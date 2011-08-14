@@ -10,11 +10,12 @@ def ensure_dir(path):
     if not os.path.isdir(path):
         os.makedirs(path)
 
-def walk(dir, callback):
+def walk(dir, callback, extension=None):
     """ walks a directory, and executes a callback on each file """
     dir = os.path.abspath(dir)
     for file in [file for file in os.listdir(dir) if not file in [".",".."]]:
         nfile = os.path.join(dir, file)
-        callback(nfile)
+        if extension == None or os.path.splitext(file)[1] == extension:
+            callback(nfile)
         if os.path.isdir(nfile):
             walk(nfile, callback)

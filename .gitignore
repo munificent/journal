@@ -1,3 +1,4 @@
 # Build and intermediate files
 *.pyc
 html/
+.sass-cache

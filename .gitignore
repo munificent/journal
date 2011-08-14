@@ -1,1 +1,3 @@
+# Build and intermediate files
 *.pyc
+html/

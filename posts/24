@@ -1,0 +1,328 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Methods on the Ether: Or Creating Your Own Control Structures for Fun and
+Profit][39]
+
+   [39]: http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/ (Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit)
+
+[code][40] | [finch][41] | [language][42] | [parsing][43] [2010][44] /
+[06][45] / [25][46]
+
+   [40]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [41]: http://journal.stuffwithstuff.com/category/finch/ (View all posts in finch)
+   [42]: http://journal.stuffwithstuff.com/category/language/ (View all posts in language)
+   [43]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts in parsing)
+   [44]: http://journal.stuffwithstuff.com/2010/ (year)
+   [45]: http://journal.stuffwithstuff.com/2010/06/ (month)
+   [46]: http://journal.stuffwithstuff.com/2010/06/25/
+
+One of my favorite things about [Lisp][47] and [Smalltalk][48] is that they
+don't have special syntax for control structures. Sometimes the most elegant
+way to express a solution to a problem requires a [unique flow control
+construct][49]. Beyond that, there's something appealingly minimal about a
+language that doesn't have a fixed set of hardcoded magic keywords.
+
+   [47]: http://en.wikipedia.org/wiki/Lisp_%28programming_language%29
+   [48]: http://en.wikipedia.org/wiki/Smalltalk
+   [49]: http://en.wikipedia.org/wiki/Domain-specific_language
+
+Unfortunately, languages like Lisp and Smalltalk that have this feature
+typically marry it to a syntax that looks strange to the large number of the
+world's programmers who were weaned on C and other curly brace languages. To
+explore a couple of a ideas, I started tinkering on a little interpreted
+language called [Finch][50]. Here, I'll try to explain how I addressed the
+build-your-own-control-flow problem while (I hope) keeping the syntax
+relatively readable to most people.
+
+   [50]: http://bitbucket.org/munificent/finch
+
+### A Smalltalk Primer
+
+Finch is inspired directly by Smalltalk (by way of [Self][51]), so it'll help
+to review how Smalltalk handles control flow before we get to Finch. If you
+know Smalltalk, feel free to skip this.
+
+   [51]: http://en.wikipedia.org/wiki/Self_%28programming_language%29
+
+Let's consider a fairly boring chunk of code in a curly language:
+
+
+
+    if (numWeasels > numCakes) {
+        print("Not enough cakes!");
+    } else {
+        for (int i = 0; i < numWeasels; i++) {
+            print("A weasel eats a cake!");
+        }
+    }
+
+
+We've got three keywords there: `if`, `else`, and `for`. Here's how that code
+would look in Smalltalk:
+
+
+
+    numWeasels > numCakes ifTrue: [
+        "Not enough cakes!" print
+    ] ifFalse: [
+        i := 0.
+        [ i < numWeasels ] whileTrue: [
+            "A weasel eats a cake!" print.
+            i := i + 1
+        ]
+    ]
+
+
+Whoa, what? First, we'll gloss over the basic stuff we don't care about here:
+`.` is used to separate statements, `:=` is for assignment, and the function
+(method) comes after the argument instead of before.
+
+The control flow part of that code is this:
+
+
+
+    ... ifTrue: [
+        ...
+    ] ifFalse: [
+        [ ... ] whileTrue: [ ... ]
+    ]
+
+
+You may think that all we've done is simple replacement: curlies become square
+brackets, `if` becomes `ifTrue:`, etc. Not so fast. `ifTrue:`, `IfFalse:`, and
+`whileTrue:` aren't reserved words in Smalltalk. They aren't special at all,
+in fact: you could implement them in Smalltalk itself if you wanted to. Here's
+how:
+
+An if/then construct is basically a "procedure" that takes three arguments: a
+boolean condition to check, a block of code to execute if the condition is
+true and (optionally) a block to execute if the condition is false. If you
+were to declare a "function" for if/then in C, it would look like:
+
+
+
+    void IfThen(bool condition, code ifTrue, code ifFalse);
+
+
+The problem, of course, is that `code` isn't a type in C: there's no easy way
+to pass around a reference to a chunk of code outside of function pointers.
+Smalltalk doesn't have that problem-- it has _blocks_.
+
+That's what the square brackets are doing in the original example. They create
+a block: a chunk of unevaluated code encapsulated as an object. If you do
+this:
+
+
+
+    [ "hi" print ]
+
+
+It doesn't print "hi". Instead, it creates an object representing that chunk
+of code. If you then _call_ the block by sending it a `value` message:
+
+
+
+    [ "hi" print ] value
+
+
+_Then_ it will print the string. Of course, you don't have to call a block
+immediately, or at all. You can store it in a variable, pass it to another
+function, call it repeatedly, etc.
+
+The other piece of syntax to understand is Smalltalk's notion of a "keyword".
+In most languages, keywords are reserved words built into the language. In
+Smalltalk, keywords are just another kind of user-defined function like
+regular method calls or operators. Keywords are identified by ending the name
+with a colon (`:`). They're used in Smalltalk to send messages to objects with
+multiple arguments. Where in C you would do `AddKeyValue(dictionary, "key",
+"value")`, in Smalltalk you'd say `dictionary addKey: "key" value: "value"`.
+
+Now we can understand how the original Smalltalk code works. `numWeasels >
+numCakes` is an expression that returns a boolean value. `ifTrue:ifFalse:` is
+then a message sent to that boolean. It takes two arguments, a "then" block
+and an "else" else block. If the boolean value is true, it evaluates the
+"then" block, otherwise it evaluates the "else" block. No special syntax
+required.
+
+Keywords and blocks are a fantastically powerful system. Blocks may also take
+arguments and can access variables declared outside of their scopes (i.e. they
+are [closures][52]), which means you've got a very simple syntax that lets you
+create all sorts of control structures and functional idioms like `map` and
+`filter`. It just looks funny.
+
+   [52]: http://en.wikipedia.org/wiki/Closure_%28computer_science%29
+
+### Back to Finch
+
+I wanted Finch to have that power but look less funny. (According to my
+definition of "funny", of course. Smalltalkers think their language looks
+perfectly normal.) Here's how our example would look in Finch:
+
+
+
+    if: numWeasels > numCakes then: {
+        write: "Not enough cakes!"
+    } else: {
+        from: 1 to: numWeasels do: {
+            write: "A weasel eats a cake!"
+        }
+    }
+
+
+The first minor change is using curlies to define blocks instead of square
+brackets. The more interesting change is that `if:then:else:` doesn't seem to
+have a receiver-- an object that the method is acting on.
+
+You'll remember in Smalltalk that the condition `numWeasels > numCakes` comes
+_before_ the `ifTrue:ifFalse` message. That's because `ifTrue:ifFalse` is a
+method on boolean objects.
+
+That's a smart solution for Smalltalk, but it seemed strange to me to see the
+condition first. I think most programmers want to see the keyword to
+understand what that condition is for before seeing the expression itself.
+Hence `if:` comes before `numWeasels > numCakes`.
+
+So how do I square that with the fact that Finch is OOP and every method must
+be a method on some object?
+
+### Enter the Ether
+
+The answer is: through a little parser trick. If the parser encounters a
+keyword message before it's encountered a receiver to send that message to
+(i.e. it parses `foo: bar` instead of `obj foo: bar` as expected), it
+automatically inserts `Ether` before it. "Ether" is a special global object
+that represents the implicit receiver of keyword messages if the receiver is
+omitted. (In some ways, this is similar to how you can omit `this` in most OOP
+languages.)
+
+When you call `if:then:else:` in Finch, you're sending that message to Ether,
+which is what handles the message. The result, I think, is a syntax as
+powerful as Smalltalk, but one that reads more naturally.
+
+At the same time, we haven't given up any of the flexibility of a dynamic OOP
+language. Ether is just a normal global object, which means you can add your
+own methods to it as you see fit. This lets you create top-level control
+structures in Finch that look just like "real" ones.
+
+For example, the `from:to:do:` block we saw earlier is actually written in
+Finch. It uses `while:do:` which is the only looping construct explicitly
+built into the interpreter. Its definition is:
+
+
+
+    Ether :: from: start to: end do: block {
+        i <- start
+        while: { i <= end } do: {
+            block call: i
+            i <-- i + 1
+        }
+    }
+
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][53]][54]
+
+   [53]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [54]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

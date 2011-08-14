@@ -1,0 +1,626 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Debunking C# vs C++ Performance][39]
+
+   [39]: http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance/ (Debunking C# vs C++ Performance)
+
+[blog][40] | [c#][41] | [code][42] | [cpp][43] | [optimization][44] [2009][45]
+/ [01][46] / [03][47]
+
+   [40]: http://journal.stuffwithstuff.com/category/blog/ (View all posts in blog)
+   [41]: http://journal.stuffwithstuff.com/category/c/ (View all posts in c#)
+   [42]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [43]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts in cpp)
+   [44]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts in optimization)
+   [45]: http://journal.stuffwithstuff.com/2009/ (year)
+   [46]: http://journal.stuffwithstuff.com/2009/01/ (month)
+   [47]: http://journal.stuffwithstuff.com/2009/01/03/
+
+If you were on [reddit][48] today, you probably saw [this article][49],
+damning C#'s performance as being **ten times worse than C++'s**. Holy shit
+balls, batman!
+
+   [48]: http://www.reddit.com/r/programming/
+   [49]: http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/
+
+Running his C# code, here are the results I got:
+
+#### Original C# Code
+
+Array Size
+
+SortTest
+
+SortTestT
+
+SortTestTC
+
+SortIndirect
+
+1024
+
+10.7162
+
+2.3441
+
+3.8781
+
+1.1366
+
+2048
+
+22.9509
+
+4.3889
+
+8.4408
+
+1.8714
+
+4096
+
+49.3709
+
+8.4452
+
+17.3883
+
+3.7319
+
+8192
+
+103.5701
+
+18.5369
+
+38.1285
+
+8.0310
+
+16384
+
+220.9323
+
+39.6958
+
+80.9258
+
+18.5821
+
+32768
+
+469.5507
+
+84.5129
+
+172.2964
+
+41.2126
+
+65536
+
+1016.2149
+
+188.6718
+
+380.3507
+
+93.2924
+
+131072
+
+2156.4188
+
+399.7299
+
+791.6437
+
+210.9526
+
+262144
+
+4616.3540
+
+847.9829
+
+1692.9814
+
+467.6020
+
+524288
+
+9732.4311
+
+1793.9729
+
+3545.2089
+
+1038.2164
+
+Pretty slow! So I took a look at the code. The first thing that would catch
+the eye of any C# programmer is this:
+
+
+
+    unsafe struct Data
+    {
+        public int key;
+        public fixed char data[128];
+    }
+
+
+_That's_ the data structure he's sorting. An unsafe struct with a fixed array?
+I had to look up `fixed` to even know what that _means_. Now, I understand
+that he's trying to make an apples/apples comparison and keep the data
+structure as close to the C++ one as possible, but I think that's missing the
+point. If you're going to compare two languages, using their _built-in typical
+sort functions_, shouldn't you use their typical _data structures_ too? Here's
+what how a regular C# developer would define `Data`:
+
+
+
+    class Data
+    {
+        public int key;
+        public char[] data;
+
+        public Data() { data = new char[128]; }
+    }
+
+
+No unmanaged code, no structs (which are rarely used in C#). Just a regular
+class with an array. Here's the results:
+
+#### Modified to Typical C# Code
+
+Array Size
+
+SortTest
+
+SortTestT
+
+SortTestTC
+
+SortIndirect
+
+1024
+
+0.3605
+
+0.3626
+
+0.4150
+
+0.5918
+
+2048
+
+0.7651
+
+0.7446
+
+0.8749
+
+0.5021
+
+4096
+
+1.6434
+
+1.6094
+
+1.9468
+
+1.2030
+
+8192
+
+3.6497
+
+3.5216
+
+4.1014
+
+2.3926
+
+16384
+
+7.9555
+
+8.0842
+
+9.3324
+
+5.4752
+
+32768
+
+21.1833
+
+19.1183
+
+23.1170
+
+15.1998
+
+65536
+
+54.6938
+
+53.4892
+
+72.3932
+
+34.6554
+
+131072
+
+122.5008
+
+114.1937
+
+141.3504
+
+75.9064
+
+262144
+
+279.8014
+
+262.5908
+
+343.4204
+
+160.8344
+
+524288
+
+598.5605
+
+577.7487
+
+759.4405
+
+359.7824
+
+Let's compare the last lines of each:
+
+Data Type
+
+SortTest
+
+SortTestT
+
+SortTestTC
+
+SortIndirect
+
+struct/fixed
+
+9732.4311
+
+1793.9729
+
+3545.2089
+
+1038.2164
+
+class
+
+598.5605
+
+577.7487
+
+759.4405
+
+359.7824
+
+how much faster
+
+**16.259x**
+**3.105x**
+**4.668x**
+**2.885x**
+
+Um, _slightly_ different? In his original post, he states that the indirect
+sorting is twice as fast in C++ than in C#. I can't do a direct comparison
+since I didn't run the C++ code, but since my change to the C# made it run
+2.885 times faster than his C# code, it stands to reason that the **C# and C++
+performance are neck and neck, if not a bit faster in C#**.
+
+### Apples to Oranges to Avocados
+
+If you're rooting for the C++ side, you're probably thinking, "No fair! The C#
+one didn't have to move the whole array around in memory!" Well, yeah, it
+didn't: _because that's how C# programmers use the language_. Since it's safe
+to rely on the garbage collector to handle deallocations, C# programmers don't
+spend effort avoiding using "dangerous" pointers (i.e. reference types). This
+is simply how the language is used. To me, the fairest comparison is one that
+preserves both the procedures (which he did by using the built-in sorts) _and_
+the data structures (which he did not do) used by each language.
+
+### The Code
+
+Aside from the `Data` change above, I cleaned up some of the copy and paste in
+his code. Here's what I used:
+
+
+
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Runtime.InteropServices;
+
+    namespace CachePressureCS
+    {
+        // normal c# type
+        class Data
+        {
+            public int key;
+            public char[] data;
+
+            public Data() { data = new char[128]; }
+        }
+
+        class DataComparer : IComparer
+        {
+            int IComparer.Compare(Object x, Object y)
+            {
+                return ((Data)x).key - ((Data)y).key;
+            }
+        }
+
+        class DataComparerT : IComparer<Data>
+        {
+            public int Compare(Data x, Data y)
+            {
+                return x.key - y.key;
+            }
+        }
+
+        class Timer
+        {
+            [DllImport("Kernel32.dll")]
+            private static extern bool QueryPerformanceCounter(out long counter);
+
+            [DllImport("Kernel32.dll")]
+            private static extern bool QueryPerformanceFrequency(out long frequency);
+
+            public Timer()
+            {
+                mStart = mEnd = 0;
+                QueryPerformanceFrequency(out mFrequency);
+            }
+
+            public void Start() { QueryPerformanceCounter(out mStart); }
+
+            public void End() { QueryPerformanceCounter(out mEnd); }
+
+            public double Time
+            {
+                get { return 1000.0 * (double)(mEnd - mStart) / (double)mFrequency; }
+            }
+
+            long mFrequency;
+            long mStart;
+            long mEnd;
+        }
+
+        class Program
+        {
+            static int CompareData(Data x, Data y)
+            {
+                return x.key - y.key;
+            }
+
+            static Data[] MakeData(int size)
+            {
+                Random rng = new Random(0);
+                Data[] data = new Data[size];
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = new Data();
+                    data[i].key = rng.Next();
+                }
+
+                return data;
+            }
+
+            static double Test(int size, Action<Data[]> sort)
+            {
+                Timer time = new Timer();
+                Data[] data = MakeData(size);
+
+                time.Start();
+                sort(data);
+                time.End();
+
+                return time.Time;
+            }
+
+            static double SortTest(int size)
+            {
+                return Test(size, data => Array.Sort(data, new DataComparer()));
+            }
+
+            static double SortTestT(int size)
+            {
+                return Test(size, data => Array.Sort<Data>(data, new DataComparerT()));
+            }
+
+            static double SortTestTC(int size)
+            {
+                return Test(size, data => Array.Sort<Data>(data, CompareData));
+            }
+
+            static double SortTestC(int size)
+            {
+                return Test(size, data => Array.Sort(data, CompareData));
+            }
+
+            static double SortTestIndirect(int size)
+            {
+                Random rng = new Random(0);
+                Timer time = new Timer();
+                Data[] data = new Data[size];
+                int[] indirect = new int[size];
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = new Data();
+                    data[i].key = rng.Next();
+                    indirect[i] = data[i].key;
+                }
+
+                time.Start();
+                Array.Sort<int, Data>(indirect, data);
+                time.End();
+
+                return time.Time;
+            }
+
+            private static void Time(Func<int, double> fn, int size)
+            {
+                double time = 0;
+                for (int j = 0; j < 10; j++)
+                {
+                    time += fn(size);
+                }
+                time /= 10.0;
+
+                Console.Write("{0,14:F4}", time);
+            }
+
+            static void Main(string[] args)
+            {
+                Console.WriteLine("    size      SortTest     SortTestT    SortTestTC  SortIndirect");
+                Console.WriteLine("-------- ------------- ------------- ------------- -------------");
+
+                for (int i = 0; i < 10; i++)
+                {
+                    int size = 1024 << i;
+
+                    Console.Write("{0,8}", size);
+                    Time(SortTest, size);
+                    Time(SortTestT, size);
+                    Time(SortTestTC, size);
+                    Time(SortTestIndirect, size);
+
+                    Console.WriteLine();
+                }
+
+                Console.ReadKey();
+            }
+        }
+    }
+
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][50]][51]
+
+   [50]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [51]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

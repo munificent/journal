@@ -1,0 +1,479 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Pattern Matching in a Dynamic OOP Language][39]
+
+   [39]: http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/ (Pattern Matching in a Dynamic OOP Language)
+
+[code][40] [2011][41] / [01][42] / [16][43]
+
+   [40]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [41]: http://journal.stuffwithstuff.com/2011/ (year)
+   [42]: http://journal.stuffwithstuff.com/2011/01/ (month)
+   [43]: http://journal.stuffwithstuff.com/2011/01/16/
+
+Another long weekend and another fun milestone for [Magpie][44]. I've finally
+managed to pull off something that I've wanted to support for a long time:
+_real destructuring pattern matching_. Even more awesome, it uses patterns not
+just in the basic `match` expression, but also for exception-handling catch
+clauses, variable declarations, and function type declarations.
+
+   [44]: http://github.com/munificent/magpie
+
+This is great because it means we can use the same concept to support a lot of
+the language's semantics. There are fewer things for a user to learn, and if I
+make that one concept more powerful, the effect is magnified across more of
+the language. But I'm getting ahead of myself here.
+
+### Pattern What?
+
+If you've never ventured into the realm of static functional languages, it's
+entirely likely you've never heard of [pattern matching][45], or if you have,
+it was describing something else. I wrote [a really long introduction to
+it][46] a while back, but I'll do the super science breakdown here.
+
+   [45]: http://en.wikipedia.org/wiki/Pattern_matching
+   [46]: http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c/
+
+What I think you'll find is that you _do_ know what it is, you just don't know
+you know it. Here's some examples:
+
+#### Switch
+
+Consider the humble `switch` statement in [Ye Olde Imperative Language][47]:
+
+
+       [47]: http://en.wikipedia.org/wiki/C_%28programming_language%29
+
+    switch (i) {
+      case 1:  printf("first"); break;
+      case 2:  printf("second"); break;
+      case 3:  printf("third"); break;
+      default: printf("uh..."); break;
+    }
+
+
+Pretty straightforward. The key bits are, we have a _value_ being tested (here
+just `i`), a series of _clauses_, and a _default clause_. Each clause has a
+_body_ and a value being compared against, which I'll call the _pattern_.
+
+The semantics are equally straightforward. First, we evaluate the value
+expression, then we walk down the clauses. For each one, we see if the pattern
+_matches_ the value. If so, we execute the body and end (we'll ignore
+fallthrough here). "Match" is a pretty fuzzy term. In the context of a
+`switch` statement in C, all it means is equivalence. Two values match if
+they're the same value.
+
+#### Catch
+
+Now let's switch gears and take a look a `catch` blocks in everyone's favorite
+[Big Enterprise Language][48]:
+
+
+       [48]: http://en.wikipedia.org/wiki/Java_%28programming_language%29
+
+    try {
+      // Do something crazy...
+    } catch (ParseException ex) {
+      System.out.println("Parse error!");
+    } catch (IOException ex) {
+      System.out.println("IO error!");
+    } catch (Exception ex) {
+      System.out.println("Uh-oh!");
+    }
+
+
+When an exception gets thrown in a try block, we start playing with the
+`catch` blocks. The key bits here are: we have a _value_ being tested (the
+thrown exception) and a series of _clauses_ (the `catch` blocks). Each clause
+has a _body_ and an exception type being compared against, which we'll again
+call the _pattern_.
+
+Sound familiar? Aside from syntax, the only real difference between exception
+handling and `switch` statements is that `catch` clauses match on the
+exception's _type_ instead of its value. All of the other machinery is the
+same.
+
+#### Destructure
+
+Last example, and a different one from the previous two. Let's take a look at
+the [Hot New Language][49]. The latest Mozilla-specific version that no one
+actually uses (not that I'm bitter or anything) introduced a new feature
+called _destructuring assignment_. It looks like this:
+
+
+       [49]: http://en.wikipedia.org/wiki/Javascript
+
+    var point = [1, 2];
+    var [x, y] = point; // Destructure point.
+    alert(x + ", " y);
+
+
+You can probably infer what's going on here. The second line declares two new
+variables, `a` and `b` and initializes them by pulling elements out of the
+array `point` used as the initializer.
+
+There's no flow control going on, but this does have some features in common
+with the previous two examples. First, we have a value: `point`. And we have a
+pattern that it's being matched against: `[x, y]`. In this case, we don't use
+the pattern to _test_ the value, we use it to _pull data out of it_.
+
+Actually, that destructuring part isn't so different from _one_ of our
+examples after all. The exception-handling code does something very similar.
+When it finds a matching `catch` block, it does bind the caught exception to a
+new variable-- the one declared in the `catch` block's type signature.
+
+### Patterns in Magpie
+
+There's some other details, but what you've just seen covers 90% of the
+awesomeness that is pattern-matching in the ML family of languages. The only
+problem is that in the languages we've looked at, those features are all split
+across unrelated constructs. A `switch` can't match on types, nor can it
+destructure an array. A `catch` block can't choose to only catch an exception
+if it has a certain _value_ (like maybe a specific error message).
+
+All the pieces are there, but they're scattered across the language. Let's
+bring them together. We'll do this by making patterns a first-class feature of
+the language. Any given pattern needs to support a couple of operations:
+
+  1. Test to see if it matches a value.
+  2. Bind new variables by pulling data out of the value.
+
+Just like normal expressions in the language work, we'll define a couple of
+core types of patterns, and then let users compose them to their heart's
+content. In Magpie, those are:
+
+#### Value Pattern
+
+The simplest pattern is just an expression that evaluates to a value. These
+are like the literals after the `case` in a `switch` statement, but Magpie
+lets you use pretty much any expression. These are valid value patterns:
+
+
+
+    123
+    true
+    "a string"
+    3 + 5
+
+
+Testing against a value is simple: it's just an equality check. A `2` pattern
+matches if the value is also `2`. Magpie does this by just calling the `==`
+operator, so it's even possible to use your own types here.
+
+Value patterns don't bind any new variables at all, so that bit's easy too.
+
+#### Tuple Pattern
+
+This is one of two patterns that has subpatterns. With this, you can start
+composing bigger patterns that do more stuff. A tuple pattern is just like a
+[tuple expression][50]: it's a series of patterns separated by commas. For
+example:
+
+
+       [50]: http://journal.stuffwithstuff.com/2009/05/05/one-and-only-one/
+
+    3, "four", false
+
+
+Here we have a tuple of three value patterns. A tuple pattern matches if all
+of the fields match the fields of the value. In other words, it walks through
+_its_ fields while walking through the tuple fields of the value in parallel.
+It's this symmetry which makes patterns so intuitive to use.
+
+A tuple pattern by itself doesn't bind any variables, but it does recursively
+give the patterns of its fields the chance to do so.
+
+#### Record Pattern
+
+The twin brother to tuple patterns, a record pattern does the same thing, but
+for a named record (or any other type with named members). Here's one:
+
+
+
+    x: 1, y: 2
+
+
+That pattern will match any object with an `x` field whose value is `1`, and a
+`y` field whose value is `2`.
+
+#### Variable Pattern
+
+Finally, the most important pattern, and the one where Magpie makes the
+greatest departure from ML. A variable pattern has a _name_ and an optional
+_type annotation_. The name can be `_` if you don't really care about it.
+Here's some:
+
+
+
+    _              // no name or type
+    a              // name but no type
+    position Point // name and type
+    _ Int | String // no name but type
+
+
+A variable pattern matches if the _type_ of the value matches the variable
+pattern's type. If the pattern doesn't have a type, it always succeeds.
+
+Variable patterns also do the magic of creating new variables. When a variable
+pattern matches, it will create a new variable with its name whose value is
+the matched value. When you combine that with tuple and record patterns, you
+get destructuring automagically. If we take this value:
+
+
+
+    name: "Dan", friends: ("Sam", "Ed")
+
+
+And match it against this pattern:
+
+
+
+    name: n, friends: (a, b)
+
+
+The match will succeed, and `n` will be `"Dan"`, `a` will be `"Sam"`, and `b`
+will be `"Ed"`.
+
+### Now What?
+
+Now we've got these pattern things, where can we use them? It turns out, lots
+of places. We'll start with the most obvious one: `match` expressions--
+Magpie's souped-up version of `switch`. Our first example looks like this in
+Magpie:
+
+
+
+    match i
+        case 1 then print("first")
+        case 2 then print("second")
+        case 3 then print("third")
+        case _ then print("uh...")
+    end
+
+
+The semantics are what you expect. It tests each pattern (the bit between
+`case` and `then`) in turn. When a pattern matches, it binds any pattern
+variables in a new scope, and executes the expression after `then` in it. A
+richer example showing all of the awesome looks like:
+
+
+
+    match name: "Dan", friends: ("Sam", "Ed")
+        case name: "Dave" then
+            "don't care about Dave's friends"
+        case name: a, friends: nothing then
+            "aww, " ~ a ~ " has no friends"
+        case name: n, friends: (a, b) then
+            n ~ " is friends with " ~ a ~ " and " ~ b
+        end
+    end
+
+
+Pretty handy, but we're just getting started.
+
+#### Catch
+
+Since we can also match on type, that gives us all we need to use patterns for
+selecting an appropriate catch clause when an error is thrown. The exception
+example up there becomes:
+
+
+
+    do
+        // Do something crazy...
+    catch ex ParseException then print("Parse error!")
+    catch ex IOException    then print("IO error!")
+    catch _                 then print("Uh-oh!")
+
+
+#### Variables
+
+Since patterns give us a way to bind variables, do we really need to have a
+separate special case `var` expression that just creates a single named
+variable? Nope. We can just make it take a single pattern. If the pattern is a
+variable pattern with no type, it degenerates to a regular variable
+declaration like:
+
+
+
+    var i = "the queen of France"
+
+
+But you can also use tuple and record patterns to destructure:
+
+
+
+    var name: n, friends: (a, b) = name: "Dan", friends: ("Sam", "Ed")
+    print(n) // "Dan"
+    print(a) // "Sam"
+    print(b) // "Ed"
+
+
+So now we've got destructuring for free. Swell!
+
+#### Functions
+
+And there's one last trick up our sleeve. If you look at the exception example
+there, it looks an awful lot like a function type declaration. That's not a
+coincidence either. We can now just use a pattern to define a function's
+parameter type, like so:
+
+
+
+    def foo(name: n String, friends: (a String, b String))
+        print(n) // "Dan"
+        print(a) // "Sam"
+        print(b) // "Ed"
+    end
+
+
+The syntax of variable patterns was designed specifically around this. My goal
+was to make the patterns used for function parameters look familiar to someone
+new to the language while hiding greater flexibility under the surface. I
+think most programmers can figure out what this means:
+
+
+
+    def sayAge(name String, age Int)
+        print(name ~ " is " ~ age ~ " years old")
+    end
+
+
+without ever realizing the `name String, age Int` is something special.
+
+Using patterns for function types also plays really nicely with Magpie's
+[static typing][51]. By adding support for evaluating the _type_ of a pattern,
+we can use that to type-check a pattern anywhere it appears. So, we can
+statically tell that this is an error:
+
+
+       [51]: http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/
+
+    match "not an int"
+        case 1 then "match a string with an int?"
+    end
+
+
+because the pattern type doesn't match the value. And using that exact same
+code, we can also tell that this is an error:
+
+
+
+    def expectInt(i Int) print(i)
+    expectInt("not an int")
+
+
+The end result of all of this is that the total amount of code in the
+interpreter has gone _down_, there are fewer distinct concepts to learn in the
+language, and at the same time I've added new functionality that wasn't there
+before. Or, in the words of the immortal John "Hannibal" Smith:
+
+> I love it when a plan comes together.
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][52]][53]
+
+   [52]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [53]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

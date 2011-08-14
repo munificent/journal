@@ -1,0 +1,351 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Closures and the Command Pattern][39]
+
+   [39]: http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern/ (Closures and the Command Pattern)
+
+[c#][40] | [code][41] | [design][42] [2009][43] / [07][44] / [02][45]
+
+   [40]: http://journal.stuffwithstuff.com/category/c/ (View all posts in c#)
+   [41]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [42]: http://journal.stuffwithstuff.com/category/design/ (View all posts in design)
+   [43]: http://journal.stuffwithstuff.com/2009/ (year)
+   [44]: http://journal.stuffwithstuff.com/2009/07/ (month)
+   [45]: http://journal.stuffwithstuff.com/2009/07/02/
+
+Like a lot of OOP programmers, I'm a fan of [Design Patterns][46]. While I
+don't treat it like the sacred tome that many think it is, I learned a lot of
+design tricks for solving problems from it. As I've moved from C++ towards
+other languages, it's become clear that many patterns in it exist just to get
+around limitations in C++.
+
+   [46]: http://www.c2.com/cgi/wiki?DesignPatterns
+
+The anti-C++ crowd just uses this as evidence that C++ sucks since you have to
+write a whole book to get around its shortcomings. Let's not go there.
+
+Instead, I want to see if I can show you a bit about a language feature that
+C++ lacks and that you may not know ([closures][47]) by getting there from
+something familiar to an average C++ OOP programmer (the [Command
+Pattern][48]) and changing it in stages. I'll use C# as the example language
+here, but any language with closures would work: Lua, Scheme, etc.
+
+   [47]: http://en.wikipedia.org/wiki/Closure_%28computer_science%29
+   [48]: http://en.wikipedia.org/wiki/Command_pattern
+
+### The Command Pattern
+
+Let's say you're writing a chess program. You want it to support both regular
+human players and built-in AI players. The core chess engine doesn't care
+about what kind of players it's dealing wth. All it needs to know is for a
+given player, what that player's move is.
+
+For a human player, the UI code will get the user's move selection and pass
+that to the engine. For an AI player, the AI rules select the best move and
+pass it in.
+
+The "move" here is the command pattern. The basic idea is that you have a
+_command_ class that encapsulates some procedure to perform and any data that
+procedure needs. You can think of it like a function call and its parameters
+bottled up together to be opened up later by someone else. A
+
+vanilla implementation is something like:
+
+
+    interface ICommand
+    {
+        void Invoke();
+    }
+
+    class MovePieceCommand : ICommand
+    {
+        public Piece Piece;
+        public int   X;
+        public int   Y;
+
+        public void Invoke()
+        {
+            Piece.MoveTo(X, Y);
+        }
+    }
+
+We'll also create a little command factory for creating the commands. This
+isn't necessary now, but it'll make sense later when we start moving things
+around.
+
+
+    static class Commands
+    {
+        // create a command to move a piece
+        public static ICommand MovePiece(Piece piece, int x, int y)
+        {
+            var command = new MovePieceCommand();
+            command.Piece = piece;
+            command.X     = x;
+            command.Y     = y;
+
+            return command;
+        }
+    }
+
+To complete this first pass, here's a little block to test our code:
+
+
+    class Program
+    {
+        public static Main(string[] args)
+        {
+            // ui or ai creates command
+            var piece = new Piece();
+            var command =  Commands.MovePiece(piece, 3, 4);
+
+            // chess engine invokes it
+            command.Invoke();
+        }
+    }
+
+### The First Change: Delegates
+
+The first change we'll make is a pretty minor one. The `ICommand` interface
+only has a single method, `Invoke()`, so there's no real reason to make an
+interface for it. Since delegates in C# work fine on instance methods, we can
+just use that instead. We'll define a delegate type for a function that takes
+no arguments and returns nothing, just like the `Invoke()` method in
+`ICommand`.
+
+
+    delegate CommandDel();
+
+    class MovePieceCommand
+    {
+        public Piece Piece;
+        public int   X;
+        public int   Y;
+
+        public void Invoke()
+        {
+            Piece.MoveTo(X, Y);
+        }
+    }
+
+    static class Commands
+    {
+        // create a command to move a piece
+        public static CommandDel MovePiece(Piece piece, int x, int y)
+        {
+            var command = new MovePieceCommand();
+            command.Piece = piece;
+            command.X     = x;
+            command.Y     = y;
+
+            return command.Invoke;
+        }
+    }
+
+    class Program
+    {
+        public static Main(string[] args)
+        {
+            // ui or ai creates command
+            var piece = new Piece();
+            var command =  Commands.MovePiece(piece, 3, 4);
+
+            // chess engine invokes it
+            command();
+        }
+    }
+
+Not much different, although we did get to ditch the interface without any
+loss in functionality.
+
+### The Second Change: Ditch Invoke
+
+That `Invoke()` method up there really doesn't do much. It just calls another
+function. Let's see if we can pull that out. C# has "anonymous delegates",
+which are basically functions defined within the body of another function.
+We'll try that.
+
+
+    class MovePieceCommand
+    {
+        public Piece Piece;
+        public int   X;
+        public int   Y;
+    }
+
+    static class Commands
+    {
+        // create a command to move a piece
+        public static Action MovePiece(Piece piece, int x, int y)
+        {
+            var command = new MovePieceCommand();
+            command.Piece = piece;
+            command.X     = x;
+            command.Y     = y;
+
+            CommandDelegate invoke = delegate()
+                {
+                    command.Piece.MoveTo(command.X, command.Y);
+                };
+
+            return invoke;
+        }
+    }
+
+Now instead of an `Invoke()` _method_ we have an anonymous function stored in
+a local `invoke` variable. But this local function isn't a method, so it
+doesn't have a `this` reference. How does it get access to the
+`MovePieceCommand` that stores the piece and location to move it to?
+
+Like a little magic trick, the body of the `invoke` delegate actually accesses
+the `MovePieceCommand` stored in `command`, a local variable defined _outside_
+of itself in `MovePiece`. _That's_ a closure: a local function that references
+a variable defined outside of its scope.
+
+In C#, the compiler will make sure those closed over local variables get moved
+to the heap, so that our delegate still has access to them even after
+`MovePiece` has returned. It actually does this by building a little class
+like our old `MovePieceCommand` and turns the delegate we just made back into
+a method. The advantage is that the _compiler_ writes the class for us. We
+don't have to. Call me lazy, but if there's anything I like, it's _doing
+less_.
+
+### Clean Up
+
+By now it's clear `MovePieceCommand` isn't doing much. It's just a bag of
+data. If our anonymous delegate can access local variables outside its scope
+anyway, there's no reason to bundle them into an object. Let's kill it.
+
+To clean things up a bit more, we'll also define the delegate using C#'s newer
+[lambda syntax][49]. It does the exact same thing, but more tersely.
+
+
+       [49]: http://msdn.microsoft.com/en-us/library/bb397687.aspx
+
+static class Commands
+
+    {
+        // create a command to move a piece
+        public static Action MovePiece(Piece piece, int x, int y)
+        {
+            return () => piece.MoveTo(x, y);
+        }
+    }
+
+And just like that, our whole command pattern has become a single line of
+code.
+
+### Conclusion
+
+There are plenty of cases where it's still useful to implement a full command
+pattern: maybe you need to be able to invoke the command in multiple ways, or
+undo it. However, for simple problems, I go for the simple solution. If you're
+working in a language with closures, it doesn't get simpler than this.
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][50]][51]
+
+   [50]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [51]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

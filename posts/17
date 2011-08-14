@@ -1,0 +1,332 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Naming Things in Code][39]
+
+   [39]: http://journal.stuffwithstuff.com/2009/06/05/naming-things-in-code/ (Naming Things in Code)
+
+[code][40] | [language][41] [2009][42] / [06][43] / [05][44]
+
+   [40]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [41]: http://journal.stuffwithstuff.com/category/language/ (View all posts in language)
+   [42]: http://journal.stuffwithstuff.com/2009/ (year)
+   [43]: http://journal.stuffwithstuff.com/2009/06/ (month)
+   [44]: http://journal.stuffwithstuff.com/2009/06/05/
+
+When I'm designing software, I spend a lot of time thinking about names. For
+me, thinking about names is inseparable from the process of design. To name
+something is to define it.
+
+> In the beginning was the Word, and the Word was with God, and the Word was
+God.
+
+The Gospel According to John
+
+One of the ways I know a design has really clicked is when the names feel
+right. It may take some time for this to happen (I rename things a _lot_ when
+I'm first putting them down in code), but that's OK. Good design doesn't
+happen fast.
+
+Of course, good names alone don't make a good design, but it's been my
+experience that crappy names do _prevent_ one. With that in mind, here's the
+guidelines I try to follow when naming things. The examples here are in C++,
+but work more or less for any language.
+
+### Types (Classes, Interfaces, Structs)
+
+#### The name should be a noun phrase.
+
+
+
+    Bad:  Happy
+    Good: Happiness
+
+
+#### Do not use namespace-like prefixes.
+
+That's what namespaces are for.
+
+
+
+    Bad:  SystemOnlineMessage
+    Good: System::Online::Message
+
+
+#### Use just enough adjectives to be clear.
+
+
+
+    Bad:  IAbstractFactoryPatternBase
+    Good: IFactory
+
+
+#### Do not use "Manager" or "Helper" or other null words in a type name.
+
+If you need to add "Manager" of "Helper" to a type name, the type is either
+poorly named or poorly designed. Likely the latter. Types should manage and
+help themselves.
+
+
+
+    Bad:  ConnectionManager
+          XmlHelper
+    Good: Connection
+          XmlDocument, XmlNode, etc.
+
+
+#### If a class doesn't represent something easily comprehensible, consider a
+concrete metaphor.
+
+
+
+    Bad:  IncomingMessageQueue
+          CharacterArray
+          SpatialOrganizer
+    Good: Mailbox
+          String
+          Map
+
+
+#### If you use a metaphor, use it consistently.
+
+
+
+    Bad:  Mailbox, DestinationID
+    Good: Mailbox, Address
+
+
+### Functions (Methods, Procedures)
+
+#### Be terse.
+
+
+
+    Bad:  list.GetNumberOfItems();
+    Good: list.Count();
+
+
+#### Don't be too terse.
+
+
+
+    Bad:  list.Verify();
+    Good: list.ContainsNull();
+
+
+#### Avd abbrvtn.
+
+
+
+    Bad:  list.Srt();
+    Good: list.Sort();
+
+
+#### Name functions that do things using verbs.
+
+
+
+    Bad:  obj.RefCount();
+    Good: list.Clear();
+          list.Sort();
+          obj.AddReference();
+
+
+#### Name functions that return a boolean (i.e. predicates) like questions.
+
+
+
+    Bad:  list.Empty();
+    Good: list.IsEmpty();
+          list.Contains(item);
+
+
+#### Name functions that just return a property and don't change state using
+nouns.
+
+
+
+    Bad:  list.GetCount();
+    Good: list.Count();
+
+
+(In C#, you'd actually use properties for this.)
+
+#### Don't make the name redundant with an argument.
+
+
+
+    Bad:  list.AddItem(item);
+          handler.ReceiveMessage(msg);
+    Good: list.Add(item);
+          handler.Receive(msg);
+
+
+#### Don't make the name redundant with the object.
+
+
+
+    Bad:  list.AddToList(item);
+    Good: list.Add(item);
+
+
+#### Only describe the return in the name if there are identical functions
+that return different types.
+
+
+
+    Bad:  list.GetCountInt();
+    Good: list.GetCount();
+          message.GetIntValue();
+          mmessage.GetFloatValue();
+
+
+#### Don't use "And" or "Or" in a function name.
+
+If you're using a conjunction in the name, the function is likely doing too
+much. Break it into smaller pieces and name accordingly.
+
+If you want to ensure this is an atomic operation, consider creating a name
+for that entire operation, or possibly a class that encapsulates it.
+
+
+
+    Bad:  mail.VerifyAddressAndSendStatus();
+    Good: mail.VerifyAddress();
+          mail.SendStatus();
+
+
+### Does it Matter?
+
+Yes, I firmly believe it does. A module with well-named parts quickly teaches
+you what it does. By reading only a fraction of the code, the you'll quickly
+build a complete mental model of the whole system. If it calls something a
+"Mailbox" you'll expect to see "Mail", and "Addresses" without having to read
+the code for them.
+
+Well-named code is easier to talk about with other programmers, helping
+knowledge of the code to spread. No one wants to try to say
+"ISrvMgrInstanceDescriptorFactory" forty times in a meeting.
+
+Over on the other side, poor names create an opaque wall of code, forcing you
+to painstakingly run the program in the your head, observe its behavior and
+then create your own private nomenclature. "Oh, DoCheck() looks like it's
+iterating through the connections to see if they're all live. I'll call that
+'AreConnectionsLive()'." Not only is this slow, it's non-transferrable.
+
+From the code I've seen, there's a strong correspondence between a cohesive
+set of names in a module, and a cohesive module. When I have trouble naming
+something, there's a good chance that what I'm trying to name is poorly
+_designed_. Maybe it's trying to do too many things at once, or is missing a
+critical piece to make it complete.
+
+It's hard to tell if I'm designing well, but one of the surest guides I've
+found that I'm _not_ doing it well is when the names don't come easy. When I
+design now, I try to pay attention to that. Once I'm happy with the names, I'm
+usually happy with the design.
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][45]][46]
+
+   [45]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [46]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

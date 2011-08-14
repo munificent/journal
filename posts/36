@@ -1,0 +1,328 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Ruby blocks, Python's with, and Magpie's Test Suite][39]
+
+   [39]: http://journal.stuffwithstuff.com/2010/09/28/ruby-blocks-pythons-with-and-magpies-test-suite/ (Ruby blocks, Python&#8217;s with, and Magpie&#8217;s Test Suite)
+
+[code][40] | [language][41] | [magpie][42] | [python][43] | [ruby][44]
+[2010][45] / [09][46] / [28][47]
+
+   [40]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [41]: http://journal.stuffwithstuff.com/category/language/ (View all posts in language)
+   [42]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts in magpie)
+   [43]: http://journal.stuffwithstuff.com/category/python/ (View all posts in python)
+   [44]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts in ruby)
+   [45]: http://journal.stuffwithstuff.com/2010/ (year)
+   [46]: http://journal.stuffwithstuff.com/2010/09/ (month)
+   [47]: http://journal.stuffwithstuff.com/2010/09/28/
+
+Part of moving a language from "tiny hobby project" to "thing that I hope
+people will use" is a solid test suite. [Magpie][48] has a test suite now, but
+it's kind of ugly and is driven mostly from Java. What I'd like is something
+more like [RubySpec][49] for Ruby: a highly readable executable specification
+for the language, written in itself.
+
+   [48]: http://magpie.stuffwithstuff.com/
+   [49]: http://www.rubyspec.org/
+
+RubySpec is built on top of RSpec, a Ruby library that provides a DSL-like API
+for writing tests. Here's what a chunk of spec looks like:
+
+
+    describe "The 'and' statement" do
+      it "short-circuits evaluation at the first false condition" do
+        x = nil
+        true and false and x = 1
+        x.should be_nil
+      end
+
+      it "evaluates to the first condition not to be true" do
+        ("yes" and 1 and nil and true).should == nil
+        ("yes" and 1 and false and true).should == false
+      end
+
+      it "evaluates to the last condition if all are true" do
+        ("yes" and 1).should == 1
+        (1 and "yes").should == "yes"
+      end
+    end
+
+I find that wonderful to read. This is exactly the kind of thing that I think
+gets people excited about Ruby. It relies on two nice features Ruby has: open
+classes, and block arguments.
+
+Open classes let us define the "bare functions" of that DSL: `describe` and
+`it` are both methods added to the base `Object` class. Inside the spec,
+you'll see a lot of calls to `.should`. That's also a method that's been
+patched into `Object`.
+
+### Block Arguments in Ruby
+
+Block arguments are then what get used to create the block structure you see
+where it appears that `describe` and `it` are keyword-like. The actual
+semantics are delightfully simple. If you do something like this in Ruby:
+
+
+    blocky("bar") do
+        puts "hi"
+    end
+
+The block after `do` gets wrapped in something like a lambda and passed to the
+method (`blocky` here) as another (unnamed) argument. That code basically gets
+desugared to:
+
+
+    blocky("bar", lambda {
+        puts "hi"
+    })
+
+The method that receives the block can then do stuff before and after it, and
+invoke it by using `yield`. It's the ability to do stuff before and after
+that's particularly nice. It makes it easy to write context managers or scoped
+behavior where you have some setup and teardown that you want to wrap around
+some user-provided behavior.
+
+### Context Managers in Python
+
+When I thought "context manager", that called to mind a [similar feature][50]
+in Python: `with`. Python's system is a bit more complex and more directly
+tied to scoped behavior. It looks like this:
+
+
+       [50]: http://www.python.org/dev/peps/pep-0343/
+
+with open('somefile.text') as f:
+
+        contents = f.read()
+
+This does a few things in sequence:
+
+  1. Evaluates the expression after `with`.
+  2. If `as` is provided, binds the result to a named variable.
+  3. Calls the `__enter__` method on the result. This is where it can perform setup work.
+  4. Evaluates the body of the `with` statement.
+  5. Finally, calls `__exit__` on the result so it can do teardown.
+
+Python's system is a good bit more complex, but it's also more object-oriented
+and handles the common scenario of an object that needs to initialize and
+teardown well.
+
+### Translating Python to Ruby
+
+Both Python and Ruby's solutions cover valid use cases, but they seem to
+overlap so much that it would be overkill to add both. Fortunately, you can
+implement one in terms of the other. Ruby's system is much simpler, so here's
+`with` implemented using it (minus important exception-handling stuff that
+I'll ignore for now):
+
+
+    class Object
+        def with(obj)
+            obj.__enter__
+            yield
+            obj.__exit__
+        end
+    end
+
+With that, you can do:
+
+
+    with File.open("somefile.text", "r") do |f|
+        contents = f.read
+    end
+
+(Of course, you wouldn't actually do this in Ruby since its built-in `File`
+class already has a nice method to do just this.)
+
+### Block Arguments in Magpie
+
+Given that, it seemed like supporting block arguments in Magpie would let me
+cover both cases. The implementation ended up being only about a dozen lines
+of code in the parser. There is a new keyword `with`. If it appears after a
+message send, a subsequent block will be parsed and wrapped in a function.
+
+That function will then be added to the arguments to that message. Unlike
+Ruby, the block argument isn't unnamed. From the method's perspective it just
+becomes another regular argument and it needs to declare a named parameter for
+it.
+
+There is one other small piece of syntactic sugar: when it wraps the block in
+a function, it declares it to take a single parameter: `it`. When the method
+that receives the block invokes it and passes in an argument, that will be
+bound to `it`.
+
+With this in place, I can start moving Magpie's test suite to something that
+looks like:
+
+
+    specify("An 'and' expression") with
+        it should("return the first arg if it is false.") with
+            (0 and false) shouldBe(0)
+        end
+
+        it should("return the second arg if the first is true.") with
+            (0 and 1) shouldBe(1)
+        end
+
+        it should("short-circuit if the first arg is false.") with
+            var called = false
+            false and (called = true)
+            called shouldBe(false)
+        end
+    end
+
+Here, `specify` is a global function the test infrastructure provides. It will
+call the block argument and pass in a test runner object that gets bound to
+`it`. It will have a method `should` that takes a description and the body of
+a test. `specify` and `it` do the setup required to keep track of success and
+failure.
+
+The only method we have to patch into `Object` is `shouldBe` which is used to
+verify expected values. The end result is, I think, pretty nice looking, and
+doesn't require much language support or monkey patching.
+
+Here's some other fun stuff it enables:
+
+
+    // functional idioms
+    var waldo = people find with it name == "waldo"
+    var positives = numbers filter with it > 0
+
+    // context management
+    File open("name.text") use with
+        while it eof not do print(it readLine)
+    end
+
+In the last example, `use` is a method that can be mixed into a class to call
+setup and teardown methods on the receiver, like:
+
+
+    def File use(block)
+        this setup
+        block(this)
+        this teardown
+    end
+
+#### Multiple Arguments
+
+Automatically binding the argument to `it` is nice for a lot of cases, but
+what if you actually want to pass multiple arguments to the block? To enable
+that, I'm planning to add an optional parameter list following `with`. If it's
+there, it will use that instead of `it`:
+
+
+    // sort by name
+    collection sort with(a, b) a name compareTo(b name)
+
+And that's about it. Not too bad for a handful of code, eh? Now I just have to
+rewrite Magpie's entire test suite to use it…
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][51]][52]
+
+   [51]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [52]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+  *[DSL]: Domain-Specific Language, a fancy term for an API that doesn't suck to read
+
+

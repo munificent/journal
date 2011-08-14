@@ -1,0 +1,496 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Extending Syntax from Within a Language][39]
+
+   [39]: http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language/ (Extending Syntax from Within a Language)
+
+[code][40] | [java][41] | [language][42] | [magpie][43] | [parsing][44]
+[2011][45] / [02][46] / [13][47]
+
+   [40]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [41]: http://journal.stuffwithstuff.com/category/java/ (View all posts in java)
+   [42]: http://journal.stuffwithstuff.com/category/language/ (View all posts in language)
+   [43]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts in magpie)
+   [44]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts in parsing)
+   [45]: http://journal.stuffwithstuff.com/2011/ (year)
+   [46]: http://journal.stuffwithstuff.com/2011/02/ (month)
+   [47]: http://journal.stuffwithstuff.com/2011/02/13/
+
+A [big goal][48] with my little language Magpie is to do as much as possible
+at the library level and keep the core language small. I've been toiling for
+the past few weeks and I finally moved a _huge_ chunk of Magpie over to the
+library side: _all infix operators are now defined and implemented in Magpie_.
+As far as the core language is concerned, it doesn't even _have_ operators.
+
+   [48]: http://magpie.stuffwithstuff.com/internals/the-heart-of-magpie.html
+
+Not only can you now define your own infix operators, including specifying
+
+precedence and associativity, but other large chunks of Magpie syntax are now
+
+defined at the library level. Take this chunk of (meaningless) code:
+
+
+
+    def doStuff(a, b)
+        if a and b then
+            print("Both " ~ a ~ " and " ~ b ~ " are truthy")
+        else
+            print("Their sum is " ~ a + b)
+        end
+    end
+
+
+The operators you see there, `+` and `~` (for string concatenation) are both
+[implemented in Magpie][49]. So is the `and` keyword. (It's [particularly
+interesting][50] because it doesn't become just a regular function call since
+it needs to short-circuit.) In fact, [not even `if`][51] is baked into the
+language. Or `def` [for that matter][52]. In fact, about the only bit up there
+that is part of the core syntax is `print(...)`.
+
+   [49]: https://github.com/munificent/magpie/blob/master/base/operators.mag
+   [50]: https://github.com/munificent/magpie/blob/master/base/syntax/AndParser.mag
+   [51]: https://github.com/munificent/magpie/blob/master/base/syntax/IfParser.mag
+   [52]: https://github.com/munificent/magpie/blob/master/base/syntax/DefParser.mag
+
+If this is the kind of thing you're interested in, I'll try to walk you
+through how this is possible, and how it works.
+
+## Pratt Parsers FTW!
+
+The real magic bit that makes this work is [Pratt parsers][53]. Magpie's core
+parser, which is written in Java, is a slightly OOP-ified version of a top-
+down operator precedence parser. That sounds intimidating, but it's actually
+the simplest parser technique I've ever seen. I kind of wish everyone knew
+about them, but I'm kind of glad no one does because it makes me feel like I
+have a secret weapon.
+
+   [53]: http://javascript.crockford.com/tdop/tdop.html
+
+Here's the Java code that parses expressions in Magpie (which means it parses
+pretty much everything since Magpie doesn't have statements):
+
+
+
+    public Expr parseExpression(int stickiness) {
+      Token token = consume();
+      PrefixParser prefix = mGrammar.getPrefixParser(token);
+      Expect.notNull(prefix);
+      Expr left = prefix.parse(this, token);
+
+      while (stickiness < mGrammar.getStickiness(current())) {
+        token = consume();
+
+        InfixParser infix = mGrammar.getInfixParser(token);
+        left = infix.parse(this, left, token);
+      }
+
+      return left;
+    }
+
+
+That's it, for reals. Precedence, associativity, infix operators, they all get
+handled by that little chunk of code. You may be thinking that `mGrammars`
+variable hides all the dirty work. That's actually pretty simple too. It's
+basically a container for two dictionaries. One maps tokens to prefix parsers,
+and one maps them to infix parsers. So, you give it a `+` token representing
+the plus operator, and it returns a parser object that knows how to parse an
+addition expression. Prefix and infix parsers are just objects that implement
+one of these dead simple interfaces:
+
+
+
+    interface PrefixParser {
+      Expr parse(MagpieParser parser, Token token);
+    }
+
+    interface InfixParser {
+      Expr parse(MagpieParser parser, Expr left, Token token);
+      int getStickiness();
+    }
+
+
+I won't go into detail about how these work (I'm trying to throw together a
+more complete post about just Pratt parsers later), but the important bit is
+that the grammar being parsed is decoupled from the core parsing code.
+
+[Recursive descent][54] parsers have a fixed set of functions representing
+each grammar production. If you're using [yacc][55] or [bison][56], you'll
+have an entirely separate offline process that generates code for your grammar
+and bakes it in. But with this, our grammar is just a collection of objects.
+If we toss a new instance of `PrefixParser` or `InfixParser` into the grammar
+dictionary, we've just extended the syntax of the language.
+
+   [54]: http://en.wikipedia.org/wiki/Recursive_descent
+   [55]: http://dinosaur.compilertools.net/
+   [56]: http://www.gnu.org/software/bison/
+
+## Exposing this to Magpie
+
+This gets us partway there. Now we've got a simple architecture that lets us
+decouple the grammar into separate objects. This is a worthwhile exercise in
+itself because it makes the parsing code written in Java less monolithic, but
+you still have to hack Java code and rebuild the interpreter to extend the
+syntax. Lame.
+
+To fix that, we'll build a shim. What we need is a Java object that implements
+`PrefixParser` or `InfixParser` but which actually runs Magpie code to do the
+parsing. I'll pick infix here just 'cause. It looks like this:
+
+
+
+    private static class MagpieInfixParser extends InfixParser {
+      public MagpieInfixParser(Interpreter interpreter, Obj parser) {
+        mInterpreter = interpreter;
+        mParser = parser;
+      }
+
+      public Expr parse(MagpieParser parser, Expr left, Token token) {
+        // Wrap the Java parser in a Magpie one.
+        Obj parserObj = mInterpreter.instantiate(
+            mInterpreter.getMagpieParserClass(), parser);
+        Obj exprObj = JavaToMagpie.convert(mInterpreter, left);
+        Obj tokenObj = JavaToMagpie.convert(mInterpreter, token);
+        Obj arg = mInterpreter.createTuple(
+            parserObj, exprObj, tokenObj);
+
+        // Let the Magpie code do the parsing.
+        Obj expr = mInterpreter.invokeMethod(mParser, "parse", arg);
+
+        // Marshall it back to Java format.
+        return MagpieToJava.convertExpr(mInterpreter, expr);
+      }
+
+      public int getStickiness() {
+        return mInterpreter.getMember(Position.none(),
+            mParser, "stickiness").asInt();
+      }
+
+      private Interpreter mInterpreter;
+      private Obj mParser;
+    }
+
+
+There are a couple of important bits here. The `Obj` class is the core class
+in the interpreter that represents a Magpie object. If `Object` is any object
+in Java land, `Obj` is any object in Magpie land.
+
+`Interpreter` is exactly what it sounds like: the class that represents a live
+Magpie interpreter. It keeps track of variables and provides helper functions
+for executing code.
+
+There are two static classes, `MagpieToJava` and `JavaToMagpie`. Their job is
+to marshall objects between the two languages. They convert from Magpie `Obj`
+instances to instances of appropriate "real" Java classes and back.
+
+Given that, the shim's job is dead simple. When you call `parse` on the
+`MagpieInfixParser` object, it just translates the arguments to Magpie and
+invokes a `parse` method on its Magpie-side sister object. It gets the result
+back (an expression) and marshalls that back to Java and returns it.
+
+## The Other Side of the Glass
+
+Over in Magpie, it looks like this:
+
+
+
+    class AndParser
+        def parse(parser MagpieParser, left Expression,
+                  token Token -> Expression)
+            // Ignore a newline after "and".
+            parser matchToken(TokenType line)
+            var right = parser parseExpression(stickiness)
+            { do
+                var temp__ = `left
+                match temp__ true?
+                    case true then `right
+                    else temp__
+                end
+            end }
+        end
+
+        get stickiness Int = 30
+    end
+
+    MagpieParser registerInfixParser("and", AndParser new())
+
+
+The Magpie side of the parser is just a class with a `parse` method. The first
+two lines parse the rest of the expression (the left-hand side of the operator
+will have already been parsed and gets passed in as `left`). Then the last bit
+in curly braces shows another neat feature of Magpie: [quotations][57].
+
+   [57]: http://magpie.stuffwithstuff.com/objects/quotations.html
+
+Like the Lisp languages, Magpie lets you treat code as data, and has classes
+to let you build objects that represent bits of code. Doing that manually is
+kind of lame though:
+
+
+
+    CallExpression new(MessageExpression(name: "+"),
+        TupleExpression new(List of(
+            IntExpression new(1), IntExpression new(2))))
+
+
+Quotations let you write that out just like it would appear in code:
+
+
+
+    { 1 + 2 }
+
+
+If you surround an expression in curlies, you'll get an object representing
+the expression back, instead of evaluating it. Inside a quotation, you can
+unquote using a backquote character (```), which is like string interpolation
+but at the code level, not textual. That way you can build chunks of code
+declaratively and fill in the blanks with dynamically-generated stuff.
+
+So the parser class here returns that last quotation, which contains a `match`
+expression (Magpie has full destructuring pattern matching, and that _is_ one
+of the core primitive parts of the language).
+
+Finally, the call to `registerInfixParser` just takes that object and passes
+it over to Java. That's where we wrap it in the shim class and toss it into
+the grammar dictionary.
+
+Once this parser is all hooked up, when an `and` is encountered, the parser
+will desugar it to a little pattern match that does the right thing. In other
+words, if you type:
+
+
+
+    happy and know(it)
+
+
+It will expand to:
+
+
+
+    do
+        var temp__ = happy
+        match temp__ true?
+            case true then know(it)
+            else temp__
+        end
+    end
+
+
+That looks a little weird, but if you think about it, it does the right thing.
+If `happy` is truthy, it will return `know(it)`. Otherwise, it will short-
+circuit and return just `happy`.
+
+## But That's Too Hard!
+
+Now we can extend the syntax from Magpie, which is cool. But I gotta admit,
+that `AndParser` class is a bit hairy, even with quotations in there. Let's
+say I want to make a `~*` operator that repeats a string a given number of
+times. Do I have to write a whole class just to do that?
+
+The answer is "no", of course. If you just want an infix operator that
+desugars to a function call, look no further than:
+
+
+
+    definfix ~* 60 (left String, count Int -> String)
+        var result = ""
+        for i = 1 to(count) do result = result ~ left
+        result
+    end
+
+
+Here `60` defines the precedence level so it knows how to parse our new
+operator if you're crazy enough to mix it in with others without parentheses.
+Now when the parser encounters:
+
+
+
+    "Beetlejuice " ~* 3
+
+
+It will transform that to a call to:
+
+
+
+    ~*("Beetlejuice ", 3)
+
+
+You may be wondering where `definfix` comes from. Why, it's a custom parser
+[written in Magpie][58], of course! Turtles all the way down!
+
+   [58]: https://github.com/munificent/magpie/blob/master/base/syntax/OperatorParser.mag
+
+## OH NOES!
+
+I got all of this working and then ran into a real snag. Let's say we have
+some module that defines a new operator:
+
+
+
+    // In repeat.mag:
+    definfix ~* 60(left String, count Int -> String)
+        var result = ""
+        for i = 1 to(count) do result = result ~ left
+        result
+    end
+
+
+Then we want to import it and use it in another one:
+
+
+
+    // In summon-ghost.mag:
+    import("repeat.mag")
+
+    print("Beetlejuice " ~* 3)
+
+
+Do you see the problem? Let's walk through how most interpreters (including
+Magpie) handle this:
+
+  1. The user runs `magpie summon-ghost.mag`.
+  2. The interpreter starts up.
+  3. It reads `summon-ghost.mag` and parses it.
+  4. It starts interpreting it…
+  5. It evaluates the `import` and parses and runs `repeat.mag`
+  6. It evaluates the `print("Beetlejuice " ~* 3)` line.
+
+Crap. It parses _all_ of `summon-ghost.mag` before it has had a chance to
+evaluate the `import` and actually define the operator we need to parse. So
+the parser is going to hit `~*` and not know what to do with it.
+
+But, a clever solution appears! It turns out that when Magpie is parsing the
+top level of a file, it returns a list of expressions. In other words, a
+Magpie program isn't a single giant block expression, it's a flat list of
+distinct ones. (Each expression in that list may be arbitrarily big and
+nested, of course, but at the top level, it's a list.)
+
+This gives us an opening to fix this little problem. It can parse and evaluate
+each expression in a file _incrementally_. Getting this working was actually
+[a tiny code change][59] and means you can now extend the syntax _and then use
+that extension immediately in the same file_. This is perfectly valid:
+
+
+       [59]: https://github.com/munificent/magpie/commit/bffe49291e9709b5bfc960420fcc6f5a4b1614bd
+
+    definfix ~* 60(left String, count Int -> String)
+        var result = ""
+        for i = 1 to(count) do result = result ~ left
+        result
+    end
+
+    print("Beetlejuice " ~* 3)
+
+
+The only limitation is that you have to do this at the top-level. Given that
+most languages don't let you do _any_ of this, that doesn't seem like too much
+to give up. In return, we can make the language dramatically more powerful at
+building internal DSLs, and the core language itself becomes _simpler_.
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][60]][61]
+
+   [60]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [61]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

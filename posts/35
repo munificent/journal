@@ -1,0 +1,457 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Future-proofing, Uniform Access, and Masquerades][39]
+
+   [39]: http://journal.stuffwithstuff.com/2010/09/18/futureproofing-uniform-access-and-masquerades/ (Future-proofing, Uniform Access, and Masquerades)
+
+[c#][40] | [code][41] | [java][42] | [language][43] | [magpie][44] [2010][45]
+/ [09][46] / [18][47]
+
+   [40]: http://journal.stuffwithstuff.com/category/c/ (View all posts in c#)
+   [41]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [42]: http://journal.stuffwithstuff.com/category/java/ (View all posts in java)
+   [43]: http://journal.stuffwithstuff.com/category/language/ (View all posts in language)
+   [44]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts in magpie)
+   [45]: http://journal.stuffwithstuff.com/2010/ (year)
+   [46]: http://journal.stuffwithstuff.com/2010/09/ (month)
+   [47]: http://journal.stuffwithstuff.com/2010/09/18/
+
+Take a look at this Java code:
+
+
+
+    public class Person {
+        public String name;
+        public int age;
+    }
+
+
+Does it make you cringe a little bit? If so, I'm guessing it's because those
+fields aren't wrapped in nice getters and setters.
+
+But why do that? What if we want them to be mutable and don't have any
+validation or logic to perform when they change? Isn't simpler better? The
+answer, of course, is that just because we don't need that _now_, that doesn't
+mean we won't need them _later_.
+
+I think of this kind of speculative defensive coding as _future-proofing_, and
+it drives me crazy that I have to do it. Eventually, this post will get around
+to being about [Magpie][48], but I hope that there is food for thought here
+even if you never take an interest in that little language.
+
+   [48]: http://bitbucket.org/munificent/magpie
+
+### Some More Examples
+
+Before we really get going, let me show you a couple of other common future-
+proofing practices I see.
+
+#### Hide constructors behind factories
+
+Java loves this one:
+
+
+
+    class PersonFactory {
+        public Person create() {
+            return new Person();
+        }
+    }
+
+    void doSomething(PersonFactory factory) {
+        Person person = factory.create();
+        // ...
+    }
+
+
+Assuming you can dodge the infinite regress of
+`FactoryFactoryFactoryFactories`, this helps abstract out the places where you
+call a constructor directly. Wrapping that behind a factory lets you swap out
+the concrete class being constructed.
+
+#### Hide classes behind interfaces
+
+This pattern looks like this (here in C#, where its most applicable):
+
+
+
+    interface IPerson
+    {
+        string Name { get; set; }
+        int    Age  { get; set; }
+    }
+
+    class Person : IPerson
+    {
+        public string Name { get; set; }
+        public int    Age  { get; set; }
+    }
+
+    void DoSomethingWithPerson(IPerson person)
+    {
+        // ...
+    }
+
+
+All of your concrete classes get squirrelled away and you only ever visibly
+deal with the interface types. I've seen entire codebases designed around
+this.
+
+This lets us swap out our use of `Person` with some other concrete class that
+implements the same interface. This can be really helpful for replacing
+concrete classes with [mocks][49] for unit testing, which can otherwise be
+tricky in C# and C++ where methods default to non-virtual.
+
+   [49]: http://en.wikipedia.org/wiki/Mock_object
+
+### Why Do We Do This?
+
+If all of this seems like a pain in the ass with little benefit,
+congratulations, you've just earned your "Feel Superior to Enterprise OOP
+Programmers" merit badge. Your complimentary Ruby T-shirt should be arriving
+in the mail shortly. It _is_ a pain. Actually, it's worse than a pain, it's
+_boring_. Boring work should be a cardinal sin in programming: it indicates
+something that the computer _should_ be doing but isn't.
+
+So why do we end up writing this kind of code all the time? There are plenty
+of other speculative things we could do now that we manage to shrug off by
+claiming [YAGNI][50]. What's special about the examples I listed?
+
+   [50]: http://c2.com/xp/YouArentGonnaNeedIt.html
+
+Let's say we _don't_ futureproof. Say we use public fields everywhere. Then
+later we realize we do need to validate the field. What will we have to do to
+make that change?
+
+### Depth Not Volume
+
+What's easier: changing a hundred lines of code in one file, or changing one
+line of code in a hundred files? The former you can do before lunch. The
+latter means you might need to call a meeting, coordinate with teams, slap
+some [deprecated annotations][51] on things, plan a release, aww hell just
+give up.
+
+   [51]: http://download.oracle.com/javase/1.5.0/docs/guide/javadoc/deprecation/deprecation.html
+
+Making non-local changes _hurts_. It hurts badly enough that a lot of our core
+ideas about good software engineering, things like coupling and cohesion,
+exist in part to localize stuff to minimize that hurt.
+
+We futureproof not to minimize the _amount_ of change we'll need to do in the
+future but to minimize the _width_ of change we'll have to do. Ask yourself
+this: how often do you apply defensive practices inside the bodies of methods
+compared to in the public signature of a type?
+
+### The Uniform Access Principle
+
+Now we get to the heart of the problem. What's special about these examples
+that causes them to lead to _wide_ changes? The key issue is that making any
+of the changes described touches _every callsite_. If you change a field to a
+getter in Java, you'll have to touch every place that field is mentioned. If
+you hide a constructor behind a factory, you'll be grepping for every `new` in
+your codebase. In C#, if you decide to replace every mention of a class with
+an interface, you'll at the very least have to change the name.
+
+The problem here is that these examples violate what Bertrand Meyer calls the
+[uniform access principle][52]. In Java, accessing a field is fundamentally
+syntactically different from calling a getter. If you go from one to the
+other, each callsite has to change. According to Meyer, that's because access
+to fields and calculated values isn't _uniform_.
+
+   [52]: http://en.wikipedia.org/wiki/Uniform_access_principle
+
+### Properties
+
+Most other languages in wide use today have addressed that problem. Python,
+Ruby, C#, and Javascript support "properties": things that _look_ like fields
+but behave like functions. This means you can transparently switch between the
+two without affecting every callsite. You no longer need to futureproof them.
+Java, as always, is like Chunk in The Goonies, struggling to keep up with the
+rest of the gang.
+
+(Caveat: fields and properties are _source_ compatible in C#, but not _binary_
+compatible, which is why you'll see many C# programmers always wrapping fields
+in properties.)
+
+### Constructors and Factories
+
+One of the things that got me thinking about this idea was [this recent
+post][53]. The author painted himself into a corner by not futureproofing: he
+was calling a constructor directly but now needed it to construct a different
+class. Worse, the callsite was outside of code he had control over.
+
+   [53]: http://blog.hackensplat.com/2010/09/construct-something-else-c.html
+
+Meyer's idea of uniform access to fields is really a small piece of a larger
+idea: Can users define their own abstractions that are syntactically identical
+to built-in behavior? Can we swap out default language-provided behavior with
+our own logic without having to change the calling convention?
+
+Unfortunately, this is a case where the answer is "no." In all of the dominant
+static OOP languages, calling `new` will always return an instance of a fixed
+class. There's no way to replace it with our own logic. We're stuck with
+factories.
+
+### Interfaces and Classes
+
+The other example is a messier problem. What does it mean to later replace
+references to a class with references to an interface? In C#, at the least
+you'll be adding `I` to the name everywhere, but there are likely other
+changes involved too: calls to static methods on the class will need to be
+refactored, and any place where you're calling a constructor will need to be
+changed somehow. This is a sticky problem to get tangled up in after the fact.
+
+Again, C# and simliar languages don't give you much help here. Of course,
+dynamic languages like Ruby and Python _do_ have you covered. If there's no
+type annotations to begin with, duck typing lets you swap things out all you
+want. Go to town!
+
+### How Magpie Approaches This (Or How it _Will_ Once it's All Implemented)
+
+I look at the dynamic solution as throwing out the baby with the bathwater. I
+really like type-checking. It sucks to have to discard it completely just to
+avoid having to do some boring future-proofing. Can we keep the type-checking
+and still solve the above two problems? I think so.
+
+#### Constructors and Factories
+
+Constructors are the easy one. Magpie has no special syntax for constructors.
+`new` is just a method you call on a class object:
+
+
+
+    var bob = Person new("Bob")
+
+
+If you later decide you need that to construct a different type, you can
+always swap out the method:
+
+
+
+    Person defineMethod("rawNew", Person getMethod("new"))
+    def Person new(name)
+        // don't want to create a person...
+        Dude new(name)
+    end
+
+
+To be honest, though, that's kinda gross. Try not to do that. A better
+solution really is to use a factory here: some object that you can swap out
+that will create people. Fortunately, Magpie makes this a bit easier too: a
+class _is_ a factory:
+
+
+
+    var makeSomeone(name, factory)
+        factory new(name)
+    end
+
+    makeSomeone("Bob", Person) // makes a person
+    makeSomeone("Bob", Hero)   // makes a hero
+
+
+Since classes are first, uh, class, you can just pass them around and use them
+like factories as-is. Because they're also instances of a class (their
+metaclass), they can even implement interfaces:
+
+
+
+    interface NamedFactory
+        new(name String)
+    end
+
+
+Now any class that has a constructor that takes a string will implicitly
+implement that interface. You get type-safe factories without having to
+actually create separate special factory classes.
+
+#### Classes and Mocks
+
+The other example problem is a little trickier. You have a concrete class that
+you're using everywhere and you realize later that you actually need to swap
+it out. One solution is to subclass the concrete class but that always feels
+dirty to me in Java. If I'm creating a mock class, I don't actually want to
+reuse any of the code from the base class, so why am I inheriting it?
+
+Instead, Magpie has (will have) a relatively simple feature called
+_masquerades_. Say we have a concrete class like:
+
+
+
+    class Person
+        this (name)
+            this name = name
+        end
+
+        greet() print("Hi, I'm " + name)
+    end
+
+
+We're using it like this:
+
+
+
+    var greetEachOther(a Person, b Person)
+        a greet
+        b greet
+    end
+
+
+In most static languages, since `greetEachOther` is typed to expect instances
+of the concrete `Person`, the only other option you have is passing in a
+subclass. Magpie gives you another alternative. Here's the class we want to
+use in place of a person:
+
+
+
+    class Robot
+        name = "Robot"
+
+        greet() print("Greetings, fleshy human.")
+    end
+
+
+This class has no relation to `Person` in the class hierarchy. But it _does_
+happen to have all of the methods that `Person` has. If there was some
+hypothetical `IPerson` interface that `Person` implemented, `Robot` would
+implement it too. Masquerades let us approximate that. You can ask an object
+of one type to masquerade as another. As long as they have compatible methods,
+it will succeed, _even though both types are concrete and unrelated_:
+
+
+
+    var main(->)
+        var robot = Robot new
+        // robot's type is Robot
+        var imposter = robot masqueradeAs[Person]
+        // imposter's type is Person but is still a reference to robot
+        // and this is now type-safe:
+        greetEachOther(Person new("Bob"), imposter)
+    end
+
+
+As far as I know, this is a novel feature in programming languages, but I
+think it's a useful one. I would definitely appreciate any feedback on it
+either way, though.
+
+### Wrap it Up
+
+One of the idea I've been following with the design of Magpie without
+realizing it is to try to maximize this uniform access principle. As much as
+possible, you should be able to write the code _today_ for the problems you
+have _today_. You shouldn't need to waste time futureproofing. It's the
+language's job to be flexible enough to handle that. Making sure that the
+built-in language constructs are syntactically compatible with user-defined
+abstractions is one important piece for doing that.
+
+As a nice side-effect, it makes the language more consistent and gives more
+power to users. There's less "well the built-in stuff can do that, but you
+can't." That, to me, is a sign of a good language.
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][54]][55]
+
+   [54]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [55]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

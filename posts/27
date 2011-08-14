@@ -1,0 +1,373 @@
+# [journal.
+
+stuffwithstuff.com][1]
+
+   [1]: http://journal.stuffwithstuff.com/
+
+## me
+
+  * [bob nystrom][2] is me
+  * [bitbucket][3] has code
+  * [github][4] has code
+  * [flickr][5] has photos
+  * [twitter][6] has status
+  * [vimeo][7] has video
+
+   [2]: http://www.stuffwithstuff.com/bob-nystrom.html
+   [3]: http://bitbucket.org/munificent/
+   [4]: http://github.com/munificent/
+   [5]: http://www.flickr.com/photos/bobisbob/
+   [6]: http://twitter.com/munificentbob
+   [7]: http://vimeo.com/bobisbob
+
+## archives
+
+  * [2011][8]
+  * [2010][9]
+  * [2009][10]
+  * [2008][11]
+
+   [8]: http://journal.stuffwithstuff.com/2011/ (2011)
+   [9]: http://journal.stuffwithstuff.com/2010/ (2010)
+   [10]: http://journal.stuffwithstuff.com/2009/ (2009)
+   [11]: http://journal.stuffwithstuff.com/2008/ (2008)
+
+## tags
+
+  * [blog][12] (2)
+  * [c#][13] (13)
+  * [code][14] (48)
+  * [cpp][15] (7)
+  * [design][16] (3)
+  * [f#][17] (2)
+  * [finch][18] (3)
+  * [game-dev][19] (6)
+  * [game-patterns][20] (3)
+  * [go][21] (2)
+  * [jasic][22] (1)
+  * [java][23] (10)
+  * [javascript][24] (3)
+  * [language][25] (29)
+  * [magpie][26] (19)
+  * [optimization][27] (1)
+  * [oscon][28] (1)
+  * [parsing][29] (7)
+  * [politics][30] (1)
+  * [python][31] (2)
+  * [roguelike][32] (2)
+  * [ruby][33] (1)
+  * [sml][34] (1)
+  * [visualization][35] (1)
+
+   [12]: http://journal.stuffwithstuff.com/category/blog/ (View all posts filed under blog)
+   [13]: http://journal.stuffwithstuff.com/category/c/ (View all posts filed under c#)
+   [14]: http://journal.stuffwithstuff.com/category/code/ (View all posts filed under code)
+   [15]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts filed under cpp)
+   [16]: http://journal.stuffwithstuff.com/category/design/ (View all posts filed under design)
+   [17]: http://journal.stuffwithstuff.com/category/f/ (View all posts filed under f#)
+   [18]: http://journal.stuffwithstuff.com/category/finch/ (View all posts filed under finch)
+   [19]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts filed under game-dev)
+   [20]: http://journal.stuffwithstuff.com/category/game-patterns/ (View all posts filed under game-patterns)
+   [21]: http://journal.stuffwithstuff.com/category/go/ (View all posts filed under go)
+   [22]: http://journal.stuffwithstuff.com/category/jasic/ (View all posts filed under jasic)
+   [23]: http://journal.stuffwithstuff.com/category/java/ (View all posts filed under java)
+   [24]: http://journal.stuffwithstuff.com/category/javascript/ (View all posts filed under javascript)
+   [25]: http://journal.stuffwithstuff.com/category/language/ (View all posts filed under language)
+   [26]: http://journal.stuffwithstuff.com/category/magpie/ (View all posts filed under magpie)
+   [27]: http://journal.stuffwithstuff.com/category/optimization/ (View all posts filed under optimization)
+   [28]: http://journal.stuffwithstuff.com/category/oscon/ (View all posts filed under oscon)
+   [29]: http://journal.stuffwithstuff.com/category/parsing/ (View all posts filed under parsing)
+   [30]: http://journal.stuffwithstuff.com/category/politics/ (View all posts filed under politics)
+   [31]: http://journal.stuffwithstuff.com/category/python/ (View all posts filed under python)
+   [32]: http://journal.stuffwithstuff.com/category/roguelike/ (View all posts filed under roguelike)
+   [33]: http://journal.stuffwithstuff.com/category/ruby/ (View all posts filed under ruby)
+   [34]: http://journal.stuffwithstuff.com/category/sml/ (View all posts filed under sml)
+   [35]: http://journal.stuffwithstuff.com/category/visualization/ (View all posts filed under visualization)
+
+## info
+
+  * [famfamfam][36] provides icons
+  * [RSS][37] syndicates me
+  * [WordPress][38] powers me
+
+   [36]: http://famfamfam.com/lab/icons/silk/
+   [37]: feed:http://journal.stuffwithstuff.com/feed/
+   [38]: http://wordpress.org/
+
+## [Fibers: Coroutines in Finch][39]
+
+   [39]: http://journal.stuffwithstuff.com/2010/07/13/fibers-coroutines-in-finch/ (Fibers: Coroutines in Finch)
+
+[code][40] | [cpp][41] | [finch][42] | [game-dev][43] | [language][44]
+[2010][45] / [07][46] / [13][47]
+
+   [40]: http://journal.stuffwithstuff.com/category/code/ (View all posts in code)
+   [41]: http://journal.stuffwithstuff.com/category/cpp/ (View all posts in cpp)
+   [42]: http://journal.stuffwithstuff.com/category/finch/ (View all posts in finch)
+   [43]: http://journal.stuffwithstuff.com/category/game-dev/ (View all posts in game-dev)
+   [44]: http://journal.stuffwithstuff.com/category/language/ (View all posts in language)
+   [45]: http://journal.stuffwithstuff.com/2010/ (year)
+   [46]: http://journal.stuffwithstuff.com/2010/07/ (month)
+   [47]: http://journal.stuffwithstuff.com/2010/07/13/
+
+With [this][48] surprisingly straightforward [commit][49], I've accomplished
+something I've wanted to do for a long time: I've implemented [coroutines][50]
+in a programming language. I call them [fibers][51] in Finch, mainly for
+brevity, but the idea is the same. Since I think coroutines are both really
+cool and not very well known, I thought it would be worthwhile to show how
+they work in Finch and why I added them.
+
+   [48]: http://bitbucket.org/munificent/finch/changeset/1ae1817c9f23
+   [49]: http://mercurial.selenic.com/wiki/Commit
+   [50]: http://en.wikipedia.org/wiki/Coroutine
+   [51]: http://en.wikipedia.org/wiki/Fiber_%28computer_science%29
+
+If you like textbook definitions, here's one for you:
+
+> Fibers are a lightweight cooperative multi-tasking construct that let you
+swich between multiple flows of execution.
+
+If you're familiar with threads this might explain it better: Imagine a system
+where all of your threads run at the highest priority so that when one thread
+is running, all others get _zero_ CPU time. In that scenario, the only way
+another thread can execute is if the running one explicitly calls `sleep()`.
+Now imagine that a call to `sleep()` requires an argument: the next thread to
+take over when this one sleeps. Now you've got the idea.
+
+### Some Code
+
+I can only read about two paragraphs in a blog post without code before I get
+bored, so here's some:
+
+
+
+    ' create a fiber
+    fiber <- Fiber new: {
+        writeLine: "fiber started"
+        Fiber yield
+        writeLine: "fiber resumed"
+    }
+
+    ' transfer control from this fiber (the main one) to it
+    writeLine: "main started"
+    fiber run
+    writeLine: "main resumed"
+    fiber run
+    writeLine: "done"
+
+
+If you run this, it outputs:
+
+
+
+    main started
+    fiber started
+    main resumed
+    fiber resumed
+    done
+
+
+The two fibers interleave together like dance partners. There are three
+important steps in this tango. First off, we need to create a fiber. The fiber
+constructor, `Fiber new:` takes one argument, the block that makes up the body
+of the fiber and returns a new fiber. Note that it _doesn't_ start the fiber
+running. The new fiber is just standing off the dancefloor patiently waiting
+to catch the eye of a partner.
+
+Once you have some fibers, there are two methods to transfer control between
+them. The first one is `run`:
+
+
+
+    someFiberObj run
+
+
+When you send that message to a fiber object, it starts running and the
+current fiber pauses.
+
+The sister to `run` is `yield`:
+
+
+
+    Fiber yield
+
+
+That pauses the current fiber and transfers control _back_ to the fiber that
+ran this one.
+
+The _only_ difference between `run` and `yield` is that `run` is called
+directly on a fiber object to control which fiber to switch to where `yield`
+implicitly switches to whatever fiber previously started this one. (In fact,
+if you look at the code, you'll see they're both implemented in terms of a
+single `switchToFiber:` primitive.)
+
+### Communication
+
+That's the basic system, but there's one more handy feature mixed in: you can
+pass data between fibers when you switch control. In addition to `Fiber
+yield`, there is also `Fiber yield:` which takes a single argument. The value
+passed to that will be sent back to the resuming fiber as the return value
+from the call to `run`. An example will really help here:
+
+
+
+    fiber <- Fiber new: {
+      Fiber yield: "a marmot"
+    }
+
+    result <- fiber run
+    writeLine: result
+
+
+That will print out "a marmot", as you'd hope. When you call `run`, the time
+stops in that fiber. It doesn't resume until the fiber you ran yields. When
+the clock starts again, the call to `run` finally completes, returning the
+value passed to `yield:`.
+
+This may remind you of [generators][52] in Python or [iterators][53] in C#.
+Coroutines are a superset of both of those, so now Finch has generators too.
+Unlike generators or iterators, communication also works going the other
+direction. You can pass data _to_ a fiber when you run it like this:
+
+
+       [52]: http://www.python.org/dev/peps/pep-0255/
+   [53]: http://msdn.microsoft.com/en-us/library/9k7k7cf0%28VS.80%29.aspx
+
+    fiber <- Fiber new: {
+      result <- Fiber yield
+      writeLine: result
+    }
+
+    fiber run
+    fiber run: "a dingo"
+
+
+An extra call to `run` is needed here at the beginning. That runs the fiber up
+to the first `yield`, which returns control back. Like in our previous
+example, time stops for the fiber in the middle of its call to `yield`. The
+second `run:` resumes the fiber, passing in a value which becomes the return
+value for the `yield` method.
+
+That probably sounds a little confusing. Play around with it a bit and it'll
+make more sense.
+
+### Why is this Cool?
+
+The reason I like coroutines is that they're a perfect fit for simulating
+multiple entities simultaneously. And by that I mean _games_. In most games,
+you've got a bunch of stuff going on at the same time: multiple enemies
+walking around, the player, various projectiles and special effects, etc.
+
+The way that's typically implemented is the game loop gives each actor a tiny
+slice of time each turn. Each entity will have an `Update()` that takes one
+step and then returns, so a monster that just patrols back and forth, waiting
+a bit at each end will have something like:
+
+
+
+    Patroller::Update() {
+        switch (state_) {
+            case WALK_LEFT:
+                x_ -= WALK_SPEED;
+                if (x_ <= MIN_X) {
+                    state_ = WAIT_LEFT;
+                    wait_ = WAIT_FRAMES;
+                }
+                break;
+
+            case WAIT_LEFT:
+                wait_--;
+                if (wait_ == 0) state_ = WALK_RIGHT;
+                break;
+
+            case WALK_RIGHT:
+                x_ += WALK_SPEED;
+                if (x_ >= MAX_X) {
+                    state_ = WAIT_RIGHT;
+                    wait_ = WAIT_FRAMES;
+                }
+                break;
+
+            case WAIT_RIGHT:
+                wait_--;
+                if (wait_ == 0) state_ = WALK_LEFT;
+                break;
+        }
+    }
+
+
+You can see that the logic has to be split up into separate pieces and a bunch
+of data (`state_`, `wait_`) has to be pushed into member variables so that it
+persists across frames. It's harder to tell what the intent of the behavior is
+even in this absolutely trivial example. Imagine what it's like when the
+entity is trying to walk a complex path or follow some strategy.
+
+If your system supports coroutines, you've got a much easier way to do this:
+simply spin up a fiber for each entity and have them yield once per turn. Our
+above behavior turns into:
+
+
+
+    Patroller prototype :: behavior {
+        ' walk left
+        from: MaxX to: MinX do: {|x|
+            _x <- x
+            Fiber yield
+        }
+
+        ' wait
+        from: 1 to: WaitTime do: { Fiber yield }
+
+        ' walk right
+        from: MinX to: MaxX do: {|x|
+            _x <- x
+            Fiber yield
+        }
+
+        ' wait
+        from: 1 to: WaitTime do: { Fiber yield }
+    }
+
+
+Even better, because fibers maintain their own entire callstacks, you can
+switch between them even from within other function calls. This lets us
+refactor code that uses them into smaller functions, so the above would likely
+be something like:
+
+
+
+    Patroller prototype :: behavior {
+        self walkFrom: MaxX to: MinX
+        self wait: WaitTime
+        self walkFrom: MinX to: MaxX
+        self wait: WaitTime
+    }
+
+    Patroller prototype :: walkFrom: a to: b {
+        from: a to: b do: {|x|
+            _x <- x
+            Fiber yield
+        }
+    }
+
+    Patroller prototype :: wait: frames {
+        from: 1 to: WaitTime do: { Fiber yield }
+    }
+
+
+Now our top-level code for patrolling is practically pseudocode for what we
+want the entity to do. Pretty swell!
+
+Discuss this at one of the sites below (or another of your choice):
+
+[ ![][54]][55]
+
+   [54]: http://cdn.stumble-upon.com/images/120x20_su_white.gif
+   [55]: http://www.stumbleupon.com/submit?url=http://journal.stuffwithstuff.com%26title%3DThe%2BArticle%2BTitle
+
+If you want to contact me directly, feel free to email at "name@site" where
+"name" is "robert" and "site" is "stuffwithstuff.com".
+
+(C) 2008-2009 Robert Nystrom
+
+

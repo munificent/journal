@@ -1,0 +1,341 @@
+/* Global style variables */
+
+$lucida:              'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+$georgia:             Georgia, serif;
+$shanti:              'Shanti', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+
+$header:              $georgia;
+$serif:               $georgia;
+$sans:                $lucida;
+$monospace:           Courier, monospace;
+
+$header-color:        #333;
+$h1-color:            $header-color;
+$h2-color:            $header-color;
+$h3-color:            $header-color;
+$h4-color:            $header-color;
+
+$content-bg:          #f4f4f4;
+$text-color:          #333;
+
+$link:                hsl(110, 100%, 30%);
+$link-hover-bg:       mix($content-bg, $link, 90%);
+
+$tag-color:           #888;
+$tag-bg:              mix($content-bg, $text-color, 90%);
+
+$code-bg:             #e4e4e4;
+$code-color:          #666;
+
+$quote-bg:            #fff;
+$quote-color:         #444;
+$quote-color-light:   lighten($quote-color, 20%);
+
+$update-bg:           hsl(40, 80%, 95%);
+$update-color:        hsl(40, 40%, 50%);
+$update-color-light:  lighten($update-color, 20%);
+$update-color-dark:   darken($update-color, 10%);
+$update-color-darker: darken($update-color, 20%);
+
+$nav-title:           #666;
+$nav-bg:              #444;
+$nav-text:            #888;
+$nav-link:            #bbb;
+$nav-hover:           #eee;
+
+$pad:                 20px;
+
+@mixin code {
+  @include rounded;
+  background:     $code-bg;
+  border-radius:  4px;
+  font-family:    $monospace;
+  color:          $code-color;
+  overflow:       auto;
+}
+
+/* Generic functionality */
+
+@mixin rounded($radius: 6px) {
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+
+/* A block element that can contain <p> elements. */
+@mixin pbox {
+  @include rounded;
+  /* Trim the bottom padding since the last <p> within it will have padding on
+     the bottom. */
+  padding: $pad $pad 1px $pad;
+  margin-bottom: $pad;
+}
+
+/* Reset */
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
+acronym, address, cite, code, em, img, ins, q, s, samp, small, strike, strong,
+sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
+caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-spacing: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+em {
+  font-weight: bold;
+}
+
+/* Text styles */
+
+/* TODO:
+   - Edit insert boxes
+   - Tables
+*/
+
+body {
+  background: $content-bg;
+  color: $text-color;
+}
+
+/* Site layout */
+
+.top {
+  width: 100%;
+  height: 40px;
+  background: $nav-bg;
+}
+
+.header {
+  width: 100%;
+  background: $nav-bg;
+
+  h1 {
+    margin: 0 auto;
+    max-width: 640px;
+    font: normal 20px $monospace;
+    color: $nav-title;
+    padding: 10px;
+  }
+
+  a {
+    color: $nav-link;
+  }
+
+  a:hover {
+    color: $nav-hover;
+  }
+}
+
+.content {
+  margin: 0 auto;
+  padding: 0 0 10px 0;
+  max-width: 640px;
+
+  h1 {
+    font: normal 36px $header;
+    color: $h1-color;
+    padding: 40px 0 36px 0;
+  }
+
+  h2 {
+    font: normal 22px $header;
+    color: $h2-color;
+    margin: 24px 0 16px;
+    }
+
+  h3 {
+    font: italic 18px $header;
+    color: $h3-color;
+    margin: 24px 0 8px;
+  }
+
+  p {
+    font: normal 16px/24px $serif;
+    margin-bottom: $pad;
+  }
+
+  blockquote {
+    @include pbox;
+    background: $quote-bg;
+
+    p {
+      color: $quote-color;
+      font: italic 16px/24px $serif;
+    }
+
+    cite {
+      font: italic 14px/24px $serif;
+      color: $quote-color-light;
+      display: block;
+      margin: 8px 0 0 0;
+      text-align: right;
+
+      &:before {
+        content: '\2014\00A0';
+      }
+    }
+  }
+
+  a, a code {
+    color: $link;
+    text-decoration: none;
+  }
+
+  a:hover {
+    background: $link-hover-bg;
+  }
+
+  code {
+    @include code;
+    padding: 1px 3px;
+    font-size: 15px;
+  }
+
+  pre {
+    @include code;
+    margin-bottom: $pad;
+    padding: $pad;
+    font-size: 14px;
+    line-height: 22px;
+
+    code {
+      padding: 0;
+      font-size: 14px;
+    }
+  }
+
+  h4 {
+    font: normal 12px $sans;
+    color: $h4-color;
+    padding: 0 0 40px 0;
+    text-transform: lowercase;
+
+    a {
+      @include rounded(4px);
+      background: $tag-bg;
+      color: $tag-color;
+      padding: 1px 4px;
+    }
+  }
+}
+
+.update {
+  @include pbox;
+  background: $update-bg;
+
+  h1 {
+    font: normal 12px/20px $sans;
+    padding: 0;
+    color: $update-color-light;
+    margin: 0 0 4px 0;
+  }
+
+  p {
+    font: normal 14px/20px $sans;
+    color: $update-color;
+  }
+}
+
+.comments-bg {
+  width: 100%;
+  background: #fff;
+
+  .comments {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 20px 0;
+    font: normal 13px $sans;
+
+    a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
+      text-decoration: none;
+    }
+
+    a {
+      color: $link;
+    }
+
+    a:hover {
+      background: $link-hover-bg;
+    }
+  }
+}
+
+.bottom {
+  width: 100%;
+  padding: 0;
+  background: $nav-bg;
+
+  code {
+    font: 14px $monospace;
+  }
+
+  .columns {
+    margin: 0 auto;
+    max-width: 660px; // extra 10px on each side to absorb border spacing
+  }
+
+  table {
+    width: 100%;
+    border-spacing: 10px;
+
+    td {
+      width: 33%;
+      text-align: left;
+      vertical-align: top;
+      color: $nav-text;
+      font: normal 12px/20px $sans;
+    }
+
+    h1 {
+      font: normal 20px $monospace;
+      text-transform: lowercase;
+      margin: 10px 0 10px 0;
+      color: $nav-title;
+    }
+
+    h2 {
+      font: bold 14px/20px $sans;
+    }
+
+    h2, p, ul {
+      padding: 0 0 10px 0;
+    }
+  }
+
+  a {
+    color: $nav-link;
+  }
+
+  a:hover {
+    color: $nav-hover;
+  }
+}

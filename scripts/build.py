@@ -21,12 +21,20 @@ def format_file(path):
 
     basename = os.path.relpath(path, 'posts')
     basename = basename.split('.')[0]
-    print basename
 
-    utils.ensure_dir('html')
+    title = 'TITLE HERE'
+
+    # load the template page
+    post = open('templates/post.html', 'r').read()
+
+    # insert the content
+    post = post.replace('$(title)', title)
+    post = post.replace('$(content)', html)
 
     with codecs.open('html/%s.html' % basename, 'w', 'utf-8') as out:
-        out.write(html)
+        out.write(post)
+
+    print basename
 
 count = 0
 def do_format(path):
@@ -39,7 +47,7 @@ def do_format(path):
 utils.kill_dir('html')
 
 # copy over the static content
-#shutil.copytree('static', 'html')
+shutil.copytree('static', 'html')
 
 def strip_newline(line):
     return line.rstrip()

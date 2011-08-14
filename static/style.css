@@ -1,0 +1,214 @@
+/* Global style variables */
+/* Generic functionality */
+/* A block element that can contain <p> elements. */
+/* Reset */
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
+acronym, address, cite, code, em, img, ins, q, s, samp, small, strike, strong,
+sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
+caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-spacing: 0; }
+
+a {
+  text-decoration: none; }
+
+em {
+  font-weight: bold; }
+
+/* Text styles */
+/* TODO:
+   - Edit insert boxes
+   - Tables
+*/
+body {
+  background: #f4f4f4;
+  color: #333333; }
+
+/* Site layout */
+.top {
+  width: 100%;
+  height: 40px;
+  background: #444444; }
+
+.header {
+  width: 100%;
+  background: #444444; }
+  .header h1 {
+    margin: 0 auto;
+    max-width: 640px;
+    font: normal 20px Courier, monospace;
+    color: #666666;
+    padding: 10px; }
+  .header a {
+    color: #bbbbbb; }
+  .header a:hover {
+    color: #eeeeee; }
+
+.content {
+  margin: 0 auto;
+  padding: 0 0 10px 0;
+  max-width: 640px; }
+  .content h1 {
+    font: normal 36px Georgia, serif;
+    color: #333333;
+    padding: 40px 0 36px 0; }
+  .content h2 {
+    font: normal 22px Georgia, serif;
+    color: #333333;
+    margin: 24px 0 16px; }
+  .content h3 {
+    font: italic 18px Georgia, serif;
+    color: #333333;
+    margin: 24px 0 8px; }
+  .content p {
+    font: normal 16px/24px Georgia, serif;
+    margin-bottom: 20px; }
+  .content blockquote {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    /* Trim the bottom padding since the last <p> within it will have padding on
+       the bottom. */
+    padding: 20px 20px 1px 20px;
+    margin-bottom: 20px;
+    background: white; }
+    .content blockquote p {
+      color: #444444;
+      font: italic 16px/24px Georgia, serif; }
+    .content blockquote cite {
+      font: italic 14px/24px Georgia, serif;
+      color: #777777;
+      display: block;
+      margin: 8px 0 0 0;
+      text-align: right; }
+      .content blockquote cite:before {
+        content: '\2014\00A0'; }
+  .content a, .content a code {
+    color: #1a9900;
+    text-decoration: none; }
+  .content a:hover {
+    background: #deeadb; }
+  .content code {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: #e4e4e4;
+    border-radius: 4px;
+    font-family: Courier, monospace;
+    color: #666666;
+    overflow: auto;
+    padding: 1px 3px;
+    font-size: 15px; }
+  .content pre {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: #e4e4e4;
+    border-radius: 4px;
+    font-family: Courier, monospace;
+    color: #666666;
+    overflow: auto;
+    margin-bottom: 20px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 22px; }
+    .content pre code {
+      padding: 0;
+      font-size: 14px; }
+  .content h4 {
+    font: normal 12px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: #333333;
+    padding: 0 0 40px 0;
+    text-transform: lowercase; }
+    .content h4 a {
+      border-radius: 4px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      background: #e0e0e0;
+      color: #888888;
+      padding: 1px 4px; }
+
+.update {
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  /* Trim the bottom padding since the last <p> within it will have padding on
+     the bottom. */
+  padding: 20px 20px 1px 20px;
+  margin-bottom: 20px;
+  background: #fcf6e8; }
+  .update h1 {
+    font: normal 12px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    padding: 0;
+    color: #d1bd94;
+    margin: 0 0 4px 0; }
+  .update p {
+    font: normal 14px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: #b3914d; }
+
+.comments-bg {
+  width: 100%;
+  background: #fff; }
+  .comments-bg .comments {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 20px 0;
+    font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    .comments-bg .comments a.dsq-subscribe-email em, .comments-bg .comments a.dsq-subscribe-rss em {
+      text-decoration: none; }
+    .comments-bg .comments a {
+      color: #1a9900; }
+    .comments-bg .comments a:hover {
+      background: #deeadb; }
+
+.bottom {
+  width: 100%;
+  padding: 0;
+  background: #444444; }
+  .bottom code {
+    font: 14px Courier, monospace; }
+  .bottom .columns {
+    margin: 0 auto;
+    max-width: 660px; }
+  .bottom table {
+    width: 100%;
+    border-spacing: 10px; }
+    .bottom table td {
+      width: 33%;
+      text-align: left;
+      vertical-align: top;
+      color: #888888;
+      font: normal 12px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    .bottom table h1 {
+      font: normal 20px Courier, monospace;
+      text-transform: lowercase;
+      margin: 10px 0 10px 0;
+      color: #666666; }
+    .bottom table h2 {
+      font: bold 14px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    .bottom table h2, .bottom table p, .bottom table ul {
+      padding: 0 0 10px 0; }
+  .bottom a {
+    color: #bbbbbb; }
+  .bottom a:hover {
+    color: #eeeeee; }

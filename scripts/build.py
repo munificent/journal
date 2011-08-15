@@ -3,6 +3,7 @@
 import codecs
 import glob
 import markdown
+import re
 import os
 import shutil
 from datetime import datetime
@@ -17,7 +18,16 @@ def format_file(path):
     with codecs.open(path, 'r', 'utf-8') as input:
         contents = input.read()
 
-    html = markdown.markdown(contents, ['def_list', 'codehilite'])
+    front, body = contents.split('\n---\n')
+
+    # Parse the metadata
+    fields = {}
+    for line in front.split('\n'):
+        print line
+        name, value = re.match('(\w+)\s*=\s*(.+)', line).groups()
+        fields[name] = value
+
+    html = markdown.markdown(body, ['def_list', 'codehilite'])
 
     basename = os.path.relpath(path, 'posts')
     basename = basename.split('.')[0]
@@ -28,7 +38,7 @@ def format_file(path):
     post = open('templates/post.html', 'r').read()
 
     # insert the content
-    post = post.replace('$(title)', title)
+    post = post.replace('$(title)', fields['title'])
     post = post.replace('$(content)', html)
 
     with codecs.open('html/%s.html' % basename, 'w', 'utf-8') as out:

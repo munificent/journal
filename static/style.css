@@ -3,7 +3,7 @@
 /* A block element that can contain <p> elements. */
 /* Reset */
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
-acronym, address, cite, code, em, img, ins, q, s, samp, small, strike, strong,
+acronym, address, cite, code, img, ins, q, s, samp, small, strike,
 sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
 caption, tbody, tfoot, thead, tr, th, td {
   margin: 0;
@@ -16,7 +16,7 @@ caption, tbody, tfoot, thead, tr, th, td {
 body {
   line-height: 1; }
 
-ol, ul {
+ul {
   list-style: none; }
 
 blockquote, q {
@@ -32,8 +32,8 @@ table {
 a {
   text-decoration: none; }
 
-em {
-  font-weight: bold; }
+ol {
+  margin-left: 24px; }
 
 /* Text styles */
 /* TODO:
@@ -51,6 +51,7 @@ body {
   background: #444444; }
 
 .header {
+  height: 48px;
   width: 100%;
   background: #444444; }
   .header h1 {
@@ -58,7 +59,7 @@ body {
     max-width: 640px;
     font: normal 20px Courier, monospace;
     color: #666666;
-    padding: 10px; }
+    padding: 12px; }
   .header a {
     color: #bbbbbb; }
   .header a:hover {
@@ -69,28 +70,58 @@ body {
   padding: 0 0 10px 0;
   max-width: 640px; }
   .content h1 {
-    font: normal 36px Georgia, serif;
+    font: normal 36px/48px Georgia, serif;
     color: #333333;
-    padding: 40px 0 36px 0; }
+    padding: 36px 0 23px 0; }
   .content h2 {
-    font: normal 22px Georgia, serif;
+    font: normal 22px/24px Georgia, serif;
     color: #333333;
-    margin: 24px 0 16px; }
+    padding: 12px 0; }
   .content h3 {
-    font: italic 18px Georgia, serif;
+    font: italic 18px/24px Georgia, serif;
     color: #333333;
-    margin: 24px 0 8px; }
+    padding: 0; }
   .content p {
     font: normal 16px/24px Georgia, serif;
-    margin-bottom: 20px; }
+    padding: 12px 0; }
+  .content a, .content a code {
+    color: #009966;
+    text-decoration: none; }
+  .content a:hover {
+    background: #dbeae5; }
+  .content code {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: white;
+    border-radius: 4px;
+    font-family: Courier, monospace;
+    color: #555555;
+    overflow: auto;
+    padding: 1px 3px;
+    font: 15px/20px Courier, monospace; }
+  .content pre {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: white;
+    border-radius: 4px;
+    font-family: Courier, monospace;
+    color: #555555;
+    overflow: auto;
+    padding: 12px;
+    font: 14px/20px Courier, monospace; }
+    .content pre code {
+      padding: 0;
+      font-size: 14px; }
   .content blockquote {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     /* Trim the bottom padding since the last <p> within it will have padding on
        the bottom. */
-    padding: 20px 20px 1px 20px;
-    margin-bottom: 20px;
+    padding: 24px 24px 1px 24px;
+    margin-bottom: 24px;
     background: white; }
     .content blockquote p {
       color: #444444;
@@ -103,50 +134,6 @@ body {
       text-align: right; }
       .content blockquote cite:before {
         content: '\2014\00A0'; }
-  .content a, .content a code {
-    color: #1a9900;
-    text-decoration: none; }
-  .content a:hover {
-    background: #deeadb; }
-  .content code {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    background: #e4e4e4;
-    border-radius: 4px;
-    font-family: Courier, monospace;
-    color: #666666;
-    overflow: auto;
-    padding: 1px 3px;
-    font-size: 15px; }
-  .content pre {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    background: #e4e4e4;
-    border-radius: 4px;
-    font-family: Courier, monospace;
-    color: #666666;
-    overflow: auto;
-    margin-bottom: 20px;
-    padding: 20px;
-    font-size: 14px;
-    line-height: 22px; }
-    .content pre code {
-      padding: 0;
-      font-size: 14px; }
-  .content h4 {
-    font: normal 12px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    color: #333333;
-    padding: 0 0 40px 0;
-    text-transform: lowercase; }
-    .content h4 a {
-      border-radius: 4px;
-      -moz-border-radius: 4px;
-      -webkit-border-radius: 4px;
-      background: #e0e0e0;
-      color: #888888;
-      padding: 1px 4px; }
 
 .update {
   border-radius: 6px;
@@ -154,8 +141,8 @@ body {
   -webkit-border-radius: 6px;
   /* Trim the bottom padding since the last <p> within it will have padding on
      the bottom. */
-  padding: 20px 20px 1px 20px;
-  margin-bottom: 20px;
+  padding: 24px 24px 1px 24px;
+  margin-bottom: 24px;
   background: #fcf6e8; }
   .update h1 {
     font: normal 12px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
@@ -172,14 +159,14 @@ body {
   .comments-bg .comments {
     max-width: 640px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 24px 0;
     font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .comments-bg .comments a.dsq-subscribe-email em, .comments-bg .comments a.dsq-subscribe-rss em {
       text-decoration: none; }
     .comments-bg .comments a {
-      color: #1a9900; }
+      color: #009966; }
     .comments-bg .comments a:hover {
-      background: #deeadb; }
+      background: #dbeae5; }
 
 .bottom {
   width: 100%;
@@ -198,11 +185,11 @@ body {
       text-align: left;
       vertical-align: top;
       color: #888888;
-      font: normal 12px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+      font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .bottom table h1 {
       font: normal 20px Courier, monospace;
       text-transform: lowercase;
-      margin: 10px 0 10px 0;
+      padding: 16px 0 16px 0;
       color: #666666; }
     .bottom table h2 {
       font: bold 14px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
@@ -212,3 +199,16 @@ body {
     color: #bbbbbb; }
   .bottom a:hover {
     color: #eeeeee; }
+
+.codehilite .c, .codehilite .c1, .codehilite .cm {
+  color: #aaaaaa; }
+.codehilite .k {
+  color: #009966; }
+.codehilite .kt {
+  color: #009999; }
+.codehilite .p {
+  color: #888888; }
+.codehilite .s, .codehilite .sc {
+  color: #cc8800; }
+.codehilite .m {
+  color: #995cd6; }

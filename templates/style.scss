@@ -43,7 +43,7 @@ $nav-text:            #888;
 $nav-link:            #bbb;
 $nav-hover:           #eee;
 
-$pad:                 16px;
+$pad:                 24px;
 
 @mixin code {
   @include rounded;
@@ -135,6 +135,7 @@ body {
 }
 
 .header {
+  height: 48px;
   width: 100%;
   background: $nav-bg;
 
@@ -143,7 +144,7 @@ body {
     max-width: 640px;
     font: normal 20px $monospace;
     color: $nav-title;
-    padding: 10px;
+    padding: 12px;
   }
 
   a {
@@ -161,26 +162,52 @@ body {
   max-width: 640px;
 
   h1 {
-    font: normal 36px $header;
+    font: normal 36px/48px $header;
     color: $h1-color;
-    padding: 40px 0 36px 0;
+    padding: 36px 0 23px 0;
   }
 
   h2 {
-    font: normal 22px $header;
+    font: normal 22px/24px $header;
     color: $h2-color;
-    margin: 24px 0 16px;
-    }
+    padding: 12px 0;
+  }
 
   h3 {
-    font: italic 18px $header;
+    font: italic 18px/24px $header;
     color: $h3-color;
-    margin: 24px 0 8px;
+    padding: 0;
   }
 
   p {
     font: normal 16px/24px $serif;
-    margin-bottom: $pad;
+    padding: 12px 0;
+  }
+
+  a, a code {
+    color: $link;
+    text-decoration: none;
+  }
+
+  a:hover {
+    background: $link-hover-bg;
+  }
+
+  code {
+    @include code;
+    padding: 1px 3px;
+    font: 15px/20px $monospace;
+  }
+
+  pre {
+    @include code;
+    padding: 12px;
+    font: 14px/20px $monospace;
+
+    code {
+      padding: 0;
+      font-size: 14px;
+    }
   }
 
   blockquote {
@@ -202,48 +229,6 @@ body {
       &:before {
         content: '\2014\00A0';
       }
-    }
-  }
-
-  a, a code {
-    color: $link;
-    text-decoration: none;
-  }
-
-  a:hover {
-    background: $link-hover-bg;
-  }
-
-  code {
-    @include code;
-    padding: 1px 3px;
-    font-size: 15px;
-  }
-
-  pre {
-    @include code;
-    margin-bottom: $pad;
-    padding: $pad;
-    font-size: 14px;
-    line-height: 22px;
-
-    code {
-      padding: 0;
-      font-size: 14px;
-    }
-  }
-
-  h4 {
-    font: normal 12px $sans;
-    color: $h4-color;
-    padding: 0 0 40px 0;
-    text-transform: lowercase;
-
-    a {
-      @include rounded(4px);
-      background: $tag-bg;
-      color: $tag-color;
-      padding: 1px 4px;
     }
   }
 }
@@ -272,7 +257,7 @@ body {
   .comments {
     max-width: 640px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 24px 0;
     font: normal 13px $sans;
 
     a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
@@ -312,13 +297,13 @@ body {
       text-align: left;
       vertical-align: top;
       color: $nav-text;
-      font: normal 12px/20px $sans;
+      font: normal 12px/18px $sans;
     }
 
     h1 {
       font: normal 20px $monospace;
       text-transform: lowercase;
-      margin: 10px 0 10px 0;
+      padding: 16px 0 16px 0;
       color: $nav-title;
     }
 

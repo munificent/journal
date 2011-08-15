@@ -18,14 +18,14 @@ $h4-color:            $header-color;
 $content-bg:          #f4f4f4;
 $text-color:          #333;
 
-$link:                hsl(110, 100%, 30%);
+$link:                hsl(160, 100%, 30%);
 $link-hover-bg:       mix($content-bg, $link, 90%);
 
 $tag-color:           #888;
 $tag-bg:              mix($content-bg, $text-color, 90%);
 
-$code-bg:             #e4e4e4;
-$code-color:          #666;
+$code-bg:             #fff; //#e8e8e8;
+$code-color:          #555;
 
 $quote-bg:            #fff;
 $quote-color:         #444;
@@ -43,7 +43,7 @@ $nav-text:            #888;
 $nav-link:            #bbb;
 $nav-hover:           #eee;
 
-$pad:                 20px;
+$pad:                 16px;
 
 @mixin code {
   @include rounded;
@@ -74,7 +74,7 @@ $pad:                 20px;
 /* Reset */
 
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
-acronym, address, cite, code, em, img, ins, q, s, samp, small, strike, strong,
+acronym, address, cite, code, img, ins, q, s, samp, small, strike,
 sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
 caption, tbody, tfoot, thead, tr, th, td {
   margin: 0;
@@ -89,7 +89,7 @@ body {
   line-height: 1;
 }
 
-ol, ul {
+ul {
   list-style: none;
 }
 
@@ -110,8 +110,8 @@ a {
   text-decoration: none;
 }
 
-em {
-  font-weight: bold;
+ol {
+  margin-left: 24px;
 }
 
 /* Text styles */
@@ -338,4 +338,14 @@ body {
   a:hover {
     color: $nav-hover;
   }
+}
+
+// Syntax highlighting
+.codehilite {
+  .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
+  .k           { color: hsl(160, 100%, 30%); } // keyword
+  .kt          { color: hsl(180, 100%, 30%); } // keyword type
+  .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
+  .s, .sc      { color: hsl(40, 100%, 40%); } // string
+  .m           { color: hsl(270, 60%, 60%); } // number
 }

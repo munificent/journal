@@ -14,7 +14,7 @@ def fix_file(path):
     with open(path, 'r') as input:
         for line in input:
             # See if this line is a footnote link.
-            m = re.search('   \[([0-9]+)\]: (http://[\w\./\%\-]+)(?: \(([^\)]+)\))?$', line)
+            m = re.search('   \[([0-9]+)\]: (http://[\S]+)(?: \(([^\)]+)\))?$', line)
             if m:
                 # Yup, key it's number.
                 num, link, desc = m.groups('')

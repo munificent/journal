@@ -93,15 +93,6 @@ ul {
   list-style: none;
 }
 
-blockquote, q {
-  quotes: none;
-}
-
-blockquote:before, blockquote:after, q:before, q:after {
-  content: '';
-  content: none;
-}
-
 table {
   border-spacing: 0;
 }
@@ -213,6 +204,8 @@ body {
   blockquote {
     @include pbox;
     background: $quote-bg;
+    margin: 0;
+    padding: 0 24px;
 
     p {
       color: $quote-color;

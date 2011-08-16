@@ -205,7 +205,7 @@ body {
     @include pbox;
     background: $quote-bg;
     margin: 0;
-    padding: 0 24px;
+    padding: 0 16px;
 
     p {
       color: $quote-color;
@@ -222,6 +222,16 @@ body {
       &:before {
         content: '\2014\00A0';
       }
+    }
+  }
+
+  blockquote.update {
+    background: hsl(40, 100%, 93%);
+    border: solid 2px #fff;
+
+    p {
+      font-style: normal;
+      color: hsl(40, 60%, 60%);
     }
   }
 

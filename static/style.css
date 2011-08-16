@@ -19,13 +19,6 @@ body {
 ul {
   list-style: none; }
 
-blockquote, q {
-  quotes: none; }
-
-blockquote:before, blockquote:after, q:before, q:after {
-  content: '';
-  content: none; }
-
 table {
   border-spacing: 0; }
 
@@ -122,7 +115,9 @@ body {
        the bottom. */
     padding: 24px 24px 1px 24px;
     margin-bottom: 24px;
-    background: white; }
+    background: white;
+    margin: 0;
+    padding: 0 16px; }
     .content blockquote p {
       color: #444444;
       font: italic 16px/24px Georgia, serif; }
@@ -134,6 +129,20 @@ body {
       text-align: right; }
       .content blockquote cite:before {
         content: '\2014\00A0'; }
+  .content blockquote.update {
+    background: #fff3db;
+    border: solid 2px #fff; }
+    .content blockquote.update p {
+      font-style: normal;
+      color: #d6ad5c; }
+  .content img {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: #fff;
+    display: block;
+    padding: 16px;
+    margin: 0 auto; }
 
 .update {
   border-radius: 6px;

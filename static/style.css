@@ -81,7 +81,7 @@ body {
     font: italic 18px/24px Georgia, serif;
     color: #333333;
     padding: 0; }
-  .content p {
+  .content p, .content li {
     font: normal 16px/24px Georgia, serif;
     padding: 12px 0; }
   .content a, .content a code {

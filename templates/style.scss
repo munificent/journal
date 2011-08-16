@@ -224,6 +224,14 @@ body {
       }
     }
   }
+
+  img {
+    @include rounded;
+    background: #fff;
+    display: block;
+    padding: 16px;
+    margin: 0 auto;
+  }
 }
 
 .update {

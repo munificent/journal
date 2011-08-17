@@ -1,6 +1,5 @@
 /* Global style variables */
 /* Generic functionality */
-/* A block element that can contain <p> elements. */
 /* Reset */
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
 acronym, address, cite, code, img, ins, q, s, samp, small, strike,
@@ -16,16 +15,13 @@ caption, tbody, tfoot, thead, tr, th, td {
 body {
   line-height: 1; }
 
-ul {
-  list-style: none; }
-
 table {
   border-spacing: 0; }
 
 a {
   text-decoration: none; }
 
-ol {
+ol, ul {
   margin-left: 24px; }
 
 /* Text styles */
@@ -38,6 +34,9 @@ body {
   color: #333333; }
 
 /* Site layout */
+.right {
+  text-align: right; }
+
 .top {
   width: 100%;
   height: 40px;
@@ -73,15 +72,19 @@ body {
   .content h3 {
     font: italic 18px/24px Georgia, serif;
     color: #333333;
-    padding: 0; }
-  .content p, .content li {
+    padding: 12px 0; }
+  .content p {
     font: normal 16px/24px Georgia, serif;
     padding: 12px 0; }
+  .content li {
+    font: normal 16px/24px Georgia, serif;
+    padding: 0;
+    margin: 0; }
   .content a, .content a code {
     color: #009966;
     text-decoration: none; }
   .content a:hover {
-    background: #dbeae5; }
+    color: #006644; }
   .content code {
     border-radius: 6px;
     -moz-border-radius: 6px;
@@ -107,60 +110,62 @@ body {
     .content pre code {
       padding: 0;
       font-size: 14px; }
+  .content tt {
+    font: 15px/20px Courier, monospace;
+    color: #555555; }
   .content blockquote {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    /* Trim the bottom padding since the last <p> within it will have padding on
-       the bottom. */
-    padding: 24px 24px 1px 24px;
-    margin-bottom: 24px;
     background: white;
-    margin: 0;
-    padding: 0 16px; }
+    padding: 0 12px;
+    margin: 0; }
     .content blockquote p {
       color: #444444;
       font: italic 16px/24px Georgia, serif; }
-    .content blockquote cite {
-      font: italic 14px/24px Georgia, serif;
-      color: #777777;
-      display: block;
-      margin: 8px 0 0 0;
-      text-align: right; }
-      .content blockquote cite:before {
-        content: '\2014\00A0'; }
+  .content .cite {
+    font: italic 14px/24px Georgia, serif;
+    color: #777777;
+    display: block;
+    text-align: right;
+    padding: 12px 24px 0 0; }
+    .content .cite:before {
+      content: '\2014\00A0'; }
   .content blockquote.update {
     background: #fff3db;
     border: solid 2px #fff; }
     .content blockquote.update p {
       font-style: normal;
       color: #d6ad5c; }
+    .content blockquote.update a {
+      color: #cc8800; }
+    .content blockquote.update a:hover {
+      color: #996600; }
   .content img {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     background: #fff;
     display: block;
-    padding: 16px;
+    padding: 12px;
     margin: 0 auto; }
-
-.update {
-  border-radius: 6px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  /* Trim the bottom padding since the last <p> within it will have padding on
-     the bottom. */
-  padding: 24px 24px 1px 24px;
-  margin-bottom: 24px;
-  background: #fcf6e8; }
-  .update h1 {
-    font: normal 12px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    padding: 0;
-    color: #d1bd94;
-    margin: 0 0 4px 0; }
-  .update p {
-    font: normal 14px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    color: #b3914d; }
+  .content .table {
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    background: #fff;
+    padding: 12px; }
+  .content table {
+    width: 100%;
+    border-collapse: collapse; }
+    .content table thead td {
+      color: #888;
+      font: bold 14px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+      padding: 0 0 8px 0; }
+    .content table td {
+      font: normal 16px/24px Georgia, serif; }
+    .content table tr + tr {
+      border-top: solid 1px #eee; }
 
 .comments-bg {
   width: 100%;
@@ -175,7 +180,7 @@ body {
     .comments-bg .comments a {
       color: #009966; }
     .comments-bg .comments a:hover {
-      background: #dbeae5; }
+      color: #006644; }
 
 .bottom {
   width: 100%;
@@ -198,7 +203,7 @@ body {
     .bottom table h1 {
       font: normal 20px Courier, monospace;
       text-transform: lowercase;
-      padding: 16px 0 16px 0;
+      padding: 12px 0;
       color: #666666; }
     .bottom table h2 {
       font: bold 14px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }

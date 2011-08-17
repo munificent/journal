@@ -19,7 +19,7 @@ $content-bg:          #f4f4f4;
 $text-color:          #333;
 
 $link:                hsl(160, 100%, 30%);
-$link-hover-bg:       mix($content-bg, $link, 90%);
+$link-hover:          hsl(160, 100%, 20%);
 
 $tag-color:           #888;
 $tag-bg:              mix($content-bg, $text-color, 90%);
@@ -30,12 +30,6 @@ $code-color:          #555;
 $quote-bg:            #fff;
 $quote-color:         #444;
 $quote-color-light:   lighten($quote-color, 20%);
-
-$update-bg:           hsl(40, 80%, 95%);
-$update-color:        hsl(40, 40%, 50%);
-$update-color-light:  lighten($update-color, 20%);
-$update-color-dark:   darken($update-color, 10%);
-$update-color-darker: darken($update-color, 20%);
 
 $nav-title:           #666;
 $nav-bg:              #444;
@@ -62,15 +56,6 @@ $pad:                 24px;
   -webkit-border-radius: $radius;
 }
 
-/* A block element that can contain <p> elements. */
-@mixin pbox {
-  @include rounded;
-  /* Trim the bottom padding since the last <p> within it will have padding on
-     the bottom. */
-  padding: $pad $pad 1px $pad;
-  margin-bottom: $pad;
-}
-
 /* Reset */
 
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
@@ -89,10 +74,6 @@ body {
   line-height: 1;
 }
 
-ul {
-  list-style: none;
-}
-
 table {
   border-spacing: 0;
 }
@@ -101,7 +82,7 @@ a {
   text-decoration: none;
 }
 
-ol {
+ol, ul {
   margin-left: 24px;
 }
 
@@ -118,6 +99,10 @@ body {
 }
 
 /* Site layout */
+
+.right {
+  text-align: right;
+}
 
 .top {
   width: 100%;
@@ -167,12 +152,18 @@ body {
   h3 {
     font: italic 18px/24px $header;
     color: $h3-color;
-    padding: 0;
+    padding: 12px 0;
   }
 
-  p, li {
+  p {
     font: normal 16px/24px $serif;
     padding: 12px 0;
+  }
+
+  li {
+    font: normal 16px/24px $serif;
+    padding: 0;
+    margin: 0;
   }
 
   a, a code {
@@ -181,7 +172,7 @@ body {
   }
 
   a:hover {
-    background: $link-hover-bg;
+    color: $link-hover;
   }
 
   code {
@@ -201,27 +192,32 @@ body {
     }
   }
 
+  tt {
+    font: 15px/20px $monospace;
+    color:          $code-color;
+  }
+
   blockquote {
-    @include pbox;
+    @include rounded;
     background: $quote-bg;
+    padding: 0 12px;
     margin: 0;
-    padding: 0 16px;
 
     p {
       color: $quote-color;
       font: italic 16px/24px $serif;
     }
+  }
 
-    cite {
-      font: italic 14px/24px $serif;
-      color: $quote-color-light;
-      display: block;
-      margin: 8px 0 0 0;
-      text-align: right;
+  .cite {
+    font: italic 14px/24px $serif;
+    color: $quote-color-light;
+    display: block;
+    text-align: right;
+    padding: 12px 24px 0 0;
 
-      &:before {
-        content: '\2014\00A0';
-      }
+    &:before {
+      content: '\2014\00A0';
     }
   }
 
@@ -233,31 +229,49 @@ body {
       font-style: normal;
       color: hsl(40, 60%, 60%);
     }
+
+    a {
+      color: hsl(40, 100%, 40%);
+    }
+
+    a:hover {
+      color: hsl(40, 100%, 30%);
+    }
   }
 
   img {
     @include rounded;
     background: #fff;
     display: block;
-    padding: 16px;
+    padding: 12px;
     margin: 0 auto;
   }
-}
 
-.update {
-  @include pbox;
-  background: $update-bg;
-
-  h1 {
-    font: normal 12px/20px $sans;
-    padding: 0;
-    color: $update-color-light;
-    margin: 0 0 4px 0;
+  .table {
+    @include rounded;
+    background: #fff;
+    padding: 12px;
   }
 
-  p {
-    font: normal 14px/20px $sans;
-    color: $update-color;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      td {
+        color: #888;
+        font: bold 14px $sans;
+        padding: 0 0 8px 0;
+      }
+    }
+
+    td {
+      font: normal 16px/24px $serif;
+    }
+
+    tr + tr {
+      border-top: solid 1px #eee;
+    }
   }
 }
 
@@ -280,7 +294,7 @@ body {
     }
 
     a:hover {
-      background: $link-hover-bg;
+      color: $link-hover;
     }
   }
 }
@@ -314,7 +328,7 @@ body {
     h1 {
       font: normal 20px $monospace;
       text-transform: lowercase;
-      padding: 16px 0 16px 0;
+      padding: 12px 0;
       color: $nav-title;
     }
 

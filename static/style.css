@@ -37,21 +37,18 @@ body {
 .right {
   text-align: right; }
 
-.top {
-  width: 100%;
-  height: 40px;
-  background: #444444; }
+.column {
+  max-width: 640px;
+  margin: 0 auto; }
 
 .header {
   height: 48px;
   width: 100%;
   background: #444444; }
   .header h1 {
-    margin: 0 auto;
-    max-width: 640px;
     font: normal 20px Courier, monospace;
     color: #666666;
-    padding: 12px; }
+    padding: 12px 0; }
   .header a {
     color: #bbbbbb; }
   .header a:hover {
@@ -167,19 +164,17 @@ body {
     .content table tr + tr {
       border-top: solid 1px #eee; }
 
-.comments-bg {
+.comments {
   width: 100%;
   background: #fff; }
-  .comments-bg .comments {
-    max-width: 640px;
-    margin: 0 auto;
+  .comments .column {
     padding: 24px 0;
     font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-    .comments-bg .comments a.dsq-subscribe-email em, .comments-bg .comments a.dsq-subscribe-rss em {
+    .comments .column a.dsq-subscribe-email em, .comments .column a.dsq-subscribe-rss em {
       text-decoration: none; }
-    .comments-bg .comments a {
+    .comments .column a {
       color: #009966; }
-    .comments-bg .comments a:hover {
+    .comments .column a:hover {
       color: #006644; }
 
 .bottom {
@@ -188,8 +183,7 @@ body {
   background: #444444; }
   .bottom code {
     font: 14px Courier, monospace; }
-  .bottom .columns {
-    margin: 0 auto;
+  .bottom .column {
     max-width: 660px; }
   .bottom table {
     width: 100%;

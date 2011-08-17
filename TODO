@@ -1,0 +1,10 @@
+* Make sure Disqus is being given correct post name
+* Generate year archive pages
+* Generate tag archive pages
+* Make sure reddit button gets right URL
+* Make sure twitter button gets right URL
+* Generate real date list in footer
+* Generate real tag list in footer
+* Put post date in footer
+* Put post tags in footer
+* Generate RSS feed

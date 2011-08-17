@@ -104,10 +104,9 @@ body {
   text-align: right;
 }
 
-.top {
-  width: 100%;
-  height: 40px;
-  background: $nav-bg;
+.column {
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .header {
@@ -116,11 +115,9 @@ body {
   background: $nav-bg;
 
   h1 {
-    margin: 0 auto;
-    max-width: 640px;
     font: normal 20px $monospace;
     color: $nav-title;
-    padding: 12px;
+    padding: 12px 0;
   }
 
   a {
@@ -275,13 +272,11 @@ body {
   }
 }
 
-.comments-bg {
+.comments {
   width: 100%;
   background: #fff;
 
-  .comments {
-    max-width: 640px;
-    margin: 0 auto;
+  .column {
     padding: 24px 0;
     font: normal 13px $sans;
 
@@ -308,8 +303,7 @@ body {
     font: 14px $monospace;
   }
 
-  .columns {
-    margin: 0 auto;
+  .column {
     max-width: 660px; // extra 10px on each side to absorb border spacing
   }
 

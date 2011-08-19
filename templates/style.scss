@@ -348,7 +348,9 @@ body {
 .codehilite {
   .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
   .k           { color: hsl(160, 100%, 30%); } // keyword
+  .kd          { color: hsl(160, 100%, 30%); } // keyword declaration
   .kt          { color: hsl(180, 100%, 30%); } // keyword type
+  .nc          { color: hsl(180, 100%, 30%); } // class name
   .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
   .s, .sc      { color: hsl(40, 100%, 40%); } // string
   .m           { color: hsl(270, 60%, 60%); } // number

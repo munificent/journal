@@ -212,7 +212,11 @@ body {
   color: #aaaaaa; }
 .codehilite .k {
   color: #009966; }
+.codehilite .kd {
+  color: #009966; }
 .codehilite .kt {
+  color: #009999; }
+.codehilite .nc {
   color: #009999; }
 .codehilite .p {
   color: #888888; }

@@ -1,3 +1,4 @@
+* Finish cleaning up the posts
 * Make sure Disqus is being given correct post name
 * Generate year archive pages
 * Generate tag archive pages
@@ -8,3 +9,6 @@
 * Put post date in footer
 * Put post tags in footer
 * Generate RSS feed
+* Figure out how to pass custom lexers to markdown -> codehilite
+* Make a lexer for the old static Magpie
+* Make my own Java lexer that doesn't use operator for {}

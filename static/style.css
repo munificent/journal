@@ -30,7 +30,7 @@ ol, ul {
    - Tables
 */
 body {
-  background: #f4f4f4;
+  background: #f0f0f0;
   color: #333333; }
 
 /* Site layout */
@@ -46,7 +46,7 @@ body {
   width: 100%;
   background: #444444; }
   .header h1 {
-    font: normal 20px Courier, monospace;
+    font: normal 20px "Varela Round", sans-serif;
     color: #666666;
     padding: 12px 0; }
   .header a {
@@ -59,15 +59,15 @@ body {
   padding: 0 0 10px 0;
   max-width: 640px; }
   .content h1 {
-    font: normal 36px/48px Georgia, serif;
+    font: normal 36px/48px "Varela Round", sans-serif;
     color: #333333;
     padding: 36px 0 23px 0; }
   .content h2 {
-    font: normal 22px/24px Georgia, serif;
+    font: normal 24px/24px "Varela Round", sans-serif;
     color: #333333;
     padding: 12px 0; }
   .content h3 {
-    font: italic 18px/24px Georgia, serif;
+    font: normal 18px/24px "Varela Round", sans-serif;
     color: #333333;
     padding: 12px 0; }
   .content p {
@@ -195,7 +195,7 @@ body {
       color: #888888;
       font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .bottom table h1 {
-      font: normal 20px Courier, monospace;
+      font: normal 20px "Varela Round", sans-serif;
       text-transform: lowercase;
       padding: 12px 0;
       color: #666666; }

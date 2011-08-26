@@ -46,7 +46,7 @@ $(content)
     <td>
       <h1>This Post</h1>
       <p>Posted on <a href="#">June 13th</a>, <a href="#">2010</a>.</p>
-      <p>Tagged <a href="#">javascript</a>, <a href="#">parsing</a>, <a href="#">programming</a>.</p>
+      <p>Tagged $(tags).</p>
       <p>
         <a href="http://www.reddit.com/submit" onclick="window.location = 'http://www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <img src="http://www.reddit.com/static/spreddit1.gif" alt="submit to reddit" border="0" /> </a>
         <a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-via="munificentbob">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
@@ -64,68 +64,13 @@ $(content)
       </p>
       <h1>Posts by Date</h1>
       <ul>
-        <li><a href="#">2011</a></li>
-        <li><a href="#">2010</a></li>
-        <li><a href="#">2009</a></li>
+        $(years)
       </ul>
     </td>
     <td>
       <h1>Posts by Tag</h1>
       <ul>
-        <li class="cat-item cat-item-13"><a href="http://journal.stuffwithstuff.com/category/blog/" title="View all posts filed under blog">blog</a>
-
-</li>
-  <li class="cat-item cat-item-6"><a href="http://journal.stuffwithstuff.com/category/c/" title="View all posts filed under c#">c#</a>
-</li>
-  <li class="cat-item cat-item-4"><a href="http://journal.stuffwithstuff.com/category/code/" title="View all posts filed under code">code</a>
-</li>
-  <li class="cat-item cat-item-17"><a href="http://journal.stuffwithstuff.com/category/cpp/" title="View all posts filed under cpp">cpp</a>
-</li>
-  <li class="cat-item cat-item-12"><a href="http://journal.stuffwithstuff.com/category/design/" title="View all posts filed under design">design</a>
-
-</li>
-  <li class="cat-item cat-item-14"><a href="http://journal.stuffwithstuff.com/category/f/" title="View all posts filed under f#">f#</a>
-</li>
-  <li class="cat-item cat-item-21"><a href="http://journal.stuffwithstuff.com/category/finch/" title="View all posts filed under finch">finch</a>
-</li>
-  <li class="cat-item cat-item-9"><a href="http://journal.stuffwithstuff.com/category/game-dev/" title="View all posts filed under game-dev">game-dev</a>
-</li>
-  <li class="cat-item cat-item-20"><a href="http://journal.stuffwithstuff.com/category/game-patterns/" title="View all posts filed under game-patterns">game-patterns</a>
-
-</li>
-  <li class="cat-item cat-item-27"><a href="http://journal.stuffwithstuff.com/category/go/" title="View all posts filed under go">go</a>
-</li>
-  <li class="cat-item cat-item-22"><a href="http://journal.stuffwithstuff.com/category/jasic/" title="View all posts filed under jasic">jasic</a>
-</li>
-  <li class="cat-item cat-item-23"><a href="http://journal.stuffwithstuff.com/category/java/" title="View all posts filed under java">java</a>
-</li>
-  <li class="cat-item cat-item-28"><a href="http://journal.stuffwithstuff.com/category/javascript/" title="View all posts filed under javascript">javascript</a>
-
-</li>
-  <li class="cat-item cat-item-16"><a href="http://journal.stuffwithstuff.com/category/language/" title="View all posts filed under language">language</a>
-</li>
-  <li class="cat-item cat-item-19"><a href="http://journal.stuffwithstuff.com/category/magpie/" title="View all posts filed under magpie">magpie</a>
-</li>
-  <li class="cat-item cat-item-18"><a href="http://journal.stuffwithstuff.com/category/optimization/" title="View all posts filed under optimization">optimization</a>
-</li>
-  <li class="cat-item cat-item-29"><a href="http://journal.stuffwithstuff.com/category/oscon/" title="View all posts filed under oscon">oscon</a>
-
-</li>
-  <li class="cat-item cat-item-15"><a href="http://journal.stuffwithstuff.com/category/parsing/" title="View all posts filed under parsing">parsing</a>
-</li>
-  <li class="cat-item cat-item-10"><a href="http://journal.stuffwithstuff.com/category/politics/" title="View all posts filed under politics">politics</a>
-</li>
-  <li class="cat-item cat-item-24"><a href="http://journal.stuffwithstuff.com/category/python/" title="View all posts filed under python">python</a>
-</li>
-  <li class="cat-item cat-item-5"><a href="http://journal.stuffwithstuff.com/category/roguelike/" title="View all posts filed under roguelike">roguelike</a>
-
-</li>
-  <li class="cat-item cat-item-25"><a href="http://journal.stuffwithstuff.com/category/ruby/" title="View all posts filed under ruby">ruby</a>
-</li>
-  <li class="cat-item cat-item-26"><a href="http://journal.stuffwithstuff.com/category/sml/" title="View all posts filed under sml">sml</a>
-</li>
-  <li class="cat-item cat-item-11"><a href="http://journal.stuffwithstuff.com/category/visualization/" title="View all posts filed under visualization">visualization</a>
-</li>
+        $(alltags)
       </ul>
     </td>
     <td>
@@ -141,7 +86,7 @@ $(content)
       </ul>
       <h1>Contact</h1>
       <p>You can email me at <code>robert</code> at <code>stuffwithstuff.com</code>.</p>
-      <p>Copyright &copy; 2008-2011 Robert Nystrom.</p>
+      <p>&copy; 2008-2011 Robert Nystrom.</p>
     </td>
   </tr>
 </table>

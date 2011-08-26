@@ -40,15 +40,40 @@ class Post:
         basename = os.path.relpath(path, 'posts')
         self.basename = basename.split('.')[0]
 
-    def output(self):
+    def output(self, years, tags):
         global post_template
 
-        html = markdown.markdown(self.body, ['def_list', 'codehilite'])
+        body = self.body
+
+        # Smart quotes
+        # TODO(bob): Commented out until I figure out a way to not smart quote
+        # code blocks.
+        #body = re.sub(r'(\s)"(\S)', r'\1&ldquo;\2', body)
+        #body = re.sub(r'(\S)"(\s)', r'\1&rdquo;\2', body)
+
+        html = markdown.markdown(body, ['def_list', 'codehilite'])
+
+        years_html = ''
+        for year in years:
+            years_html += '<li><a href="%s">%s</a></li>\n' % (year, year)
+
+        tags_html = ''
+        for tag in self.info['tags'].split(' '):
+            if len(tags_html) > 0:
+                tags_html += ', '
+            tags_html += '<a href="tag/%s">%s</a>' % (tag, tag)
+
+        alltags_html = ''
+        for tag in tags:
+            alltags_html += '<li><a href="tag/%s">%s</a></li>\n' % (tag, tag)
 
         # Insert the content
         post = post_template
         post = post.replace('$(title)', self.info['title'])
         post = post.replace('$(content)', html)
+        post = post.replace('$(years)', years_html)
+        post = post.replace('$(tags)', tags_html)
+        post = post.replace('$(alltags)', alltags_html)
 
         with codecs.open('html/%s.html' % self.basename, 'w', 'utf-8') as out:
             out.write(post)
@@ -65,6 +90,16 @@ def get_years(posts):
     years = list(years)
     years.sort()
     return years
+
+def get_tags(posts):
+    '''Walks through the posts and gets the list of tags.'''
+    tags = set()
+    for post in posts:
+        for tag in post.info['tags'].split(' '):
+            tags.add(tag)
+    tags = list(tags)
+    tags.sort()
+    return tags
 
 last_length = 0
 def write_line(text):
@@ -91,9 +126,12 @@ def strip_newline(line):
     return line.rstrip()
 
 utils.walk('posts', read_post, '.md')
+years = get_years(posts)
+tags = get_tags(posts)
+
 i = 1
 for post in posts:
-    post.output()
+    post.output(years, tags)
     write_line('%s/%s' % (i, len(posts)))
     i += 1
 

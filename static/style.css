@@ -30,7 +30,7 @@ ol, ul {
    - Tables
 */
 body {
-  background: #f0f0f0;
+  background: #f4f4f4;
   color: #333333; }
 
 /* Site layout */
@@ -38,7 +38,7 @@ body {
   text-align: right; }
 
 .column {
-  max-width: 640px;
+  max-width: 600px;
   margin: 0 auto; }
 
 .header {
@@ -46,7 +46,7 @@ body {
   width: 100%;
   background: #444444; }
   .header h1 {
-    font: normal 20px "Varela Round", sans-serif;
+    font: normal 20px Courier, monospace;
     color: #666666;
     padding: 12px 0; }
   .header a {
@@ -55,19 +55,17 @@ body {
     color: #eeeeee; }
 
 .content {
-  margin: 0 auto;
-  padding: 0 0 10px 0;
-  max-width: 640px; }
+  padding: 0 0 10px 0; }
   .content h1 {
-    font: normal 36px/48px "Varela Round", sans-serif;
+    font: normal 36px/48px Georgia, serif;
     color: #333333;
     padding: 36px 0 23px 0; }
   .content h2 {
-    font: normal 24px/24px "Varela Round", sans-serif;
+    font: normal 24px/24px Georgia, serif;
     color: #333333;
     padding: 12px 0; }
   .content h3 {
-    font: normal 18px/24px "Varela Round", sans-serif;
+    font: bold 16px/24px Georgia, serif;
     color: #333333;
     padding: 12px 0; }
   .content p {
@@ -103,7 +101,7 @@ body {
     color: #555555;
     overflow: auto;
     padding: 12px;
-    font: 14px/20px Courier, monospace; }
+    font: 15px/24px Courier, monospace; }
     .content pre code {
       padding: 0;
       font-size: 14px; }
@@ -195,7 +193,7 @@ body {
       color: #888888;
       font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .bottom table h1 {
-      font: normal 20px "Varela Round", sans-serif;
+      font: normal 20px Courier, monospace;
       text-transform: lowercase;
       padding: 12px 0;
       color: #666666; }

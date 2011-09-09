@@ -4,9 +4,8 @@ $lucida:              'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 $georgia:             Georgia, serif;
 $shanti:              'Shanti', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 $helvetica:           'Helvetica', 'Helvetica Neue', 'Arial', sans-serif;
-$varela:              'Varela Round', sans-serif;
 
-$header:              $varela;
+$header:              $georgia;
 $serif:               $georgia;
 $sans:                $lucida;
 $monospace:           Courier, monospace;
@@ -17,7 +16,7 @@ $h2-color:            $header-color;
 $h3-color:            $header-color;
 $h4-color:            $header-color;
 
-$content-bg:          #f0f0f0;
+$content-bg:          #f4f4f4;
 $text-color:          #333;
 
 $link:                hsl(160, 100%, 30%);
@@ -107,7 +106,7 @@ body {
 }
 
 .column {
-  max-width: 640px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -117,7 +116,7 @@ body {
   background: $nav-bg;
 
   h1 {
-    font: normal 20px $varela;
+    font: normal 20px $monospace;
     color: $nav-title;
     padding: 12px 0;
   }
@@ -132,9 +131,7 @@ body {
 }
 
 .content {
-  margin: 0 auto;
   padding: 0 0 10px 0;
-  max-width: 640px;
 
   h1 {
     font: normal 36px/48px $header;
@@ -149,7 +146,7 @@ body {
   }
 
   h3 {
-    font: normal 18px/24px $header;
+    font: bold 16px/24px $header;
     color: $h3-color;
     padding: 12px 0;
   }
@@ -183,7 +180,7 @@ body {
   pre {
     @include code;
     padding: 12px;
-    font: 14px/20px $monospace;
+    font: 15px/24px $monospace;
 
     code {
       padding: 0;
@@ -322,7 +319,7 @@ body {
     }
 
     h1 {
-      font: normal 20px $varela;
+      font: normal 20px $monospace;
       text-transform: lowercase;
       padding: 12px 0;
       color: $nav-title;

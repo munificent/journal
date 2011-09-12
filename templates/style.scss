@@ -2,10 +2,9 @@
 
 $lucida:              'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 $georgia:             Georgia, serif;
-$shanti:              'Shanti', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 $helvetica:           'Helvetica', 'Helvetica Neue', 'Arial', sans-serif;
 
-$header:              $georgia;
+$header:              'Varela Round', Georgia, serif;
 $serif:               $georgia;
 $sans:                $lucida;
 $monospace:           Courier, monospace;
@@ -16,7 +15,7 @@ $h2-color:            $header-color;
 $h3-color:            $header-color;
 $h4-color:            $header-color;
 
-$content-bg:          #f4f4f4;
+$content-bg:          #fff;
 $text-color:          #333;
 
 $link:                hsl(160, 100%, 30%);
@@ -25,13 +24,14 @@ $link-hover:          hsl(160, 100%, 20%);
 $tag-color:           #888;
 $tag-bg:              mix($content-bg, $text-color, 90%);
 
-$code-bg:             #fff;
+$code-bg:             #eee;
 $code-color:          #555;
 
 $quote-bg:            #fff;
 $quote-color:         #444;
 $quote-color-light:   lighten($quote-color, 20%);
 
+$nav-font:            'Varela Round', Courier, monospace;
 $nav-title:           #666;
 $nav-bg:              #444;
 $nav-text:            #888;
@@ -101,6 +101,17 @@ body {
 
 /* Site layout */
 
+/*
+.overlay {
+  position: absolute;
+  background: url('24.png');
+  width: 100%;
+  height: 10000px;
+  z-index: 3;
+  opacity: 0.5;
+}
+*/
+
 .right {
   text-align: right;
 }
@@ -108,6 +119,7 @@ body {
 .column {
   max-width: 600px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .header {
@@ -116,7 +128,7 @@ body {
   background: $nav-bg;
 
   h1 {
-    font: normal 20px $monospace;
+    font: normal 20px $nav-font;
     color: $nav-title;
     padding: 12px 0;
   }
@@ -131,22 +143,25 @@ body {
 }
 
 .content {
-  padding: 0 0 10px 0;
+  padding: 0 0 12px 0;
+
+  .column {
+    background: #fff;
+  }
 
   h1 {
     font: normal 36px/48px $header;
     color: $h1-color;
-    padding: 36px 0 23px 0;
+    padding: 36px 0 24px 0;
   }
 
   h2 {
     font: normal 24px/48px $header;
     color: $h2-color;
-    padding: 12px 0;
   }
 
   h3 {
-    font: bold 16px/24px $header;
+    font: italic 18px/24px $header;
     color: $h3-color;
     padding: 12px 0;
   }
@@ -158,8 +173,6 @@ body {
 
   li {
     font: normal 16px/24px $serif;
-    padding: 0;
-    margin: 0;
   }
 
   a, a code {
@@ -273,7 +286,7 @@ body {
 
 .comments {
   width: 100%;
-  background: #fff;
+  background: #eee;
 
   .column {
     padding: 24px 0;
@@ -303,12 +316,12 @@ body {
   }
 
   .column {
-    max-width: 660px; // extra 10px on each side to absorb border spacing
+    max-width: 624px; // extra 12px on each side to absorb border spacing
   }
 
   table {
     width: 100%;
-    border-spacing: 10px;
+    border-spacing: 12px;
 
     td {
       width: 33%;
@@ -319,7 +332,7 @@ body {
     }
 
     h1 {
-      font: normal 20px $monospace;
+      font: normal 20px $nav-font;
       text-transform: lowercase;
       padding: 12px 0;
       color: $nav-title;

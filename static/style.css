@@ -30,23 +30,34 @@ ol, ul {
    - Tables
 */
 body {
-  background: #f4f4f4;
+  background: white;
   color: #333333; }
 
 /* Site layout */
+/*
+.overlay {
+  position: absolute;
+  background: url('24.png');
+  width: 100%;
+  height: 10000px;
+  z-index: 3;
+  opacity: 0.5;
+}
+*/
 .right {
   text-align: right; }
 
 .column {
   max-width: 600px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  padding: 0 24px; }
 
 .header {
   height: 48px;
   width: 100%;
   background: #444444; }
   .header h1 {
-    font: normal 20px Courier, monospace;
+    font: normal 20px "Varela Round", Courier, monospace;
     color: #666666;
     padding: 12px 0; }
   .header a {
@@ -55,26 +66,25 @@ body {
     color: #eeeeee; }
 
 .content {
-  padding: 0 0 10px 0; }
+  padding: 0 0 12px 0; }
+  .content .column {
+    background: #fff; }
   .content h1 {
-    font: normal 36px/48px Georgia, serif;
+    font: normal 36px/48px "Varela Round", Georgia, serif;
     color: #333333;
-    padding: 36px 0 23px 0; }
+    padding: 36px 0 24px 0; }
   .content h2 {
-    font: normal 24px/48px Georgia, serif;
-    color: #333333;
-    padding: 12px 0; }
+    font: normal 24px/48px "Varela Round", Georgia, serif;
+    color: #333333; }
   .content h3 {
-    font: bold 16px/24px Georgia, serif;
+    font: italic 18px/24px "Varela Round", Georgia, serif;
     color: #333333;
     padding: 12px 0; }
   .content p {
     font: normal 16px/24px Georgia, serif;
     padding: 12px 0; }
   .content li {
-    font: normal 16px/24px Georgia, serif;
-    padding: 0;
-    margin: 0; }
+    font: normal 16px/24px Georgia, serif; }
   .content a, .content a code {
     color: #009966;
     text-decoration: none; }
@@ -84,7 +94,7 @@ body {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: white;
+    background: #eeeeee;
     border-radius: 4px;
     font-family: Courier, monospace;
     color: #555555;
@@ -95,7 +105,7 @@ body {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: white;
+    background: #eeeeee;
     border-radius: 4px;
     font-family: Courier, monospace;
     color: #555555;
@@ -164,7 +174,7 @@ body {
 
 .comments {
   width: 100%;
-  background: #fff; }
+  background: #eee; }
   .comments .column {
     padding: 24px 0;
     font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
@@ -193,7 +203,7 @@ body {
       color: #888888;
       font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .bottom table h1 {
-      font: normal 20px Courier, monospace;
+      font: normal 20px "Varela Round", Courier, monospace;
       text-transform: lowercase;
       padding: 12px 0;
       color: #666666; }
@@ -207,7 +217,7 @@ body {
     color: #eeeeee; }
 
 .codehilite .c, .codehilite .c1, .codehilite .cm {
-  color: #aaaaaa; }
+  color: #a1a1a1; }
 .codehilite .k {
   color: #009966; }
 .codehilite .kd {
@@ -217,7 +227,7 @@ body {
 .codehilite .nc {
   color: #009999; }
 .codehilite .p {
-  color: #888888; }
+  color: #828282; }
 .codehilite .s, .codehilite .sc {
   color: #cc8800; }
 .codehilite .m {

@@ -1,55 +1,55 @@
-/* Global style variables */
-
-$lucida:              'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-$georgia:             Georgia, serif;
-$helvetica:           'Helvetica', 'Helvetica Neue', 'Arial', sans-serif;
-
-$header:              'Varela Round', Georgia, serif;
-$serif:               $georgia;
-$sans:                $lucida;
-$monospace:           Courier, monospace;
+// Fonts
+$nav-font:            'Varela Round', Courier, monospace;
+$header-font:         'Varela Round', Georgia, serif;
+$body-font:           Georgia, serif;
+$sans:                'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+$code-font:           Courier, monospace;
 
 $header-color:        #333;
-$h1-color:            $header-color;
-$h2-color:            $header-color;
-$h3-color:            $header-color;
-$h4-color:            $header-color;
-
 $content-bg:          #fff;
 $text-color:          #333;
 
-$link:                hsl(160, 100%, 30%);
-$link-hover:          hsl(160, 100%, 20%);
+$link:                hsl(100, 100%, 30%);
+$link-hover:          hsl(100, 100%, 20%);
 
 $tag-color:           #888;
 $tag-bg:              mix($content-bg, $text-color, 90%);
 
-$code-bg:             #eee;
-$code-color:          #555;
+$code-bg:             hsl(100, 20%, 95%);
+$code-color:          mix($code-bg, #000, 50%);
 
-$quote-bg:            #fff;
-$quote-color:         #444;
-$quote-color-light:   lighten($quote-color, 20%);
+$quote-bg:            hsl(220, 20%, 95%);
+$quote-color:         hsl(220, 20%, 60%);
+$quote-color-light:   hsl(220, 20%, 60%);
 
-$nav-font:            'Varela Round', Courier, monospace;
 $nav-title:           #666;
-$nav-bg:              #444;
+$nav-bg:              hsl(0, 0%, 25%);
 $nav-text:            #888;
 $nav-link:            #bbb;
-$nav-hover:           #eee;
+$nav-hover:           hsl(100, 60%, 60%);
 
-$pad:                 24px;
+$comments-bg:         hsl(0, 0%, 86%);
+$image-bg:            hsl(0, 0%, 94%);
+
+$update-bg:           hsl(40, 100%, 93%);
+$update-color:        hsl(40, 60%, 50%);
+$update-link:         hsl(40, 100%, 40%);
+$update-hover:        hsl(40, 100%, 30%);
+
+$table-bg:            hsl(0, 0%, 94%);
+$table-color:         mix($table-bg, $text-color, 20%);
+$table-head-color:    hsl(0, 0%, 60%);
+$table-alt-bg:        hsl(0, 0%, 97%);
+
+// Mixins
 
 @mixin code {
   @include rounded;
   background:     $code-bg;
-  border-radius:  4px;
-  font-family:    $monospace;
+  font-family:    $code-font;
   color:          $code-color;
   overflow:       auto;
 }
-
-/* Generic functionality */
 
 @mixin rounded($radius: 6px) {
   border-radius: $radius;
@@ -57,7 +57,7 @@ $pad:                 24px;
   -webkit-border-radius: $radius;
 }
 
-/* Reset */
+// Styles
 
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
 acronym, address, cite, code, img, ins, q, s, samp, small, strike,
@@ -73,6 +73,8 @@ caption, tbody, tfoot, thead, tr, th, td {
 
 body {
   line-height: 1;
+  background: $content-bg;
+  color: $text-color;
 }
 
 table {
@@ -80,37 +82,17 @@ table {
 }
 
 a {
+  color: $link;
   text-decoration: none;
+
+  &:hover {
+    color: $link-hover;
+  }
 }
 
 ol, ul {
   margin-left: 24px;
 }
-
-/* Text styles */
-
-/* TODO:
-   - Edit insert boxes
-   - Tables
-*/
-
-body {
-  background: $content-bg;
-  color: $text-color;
-}
-
-/* Site layout */
-
-/*
-.overlay {
-  position: absolute;
-  background: url('24.png');
-  width: 100%;
-  height: 10000px;
-  z-index: 3;
-  opacity: 0.5;
-}
-*/
 
 .right {
   text-align: right;
@@ -122,16 +104,158 @@ body {
   padding: 0 24px;
 }
 
-.header {
-  height: 48px;
-  width: 100%;
-  background: $nav-bg;
+.content {
+  padding: 0 0 12px 0;
 
   h1 {
-    font: normal 20px $nav-font;
-    color: $nav-title;
+    font: normal 36px/48px $header-font;
+    color: $header-color;
+    padding: 36px 0 24px 0;
+  }
+
+  h2 {
+    font: normal 24px/48px $header-font;
+    color: $header-color;
+  }
+
+  h3 {
+    font: italic 18px/24px $header-font;
+    color: $header-color;
     padding: 12px 0;
   }
+
+  p {
+    font: normal 16px/24px $body-font;
+    padding: 12px 0;
+  }
+
+  li {
+    font: normal 16px/24px $body-font;
+  }
+
+  a, a code {
+    color: $link;
+
+    &:hover {
+      color: $link-hover;
+    }
+  }
+
+  code {
+    @include code;
+    padding: 2px 4px;
+    font: 15px/20px $code-font;
+  }
+
+  pre {
+    @include code;
+    padding: 12px;
+    font: 14px/24px $code-font;
+  }
+
+  tt {
+    font: 15px/20px $code-font;
+    color: $code-color;
+  }
+
+  blockquote {
+    @include rounded;
+    background: $quote-bg;
+    color: $quote-color;
+    padding: 0 12px;
+
+    p {
+      font: italic 16px/24px $body-font;
+    }
+  }
+
+  .cite {
+    font: normal 13px/24px $sans;
+    color: $quote-color-light;
+    display: block;
+    text-align: right;
+    padding: 12px 24px 12px 0;
+
+    &:before {
+      content: '\2014\00A0';
+    }
+  }
+
+  blockquote.update {
+    background: $update-bg;
+    color: $update-color;
+
+    p {
+      font: normal 13px/24px $sans;
+    }
+
+    a {
+      color: $update-link;
+
+      &:hover {
+        color: $update-hover;
+      }
+    }
+  }
+
+  img {
+    @include rounded;
+    display: block;
+    padding: 12px;
+    margin: 0 auto;
+
+    &.framed {
+      background: $image-bg;
+    }
+  }
+
+  .table {
+    @include rounded;
+    background: $table-bg;
+    padding: 12px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: $table-color;
+
+    td {
+      font: normal 16px/24px $body-font;
+      padding: 0 4px;
+    }
+
+    thead {
+      td {
+        color: $table-head-color;
+        font: bold 14px/24px $sans;
+      }
+    }
+
+    tbody tr:nth-child(odd) {
+      background: $table-alt-bg;
+    }
+  }
+}
+
+.comments {
+  width: 100%;
+  background: $comments-bg;
+  font: normal 13px $sans;
+
+  .column {
+    padding: 24px 0;
+
+    a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
+      text-decoration: none;
+    }
+  }
+}
+
+.nav {
+  background: $nav-bg;
+  color: $nav-text;
+  font: normal 12px/18px $sans;
 
   a {
     color: $nav-link;
@@ -140,181 +264,30 @@ body {
   a:hover {
     color: $nav-hover;
   }
-}
 
-.content {
-  padding: 0 0 12px 0;
-
-  .column {
-    background: #fff;
+  code {
+    font: 14px $code-font;
   }
 
   h1 {
-    font: normal 36px/48px $header;
-    color: $h1-color;
-    padding: 36px 0 24px 0;
-  }
-
-  h2 {
-    font: normal 24px/48px $header;
-    color: $h2-color;
-  }
-
-  h3 {
-    font: italic 18px/24px $header;
-    color: $h3-color;
+    font: normal 20px $nav-font;
+    color: $nav-title;
     padding: 12px 0;
+    text-transform: lowercase;
   }
 
-  p {
-    font: normal 16px/24px $serif;
-    padding: 12px 0;
+  p + p {
+    padding-top: 12px;
   }
 
-  li {
-    font: normal 16px/24px $serif;
-  }
-
-  a, a code {
-    color: $link;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: $link-hover;
-  }
-
-  code {
-    @include code;
-    padding: 1px 3px;
-    font: 15px/20px $monospace;
-  }
-
-  pre {
-    @include code;
-    padding: 12px;
-    font: 14px/24px $monospace;
-
-    code {
-      padding: 0;
-      font-size: 14px;
-    }
-  }
-
-  tt {
-    font: 15px/20px $monospace;
-    color:          $code-color;
-  }
-
-  blockquote {
-    @include rounded;
-    background: $quote-bg;
-    padding: 0 12px;
-    margin: 0;
-
-    p {
-      color: $quote-color;
-      font: italic 16px/24px $serif;
-    }
-  }
-
-  .cite {
-    font: italic 14px/24px $serif;
-    color: $quote-color-light;
-    display: block;
-    text-align: right;
-    padding: 12px 24px 0 0;
-
-    &:before {
-      content: '\2014\00A0';
-    }
-  }
-
-  blockquote.update {
-    background: hsl(40, 100%, 93%);
-    border: solid 2px #fff;
-
-    p {
-      font-style: normal;
-      color: hsl(40, 60%, 60%);
-    }
-
-    a {
-      color: hsl(40, 100%, 40%);
-    }
-
-    a:hover {
-      color: hsl(40, 100%, 30%);
-    }
-  }
-
-  img {
-    @include rounded;
-    background: #fff;
-    display: block;
-    padding: 12px;
-    margin: 0 auto;
-  }
-
-  .table {
-    @include rounded;
-    background: #fff;
-    padding: 12px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-
-    thead {
-      td {
-        color: #888;
-        font: bold 14px $sans;
-        padding: 0 0 8px 0;
-      }
-    }
-
-    td {
-      font: normal 16px/24px $serif;
-    }
-
-    tr + tr {
-      border-top: solid 1px #eee;
-    }
-  }
+  width: 100%;
 }
 
-.comments {
-  width: 100%;
-  background: #eee;
-
-  .column {
-    padding: 24px 0;
-    font: normal 13px $sans;
-
-    a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
-      text-decoration: none;
-    }
-
-    a {
-      color: $link;
-    }
-
-    a:hover {
-      color: $link-hover;
-    }
-  }
+.nav.top {
+  height: 48px;
 }
 
-.bottom {
-  width: 100%;
-  padding: 0;
-  background: $nav-bg;
-
-  code {
-    font: 14px $monospace;
-  }
-
+.nav.bottom {
   .column {
     max-width: 624px; // extra 12px on each side to absorb border spacing
   }
@@ -325,45 +298,19 @@ body {
 
     td {
       width: 33%;
-      text-align: left;
       vertical-align: top;
-      color: $nav-text;
-      font: normal 12px/18px $sans;
     }
-
-    h1 {
-      font: normal 20px $nav-font;
-      text-transform: lowercase;
-      padding: 12px 0;
-      color: $nav-title;
-    }
-
-    h2 {
-      font: bold 14px/20px $sans;
-    }
-
-    h2, p, ul {
-      padding: 0 0 10px 0;
-    }
-  }
-
-  a {
-    color: $nav-link;
-  }
-
-  a:hover {
-    color: $nav-hover;
   }
 }
 
 // Syntax highlighting
 .codehilite {
   .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
-  .k           { color: hsl(160, 100%, 30%); } // keyword
-  .kd          { color: hsl(160, 100%, 30%); } // keyword declaration
+  .k           { color: hsl(100, 100%, 30%); } // keyword
+  .kd          { color: hsl(120, 100%, 30%); } // keyword declaration
   .kt          { color: hsl(180, 100%, 30%); } // keyword type
   .nc          { color: hsl(180, 100%, 30%); } // class name
   .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
   .s, .sc      { color: hsl(40, 100%, 40%); } // string
-  .m           { color: hsl(270, 60%, 60%); } // number
+  .m           { color: hsl(200, 100%, 40%); } // number
 }

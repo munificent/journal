@@ -1,6 +1,3 @@
-/* Global style variables */
-/* Generic functionality */
-/* Reset */
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
 acronym, address, cite, code, img, ins, q, s, samp, small, strike,
 sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
@@ -13,37 +10,22 @@ caption, tbody, tfoot, thead, tr, th, td {
   vertical-align: baseline; }
 
 body {
-  line-height: 1; }
+  line-height: 1;
+  background: white;
+  color: #333333; }
 
 table {
   border-spacing: 0; }
 
 a {
+  color: #339900;
   text-decoration: none; }
+  a:hover {
+    color: #226600; }
 
 ol, ul {
   margin-left: 24px; }
 
-/* Text styles */
-/* TODO:
-   - Edit insert boxes
-   - Tables
-*/
-body {
-  background: white;
-  color: #333333; }
-
-/* Site layout */
-/*
-.overlay {
-  position: absolute;
-  background: url('24.png');
-  width: 100%;
-  height: 10000px;
-  z-index: 3;
-  opacity: 0.5;
-}
-*/
 .right {
   text-align: right; }
 
@@ -52,23 +34,8 @@ body {
   margin: 0 auto;
   padding: 0 24px; }
 
-.header {
-  height: 48px;
-  width: 100%;
-  background: #444444; }
-  .header h1 {
-    font: normal 20px "Varela Round", Courier, monospace;
-    color: #666666;
-    padding: 12px 0; }
-  .header a {
-    color: #bbbbbb; }
-  .header a:hover {
-    color: #eeeeee; }
-
 .content {
   padding: 0 0 12px 0; }
-  .content .column {
-    background: #fff; }
   .content h1 {
     font: normal 36px/48px "Varela Round", Georgia, serif;
     color: #333333;
@@ -86,149 +53,139 @@ body {
   .content li {
     font: normal 16px/24px Georgia, serif; }
   .content a, .content a code {
-    color: #009966;
-    text-decoration: none; }
-  .content a:hover {
-    color: #006644; }
+    color: #339900; }
+    .content a:hover, .content a code:hover {
+      color: #226600; }
   .content code {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: #eeeeee;
-    border-radius: 4px;
+    background: #f1f5f0;
     font-family: Courier, monospace;
-    color: #555555;
+    color: #787a78;
     overflow: auto;
-    padding: 1px 3px;
+    padding: 2px 4px;
     font: 15px/20px Courier, monospace; }
   .content pre {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: #eeeeee;
-    border-radius: 4px;
+    background: #f1f5f0;
     font-family: Courier, monospace;
-    color: #555555;
+    color: #787a78;
     overflow: auto;
     padding: 12px;
     font: 14px/24px Courier, monospace; }
-    .content pre code {
-      padding: 0;
-      font-size: 14px; }
   .content tt {
     font: 15px/20px Courier, monospace;
-    color: #555555; }
+    color: #787a78; }
   .content blockquote {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: white;
-    padding: 0 12px;
-    margin: 0; }
+    background: #f0f1f5;
+    color: #8592ad;
+    padding: 0 12px; }
     .content blockquote p {
-      color: #444444;
       font: italic 16px/24px Georgia, serif; }
   .content .cite {
-    font: italic 14px/24px Georgia, serif;
-    color: #777777;
+    font: normal 13px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: #8592ad;
     display: block;
     text-align: right;
-    padding: 12px 24px 0 0; }
+    padding: 12px 24px 12px 0; }
     .content .cite:before {
       content: '\2014\00A0'; }
   .content blockquote.update {
     background: #fff3db;
-    border: solid 2px #fff; }
+    color: #cc9933; }
     .content blockquote.update p {
-      font-style: normal;
-      color: #d6ad5c; }
+      font: normal 13px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .content blockquote.update a {
       color: #cc8800; }
-    .content blockquote.update a:hover {
-      color: #996600; }
+      .content blockquote.update a:hover {
+        color: #996600; }
   .content img {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: #fff;
     display: block;
     padding: 12px;
     margin: 0 auto; }
+    .content img.framed {
+      background: #f0f0f0; }
   .content .table {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: #fff;
+    background: #f0f0f0;
     padding: 12px; }
   .content table {
     width: 100%;
-    border-collapse: collapse; }
-    .content table thead td {
-      color: #888;
-      font: bold 14px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-      padding: 0 0 8px 0; }
+    border-collapse: collapse;
+    color: #585858; }
     .content table td {
-      font: normal 16px/24px Georgia, serif; }
-    .content table tr + tr {
-      border-top: solid 1px #eee; }
+      font: normal 16px/24px Georgia, serif;
+      padding: 0 4px; }
+    .content table thead td {
+      color: #999999;
+      font: bold 14px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    .content table tbody tr:nth-child(odd) {
+      background: #f7f7f7; }
 
 .comments {
   width: 100%;
-  background: #eee; }
+  background: #dbdbdb;
+  font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
   .comments .column {
-    padding: 24px 0;
-    font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    padding: 24px 0; }
     .comments .column a.dsq-subscribe-email em, .comments .column a.dsq-subscribe-rss em {
       text-decoration: none; }
-    .comments .column a {
-      color: #009966; }
-    .comments .column a:hover {
-      color: #006644; }
 
-.bottom {
-  width: 100%;
-  padding: 0;
-  background: #444444; }
-  .bottom code {
-    font: 14px Courier, monospace; }
-  .bottom .column {
-    max-width: 660px; }
-  .bottom table {
-    width: 100%;
-    border-spacing: 10px; }
-    .bottom table td {
-      width: 33%;
-      text-align: left;
-      vertical-align: top;
-      color: #888888;
-      font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-    .bottom table h1 {
-      font: normal 20px "Varela Round", Courier, monospace;
-      text-transform: lowercase;
-      padding: 12px 0;
-      color: #666666; }
-    .bottom table h2 {
-      font: bold 14px/20px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-    .bottom table h2, .bottom table p, .bottom table ul {
-      padding: 0 0 10px 0; }
-  .bottom a {
+.nav {
+  background: #404040;
+  color: #888888;
+  font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  width: 100%; }
+  .nav a {
     color: #bbbbbb; }
-  .bottom a:hover {
-    color: #eeeeee; }
+  .nav a:hover {
+    color: #85d65c; }
+  .nav code {
+    font: 14px Courier, monospace; }
+  .nav h1 {
+    font: normal 20px "Varela Round", Courier, monospace;
+    color: #666666;
+    padding: 12px 0;
+    text-transform: lowercase; }
+  .nav p + p {
+    padding-top: 12px; }
+
+.nav.top {
+  height: 48px; }
+
+.nav.bottom .column {
+  max-width: 624px; }
+.nav.bottom table {
+  width: 100%;
+  border-spacing: 12px; }
+  .nav.bottom table td {
+    width: 33%;
+    vertical-align: top; }
 
 .codehilite .c, .codehilite .c1, .codehilite .cm {
-  color: #a1a1a1; }
+  color: #b4b7b4; }
 .codehilite .k {
-  color: #009966; }
+  color: #339900; }
 .codehilite .kd {
-  color: #009966; }
+  color: #009900; }
 .codehilite .kt {
   color: #009999; }
 .codehilite .nc {
   color: #009999; }
 .codehilite .p {
-  color: #828282; }
+  color: #9c9e9c; }
 .codehilite .s, .codehilite .sc {
   color: #cc8800; }
 .codehilite .m {
-  color: #995cd6; }
+  color: #0088cc; }

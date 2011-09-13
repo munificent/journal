@@ -1,4 +1,4 @@
-# Converts my hacked front matter to YAML.
+# Comma separate tags.
 import utils
 import re
 import os.path
@@ -12,15 +12,13 @@ def fix_file(path):
         date = basename.replace('-', '/')
         print date
 
+        def fixcommas(g):
+            return 'tags: ' + g.group(1).replace(' ', ', ') + '\n'
+
         # Parse the title and link
-        if 'permalink = ' in content:
-            content = re.sub('^title = ([^\n]+)\npermalink = ([^\n]+)\ntags = ([^\n]+)\n',
-                r'---\ntitle: \1\ntags: \3\npermalink: \2\ndate: ' + date + r'\n',
-                content)
-        else:
-            content = re.sub('^title = ([^\n]+)\ntags = ([^\n]+)\n',
-                r'---\ntitle: \1\ntags: \2\ndate: ' + date + r'\n',
-                content)
+        content = re.sub('tags: ([^\n]+)\n',
+            fixcommas,
+            content)
 
         # Save the file back out
         with open(path, 'w') as output:

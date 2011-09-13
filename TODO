@@ -1,4 +1,3 @@
-* Finish cleaning up the posts
 * Make sure Disqus is being given correct post name
 * Generate year archive pages
 * Generate tag archive pages
@@ -6,8 +5,6 @@
 * Make sure twitter button gets right URL
 * Generate real date list in footer
 * Generate real tag list in footer
-* Put post date in footer
-* Put post tags in footer
 * Generate RSS feed
 * Figure out how to pass custom lexers to markdown -> codehilite
 * Make a lexer for the old static Magpie

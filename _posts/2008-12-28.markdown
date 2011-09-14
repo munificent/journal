@@ -1,7 +1,7 @@
 ---
 title: "Fixing Ambiguities in Grammars"
 tags: code, f#, language, parsing
-permalink: fixing-ambiguities-in-yacc
+permalink: http://journal.stuffwithstuff.com/2008/12/28/fixing-ambiguities-in-yacc
 date: 2008/12/28
 ---
 For kicks, I've been writing a little toy programming language using [F#](http://www.apress.com/book/view/1590598504),

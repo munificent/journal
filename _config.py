@@ -48,5 +48,6 @@ blog.description = "Bob Nystrom's Blog"
 blog.timezone = "US/Pacific"
 
 blog.disqus.enabled = True
+blog.disqus.name = "journal-stuffwithstuff"
 
 blog.post.date_format = "%Y/%m/%d"

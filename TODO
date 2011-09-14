@@ -1,11 +1,9 @@
+* Add RSS link to nav
+* Add comments RSS link to nav
+* Add blogofile link to nav
 * Make sure Disqus is being given correct post name
-* Generate year archive pages
-* Generate tag archive pages
-* Make sure reddit button gets right URL
-* Make sure twitter button gets right URL
-* Generate real date list in footer
-* Generate real tag list in footer
-* Generate RSS feed
-* Figure out how to pass custom lexers to markdown -> codehilite
-* Make a lexer for the old static Magpie
-* Make my own Java lexer that doesn't use operator for {}
+* Figure out what disqus_identifier is for
+* Use reddit badge that shows votes
+* Use twitter badge that shows tweets
+* Use +1 badge that shows +1s
+* Set up build hook to generate css from scss

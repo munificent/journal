@@ -1,6 +1,6 @@
 ---
 title: "Meltwater: A Color Theme for XCode"
-tags: code
+categories: code
 date: 2010/07/07
 ---
 Because I'm a visual kind of person, one of the first things I do on a new

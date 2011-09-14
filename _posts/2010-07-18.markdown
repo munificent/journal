@@ -1,6 +1,6 @@
 ---
 title: "Jasic: A Complete Interpreter in One Java File"
-tags: code, jasic, language, parsing
+categories: code, jasic, language, parsing
 date: 2010/07/18
 ---
 I just put the finishing touches on a tiny little interpreter project: Jasic.

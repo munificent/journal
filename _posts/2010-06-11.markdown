@@ -1,6 +1,6 @@
 ---
 title: "Amaranth, an Open Source Roguelike in C#"
-tags: c#, code, game-dev, roguelike
+categories: c#, code, game-dev, roguelike
 date: 2010/06/11
 ---
 Tonight I get to do something I've wanted to do for a really long time: I'm

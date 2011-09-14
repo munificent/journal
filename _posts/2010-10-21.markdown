@@ -1,6 +1,6 @@
 ---
 title: "The Language I Wish Go Was"
-tags: code, go, language
+categories: code, go, language
 date: 2010/10/21
 ---
 By all rights, I should love [Go](http://golang.org/). I like low-level languages. I'm

@@ -1,6 +1,6 @@
 ---
 title: "One and Only One"
-tags: code, language, magpie
+categories: code, language, magpie
 date: 2009/05/05
 ---
 My little language [Magpie](http://bitbucket.org/munificent/magpie/) has a feature that may at first seem really

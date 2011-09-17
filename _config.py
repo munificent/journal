@@ -20,6 +20,7 @@
 #  non-blogofile site, then you would set the site_url to the full URL
 #  including that subdirectory: "http://www.yoursite.com/path/to/blogofile-dir"
 site.url = "http://journal.stuffwithstuff.com"
+#site.url = "http://stuffwithstuff.com/journal-dev"
 
 #### Blog Settings ####
 blog = controllers.blog
@@ -34,7 +35,7 @@ blog.enabled = True
 #  and you set blog_path to "/blog" your full blog URL would be
 #  "http://www.yoursite.com/~ryan/blog"
 #  Leave blank "" to set to the root of site_url
-blog.path = "."
+blog.path = ""
 
 ## blog_name -- Your Blog's name.
 # This is used repeatedly in default blog templates

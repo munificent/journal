@@ -11,7 +11,6 @@ caption, tbody, tfoot, thead, tr, th, td {
 
 body {
   line-height: 1;
-  background: white;
   color: #333333; }
 
 table {
@@ -22,9 +21,6 @@ a {
   text-decoration: none; }
   a:hover {
     color: #226600; }
-
-ol, ul {
-  margin-left: 24px; }
 
 .right {
   text-align: right; }
@@ -51,6 +47,8 @@ ol, ul {
   .content p {
     font: normal 16px/24px Georgia, serif;
     padding: 12px 0; }
+  .content ol, .content ul {
+    margin-left: 24px; }
   .content li {
     font: normal 16px/24px Georgia, serif; }
   .content a, .content a code {
@@ -62,21 +60,19 @@ ol, ul {
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     background: #f1f5f0;
-    font-family: Courier, monospace;
-    color: #787a78;
-    overflow: auto;
     padding: 2px 4px;
+    color: #787a78;
     font: 15px/20px Courier, monospace; }
   .content pre {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     background: #f1f5f0;
-    font-family: Courier, monospace;
+    margin: 6px 0;
+    padding: 6px 12px;
     color: #787a78;
-    overflow: auto;
-    padding: 12px;
-    font: 14px/24px Courier, monospace; }
+    font: 14px/24px Courier, monospace;
+    overflow: auto; }
   .content tt {
     font: 15px/20px Courier, monospace;
     color: #787a78; }
@@ -86,9 +82,14 @@ ol, ul {
     -webkit-border-radius: 6px;
     background: #f0f1f5;
     color: #8592ad;
-    padding: 0 12px; }
+    padding: 6px 12px;
+    margin: 6px 0; }
     .content blockquote p {
       font: italic 16px/24px Georgia, serif; }
+      .content blockquote p:first-child {
+        padding-top: 0; }
+      .content blockquote p:last-child {
+        padding-bottom: 0; }
   .content .cite {
     font: normal 13px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #8592ad;
@@ -99,20 +100,21 @@ ol, ul {
       content: '\2014\00A0'; }
   .content blockquote.update {
     background: #fff3db;
-    color: #cc9933; }
+    color: #b88a2e; }
     .content blockquote.update p {
       font: normal 13px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
     .content blockquote.update a {
-      color: #cc8800; }
+      color: #b37700; }
       .content blockquote.update a:hover {
-        color: #996600; }
+        color: #805500; }
   .content img {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
+    background: inherit;
     display: block;
-    padding: 12px;
-    margin: 0 auto; }
+    padding: 6px;
+    margin: 6px auto; }
     .content img.framed {
       background: #f0f0f0; }
   .content .table {
@@ -120,14 +122,15 @@ ol, ul {
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     background: #f0f0f0;
-    padding: 12px; }
+    padding: 6px;
+    margin: 6px 0; }
   .content table {
     width: 100%;
     border-collapse: collapse;
     color: #585858; }
     .content table td {
       font: normal 16px/24px Georgia, serif;
-      padding: 0 4px; }
+      padding: 0 6px; }
     .content table thead td {
       color: #999999;
       font: bold 14px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
@@ -177,8 +180,15 @@ ol, ul {
     color: #666666;
     padding: 12px 0;
     text-transform: lowercase; }
-  .nav p + p {
-    padding-top: 12px; }
+  .nav ol, .nav ul {
+    margin-left: 12px;
+    padding-bottom: 12px; }
+  .nav li {
+    margin-left: 6px; }
+  .nav p {
+    padding-bottom: 12px; }
+  .nav small {
+    color: #666666; }
 
 .nav.top {
   height: 48px; }

@@ -1,4 +1,3 @@
-// Fonts
 $nav-font:            'Varela Round', Courier, monospace;
 $header-font:         'Varela Round', Georgia, serif;
 $body-font:           Georgia, serif;
@@ -6,14 +5,10 @@ $sans:                'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 $code-font:           Courier, monospace;
 
 $header-color:        #333;
-$content-bg:          #fff;
 $text-color:          #333;
 
 $link:                hsl(100, 100%, 30%);
 $link-hover:          hsl(100, 100%, 20%);
-
-$tag-color:           #888;
-$tag-bg:              mix($content-bg, $text-color, 90%);
 
 $code-bg:             hsl(100, 20%, 95%);
 $code-color:          mix($code-bg, #000, 50%);
@@ -25,38 +20,27 @@ $quote-color-light:   hsl(220, 20%, 60%);
 $nav-title:           #666;
 $nav-bg:              hsl(0, 0%, 25%);
 $nav-text:            #888;
+$nav-text-small:      #666;
 $nav-link:            #bbb;
 $nav-hover:           hsl(100, 60%, 60%);
 
 $comments-bg:         hsl(0, 0%, 86%);
-$image-bg:            hsl(0, 0%, 94%);
+$box-bg:              hsl(0, 0%, 94%);
 
 $update-bg:           hsl(40, 100%, 93%);
-$update-color:        hsl(40, 60%, 50%);
-$update-link:         hsl(40, 100%, 40%);
-$update-hover:        hsl(40, 100%, 30%);
+$update-color:        hsl(40, 60%, 45%);
+$update-link:         hsl(40, 100%, 35%);
+$update-hover:        hsl(40, 100%, 25%);
 
-$table-bg:            hsl(0, 0%, 94%);
-$table-color:         mix($table-bg, $text-color, 20%);
+$table-color:         mix($box-bg, $text-color, 20%);
 $table-head-color:    hsl(0, 0%, 60%);
 $table-alt-bg:        hsl(0, 0%, 97%);
 
-$post-box-bg:         hsl(0, 0%, 94%);
-
-// Mixins
-
-@mixin code {
-  @include rounded;
-  background:     $code-bg;
-  font-family:    $code-font;
-  color:          $code-color;
-  overflow:       auto;
-}
-
-@mixin rounded($radius: 6px) {
-  border-radius: $radius;
-  -moz-border-radius: $radius;
-  -webkit-border-radius: $radius;
+@mixin box($color) {
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  background: $color;
 }
 
 // Styles
@@ -75,7 +59,6 @@ caption, tbody, tfoot, thead, tr, th, td {
 
 body {
   line-height: 1;
-  background: $content-bg;
   color: $text-color;
 }
 
@@ -90,10 +73,6 @@ a {
   &:hover {
     color: $link-hover;
   }
-}
-
-ol, ul {
-  margin-left: 24px;
 }
 
 .right {
@@ -134,6 +113,10 @@ ol, ul {
     padding: 12px 0;
   }
 
+  ol, ul {
+    margin-left: 24px;
+  }
+
   li {
     font: normal 16px/24px $body-font;
   }
@@ -147,16 +130,19 @@ ol, ul {
   }
 
   code {
-    @include code;
+    @include box($code-bg);
     padding: 2px 4px;
+    color: $code-color;
     font: 15px/20px $code-font;
   }
 
   pre {
-    @include code;
-    padding: 6px 12px;
+    @include box($code-bg);
     margin: 6px 0;
+    padding: 6px 12px;
+    color: $code-color;
     font: 14px/24px $code-font;
+    overflow: auto;
   }
 
   tt {
@@ -165,8 +151,7 @@ ol, ul {
   }
 
   blockquote {
-    @include rounded;
-    background: $quote-bg;
+    @include box($quote-bg);
     color: $quote-color;
     padding: 6px 12px;
     margin: 6px 0;
@@ -214,19 +199,18 @@ ol, ul {
   }
 
   img {
-    @include rounded;
+    @include box(inherit);
     display: block;
     padding: 6px;
     margin: 6px auto;
 
     &.framed {
-      background: $image-bg;
+      background: $box-bg;
     }
   }
 
   .table {
-    @include rounded;
-    background: $table-bg;
+    @include box($box-bg);
     padding: 6px;
     margin: 6px 0;
   }
@@ -264,8 +248,7 @@ ol, ul {
 // }
 
 .post-box {
-  @include rounded;
-  background: $post-box-bg;
+  @include box($box-bg);
   padding: 6px 12px;
   margin: 6px 0;
 
@@ -323,8 +306,21 @@ ol, ul {
     text-transform: lowercase;
   }
 
-  p + p {
-    padding-top: 12px;
+  ol, ul {
+    margin-left: 12px;
+    padding-bottom: 12px;
+  }
+
+  li {
+    margin-left: 6px;
+  }
+
+  p {
+    padding-bottom: 12px;
+  }
+
+  small {
+    color: $nav-text-small;
   }
 
   width: 100%;

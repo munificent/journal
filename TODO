@@ -1,5 +1,4 @@
 * Add RSS link to nav
 * Add comments RSS link to nav
 * Set up build hook to generate css from scss
-* Proper <title> tag
 * Make sure RSS stuff looks right

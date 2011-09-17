@@ -6,6 +6,7 @@
     <%include file="head.mako" />
   </head>
   <body>
+    <div class="overlay"></div>
     <%include file="header.mako" />
     ${next.body()}
     <%include file="footer.mako" />

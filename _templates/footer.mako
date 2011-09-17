@@ -11,44 +11,41 @@
   <tr>
     <td>
 % if post is not UNDEFINED:
-      <h1>This Post</h1>
-      <p>Posted on <strong>${post.date.strftime("%B %d, %Y")}</strong>.</p>
+      <h1>About the Post</h1>
+      <p>Posted on <a href="${bf.util.site_path_helper(bf.config.blog.path,'archive')}">${post.date.strftime("%B %d, %Y")}</a>.</p>
       <%
          tag_links = []
          for tag in post.categories:
              tag_links.append("<a href='%s'>%s</a>" % (tag.path, tag.name))
       %>
       <p>Tagged ${", ".join(tag_links)}.</p>
+      <p><script type="text/javascript" src="http://www.reddit.com/static/button/button1.js"></script></p>
+      <p><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="munificentbob">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script></p>
       <p>
-        <a href="http://www.reddit.com/submit" onclick="window.location = 'http://www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <img src="http://www.reddit.com/static/spreddit1.gif" alt="submit to reddit" border="0" /> </a>
-        <a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-via="munificentbob">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-        <g:plusone size="small" count="false"></g:plusone>
-
+        <div class="g-plusone" data-size="small" data-annotation="inline" data-width="200"></div>
         <script type="text/javascript">
           (function() {
-            var po = document.createElement('script');
-            po.type = 'text/javascript'; po.async = true;
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
             po.src = 'https://apis.google.com/js/plusone.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(po, s);
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
           })();
         </script>
       </p>
-      <h1>Posts by Date</h1>
+% else:
+      <h1>Archives</h1>
       <ul>
-        $(years)
+        <li>Organized <a href="${bf.util.site_path_helper(bf.config.blog.path,'archive')}">by date</a></li>
       </ul>
 % endif
-
     </td>
     <td>
-      <h1>Posts by Tag</h1>
-      <ul>
-        $(alltags)
-      </ul>
+      <h1>About the Blog</h1>
+      <p>The <a href="${bf.util.site_path_helper(bf.config.blog.path,'archive')}">archives</a> have older posts.</p>
+      <p>This blog is built using <a href="http://www.blogofile.com">blogofile</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     </td>
     <td>
-      <h1>Other Stuff</h1>
+      <h1>About Me</h1>
+      <p>I've got other stuff you can see here:</p>
       <ul>
         <li>Code at <a href="http://github.com/munificent">github</a></li>
         <li>Code at <a href="http://bitbucket.org/munificent">bitbucket</a></li>
@@ -58,7 +55,7 @@
         <li>Posts at <a href="http://plus.google.com/100798142896685420545">google+</a></li>
         <li>My <a href="http://www.stuffwithstuff.com/bob-nystrom.html">r&eacute;sum&eacute;</a></li>
       </ul>
-      <h1>Contact</h1>
+      <br/>
       <p>You can email me at <code>robert</code> at <code>stuffwithstuff.com</code>.</p>
       <p>&copy; 2008-2011 Robert Nystrom.</p>
     </td>

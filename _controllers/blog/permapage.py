@@ -6,14 +6,26 @@ blog = bf.config.controllers.blog
 
 
 def run():
+    write_index()
     write_permapages()
 
+
+def write_index():
+    "Write the most recent post to the main index.html"
+
+    env = {
+        "post": blog.posts[0],
+        "posts": blog.posts
+    }
+
+    bf.writer.materialize_template(
+            "permapage.mako", bf.util.path_join("index.html"), env)
 
 def write_permapages():
     "Write blog posts to their permalink locations"
     site_re = re.compile(bf.config.site.url, re.IGNORECASE)
     num_posts = len(blog.posts)
-    
+
     for i, post in enumerate(blog.posts):
         if post.permalink:
             path = site_re.sub("", post.permalink)
@@ -33,6 +45,6 @@ def write_permapages():
             env['prev_post'] = blog.posts[i + 1]
         if i > 0:
             env['next_post'] = blog.posts[i - 1]
-        
+
         bf.writer.materialize_template(
                 "permapage.mako", bf.util.path_join(path, "index.html"), env)

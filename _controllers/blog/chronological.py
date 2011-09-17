@@ -4,11 +4,11 @@ from blogofile.cache import bf
 
 blog = bf.config.controllers.blog
 
+# Note: This is not being used. Just leaving it here for future use.
 
 def run():
     write_blog_chron(posts=blog.posts, root=blog.pagination_dir.lstrip("/"))
     write_blog_first_page()
-
 
 def write_blog_chron(posts, root):
     page_num = 1
@@ -35,7 +35,6 @@ def write_blog_chron(posts, root):
         }
         bf.writer.materialize_template("chronological.mako", fn, env)
         page_num += 1
-
 
 def write_blog_first_page():
     if not blog.custom_index:

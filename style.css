@@ -38,8 +38,9 @@ ol, ul {
   padding: 0 0 12px 0; }
   .content h1 {
     font: normal 36px/48px "Varela Round", Georgia, serif;
-    color: #333333;
     padding: 36px 0 24px 0; }
+    .content h1 a {
+      color: #333333; }
   .content h2 {
     font: normal 24px/48px "Varela Round", Georgia, serif;
     color: #333333; }
@@ -133,6 +134,24 @@ ol, ul {
     .content table tbody tr:nth-child(odd) {
       background: #f7f7f7; }
 
+.post-box {
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  background: #f0f0f0;
+  padding: 6px 12px;
+  margin: 6px 0; }
+  .post-box h2 {
+    font: normal 16px/24px "Varela Round", Georgia, serif;
+    color: #333333;
+    padding: 0; }
+  .post-box p {
+    font: normal 12px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    padding: 0; }
+
+.post-box + .post-box {
+  margin-top: 12px; }
+
 .comments {
   width: 100%;
   background: #dbdbdb;
@@ -165,10 +184,10 @@ ol, ul {
   height: 48px; }
 
 .nav.bottom .column {
-  max-width: 624px; }
+  max-width: 648px; }
 .nav.bottom table {
   width: 100%;
-  border-spacing: 12px; }
+  border-spacing: 24px; }
   .nav.bottom table td {
     width: 33%;
     vertical-align: top; }

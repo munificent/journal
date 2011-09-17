@@ -7,3 +7,5 @@
 * Use twitter badge that shows tweets
 * Use +1 badge that shows +1s
 * Set up build hook to generate css from scss
+* Title on category page
+* Fix category links in footer

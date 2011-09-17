@@ -50,4 +50,8 @@ blog.timezone = "US/Pacific"
 blog.disqus.enabled = True
 blog.disqus.name = "journal-stuffwithstuff"
 
+# This is the number of posts per page on the list pages, like categories and
+# chronological. Setting to a big number since I don't want those paged at all.
+blog.posts_per_page = 99999
+
 blog.post.date_format = "%Y/%m/%d"

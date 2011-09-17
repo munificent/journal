@@ -41,6 +41,8 @@ $table-color:         mix($table-bg, $text-color, 20%);
 $table-head-color:    hsl(0, 0%, 60%);
 $table-alt-bg:        hsl(0, 0%, 97%);
 
+$post-box-bg:         hsl(0, 0%, 94%);
+
 // Mixins
 
 @mixin code {
@@ -109,8 +111,11 @@ ol, ul {
 
   h1 {
     font: normal 36px/48px $header-font;
-    color: $header-color;
     padding: 36px 0 24px 0;
+
+    a {
+      color: $header-color;
+    }
   }
 
   h2 {
@@ -149,7 +154,8 @@ ol, ul {
 
   pre {
     @include code;
-    padding: 12px;
+    padding: 6px 12px;
+    margin: 6px 0;
     font: 14px/24px $code-font;
   }
 
@@ -162,10 +168,19 @@ ol, ul {
     @include rounded;
     background: $quote-bg;
     color: $quote-color;
-    padding: 0 12px;
+    padding: 6px 12px;
+    margin: 6px 0;
 
     p {
       font: italic 16px/24px $body-font;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
     }
   }
 
@@ -201,8 +216,8 @@ ol, ul {
   img {
     @include rounded;
     display: block;
-    padding: 12px;
-    margin: 0 auto;
+    padding: 6px;
+    margin: 6px auto;
 
     &.framed {
       background: $image-bg;
@@ -212,7 +227,8 @@ ol, ul {
   .table {
     @include rounded;
     background: $table-bg;
-    padding: 12px;
+    padding: 6px;
+    margin: 6px 0;
   }
 
   table {
@@ -222,7 +238,7 @@ ol, ul {
 
     td {
       font: normal 16px/24px $body-font;
-      padding: 0 4px;
+      padding: 0 6px;
     }
 
     thead {
@@ -236,6 +252,37 @@ ol, ul {
       background: $table-alt-bg;
     }
   }
+}
+
+// .overlay {
+//   background: url('24.png');
+//   width: 100%;
+//   height: 10000px;
+//   opacity: 0.5;
+//   z-index: 3;
+//   position: absolute;
+// }
+
+.post-box {
+  @include rounded;
+  background: $post-box-bg;
+  padding: 6px 12px;
+  margin: 6px 0;
+
+  h2 {
+    font: normal 16px/24px $header-font;
+    color: $header-color;
+    padding: 0; //12px 0;
+  }
+
+  p {
+    font: normal 12px/24px $sans;
+    padding: 0;
+  }
+}
+
+.post-box + .post-box {
+  margin-top: 12px;
 }
 
 .comments {
@@ -289,12 +336,12 @@ ol, ul {
 
 .nav.bottom {
   .column {
-    max-width: 624px; // extra 12px on each side to absorb border spacing
+    max-width: 648px; // extra 24px on each side to absorb border spacing
   }
 
   table {
     width: 100%;
-    border-spacing: 12px;
+    border-spacing: 24px;
 
     td {
       width: 33%;

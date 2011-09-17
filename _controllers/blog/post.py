@@ -13,6 +13,7 @@ import sys
 import datetime
 import re
 import operator
+import urllib
 import urlparse
 import hashlib
 import codecs
@@ -61,6 +62,21 @@ reserved_field_names = {
     "filename"   :"Reserved internally"
     }
 
+def sanitize(text):
+    """
+    Cleans up a string into a URL-friendly form.
+
+    Inspired loosely by WordPress:
+    http://core.trac.wordpress.org/browser/tags/3.2.1/wp-includes/formatting.php#L820
+    """
+    text = text.lower()
+
+    # Replace everything but alphanumeric with '-'
+    text = re.sub("[^A-Za-z0-9]", "-", text)
+
+    # Coalesce duplicate, leading, or trailing dashes
+    text = re.sub("-+", "-", text)
+    return text.strip("-")
 
 class PostParseException(Exception):
 
@@ -188,7 +204,7 @@ class Post(object):
             self.permalink = \
                     re.sub(":day", self.date.strftime("%d"), self.permalink)
 
-            title = self.__sanitize_with_dashes(self.slug)
+            title = sanitize(self.slug)
             self.permalink = \
                     re.sub(":title", title, self.permalink)
 
@@ -202,17 +218,6 @@ class Post(object):
                     self.title.encode('utf-8')).hexdigest(), self.permalink)
 
         logger.debug(u"Permalink: {0}".format(self.permalink))
-
-    def __sanitize_with_dashes(self, text):
-        # Inspired loosely by WordPress:
-        # http://core.trac.wordpress.org/browser/tags/3.2.1/wp-includes/formatting.php#L820
-
-        # Replace everything but alphanumeric with '-'
-        text = re.sub("[^A-Za-z0-9]", "-", text)
-
-        # Coalesce duplicate, leading, or trailing dashes
-        text = re.sub("-+", "-", text)
-        return text.strip("-")
 
     def __parse_yaml(self, yaml_src):
         y = yaml.load(yaml_src)
@@ -295,13 +300,13 @@ class Category(object):
 
     def __init__(self, name):
         self.name = unicode(name)
-        # TODO: slugification should be abstracted out somewhere reusable
-        # TODO: consider making url_name and path read-only properties?
-        self.url_name = self.name.lower().replace(" ", "-")
+        self.url_name = self.name
+        # urllib.quote here is to handle the "c#" tag without collapsing it
+        # to "c" like sanitize() would.
         self.path = bf.util.site_path_helper(
                 bf.config.controllers.blog.path,
                 bf.config.controllers.blog.category_dir,
-                self.url_name)
+                urllib.quote(self.url_name))
 
     def __eq__(self, other):
         if self.name == other.name:

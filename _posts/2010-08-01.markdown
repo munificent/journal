@@ -138,7 +138,7 @@ code is still written using classes and instances. If you have this in Magpie:
 
 At runtime, the interpreter will build this object hierarchy:
 
-![Object hierarchy for a class Foo and two instances of it](image/2010/08/prototype-hierarchy.png "Object Hierarchy")
+![Object hierarchy for a class Foo and two instances of it](/image/2010/08/prototype-hierarchy.png "Object Hierarchy")
 
 Every box represents an object and is of the same Java class in the
 interpreter (`Obj`). Objects `a` and `b` both have `Foo proto` as their

@@ -14,7 +14,7 @@
       <p>Tagged ${", ".join(tag_links)}.</p>
       <p>
       <script type="text/javascript">
-        reddit_url = "${post.permalink|h}";
+        reddit_url = "${post.permalink|h}/";
         reddit_title = "${post.title|h}";
       </script>
       <script type="text/javascript" src="http://www.reddit.com/static/button/button1.js"></script></p>

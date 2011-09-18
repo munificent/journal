@@ -2,3 +2,4 @@
 * Add comments RSS link to nav
 * Set up build hook to generate css from scss
 * Make sure RSS stuff looks right
+* Make separate pygments lexer for old magpie

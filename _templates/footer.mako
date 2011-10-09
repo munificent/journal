@@ -46,6 +46,7 @@
       <h1>About the Blog</h1>
       <p>The <a href="${bf.util.site_path_helper(bf.config.blog.path,'archive')}">archives</a> have older posts.</p>
       <p>This blog is built using <a href="http://www.blogofile.com">blogofile</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+      <p>It is lovingly designed by hand to fit a <a href="#" onclick="toggleGrid()">24 pixel grid</a>.</p>
     </td>
     <td>
       <h1>About Me</h1>

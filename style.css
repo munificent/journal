@@ -30,6 +30,9 @@ a {
   margin: 0 auto;
   padding: 0 24px; }
 
+.grid {
+  background: url("image/grid.png"); }
+
 .content {
   padding: 0 0 12px 0; }
   .content h1 {

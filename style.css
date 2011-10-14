@@ -64,7 +64,7 @@ a {
     -webkit-border-radius: 6px;
     background: #f1f5f0;
     padding: 2px 4px;
-    color: #787a78;
+    color: #606260;
     font: 15px/20px Courier, monospace; }
   .content pre {
     border-radius: 6px;
@@ -73,12 +73,12 @@ a {
     background: #f1f5f0;
     margin: 6px 0;
     padding: 6px 12px;
-    color: #787a78;
+    color: #606260;
     font: 14px/24px Courier, monospace;
     overflow: auto; }
   .content tt {
     font: 15px/20px Courier, monospace;
-    color: #787a78; }
+    color: #606260; }
   .content blockquote {
     border-radius: 6px;
     -moz-border-radius: 6px;
@@ -206,18 +206,22 @@ a {
     vertical-align: top; }
 
 .codehilite .c, .codehilite .c1, .codehilite .cm {
-  color: #b4b7b4; }
+  color: #a8aba8; }
 .codehilite .k {
   color: #339900; }
 .codehilite .kd {
   color: #009900; }
 .codehilite .kt {
   color: #009999; }
+.codehilite .o {
+  color: #3d748f; }
+.codehilite .nb {
+  color: #009980; }
 .codehilite .nc {
   color: #009999; }
 .codehilite .p {
-  color: #9c9e9c; }
+  color: #8b8e8b; }
 .codehilite .s, .codehilite .sc {
   color: #cc8800; }
-.codehilite .m {
+.codehilite .m, .codehilite .mf {
   color: #0088cc; }

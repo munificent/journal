@@ -11,7 +11,7 @@ $link:                hsl(100, 100%, 30%);
 $link-hover:          hsl(100, 100%, 20%);
 
 $code-bg:             hsl(100, 20%, 95%);
-$code-color:          mix($code-bg, #000, 50%);
+$code-color:          mix($code-bg, #000, 40%);
 
 $quote-bg:            hsl(220, 20%, 95%);
 $quote-color:         hsl(220, 20%, 60%);
@@ -356,8 +356,10 @@ a {
   .k           { color: hsl(100, 100%, 30%); } // keyword
   .kd          { color: hsl(120, 100%, 30%); } // keyword declaration
   .kt          { color: hsl(180, 100%, 30%); } // keyword type
+  .o           { color: hsl(200, 40%, 40%); } // operator
+  .nb          { color: hsl(170, 100%, 30%); } // built-in name
   .nc          { color: hsl(180, 100%, 30%); } // class name
   .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
   .s, .sc      { color: hsl(40, 100%, 40%); } // string
-  .m           { color: hsl(200, 100%, 40%); } // number
+  .m, .mf      { color: hsl(200, 100%, 40%); } // number
 }

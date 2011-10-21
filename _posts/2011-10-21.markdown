@@ -49,11 +49,11 @@ But tooling is gilding the lily. When you're talking about types, you expect, yo
     :::dart
     int i = someFunction();
 
-Turns into:
+Turns into (more or less, simplifying things a bit) this:
 
     :::dart
     var _temp = someFunction();
-    if (_temp is! int) throw 'Type error! Oh God what do we do now!';
+    if (_temp is! int) throw 'Type error! Run for your life!';
     var i = _temp;
 
 You can think of every type annotation as an *expectation*: this thing *should* be a number here. In checked mode, the VM will constantly validate your expectations and stop if something doesn't hold.
@@ -141,7 +141,7 @@ This is where things get weird. (Actually, if you're a type system person, they'
 
 This probably seems a little odd.
 
-<img alt="Your type errors will blot out the sun! Then we will code in the shade." src="/image/2011/10/daaart.jpg" class="framed"/>
+<img alt="Your type errors will blot out the sun! Then we will code in the shade." src="/image/2011/10/daaart.jpeg" class="framed"/>
 
 Maybe more than a little odd. In production mode, Dart behaves exactly as if it were a dynamically-typed language. Imagine if you decided to write your JavaScript like this (not that anyone would be [crazy enough to do that](http://code.google.com/closure/compiler/docs/js-for-compiler.html)):
 
@@ -159,7 +159,7 @@ OK, so what do we have? We have a nice little syntax for jamming type annotation
 
 That... doesn't really sound much like a "type system" compared to other languages. In fact, if you try to think of it as a type system, it's pretty disappointing. It's more like some type... stuff. Instead of thinking of it in terms of type systems, I tried to find something else I was familiar with from other languages that I could map it to. It finally clicked when someone at work referred to them as *type assertions*.
 
-*Now I get it!*
+**Now I get it.**
 
 If you've done C or C++ programming, you've probably used [`assert()`](http://en.wikipedia.org/wiki/Assertion_%28computing%29) or some flavor of it. If not, it looks like this:
 
@@ -173,9 +173,11 @@ That `assert` statement evaluates the condition in it. If it comes up false, the
 
 Debug is what developers use day in and day out. It has extra diagnostic stuff like symbol table information for debugging, and also includes all of the assertions. But there is also usually a *release* mode. This is what you ship to customers and run in production. In that mode, the assertions are compiled out. They are erased completely.
 
-Sound familiar?
+*Sound familiar?*
 
-Now why on Earth would you want to disable your asserts in release mode? Isn't that like wearing your life jacket in the boating classroom and then taking it off when you go out on the water? It turns out that removing your asserts at runtime has a few advantages:
+Now why on Earth would you want to disable your asserts in release mode? Isn't that like wearing your life jacket in the boating classroom and then taking it off when you go out on the water?
+
+It turns out that removing your asserts at runtime actually has a few advantages:
 
 1.  **It's faster.** All of those assert conditions have to be executed and
     checked at runtime. That can add a lot of runtime overhead. When I used to

@@ -71,11 +71,16 @@ You won't see a type error here because it will never actually get inside the `i
 Note that we said earlier that tools *can* do static type-checking if they want. What Dart does is *also* give you the option to perform those checks at runtime. This is actually how most static languages work too. Very few languages are *not* unsound, and in the presence of unsoundness, they have to check at runtime. Consider this Java code:
 
     :::java
-    int[] array = new int[5];
+    String[] array = new String[5];
     Object[] untyped = array;
-    untyped[2] = "not an int!";
+    untyped[2] = 123; // not a string
 
-Here we're creating an array of ints. Then we assign it to a variable whose type is an array of objects (i.e. anything). Then we try to stuff something that isn't an int (but *is* an object) in it.
+Here we're creating an array of strings. Then we assign it to a variable whose type is an array of objects (i.e. anything). Then we try to stuff something that isn't a string (but *is* an object) in it.
+
+<blockquote class="update">
+<p><em>Update 2011/10/23:</em> I was wrongly using an int array here. Changed it to <code>string[]</code>. I didn't realize only arrays of reference types are covariant in Java.
+</p>
+</blockquote>
 
 The static type checker won't catch this because [arrays are covariant in Java](http://c2.com/cgi/wiki?JavaArraysBreakTypeSafety). That means that to ensure the last line doesn't crash your VM, it will do a *runtime* check every time you set an element in an array to make sure it's the right type.
 
@@ -121,7 +126,7 @@ Since Dart lets you mix untyped and typed code, it just embraces this model of v
 
     There's a type error here (according to most static type systems). We're
     passing a `List<int>` to a function that takes a `List<Object>`, which
-    relies on [covariance](http://en.wikipedia.org/wiki/Covariance), but that
+    relies on [covariance](http://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29), but that
     isn't statically safe. This `contains` method *could* call `collection.add("not an int")` and that would be an error.
 
     However, it *doesn't actually do that*. It's using the collection in a way
@@ -205,7 +210,7 @@ So what Dart does is apply that reasoning to the type assertions themselves. You
 
     :::dart
     var _temp = someFunction();
-    assert(_temp is! int);
+    assert(_temp is int);
     var i = _temp;
 
 As a developer, you can run in checked mode and Dart gives you much of the benefit of a typed language. All those asserts help you enforce API requirements just like they do in C++ or other languages. In fact, you could adopt this style in JavaScript if you really wanted to.

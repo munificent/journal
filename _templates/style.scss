@@ -350,6 +350,11 @@ a {
   }
 }
 
+.dsq-comment-text blockquote {
+  padding-left: 16px;
+  color: #777;
+}
+
 // Syntax highlighting
 .codehilite {
   .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment

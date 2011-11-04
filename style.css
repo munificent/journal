@@ -205,6 +205,10 @@ a {
     width: 33%;
     vertical-align: top; }
 
+.dsq-comment-text blockquote {
+  padding-left: 16px;
+  color: #777; }
+
 .codehilite .c, .codehilite .c1, .codehilite .cm {
   color: #a8aba8; }
 .codehilite .k {

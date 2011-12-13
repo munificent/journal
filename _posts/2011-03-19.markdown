@@ -118,9 +118,9 @@ OK, let's build ourselves a parser!
 ## First Things First
 
 Even though a "full" Pratt parser is pretty tiny, I found it to be a bit hard
-to decipher. Sort of like [quicksort](http://en.wikipedia.org/wiki/Quicksort), the code is a deceptively-simple
-handful of code that is deeply intertwined. To untangle that, we'll build it
-up one tiny step at a time.
+to decipher. Sort of like [quicksort](http://en.wikipedia.org/wiki/Quicksort),
+the implementation is a deceptively-simple handful of deeply intertwined code.
+To untangle it, we'll build it up one tiny step at a time.
 
 The simplest expressions to parse are prefix operators and single-token ones.
 For those, the current token tells us all that we need to do. Bantam has one
@@ -161,16 +161,10 @@ differ in the actual operator token itself:
 
     :::java
     class PrefixOperatorParselet implements PrefixParselet {
-      public PrefixOperatorParselet(TokenType operator) {
-        mOperator = operator;
-      }
-
       public Expression parse(Parser parser, Token token) {
         Expression operand = parser.parseExpression();
-        return new PrefixExpression(mOperator, operand);
+        return new PrefixExpression(token.getType(), operand);
       }
-
-      private final TokenType mOperator;
     }
 
 You'll note that it calls back into `parseExpression()` to parse the operand
@@ -206,7 +200,7 @@ operators), we'll make this helper method:
 
     :::java
     void prefix(TokenType token) {
-      register(token, new PrefixOperatorParselet(token));
+      register(token, new PrefixOperatorParselet());
     }
 
 And now we can define the grammar like:
@@ -299,17 +293,11 @@ arithmetic operators like `+` using something like:
 
     :::java
     class BinaryOperatorParselet implements InfixParselet {
-      public BinaryOperatorParselet(TokenType operator) {
-        mOperator = operator;
-      }
-
       public Expression parse(Parser parser,
           Expression left, Token token) {
         Expression right = parser.parseExpression();
-        return new OperatorExpression(left, mOperator, right);
+        return new OperatorExpression(left, token.getType(), right);
       }
-
-      private final TokenType mOperator;
     }
 
 This also works for postfix operators. I'm calling them "infix" parselets, but
@@ -322,16 +310,10 @@ expression and wraps it in another expression:
 
     :::java
     class PostfixOperatorParselet implements InfixParselet {
-      public PostfixOperatorParselet(TokenType operator) {
-        mOperator = operator;
-      }
-
       public Expression parse(Parser parser, Expression left,
           Token token) {
-        return new PostfixExpression(left, mOperator);
+        return new PostfixExpression(left, token.getType());
       }
-
-      private final TokenType mOperator;
     }
 
 Mixfix is easy too. It's pretty much a familiar recursive descent parser:

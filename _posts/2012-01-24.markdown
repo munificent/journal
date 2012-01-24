@@ -94,7 +94,7 @@ That code really *is* just repetitive boilerplate. There's more. It's useful to 
       kStringLiteral,
       kUnaryOpExpr,
       kBinaryOpExpr,
-      /// again, you get the idea...
+      // again, you get the idea...
     };
 
 For debugging, it's handy to be able to get a string representation for an AST node's type too:

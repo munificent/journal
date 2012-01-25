@@ -52,7 +52,7 @@ These are relatively simple types. A (greatly!) simplified one looks a bit like:
         right(right) {}
 
       virtual void accept(AstVisitor& visitor) {
-        visitor.visitBinaryOpExpr(*this);
+        visitor.visitBinaryOpExpr(this);
       }
 
       Expression* left() { return left; }
@@ -74,7 +74,7 @@ Where the tedium really comes in is all of the surrounding code that *uses* thes
     public:
       ~virtual AstVisitor() {}
 
-      virtual void visitBoolLiteral(NumLiteral* expr) = 0;
+      virtual void visitBoolLiteral(BoolLiteral* expr) = 0;
       virtual void visitNumLiteral(NumLiteral* expr) = 0;
       virtual void visitStringLiteral(StringLiteral* expr) = 0;
       virtual void visitUnaryOpExpr(UnaryOpExpr* expr) = 0;

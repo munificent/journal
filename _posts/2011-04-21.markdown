@@ -94,7 +94,7 @@ I got stuck on this issue for months. In the meantime, I started learning more a
 
 ## Multi-what?
 
-Multimethods, like [pattern matching](http://en.wikipedia.org/wiki/Pattern_matching), are a language puzzle to me. They are *so awesome* and yet so *few* languages support them. People are finally starting to catch on to pattern matching, but the set of languages that support multimethods can still fit in your hand: Common Lisp, through [CLOS]()http://www.dreamsongs.com/CLOS.html, [Dylan](http://www.opendylan.org/) (mostly dead but maybe being resurrected now?), and the still nascent [Slate](http://slatelanguage.org/) language.
+Multimethods, like [pattern matching](http://en.wikipedia.org/wiki/Pattern_matching), are a language puzzle to me. They are *so awesome* and yet so *few* languages support them. People are finally starting to catch on to pattern matching, but the set of languages that support multimethods can still fit in your hand: Common Lisp, through [CLOS](http://www.dreamsongs.com/CLOS.html), [Dylan](http://www.opendylan.org/) (mostly dead but maybe being resurrected now?), and the still nascent [Slate](http://slatelanguage.org/) language.
 
 If you've never heard of multimethods, the basic idea is pretty simple though a bit confusing if you come from a single-dispatch (i.e. C++, Java, C#, Smalltalk, et. al.) background. These languages do runtime dispatch only on the receiver, using the term "overriding":
 

@@ -338,12 +338,6 @@ In other words, globally scoped multimethods in Magpie are isomorphic to methods
 Multimethods match on *all* of their arguments, not just the "receiver" on the left-hand side. Let's go back to our Ruby example. Say we need to serialize Dogs and Cows to a stream. Since classes in Ruby are open for extension, we can do:
 
     :::ruby
-    class Stream
-        def write(bytes)
-            ...
-        end
-    end
-
     class Dog
         def serialize(stream)
             stream write("dog")
@@ -359,21 +353,15 @@ Multimethods match on *all* of their arguments, not just the "receiver" on the l
 Swell. But then someone else on our team gets tasked with making dogs and cows support serializing to XML. If they aren't aware of *our* monkey-patch and add:
 
     :::ruby
-    class Stream
-        def write(bytes)
-            ...
-        end
-    end
-
     class Dog
         def serialize(xmlWriter)
-            stream write("<dog></dog>")
+            xmlWriter write("<dog></dog>")
         end
     end
 
     class Cow
         def serialize(xmlWriter)
-            stream write("<cow></cow>")
+            xmlWriter write("<cow></cow>")
         end
     end
 
@@ -391,11 +379,11 @@ Meanwhile, in Magpie:
     end
 
     def (dog is Dog) write(writer is XmlWriter)
-        stream write("<dog></dog>")
+        writer write("<dog></dog>")
     end
 
     def (cow is Cow) write(writer is XmlWriter)
-        stream write("<cow></cow>")
+        writer write("<cow></cow>")
     end
 
 Here, there is no collision at all. When you call `write`, it will look at both the left-hand argument (a `Cow` or a `Dog`) *and* the right-hand side (a `Stream` or an `XmlWriter`) and pick the one perfect method for those types.

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Jasic: A Complete Interpreter in One Java File"
 #categories: code, jasic, language, parsing
 ---

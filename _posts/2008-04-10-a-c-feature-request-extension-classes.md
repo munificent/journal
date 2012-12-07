@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "A C# Feature Request: Extension Classes"
 #categories: c#, code
 ---

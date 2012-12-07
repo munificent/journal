@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "What I Learned at the Emerging Languages Camp"
 #categories: code, language, parsing
 ---

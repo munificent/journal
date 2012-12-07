@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Fixing Ambiguities in Grammars"
 #categories: code, f#, language, parsing
 permalink: http://journal.stuffwithstuff.com/2008/12/28/fixing-ambiguities-in-yacc

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Meltwater: A Color Theme for XCode"
 #categories: code
 ---

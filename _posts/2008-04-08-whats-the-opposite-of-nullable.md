@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "What's the Opposite of \"nullable\"?"
 #categories: c#, code
 ---

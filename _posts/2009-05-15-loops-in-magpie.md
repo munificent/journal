@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Loops in Magpie"
 #categories: c#, code, language, magpie
 ---

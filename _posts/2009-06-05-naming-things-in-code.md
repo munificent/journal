@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Naming Things in Code"
 #categories: code, language
 ---

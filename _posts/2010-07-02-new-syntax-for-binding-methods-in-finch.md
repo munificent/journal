@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "New Syntax for Binding Methods in Finch"
 #categories: code
 ---

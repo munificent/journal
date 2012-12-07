@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Wrapping My Head Around Optional Typing"
 #categories: language, dart
 ---

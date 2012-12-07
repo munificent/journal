@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Bootstrapping a Type System"
 #categories: code, java, language, magpie
 ---

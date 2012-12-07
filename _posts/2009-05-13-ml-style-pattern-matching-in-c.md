@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "ML-style Pattern Matching in C#"
 #categories: c#, code, f#, language
 ---

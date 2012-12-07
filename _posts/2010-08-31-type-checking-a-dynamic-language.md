@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Type-checking a Dynamic Language"
 #categories: code, java, language, magpie, python
 ---

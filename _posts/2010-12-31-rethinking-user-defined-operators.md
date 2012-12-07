@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Rethinking User-defined Operators"
 #categories: code, cpp, go, java, language, magpie, parsing
 ---

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Extending Syntax from Within a Language"
 #categories: code, java, language, magpie, parsing
 ---

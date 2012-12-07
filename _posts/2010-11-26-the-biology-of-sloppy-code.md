@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "The Biology of Sloppy Code"
 #categories: code
 ---

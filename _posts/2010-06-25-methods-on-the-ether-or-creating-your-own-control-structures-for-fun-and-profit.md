@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit"
 #categories: code, finch, language, parsing
 ---

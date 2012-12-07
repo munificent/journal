@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Debunking C# vs C++ Performance"
 #categories: blog, c#, code, cpp, optimization
 ---

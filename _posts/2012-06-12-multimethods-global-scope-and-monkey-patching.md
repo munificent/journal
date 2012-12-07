@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Multimethods, Global Scope, and Monkey-Patching"
 #categories: code, language, magpie
 ---

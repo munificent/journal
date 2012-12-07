@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Killing Primitive Loops and Conditionals"
 #categories: code, finch, language
 ---

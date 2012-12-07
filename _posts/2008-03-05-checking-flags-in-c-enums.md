@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Checking Flags in C# Enums"
 #categories: c#, code
 ---

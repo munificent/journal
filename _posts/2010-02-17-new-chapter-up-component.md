@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "New Chapter Up: Component"
 #categories: code, cpp, game-dev, game-patterns
 ---

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "The Language I Wish Go Was"
 #categories: code, go, language
 ---

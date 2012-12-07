@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "C# Extension Methods: Not Just for Breakfast"
 #categories: c#, code
 ---

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Amaranth, an Open Source Roguelike in C#"
 #categories: c#, code, game-dev, roguelike
 ---

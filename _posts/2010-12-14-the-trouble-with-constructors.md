@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "The Trouble with Constructors"
 #categories: code, language, magpie
 ---

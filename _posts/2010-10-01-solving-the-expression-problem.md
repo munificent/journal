@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Solving the Expression Problem"
 #categories: code, java, language, magpie
 ---

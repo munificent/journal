@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "One and Only One"
 #categories: code, language, magpie
 ---

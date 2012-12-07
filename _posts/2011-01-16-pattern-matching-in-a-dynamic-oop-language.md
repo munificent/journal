@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Pattern Matching in a Dynamic OOP Language"
 #categories: code
 ---

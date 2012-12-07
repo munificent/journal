@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Refining Exceptions and Error Codes"
 #categories: code, language, magpie
 ---

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "New Game Programming Patterns Chapters Up!"
 #categories: code, cpp, game-patterns
 ---

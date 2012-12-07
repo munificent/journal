@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "A Type-checking Conundrum!"
 #categories: code, language, magpie
 ---

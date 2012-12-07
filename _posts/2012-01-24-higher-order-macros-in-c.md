@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Higher Order Macros in C++"
 #categories: code, c, c++
 ---

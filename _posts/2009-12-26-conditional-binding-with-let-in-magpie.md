@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Conditional Binding with \"let\" in Magpie"
 #categories: code, language, magpie
 ---

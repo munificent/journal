@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "\"Constrained Compound\" Design Pattern"
 #categories: c#, code, design
 ---

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Outsourced Blog Comments"
 #categories: blog, code
 ---

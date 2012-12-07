@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Stupid Magpie Tricks (Or: Yes, I'm Making a Programming Language Like Everyone Else)"
 #categories: code, language, magpie
 ---

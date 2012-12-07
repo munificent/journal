@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Semicolons are a Shibboleth"
 #categories: code, dart
 ---

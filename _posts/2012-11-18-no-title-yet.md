@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "NO TITLE YET"
 ##categories: code, language, magpie
 ---

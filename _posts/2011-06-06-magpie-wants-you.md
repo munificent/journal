@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Magpie Wants You!"
 #categories: code, language, magpie, oscon
 ---

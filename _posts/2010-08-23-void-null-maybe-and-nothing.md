@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "void, null, Maybe and nothing"
 #categories: code, java, language, magpie
 ---

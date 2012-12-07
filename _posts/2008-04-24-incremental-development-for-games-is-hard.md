@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Incremental Development for Games (Is Hard)"
 #categories: code, game-dev
 ---

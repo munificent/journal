@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Visualizing the Democratic Primary"
 #categories: politics, visualization
 ---

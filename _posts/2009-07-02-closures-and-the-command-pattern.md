@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Closures and the Command Pattern"
 #categories: c#, code, design
 ---

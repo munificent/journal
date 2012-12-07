@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Class in the Front, Proto in the Back"
 #categories: code, java, language, magpie
 ---

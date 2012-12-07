@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Fibers: Coroutines in Finch"
 #categories: code, cpp, finch, game-dev, language
 ---

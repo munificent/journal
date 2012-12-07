@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Multimethods, Multiple Inheritance, Multiawesome!"
 #categories: code, cpp, java, javascript, language, magpie
 ---

@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Avoiding Overload Hell in C#"
 #categories: c#, code
 ---

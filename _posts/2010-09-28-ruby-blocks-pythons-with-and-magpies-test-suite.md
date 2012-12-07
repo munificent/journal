@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Ruby blocks, Python's with, and Magpie's Test Suite"
 #categories: code, language, magpie, python, ruby
 ---

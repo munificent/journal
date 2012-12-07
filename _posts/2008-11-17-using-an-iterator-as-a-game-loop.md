@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Using an Iterator as a Game Loop"
 #categories: c#, code, game-dev, roguelike
 ---

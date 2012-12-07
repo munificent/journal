@@ -1,4 +1,6 @@
-# Renames the post files based on their date.
+# Renames the post files to Jekyll-style.
+import os.path
+
 import utils
 import re
 
@@ -7,13 +9,17 @@ import re
 def fix_file(path):
     with open(path, 'r') as input:
         print path
+
+        m = re.search('(.*)\.markdown', os.path.basename(path))
+        date = m.group(1)
+
         content = input.read()
-        m = re.search('http://journal\.stuffwithstuff\.com/(20\d\d)/(\d\d)/(\d\d)', content)
-        print m.group(1), m.group(2), m.group(3)
+        m = re.search('title: "(.*)"', content)
+        perm = utils.linkify(m.group(1))
 
         # Save the file back out
-        with open('new/%s-%s-%s.md' % (m.group(1), m.group(2), m.group(3)), 'w') as output:
+        with open('new/%s-%s.md' % (date, perm), 'w') as output:
             output.write(content)
 
 utils.ensure_dir('new')
-utils.walk('posts', fix_file, '.md')
+utils.walk('_posts', fix_file, '.markdown')

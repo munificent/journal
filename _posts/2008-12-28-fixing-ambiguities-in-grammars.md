@@ -2,7 +2,7 @@
 layout: post
 title: "Fixing Ambiguities in Grammars"
 #categories: code, f#, language, parsing
-permalink: http://journal.stuffwithstuff.com/2008/12/28/fixing-ambiguities-in-yacc
+permalink: 2008/12/28/fixing-ambiguities-in-yacc
 ---
 For kicks, I've been writing a little toy programming language using [F#](http://www.apress.com/book/view/1590598504),
 [lex](http://en.wikipedia.org/wiki/Lex_programming_tool) and [yacc](http://en.wikipedia.org/wiki/Yacc) (fslex and fsyacc, specifically, although everything

@@ -2,7 +2,7 @@
 layout: post
 title: "Future-proofing, Uniform Access, and Masquerades"
 #categories: c#, code, java, language, magpie
-permalink: http://journal.stuffwithstuff.com/2010/09/18/futureproofing-uniform-access-and-masquerades
+permalink: 2010/09/18/futureproofing-uniform-access-and-masquerades
 ---
 Take a look at this Java code:
 

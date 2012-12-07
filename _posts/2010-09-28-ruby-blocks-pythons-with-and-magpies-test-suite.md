@@ -1,7 +1,6 @@
 ---
 title: "Ruby blocks, Python's with, and Magpie's Test Suite"
-categories: code, language, magpie, python, ruby
-date: 2010/09/28
+#categories: code, language, magpie, python, ruby
 ---
 Part of moving a language from "tiny hobby project" to "thing that I hope
 people will use" is a solid test suite. [Magpie](http://magpie.stuffwithstuff.com/) has a test suite now, but

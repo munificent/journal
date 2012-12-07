@@ -1,7 +1,6 @@
 ---
 title: "Extending Syntax from Within a Language"
-categories: code, java, language, magpie, parsing
-date: 2011/02/13
+#categories: code, java, language, magpie, parsing
 ---
 A [big goal](http://magpie.stuffwithstuff.com/internals/the-heart-of-magpie.html) with my little language Magpie is to do as much as possible
 at the library level and keep the core language small. I've been toiling for

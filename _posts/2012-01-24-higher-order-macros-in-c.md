@@ -1,7 +1,6 @@
 ---
 title: "Higher Order Macros in C++"
-categories: code, c, c++
-date: 2012/01/24
+#categories: code, c, c++
 ---
 
 My hobby project lately has been working on a little [bytecode interpreter][1] for [Magpie][2] in C++. As an ex-game programmer, I'm pretty sad at how rusty my C++ has gotten. To try to make things a bit easier on myself, I've been borrowing from the masters whenever possible. That means I usually have [v8][]'s source code open in another window.

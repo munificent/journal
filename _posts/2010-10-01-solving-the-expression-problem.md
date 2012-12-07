@@ -1,7 +1,6 @@
 ---
 title: "Solving the Expression Problem"
-categories: code, java, language, magpie
-date: 2010/10/01
+#categories: code, java, language, magpie
 ---
 I started working on Magpie out of frustration with a lot of the languages I
 used. One of the key itches I wanted to scratch is something called the

@@ -1,7 +1,6 @@
 ---
 title: "Wrapping My Head Around Optional Typing"
-categories: language, dart
-date: 2011/10/21
+#categories: language, dart
 ---
 
 One of the really cool parts about being involved with [Dart](http://dartlang.org) is that I get a lot of first-hand experience with an optionally-typed language. I've been [fascinated](/2010/08/31/type-checking-a-dynamic-language/) [by](/2010/09/01/a-type-checking-conundrum/) [optional typing](/2010/10/29/bootstrapping-a-type-system/) for a while, but there are few opportunities to actually try it out on non-trivial code. With Dart, I get to use an optionally-typed language whose lineage goes right back to [one of the original wellsprings](http://www.strongtalk.org/).

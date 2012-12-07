@@ -1,7 +1,6 @@
 ---
 title: "New Syntax for Binding Methods in Finch"
-categories: code
-date: 2010/07/02
+#categories: code
 ---
 I just checked in a small change to Finch that I think makes the language read
 better. There is now [syntactic sugar](http://en.wikipedia.org/wiki/Syntactic_sugar) for binding a method to an object.

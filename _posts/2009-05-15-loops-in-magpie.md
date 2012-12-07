@@ -1,7 +1,6 @@
 ---
 title: "Loops in Magpie"
-categories: c#, code, language, magpie
-date: 2009/05/15
+#categories: c#, code, language, magpie
 ---
 I'm working on the loop syntax in Magpie right now, and I think I more or less
 have the plan figured out. Looping is a bit tricky in a language: there's a

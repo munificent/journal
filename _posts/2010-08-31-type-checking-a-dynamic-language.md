@@ -1,7 +1,6 @@
 ---
 title: "Type-checking a Dynamic Language"
-categories: code, java, language, magpie, python
-date: 2010/08/31
+#categories: code, java, language, magpie, python
 ---
 If you're going down the strange path of building a language that's half-
 dynamic and half-static, one obvious question you have to answer is, "When the

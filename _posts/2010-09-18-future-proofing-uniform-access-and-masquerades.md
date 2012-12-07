@@ -1,8 +1,7 @@
 ---
 title: "Future-proofing, Uniform Access, and Masquerades"
-categories: c#, code, java, language, magpie
+#categories: c#, code, java, language, magpie
 permalink: http://journal.stuffwithstuff.com/2010/09/18/futureproofing-uniform-access-and-masquerades
-date: 2010/09/18
 ---
 Take a look at this Java code:
 

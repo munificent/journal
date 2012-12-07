@@ -1,7 +1,6 @@
 ---
 title: "Visualizing the Democratic Primary"
-categories: politics, visualization
-date: 2008/05/12
+#categories: politics, visualization
 ---
 Like lots and lots of people, I've been following this year's election very
 closely. I'm not into sports, so this is about the closest to it I get. And,

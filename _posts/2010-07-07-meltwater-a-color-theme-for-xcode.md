@@ -1,7 +1,6 @@
 ---
 title: "Meltwater: A Color Theme for XCode"
-categories: code
-date: 2010/07/07
+#categories: code
 ---
 Because I'm a visual kind of person, one of the first things I do on a new
 machine is get the syntax highlighting in my IDE(s) to something I like. At

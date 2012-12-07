@@ -1,7 +1,6 @@
 ---
 title: "A Proposal for Null-safety in Dart"
-categories: code, dart, language
-date: 2011/10/29
+#categories: code, dart, language
 ---
 
 Page 75 of the current (0.04) draft of [the Dart language spec](http://www.dartlang.org/docs/spec/index.html) has this note in it:

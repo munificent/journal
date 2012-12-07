@@ -1,7 +1,6 @@
 ---
 title: "The Language I Wish Go Was"
-categories: code, go, language
-date: 2010/10/21
+#categories: code, go, language
 ---
 By all rights, I should love [Go](http://golang.org/). I like low-level languages. I'm
 comfortable in C and have written memory managers for fun. I hate the

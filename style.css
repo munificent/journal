@@ -209,23 +209,23 @@ a {
   padding-left: 16px;
   color: #777; }
 
-.codehilite .c, .codehilite .c1, .codehilite .cm {
+.highlight .c, .highlight .c1, .highlight .cm {
   color: #a8aba8; }
-.codehilite .k {
+.highlight .k {
   color: #339900; }
-.codehilite .kd {
+.highlight .kd {
   color: #009900; }
-.codehilite .kt {
+.highlight .kt {
   color: #009999; }
-.codehilite .o {
+.highlight .o {
   color: #3d748f; }
-.codehilite .nb {
+.highlight .nb {
   color: #009980; }
-.codehilite .nc {
+.highlight .nc {
   color: #009999; }
-.codehilite .p {
+.highlight .p {
   color: #8b8e8b; }
-.codehilite .s, .codehilite .sc {
+.highlight .s, .highlight .sc {
   color: #cc8800; }
-.codehilite .m, .codehilite .mf {
+.highlight .m, .highlight .mf {
   color: #0088cc; }

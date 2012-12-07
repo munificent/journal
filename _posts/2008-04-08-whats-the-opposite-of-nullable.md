@@ -1,7 +1,6 @@
 ---
 title: "What's the Opposite of \"nullable\"?"
-categories: c#, code
-date: 2008/04/08
+#categories: c#, code
 ---
 I hate [duplicate code](http://en.wikipedia.org/wiki/DRY). [Hate it](http://c2.com/cgi/wiki?DontRepeatYourself) [hate it](http://www.codinghorror.com/blog/archives/000805.html) [hate it](http://www.thefrontside.net/blog/repeat_yourself). At the
 same time, I *do* like having my code check its arguments.

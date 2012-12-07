@@ -1,7 +1,6 @@
 ---
 title: "\"Constrained Compound\" Design Pattern"
-categories: c#, code, design
-date: 2008/11/23
+#categories: c#, code, design
 ---
 I've seen a lot of people argue that inheritance is an anti-feature in a
 language and that it's never necessary. That rubbed me the wrong way because I

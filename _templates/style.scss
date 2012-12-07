@@ -356,7 +356,7 @@ a {
 }
 
 // Syntax highlighting
-.codehilite {
+.highlight {
   .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
   .k           { color: hsl(100, 100%, 30%); } // keyword
   .kd          { color: hsl(120, 100%, 30%); } // keyword declaration

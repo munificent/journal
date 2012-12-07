@@ -1,7 +1,6 @@
 ---
 title: "Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit"
-categories: code, finch, language, parsing
-date: 2010/06/25
+#categories: code, finch, language, parsing
 ---
 One of my favorite things about [Lisp](http://en.wikipedia.org/wiki/Lisp_%28programming_language%29) and [Smalltalk](http://en.wikipedia.org/wiki/Smalltalk) is that they
 don't have special syntax for control structures. Sometimes the most elegant

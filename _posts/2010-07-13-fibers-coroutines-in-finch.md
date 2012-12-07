@@ -1,7 +1,6 @@
 ---
 title: "Fibers: Coroutines in Finch"
-categories: code, cpp, finch, game-dev, language
-date: 2010/07/13
+#categories: code, cpp, finch, game-dev, language
 ---
 With [this](http://bitbucket.org/munificent/finch/changeset/1ae1817c9f23) surprisingly straightforward [commit](http://mercurial.selenic.com/wiki/Commit), I've accomplished
 something I've wanted to do for a long time: I've implemented [coroutines](http://en.wikipedia.org/wiki/Coroutine)

@@ -1,7 +1,6 @@
 ---
 title: "New Game Programming Patterns Chapters Up!"
-categories: code, cpp, game-patterns
-date: 2010/01/25
+#categories: code, cpp, game-patterns
 ---
 I've finally gotten a chance to get some new chapters online for [Game
 Programming Patterns](http://gameprogrammingpatterns.com/). They've been done for a while, but I had to get the

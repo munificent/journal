@@ -1,7 +1,6 @@
 ---
 title: "Killing Primitive Loops and Conditionals"
-categories: code, finch, language
-date: 2010/07/24
+#categories: code, finch, language
 ---
 The challenge I had giving my talk on [Finch](http://finch.stuffwithstuff.com/) at the [Emerging Languages
 Camp](http://emerginglangs.com/) yesterday was knowing that I had nothing original to say that the

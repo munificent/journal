@@ -1,7 +1,6 @@
 ---
 title: "Closures and the Command Pattern"
-categories: c#, code, design
-date: 2009/07/02
+#categories: c#, code, design
 ---
 Like a lot of OOP programmers, I'm a fan of [Design Patterns](http://www.c2.com/cgi/wiki?DesignPatterns). While I
 don't treat it like the sacred tome that many think it is, I learned a lot of

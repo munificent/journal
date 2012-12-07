@@ -1,7 +1,6 @@
 ---
 title: "Refining Exceptions and Error Codes"
-categories: code, language, magpie
-date: 2010/11/08
+#categories: code, language, magpie
 ---
 I've been thinking a lot about error-handling in Magpie, and I wanted to foist
 a couple of ideas out there to get some feedback.

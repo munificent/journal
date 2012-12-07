@@ -1,7 +1,6 @@
 ---
 title: "Class in the Front, Proto in the Back"
-categories: code, java, language, magpie
-date: 2010/08/01
+#categories: code, java, language, magpie
 ---
 Inspired by what I learned and saw at the [Emerging Languages Camp](http://emerginglangs.com/), I've
 started working on [Magpie](http://bitbucket.org/munificent/magpie) again. It's more or less been dormant while I

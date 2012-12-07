@@ -1,7 +1,6 @@
 ---
 title: "ML-style Pattern Matching in C#"
-categories: c#, code, f#, language
-date: 2009/05/13
+#categories: c#, code, f#, language
 ---
 There's nothing like travelling abroad to make you see your home country with
 new eyes. While your first fascination with everything new and different in

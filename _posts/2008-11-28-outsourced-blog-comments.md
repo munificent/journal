@@ -1,7 +1,6 @@
 ---
 title: "Outsourced Blog Comments"
-categories: blog, code
-date: 2008/11/28
+#categories: blog, code
 ---
 <blockquote class="update">
 <p><em>Update 2011/08/16:</em> This post is about an older version of the blog. I used to use WordPress and redesigned the template a while back.

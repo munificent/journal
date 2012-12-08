@@ -39,20 +39,23 @@ Named or keyword arguments solve that. Smalltalk uses them for _all_ multi-
 argument methods, but I think that's going a bit too far. One simple bit of
 syntactic sugar would be to allow a function call like:
 
-    :::go
-    substring(from: start, to: end)
+{% highlight go %}
+substring(from: start, to: end)
+{% endhighlight %}
 
 To be translated by the parser into:
 
-    :::go
-    substring__from__to(start, end)
+{% highlight go %}
+substring__from__to(start, end)
+{% endhighlight %}
 
 This would also give you a primitive form of overloading:
 
-    :::go
-    substring(from: start, to: end)
-    substring(from: start, length: end)
-    substring(from: start)
+{% highlight go %}
+substring(from: start, to: end)
+substring(from: start, length: end)
+substring(from: start)
+{% endhighlight %}
 
 These function calls would all desugar to distinct long function names, so
 even though they're all `substring`, there's no overloading or name collision.
@@ -66,10 +69,11 @@ A lot of behavior comes in pairs: you open a file, then close it. You start a
 transaction, then commit it. You lock, then unlock. In between the pairs, a
 chunk of code is performed. This can be done manually, like:
 
-    :::go
-    file := os.Open(filename)
-    fmt.println(file.Read())
-    file.Close()
+{% highlight go %}
+file := os.Open(filename)
+fmt.println(file.Read())
+file.Close()
+{% endhighlight %}
 
 But then you have to ensure you don't forget to close it. Go's `defer` gives
 you a little help here, but you still have to *remember* to `defer` each call.
@@ -77,29 +81,32 @@ In C++, the [RAII pattern](http://en.wikipedia.org/wiki/Resource_Acquisition_Is_
 how [Ruby](http://www.robertsosinski.com/2008/12/21/understanding-ruby-blocks-procs-and-lambdas/) solves this. We can solve the "forgetting to close" problem in
 Go today by defining a function like this:
 
-    :::go
-    func ReadFile(filename string, block func(f *File)) {
-        file := os.Open(filename)
-        block(file)
-        file.Close()
-    }
+{% highlight go %}
+func ReadFile(filename string, block func(f *File)) {
+    file := os.Open(filename)
+    block(file)
+    file.Close()
+}
+{% endhighlight %}
 
 Now when you need to read from a file, you just do:
 
-    :::go
-    ReadFile(filename, func(file) {
-        fmt.println(file.Read())
-    })
+{% highlight go %}
+ReadFile(filename, func(file) {
+    fmt.println(file.Read())
+})
+{% endhighlight %}
 
 Now you're safely guaranteed to close the file when the operation is done.
 This works because Go has lexical closures, a really nice feature. But the
 syntax for this is ungainly. Ruby addresses this with block arguments.
 Translated to Go, they could look something like:
 
-    :::go
-    ReadFile(filename) do(file) {
-        fmt.println(file.Read())
-    }
+{% highlight go %}
+ReadFile(filename) do(file) {
+    fmt.println(file.Read())
+}
+{% endhighlight %}
 
 The block after `do` would be wrapped in a closure and passed to the preceding
 function as a subsequent argument. (In other words, it will desugar to exactly
@@ -123,13 +130,15 @@ exact kind of data structures a systems language like Go would use frequently.
 Being able to define operators that do what you expect on them would be nice.
 Call me crazy, but I prefer:
 
-    :::go
-    position := origin + offset + orientation * speed
+{% highlight go %}
+position := origin + offset + orientation * speed
+{% endhighlight %}
 
 over:
 
-    :::go
-    position := Add(Add(origin, offset), Multiply(orientation, speed))
+{% highlight go %}
+position := Add(Add(origin, offset), Multiply(orientation, speed))
+{% endhighlight %}
 
 ## The Type System
 
@@ -161,15 +170,17 @@ that creates composite values.
 
 The syntax would be simple: a comma creates a tuple:
 
-    :::go
-    point := 1, 2          // create a tuple of two ints
-    doSomething(true, "s") // pass a tuple to a function
-    return value, err      // return a tuple
+{% highlight go %}
+point := 1, 2          // create a tuple of two ints
+doSomething(true, "s") // pass a tuple to a function
+return value, err      // return a tuple
+{% endhighlight %}
 
 Multiple assignment could be used to pull fields out of a tuple:
 
-    :::go
-    x, y := point
+{% highlight go %}
+x, y := point
+{% endhighlight %}
 
 ### Unions
 
@@ -198,29 +209,31 @@ want to write a function that parses strings into numbers. It will return an
 `int` on success, but may also fail. Using a union, you could define that
 like:
 
-    :::go
-    func ParseInt(text string) int | *Error {
-        // code to parse...
-        if success {
-            return value;
-        } else {
-            return ParseError("Could not parse string.")
-        }
+{% highlight go %}
+func ParseInt(text string) int | *Error {
+    // code to parse...
+    if success {
+        return value;
+    } else {
+        return ParseError("Could not parse string.")
     }
+}
+{% endhighlight %}
 
 Note the `|` in the return type declaration and that the two `return`
 statements return different types. A caller would then determine if it was
 successful using a type test. The syntax could be improved, but something not
 too far from what Go has now could look like:
 
-    :::go
-    parsed := ParseInt("123")
-    switch parsed {
-    case int as i:
-        // here i is the parsed int value
-    case *Error as err:
-        // here is the error
-    }
+{% highlight go %}
+parsed := ParseInt("123")
+switch parsed {
+case int as i:
+    // here i is the parsed int value
+case *Error as err:
+    // here is the error
+}
+{% endhighlight %}
 
 This is more type-safe that it may at first appear. It's important to note
 that the type of `parsed` is *not* `int`, it's `int | *Error`. That means that
@@ -279,13 +292,15 @@ A function declared in the same package as a type with the same name as the
 type defines a constructor function. Structs can be created by value by
 calling the function directly:
 
-    :::go
-    pt := Point(2, 3);
+{% highlight go %}
+pt := Point(2, 3);
+{% endhighlight %}
 
 Or they can be created by on the heap using `new`:
 
-    :::go
-    pt := new Point(2, 3);
+{% highlight go %}
+pt := new Point(2, 3);
+{% endhighlight %}
 
 If a struct has no constructors, it implicitly has a default one. If it has
 one or more constructor functions, then any creation must go through one of
@@ -338,22 +353,23 @@ While they may not realize it, I think the Go designers actually agree with
 me. Consider this code from [the article linked to](http://blog.golang.org/2010/08/defer-panic-and-recover.html) on [why Go doesn't
 have exceptions](http://golang.org/doc/go_faq.html#exceptions):
 
-    :::go
-    func CopyFile(dstName, srcName string) (written int64, err os.Error) {
-        src, err := os.Open(srcName, os.O_RDONLY, 0)
-        if err != nil {
-            return
-        }
-        defer src.Close()
-
-        dst, err := os.Open(dstName, os.O_WRONLY|os.O_CREATE, 0644)
-        if err != nil {
-            return
-        }
-        defer dst.Close()
-
-        return io.Copy(dst, src)
+{% highlight go %}
+func CopyFile(dstName, srcName string) (written int64, err os.Error) {
+    src, err := os.Open(srcName, os.O_RDONLY, 0)
+    if err != nil {
+        return
     }
+    defer src.Close()
+
+    dst, err := os.Open(dstName, os.O_WRONLY|os.O_CREATE, 0644)
+    if err != nil {
+        return
+    }
+    defer dst.Close()
+
+    return io.Copy(dst, src)
+}
+{% endhighlight %}
 
 Those two `if err != nil` blocks exactly what exceptions do for you,
 automatically and gracefully. Another example: every place I could find in the
@@ -371,13 +387,14 @@ about exceptions:
 My favorite aspect of exceptions is that they can, just by the shape of the
 code, prevent you from doing something incorrect. Consider this:
 
-    :::go
-    try {
-        File file = openFile(filename);
-        file.read();
-    } catch (RuntimeException ex) {
-        System.out.println("Oh noes!");
-    }
+{% highlight go %}
+try {
+    File file = openFile(filename);
+    file.read();
+} catch (RuntimeException ex) {
+    System.out.println("Oh noes!");
+}
+{% endhighlight %}
 
 What exceptions give you here is the absolute guarantee that that `file` will
 *never* hold anything except the value of a *successful* return from
@@ -393,11 +410,12 @@ explain. Let's say I'm passing an object of a type I defined to some third-
 party library, which will then call a method on the object. So the callstack
 looks something like:
 
-    :::text
-    top of stack...
-    MyObject::doSomething
-    ThirdPartyLib::callMyObject
-    MyCode::passObjectToLib
+{% highlight text %}
+top of stack...
+MyObject::doSomething
+ThirdPartyLib::callMyObject
+MyCode::passObjectToLib
+{% endhighlight %}
 
 Now let's say that `doSomething` method fails and throws an exception of type
 `MyException`, which I'll catch in `passObjectToLib`. The third-party library
@@ -432,9 +450,10 @@ are three separate vector types, one for [ints](http://code.google.com/p/go/sour
 and one for [`interface{}`](http://code.google.com/p/go/source/browse/src/pkg/container/vector/vector.go). You'll notice the code for all three is
 identical except for the types. Indeed:
 
-    :::go
-    // CAUTION: If this file is not vector.go, it was generated
-    // automatically from vector.go - DO NOT EDIT in that case!
+{% highlight go %}
+// CAUTION: If this file is not vector.go, it was generated
+// automatically from vector.go - DO NOT EDIT in that case!
+{% endhighlight %}
 
 I can't think of a clearer indicator that a feature is missing. Actually, I
 can: `map`. Go has a hashtable collection type which *is* generic, precisely
@@ -504,45 +523,48 @@ the syntax. In all cases, all that needs to happen is that some piece of Go
 syntax gets desugared to a regular method or function call. The way to specify
 these "special" methods is a [bikeshed](http://www.bikeshed.com/) question, but something like this would work without adding any keywords:
 
-    :::go
-    // Property getter like vector.Magnitude
-    func (vector *Vector) Magnitude__get__() float {
-        // Calculate the magnitude of a vector...
-    }
+{% highlight go %}
+// Property getter like vector.Magnitude
+func (vector *Vector) Magnitude__get__() float {
+    // Calculate the magnitude of a vector...
+}
 
-    // Property setter like rect.Width = 4
-    func (rect *Rect) Width__set__(value int) {
-        // Set the width of the rectangle...
-    }
+// Property setter like rect.Width = 4
+func (rect *Rect) Width__set__(value int) {
+    // Set the width of the rectangle...
+}
 
-    // Subscript operator like list[index]
-    func (s *StringList) Subscript__(index int) string {
-        // Get the element at index...
-    }
+// Subscript operator like list[index]
+func (s *StringList) Subscript__(index int) string {
+    // Get the element at index...
+}
 
-    // Subscript operator in assignment like list[index] = "value"
-    func (s *StringList) SubscriptSet__(index int, value string) string {
-        // Set the element at index to value...
-    }
+// Subscript operator in assignment like list[index] = "value"
+func (s *StringList) SubscriptSet__(index int, value string) string {
+    // Set the element at index to value...
+}
 
-    // Initialization function automatically called after new(Thing)
-    // creates a zero-valued object.
-    func (t *Thing) Init__() {
-        // Initialize the value...
-    }
+// Initialization function automatically called after new(Thing)
+// creates a zero-valued object.
+func (t *Thing) Init__() {
+    // Initialize the value...
+}
+{% endhighlight %}
 
 Minimalists will argue that this just adds needless complexity to the
 language. My only counter-argument is that it was Java's attempts to
 *simplify* C++ that led to things like
 
-    :::java
-    book.getChapters().put(book.getChapters().size() - 1,
-      ChapterFactory.instance().create("Prologue"));
+{% highlight java %}
+book.getChapters().put(book.getChapters().size() - 1,
+  ChapterFactory.instance().create("Prologue"));
+{% endhighlight %}
 
 instead of:
 
-    :::java
-    book.chapters[book.chapters.size - 1] = new Chapter("Prologue");
+{% highlight java %}
+book.chapters[book.chapters.size - 1] = new Chapter("Prologue");
+{% endhighlight %}
 
 Sometimes a little syntactic sugar goes a long way.
 
@@ -572,4 +594,3 @@ want control over memory and generics.
 For me, I'm gonna get back to working on [my little language](http://bitbucket.org/munificent/magpie). Meanwhile,
 if there's anything here that the Go community is interested in, I'm more than
 up for the challenge of actually implementing it.
-

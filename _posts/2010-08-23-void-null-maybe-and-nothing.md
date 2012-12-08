@@ -17,29 +17,32 @@ returns nothing.
 C has the `void` type for the former. A function that just performs some side-
 effect like printing to the screen is declared to return `void`, like:
 
-    :::c
-    void sayHi() {
-        printf("hi!");
-    }
+{% highlight c %}
+void sayHi() {
+    printf("hi!");
+}
+{% endhighlight %}
 
 And the compiler will check to make sure you don't do something dumb like:
 
-    :::c
-    int a = sayHi();
+{% highlight c %}
+int a = sayHi();
+{% endhighlight %}
 
 Failing to return *sometimes* is a lot trickier. Consider a function that
 takes a path and returns a handle to a file. If there is no file at the given
 path, there's no `File` it can return so it needs to fail somehow. The way
 most OOP languages like Java and C# handle this is by returning `null`:
 
-    :::java
-    File openFile(String path) {
-        if (isValid(path)) {
-            return new File(path);
-        } else {
-            return null;
-        }
+{% highlight java %}
+File openFile(String path) {
+    if (isValid(path)) {
+        return new File(path);
+    } else {
+        return null;
     }
+}
+{% endhighlight %}
 
 For any reference type (like `File`), a variable can have a valid value, or it
 can be `null`. In other words, `null` is this magical value that exists as a
@@ -92,19 +95,21 @@ single value called `nothing` that represents the absence of a value. If you
 have a function that just has side-effects, that's what it returns implicitly.
 For example, this function returns `nothing`:
 
-    :::magpie
-    var sayHi(->)
-        print("hi")
-    end
+{% highlight magpie %}
+var sayHi(->)
+    print("hi")
+end
+{% endhighlight %}
 
 The `(->)` is the type signature. In this case, it takes no arguments (there's
 nothing to the left of the arrow) and it returns nothing (there's nothing to
 the right). If we wanted to be more explicit, we could say:
 
-    :::magpie
-    var sayHi(-> Nothing)
-        print("hi")
-    end
+{% highlight magpie %}
+var sayHi(-> Nothing)
+    print("hi")
+end
+{% endhighlight %}
 
 Note how "Nothing" is capitalized. `nothing` is the value, `Nothing` is its
 type. There is only one value of type `Nothing` and its name is `nothing`.
@@ -112,11 +117,12 @@ type. There is only one value of type `Nothing` and its name is `nothing`.
 That much is easy. What about `openFile()`? If I had a billion dollars to
 blow, it would be:
 
-    :::magpie
-    var openFile(path String -> File)
-        if path valid? then File new(path)
-        else nothing
-    end
+{% highlight magpie %}
+var openFile(path String -> File)
+    if path valid? then File new(path)
+    else nothing
+end
+{% endhighlight %}
 
 and we'd let `nothing` silently masquerade as a file. But `nothing` isn't a
 file, it's a `Nothing`. So the above program won't type-check. What we need is
@@ -129,11 +135,12 @@ has *or types*. (I'm guessing there may be other names for them in the
 literature. I know I didn't invent them.) A correct version of `openFile()`
 looks like:
 
-    :::magpie
-    var openFile(path String -> File | Nothing)
-        if path valid? then File new(path)
-        else nothing
-    end
+{% highlight magpie %}
+var openFile(path String -> File | Nothing)
+    if path valid? then File new(path)
+    else nothing
+end
+{% endhighlight %}
 
 My hope is that that's pretty clear and easy to understand: `openFile` takes a
 string and returns a file or nothing. It reads just like you'd say it.
@@ -144,9 +151,10 @@ There's one last little problem we're left with though. If we're the ones
 *calling* `openFile()` now, what do we do with what we got back? If we try
 this:
 
-    :::magpie
-    var myFile = openFile("path/to/file.txt")
-    myFile read
+{% highlight magpie %}
+var myFile = openFile("path/to/file.txt")
+myFile read
+{% endhighlight %}
 
 We'll get a compile error on the second line. You can't call `read` on
 `nothing` and `myFile` might be just that. To address that, Magpie has a
@@ -154,12 +162,13 @@ little thing called `let`. It's a lightweight version of full pattern matching
 (which the old C# Magpie has, and the new Java will at some point) to make
 this exact case easy to work with. It looks like this:
 
-    :::magpie
-    let myFile = openFile("path/to/file.txt") then
-        myFile read
-    else
-        print("Couldn't open file!")
-    end
+{% highlight magpie %}
+let myFile = openFile("path/to/file.txt") then
+    myFile read
+else
+    print("Couldn't open file!")
+end
+{% endhighlight %}
 
 A `let` combines conditional logic like `if` with defining a variable. First,
 it evaluates the right-hand expression (`openFile...` in this case). If, and

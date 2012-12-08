@@ -107,9 +107,10 @@ interpreted. I suppose that's fine for some things, but many, if not most,
 operators are conceptually symmetric. It's really weird then that the
 implementation isn't. That leads to weird undesirable behavior. For example:
 
-    :::magpie
-    var a = "1" + 1 // "11"
-    var b = 1 + "1" // error!
+{% highlight magpie %}
+var a = "1" + 1 // "11"
+var b = 1 + "1" // error!
+{% endhighlight %}
 
 String's implementation of `+` would coerce the right-hand operand to a
 string. Meanwhile, Int's implementation would just bail if the other operand
@@ -133,16 +134,17 @@ just a method on those classes, they all need to have it.
 Fortunately, classes are open in Magpie, so I can extend all of those classes
 in one place and add that method. Like so:
 
-    :::magpie
-    extend interface Type
-        def |(other Type -> Type)
-    end
+{% highlight magpie %}
+extend interface Type
+    def |(other Type -> Type)
+end
 
-    def Class |(other Type -> Type) OrType combine(this, other)
-    def FunctionType |(other Type -> Type) OrType combine(this, other)
-    def Interface |(other Type -> Type) OrType combine(this, other)
-    def OrType |(other Type -> Type) OrType combine(this, other)
-    def Tuple |(other Type -> Type) OrType combine(this, other)
+def Class |(other Type -> Type) OrType combine(this, other)
+def FunctionType |(other Type -> Type) OrType combine(this, other)
+def Interface |(other Type -> Type) OrType combine(this, other)
+def OrType |(other Type -> Type) OrType combine(this, other)
+def Tuple |(other Type -> Type) OrType combine(this, other)
+{% endhighlight %}
 
 But this is still kind of lame. It's particularly annoying because I have to
 add another row here every time a new class of types is defined. I *hate*
@@ -179,10 +181,11 @@ preventing the implementation of that function from just immediately calling a
 method on one of its arguments. I could make `+` a global function and still
 get the exact same behavior as before just by doing this:
 
-    :::magpie
-    def +(left, right)
-       left add(right)
-    end
+{% highlight magpie %}
+def +(left, right)
+   left add(right)
+end
+{% endhighlight %}
 
 The `add` replaces our old plus-operator-as-method, and we're back in
 business. But what's great about this is that I don't *have* to do this.
@@ -197,34 +200,37 @@ operator and it can control what responsibility it delegates to its operands.
 
 For example, it we want to ensure `==` is symmetric, we can just do:
 
-    :::magpie
-    def ==(left, right)
-        left equals(right) and right equals(left)
-    end
+{% highlight magpie %}
+def ==(left, right)
+    left equals(right) and right equals(left)
+end
+{% endhighlight %}
 
 Want to make sure its reflexive?
 
-    :::magpie
-    def ==(left, right)
-        // same? tests for identity, i.e. reference equality
-        if Reflect same?(left, right) then return true
+{% highlight magpie %}
+def ==(left, right)
+    // same? tests for identity, i.e. reference equality
+    if Reflect same?(left, right) then return true
 
-        left equals(right) and right equals(left)
-    end
+    left equals(right) and right equals(left)
+end
+{% endhighlight %}
 
 Ever get tired of having to make sure to check for `null` before you call
 `equals` in Java? A clever `==` in Magpie can handle that for you too:
 
-    :::magpie
-    def ==(left, right)
-        // same? tests for identity, i.e. reference equality
-        if Reflect same?(left, right) then return true
+{% highlight magpie %}
+def ==(left, right)
+    // same? tests for identity, i.e. reference equality
+    if Reflect same?(left, right) then return true
 
-        if left == nothing then return false
-        if right == nothing then return false
+    if left == nothing then return false
+    if right == nothing then return false
 
-        left equals(right) and right equals(left)
-    end
+    left equals(right) and right equals(left)
+end
+{% endhighlight %}
 
 (I should point out that Magpie's equivalent to `null`, `nothing`, is a valid
 object too, so you could always implement `equals` on it and then ditch the
@@ -236,16 +242,17 @@ equatable only if they're the exact same class. That presents the opportunity
 to have the class itself do the comparison (i.e. as a static method on the
 class):
 
-    :::magpie
-    def ==(left, right)
-        // must be same class
-        var leftClass = Reflect getClass(left)
-        var rightClass = Reflect getClass(right)
-        if Reflect same?(leftClass, rightClass) not then return false
+{% highlight magpie %}
+def ==(left, right)
+    // must be same class
+    var leftClass = Reflect getClass(left)
+    var rightClass = Reflect getClass(right)
+    if Reflect same?(leftClass, rightClass) not then return false
 
-        // now let the class itself determine it
-        leftClass equal?(left, right)
-    end
+    // now let the class itself determine it
+    leftClass equal?(left, right)
+end
+{% endhighlight %}
 
 I'm still working out what the exact implementation of this should be, but I
 think it's really nice that I can do that figuring in a single place in code.

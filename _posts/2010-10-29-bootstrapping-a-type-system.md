@@ -24,8 +24,9 @@ Magpie makes this distinction *very* blurry, but for our purposes what I care
 about is the static definition of a type: it's the stuff that the type-checker
 works with. For example, say you create a variable:
 
-    :::magpie
-    var i = 123
+{% highlight magpie %}
+var i = 123
+{% endhighlight %}
 
 The type-checker will track that `i` is an integer. It does so by associating an
 object&mdash; a *thing*&mdash; with that name. That object is a type. If you
@@ -67,11 +68,12 @@ If you have an OOP mindset, you can look at those two operations as defining
 an interface. If you were implementing a type-checker in Java, you could
 define a type to be any class that implements:
 
-    :::java
-    interface Type {
-        boolean canAssignFrom(Type other);
-        Type getMemberType(String name);
-    }
+{% highlight java %}
+interface Type {
+    boolean canAssignFrom(Type other);
+    Type getMemberType(String name);
+}
+{% endhighlight %}
 
 The concrete classes that represented kinds of types (say "Class",
 "Interface", "Array", etc.) would then implement that interface and you're
@@ -82,8 +84,9 @@ good to go. Magpie does exactly that.
 It's just that *where* it does that is kind of unusual. In Magpie, all types
 are first-class, like Ruby or Python. For example:
 
-    :::magpie
-    var monkey = Monkey new("Bobo")
+{% highlight magpie %}
+var monkey = Monkey new("Bobo")
+{% endhighlight %}
 
 In this code, `Monkey` is just a global variable whose value is an object
 representing the `Monkey` class. So classes are first-class objects.
@@ -131,14 +134,15 @@ checking them for validity. For example, consider:
 
 The parser converts that into an [AST](http://en.wikipedia.org/wiki/Abstract_syntax_tree), a little tree like:
 
-    :::text
-    (print)
-       |
-    (string)
-       |
-      (+)
-      / \
-    (1) (2)
+{% highlight text %}
+(print)
+   |
+(string)
+   |
+  (+)
+  / \
+(1) (2)
+{% endhighlight %}
 
 The type-checker walks that tree from the bottom to top. Something like this:
 
@@ -213,33 +217,34 @@ take arguments of type `Type`.
 Every class that defines a type in Magpie implements that. Interfaces are a
 type, so [`Interface`](http://bitbucket.org/munificent/magpie/src/8865c82a958d/base/Interface.mag) implements it, of course:
 
-    :::magpie
-    class Interface
-        canAssignFrom(other Type -> Bool)
-            // Check that other type has every member of this one.
-            for member = members do
-                var type = member memberType()
-                let otherMem = other getMemberType(member name) then
-                    // Must be assignable.
-                    if type canAssignFrom(otherMem) not then
-                        return false
-                    end
-                else return false // Must have members
-            end
-
-            // If we got here, every method was found and matched.
-            true
+{% highlight magpie %}
+class Interface
+    canAssignFrom(other Type -> Bool)
+        // Check that other type has every member of this one.
+        for member = members do
+            var type = member memberType()
+            let otherMem = other getMemberType(member name) then
+                // Must be assignable.
+                if type canAssignFrom(otherMem) not then
+                    return false
+                end
+            else return false // Must have members
         end
 
-        getMemberType(name String -> Type | Nothing)
-            let member = members first(
-                fn (m Member -> Bool) m name == name) then
-                member memberType()
-            end
-        end
-
-        // other stuff...
+        // If we got here, every method was found and matched.
+        true
     end
+
+    getMemberType(name String -> Type | Nothing)
+        let member = members first(
+            fn (m Member -> Bool) m name == name) then
+            member memberType()
+        end
+    end
+
+    // other stuff...
+end
+{% endhighlight %}
 
 So we have a Magpie class, `Interface` that implements an interface, `Type`,
 that is in turn an instance of that same `Interface` class.
@@ -261,10 +266,11 @@ no meaningful distinction between expressions and type annotations. Type
 annotations are just regular Magpie expressions, evaluated dynamically during
 type-checking. If you have a function like:
 
-    :::magpie
-    parseNumber(value String -> Int | Nothing)
-        // ...
-    end
+{% highlight magpie %}
+parseNumber(value String -> Int | Nothing)
+    // ...
+end
+{% endhighlight %}
 
 That `String` is just a regular Magpie expression, as is `Int | Nothing`. In
 the case of the latter, `|` is just an operator on the `Class` class.
@@ -273,8 +279,9 @@ This means that not only is Magpie's type system extensible, even its type
 *annotations* are. If you wanted to, you could define new operators or
 functions and use them in type annotations:
 
-    :::magpie
-    what(arg doSomething(Very * Strange))
+{% highlight magpie %}
+what(arg doSomething(Very * Strange))
+{% endhighlight %}
 
 I honestly don't know if that's a useful feature, but I do like the idea of
 not having the type system welded into the language. If you like prototypes,

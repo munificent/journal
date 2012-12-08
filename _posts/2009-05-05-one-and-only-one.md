@@ -16,8 +16,9 @@ remember where I'm at.
 First off, a quick primer in Magpie syntax. Here's a function to square a
 number:
 
-    :::magpie
-    Square (n Int -> Int) n * n
+{% highlight magpie %}
+Square (n Int -> Int) n * n
+{% endhighlight %}
 
 The name comes first, followed by the type signature in parentheses. To the
 left of the `->` is the argument, to the right is the return type. The body of
@@ -27,8 +28,9 @@ its body.
 
 You can call it like this:
 
-    :::magpie
-    Square 3 // returns 9
+{% highlight magpie %}
+Square 3 // returns 9
+{% endhighlight %}
 
 Unlike C and other languages, function arguments aren't put inside
 parentheses.
@@ -37,13 +39,15 @@ parentheses.
 
 That's easy. Here's a function to multiply three numbers:
 
-    :::magpie
-    Mult (a Int, b Int, c Int -> Int) a * b * c
+{% highlight magpie %}
+Mult (a Int, b Int, c Int -> Int) a * b * c
+{% endhighlight %}
 
 You can call it like:
 
-    :::magpie
-    Mult (2, 3, 4) // returns 24
+{% highlight magpie %}
+Mult (2, 3, 4) // returns 24
+{% endhighlight %}
 
 ## Hey! I Thought You Said Functions Always Take One Argument!
 
@@ -51,9 +55,10 @@ They do, they do. However, Magpie also supports [tuples](http://en.wikipedia.org
 make a single value by combining others together. In Magpie, tuples are
 created using the comma operator:
 
-    :::magpie
-    (1, 2)             // a tuple of two Int fields
-    (2, true, "three") // a tuple of three fields of different type
+{% highlight magpie %}
+(1, 2)             // a tuple of two Int fields
+(2, true, "three") // a tuple of three fields of different type
+{% endhighlight %}
 
 (They are also placed inside parentheses, but you can more or less ignore
 that. It's more for precedence reasons than anything else. The comma is where
@@ -67,12 +72,13 @@ calling `Mult` with a single argument, the tuple `(2, 3, 4)`.
 No, this isn't just a semantic trick. `Mult` really does take a single value.
 I'll prove it:
 
-    :::magpie
-    // create a local variable and assign a tuple to it
-    def arg <- (2, 3, 4)
+{% highlight magpie %}
+// create a local variable and assign a tuple to it
+def arg <- (2, 3, 4)
 
-    // pass the single argument to the function
-    Mult arg
+// pass the single argument to the function
+Mult arg
+{% endhighlight %}
 
 This is perfectly legit in Magpie and doesn't require function overloading or
 anything. In fact, this is kind of useful. When you start playing with
@@ -88,19 +94,22 @@ monuple?). But you can also have a tuple with _no_ values, strange as that
 sounds. There's exactly one of them (how could there be different ones?) It's
 called "Unit", and looks like `()`. So if you had a function like this:
 
-    :::magpie
-    SayHi (->) Print "hi!"
+{% highlight magpie %}
+SayHi (->) Print "hi!"
+{% endhighlight %}
 
 You could call it like this:
 
-    :::magpie
-    SayHi () // prints "hi"
+{% highlight magpie %}
+SayHi () // prints "hi"
+{% endhighlight %}
 
 That's a bit tedious, though, so in most cases you can omit the `()` and
 Magpie will infer it:
 
-    :::magpie
-    SayHi // prints "hi"
+{% highlight magpie %}
+SayHi // prints "hi"
+{% endhighlight %}
 
 ## What About Returns? I Don't See Print Returning Anything.
 
@@ -117,8 +126,9 @@ distinction between *expressions* (which return things) and *statements*
 (which don't). This means that things like flow control can be regular
 expressions in Magpie. For example:
 
-    :::magpie
-    Square (if 1 < 2 then 3 else 4)
+{% highlight magpie %}
+Square (if 1 < 2 then 3 else 4)
+{% endhighlight %}
 
 This calls the `Square` function and passes in 3. We can do this because
 `if/then/else` is a regular expression and can be used anywhere.
@@ -131,9 +141,10 @@ flexible.
 And, of course, this also means you can return *multiple* values, just like
 you can in Python or Lua:
 
-    :::magpie
-    Swap (a Int, b Int -> (Int, Int)) (b, a)
+{% highlight magpie %}
+Swap (a Int, b Int -> (Int, Int)) (b, a)
 
-    Swap (1, 2) // returns (2, 1)
+Swap (1, 2) // returns (2, 1)
+{% endhighlight %}
 
 So, in the end, it isn't much of a limitation at all.

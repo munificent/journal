@@ -32,12 +32,13 @@ to eventually need two things: to *not* do something, and to do something
 *more than once*. `if:then:else:` calls in Finch handle the former. They look
 like this:
 
-    :::finch
-    if: rapper = vanilla ice then: {
-        writeLine: "Too cold"
-    } else: {
-        writeLine: "Wack MC"
-    }
+{% highlight finch %}
+if: rapper = vanilla ice then: {
+    writeLine: "Too cold"
+} else: {
+    writeLine: "Wack MC"
+}
+{% endhighlight %}
 
 If you aren't familiar with Finch, I can translate that into something a
 little more vanilla. What you see there is a single call to an `if:then:else:`
@@ -62,9 +63,10 @@ logic needed). The version bound to false objects will always evaluate the
 In Finch, all objects are implicitly false except for the one magic `True`
 object, so the code looks like this:
 
-    :::finch
-    Object prototype :: ifTrue: then else: else { else call }
-    True :: ifTrue: then else: else { then call }
+{% highlight finch %}
+Object prototype :: ifTrue: then else: else { else call }
+True :: ifTrue: then else: else { then call }
+{% endhighlight %}
 
 The first line defines `ifTrue:else:` on the prototypical object that all
 others inherit from. All it does is invoke the "else" block. The second line
@@ -77,10 +79,11 @@ have known this the whole time.) Because I'm not crazy about how Smalltalk
 syntax looks for this, we'll go ahead and wrap it in [a method on Ether](http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/)
 to make it look a little more normal:
 
-    :::finch
-    Ether :: if: condition then: then else: else {
-        condition ifTrue: then else: else
-    }
+{% highlight finch %}
+Ether :: if: condition then: then else: else {
+    condition ifTrue: then else: else
+}
+{% endhighlight %}
 
 All that does is bounce the call over as a message on the condition object,
 and we've got `if:then:else:` working without needing any hard-coded support
@@ -93,11 +96,12 @@ than one time. Everyone who took Scheme in college now has their hand waving
 furiously in the air. Yes, I'm going to call on you. Yes, you have the right
 answer. First, here's a while loop:
 
-    :::finch
-    while: { mother burnedDown? not } do: {
-        writeLine: "Burn, baby, burn"
-        writeLine: "Disco inferno"
-    }
+{% highlight finch %}
+while: { mother burnedDown? not } do: {
+    writeLine: "Burn, baby, burn"
+    writeLine: "Disco inferno"
+}
+{% endhighlight %}
 
 If you don't have looping built in, there's only one way for something to
 happen more than once: it has to invoke *itself* recursively. I've known about
@@ -107,13 +111,14 @@ until recently, or maybe it's all the alcohol.
 
 Now that Finch *does* have it, we can use it like so:
 
-    :::finch
-    Ether :: while: condition do: block {
-        if: condition call then: {
-            block call
-            while: condition do: block
-        }
+{% highlight finch %}
+Ether :: while: condition do: block {
+    if: condition call then: {
+        block call
+        while: condition do: block
     }
+}
+{% endhighlight %}
 
 All it does is check the condition. If `True`, it evaluates the block and then
 recursively calls itself. The TCO will ensure that it can loop as long as it

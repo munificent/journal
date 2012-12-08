@@ -14,27 +14,29 @@ for kicks, I'd like to propose a C# feature request: **Extension classes**.
 An extension class is a class that adds methods, properties, etc. to another
 class. Given some class `Foo`:
 
-    :::csharp
-    public class Foo
-    {
-        public int Value { get { return 3; } }
-    }
+{% highlight csharp %}
+public class Foo
+{
+    public int Value { get { return 3; } }
+}
+{% endhighlight %}
 
 My proposed syntax is:
 
-    :::csharp
-    public class FooExtensions this Foo
+{% highlight csharp %}
+public class FooExtensions this Foo
+{
+    public int DoubledValue
     {
-        public int DoubledValue
-        {
-            get { return Value * 2; }
-        }
-
-        public void Hi()
-        {
-            Console.WriteLine("hi.");
-        }
+        get { return Value * 2; }
     }
+
+    public void Hi()
+    {
+        Console.WriteLine("hi.");
+    }
+}
+{% endhighlight %}
 
 The magic bit up there is the "`this Foo`". That basically says, "the '`this`'
 reference inside this class is actually of this other type '`Foo`'". As you
@@ -60,11 +62,12 @@ It can only use public members just like outside code. And, of course,
 
 OK, so we've got properties in the mix, is there anything else we could add?
 
-    :::csharp
-    public class FooExtensions this Foo
-    {
-        public static SomeMethod() { /* ... */ }
-    }
+{% highlight csharp %}
+public class FooExtensions this Foo
+{
+    public static SomeMethod() { /* ... */ }
+}
+{% endhighlight %}
 
 How about static methods and properties? You could say there's no value in
 doing this since you have to access statics through the class name anyway, but

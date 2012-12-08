@@ -279,33 +279,33 @@ For whatever reason, we decide it would be super rad if `Tree<T>` implemented `I
 
 Let's see what implementing that looks like. `Iterable<T>` is easy, of course:
 
-  class Tree<T> implements Iterable<T> {
-    Iterator<T> iterator() { return new TreeIterator<T>(this); }
-    ...other stuff...
-  }
+    class Tree<T> implements Iterable<T> {
+      Iterator<T> iterator() { return new TreeIterator<T>(this); }
+      ...other stuff...
+    }
 
 Now let's see `TreeIterator<T>`:
 
-  class TreeIterator<T> implements Iterator<T> {
-    final Stack<Tree<T>> stack;
+    class TreeIterator<T> implements Iterator<T> {
+      final Stack<Tree<T>> stack;
 
-    public TreeIterator(Tree<T> tree) {
-      stack = new Stack<Tree<T>>();
-      stack.push(tree);
-    }
-
-    public boolean hasNext() {
-
-    }
-
-    public T next() {
-      Tree<T> tree = stack.peek();
-      while (tree.left != null) {
+      public TreeIterator(Tree<T> tree) {
+        stack = new Stack<Tree<T>>();
         stack.push(tree);
-        tree = tree.left;
+      }
+
+      public boolean hasNext() {
+
+      }
+
+      public T next() {
+        Tree<T> tree = stack.peek();
+        while (tree.left != null) {
+          stack.push(tree);
+          tree = tree.left;
+        }
       }
     }
-  }
 
 - c-style for loops
   - three parts: initializer, advance, exit condition

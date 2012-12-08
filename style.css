@@ -76,6 +76,8 @@ a {
     color: #606260;
     font: 14px/24px Courier, monospace;
     overflow: auto; }
+    .content pre code {
+      padding: 0; }
   .content tt {
     font: 15px/20px Courier, monospace;
     color: #606260; }

@@ -37,4 +37,3 @@ It's all up on [bitbucket](http://bitbucket.org): [bramble](http://bitbucket.org
 Feel free to try it out, branch it, or whatever. In the meantime, I'll try to
 find time to start writing some documentation on more interesting parts of
 what's in there.
-

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    {% include head.html %}
+    <title>{{ page.title }} | journal.stuffwithstuff.com</title>
+  </head>
+  <body>
+    {% include header.html %}
+
+
+    <div class="content">
+      <div class="column">
+      <h1>
+        <a href="${post.permapath()}" rel="bookmark"
+           title="Permanent Link to {{ page.title | escape }}">
+          {{ page.title | escape }}
+        </a>
+      </h1>
+      {{ content }}
+      </div>
+    </div>
+
+    {% if site.disqus %}
+      <div class="comments">
+        <div class="column">
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            var disqus_shortname = '{{ site.disqus }}';
+            // TODO(bob): Fix. Should be permalink name.
+            var disqus_url = "{{ page.id | escape }}";
+
+            (function() {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </div>
+      </div>
+    {% endif %}
+
+  </body>
+</html>

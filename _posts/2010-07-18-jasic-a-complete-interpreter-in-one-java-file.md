@@ -16,19 +16,20 @@ more about interpreters, now you've got a little primer.
 
 Here's a little code to give you a flavor of the language:
 
-    :::finch
-    ' initialize the loop counter
-    count = 10
+{% highlight finch %}
+' initialize the loop counter
+count = 10
 
-    ' stop looping if we're done
-    top:
-    if count = 0 then end
-    print "Hello, world!"
+' stop looping if we're done
+top:
+if count = 0 then end
+print "Hello, world!"
 
-    ' decrement and restart the loop
-    count = count - 1
-    goto top
-    end:
+' decrement and restart the loop
+count = count - 1
+goto top
+end:
+{% endhighlight %}
 
 Old school! All of the code is [right here in Jasic.java](http://github.com/munificent/jasic/blob/master/com/stuffwithstuff/Jasic.java). There's also a
 [README](http://github.com/munificent/jasic/blob/master/README) to help get you started. What are you waiting for?

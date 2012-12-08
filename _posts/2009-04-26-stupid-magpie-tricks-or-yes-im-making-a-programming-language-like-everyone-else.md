@@ -27,24 +27,25 @@ In Magpie, almost everything is a function, including constructors. Since it
 doesn't have an explicit `new` keyword, you can pass around a reference to a
 constructor like you can any other function.
 
-    :::magpie
-    // define a type
-    struct Point
-        X Int
-        Y Int
-    end
+{% highlight magpie %}
+// define a type
+struct Point
+    X Int
+    Y Int
+end
 
-    Main (->)
-        // pass the constructor to a function
-        TakeRef fn Point (Int, Int)
-    end
+Main (->)
+    // pass the constructor to a function
+    TakeRef fn Point (Int, Int)
+end
 
-    TakeRef (func fn (Int, Int -> Point))
-        // call the ref
-        def point <- func (1, 2)
+TakeRef (func fn (Int, Int -> Point))
+    // call the ref
+    def point <- func (1, 2)
 
-        Print (point.X.String + ", " + point.Y.String)
-    end
+    Print (point.X.String + ", " + point.Y.String)
+end
+{% endhighlight %}
 
 Try *that* C# and C++!
 
@@ -55,27 +56,28 @@ arguments, you use a tuple. Syntactically, it looks the same as other
 languages, but does have an interesting side-effect: you treat the entire
 batch of arguments as a single value to be played with:
 
-    :::magpie
-    // define a function that takes three args
-    Sum (a Int, b Int, c Int -> Int) a + b + c
+{% highlight magpie %}
+// define a function that takes three args
+Sum (a Int, b Int, c Int -> Int) a + b + c
 
-    Main (->)
-        // calling it looks pretty normal...
-        def a <- Sum (1, 2, 3)
+Main (->)
+    // calling it looks pretty normal...
+    def a <- Sum (1, 2, 3)
 
-        // but you can also do this
-        def arg1 <- (1, 2, 3)
-        def sum1 <- Sum arg1
-        Print sum1.String
+    // but you can also do this
+    def arg1 <- (1, 2, 3)
+    def sum1 <- Sum arg1
+    Print sum1.String
 
-        // or this
-        def arg2 <- GetArgs
-        def sum2 <- Sum arg2
-        Print sum2.String
-    end
+    // or this
+    def arg2 <- GetArgs
+    def sum2 <- Sum arg2
+    Print sum2.String
+end
 
-    // this function returns a tuple
-    GetArgs (-> (Int, Int, Int)) (4, 5, 6)
+// this function returns a tuple
+GetArgs (-> (Int, Int, Int)) (4, 5, 6)
+{% endhighlight %}
 
 ## Is That It?
 

@@ -73,13 +73,14 @@ raining down from heaven or something.
 A token is just a chunk of meaningful code with a type and a string associated
 with it. Given `a + b(c)`, the tokens would be:
 
-    :::text
-    NAME "a"
-    PLUS "+"
-    NAME "b"
-    LEFT_PAREN "("
-    NAME "c"
-    RIGHT_PAREN ")"
+{% highlight text %}
+NAME "a"
+PLUS "+"
+NAME "b"
+LEFT_PAREN "("
+NAME "c"
+RIGHT_PAREN ")"
+{% endhighlight %}
 
 Likewise, we won't be *interpreting* or *compiling* this code. We just want to
 parse it to a nice data structure. For our purposes, that means our parser
@@ -87,21 +88,22 @@ should chew up a bunch of [`Token`](https://github.com/munificent/bantam/blob/ma
 some class that implements [`Expression`](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/Expression.java). To give you an idea, here's a
 simplified version of the class for a [conditional expression](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/ConditionalExpression.java):
 
-    :::java
-    class ConditionalExpression implements Expression {
-      public ConditionalExpression(
-          Expression condition,
-          Expression thenArm,
-          Expression elseArm) {
-        this.condition = condition;
-        this.thenArm   = thenArm;
-        this.elseArm   = elseArm;
-      }
+{% highlight java %}
+class ConditionalExpression implements Expression {
+  public ConditionalExpression(
+      Expression condition,
+      Expression thenArm,
+      Expression elseArm) {
+    this.condition = condition;
+    this.thenArm   = thenArm;
+    this.elseArm   = elseArm;
+  }
 
-      public final Expression condition;
-      public final Expression thenArm;
-      public final Expression elseArm;
-    }
+  public final Expression condition;
+  public final Expression thenArm;
+  public final Expression elseArm;
+}
+{% endhighlight %}
 
 (You gotta love Java's "please sign it in quadruplicate" level of beaurcracy
 here. Like I said, if you can do this in Java, you can do it in *any*
@@ -127,45 +129,49 @@ For those, the current token tells us all that we need to do. Bantam has one
 single-token expression, named variables, and four prefix operators: `+`, `-`,
 `~`, and `!`. The simplest possible code to parse that would be:
 
-    :::java
-    Expression parseExpression() {
-      if (match(TokenType.NAME))       // return NameExpression...
-      else if (match(TokenType.PLUS))  // return prefix + operator...
-      else if (match(TokenType.MINUS)) // return prefix - operator...
-      else if (match(TokenType.TILDE)) // return prefix ~ operator...
-      else if (match(TokenType.BANG))  // return prefix ! operator...
-      else throw new ParseException();
-    }
+{% highlight java %}
+Expression parseExpression() {
+  if (match(TokenType.NAME))       // return NameExpression...
+  else if (match(TokenType.PLUS))  // return prefix + operator...
+  else if (match(TokenType.MINUS)) // return prefix - operator...
+  else if (match(TokenType.TILDE)) // return prefix ~ operator...
+  else if (match(TokenType.BANG))  // return prefix ! operator...
+  else throw new ParseException();
+}
+{% endhighlight %}
 
 But that's a bit monolithic. As you can see, we're switching off of a
 `TokenType` to branch to different parsing behavior. Let's encode that
 directly by making a `Map` from `TokenTypes` to chunks of parsing code. We'll
 call these chunks "parselets", and they will implement this:
 
-    :::java
-    interface PrefixParselet {
-      Expression parse(Parser parser, Token token);
-    }
+{% highlight java %}
+interface PrefixParselet {
+  Expression parse(Parser parser, Token token);
+}
+{% endhighlight %}
 
 An implementation of this to parse variable names is just:
 
-    :::java
-    class NameParselet implements PrefixParselet {
-      public Expression parse(Parser parser, Token token) {
-        return new NameExpression(token.getText());
-      }
-    }
+{% highlight java %}
+class NameParselet implements PrefixParselet {
+  public Expression parse(Parser parser, Token token) {
+    return new NameExpression(token.getText());
+  }
+}
+{% endhighlight %}
 
 We can use a single class for all of the prefix operators since they only
 differ in the actual operator token itself:
 
-    :::java
-    class PrefixOperatorParselet implements PrefixParselet {
-      public Expression parse(Parser parser, Token token) {
-        Expression operand = parser.parseExpression();
-        return new PrefixExpression(token.getType(), operand);
-      }
-    }
+{% highlight java %}
+class PrefixOperatorParselet implements PrefixParselet {
+  public Expression parse(Parser parser, Token token) {
+    Expression operand = parser.parseExpression();
+    return new PrefixExpression(token.getType(), operand);
+  }
+}
+{% endhighlight %}
 
 You'll note that it calls back into `parseExpression()` to parse the operand
 that appears after the operator (i.e. to parse the `a` in `-a`). This
@@ -173,44 +179,47 @@ recursion takes care of nested operators like `-+~!a`.
 
 Back in `Parser`, the chained `if` statements are replaced with a cleaner map:
 
-    :::java
-    class Parser {
-      public void register(TokenType token, PrefixParselet parselet) {
-        mPrefixParselets.put(token, parselet);
-      }
+{% highlight java %}
+class Parser {
+  public void register(TokenType token, PrefixParselet parselet) {
+    mPrefixParselets.put(token, parselet);
+  }
 
-      public Expression parseExpression() {
-        Token token = consume();
-        PrefixParselet prefix = mPrefixParselets.get(token.getType());
+  public Expression parseExpression() {
+    Token token = consume();
+    PrefixParselet prefix = mPrefixParselets.get(token.getType());
 
-        if (prefix == null) throw new ParseException(
-            "Could not parse \"" + token.getText() + "\".");
+    if (prefix == null) throw new ParseException(
+        "Could not parse \"" + token.getText() + "\".");
 
-        return prefix.parse(this, token);
-      }
+    return prefix.parse(this, token);
+  }
 
-      // Other stuff...
+  // Other stuff...
 
-      private final Map<TokenType, PrefixParselet> mPrefixParselets =
-          new HashMap<TokenType, PrefixParselet>();
-    }
+  private final Map<TokenType, PrefixParselet> mPrefixParselets =
+      new HashMap<TokenType, PrefixParselet>();
+}
+{% endhighlight %}
 
 To define the grammar we have so far (variables and the four prefix
 operators), we'll make this helper method:
 
-    :::java
-    void prefix(TokenType token) {
-      register(token, new PrefixOperatorParselet());
-    }
+{% highlight java %}
+void prefix(TokenType token) {
+  register(token, new PrefixOperatorParselet());
+}
+{% endhighlight %}
 
 And now we can define the grammar like:
 
-    :::java
-    register(TokenType.NAME, new NameParselet());
-    prefix(TokenType.PLUS);
-    prefix(TokenType.MINUS);
-    prefix(TokenType.TILDE);
-    prefix(TokenType.BANG);
+{% highlight java %}
+register(TokenType.NAME, new NameParselet());
+prefix(TokenType.PLUS);
+prefix(TokenType.MINUS);
+prefix(TokenType.TILDE);
+prefix(TokenType.BANG);
+{% endhighlight %}
 
 This is already an improvement over a recursive descent parser because our
 grammar is now more declarative instead of being spread out over a few
@@ -231,8 +240,9 @@ Fortunately, we're in a good place to do so. Our current `parseExpression()`
 method will parse a complete prefix expression including any nested prefix
 expressions and then stop. So, if we throw this at it:
 
-    :::java
-    -a + b
+{% highlight java %}
+-a + b
+{% endhighlight %}
 
 It will parse `-a` and leave us sitting on `+`. That's exactly the token we
 need to tell what infix expression we're parsing. The only difference between
@@ -240,10 +250,11 @@ an infix expression and a prefix one here is that there's another expression
 *before* the infix operator that it needs to have as an argument. Let's define
 a parselet that supports that:
 
-    :::java
-    interface InfixParselet {
-      Expression parse(Parser parser, Expression left, Token token);
-    }
+{% highlight java %}
+interface InfixParselet {
+  Expression parse(Parser parser, Expression left, Token token);
+}
+{% endhighlight %}
 
 The only difference is that `left` argument, which is just the expression we
 parsed before we got to the infix token. We'll wire this up to our parser by
@@ -258,47 +269,49 @@ example, the prefix parselet for `(` handles grouping in an expression like `a
 Now, after we parse the prefix expression, we hand it off to any infix one
 that subsumes it:
 
-    :::java
-    class Parser {
-      public void register(TokenType token, InfixParselet parselet) {
-        mInfixParselets.put(token, parselet);
-      }
+{% highlight java %}
+class Parser {
+  public void register(TokenType token, InfixParselet parselet) {
+    mInfixParselets.put(token, parselet);
+  }
 
-      public Expression parseExpression() {
-        Token token = consume();
-        PrefixParselet prefix = mPrefixParselets.get(token.getType());
+  public Expression parseExpression() {
+    Token token = consume();
+    PrefixParselet prefix = mPrefixParselets.get(token.getType());
 
-        if (prefix == null) throw new ParseException(
-            "Could not parse \"" + token.getText() + "\".");
+    if (prefix == null) throw new ParseException(
+        "Could not parse \"" + token.getText() + "\".");
 
-        Expression left = prefix.parse(this, token);
+    Expression left = prefix.parse(this, token);
 
-        token = consume();
-        InfixParselet infix = mInfixParselets.get(token.getType());
+    token = consume();
+    InfixParselet infix = mInfixParselets.get(token.getType());
 
-        // No infix expression at this point, so we're done.
-        if (infix == null) return left;
+    // No infix expression at this point, so we're done.
+    if (infix == null) return left;
 
-        return infix.parse(this, left, token);
-      }
+    return infix.parse(this, left, token);
+  }
 
-      // Other stuff...
+  // Other stuff...
 
-      private final Map<TokenType, InfixParselet> mInfixParselets =
-          new HashMap<TokenType, InfixParselet>();
-    }
+  private final Map<TokenType, InfixParselet> mInfixParselets =
+      new HashMap<TokenType, InfixParselet>();
+}
+{% endhighlight %}
 
 Pretty straightforward. We can implement an infix parselet for binary
 arithmetic operators like `+` using something like:
 
-    :::java
-    class BinaryOperatorParselet implements InfixParselet {
-      public Expression parse(Parser parser,
-          Expression left, Token token) {
-        Expression right = parser.parseExpression();
-        return new OperatorExpression(left, token.getType(), right);
-      }
-    }
+{% highlight java %}
+class BinaryOperatorParselet implements InfixParselet {
+  public Expression parse(Parser parser,
+      Expression left, Token token) {
+    Expression right = parser.parseExpression();
+    return new OperatorExpression(left, token.getType(), right);
+  }
+}
+{% endhighlight %}
 
 This also works for postfix operators. I'm calling them "infix" parselets, but
 they're really "anything but prefix". If there's some expression that comes
@@ -308,27 +321,29 @@ postfix expressions and mixfix ones like `?:`.
 Postfix is as easy as a single-token prefix parselet: it just takes the `left`
 expression and wraps it in another expression:
 
-    :::java
-    class PostfixOperatorParselet implements InfixParselet {
-      public Expression parse(Parser parser, Expression left,
-          Token token) {
-        return new PostfixExpression(left, token.getType());
-      }
-    }
+{% highlight java %}
+class PostfixOperatorParselet implements InfixParselet {
+  public Expression parse(Parser parser, Expression left,
+      Token token) {
+    return new PostfixExpression(left, token.getType());
+  }
+}
+{% endhighlight %}
 
 Mixfix is easy too. It's pretty much a familiar recursive descent parser:
 
-    :::java
-    class ConditionalParselet implements InfixParselet {
-      public Expression parse(Parser parser, Expression left,
-          Token token) {
-        Expression thenArm = parser.parseExpression();
-        parser.consume(TokenType.COLON);
-        Expression elseArm = parser.parseExpression();
+{% highlight java %}
+class ConditionalParselet implements InfixParselet {
+  public Expression parse(Parser parser, Expression left,
+      Token token) {
+    Expression thenArm = parser.parseExpression();
+    parser.consume(TokenType.COLON);
+    Expression elseArm = parser.parseExpression();
 
-        return new ConditionalExpression(left, thenArm, elseArm);
-      }
-    }
+    return new ConditionalExpression(left, thenArm, elseArm);
+  }
+}
+{% endhighlight %}
 
 Now we can parse prefix expressions, postfix, infix, and even mixfix. With a
 pretty small amount of code, we can parse expressions like `a + (b ? c! :
@@ -350,59 +365,63 @@ allow, it just stops parsing and returns what it has so far.
 To make that check we need to know the precedence of any given infix
 expression. We'll do that by letting the parselet specify it:
 
-    :::java
-    public interface InfixParselet {
-      Expression parse(Parser parser, Expression left, Token token);
-      int getPrecedence();
-    }
+{% highlight java %}
+public interface InfixParselet {
+  Expression parse(Parser parser, Expression left, Token token);
+  int getPrecedence();
+}
+{% endhighlight %}
 
 Using that, our core expression parser becomes:
 
-    :::java
-    public Expression parseExpression(int precedence) {
-      Token token = consume();
-      PrefixParselet prefix = mPrefixParselets.get(token.getType());
+{% highlight java %}
+public Expression parseExpression(int precedence) {
+  Token token = consume();
+  PrefixParselet prefix = mPrefixParselets.get(token.getType());
 
-      if (prefix == null) throw new ParseException(
-          "Could not parse \"" + token.getText() + "\".");
+  if (prefix == null) throw new ParseException(
+      "Could not parse \"" + token.getText() + "\".");
 
-      Expression left = prefix.parse(this, token);
+  Expression left = prefix.parse(this, token);
 
-      while (precedence < getPrecedence()) {
-        token = consume();
+  while (precedence < getPrecedence()) {
+    token = consume();
 
-        InfixParselet infix = mInfixParselets.get(token.getType());
-        left = infix.parse(this, left, token);
-      }
+    InfixParselet infix = mInfixParselets.get(token.getType());
+    left = infix.parse(this, left, token);
+  }
 
-      return left;
-    }
+  return left;
+}
+{% endhighlight %}
 
 That relies on a tiny helper function to get the precedence of the current
 token or default if there's no infix parselet for it:
 
-    :::java
-    private int getPrecedence() {
-      InfixParselet parser = mInfixParselets.get(
-          lookAhead(0).getType());
-      if (parser != null) return parser.getPrecedence();
+{% highlight java %}
+private int getPrecedence() {
+  InfixParselet parser = mInfixParselets.get(
+      lookAhead(0).getType());
+  if (parser != null) return parser.getPrecedence();
 
-      return 0;
-    }
+  return 0;
+}
+{% endhighlight %}
 
 And that's it. To use this, we'll set up a little precedence table:
 
-    :::java
-    public class Precedence {
-      public static final int ASSIGNMENT  = 1;
-      public static final int CONDITIONAL = 2;
-      public static final int SUM         = 3;
-      public static final int PRODUCT     = 4;
-      public static final int EXPONENT    = 5;
-      public static final int PREFIX      = 6;
-      public static final int POSTFIX     = 7;
-      public static final int CALL        = 8;
-    }
+{% highlight java %}
+public class Precedence {
+  public static final int ASSIGNMENT  = 1;
+  public static final int CONDITIONAL = 2;
+  public static final int SUM         = 3;
+  public static final int PRODUCT     = 4;
+  public static final int EXPONENT    = 5;
+  public static final int PREFIX      = 6;
+  public static final int POSTFIX     = 7;
+  public static final int CALL        = 8;
+}
+{% endhighlight %}
 
 To make our operators correctly handle precedence, they'll pass an appropriate
 value back into `parseExpression()` when they call it recursively. For

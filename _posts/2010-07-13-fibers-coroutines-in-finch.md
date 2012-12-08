@@ -27,29 +27,31 @@ take over when this one sleeps. Now you've got the idea.
 I can only read about two paragraphs in a blog post without code before I get
 bored, so here's some:
 
-    :::finch
-    ' create a fiber
-    fiber <- Fiber new: {
-        writeLine: "fiber started"
-        Fiber yield
-        writeLine: "fiber resumed"
-    }
+{% highlight finch %}
+' create a fiber
+fiber <- Fiber new: {
+    writeLine: "fiber started"
+    Fiber yield
+    writeLine: "fiber resumed"
+}
 
-    ' transfer control from this fiber (the main one) to it
-    writeLine: "main started"
-    fiber run
-    writeLine: "main resumed"
-    fiber run
-    writeLine: "done"
+' transfer control from this fiber (the main one) to it
+writeLine: "main started"
+fiber run
+writeLine: "main resumed"
+fiber run
+writeLine: "done"
+{% endhighlight %}
 
 If you run this, it outputs:
 
-    :::text
-    main started
-    fiber started
-    main resumed
-    fiber resumed
-    done
+{% highlight text %}
+main started
+fiber started
+main resumed
+fiber resumed
+done
+{% endhighlight %}
 
 The two fibers interleave together like dance partners. There are three
 important steps in this tango. First off, we need to create a fiber. The fiber
@@ -61,16 +63,18 @@ to catch the eye of a partner.
 Once you have some fibers, there are two methods to transfer control between
 them. The first one is `run`:
 
-    :::finch
-    someFiberObj run
+{% highlight finch %}
+someFiberObj run
+{% endhighlight %}
 
 When you send that message to a fiber object, it starts running and the
 current fiber pauses.
 
 The sister to `run` is `yield`:
 
-    :::finch
-    Fiber yield
+{% highlight finch %}
+Fiber yield
+{% endhighlight %}
 
 That pauses the current fiber and transfers control *back* to the fiber that
 ran this one.
@@ -89,13 +93,14 @@ yield`, there is also `Fiber yield:` which takes a single argument. The value
 passed to that will be sent back to the resuming fiber as the return value
 from the call to `run`. An example will really help here:
 
-    :::finch
-    fiber <- Fiber new: {
-      Fiber yield: "a marmot"
-    }
+{% highlight finch %}
+fiber <- Fiber new: {
+  Fiber yield: "a marmot"
+}
 
-    result <- fiber run
-    writeLine: result
+result <- fiber run
+writeLine: result
+{% endhighlight %}
 
 That will print out "a marmot", as you'd hope. When you call `run`, the time
 stops in that fiber. It doesn't resume until the fiber you ran yields. When
@@ -107,14 +112,15 @@ Coroutines are a superset of both of those, so now Finch has generators too.
 Unlike generators or iterators, communication also works going the other
 direction. You can pass data *to* a fiber when you run it like this:
 
-    :::finch
-    fiber <- Fiber new: {
-      result <- Fiber yield
-      writeLine: result
-    }
+{% highlight finch %}
+fiber <- Fiber new: {
+  result <- Fiber yield
+  writeLine: result
+}
 
-    fiber run
-    fiber run: "a dingo"
+fiber run
+fiber run: "a dingo"
+{% endhighlight %}
 
 An extra call to `run` is needed here at the beginning. That runs the fiber up
 to the first `yield`, which returns control back. Like in our previous
@@ -178,52 +184,54 @@ If your system supports coroutines, you've got a much easier way to do this:
 simply spin up a fiber for each entity and have them yield once per turn. Our
 above behavior turns into:
 
-    :::finch
-    Patroller :: behavior {
-        ' walk left
-        from: MaxX to: MinX do: {|x|
-            _x <- x
-            Fiber yield
-        }
-
-        ' wait
-        from: 1 to: WaitTime do: { Fiber yield }
-
-        ' walk right
-        from: MinX to: MaxX do: {|x|
-            _x <- x
-            Fiber yield
-        }
-
-        ' wait
-        from: 1 to: WaitTime do: { Fiber yield }
+{% highlight finch %}
+Patroller :: behavior {
+    ' walk left
+    from: MaxX to: MinX do: {|x|
+        _x <- x
+        Fiber yield
     }
+
+    ' wait
+    from: 1 to: WaitTime do: { Fiber yield }
+
+    ' walk right
+    from: MinX to: MaxX do: {|x|
+        _x <- x
+        Fiber yield
+    }
+
+    ' wait
+    from: 1 to: WaitTime do: { Fiber yield }
+}
+{% endhighlight %}
 
 Even better, because fibers maintain their own entire callstacks, you can
 switch between them even from within other function calls. This lets us
 refactor code that uses them into smaller functions, so the above would likely
 be something like:
 
-    :::finch
-    Patroller :: (
-        behavior {
-            self walkFrom: MaxX to: MinX
-            self wait: WaitTime
-            self walkFrom: MinX to: MaxX
-            self wait: WaitTime
-        }
+{% highlight finch %}
+Patroller :: (
+    behavior {
+        self walkFrom: MaxX to: MinX
+        self wait: WaitTime
+        self walkFrom: MinX to: MaxX
+        self wait: WaitTime
+    }
 
-        walkFrom: a to: b {
-            from: a to: b do: {|x|
-                _x <- x
-                Fiber yield
-            }
+    walkFrom: a to: b {
+        from: a to: b do: {|x|
+            _x <- x
+            Fiber yield
         }
+    }
 
-        wait: frames {
-            from: 1 to: WaitTime do: { Fiber yield }
-        }
-    )
+    wait: frames {
+        from: 1 to: WaitTime do: { Fiber yield }
+    }
+)
+{% endhighlight %}
 
 Now our top-level code for patrolling is practically pseudocode for what we
 want the entity to do. Pretty swell!

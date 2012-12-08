@@ -17,15 +17,16 @@ that it can work with: Text, Drawings, and Spreadsheets. And we've got a few
 operations we need to be able to do with a document: draw it to the screen,
 load it, and save it to disc. They form a grid, like so:
 
-    :::text
-                Text       Drawing   Spreadsheet
-            +-----------+-----------+-----------+
-    draw()  |           |           |           |
-            +-----------+-----------+-----------+
-    load()  |           |           |           |
-            +-----------+-----------+-----------+
-    save()  |           |           |           |
-            +-----------+-----------+-----------+
+{% highlight text %}
+            Text       Drawing   Spreadsheet
+        +-----------+-----------+-----------+
+draw()  |           |           |           |
+        +-----------+-----------+-----------+
+load()  |           |           |           |
+        +-----------+-----------+-----------+
+save()  |           |           |           |
+        +-----------+-----------+-----------+
+{% endhighlight %}
 
 Each cell in that grid is a chunk of code we've got to write. We need to draw
 text, load a drawing, save a spreadsheet, etc. All nine combinations will be
@@ -49,30 +50,31 @@ These are the most popular languages on the block today, and include C++, Java
 and C#. They organize code into classes, and put operations as methods on
 those classes. A Java implementation of the above would look something like:
 
-    :::java
-    public interface Document {
-        void draw();
-        void load();
-        void save();
-    }
+{% highlight java %}
+public interface Document {
+    void draw();
+    void load();
+    void save();
+}
 
-    public class TextDocument implements Document {
-        public void draw() { /* draw text doc... */ }
-        public void load() { /* load text doc... */ }
-        public void save() { /* save text doc... */ }
-    }
+public class TextDocument implements Document {
+    public void draw() { /* draw text doc... */ }
+    public void load() { /* load text doc... */ }
+    public void save() { /* save text doc... */ }
+}
 
-    public class DrawingDocument implements Document {
-        public void draw() { /* draw drawing... */ }
-        public void load() { /* load drawing... */ }
-        public void save() { /* save drawing... */ }
-    }
+public class DrawingDocument implements Document {
+    public void draw() { /* draw drawing... */ }
+    public void load() { /* load drawing... */ }
+    public void save() { /* save drawing... */ }
+}
 
-    public class SpreadsheetDocument implements Document {
-        public void draw() { /* draw spreadsheet... */ }
-        public void load() { /* load spreadsheet... */ }
-        public void save() { /* save spreadsheet... */ }
-    }
+public class SpreadsheetDocument implements Document {
+    public void draw() { /* draw spreadsheet... */ }
+    public void load() { /* load spreadsheet... */ }
+    public void save() { /* save spreadsheet... */ }
+}
+{% endhighlight %}
 
 An OOP language answers question 1 by saying that all operations for a single
 type should be lumped together. Everything you can do with a spreadsheet&mdash;
@@ -112,23 +114,24 @@ the *functions* (the rows).
 
 A Caml implementation of our example would look like:
 
-    :::ocaml
-    type document
-      = Text
-      | Drawing
-      | Spreadsheet
+{% highlight ocaml %}
+type document
+  = Text
+  | Drawing
+  | Spreadsheet
 
-    fun draw (Text)        = (* draw text doc... *)
-      | draw (Drawing)     = (* draw drawing doc... *)
-      | draw (Spreadsheet) = (* draw spreadsheet... *)
+fun draw (Text)        = (* draw text doc... *)
+  | draw (Drawing)     = (* draw drawing doc... *)
+  | draw (Spreadsheet) = (* draw spreadsheet... *)
 
-    fun load (Text)        = (* load text doc... *)
-      | load (Drawing)     = (* load drawing doc... *)
-      | load (Spreadsheet) = (* load spreadsheet... *)
+fun load (Text)        = (* load text doc... *)
+  | load (Drawing)     = (* load drawing doc... *)
+  | load (Spreadsheet) = (* load spreadsheet... *)
 
-    fun save (Text)        = (* save text doc... *)
-      | save (Drawing)     = (* save drawing doc... *)
-      | save (Spreadsheet) = (* save spreadsheet... *)
+fun save (Text)        = (* save text doc... *)
+  | save (Drawing)     = (* save drawing doc... *)
+  | save (Spreadsheet) = (* save spreadsheet... *)
+{% endhighlight %}
 
 (At least, I hope that's right. Please let me know what I get wrong.)
 
@@ -193,33 +196,35 @@ forgot something or messed something up.
 Here's how you'd accomplish this in Magpie. First, we'll define an interface
 that all documents will implement:
 
-    :::magpie
-    interface Document
-        draw()
-        load()
-        save()
-    end
+{% highlight magpie %}
+interface Document
+    draw()
+    load()
+    save()
+end
+{% endhighlight %}
 
 Then we'll create some classes that implement them:
 
-    :::magpie
-    class TextDocument
-        draw() // draw text doc...
-        load() // load text doc...
-        save() // save text doc...
-    end
+{% highlight magpie %}
+class TextDocument
+    draw() // draw text doc...
+    load() // load text doc...
+    save() // save text doc...
+end
 
-    class DrawingDocument
-        draw() // draw drawing...
-        load() // load drawing...
-        save() // save drawing...
-    end
+class DrawingDocument
+    draw() // draw drawing...
+    load() // load drawing...
+    save() // save drawing...
+end
 
-    class SpreadsheetDocument
-        draw() // draw spreadsheet...
-        load() // load spreadsheet...
-        save() // save spreadsheet...
-    end
+class SpreadsheetDocument
+    draw() // draw spreadsheet...
+    load() // load spreadsheet...
+    save() // save spreadsheet...
+end
+{% endhighlight %}
 
 So far, this looks pretty much like the static OOP solution with a bit less
 boilerplate. The biggest difference is that there's no explicit `implements
@@ -238,20 +243,22 @@ Here is where it gets interesting. Now we decide we want to add printing
 support. In Magpie, classes and interfaces are open for extension. So we can
 just do:
 
-    :::magpie
-    extend interface Document
-        print()
-    end
+{% highlight magpie %}
+extend interface Document
+    print()
+end
+{% endhighlight %}
 
 If we try to run the program now, we'll get type-check errors every place we
 pass a concrete document class to something that expects the interface: the
 classes no longer implement it since they lack the required `print()` method.
 To patch that up, we'll implement those:
 
-    :::magpie
-    def TextDocument print() // print text doc...
-    def DrawingDocument print() // print drawing...
-    def SpreadsheetDocument print() // print spreadsheet...
+{% highlight magpie %}
+def TextDocument print() // print text doc...
+def DrawingDocument print() // print drawing...
+def SpreadsheetDocument print() // print spreadsheet...
+{% endhighlight %}
 
 (`def` is one of two syntaxes for adding members to a class. It's nice for
 adding a single member to a class. If you're adding a bunch of members to one

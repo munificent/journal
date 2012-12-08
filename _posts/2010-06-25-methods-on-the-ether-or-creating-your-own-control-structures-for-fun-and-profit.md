@@ -3,6 +3,7 @@ layout: post
 title: "Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit"
 #categories: code, finch, language, parsing
 ---
+
 One of my favorite things about [Lisp](http://en.wikipedia.org/wiki/Lisp_%28programming_language%29) and [Smalltalk](http://en.wikipedia.org/wiki/Smalltalk) is that they
 don't have special syntax for control structures. Sometimes the most elegant
 way to express a solution to a problem requires a [unique flow control
@@ -25,28 +26,30 @@ know Smalltalk, feel free to skip this.
 
 Let's consider a fairly boring chunk of code in a curly language:
 
-    :::c
-    if (numWeasels > numCakes) {
-        print("Not enough cakes!");
-    } else {
-        for (int i = 0; i < numWeasels; i++) {
-            print("A weasel eats a cake!");
-        }
+{% highlight c %}
+if (numWeasels > numCakes) {
+    print("Not enough cakes!");
+} else {
+    for (int i = 0; i < numWeasels; i++) {
+        print("A weasel eats a cake!");
     }
+}
+{% endhighlight %}
 
 We've got three keywords there: `if`, `else`, and `for`. Here's how that code
 would look in Smalltalk:
 
-    :::smalltalk
-    numWeasels > numCakes ifTrue: [
-        "Not enough cakes!" print
-    ] ifFalse: [
-        i := 0.
-        [ i < numWeasels ] whileTrue: [
-            "A weasel eats a cake!" print.
-            i := i + 1
-        ]
+{% highlight smalltalk %}
+numWeasels > numCakes ifTrue: [
+    "Not enough cakes!" print
+] ifFalse: [
+    i := 0.
+    [ i < numWeasels ] whileTrue: [
+        "A weasel eats a cake!" print.
+        i := i + 1
     ]
+]
+{% endhighlight %}
 
 Whoa, what? First, we'll gloss over the basic stuff we don't care about here:
 `.` is used to separate statements, `:=` is for assignment, and the function
@@ -54,12 +57,13 @@ Whoa, what? First, we'll gloss over the basic stuff we don't care about here:
 
 The control flow part of that code is this:
 
-    :::smalltalk
-    ... ifTrue: [
-        ...
-    ] ifFalse: [
-        [ ... ] whileTrue: [ ... ]
-    ]
+{% highlight smalltalk %}
+... ifTrue: [
+    ...
+] ifFalse: [
+    [ ... ] whileTrue: [ ... ]
+]
+{% endhighlight %}
 
 You may think that all we've done is simple replacement: curlies become square
 brackets, `if` becomes `ifTrue:`, etc. Not so fast. `ifTrue:`, `IfFalse:`, and
@@ -72,8 +76,9 @@ boolean condition to check, a block of code to execute if the condition is
 true and (optionally) a block to execute if the condition is false. If you
 were to declare a "function" for if/then in C, it would look like:
 
-    :::c
-    void IfThen(bool condition, code ifTrue, code ifFalse);
+{% highlight c %}
+void IfThen(bool condition, code ifTrue, code ifFalse);
+{% endhighlight %}
 
 The problem, of course, is that `code` isn't a type in C: there's no easy way
 to pass around a reference to a chunk of code outside of function pointers.
@@ -83,14 +88,16 @@ That's what the square brackets are doing in the original example. They create
 a block: a chunk of unevaluated code encapsulated as an object. If you do
 this:
 
-    :::smalltalk
-    [ "hi" print ]
+{% highlight smalltalk %}
+[ "hi" print ]
+{% endhighlight %}
 
 It doesn't print "hi". Instead, it creates an object representing that chunk
 of code. If you then *call* the block by sending it a `value` message:
 
-    :::smalltalk
-    [ "hi" print ] value
+{% highlight smalltalk %}
+[ "hi" print ] value
+{% endhighlight %}
 
 *Then* it will print the string. Of course, you don't have to call a block
 immediately, or at all. You can store it in a variable, pass it to another
@@ -123,14 +130,15 @@ I wanted Finch to have that power but look less funny. (According to my
 definition of "funny", of course. Smalltalkers think their language looks
 perfectly normal.) Here's how our example would look in Finch:
 
-    :::finch
-    if: numWeasels > numCakes then: {
-        write: "Not enough cakes!"
-    } else: {
-        from: 1 to: numWeasels do: {
-            write: "A weasel eats a cake!"
-        }
+{% highlight finch %}
+if: numWeasels > numCakes then: {
+    write: "Not enough cakes!"
+} else: {
+    from: 1 to: numWeasels do: {
+        write: "A weasel eats a cake!"
     }
+}
+{% endhighlight %}
 
 The first minor change is using curlies to define blocks instead of square
 brackets. The more interesting change is that `if:then:else:` doesn't seem to
@@ -171,11 +179,12 @@ For example, the `from:to:do:` block we saw earlier is actually written in
 Finch. It uses `while:do:` which is the only looping construct explicitly
 built into the interpreter. Its definition is:
 
-    :::finch
-    Ether :: from: start to: end do: block {
-        i <- start
-        while: { i <= end } do: {
-            block call: i
-            i <-- i + 1
-        }
+{% highlight finch %}
+Ether :: from: start to: end do: block {
+    i <- start
+    while: { i <= end } do: {
+        block call: i
+        i <-- i + 1
     }
+}
+{% endhighlight %}

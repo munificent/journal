@@ -47,30 +47,31 @@ says, "Here's where you do your work." If you've minimized global and static
 objects then the limited parameters to the sandbox say, "You only really have
 access to the methods in `this`" so just use those. Here's an example:
 
-    :::csharp
-    public abstract class Widget
-    {
-        // the sandbox
-        public abstract void Draw();
+{% highlight csharp %}
+public abstract class Widget
+{
+    // the sandbox
+    public abstract void Draw();
 
-        protected void DrawString(string text, int x, int y) { /* */ }
-        protected void DrawLine(int x1, int y1, int x2, int y2) { /* */ }
-        protected void DrawRect(int x, int y, int w, int h) { /* */ }
-    }
+    protected void DrawString(string text, int x, int y) { /* */ }
+    protected void DrawLine(int x1, int y1, int x2, int y2) { /* */ }
+    protected void DrawRect(int x, int y, int w, int h) { /* */ }
+}
 
-    public class MyWidget : Widget
+public class MyWidget : Widget
+{
+    public override void Draw()
     {
-        public override void Draw()
+        DrawString("MyWidget", 5, 3);
+        DrawRect(0, 0, 200, 20);
+
+        for (int x = 0; x < 200; x += 5)
         {
-            DrawString("MyWidget", 5, 3);
-            DrawRect(0, 0, 200, 20);
-
-            for (int x = 0; x < 200; x += 5)
-            {
-                DrawLine(x, 15, x, 20);
-            }
+            DrawLine(x, 15, x, 20);
         }
     }
+}
+{% endhighlight %}
 
 If you try to go down this path, one limitation you will quickly realize is
 that often the base class itself doesn't have enough contextual information to
@@ -78,31 +79,32 @@ provide those atomic functions. That needs to be pased in, but you don't want
 the sandbox to have it (since it could then poke at it directly). Here's a
 typical way around it:
 
-    :::csharp
-    public abstract class Widget
+{% highlight csharp %}
+public abstract class Widget
+{
+    // the public API
+    public void Draw(DrawContext context)
     {
-        // the public API
-        public void Draw(DrawContext context)
-        {
-            // store what we need to implement the atomic operations
-            mContext = context;
+        // store what we need to implement the atomic operations
+        mContext = context;
 
-            // but don't give it to the sandbox
-            DrawInternal();
+        // but don't give it to the sandbox
+        DrawInternal();
 
-            // done with it
-            mContext = null;
-        }
-
-        // the sandbox
-        protected abstract void DrawInternal();
-
-        protected void DrawString(string text, int x, int y) { /* */ }
-        protected void DrawLine(int x1, int y1, int x2, int y2) { /* */ }
-        protected void DrawRect(int x, int y, int w, int h) { /* */ }
-
-        private DrawContext mContext;
+        // done with it
+        mContext = null;
     }
+
+    // the sandbox
+    protected abstract void DrawInternal();
+
+    protected void DrawString(string text, int x, int y) { /* */ }
+    protected void DrawLine(int x1, int y1, int x2, int y2) { /* */ }
+    protected void DrawRect(int x, int y, int w, int h) { /* */ }
+
+    private DrawContext mContext;
+}
+{% endhighlight %}
 
 Now `DrawString()`, etc. have access to the DrawContext, but the derived
 widget itself does not.
@@ -116,54 +118,55 @@ implicit argument to the sandbox method `Draw()`. Instead of using `this` you
 can always make those operations an explicit parameter. Here's a way to use
 that to have different widgets draw differently without using inheritance:
 
-    :::csharp
-    public class Widget
+{% highlight csharp %}
+public class Widget
+{
+    public Widget(Action<DrawOperations> drawFunc)
     {
-        public Widget(Action<DrawOperations> drawFunc)
+        mDrawFunc = drawFunc;
+    }
+
+    public void Draw(DrawContext context)
+    {
+        mDrawFunc(new DrawOperations(context));
+    }
+
+    private class DrawOperations
+    {
+        public DrawOperations(DrawContext context)
         {
-            mDrawFunc = drawFunc;
+            mContext = context;
         }
 
-        public void Draw(DrawContext context)
-        {
-            mDrawFunc(new DrawOperations(context));
-        }
+        public void DrawString(string text, int x, int y) { /* */ }
+        public void DrawLine(int x1, int y1, int x2, int y2) { /* */ }
+        public void DrawRect(int x, int y, int w, int h) { /* */ }
 
-        private class DrawOperations
+        private DrawContext mContext;
+
+    }
+
+    private Action<DrawOperations> mDrawFunc;
+}
+
+public Widget MakeMyWidget()
+{
+    Widget widget = new Widget(
+        operations =>
         {
-            public DrawOperations(DrawContext context)
+            operations.DrawString("MyWidget", 5, 3);
+            operations.DrawRect(0, 0, 200, 20);
+
+            for (int x = 0; x < 200; x += 5)
             {
-                mContext = context;
+                operations.DrawLine(x, 15, x, 20);
             }
-
-            public void DrawString(string text, int x, int y) { /* */ }
-            public void DrawLine(int x1, int y1, int x2, int y2) { /* */ }
-            public void DrawRect(int x, int y, int w, int h) { /* */ }
-
-            private DrawContext mContext;
-
-        }
-
-        private Action<DrawOperations> mDrawFunc;
+        });
     }
 
-    public Widget MakeMyWidget()
-    {
-        Widget widget = new Widget(
-            operations =>
-            {
-                operations.DrawString("MyWidget", 5, 3);
-                operations.DrawRect(0, 0, 200, 20);
-
-                for (int x = 0; x < 200; x += 5)
-                {
-                    operations.DrawLine(x, 15, x, 20);
-                }
-            });
-        }
-
-        return widget;
-    }
+    return widget;
+}
+{% endhighlight %}
 
 This has the advantage of letting you later change how a widget draws without
 baking it into the class hierarchy, but may be a bit odd to people with only

@@ -25,45 +25,50 @@ Before we get too far, let's make sure we're all talking about the same thing.
 In Magpie, all objects are instances of a class. The class determines what
 methods an object has. The pseudocode for invoking a method is:
 
-    :::magpie
-    invoke(obj, methodName, arg)
-        class = obj.getClass
-        method = class.findMethod(methodName)
-        method.invoke(obj, arg)
-    end
+{% highlight magpie %}
+invoke(obj, methodName, arg)
+    class = obj.getClass
+    method = class.findMethod(methodName)
+    method.invoke(obj, arg)
+end
+{% endhighlight %}
 
 Under the hood then, a class is a bag of methods, something like:
 
-    :::java
-    class ClassObj {
-        Map<String, Method> methods;
-    }
+{% highlight java %}
+class ClassObj {
+    Map<String, Method> methods;
+}
+{% endhighlight %}
 
 And an object is just a reference to its class (and some data, but we won't
 worry about that here):
 
-    :::java
-    class Obj {
-        ClassObj theClass;
-    }
+{% highlight java %}
+class Obj {
+    ClassObj theClass;
+}
+{% endhighlight %}
 
 However, there are actually *two* kinds of methods. There are regular instance
 methods, like we've seen and "static" or "class" methods that you invoke
 directly on the class. These include things like constructors (which are like
 Ruby's [new](http://www.devx.com/enterprise/Article/30917/0/page/3) methods). For example:
 
-    :::magpie
-    def foo = Foo.new   // call a class method on Foo
-    foo.toString        // call an instance method on a Foo
+{% highlight magpie %}
+def foo = Foo.new   // call a class method on Foo
+foo.toString        // call an instance method on a Foo
+{% endhighlight %}
 
 So our class object really needs *two* dictionaries, one for class and one for
 instance methods:
 
-    :::java
-    class ClassObj {
-        Map<String, Method> classMethods;
-        Map<String, Method> instanceMethods;
-    }
+{% highlight java %}
+class ClassObj {
+    Map<String, Method> classMethods;
+    Map<String, Method> instanceMethods;
+}
+{% endhighlight %}
 
 It also ends up needing to duplicate the API for using them: separate methods
 for defining a method, looking one up, invoking one, etc. I *[hate](http://en.wikipedia.org/wiki/DRY)* redundancy so this rubbed me the wrong way.
@@ -77,34 +82,37 @@ the set of methods you can call on an *instance* of the class.
 
 My `ClassObj` type disappeared, to just be:
 
-    :::java
-    class Obj {
-        Map<String, Method> methods;
-    }
+{% highlight java %}
+class Obj {
+    Map<String, Method> methods;
+}
+{% endhighlight %}
 
 The only missing piece was that an instance of some object needed to have a
 reference to the other object that contains its methods, like so:
 
-    :::java
-    class Obj {
-        Obj parent;
-        Map<String, Method> methods;
-    }
+{% highlight java %}
+class Obj {
+    Obj parent;
+    Map<String, Method> methods;
+}
+{% endhighlight %}
 
 Now our pseudo-code for invoking a method is:
 
-    :::magpie
-    invoke(obj, methodName, arg)
-        thisObj = obj
-        loop
-            method = thisObj.findMethod(methodName)
-            if method != null then
-                return method.invoke(obj, arg)
-            end
-            // walk up the parent chain
-            thisObj = obj.parent
+{% highlight magpie %}
+invoke(obj, methodName, arg)
+    thisObj = obj
+    loop
+        method = thisObj.findMethod(methodName)
+        if method != null then
+            return method.invoke(obj, arg)
         end
+        // walk up the parent chain
+        thisObj = obj.parent
     end
+end
+{% endhighlight %}
 
 You'll note that this pseudocode handles *both* instance and class methods.
 With instance methods, `obj` will be the class object itself (since classes
@@ -126,15 +134,16 @@ the same type system that Javascript and [Finch](http://finch.stuffwithstuff.com
 The interesting part is that this is hidden completely from the user. Magpie
 code is still written using classes and instances. If you have this in Magpie:
 
-    :::magpie
-    class Foo
-        def sayHi () print "hi"
-    end
+{% highlight magpie %}
+class Foo
+    def sayHi () print "hi"
+end
 
-    def a = Foo.new
-    def b = Foo.new
-    a.sayHi
-    b.sayHi
+def a = Foo.new
+def b = Foo.new
+a.sayHi
+b.sayHi
+{% endhighlight %}
 
 At runtime, the interpreter will build this object hierarchy:
 

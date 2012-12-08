@@ -9,16 +9,17 @@ loop in the executable that iterates as long as the game is running. In GUI
 apps, an [event loop](http://en.wikipedia.org/wiki/Event_loop) accomplishes the same goal of keeping the executable
 running indefinitely. A simple game loop looks like:
 
-    :::csharp
-    void GameLoop()
+{% highlight csharp %}
+void GameLoop()
+{
+    while (mPlaying)
     {
-        while (mPlaying)
-        {
-            HandleUserInput();
-            UpdateGameState();
-            Render();
-        }
+        HandleUserInput();
+        UpdateGameState();
+        Render();
     }
+}
+{% endhighlight %}
 
 Pretty straightforward, and it's endearing to know that even the most advanced
 blockbuster game on the market has some code quite similar to this in it
@@ -42,12 +43,13 @@ events when things happen (monsters move, items are used, etc.) The UI can
 hook into those and render the parts it needs to. So _&hellip;hand-waving&hellip;_ don't
 worry about rendering.
 
-    :::csharp
-    void ProcessGame(UserInput input)
-    {
-        HandleUserInput(input);
-        UpdateGameState();
-    }
+{% highlight csharp %}
+void ProcessGame(UserInput input)
+{
+    HandleUserInput(input);
+    UpdateGameState();
+}
+{% endhighlight %}
 
 Still pretty dumb. Let's delve into updating the game state.
 
@@ -56,16 +58,17 @@ Still pretty dumb. Let's delve into updating the game state.
 The game has a dungeon with a bunch of monsters and the player-controlled
 hero. Something like:
 
-    :::csharp
-    void UpdateGameState()
-    {
-        Hero.Move();
+{% highlight csharp %}
+void UpdateGameState()
+{
+    Hero.Move();
 
-        foreach (Monster monster in Monsters)
-        {
-            monster.Move();
-        }
+    foreach (Monster monster in Monsters)
+    {
+        monster.Move();
     }
+}
+{% endhighlight %}
 
 This works for games like checkers where everyone takes exactly one turn.
 Here's where it gets a bit more complex. In my game, each entity moves at its
@@ -73,15 +76,16 @@ own speed so some may get more than one turn before others go. In addition,
 the hero is basically the same thing as a monster except the player controls
 him instead of AI doing it. Like this:
 
-    :::csharp
-    void UpdateGameState()
+{% highlight csharp %}
+void UpdateGameState()
+{
+    // Entities has the hero in it too
+    foreach (Entity entity in Entities)
     {
-        // Entities has the hero in it too
-        foreach (Entity entity in Entities)
-        {
-            entity.Move();
-        }
+        entity.Move();
     }
+}
+{% endhighlight %}
 
 The tricky bit is because of speed, the UI may need to call `ProcessGame()`
 multiple times before the hero actually needs user input. If the hero is
@@ -91,25 +95,26 @@ takes one. This means there is no longer a 1-1 correspondence between
 engine if it's time to provide user input. So `ProcessGame()` really become
 "process the game in a loop until we need user input to continue":
 
-    :::csharp
-    void ProcessGame()
+{% highlight csharp %}
+void ProcessGame()
+{
+    while (true)
     {
-        while (true)
+        Entity entity = Entities[mCurrentEntity];
+
+        if (entity.NeedsUserInput)
         {
-            Entity entity = Entities[mCurrentEntity];
+            return;
+        }
+        else
+        {
+            entity.Move();
 
-            if (entity.NeedsUserInput)
-            {
-                return;
-            }
-            else
-            {
-                entity.Move();
-
-                mCurrentEntity = (mCurrentEntity + 1) % Entities.Count;
-            }
+            mCurrentEntity = (mCurrentEntity + 1) % Entities.Count;
         }
     }
+}
+{% endhighlight %}
 
 Fairly simple. We loop through the entities, wrapping around and keep going
 until we reach the hero who needs a move. But you'll notice we had to create a
@@ -122,47 +127,48 @@ function.
 That isn't so bad, but I also added processing for items (if you lay a burning
 torch on the ground, it needs to process so it can eventually burn out):
 
-    :::csharp
-    void ProcessGame()
+{% highlight csharp %}
+void ProcessGame()
+{
+    while (true)
     {
-        while (true)
+        if (mInEntities)
         {
-            if (mInEntities)
+            Entity entity = Entities[mCurrentEntity];
+
+            if (entity.NeedsUserInput)
             {
-                Entity entity = Entities[mCurrentEntity];
-
-                if (entity.NeedsUserInput)
-                {
-                    return;
-                }
-                else
-                {
-                    entity.Move();
-
-                    mCurrentEntity++;
-
-                    if (mCurrentEntity >= Entities.Count)
-                    {
-                        mCurrentEntity = 0;
-                        mInEntities = false;
-                    }
-                }
+                return;
             }
             else
             {
-                Item item = Items[mCurrentItem];
-                item.Move();
+                entity.Move();
 
-                mCurrentItem++;
+                mCurrentEntity++;
 
-                if (mCurrentItem >= Items.Count)
+                if (mCurrentEntity >= Entities.Count)
                 {
-                    mCurrentItem = 0;
-                    mInEntities = true;
+                    mCurrentEntity = 0;
+                    mInEntities = false;
                 }
             }
         }
+        else
+        {
+            Item item = Items[mCurrentItem];
+            item.Move();
+
+            mCurrentItem++;
+
+            if (mCurrentItem >= Items.Count)
+            {
+                mCurrentItem = 0;
+                mInEntities = true;
+            }
+        }
     }
+}
+{% endhighlight %}
 
 *Yeesh.* Now we've got another field to track the current item, and another
 one just to track which of the two loops we're in. It's getting hairy and this
@@ -177,50 +183,52 @@ to jump back to the last place we were in the function. Sound familiar?
 
 Here's an iterator:
 
-    :::csharp
-    IEnumerable<int> Fibonacci()
+{% highlight csharp %}
+IEnumerable<int> Fibonacci()
+{
+    int a = 0;
+    int b = 1;
+
+    while(true)
     {
-        int a = 0;
-        int b = 1;
+        yield return a;
 
-        while(true)
-        {
-            yield return a;
-
-            int swap = a;
-            a = b;
-            b = swap + b;
-        }
+        int swap = a;
+        a = b;
+        b = swap + b;
     }
+}
+{% endhighlight %}
 
 `yield return` lets us pick up where we left off, and we didn't have to create
 any members to keep track of `a` and `b` because the `IEnumerable<int>`
 created automatically by the compiler encapsulates that. A perfect fit! Let's
 turn the game processing into the same thing:
 
-    :::csharp
-    IEnumerable<bool> ProcessGame()
+{% highlight csharp %}
+IEnumerable<bool> ProcessGame()
+{
+    while (true)
     {
-        while (true)
+        foreach (Entity entity in Entities)
         {
-            foreach (Entity entity in Entities)
+            if (entity.NeedsUserInput)
             {
-                if (entity.NeedsUserInput)
-                {
-                    yield return true;
-                }
-                else
-                {
-                    entity.Move();
-                }
+                yield return true;
             }
-
-            foreach (Item item in Items)
+            else
             {
-                item.Move();
+                entity.Move();
             }
         }
+
+        foreach (Item item in Items)
+        {
+            item.Move();
+        }
     }
+}
+{% endhighlight %}
 
 Much simpler, and we let the language take care of encapsulating the state
 needed to return for us. Less code for us to monkey with.
@@ -232,40 +240,41 @@ The only annoying bit left now is that the UI actually needs to call
 afterwards. To make things nicer, we can let the game handle that so that
 `ProcessGame()` works exactly like it used to:
 
-    :::csharp
-    void ProcessGame()
+{% highlight csharp %}
+void ProcessGame()
+{
+    if (mIterator == null)
     {
-        if (mIterator == null)
-        {
-            mIterator = CreateProcessIterator().GetEnumerator();
-        }
-
-        mIterator.MoveNext();
-        bool dummy = mIterator.Current;
+        mIterator = CreateProcessIterator().GetEnumerator();
     }
 
-    IEnumerable<bool> CreateProcessIterator()
-    {
-        while (true)
-        {
-            foreach (Entity entity in Entities)
-            {
-                if (entity.NeedsUserInput)
-                {
-                    yield return true;
-                }
-                else
-                {
-                    entity.Move();
-                }
-            }
+    mIterator.MoveNext();
+    bool dummy = mIterator.Current;
+}
 
-            foreach (Item item in Items)
+IEnumerable<bool> CreateProcessIterator()
+{
+    while (true)
+    {
+        foreach (Entity entity in Entities)
+        {
+            if (entity.NeedsUserInput)
             {
-                item.Move();
+                yield return true;
+            }
+            else
+            {
+                entity.Move();
             }
         }
+
+        foreach (Item item in Items)
+        {
+            item.Move();
+        }
     }
+}
+{% endhighlight %}
 
 You'll note that in the above example, we're using `IEnumerable<bool>`. The
 `bool` there is pretty much arbitrary because the values of the `IEnumerable`

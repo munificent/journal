@@ -50,24 +50,27 @@ A non-null type is a subtype of its nullable type. In other words, you can alway
 
 Also, the special `Null` type is a subtype of every nullable type. This means you can initialize nullable types with `null` like you'd expect. Since `Null` is *not* a subtype of *non*-nullable types, you *cannot* initialize those with `null`. That implies that all variables of non-null types must be initialized. This is an error:
 
-    :::dart
-    int a;
+{% highlight dart %}
+int a;
+{% endhighlight %}
 
 As is this:
 
-    :::dart
-    class Point {
-      int x, y;
-      Point();
-    }
+{% highlight dart %}
+class Point {
+  int x, y;
+  Point();
+}
+{% endhighlight %}
 
 Requiring fields of non-nullable types to be initialized is a challenge in languages like Java and Scala where you can access a field before it's been initialized in the constructor. Fortunately, Dart already has constructor initialization lists, and they solve this problem handily. We can fix that `Point` class like so:
 
-    :::dart
-    class Point {
-      int x, y;
-      Point() : x = 0, y = 0;
-    }
+{% highlight dart %}
+class Point {
+  int x, y;
+  Point() : x = 0, y = 0;
+}
+{% endhighlight %}
 
 Since the constructor initializers are run before you can access `this`, we've ensured that those fields will be initialized before *anyone* can see them. Neat.
 
@@ -83,38 +86,44 @@ To test for null, you can just do a vanilla `if (foo == null)` statement.
 
 To go back and forth between nullable and non-nullable types, we rely on assignment compatibility. Dart's assignment compatibility rules are looser than other languages. Like most, they allow implicit upcasts. Given this:
 
-    :::dart
-    class Base {}
-    class Derived extends Base {}
+{% highlight dart %}
+class Base {}
+class Derived extends Base {}
+{% endhighlight %}
 
 Then this is allowed:
 
-    :::dart
-    Base b = new Derived();
+{% highlight dart %}
+Base b = new Derived();
+{% endhighlight %}
 
 But Dart also allows implicit *downcasts* (in other words from supertype to subtype):
 
-    :::dart
-    Derived d = b; // declared as type Base above
+{% highlight dart %}
+Derived d = b; // declared as type Base above
+{% endhighlight %}
 
 (The reasoning here is that many times a downcast *will* work correctly at runtime, and Dart's type system is optimistic that you know what you're doing.)
 
 Thanks to this, nullable types are easy to work with. It is, of course, always safe to go from a non-null type to a nullable one:
 
-    :::dart
-    int? a = 123;
+{% highlight dart %}
+int? a = 123;
+{% endhighlight %}
 
 But it's equally easy (though not equally *safe*) to go in the other direction:
 
-    :::dart
-    int b = a; // declared as int? above
+{% highlight dart %}
+int b = a; // declared as int? above
+{% endhighlight %}
 
 If you actually want to be safe, you just need to check for null first:
 
-    :::dart
-    if (a != null) {
-      int b = a; // safe at runtime now too!
-    }
+{% highlight dart %}
+if (a != null) {
+  int b = a; // safe at runtime now too!
+}
+{% endhighlight %}
 
 So here, as in other places in Dart, the type checker won't get in your way.
 
@@ -139,8 +148,9 @@ Well, yes, sort of. But Dart's specified static checker isn't that strict in gen
     what you can't do is implicitly assign from *null* to a non-nullable type.
     This is a static error:
 
-        :::dart
-        int a = null;
+{% highlight dart %}
+int a = null;
+{% endhighlight %}
 
     That goes a long way towards flushing out uninitialized variable bugs. In
     my experience with Dart, that's one of the most common errors I run into.
@@ -149,15 +159,16 @@ Well, yes, sort of. But Dart's specified static checker isn't that strict in gen
     are encouraged to do their own smarter analysis. If we get nullability
     annotations in Dart, it will be easy to have tools do data flow analysis and report warnings like this:
 
-        :::dart
-        double(int? i) {
-          return i * 2; // WARN that we didn't test i for null first
-        }
+{% highlight dart %}
+double(int? i) {
+  return i * 2; // WARN that we didn't test i for null first
+}
 
-        double(int? i ) {
-          if (i == null) return 0;
-          return i * 2; // OK now
-        }
+double(int? i ) {
+  if (i == null) return 0;
+  return i * 2; // OK now
+}
+{% endhighlight %}
 
 ## Nullables and Generics
 
@@ -165,17 +176,19 @@ A key question that comes up with nullables is how they play with generic types.
 
 Generics are covariant in Dart. That means that generics also allow subtyping between a nullable and non-nullable type argument. In other words, this is allowed:
 
-    :::dart
-    List<int?> list = new List<int>();
+{% highlight dart %}
+List<int?> list = new List<int>();
+{% endhighlight %}
 
 As long as you use your types in a way that makes covariance safe (i.e. you read from them and don't write to them) this will work as well for nullable types as it does with subclassing.
 
 The other question is how using a type parameter in an annotation plays with nullability. I.e.:
 
-    :::dart
-    class SomeClass<T> {
-      T? someField;
-    }
+{% highlight dart %}
+class SomeClass<T> {
+  T? someField;
+}
+{% endhighlight %}
 
 This is *really* beyond the edge of my type system fu, but I think the fact that nullable types flatten (`A??` becomes `A?`) will alleviate some of the nasty corner cases this may lead to. I'm not sure though, and this is definitely something I'd like feedback on.
 
@@ -258,11 +271,12 @@ For example, the [`Map&lt;K,V&gt;` interface](http://www.dartlang.org/docs/api/M
 
 Likewise, there are a number of methods that take named optional parameters whose types aren't nullable, like:
 
-    :::dart
-    class Expect {
-        static void isFalse(actual, [String reason = null])
-        // more...
-    }
+{% highlight dart %}
+class Expect {
+    static void isFalse(actual, [String reason = null])
+    // more...
+}
+{% endhighlight %}
 
 Here, that `String` will need to be made nullable.
 
@@ -270,22 +284,25 @@ Here, that `String` will need to be made nullable.
 
 The more intrusive change is that operations that implicitly create `null` entries in collections might need to be modified. For example, if you do:
 
-    :::dart
-    var list = new List<int>(4);
+{% highlight dart %}
+var list = new List<int>(4);
+{% endhighlight %}
 
 then you create a list whose four elements are automatically set to `null`. That's a problem here because the element type (`int`) is non-nullable.
 
 The safest way to handle this is to change the constructor to let the user explicitly provide the value to initialize the new entries with. So instead of the above, you could do:
 
-    :::dart
-    var list = new List<int>(4, fill: 1);
-    print(list); // [1, 1, 1, 1]
+{% highlight dart %}
+var list = new List<int>(4, fill: 1);
+print(list); // [1, 1, 1, 1]
+{% endhighlight %}
 
 or maybe:
 
-    :::dart
-    var list = new List<int>.generate(4, (index) => index * 2);
-    print(list); // [0, 2, 4, 6]
+{% highlight dart %}
+var list = new List<int>.generate(4, (index) => index * 2);
+print(list); // [0, 2, 4, 6]
+{% endhighlight %}
 
 I may have missed something, but I believe `List` is the only type that needs any real API changes like this.
 

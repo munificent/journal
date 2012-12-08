@@ -121,4 +121,3 @@ expect he'd be a brick-tossing anarchist. One advantage that attitude gives
 him is that he and the others working on [ooc](http://ooc-lang.org/) pour features into the
 language while the rest of us are still sitting around fretting about minutia.
 I think a lot of us could use some of that "let's just fucking do it" spirit.
-

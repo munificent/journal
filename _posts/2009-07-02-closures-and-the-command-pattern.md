@@ -34,58 +34,61 @@ The "move" here is the command pattern. The basic idea is that you have a
 procedure needs. You can think of it like a function call and its parameters
 bottled up together to be opened up later by someone else. A vanilla implementation is something like:
 
-    :::csharp
-    interface ICommand
-    {
-        void Invoke();
-    }
+{% highlight csharp %}
+interface ICommand
+{
+    void Invoke();
+}
 
-    class MovePieceCommand : ICommand
-    {
-        public Piece Piece;
-        public int   X;
-        public int   Y;
+class MovePieceCommand : ICommand
+{
+    public Piece Piece;
+    public int   X;
+    public int   Y;
 
-        public void Invoke()
-        {
-            Piece.MoveTo(X, Y);
-        }
+    public void Invoke()
+    {
+        Piece.MoveTo(X, Y);
     }
+}
+{% endhighlight %}
 
 We'll also create a little command factory for creating the commands. This
 isn't necessary now, but it'll make sense later when we start moving things
 around.
 
-    :::csharp
-    static class Commands
+{% highlight csharp %}
+static class Commands
+{
+    // create a command to move a piece
+    public static ICommand MovePiece(Piece piece, int x, int y)
     {
-        // create a command to move a piece
-        public static ICommand MovePiece(Piece piece, int x, int y)
-        {
-            var command = new MovePieceCommand();
-            command.Piece = piece;
-            command.X     = x;
-            command.Y     = y;
+        var command = new MovePieceCommand();
+        command.Piece = piece;
+        command.X     = x;
+        command.Y     = y;
 
-            return command;
-        }
+        return command;
     }
+}
+{% endhighlight %}
 
 To complete this first pass, here's a little block to test our code:
 
-    :::csharp
-    class Program
+{% highlight csharp %}
+class Program
+{
+    public static Main(string[] args)
     {
-        public static Main(string[] args)
-        {
-            // ui or ai creates command
-            var piece = new Piece();
-            var command =  Commands.MovePiece(piece, 3, 4);
+        // ui or ai creates command
+        var piece = new Piece();
+        var command =  Commands.MovePiece(piece, 3, 4);
 
-            // chess engine invokes it
-            command.Invoke();
-        }
+        // chess engine invokes it
+        command.Invoke();
     }
+}
+{% endhighlight %}
 
 ## The First Change: Delegates
 
@@ -96,47 +99,48 @@ just use that instead. We'll define a delegate type for a function that takes
 no arguments and returns nothing, just like the `Invoke()` method in
 `ICommand`.
 
-    :::csharp
-    delegate CommandDel();
+{% highlight csharp %}
+delegate CommandDel();
 
-    class MovePieceCommand
+class MovePieceCommand
+{
+    public Piece Piece;
+    public int   X;
+    public int   Y;
+
+    public void Invoke()
     {
-        public Piece Piece;
-        public int   X;
-        public int   Y;
-
-        public void Invoke()
-        {
-            Piece.MoveTo(X, Y);
-        }
+        Piece.MoveTo(X, Y);
     }
+}
 
-    static class Commands
+static class Commands
+{
+    // create a command to move a piece
+    public static CommandDel MovePiece(Piece piece, int x, int y)
     {
-        // create a command to move a piece
-        public static CommandDel MovePiece(Piece piece, int x, int y)
-        {
-            var command = new MovePieceCommand();
-            command.Piece = piece;
-            command.X     = x;
-            command.Y     = y;
+        var command = new MovePieceCommand();
+        command.Piece = piece;
+        command.X     = x;
+        command.Y     = y;
 
-            return command.Invoke;
-        }
+        return command.Invoke;
     }
+}
 
-    class Program
+class Program
+{
+    public static Main(string[] args)
     {
-        public static Main(string[] args)
-        {
-            // ui or ai creates command
-            var piece = new Piece();
-            var command =  Commands.MovePiece(piece, 3, 4);
+        // ui or ai creates command
+        var piece = new Piece();
+        var command =  Commands.MovePiece(piece, 3, 4);
 
-            // chess engine invokes it
-            command();
-        }
+        // chess engine invokes it
+        command();
     }
+}
+{% endhighlight %}
 
 Not much different, although we did get to ditch the interface without any
 loss in functionality.
@@ -148,32 +152,33 @@ function. Let's see if we can pull that out. C# has "anonymous delegates",
 which are basically functions defined within the body of another function.
 We'll try that.
 
-    :::csharp
-    class MovePieceCommand
+{% highlight csharp %}
+class MovePieceCommand
+{
+    public Piece Piece;
+    public int   X;
+    public int   Y;
+}
+
+static class Commands
+{
+    // create a command to move a piece
+    public static Action MovePiece(Piece piece, int x, int y)
     {
-        public Piece Piece;
-        public int   X;
-        public int   Y;
+        var command = new MovePieceCommand();
+        command.Piece = piece;
+        command.X     = x;
+        command.Y     = y;
+
+        CommandDelegate invoke = delegate()
+            {
+                command.Piece.MoveTo(command.X, command.Y);
+            };
+
+        return invoke;
     }
-
-    static class Commands
-    {
-        // create a command to move a piece
-        public static Action MovePiece(Piece piece, int x, int y)
-        {
-            var command = new MovePieceCommand();
-            command.Piece = piece;
-            command.X     = x;
-            command.Y     = y;
-
-            CommandDelegate invoke = delegate()
-                {
-                    command.Piece.MoveTo(command.X, command.Y);
-                };
-
-            return invoke;
-        }
-    }
+}
+{% endhighlight %}
 
 Now instead of an `Invoke()` *method* we have an anonymous function stored in
 a local `invoke` variable. But this local function isn't a method, so it
@@ -202,15 +207,16 @@ anyway, there's no reason to bundle them into an object. Let's kill it.
 To clean things up a bit more, we'll also define the delegate using C#'s newer
 [lambda syntax](http://msdn.microsoft.com/en-us/library/bb397687.aspx). It does the exact same thing, but more tersely.
 
-    :::csharp
-    static class Commands
+{% highlight csharp %}
+static class Commands
+{
+    // create a command to move a piece
+    public static Action MovePiece(Piece piece, int x, int y)
     {
-        // create a command to move a piece
-        public static Action MovePiece(Piece piece, int x, int y)
-        {
-            return () => piece.MoveTo(x, y);
-        }
+        return () => piece.MoveTo(x, y);
     }
+}
+{% endhighlight %}
 
 And just like that, our whole command pattern has become a single line of
 code.

@@ -147,6 +147,10 @@ a {
     color: $code-color;
     font: 14px/24px $code-font;
     overflow: auto;
+
+    code {
+      padding: 0;
+    }
   }
 
   tt {

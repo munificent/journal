@@ -16,25 +16,27 @@ with in the language was pattern matching. Pattern matching in F# (and its
 ancestors ML and OCaml) is something like `switch/case` on steroids. Here's a
 simple example of a `switch/case` in C#:
 
-    :::csharp
-    int i = 2;
-    switch (i)
-    {
-        case 0:  Print("zero");
-        case 1:  Print("one");
-        case 2:  Print("two");
-        default: Print("some other value");
-    }
+{% highlight csharp %}
+int i = 2;
+switch (i)
+{
+    case 0:  Print("zero");
+    case 1:  Print("one");
+    case 2:  Print("two");
+    default: Print("some other value");
+}
+{% endhighlight %}
 
 Here's what the same logic would look like in F#:
 
-    :::fsharp
-    let i = 2
-    match i with
-    | 0 -> Print("zero")
-    | 1 -> Print("one")
-    | 2 -> Print("two")
-    | _ -> Print("some other value")
+{% highlight fsharp %}
+let i = 2
+match i with
+| 0 -> Print("zero")
+| 1 -> Print("one")
+| 2 -> Print("two")
+| _ -> Print("some other value")
+{% endhighlight %}
 
 You can probably infer what's going on. Pretty similar to our familiar
 `switch/case`. It checks each value and executes the clause on the right the
@@ -50,43 +52,46 @@ Where C# has enums, F# has discriminated unions. The main difference between
 the two is that each value in the union can have additional data fields.
 Imagine you want to enumerate the different kinds of [image macros](http://en.wikipedia.org/wiki/Image_macro):
 
-    :::csharp
-    enum ImageMacro
-    {
-        Lolcat,
-        Lolrus,
-        ORlyOwl
-    }
+{% highlight csharp %}
+enum ImageMacro
+{
+    Lolcat,
+    Lolrus,
+    ORlyOwl
+}
+{% endhighlight %}
 
 Pretty basic. Now if it's a [lolcat](http://en.wikipedia.org/wiki/Lolcat), we also want to note the text of the
 caption, and if it's a [lolrus](http://icanhascheezburger.com/2007/01/14/i-has-a-bucket/), we want to note how many buckets it has.
 In C#, we'd have to ditch the enum and resort to a class hierarchy:
 
-    :::csharp
-    abstract class ImageMacro { }
+{% highlight csharp %}
+abstract class ImageMacro { }
 
-    class Lolcat : ImageMacro
-    {
-        public string Caption;
-        public Lolcat(string caption) { Caption = caption; }
-    }
+class Lolcat : ImageMacro
+{
+    public string Caption;
+    public Lolcat(string caption) { Caption = caption; }
+}
 
-    class Lolrus : ImageMacro
-    {
-        public int Buckets;
-        public Lolrus(int buckets) { Buckets = buckets; }
-    }
+class Lolrus : ImageMacro
+{
+    public int Buckets;
+    public Lolrus(int buckets) { Buckets = buckets; }
+}
 
-    class ORlyOwl : ImageMacro { }
+class ORlyOwl : ImageMacro { }
+{% endhighlight %}
 
 Classic OOP design, and it gets the job done. In F#, you can simply add fields
 to a discriminated union and accomplish the exact same thing:
 
-    :::fsharp
-    type ImageMacro =
-        | Lolcat    of string
-        | Lolrus    of int
-        | ORlyOwl
+{% highlight fsharp %}
+type ImageMacro =
+    | Lolcat    of string
+    | Lolrus    of int
+    | ORlyOwl
+{% endhighlight %}
 
 The "of string" says that when you make a Lolcat ImageMacro (and *only* a
 Lolcat) that you must also provide a caption. Likewise, the "of int" says that
@@ -100,12 +105,13 @@ other. Now let's get back to pattern matching and see something it can do that
 a `switch/case` definitely can't. Given our above ImageMacro type, let's say
 we want to print it out:
 
-    :::fsharp
-    let image = Lolcat("I made you a cookie")
-    match image with
-    | Lolcat(caption) -> Print("Lolcat says '" + caption + "'")
-    | Lolrus(buckets) -> Print("Lolrus has " + buckets + " buckets")
-    | ORlyOwn         -> Print("O RLY?")
+{% highlight fsharp %}
+let image = Lolcat("I made you a cookie")
+match image with
+| Lolcat(caption) -> Print("Lolcat says '" + caption + "'")
+| Lolrus(buckets) -> Print("Lolrus has " + buckets + " buckets")
+| ORlyOwn         -> Print("O RLY?")
+{% endhighlight %}
 
 Now *that's* pretty nice. Not only does it switch on what kind of image macro
 it is, it also pulls out the data associated with each one ("destructures" in
@@ -117,12 +123,13 @@ So can we bring discriminated union pattern matching back to C#? Since C#
 doesn't have discriminated unions, we'll have to make it work with the little
 inheritance tree up there. Here's what I got:
 
-    :::csharp
-    ImageMacro image = new Lolcat("I made you a cookie");
-    Pattern.Match(image).
-        Case<Lolcat, string> (c  => Print("Lolcat says '" + c + "'")).
-        Case<Lolrus, int>    (b  => Print("I has " + b + " buckets")).
-        Case<ORlyOwl>        (() => Print("O RLY?"));
+{% highlight csharp %}
+ImageMacro image = new Lolcat("I made you a cookie");
+Pattern.Match(image).
+    Case<Lolcat, string> (c  => Print("Lolcat says '" + c + "'")).
+    Case<Lolrus, int>    (b  => Print("I has " + b + " buckets")).
+    Case<ORlyOwl>        (() => Print("O RLY?"));
+{% endhighlight %}
 
 A little strange, but not *too* bad. Looks kind of like a `switch/case` but
 switches based on type. For `Lolcat` and `Lolrus`, we pull out the caption and
@@ -136,24 +143,26 @@ the action to perform when the case is successfully matched. Let's start with
 the simplest possible system: one that can only match a single value based on
 type, with no fields. Here's the basic class:
 
-    :::csharp
-    public class Matcher<T>
+{% highlight csharp %}
+public class Matcher<T>
+{
+    public Matcher(T value) { mValue = value; }
+
+    public void Case<TCase>(Action action)
     {
-        public Matcher(T value) { mValue = value; }
-
-        public void Case<TCase>(Action action)
-        {
-            if (mValue is TCase) action();
-        }
-
-        private T mValue;
+        if (mValue is TCase) action();
     }
+
+    private T mValue;
+}
+{% endhighlight %}
 
 The action being passed in is a delegate, and we construct it using C# 3.5's
 handy lambda notation. For the ORlyOwl, it's:
 
-    :::csharp
-    () => Print("O RLY?")
+{% highlight csharp %}
+() => Print("O RLY?")
+{% endhighlight %}
 
 Aside from being a nice clean notation, the other nice thing about lambdas
 (and anonymous delegates) is that they can access variables defined in the
@@ -168,12 +177,13 @@ kids are calling a "fluent interface". The basic idea is to make methods
 return `this` so that you can call multiple methods on the same object by
 `chaining.Them().Like().This()`:
 
-    :::csharp
-    public Matcher<T> Case<TCase>(Action action)
-    {
-        if (mValue is TCase) action();
-        return this;
-    }
+{% highlight csharp %}
+public Matcher<T> Case<TCase>(Action action)
+{
+    if (mValue is TCase) action();
+    return this;
+}
+{% endhighlight %}
 
 ### Preventing Multiple Matches
 
@@ -181,59 +191,63 @@ There's a problem here. A pattern should only match the _first_ successful
 case. If we just allow arbitrary chaining, it would be possible to have
 multiple matches. Here's a solution:
 
-    :::csharp
-    public virtual Matcher<T> Case<TCase>(Action action)
+{% highlight csharp %}
+public virtual Matcher<T> Case<TCase>(Action action)
+{
+    if (mValue is TCase)
     {
-        if (mValue is TCase)
-        {
-            action();
-            return new NullMatcher<T>();
-        }
-        return this;
+        action();
+        return new NullMatcher<T>();
     }
+    return this;
+}
+{% endhighlight %}
 
 Now when we have a successful match, instead of continuing the fluent
 interface and returning `this`, we return a `NullMatcher<T>` As you can
 probably guess, that class has the same methods as `Matcher<T>`, but never
 actually matches:
 
-    :::csharp
-    public class NullMatcher<T> : Matcher<T>
+{% highlight csharp %}
+public class NullMatcher<T> : Matcher<T>
+{
+    public override Matcher<T> Case<TCase>(Action action)
     {
-        public override Matcher<T> Case<TCase>(Action action)
-        {
-            return this;
-        }
+        return this;
     }
+}
+{% endhighlight %}
 
 ### Extracting Fields
 
 So far, we're up to being able to do this:
 
-    :::csharp
-    Pattern.Match(image).
-        Case<Lolcat>    (caption => Print("Lolcat says '?'")).
-        Case<Lolrus>    (buckets => Print("Lolrus has ? buckets")).
-        Case<ORlyOwl>   (()      => Print("O RLY?"));
+{% highlight csharp %}
+Pattern.Match(image).
+    Case<Lolcat>    (caption => Print("Lolcat says '?'")).
+    Case<Lolrus>    (buckets => Print("Lolrus has ? buckets")).
+    Case<ORlyOwl>   (()      => Print("O RLY?"));
+{% endhighlight %}
 
 The last remaining step is to pull out the `caption` and `buckets` from the
 `Lolcat` and `Lolrus` types. We'll do this by overloading `Case()`:
 
-    :::csharp
-    public virtual Matcher<T> Case<TCase, TArg>(Action <TArg> action)
-    {
-        IMatchable<TArg> matchable = mValue as IMatchable<TArg>;
+{% highlight csharp %}
+public virtual Matcher<T> Case<TCase, TArg>(Action <TArg> action)
+{
+    IMatchable<TArg> matchable = mValue as IMatchable<TArg>;
 
-        if ((matchable != null) && (mValue is TCase))
-        {
-            action(matchable.GetArg());
-            return new NullMatcher<T>();
-        }
-        else
-        {
-            return this;
-        }
+    if ((matchable != null) && (mValue is TCase))
+    {
+        action(matchable.GetArg());
+        return new NullMatcher<T>();
     }
+    else
+    {
+        return this;
+    }
+}
+{% endhighlight %}
 
 What this does is both check the type and see if it implements
 `IMatchable<T>`. This little interface just lets a class expose a field for
@@ -243,27 +257,28 @@ would also incur a performance penalty and bind the pattern matching to the
 internals of the matched classes.) Here's the interface and it's
 implementation in our macro classes:
 
-    :::csharp
-    interface IMatchable<TArg>
-    {
-        TArg GetArg();
-    }
+{% highlight csharp %}
+interface IMatchable<TArg>
+{
+    TArg GetArg();
+}
 
-    class Lolcat : ImageMacro, IMatchable<string>
-    {
-        public string Caption;
-        public Lolcat(string caption) { Caption = caption; }
+class Lolcat : ImageMacro, IMatchable<string>
+{
+    public string Caption;
+    public Lolcat(string caption) { Caption = caption; }
 
-        string IMatchable<string>.GetArg() { return Caption; }
-    }
+    string IMatchable<string>.GetArg() { return Caption; }
+}
 
-    class Lolrus : ImageMacro, IMatchable<int>
-    {
-        public int NumBuckets;
-        public Lolrus(int numBuckets) { NumBuckets = numBuckets; }
+class Lolrus : ImageMacro, IMatchable<int>
+{
+    public int NumBuckets;
+    public Lolrus(int numBuckets) { NumBuckets = numBuckets; }
 
-        int IMatchable<int>.GetArg() { return NumBuckets; }
-    }
+    int IMatchable<int>.GetArg() { return NumBuckets; }
+}
+{% endhighlight %}
 
 I'm using explicit interface implementation here, because users only really
 care about using `GetArg()` when they're doing pattern matching. Otherwise,
@@ -274,19 +289,21 @@ there's no reason to make it a visible part of the class's interface.
 We've built back almost up the to the top. The last little bit left is the
 simplest:
 
-    :::csharp
-    Pattern.Match(image)
+{% highlight csharp %}
+Pattern.Match(image)
+{% endhighlight %}
 
 `Pattern` is simply a static class with one method `Match()`:
 
-    :::csharp
-    class Pattern
+{% highlight csharp %}
+class Pattern
+{
+    public static Matcher<T> Match<T>(T value)
     {
-        public static Matcher<T> Match<T>(T value)
-        {
-            return new Matcher<T>(value);
-        }
+        return new Matcher<T>(value);
     }
+}
+{% endhighlight %}
 
 The Pattern class exists simply because C# requires all functions to be in a
 class. However, constructing Matchers through `Match<T>` does have one nice
@@ -296,11 +313,12 @@ to explicitly write it out like you would when calling a constructor.
 With this little bit in place, we've reached our goal of being able to get
 something like matching discriminated unions working in C#:
 
-    :::csharp
-    Pattern.Match(image).
-        Case<Lolcat, string> (c  => Print("Lolcat says '" + c + "'")).
-        Case<Lolrus, int>    (b  => Print("I has " + b + " buckets")).
-        Case<ORlyOwl>           (() => Print("O RLY?"));
+{% highlight csharp %}
+Pattern.Match(image).
+    Case<Lolcat, string> (c  => Print("Lolcat says '" + c + "'")).
+    Case<Lolrus, int>    (b  => Print("I has " + b + " buckets")).
+    Case<ORlyOwl>           (() => Print("O RLY?"));
+{% endhighlight %}
 
 ## But Wait, That's Not All!
 
@@ -312,29 +330,32 @@ Here are a few other things the full code lets you do:
 In the example above, we only pull a single field out of a given case. F#
 supports multiple fields as well, as does the Matcher class (up to four):
 
-    :::csharp
-    Case<Loldog, string, int> ((caption, dogs) =>
-        Print("'" + caption + "', says " + dogs + " hotdogs")).
+{% highlight csharp %}
+Case<Loldog, string, int> ((caption, dogs) =>
+    Print("'" + caption + "', says " + dogs + " hotdogs")).
+{% endhighlight %}
 
 ### Default Case
 
 It's also useful to have a `default`-like case that will always succeed if
 reached:
 
-    :::csharp
-    Pattern.Match(image).
-        Case<Lolrus, int> (b  => Print("I has " + buckets + " buckets")).
-        Default                 (() => Print("Default"));
+{% highlight csharp %}
+Pattern.Match(image).
+    Case<Lolrus, int> (b  => Print("I has " + buckets + " buckets")).
+    Default                 (() => Print("Default"));
+{% endhighlight %}
 
 ### Equality Matching
 
 Another way to match values is if they are equal. We can do this generically
 since `Equals()` is part of the .NET framework.
 
-    :::csharp
-    Pattern.Match("a string").
-        Case("not",      () => Print("should not match")).
-        Case("a string", () => Print("should match"));
+{% highlight csharp %}
+Pattern.Match("a string").
+    Case("not",      () => Print("should not match")).
+    Case("a string", () => Print("should match"));
+{% endhighlight %}
 
 The example here uses strings, but this works with any type as long as it
 implements `Equals()` correctly.
@@ -347,10 +368,11 @@ obvious solution then is to simply let users pass in an arbitrary predicate (a
 predicate is a function that returns a bool) and have the match succeed based
 on that:
 
-    :::csharp
-    Pattern.Match(123).
-        Case(value => value < 100, () => Print("less than 100")).
-        Case(value => value > 100, () => Print("greater than 100"));
+{% highlight csharp %}
+Pattern.Match(123).
+    Case(value => value < 100, () => Print("less than 100")).
+    Case(value => value > 100, () => Print("greater than 100"));
+{% endhighlight %}
 
 You'll note that in the final code below, all of the other matching types are
 built on top of this.
@@ -360,29 +382,32 @@ built on top of this.
 F#, unlike C#, treats everything as an expression, even flow control
 statements like `if/then` and `match`. This means a match can return a result:
 
-    :::fsharp
-    // F#:
-    let isTwo = match 2 with
-                | 2 -> true
-                | _ -> false
+{% highlight fsharp %}
+// F#:
+let isTwo = match 2 with
+            | 2 -> true
+            | _ -> false
+{% endhighlight %}
 
 where in C# you'd have to do an assignment:
 
-    :::csharp
-    // C#
-    bool isTwo;
-    switch (2)
-    {
-        case 2:  isTwo = true;
-        default: isTwo = false;
-    }
+{% highlight csharp %}
+// C#
+bool isTwo;
+switch (2)
+{
+    case 2:  isTwo = true;
+    default: isTwo = false;
+}
+{% endhighlight %}
 
 Our pattern matching class can do this too, even within C#:
 
-    :::csharp
-    bool isTwo = Pattern.Match<int, bool>(2).
-                     Case(2,  true).
-                     Default( false);
+{% highlight csharp %}
+bool isTwo = Pattern.Match<int, bool>(2).
+                 Case(2,  true).
+                 Default( false);
+{% endhighlight %}
 
 ## Conclusion
 

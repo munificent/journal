@@ -28,13 +28,14 @@ you know it. Here's some examples:
 
 Consider the humble `switch` statement in [Ye Olde Imperative Language](http://en.wikipedia.org/wiki/C_%28programming_language%29):
 
-    :::c
-    switch (i) {
-      case 1:  printf("first"); break;
-      case 2:  printf("second"); break;
-      case 3:  printf("third"); break;
-      default: printf("uh..."); break;
-    }
+{% highlight c %}
+switch (i) {
+  case 1:  printf("first"); break;
+  case 2:  printf("second"); break;
+  case 3:  printf("third"); break;
+  default: printf("uh..."); break;
+}
+{% endhighlight %}
 
 Pretty straightforward. The key bits are, we have a *value* being tested (here
 just `i`), a series of *clauses*, and a *default clause*. Each clause has a
@@ -52,16 +53,17 @@ they're the same value.
 Now let's switch gears and take a look a `catch` blocks in everyone's favorite
 [Big Enterprise Language](http://en.wikipedia.org/wiki/Java_%28programming_language%29):
 
-    :::java
-    try {
-      // Do something crazy...
-    } catch (ParseException ex) {
-      System.out.println("Parse error!");
-    } catch (IOException ex) {
-      System.out.println("IO error!");
-    } catch (Exception ex) {
-      System.out.println("Uh-oh!");
-    }
+{% highlight java %}
+try {
+  // Do something crazy...
+} catch (ParseException ex) {
+  System.out.println("Parse error!");
+} catch (IOException ex) {
+  System.out.println("IO error!");
+} catch (Exception ex) {
+  System.out.println("Uh-oh!");
+}
+{% endhighlight %}
 
 When an exception gets thrown in a try block, we start playing with the
 `catch` blocks. The key bits here are: we have a *value* being tested (the
@@ -81,10 +83,11 @@ the [Hot New Language](http://en.wikipedia.org/wiki/Javascript). The latest Mozi
 actually uses (not that I'm bitter or anything) introduced a new feature
 called *destructuring assignment*. It looks like this:
 
-    :::javascript
-    var point = [1, 2];
-    var [x, y] = point; // Destructure point.
-    alert(x + ", " y);
+{% highlight javascript %}
+var point = [1, 2];
+var [x, y] = point; // Destructure point.
+alert(x + ", " y);
+{% endhighlight %}
 
 You can probably infer what's going on here. The second line declares two new
 variables, `a` and `b` and initializes them by pulling elements out of the
@@ -126,11 +129,12 @@ The simplest pattern is just an expression that evaluates to a value. These
 are like the literals after the `case` in a `switch` statement, but Magpie
 lets you use pretty much any expression. These are valid value patterns:
 
-    :::magpie
-    123
-    true
-    "a string"
-    3 + 5
+{% highlight magpie %}
+123
+true
+"a string"
+3 + 5
+{% endhighlight %}
 
 Testing against a value is simple: it's just an equality check. A `2` pattern
 matches if the value is also `2`. Magpie does this by just calling the `==`
@@ -145,8 +149,9 @@ composing bigger patterns that do more stuff. A tuple pattern is just like a
 [tuple expression](http://journal.stuffwithstuff.com/2009/05/05/one-and-only-one/): it's a series of patterns separated by commas. For
 example:
 
-    :::magpie
-    3, "four", false
+{% highlight magpie %}
+3, "four", false
+{% endhighlight %}
 
 Here we have a tuple of three value patterns. A tuple pattern matches if all
 of the fields match the fields of the value. In other words, it walks through
@@ -161,8 +166,9 @@ give the patterns of its fields the chance to do so.
 The twin brother to tuple patterns, a record pattern does the same thing, but
 for a named record (or any other type with named members). Here's one:
 
-    :::magpie
-    x: 1, y: 2
+{% highlight magpie %}
+x: 1, y: 2
+{% endhighlight %}
 
 That pattern will match any object with an `x` field whose value is `1`, and a
 `y` field whose value is `2`.
@@ -174,11 +180,12 @@ greatest departure from ML. A variable pattern has a *name* and an optional
 *type annotation*. The name can be `_` if you don't really care about it.
 Here's some:
 
-    :::magpie
-    _              // no name or type
-    a              // name but no type
-    position Point // name and type
-    _ Int | String // no name but type
+{% highlight magpie %}
+_              // no name or type
+a              // name but no type
+position Point // name and type
+_ Int | String // no name but type
+{% endhighlight %}
 
 A variable pattern matches if the *type* of the value matches the variable
 pattern's type. If the pattern doesn't have a type, it always succeeds.
@@ -188,13 +195,15 @@ pattern matches, it will create a new variable with its name whose value is
 the matched value. When you combine that with tuple and record patterns, you
 get destructuring automagically. If we take this value:
 
-    :::magpie
-    name: "Dan", pals: ("Sam", "Ed")
+{% highlight magpie %}
+name: "Dan", pals: ("Sam", "Ed")
+{% endhighlight %}
 
 And match it against this pattern:
 
-    :::magpie
-    name: n, pals: (a, b)
+{% highlight magpie %}
+name: n, pals: (a, b)
+{% endhighlight %}
 
 The match will succeed, and `n` will be `"Dan"`, `a` will be `"Sam"`, and `b`
 will be `"Ed"`.
@@ -206,29 +215,31 @@ of places. We'll start with the most obvious one: `match` expressions&mdash;
 Magpie's souped-up version of `switch`. Our first example looks like this in
 Magpie:
 
-    :::magpie
-    match i
-        case 1 then print("first")
-        case 2 then print("second")
-        case 3 then print("third")
-        case _ then print("uh...")
-    end
+{% highlight magpie %}
+match i
+    case 1 then print("first")
+    case 2 then print("second")
+    case 3 then print("third")
+    case _ then print("uh...")
+end
+{% endhighlight %}
 
 The semantics are what you expect. It tests each pattern (the bit between
 `case` and `then`) in turn. When a pattern matches, it binds any pattern
 variables in a new scope, and executes the expression after `then` in it. A
 richer example showing all of the awesome looks like:
 
-    :::magpie
-    match name: "Dan", pals: ("Sam", "Ed")
-        case name: "Dave" then
-            "don't care about Dave's friends"
-        case name: a, pals: nothing then
-            "aww, " ~ a ~ " has no friends"
-        case name: n, pals: (a, b) then
-            n ~ " is pals with " ~ a ~ " and " ~ b
-        end
+{% highlight magpie %}
+match name: "Dan", pals: ("Sam", "Ed")
+    case name: "Dave" then
+        "don't care about Dave's friends"
+    case name: a, pals: nothing then
+        "aww, " ~ a ~ " has no friends"
+    case name: n, pals: (a, b) then
+        n ~ " is pals with " ~ a ~ " and " ~ b
     end
+end
+{% endhighlight %}
 
 Pretty handy, but we're just getting started.
 
@@ -238,12 +249,13 @@ Since we can also match on type, that gives us all we need to use patterns for
 selecting an appropriate catch clause when an error is thrown. The exception
 example up there becomes:
 
-    :::magpie
-    do
-        // Do something crazy...
-    catch ex ParseException then print("Parse error!")
-    catch ex IOException    then print("IO error!")
-    catch _                 then print("Uh-oh!")
+{% highlight magpie %}
+do
+    // Do something crazy...
+catch ex ParseException then print("Parse error!")
+catch ex IOException    then print("IO error!")
+catch _                 then print("Uh-oh!")
+{% endhighlight %}
 
 ### Variables
 
@@ -253,16 +265,18 @@ variable? Nope. We can just make it take a single pattern. If the pattern is a
 variable pattern with no type, it degenerates to a regular variable
 declaration like:
 
-    :::magpie
-    var i = "the queen of France"
+{% highlight magpie %}
+var i = "the queen of France"
+{% endhighlight %}
 
 But you can also use tuple and record patterns to destructure:
 
-    :::magpie
-    var name: n, pals: (a, b) = name: "Dan", pals: ("Sam", "Ed")
-    print(n) // "Dan"
-    print(a) // "Sam"
-    print(b) // "Ed"
+{% highlight magpie %}
+var name: n, pals: (a, b) = name: "Dan", pals: ("Sam", "Ed")
+print(n) // "Dan"
+print(a) // "Sam"
+print(b) // "Ed"
+{% endhighlight %}
 
 So now we've got destructuring for free. Swell!
 
@@ -273,22 +287,24 @@ there, it looks an awful lot like a function type declaration. That's not a
 coincidence either. We can now just use a pattern to define a function's
 parameter type, like so:
 
-    :::magpie
-    def foo(name: n String, pals: (a String, b String))
-        print(n) // "Dan"
-        print(a) // "Sam"
-        print(b) // "Ed"
-    end
+{% highlight magpie %}
+def foo(name: n String, pals: (a String, b String))
+    print(n) // "Dan"
+    print(a) // "Sam"
+    print(b) // "Ed"
+end
+{% endhighlight %}
 
 The syntax of variable patterns was designed specifically around this. My goal
 was to make the patterns used for function parameters look familiar to someone
 new to the language while hiding greater flexibility under the surface. I
 think most programmers can figure out what this means:
 
-    :::magpie
-    def sayAge(name String, age Int)
-        print(name ~ " is " ~ age ~ " years old")
-    end
+{% highlight magpie %}
+def sayAge(name String, age Int)
+    print(name ~ " is " ~ age ~ " years old")
+end
+{% endhighlight %}
 
 without ever realizing the `name String, age Int` is something special.
 
@@ -297,17 +313,19 @@ Using patterns for function types also plays really nicely with Magpie's
 we can use that to type-check a pattern anywhere it appears. So, we can
 statically tell that this is an error:
 
-    :::magpie
-    match "not an int"
-        case 1 then "match a string with an int?"
-    end
+{% highlight magpie %}
+match "not an int"
+    case 1 then "match a string with an int?"
+end
+{% endhighlight %}
 
 because the pattern type doesn't match the value. And using that exact same
 code, we can also tell that this is an error:
 
-    :::magpie
-    def expectInt(i Int) print(i)
-    expectInt("not an int")
+{% highlight magpie %}
+def expectInt(i Int) print(i)
+expectInt("not an int")
+{% endhighlight %}
 
 The end result of all of this is that the total amount of code in the
 interpreter has gone *down*, there are fewer distinct concepts to learn in the

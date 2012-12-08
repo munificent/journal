@@ -98,12 +98,13 @@ Running his C# code, here are the results I got:
 Pretty slow! So I took a look at the code. The first thing that would catch
 the eye of any C# programmer is this:
 
-    :::csharp
-    unsafe struct Data
-    {
-        public int key;
-        public fixed char data[128];
-    }
+{% highlight csharp %}
+unsafe struct Data
+{
+    public int key;
+    public fixed char data[128];
+}
+{% endhighlight %}
 
 *That's* the data structure he's sorting. An unsafe struct with a fixed array?
 I had to look up `fixed` to even know what that *means*. Now, I understand
@@ -113,14 +114,15 @@ point. If you're going to compare two languages, using their *built-in typical
 sort functions*, shouldn't you use their typical *data structures* too? Here's
 what how a regular C# developer would define `Data`:
 
-    :::csharp
-    class Data
-    {
-        public int key;
-        public char[] data;
+{% highlight csharp %}
+class Data
+{
+    public int key;
+    public char[] data;
 
-        public Data() { data = new char[128]; }
-    }
+    public Data() { data = new char[128]; }
+}
+{% endhighlight %}
 
 No unmanaged code, no structs (which are rarely used in C#). Just a regular
 class with an array. Here's the results:
@@ -270,173 +272,174 @@ the data structures (which he did not do) used by each language.
 Aside from the `Data` change above, I cleaned up some of the copy and paste in
 his code. Here's what I used:
 
-    :::csharp
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Runtime.InteropServices;
+{% highlight csharp %}
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Runtime.InteropServices;
 
-    namespace CachePressureCS
+namespace CachePressureCS
+{
+    // normal c# type
+    class Data
     {
-        // normal c# type
-        class Data
+        public int key;
+        public char[] data;
+
+        public Data() { data = new char[128]; }
+    }
+
+    class DataComparer : IComparer
+    {
+        int IComparer.Compare(Object x, Object y)
         {
-            public int key;
-            public char[] data;
-
-            public Data() { data = new char[128]; }
-        }
-
-        class DataComparer : IComparer
-        {
-            int IComparer.Compare(Object x, Object y)
-            {
-                return ((Data)x).key - ((Data)y).key;
-            }
-        }
-
-        class DataComparerT : IComparer<Data>
-        {
-            public int Compare(Data x, Data y)
-            {
-                return x.key - y.key;
-            }
-        }
-
-        class Timer
-        {
-            [DllImport("Kernel32.dll")]
-            private static extern bool QueryPerformanceCounter(out long counter);
-
-            [DllImport("Kernel32.dll")]
-            private static extern bool QueryPerformanceFrequency(out long frequency);
-
-            public Timer()
-            {
-                mStart = mEnd = 0;
-                QueryPerformanceFrequency(out mFrequency);
-            }
-
-            public void Start() { QueryPerformanceCounter(out mStart); }
-
-            public void End() { QueryPerformanceCounter(out mEnd); }
-
-            public double Time
-            {
-                get { return 1000.0 * (double)(mEnd - mStart) / (double)mFrequency; }
-            }
-
-            long mFrequency;
-            long mStart;
-            long mEnd;
-        }
-
-        class Program
-        {
-            static int CompareData(Data x, Data y)
-            {
-                return x.key - y.key;
-            }
-
-            static Data[] MakeData(int size)
-            {
-                Random rng = new Random(0);
-                Data[] data = new Data[size];
-
-                for (int i = 0; i < data.Length; i++)
-                {
-                    data[i] = new Data();
-                    data[i].key = rng.Next();
-                }
-
-                return data;
-            }
-
-            static double Test(int size, Action<Data[]> sort)
-            {
-                Timer time = new Timer();
-                Data[] data = MakeData(size);
-
-                time.Start();
-                sort(data);
-                time.End();
-
-                return time.Time;
-            }
-
-            static double SortTest(int size)
-            {
-                return Test(size, data => Array.Sort(data, new DataComparer()));
-            }
-
-            static double SortTestT(int size)
-            {
-                return Test(size, data => Array.Sort<Data>(data, new DataComparerT()));
-            }
-
-            static double SortTestTC(int size)
-            {
-                return Test(size, data => Array.Sort<Data>(data, CompareData));
-            }
-
-            static double SortTestC(int size)
-            {
-                return Test(size, data => Array.Sort(data, CompareData));
-            }
-
-            static double SortTestIndirect(int size)
-            {
-                Random rng = new Random(0);
-                Timer time = new Timer();
-                Data[] data = new Data[size];
-                int[] indirect = new int[size];
-
-                for (int i = 0; i < data.Length; i++)
-                {
-                    data[i] = new Data();
-                    data[i].key = rng.Next();
-                    indirect[i] = data[i].key;
-                }
-
-                time.Start();
-                Array.Sort<int, Data>(indirect, data);
-                time.End();
-
-                return time.Time;
-            }
-
-            private static void Time(Func<int, double> fn, int size)
-            {
-                double time = 0;
-                for (int j = 0; j < 10; j++)
-                {
-                    time += fn(size);
-                }
-                time /= 10.0;
-
-                Console.Write("{0,14:F4}", time);
-            }
-
-            static void Main(string[] args)
-            {
-                Console.WriteLine("    size      SortTest     SortTestT    SortTestTC  SortIndirect");
-                Console.WriteLine("-------- ------------- ------------- ------------- -------------");
-
-                for (int i = 0; i < 10; i++)
-                {
-                    int size = 1024 << i;
-
-                    Console.Write("{0,8}", size);
-                    Time(SortTest, size);
-                    Time(SortTestT, size);
-                    Time(SortTestTC, size);
-                    Time(SortTestIndirect, size);
-
-                    Console.WriteLine();
-                }
-
-                Console.ReadKey();
-            }
+            return ((Data)x).key - ((Data)y).key;
         }
     }
+
+    class DataComparerT : IComparer<Data>
+    {
+        public int Compare(Data x, Data y)
+        {
+            return x.key - y.key;
+        }
+    }
+
+    class Timer
+    {
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryPerformanceCounter(out long counter);
+
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryPerformanceFrequency(out long frequency);
+
+        public Timer()
+        {
+            mStart = mEnd = 0;
+            QueryPerformanceFrequency(out mFrequency);
+        }
+
+        public void Start() { QueryPerformanceCounter(out mStart); }
+
+        public void End() { QueryPerformanceCounter(out mEnd); }
+
+        public double Time
+        {
+            get { return 1000.0 * (double)(mEnd - mStart) / (double)mFrequency; }
+        }
+
+        long mFrequency;
+        long mStart;
+        long mEnd;
+    }
+
+    class Program
+    {
+        static int CompareData(Data x, Data y)
+        {
+            return x.key - y.key;
+        }
+
+        static Data[] MakeData(int size)
+        {
+            Random rng = new Random(0);
+            Data[] data = new Data[size];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = new Data();
+                data[i].key = rng.Next();
+            }
+
+            return data;
+        }
+
+        static double Test(int size, Action<Data[]> sort)
+        {
+            Timer time = new Timer();
+            Data[] data = MakeData(size);
+
+            time.Start();
+            sort(data);
+            time.End();
+
+            return time.Time;
+        }
+
+        static double SortTest(int size)
+        {
+            return Test(size, data => Array.Sort(data, new DataComparer()));
+        }
+
+        static double SortTestT(int size)
+        {
+            return Test(size, data => Array.Sort<Data>(data, new DataComparerT()));
+        }
+
+        static double SortTestTC(int size)
+        {
+            return Test(size, data => Array.Sort<Data>(data, CompareData));
+        }
+
+        static double SortTestC(int size)
+        {
+            return Test(size, data => Array.Sort(data, CompareData));
+        }
+
+        static double SortTestIndirect(int size)
+        {
+            Random rng = new Random(0);
+            Timer time = new Timer();
+            Data[] data = new Data[size];
+            int[] indirect = new int[size];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = new Data();
+                data[i].key = rng.Next();
+                indirect[i] = data[i].key;
+            }
+
+            time.Start();
+            Array.Sort<int, Data>(indirect, data);
+            time.End();
+
+            return time.Time;
+        }
+
+        private static void Time(Func<int, double> fn, int size)
+        {
+            double time = 0;
+            for (int j = 0; j < 10; j++)
+            {
+                time += fn(size);
+            }
+            time /= 10.0;
+
+            Console.Write("{0,14:F4}", time);
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("    size      SortTest     SortTestT    SortTestTC  SortIndirect");
+            Console.WriteLine("-------- ------------- ------------- ------------- -------------");
+
+            for (int i = 0; i < 10; i++)
+            {
+                int size = 1024 << i;
+
+                Console.Write("{0,8}", size);
+                Time(SortTest, size);
+                Time(SortTestT, size);
+                Time(SortTestTC, size);
+                Time(SortTestIndirect, size);
+
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
+{% endhighlight %}

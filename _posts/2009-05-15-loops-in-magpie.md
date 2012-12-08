@@ -35,60 +35,63 @@ user wants a new variable for the current item. Also, iterating through
 multiple collections simultaneously should be fairly easy to do. This leads me
 to adding just one new keyword:
 
-    :::magpie
-    for <var> <- <generator> do
-        ...
-    end
+{% highlight magpie %}
+for <var> <- <generator> do
+    ...
+end
+{% endhighlight %}
 
 In addition, multiple `for` clauses can be provided (but only one `do`) to
 iterate through multiple collections in parallel. I still need to work out the
 details, but I'm thinking that that will be syntactic sugar for:
 
-    :::magpie
-    // evaluate the generator expression once
-    def _generator <- Generate <generator>
+{% highlight magpie %}
+// evaluate the generator expression once
+def _generator <- Generate <generator>
 
-    // advance to the first item
+// advance to the first item
+_generator.MoveNext
+while Not _generator.IsDone do
+    def <var> <- _generator.Current
+    ...
     _generator.MoveNext
-    while Not _generator.IsDone do
-        def <var> <- _generator.Current
-        ...
-        _generator.MoveNext
-    end
+end
+{% endhighlight %}
 
 Using that, the use cases I have can be solved by:
 
-    :::magpie
-    // iterating through a collection
-    for item <- someList do
-        Print item
-    end
+{% highlight magpie %}
+// iterating through a collection
+for item <- someList do
+    Print item
+end
 
-    // iterating multiple collections in lockstep
-    for a <- someList1
-    for b <- someList2 do
-        Print (a == b).String
-    end
+// iterating multiple collections in lockstep
+for a <- someList1
+for b <- someList2 do
+    Print (a == b).String
+end
 
-    // iterating backwards
-    for item <- Reverse someList
-        Print item
-    end
+// iterating backwards
+for item <- Reverse someList
+    Print item
+end
 
-    // assigning to array elements
-    for index <- array.Indexes
-        array.index <- 0
-    end
+// assigning to array elements
+for index <- array.Indexes
+    array.index <- 0
+end
 
-    // iterating a fixed number of times
-    for i <- 50.Times
-        Print i.String
-    end
+// iterating a fixed number of times
+for i <- 50.Times
+    Print i.String
+end
 
-    // iterating through a range
-    for i <- Range (10, 30)
-        Print i.String
-    end
+// iterating through a range
+for i <- Range (10, 30)
+    Print i.String
+end
+{% endhighlight %}
 
 In those examples, `Reverse`, `Indexes`, `Times`, and `Range` can all be
 simple library functions. There's nothing magical about them. This may change

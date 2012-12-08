@@ -22,23 +22,25 @@ created by an external developer (read "Microsoft"). We'll pick String because
 [everyone](http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx) [else](http://www.developer.com/net/csharp/article.php/3592216) [does](http://msdn2.microsoft.com/en-us/library/bb383977.aspx). Let's say you want a method to tell if a
 string contains only letters. Here's how you'd normally do it:
 
-    :::csharp
-    public static class StringUtils
+{% highlight csharp %}
+public static class StringUtils
+{
+    public static bool IsAlpha(string text)
     {
-        public static bool IsAlpha(string text)
+        foreach (char c in text.ToLower())
         {
-            foreach (char c in text.ToLower())
-            {
-                if (!Char.IsLetter(c)) return false;
-            }
-            return true;
+            if (!Char.IsLetter(c)) return false;
         }
+        return true;
     }
+}
+{% endhighlight %}
 
 That works, but the calling convention is kind of lame:
 
-    :::csharp
-    bool isAlpha = StringUtils.IsAlpha(someString);
+{% highlight csharp %}
+bool isAlpha = StringUtils.IsAlpha(someString);
+{% endhighlight %}
 
 Not only is it backwards from normal "noun.verb" OOP syntax, it's got this
 useless "`StringUtils`" in there. Worse, your users have to *know* that
@@ -46,25 +48,27 @@ useless "`StringUtils`" in there. Worse, your users have to *know* that
 longer an easily discoverable property of all strings. So here's the fancy C#
 3.0 way using an extension method:
 
-    :::csharp
-    public static class StringUtils
+{% highlight csharp %}
+public static class StringUtils
+{
+    public static bool IsAlpha(this string text)
     {
-        public static bool IsAlpha(this string text)
+        string letters = "abcdefghijklmnopqrstuvwxyz";
+        foreach (char c in text.ToLower())
         {
-            string letters = "abcdefghijklmnopqrstuvwxyz";
-            foreach (char c in text.ToLower())
-            {
-                if (!letters.Contains(c)) return false;
-            }
-            return true;
+            if (!letters.Contains(c)) return false;
         }
+        return true;
     }
+}
+{% endhighlight %}
 
 Not much different right? Just add a little `this` in the declaration. The
 difference is in the calling convention:
 
-    :::csharp
-    bool isAlpha = someString.IsAlpha();
+{% highlight csharp %}
+bool isAlpha = someString.IsAlpha();
+{% endhighlight %}
 
 Much better. So this is about as far as I think most people get with them.
 "Extension method" = "friendlier calling convention." Now let's see if there
@@ -80,15 +84,16 @@ Maybe your classes already have distinct base classes for good reasons.
 Here's what I'm talkin' about. Let's say you're writing a game and you've got
 something like this:
 
-    :::csharp
-    public interface IPosition
-    {
-        float X { get; }
-        float Y { get; }
-    }
+{% highlight csharp %}
+public interface IPosition
+{
+    float X { get; }
+    float Y { get; }
+}
 
-    public class Monster : Actor, IPosition { /* implementation... */ }
-    public class Treasure: Item, IPosition { /* implementation... */ }
+public class Monster : Actor, IPosition { /* implementation... */ }
+public class Treasure: Item, IPosition { /* implementation... */ }
+{% endhighlight %}
 
 Often, you want to look through a collection of these to find the first one at
 a given position.
@@ -96,11 +101,12 @@ a given position.
 The normal solution is to just derive your own collection and implement it
 there:
 
-    :::csharp
-    public class MonsterCollection : List<Monster>
-    {
-        public Monster GetAt(IPosition pos) { /* ... */ }
-    }
+{% highlight csharp %}
+public class MonsterCollection : List<Monster>
+{
+    public Monster GetAt(IPosition pos) { /* ... */ }
+}
+{% endhighlight %}
 
 The problem is you've now got to derive a new collection for every class with
 a position and copy `GetAt()` in every one. Sure you could do an abstract
@@ -112,38 +118,42 @@ Extension methods to the rescue! You can define extension methods *on
 interfaces*. In fact, you can even define them on *generic* interfaces. Like
 `IEnumerable<T>`. Ooh!
 
-    :::csharp
-    public static class IPositionExtensions
+{% highlight csharp %}
+public static class IPositionExtensions
+{
+    public static T GetAt<T>(this IEnumerable<T> col,
+        float x, float y) where T : IPosition
     {
-        public static T GetAt<T>(this IEnumerable<T> col,
-            float x, float y) where T : IPosition
+        foreach (T item in col)
         {
-            foreach (T item in col)
-            {
-                if ((item.X == x) && (item.Y == y)) return item;
-            }
-            return default(T);
+            if ((item.X == x) && (item.Y == y)) return item;
         }
+        return default(T);
     }
+}
+{% endhighlight %}
 
 Now you can do:
 
-    :::csharp
-    List<Monster> monsters = new List<Monster>();
-    monsters.GetAt(1.0f, 2.0f);
+{% highlight csharp %}
+List<Monster> monsters = new List<Monster>();
+monsters.GetAt(1.0f, 2.0f);
+{% endhighlight %}
 
 Along with:
 
-    :::csharp
-    Stack<Treasure> treasures = new Stack<Treasure>();
-    treasures.GetAt(1.0f, 2.0f);
+{% highlight csharp %}
+Stack<Treasure> treasures = new Stack<Treasure>();
+treasures.GetAt(1.0f, 2.0f);
+{% endhighlight %}
 
 Heck, even:
 
-    :::csharp
-    Dictionary<string, Monster> monsters =
-        new Dictionary<string, Monster>();
-    monsters.Values.GetAt(1.0f, 2.0f);
+{% highlight csharp %}
+Dictionary<string, Monster> monsters =
+    new Dictionary<string, Monster>();
+monsters.Values.GetAt(1.0f, 2.0f);
+{% endhighlight %}
 
 This means **you can define methods that say, "if this class provides this
 capability, then it also has this capability"**. Whoawesome!
@@ -166,13 +176,15 @@ At the concept level, it's good advice, until you run into some issues:
 
 1.  You've just **changed the user's calling convention because of an implementation detail**. The fact that you can implement a method just using the public interface of the class is a facet of its *implementation*, just the kind of detail that encapsulation is supposed to *hide*. But now the user is forced to deal with that distinction because sometimes they call (in C#):
 
-        :::csharp
-        foo.Bar(); // needs access to private members
+{% highlight csharp %}
+foo.Bar(); // needs access to private members
+{% endhighlight %}
 
     and sometimes it's:
 
-        :::csharp
-        FooHelper.Bar(foo); // doesn't need access to private members
+{% highlight csharp %}
+FooHelper.Bar(foo); // doesn't need access to private members
+{% endhighlight %}
 
 2.  You also **threw away discoverability**. Users expect to find the capabilities of an object through the instance methods of that object. You can save a lot of time reading MSDN by just typing `foo.` and seeing what it lets you do. Shunting stuff over in a separate class means users need to know about it and seek it out.
 
@@ -199,21 +211,22 @@ rest of your code is dumb.
 
 For example, let's say we have a monster. (Who wouldn't want a pet monster?)
 
-    :::csharp
-    namespace Engine
+{% highlight csharp %}
+namespace Engine
+{
+    public class Monster
     {
-        public class Monster
-        {
-            public float X;
-            public float Y;
-            public string Type;
+        public float X;
+        public float Y;
+        public string Type;
 
-            public void ProcessAI()
-            {
-                // stuff...
-            }
+        public void ProcessAI()
+        {
+            // stuff...
         }
     }
+}
+{% endhighlight %}
 
 This class defines what a monster *is* in the abstract data sense. We want to
 isolate it from anything specific to UI or rendering because while *right now*
@@ -223,28 +236,30 @@ future. That change shouldn't affect the engine one bit.
 But our uber-modern ASCII UI needs to know what character to use to draw a
 given monster. Ideally:
 
-    :::csharp
-    public void Draw(Monster monster)
-    {
-        Console.WriteLine(monster.Character);
-    }
+{% highlight csharp %}
+public void Draw(Monster monster)
+{
+    Console.WriteLine(monster.Character);
+}
+{% endhighlight %}
 
 So we can solve this like this:
 
-    :::csharp
-    namespace UI
+{% highlight csharp %}
+namespace UI
+{
+    public static class MonsterExtensions
     {
-        public static class MonsterExtensions
+        public static char GetCharacter(this Monster monster)
         {
-            public static char GetCharacter(this Monster monster)
-            {
-                if (type == "orc") return 'o';
-                if (type == "kobold") return 'k';
-                if (type == "dragon") return 'd';
-                return '?';
-            }
+            if (type == "orc") return 'o';
+            if (type == "kobold") return 'k';
+            if (type == "dragon") return 'd';
+            return '?';
         }
     }
+}
+{% endhighlight %}
 
 Now code that is using the UI namespace sees `GetCharacter()` as an intrinsic
 capability of monsters, but code that only uses the engine doesn't. And since

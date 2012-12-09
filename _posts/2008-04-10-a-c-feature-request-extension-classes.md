@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A C# Feature Request: Extension Classes"
-#categories: c#, code
+tags: c-sharp code
 ---
 As you [may have noticed](http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast/), I'm a big fan of [extension methods](http://msdn2.microsoft.com/en-us/library/bb383977.aspx) in C#
 3.0, but they aren't without their limitations. The first one you notice when

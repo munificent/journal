@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Pratt Parsers: Expression Parsing Made Easy"
-#categories: code, java, javascript, language, magpie, parsing
+tags: code java javascript language magpie parsing
 ---
 
 Every now and then, I stumble onto some algorithm or idea that's so clever and

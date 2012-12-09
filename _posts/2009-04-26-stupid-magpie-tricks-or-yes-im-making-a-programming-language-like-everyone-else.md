@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Stupid Magpie Tricks (Or: Yes, I'm Making a Programming Language Like Everyone Else)"
-#categories: code, language, magpie
+tags: code language magpie
 ---
 This blog has been collecting dust for several months now. Not because I
 haven't been doing anything, quite the opposite. I've been spending all my

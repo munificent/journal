@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Magpie Wants You!"
-#categories: code, language, magpie, oscon
+tags: code language magpie oscon
 ---
 I've been very fortunate to get lots of feedback and encouragement so far
 while I've worked on my [little language Magpie](http://magpie.stuffwithstuff.com), but I haven't actually

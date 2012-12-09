@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Time for a New Blog"
-#categories: blog, blogofile
+tags: blog blogofile
 ---
 
 I finally got tired enough of dealing with WordPress's admin interface and writing posts in HTML to do something about it, and I've redone this here blog. Now it's all [blogofile](http://www.blogofile.com). I can edit in [markdown](http://daringfireball.net/projects/markdown/) and preview locally. All of my content is backed up just by pushing it to [github](https://github.com/munificent/journal).

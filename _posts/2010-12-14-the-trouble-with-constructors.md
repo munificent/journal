@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Trouble with Constructors"
-#categories: code, language, magpie
+tags: code language magpie
 ---
 Every fledgling programming language exists somewhere on the continuum between
 "scratchings in a notebook" and "making Java nervous". Right now, Magpie is

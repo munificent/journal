@@ -7,8 +7,6 @@
   </head>
   <body>
     {% include header.html %}
-
-
     <div class="content">
       <div class="column">
       <h1>
@@ -20,7 +18,6 @@
       {{ content }}
       </div>
     </div>
-
     {% if site.disqus %}
       <div class="comments">
         <div class="column">
@@ -41,6 +38,6 @@
         </div>
       </div>
     {% endif %}
-
+    {% include footer.html %}
   </body>
 </html>

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Semicolons are a Shibboleth"
-#categories: code, dart
+tags: code dart
 ---
 
 For better or worse, anything that Google does attracts a ton of attention. New programming languages also bring out the inner critic in most people. Type systems are prone to enraging the [LtU](http://lambda-the-ultimate.org/node/4377) set, especially [unsound ones](http://www.dartlang.org/articles/optional-types/). And doing anything that [approaches JavaScript](http://www.2ality.com/2011/09/google-dart.html) is bound to infuriate a set of people that are passionately devoted to JS and The Way of the Prototype.

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Avoiding Overload Hell in C#"
-#categories: c#, code
+tags: c-sharp code
 ---
 
 C# [lacks default parameters](http://blogs.msdn.com/csharpfaq/archive/2004/03/07/85556.aspx). The C# answer to default params is

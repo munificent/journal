@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Fixing Ambiguities in Grammars"
-#categories: code, f#, language, parsing
+tags: code f-sharp language parsing
 permalink: 2008/12/28/fixing-ambiguities-in-yacc
 ---
 For kicks, I've been writing a little toy programming language using [F#](http://www.apress.com/book/view/1590598504),

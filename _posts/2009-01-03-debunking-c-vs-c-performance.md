@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Debunking C# vs C++ Performance"
-#categories: blog, c#, code, cpp, optimization
+tags: blog c-sharp code cpp optimization
 ---
 If you were on [reddit](http://www.reddit.com/r/programming/) today, you probably saw [this article](http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/),
 damning C#'s performance as being **ten times worse than C++'s**. Holy shit

@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Fixing Ambiguities in Grammars"
-tags: code f-sharp language parsing
-permalink: 2008/12/28/fixing-ambiguities-in-yacc
+categories: code f-sharp language parsing
 ---
 For kicks, I've been writing a little toy programming language using [F#](http://www.apress.com/book/view/1590598504),
 [lex](http://en.wikipedia.org/wiki/Lex_programming_tool) and [yacc](http://en.wikipedia.org/wiki/Yacc) (fslex and fsyacc, specifically, although everything

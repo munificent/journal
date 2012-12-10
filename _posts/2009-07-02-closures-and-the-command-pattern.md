@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Closures and the Command Pattern"
-tags: c-sharp code design
+categories: c-sharp code design
 ---
 Like a lot of OOP programmers, I'm a fan of [Design Patterns](http://www.c2.com/cgi/wiki?DesignPatterns). While I
 don't treat it like the sacred tome that many think it is, I learned a lot of

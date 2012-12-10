@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What's the Opposite of \"nullable\"?"
-tags: c-sharp code
+categories: c-sharp code
 ---
 I hate [duplicate code](http://en.wikipedia.org/wiki/DRY). [Hate it](http://c2.com/cgi/wiki?DontRepeatYourself) [hate it](http://www.codinghorror.com/blog/archives/000805.html) [hate it](http://www.thefrontside.net/blog/repeat_yourself). At the
 same time, I *do* like having my code check its arguments.

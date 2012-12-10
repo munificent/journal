@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "C# Extension Methods: Not Just for Breakfast"
-tags: c-sharp code
+categories: c-sharp code
 ---
 When I first started reading about C# 3.0, one of the new features that caught
 my eye was extension methods. I really like `foo.Bar()` syntax because with

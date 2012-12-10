@@ -1,9 +1,7 @@
 ---
 title: "Have We Been Doing Overriding Wrong the Whole Time?"
-categories: code, language
-date: 2011/09/20
+categories: code language
 ---
-
 
 Over the weekend, I was reading one of the excellent papers on [Self](http://selflanguage.org/), [Parents are Shared Parts of Objects: Inheritance and Encapsulation in SELF](http://selflanguage.org/documentation/published/parents-shared-parts.html). If you're interested in prototypes, or you're a Javascripter (and those should be synonymous) you owe it to yourself to read some of these papers. Each one is an eye-opener.
 

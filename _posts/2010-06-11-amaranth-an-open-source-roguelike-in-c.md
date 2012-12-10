@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Amaranth, an Open Source Roguelike in C#"
-tags: c-sharp code game-dev roguelike
+categories: c-sharp code game-dev roguelike
 ---
 Tonight I get to do something I've wanted to do for a really long time: I'm
 open-sourcing the [roguelike](http://en.wikipedia.org/wiki/Roguelike) I've been working on for several years.

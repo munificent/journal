@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Jasic: A Complete Interpreter in One Java File"
-tags: code jasic language parsing
+categories: code jasic language parsing
 ---
 I just put the finishing touches on a tiny little interpreter project: Jasic.
 Jasic is a dialect of the [original BASIC](http://en.wikipedia.org/wiki/Dartmouth_BASIC) programming language. It lacks

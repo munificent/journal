@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Future-proofing, Uniform Access, and Masquerades"
-tags: c-sharp code java language magpie
-permalink: 2010/09/18/futureproofing-uniform-access-and-masquerades
+categories: c-sharp code java language magpie
 ---
 Take a look at this Java code:
 

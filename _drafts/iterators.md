@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "NO TITLE YET"
-tags: code language magpie UNTAGGED
+categories: code language magpie UNTAGGED
 ---
 
 If you're designing an imperative programming language, one think you end up thinking about is loops. If your only background is C/Java/JS, this seems like a no-brainer. You'll probably start with a vanilla C-style for loop:

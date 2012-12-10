@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "One and Only One"
-tags: code language magpie
+categories: code language magpie
 ---
 My little language [Magpie](http://bitbucket.org/munificent/magpie/) has a feature that may at first seem really
 limiting: *all functions take exactly one argument and return one value, no

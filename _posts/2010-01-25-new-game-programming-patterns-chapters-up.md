@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "New Game Programming Patterns Chapters Up!"
-tags: code cpp game-patterns
+categories: code cpp game-patterns
 ---
 I've finally gotten a chance to get some new chapters online for [Game
 Programming Patterns](http://gameprogrammingpatterns.com/). They've been done for a while, but I had to get the

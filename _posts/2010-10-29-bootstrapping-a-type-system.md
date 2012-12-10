@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Bootstrapping a Type System"
-tags: code java language magpie
+categories: code java language magpie
 ---
 Magpie has reached a strange but neat little milestone on the road from "weird
 experiment" to "real language": the type system is now bootstrapped. I'm not

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "\"Constrained Compound\" Design Pattern"
-tags: c-sharp code design
+categories: c-sharp code design
 ---
 I've seen a lot of people argue that inheritance is an anti-feature in a
 language and that it's never necessary. That rubbed me the wrong way because I

@@ -1,0 +1,10 @@
+<div class="post-box">
+  <h2>
+    <a href="{{ post.url }}" rel="bookmark"
+       title="Permanent Link to {{ post.title | escape }}">{{ post.title }}</a>
+  </h2>
+  <p>
+    Posted on <a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a>.
+    Tagged {{ post.categories | category_links }}.
+  </p>
+</div>

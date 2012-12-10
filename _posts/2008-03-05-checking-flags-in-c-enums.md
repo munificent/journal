@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Checking Flags in C# Enums"
-tags: c-sharp code
+categories: c-sharp code
 ---
 I like C# [enums](http://msdn2.microsoft.com/en-us/library/sbbt4032(VS.80).aspx) and I also like using them as [bitfields](http://msdn2.microsoft.com/en-us/library/system.flagsattribute(VS.80).aspx), even
 though apparently [not everyone does](http://cleveralias.blogs.com/thought_spearmints/2004/01/more_c_enum_wac.html). I realize they aren't perfectly

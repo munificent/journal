@@ -6,7 +6,7 @@
 {% if page.id %}
       <h1>About the Post</h1>
       <p>Posted on <a href="/archive">{{ page.date | date: "%B %d, %Y" }}</a>.</p>
-      <p>Tagged {% posttags %}.</p>
+      <p>Tagged {% postcategories %}.</p>
       <p>
       <script type="text/javascript">
         reddit_url = "${post.permalink|h}/";
@@ -31,7 +31,7 @@
 {% else %}
       <h1>All Tags</h1>
       <ul>
-      {% alltags %}
+      {% allcategories %}
       </ul>
 {% endif %}
     </td>

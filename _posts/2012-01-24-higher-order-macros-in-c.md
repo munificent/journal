@@ -6,7 +6,7 @@ categories: code c cpp
 
 My hobby project lately has been working on a little [bytecode interpreter][1] for [Magpie][2] in C++. As an ex-game programmer, I'm pretty sad at how rusty my C++ has gotten. To try to make things a bit easier on myself, I've been borrowing from the masters whenever possible. That means I usually have [v8][]'s source code open in another window.
 
-[1]: https://github.com/munificent/magpie-cpp
+[1]: https://github.com/munificent/magpie
 [2]: http://magpie-lang.org/
 [v8]: http://code.google.com/p/v8/
 
@@ -45,7 +45,7 @@ Depending on how rich your language is, you'll have quite a few different AST cl
 
 These are relatively simple types. A (greatly!) simplified one looks a bit like:
 
-{% highlight c++ %}
+{% highlight cpp %}
 class BinaryOpExpr : public Expression {
   BinaryOpExpr(Expression* left, Expression* right)
   : left(left),
@@ -70,7 +70,7 @@ Where the tedium really comes in is all of the surrounding code that *uses* thes
 
 [visitor]: http://code.google.com/p/v8/source/browse/trunk/src/ast.h#2151
 
-{% highlight c++ %}
+{% highlight cpp %}
 class AstVisitor {
 public:
   ~virtual AstVisitor() {}
@@ -89,7 +89,7 @@ public:
 
 That code really *is* just repetitive boilerplate. There's more. It's useful to also have an enum for each AST node type so that we can also `switch` directly on the type of a node without having to go through a visitor for everything. So you'll want something like:
 
-{% highlight c++ %}
+{% highlight cpp %}
 enum AstType {
   kBoolLiteral,
   kNumLiteral,
@@ -102,7 +102,7 @@ enum AstType {
 
 For debugging, it's handy to be able to get a string representation for an AST node's type too:
 
-{% highlight c++ %}
+{% highlight cpp %}
 const char* typeString(AstType type) {
   switch (type) {
     case kBoolLiteral:  return "BoolLiteral";
@@ -125,14 +125,14 @@ More often than not, that fact makes it too blunt of an instrument to be wielded
 
 Let's try doing something like this:
 
-{% highlight c++ %}
+{% highlight cpp %}
 #define DEFINE_VISIT(type)  \
     virtual void visit##type(type* expr) = 0
 {% endhighlight %}
 
 With this, we can simplify our visitor class to:
 
-{% highlight c++ %}
+{% highlight cpp %}
 class AstVisitor {
 public:
   ~virtual AstVisitor() {}
@@ -153,7 +153,7 @@ That's a *little* better, I guess. But not really. This trick doesn't help at al
 
 What we want is a macro that will *itself* walk over all of the types, like:
 
-{% highlight c++ %}
+{% highlight cpp %}
 #define AST_NODE_LIST   \
     BoolLiteral         \
     NumLiteral          \
@@ -164,7 +164,7 @@ What we want is a macro that will *itself* walk over all of the types, like:
 
 But of course, that one doesn't do anything useful. We don't want it to just expand to the type names themselves. It needs to do something with them. But that something is different for each problem area. We need it to take a parameter that is the chunk of code that we generate for each type. Like:
 
-{% highlight c++ %}
+{% highlight cpp %}
 #define AST_NODE_LIST(code) \
     code(BoolLiteral)       \
     code(NumLiteral)        \
@@ -179,7 +179,7 @@ Now the fun part. When we use that `AST_NODE_LIST` macro, what is that `code` ar
 
 Until I saw this in V8, I didn't even know you *could* pass macros to macros. But indeed you can. Using the `AST_NODE_LIST` we just defined, our visitor becomes:
 
-{% highlight c++ %}
+{% highlight cpp %}
 class AstVisitor {
 public:
   ~virtual AstVisitor() {}
@@ -195,7 +195,7 @@ When `AST_NODE_LIST` is expanded, it will expand to one call to `DEFINE_VISIT` f
 
 Likewise, our enum becomes:
 
-{% highlight c++ %}
+{% highlight cpp %}
 #define DEFINE_ENUM_TYPE(type) k##type,
 enum AstType {
   AST_NODE_LIST(DEFINE_ENUM_TYPE)
@@ -205,7 +205,7 @@ enum AstType {
 
 That's the whole thing in its entirety. Finally, the function for converting it to a string:
 
-{% highlight c++ %}
+{% highlight cpp %}
 #define DEFINE_TYPE_STRING(type) case k##type: return #type;
 const char* typeString(AstType type) {
   switch (type) {

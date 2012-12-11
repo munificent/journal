@@ -26,7 +26,7 @@ But I'm getting ahead of myself. First, let me rewind and set up some preliminar
 
 When you hear "scope" you probably think something like this:
 
-{% highlight c++ %}
+{% highlight c %}
 {
   int a = 1;
   {

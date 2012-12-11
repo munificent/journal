@@ -1,8 +1,6 @@
 * Fix post name in disqus code
-* Add footer and bottom navigation
-
+* Get RSS feeds working
 * Add RSS link to nav
 * Add comments RSS link to nav
-* Set up build hook to generate css from scss
-* Make sure RSS stuff looks right
+* Set up generator to generate css from scss
 * Make separate pygments lexer for old magpie

@@ -29,6 +29,18 @@ module Jekyll
       html
     end
   end
+
+  # Include the post slug to template data. (Not used right now.)
+=begin
+  class Post
+    alias orig_to_liquid to_liquid
+    def to_liquid
+      hash = self.orig_to_liquid
+      hash['slug'] = self.slug
+      hash
+    end
+  end
+=end
 end
 
 Liquid::Template.register_tag('allcategories', Jekyll::AllCategoriesTag)

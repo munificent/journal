@@ -1,0 +1,379 @@
+$nav-font:            'Varela Round', Courier, monospace;
+$header-font:         'Varela Round', Georgia, serif;
+$body-font:           Georgia, serif;
+$sans:                'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+$code-font:           Courier, monospace;
+
+$header-color:        #333;
+$text-color:          #333;
+
+$link:                hsl(100, 100%, 30%);
+$link-hover:          hsl(100, 100%, 20%);
+
+$code-bg:             hsl(100, 20%, 95%);
+$code-color:          mix($code-bg, #000, 40%);
+
+$quote-bg:            hsl(220, 20%, 95%);
+$quote-color:         hsl(220, 20%, 60%);
+$quote-color-light:   hsl(220, 20%, 60%);
+
+$nav-title:           #666;
+$nav-bg:              hsl(0, 0%, 25%);
+$nav-text:            #888;
+$nav-text-small:      #666;
+$nav-link:            #bbb;
+$nav-hover:           hsl(100, 60%, 60%);
+
+$comments-bg:         hsl(0, 0%, 86%);
+$box-bg:              hsl(0, 0%, 94%);
+
+$update-bg:           hsl(40, 100%, 93%);
+$update-color:        hsl(40, 60%, 45%);
+$update-link:         hsl(40, 100%, 35%);
+$update-hover:        hsl(40, 100%, 25%);
+
+$table-color:         mix($box-bg, $text-color, 20%);
+$table-head-color:    hsl(0, 0%, 60%);
+$table-alt-bg:        hsl(0, 0%, 97%);
+
+@mixin box($color) {
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  background: $color;
+}
+
+// Styles
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
+acronym, address, cite, code, img, ins, q, s, samp, small, strike,
+sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
+caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+  color: $text-color;
+}
+
+table {
+  border-spacing: 0;
+}
+
+a {
+  color: $link;
+  text-decoration: none;
+
+  &:hover {
+    color: $link-hover;
+  }
+}
+
+.right {
+  text-align: right;
+}
+
+.column {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.grid {
+  background: url('image/grid.png');
+}
+
+.content {
+  padding: 0 0 12px 0;
+
+  h1 {
+    font: normal 36px/48px $header-font;
+    padding: 36px 0 24px 0;
+
+    a {
+      color: $header-color;
+    }
+  }
+
+  h2 {
+    font: normal 24px/48px $header-font;
+    color: $header-color;
+  }
+
+  h3 {
+    font: italic 18px/24px $header-font;
+    color: $header-color;
+    padding: 12px 0;
+  }
+
+  p {
+    font: normal 16px/24px $body-font;
+    padding: 12px 0;
+  }
+
+  ol, ul {
+    margin-left: 24px;
+  }
+
+  li {
+    font: normal 16px/24px $body-font;
+  }
+
+  a, a code {
+    color: $link;
+
+    &:hover {
+      color: $link-hover;
+    }
+  }
+
+  code {
+    @include box($code-bg);
+    padding: 2px 4px;
+    color: $code-color;
+    font: 15px/20px $code-font;
+  }
+
+  pre {
+    @include box($code-bg);
+    margin: 6px 0;
+    padding: 6px 12px;
+    color: $code-color;
+    font: 14px/24px $code-font;
+    overflow: auto;
+
+    code {
+      padding: 0;
+    }
+  }
+
+  tt {
+    font: 15px/20px $code-font;
+    color: $code-color;
+  }
+
+  blockquote {
+    @include box($quote-bg);
+    color: $quote-color;
+    padding: 6px 12px;
+    margin: 6px 0;
+
+    p {
+      font: italic 16px/24px $body-font;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .cite {
+    font: normal 13px/24px $sans;
+    color: $quote-color-light;
+    display: block;
+    text-align: right;
+    padding: 12px 24px 12px 0;
+
+    &:before {
+      content: '\2014\00A0';
+    }
+  }
+
+  blockquote.update {
+    background: $update-bg;
+    color: $update-color;
+
+    p {
+      font: normal 13px/24px $sans;
+    }
+
+    a {
+      color: $update-link;
+
+      &:hover {
+        color: $update-hover;
+      }
+    }
+  }
+
+  img {
+    @include box(inherit);
+    display: block;
+    padding: 6px;
+    margin: 6px auto;
+
+    &.framed {
+      background: $box-bg;
+    }
+  }
+
+  .table {
+    @include box($box-bg);
+    padding: 6px;
+    margin: 6px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: $table-color;
+
+    td {
+      font: normal 16px/24px $body-font;
+      padding: 0 6px;
+    }
+
+    thead {
+      td {
+        color: $table-head-color;
+        font: bold 14px/24px $sans;
+      }
+    }
+
+    tbody tr:nth-child(odd) {
+      background: $table-alt-bg;
+    }
+  }
+}
+
+// .overlay {
+//   background: url('24.png');
+//   width: 100%;
+//   height: 10000px;
+//   opacity: 0.5;
+//   z-index: 3;
+//   position: absolute;
+// }
+
+.post-box {
+  @include box($box-bg);
+  padding: 6px 12px;
+  margin: 6px 0;
+
+  h2 {
+    font: normal 16px/24px $header-font;
+    color: $header-color;
+    padding: 0; //12px 0;
+  }
+
+  p {
+    font: normal 12px/24px $sans;
+    padding: 0;
+  }
+}
+
+.post-box + .post-box {
+  margin-top: 12px;
+}
+
+.comments {
+  width: 100%;
+  background: $comments-bg;
+  font: normal 13px $sans;
+
+  .column {
+    padding: 24px 0;
+
+    a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
+      text-decoration: none;
+    }
+  }
+}
+
+.nav {
+  background: $nav-bg;
+  color: $nav-text;
+  font: normal 12px/18px $sans;
+
+  a {
+    color: $nav-link;
+  }
+
+  a:hover {
+    color: $nav-hover;
+  }
+
+  code {
+    font: 14px $code-font;
+  }
+
+  h1 {
+    font: normal 20px $nav-font;
+    color: $nav-title;
+    padding: 12px 0;
+    text-transform: lowercase;
+  }
+
+  ol, ul {
+    margin-left: 12px;
+    padding-bottom: 12px;
+  }
+
+  li {
+    margin-left: 6px;
+  }
+
+  p {
+    padding-bottom: 12px;
+  }
+
+  small {
+    color: $nav-text-small;
+  }
+
+  width: 100%;
+}
+
+.nav.top {
+  height: 48px;
+}
+
+.nav.bottom {
+  .column {
+    max-width: 648px; // extra 24px on each side to absorb border spacing
+  }
+
+  table {
+    width: 100%;
+    border-spacing: 24px;
+
+    td {
+      width: 33%;
+      vertical-align: top;
+    }
+  }
+}
+
+img.rss {
+  vertical-align: middle;
+  padding-bottom: 3px;
+}
+
+.dsq-comment-text blockquote {
+  padding-left: 16px;
+  color: #777;
+}
+
+// Syntax highlighting
+.highlight {
+  .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
+  .k           { color: hsl(100, 100%, 30%); } // keyword
+  .kd          { color: hsl(120, 100%, 30%); } // keyword declaration
+  .kt          { color: hsl(180, 100%, 30%); } // keyword type
+  .o           { color: hsl(200, 40%, 40%); } // operator
+  .nb          { color: hsl(170, 100%, 30%); } // built-in name
+  .nc          { color: hsl(180, 100%, 30%); } // class name
+  .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
+  .s, .sc      { color: hsl(40, 100%, 40%); } // string
+  .m, .mf      { color: hsl(200, 100%, 40%); } // number
+}

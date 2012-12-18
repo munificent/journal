@@ -207,6 +207,10 @@ a {
     width: 33%;
     vertical-align: top; }
 
+img.rss {
+  vertical-align: middle;
+  padding-bottom: 3px; }
+
 .dsq-comment-text blockquote {
   padding-left: 16px;
   color: #777; }

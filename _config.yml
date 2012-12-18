@@ -4,5 +4,10 @@ permalink: /:year/:month/:day/:title
 pygments: true
 markdown: kramdown
 
+exclude: [
+  TODO,
+  README.md
+]
+
 # Custom variables:
 disqus: "journal-stuffwithstuff"

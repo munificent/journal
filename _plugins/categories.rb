@@ -1,4 +1,4 @@
-module Jekyll
+module StuffWithStuff
   # Generate a hyperlinked list of all categories used in any posts with their
   # occurrence counts.
   class AllCategoriesTag < Liquid::Tag
@@ -15,6 +15,20 @@ module Jekyll
     end
   end
 
+  module CategoryLinksFilter
+    def categorylinks(input)
+      html = ""
+      input.each do |category|
+        if html != "" then html << ", " end
+        html << "<a href=\"/category/#{category}\">#{category}</a>"
+      end
+      html
+    end
+  end
+
+  # Include the post slug to template data. (Not used right now.)
+=begin
+
   # Generate a comma-separated hyperlinked list of the tags used on the current
   # post.
   class PostCategoriesTag < Liquid::Tag
@@ -30,8 +44,6 @@ module Jekyll
     end
   end
 
-  # Include the post slug to template data. (Not used right now.)
-=begin
   class Post
     alias orig_to_liquid to_liquid
     def to_liquid
@@ -43,5 +55,5 @@ module Jekyll
 =end
 end
 
-Liquid::Template.register_tag('allcategories', Jekyll::AllCategoriesTag)
-Liquid::Template.register_tag('postcategories', Jekyll::PostCategoriesTag)
+Liquid::Template.register_tag('allcategories', StuffWithStuff::AllCategoriesTag)
+Liquid::Template.register_filter(StuffWithStuff::CategoryLinksFilter)

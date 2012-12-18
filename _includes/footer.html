@@ -3,20 +3,22 @@
 <table>
   <tr>
     <td>
-{% if page.id %}
+{% if post.id %}
       <h1>About the Post</h1>
-      <p>Posted on <a href="/archive">{{ page.date | date: "%B %d, %Y" }}</a>.</p>
-      <p>Tagged {% postcategories %}.</p>
+      <h2>title {{ post.title | escape }}</h2>
+      <h2>url {{ post.url | escape }}</h2>
+      <p>Posted on <a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a>.</p>
+      <p>Tagged {{ post.categories | categorylinks }}.</p>
       <p>
       <script type="text/javascript">
-        reddit_url = "${post.permalink|h}/";
-        reddit_title = "${post.title|h}";
+        reddit_url = "http://journal.stuffwithstuff.com{{ post.url | escape }}/";
+        reddit_title = "{{ post.title | escape }}";
       </script>
       <script type="text/javascript" src="http://www.reddit.com/static/button/button1.js"></script></p>
       <p>
-      <a href="https://twitter.com/share" class="twitter-share-button" data-url="${post.permalink|h}" data-text="${post.title|h}" data-count="horizontal" data-via="munificentbob">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://journal.stuffwithstuff.com{{ post.url | escape }}" data-text="{{ post.title | escape }}" data-count="horizontal" data-via="munificentbob">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
       </p>
-      <p><div class="g-plusone" data-size="small" data-annotation="inline" data-width="200" href="${post.permalink|h}"></div>
+      <p><div class="g-plusone" data-size="small" data-annotation="inline" data-width="200" href="http://journal.stuffwithstuff.com{{ post.url | escape }}"></div>
         <script type="text/javascript">
           (function() {
             var po = document.createElement('script');

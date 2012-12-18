@@ -1,6 +1,2 @@
-* Make sure social buttons all work
-* Get RSS feeds working
-* Add RSS link to nav
-* Add comments RSS link to nav
 * Set up generator to generate css from scss
 * Make separate pygments lexer for old magpie

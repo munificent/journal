@@ -6,8 +6,7 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_shortname = '{{ site.disqus }}';
-        // TODO(bob): Fix. Should be permalink name.
-        var disqus_url = "http://journal.stuffwithstuff.com/{{ post.url | escape }}";
+        var disqus_url = "http://journal.stuffwithstuff.com{{ post.url | escape }}";
 
         (function() {
             var dsq = document.createElement('script');

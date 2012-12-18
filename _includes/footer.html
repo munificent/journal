@@ -5,8 +5,6 @@
     <td>
 {% if post.id %}
       <h1>About the Post</h1>
-      <h2>title {{ post.title | escape }}</h2>
-      <h2>url {{ post.url | escape }}</h2>
       <p>Posted on <a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a>.</p>
       <p>Tagged {{ post.categories | categorylinks }}.</p>
       <p>

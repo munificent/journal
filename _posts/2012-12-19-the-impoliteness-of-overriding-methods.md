@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "The Impoliteness of Overriding Methods"
 categories: code language beta oop
 ---

@@ -40,9 +40,17 @@ a {
     padding: 36px 0 24px 0; }
     .content h1 a {
       color: #333333; }
+    .content h1 code {
+      background: inherit;
+      color: #606260;
+      font: 36px Courier, monospace; }
   .content h2 {
     font: normal 24px/48px "Varela Round", Georgia, serif;
     color: #333333; }
+    .content h2 code {
+      background: inherit;
+      color: #606260;
+      font: 24px Courier, monospace; }
   .content h3 {
     font: italic 18px/24px "Varela Round", Georgia, serif;
     color: #333333;

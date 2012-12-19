@@ -99,11 +99,23 @@ a {
     a {
       color: $header-color;
     }
+
+    code {
+      background: inherit;
+      color: $code-color;
+      font: 36px $code-font;
+    }
   }
 
   h2 {
     font: normal 24px/48px $header-font;
     color: $header-color;
+
+    code {
+      background: inherit;
+      color: $code-color;
+      font: 24px $code-font;
+    }
   }
 
   h3 {

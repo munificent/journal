@@ -86,11 +86,11 @@ var account = {
   balance: undefined,
 
   deposit: function(amount) {
-    return balance += amount;
+    return this.balance += amount;
   },
 
   withdraw: function(amount) {
-    return balance -= amount;
+    return this.balance -= amount;
   }
 };
 {% endhighlight %}

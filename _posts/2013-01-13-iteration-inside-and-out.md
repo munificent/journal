@@ -89,10 +89,12 @@ Dead simple. One key property this has is that it *short-circuits*: it will stop
 Let's do something a bit more complex. Let's write a function that takes two sequences and returns a sequence that will alternate between items in each sequence. So if you throw `[1, 2, 3]` and `['a', 'b', 'c']`, you'll get back `1, 'a', 2, 'b', 3, 'c'`.
 
 {% highlight dart %}
-interleave(Iterable a, Iterable b) => new InterleaveIterable(a, b);
+interleave(Iterable a, Iterable b) {
+  return new InterleaveIterable(a, b);
+}
 {% endhighlight %}
 
-The `=>` is just Dart's [short-hand][] for functions that evaluate and return a single expression. It's the same as `return new InterleaveIterable(a, b)`. So this just delegates to an object, because you need some type to hang the iterator protocol off of. Here's that type:
+This just delegates to an object, because you need some type to hang the iterator protocol off of. Here's that type:
 
 [short-hand]: http://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#functions
 
@@ -102,8 +104,9 @@ class InterleaveIterable {
   Iterable b;
   InterleaveIterable(this.a, this.b);
 
-  Iterator get iterator() =>
-      new InterleaveIterator(a.iterator(), b.iterator());
+  Iterator get iterator() {
+    return new InterleaveIterator(a.iterator(), b.iterator());
+  }
 }
 {% endhighlight %}
 
@@ -227,7 +230,7 @@ I'll get back to exactly what went wrong here but for now let's just agree that 
 
 ## Interal Iterators: Don't Call Me, I'll Call You.
 
-Right now, the Rubyists are grinning, the Smalltalkers are furiously waving their hands in the air to get the teacher's attention and the Lispers are just nodding smugly in the back row (all as usual). Here's what they know that you we may not:
+Right now, the Rubyists are grinning, the Smalltalkers are furiously waving their hands in the air to get the teacher's attention and the Lispers are just nodding smugly in the back row (all as usual). Here's what they know that you may not:
 
 Those languages (Smalltalk, Ruby by way of Smalltalk, and most Lisps) use *internal* iterators. When you're iterating you've got two chunks of code in play:
 
@@ -247,7 +250,7 @@ That `each` method on `Array` is the iterator. Its job is to walk over each item
 
 So what this does is bundle up that `puts` expression into an object and send it to `each`. The `each` method can then iterate through each item in the array and call that block of code, passing in the item.
 
-### Beatiful example 1: Walking a tree
+### Beautiful example 1: Walking a tree
 
 Let's see what our ugly external iterator example looks like in Ruby. First, we'll define the tree:
 
@@ -329,7 +332,9 @@ What's the difference? In both examples, there's a little chunk of code: `return
 
 So all it does is cause that *function* to return. So it ends, and returns back to `forEach()` which then proceeds along its merry way onto the next item. In Ruby, that `return` doesn't return from the *block* that contains it, it returns from the *method* that contains it. A `return` will walk up any enclosing blocks, returning from *all* of them until it hits an honest-to-God method and then make *that* return.
 
-This feature is called "non-local returns". Smalltalk has it, as does Ruby. If you want internal iterators, and you want them to be able to terminate early like we do here, you really need non-local returns.
+This feature is called "[non-local returns][nonlocal]". Smalltalk has it, as does Ruby. If you want internal iterators, and you want them to be able to terminate early like we do here, you really need non-local returns.
+
+[nonlocal]: http://yehudakatz.com/2010/02/07/the-building-blocks-of-ruby/
 
 This is a big part of the reason why internal iterators aren't idiomatic in other languages. It's really limiting if your `each` or `forEach()` function can't early out easily.
 
@@ -379,7 +384,7 @@ When we converted that function to an external iterator, that fifty lines of boi
 
 [reifying]: http://en.wikipedia.org/wiki/Reification_(computer_science)
 
-The lesson here is that stack frames are an amazingly terse way of storing state. You don't realize how much it's doing for you until you have to write it all out by hand.
+The lesson here is that stack frames are an amazingly terse way of storing state. You don't realize how much it's doing for you until you have to write it all out by hand. If anyone ever asks me what my favorite data structure is, my answer is always: *the callstack*.
 
 ## Who owns the callstack?
 

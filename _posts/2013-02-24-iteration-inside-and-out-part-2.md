@@ -6,7 +6,7 @@ categories: code language magpie ruby dart lua golang python
 
 *You'll probably want to have read [part one][] first unless you're feeling brave.*
 
-[part one]: http://journal.stuffwithstuff.com/2013/01/13/iteration-inside-and-out/
+[part one]: /2013/01/13/iteration-inside-and-out/
 
 In our last episode, we learned that iteration involves two chunks of code: one generating values, and one consuming them. During a loop, these two chunks take turns in a cycle of generate, consume, generate, consume, like some sort of weird incremental Ouroboros. This means that one chunk has to fully return and unwind its stack frames before it can hand off to the next one.
 
@@ -16,7 +16,7 @@ With external iterators, the code *consuming* values has control over the stack,
 
 Conversely, internal iterators put the code *generating* values in control. They excel when generating values is complicated, like walking a tree and iterating over the nodes.
 
-Now we'll see some techniques to deal with this. The basic idea is [*reification*](http://en.wikipedia.org/wiki/Reification_(computer_science\)). If you've got some data on the callstack that you want to hang onto, you need to find a place to store it.
+Now we'll see some techniques to deal with this. The basic idea is [*reification*](http://en.wikipedia.org/wiki/Reification_(computer_science)). If you've got some data on the callstack that you want to hang onto, you need to find a place to store it.
 
 ## Iterators and generators
 

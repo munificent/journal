@@ -441,4 +441,6 @@ That's the issue. Whoever gets put on top of the stack is in the weaker position
 
 Since there's just one callstack, that's the best we can do. *Or is it?*
 
-In a follow-up post, I'll go into what some languages have done to try to deal with this, including what I ended up doing in Magpie.
+*Check out [part two][] to see what some languages have done to try to deal with this.*
+
+[part two]: /2013/02/24/iteration-inside-and-out-part-2/

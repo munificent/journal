@@ -218,7 +218,12 @@ a {
     color: $update-color;
 
     p {
-      font: 13px/24px $sans;
+      font: 13px/22px $sans;
+    }
+
+    code {
+      background: mix($update-bg, $code-color, 92%);
+      font-size: 13px/22px;
     }
 
     a {

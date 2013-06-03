@@ -148,9 +148,7 @@ Well, yes, sort of. But Dart's specified static checker isn't that strict in gen
     what you can't do is implicitly assign from *null* to a non-nullable type.
     This is a static error:
 
-{% highlight dart %}
-int a = null;
-{% endhighlight %}
+        int a = null;
 
     That goes a long way towards flushing out uninitialized variable bugs. In
     my experience with Dart, that's one of the most common errors I run into.

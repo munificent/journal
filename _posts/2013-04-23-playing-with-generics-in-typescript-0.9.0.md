@@ -4,6 +4,11 @@ title: "Playing with Generics in TypeScript 0.9.0"
 categories: code language typescript dart
 ---
 
+<div class="update">
+  <p>Oops! I got a bunch of this wrong because <code>Base</code> and <code>Derived</code> have no members. Since TypeScript is structurally typed, that's what allows all of the variance I describe below.</p>
+  <p>See Anders Hejlsberg's comment at the end for more details.</p>
+</div>
+
 This was just going to be a comment on [this reddit thread](http://www.reddit.com/r/programming/comments/1cyij4/typescript_09_early_previews_with_support_for/), but then it seemed to take on a life of its own, so I figured I may as well <s>milk it for all it's worth</s> make a nice post out of it.
 
 Yesterday, the TypeScript guys [announced a preview of the new 0.9.0 version](http://blogs.msdn.com/b/typescript/archive/2013/04/22/announcing-0-9-early-previews.aspx) of the language featuring generics. I, like a lot of people, was really curious to see what approach they'd take with them. Retrofitting a type system onto a dynamic language is *hard* and generics are one of the places where that new suit of armor can really chafe the squishy flesh underneath.
@@ -49,8 +54,10 @@ new Box<number>("not num")
 
 This gives:
 
-    /generics.ts(5,0): error TS2081: Supplied parameters do not match any signature of call target.
-    /generics.ts(5,0): error TS2085: Could not select overload for 'new' expression.
+    /generics.ts(5,0): error TS2081: Supplied parameters do not match
+    any signature of call target.
+    /generics.ts(5,0): error TS2085: Could not select overload for
+    'new' expression.
 
 Looks about right. Now let's try covariance:
 
@@ -72,8 +79,9 @@ var e : Box<number> = new Box<string>(null);
 
 As a sanity check, this *does* give an error.
 
-    /generics.ts(73,4): error TS2012: Cannot convert 'Box<string>' to 'Box<number>':
-    Types of property 'value' of types 'Box<string>' and 'Box<number>' are incompatible.
+    /generics.ts(73,4): error TS2012: Cannot convert 'Box<string>' to
+    'Box<number>': Types of property 'value' of types 'Box<string>' and
+    'Box<number>' are incompatible.
 
 So it doesn't just *ignore* the type parameters, it really is bivariant: it will allow either a subtype or supertype relation for the type parameters, but not no relation at all.
 

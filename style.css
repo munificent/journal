@@ -119,7 +119,10 @@ a {
     padding: 0 12px;
     color: #b87e2e; }
     .content .update p {
-      font: 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+      font: 13px/22px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    .content .update code {
+      background: #eee8de;
+      font-size: 13px/22px; }
     .content .update a {
       color: #ffb54d; }
       .content .update a:hover {

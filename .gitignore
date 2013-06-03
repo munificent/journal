@@ -1,4 +1,5 @@
 # Build and intermediate files
 *.pyc
 _site/
+_cache/
 .sass-cache

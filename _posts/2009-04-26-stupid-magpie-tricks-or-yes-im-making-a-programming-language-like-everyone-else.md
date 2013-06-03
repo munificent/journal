@@ -11,9 +11,9 @@ Yesterday, I finally [put it online where people can get to it](http://bitbucket
 to have a look, although it's got a good ways to go before I'd describe it as
 really useful.
 
-<blockquote class="update">
-<p><em>Update 2011/08/16:</em> Magpie lives in <a href="http://github.com/munificent/magpie">github</a> now.</p>
-</blockquote>
+<div class="update">
+<p><strong>Update 2011/08/16:</strong> Magpie lives in <a href="http://github.com/munificent/magpie">github</a> now.</p>
+</div>
 
 I hate "general announcement" blog posts, especially on my blog because it's
 not like people read this just to find out what *I'm* doing, so to try to make

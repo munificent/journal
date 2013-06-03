@@ -3,10 +3,10 @@ layout: post
 title: "Outsourced Blog Comments"
 categories: blog code
 ---
-<blockquote class="update">
+<div class="update">
 <p><em>Update 2011/08/16:</em> This post is about an older version of the blog. I used to use WordPress and redesigned the template a while back.
 </p>
-</blockquote>
+</div>
 
 I just finished redoing the template for this here blog thing, and the most
 significant change is that there are no longer comments on it.

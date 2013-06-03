@@ -34,6 +34,6 @@ end:
 Old school! All of the code is [right here in Jasic.java](http://github.com/munificent/jasic/blob/master/com/stuffwithstuff/Jasic.java). There's also a
 [README](http://github.com/munificent/jasic/blob/master/README) to help get you started. What are you waiting for?
 
-<blockquote class="update">
+<div class="update">
 <p><em>Update 2011/09/9:</em> Moved JASIC from bitbucket to github.</p>
-</blockquote>
+</div>

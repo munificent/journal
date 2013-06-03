@@ -11,16 +11,13 @@ caption, tbody, tfoot, thead, tr, th, td {
 
 body {
   line-height: 1;
-  color: #333333; }
+  color: #222222; }
 
 table {
   border-spacing: 0; }
 
 a {
-  color: #339900;
   text-decoration: none; }
-  a:hover {
-    color: #226600; }
 
 .right {
   text-align: right; }
@@ -30,169 +27,174 @@ a {
   margin: 0 auto;
   padding: 0 24px; }
 
-.grid {
-  background: url("image/grid.png"); }
-
 .content {
   padding: 0 0 12px 0; }
   .content h1 {
-    font: normal 36px/48px "Varela Round", Georgia, serif;
-    padding: 36px 0 24px 0; }
+    font: normal 36px/48px "Radley", Georgia, serif;
+    font-weight: 700;
+    padding: 24px 0 0 0; }
     .content h1 a {
-      color: #333333; }
+      color: #222222; }
     .content h1 code {
       background: inherit;
-      color: #606260;
-      font: 36px Courier, monospace; }
+      color: #304550;
+      font: 36px "Source Code Pro", Courier, monospace; }
   .content h2 {
-    font: normal 24px/48px "Varela Round", Georgia, serif;
-    color: #333333; }
+    font: normal 24px "Radley", Georgia, serif;
+    padding-top: 12px;
+    font-weight: 700; }
     .content h2 code {
       background: inherit;
-      color: #606260;
-      font: 24px Courier, monospace; }
+      color: #304550;
+      font: 20px "Source Code Pro", Courier, monospace;
+      font-weight: 700;
+      padding: 0; }
   .content h3 {
-    font: italic 18px/24px "Varela Round", Georgia, serif;
-    color: #333333;
-    padding: 12px 0; }
+    font: italic 20px/24px "Radley", Georgia, serif;
+    padding: 12px 0 0 0; }
+  .content h4 {
+    font: 12px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    padding: 6px 0 18px 0; }
+  .content a {
+    color: #006699; }
+  .content a:hover {
+    color: #00aaff; }
   .content p {
-    font: normal 16px/24px Georgia, serif;
-    padding: 12px 0; }
+    font: 16px/24px "Radley", Georgia, serif;
+    padding: 8px 0; }
+  .content p + p {
+    padding-top: 12px; }
   .content ol, .content ul {
     margin-left: 24px; }
   .content li {
-    font: normal 16px/24px Georgia, serif; }
+    font: 16px/24px "Radley", Georgia, serif; }
   .content a, .content a code {
-    color: #339900; }
+    color: #006699; }
     .content a:hover, .content a code:hover {
-      color: #226600; }
+      color: #00aaff; }
   .content code {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    background: #f1f5f0;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #f5f8fa;
     padding: 2px 4px;
-    color: #606260;
-    font: 15px/20px Courier, monospace; }
+    color: #304550;
+    font: 14px/18px "Source Code Pro", Courier, monospace; }
   .content pre {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    background: #f1f5f0;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #f5f8fa;
     margin: 6px 0;
     padding: 6px 12px;
-    color: #606260;
-    font: 14px/24px Courier, monospace;
+    color: #304550;
     overflow: auto; }
     .content pre code {
-      padding: 0; }
+      padding: 0;
+      font: 13px/18px "Source Code Pro", Courier, monospace; }
   .content tt {
-    font: 15px/20px Courier, monospace;
-    color: #606260; }
+    font: 13px/18px "Source Code Pro", Courier, monospace;
+    color: #304550; }
   .content blockquote {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    background: #f0f1f5;
-    color: #8592ad;
-    padding: 6px 12px;
-    margin: 6px 0; }
+    color: #7a7a7a;
+    padding: 0 24px; }
     .content blockquote p {
-      font: italic 16px/24px Georgia, serif; }
-      .content blockquote p:first-child {
-        padding-top: 0; }
-      .content blockquote p:last-child {
-        padding-bottom: 0; }
+      font: italic 16px/24px "Radley", Georgia, serif; }
+      .content blockquote p strong {
+        font-weight: 600; }
   .content .cite {
-    font: normal 13px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    color: #8592ad;
+    font: italic 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: #a6a6a6;
     display: block;
     text-align: right;
-    padding: 12px 24px 12px 0; }
+    margin-top: 0;
+    padding: 0 24px 12px 0; }
     .content .cite:before {
       content: '\2014\00A0'; }
-  .content blockquote.update {
-    background: #fff3db;
-    color: #b88a2e; }
-    .content blockquote.update p {
-      font: normal 13px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-    .content blockquote.update a {
-      color: #b37700; }
-      .content blockquote.update a:hover {
-        color: #805500; }
+  .content .update {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #fff7eb;
+    padding: 0 12px;
+    color: #b87e2e; }
+    .content .update p {
+      font: 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+    .content .update a {
+      color: #ffb54d; }
+      .content .update a:hover {
+        color: #ffdfb3; }
   .content img {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
     background: inherit;
     display: block;
     padding: 6px;
     margin: 6px auto; }
     .content img.framed {
-      background: #f0f0f0; }
+      background: #f4f9fb; }
   .content .table {
-    border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    background: #f0f0f0;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #f4f9fb;
     padding: 6px;
     margin: 6px 0; }
   .content table {
     width: 100%;
     border-collapse: collapse;
-    color: #585858; }
+    color: #4c4d4d; }
     .content table td {
-      font: normal 16px/24px Georgia, serif;
+      font: 16px/24px "Radley", Georgia, serif;
       padding: 0 6px; }
     .content table thead td {
-      color: #999999;
-      font: bold 14px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+      color: #7aa3b8;
+      font: 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+      font-weight: 600; }
     .content table tbody tr:nth-child(odd) {
-      background: #f7f7f7; }
-
-.post-box {
-  border-radius: 6px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  background: #f0f0f0;
-  padding: 6px 12px;
-  margin: 6px 0; }
-  .post-box h2 {
-    font: normal 16px/24px "Varela Round", Georgia, serif;
-    color: #333333;
-    padding: 0; }
-  .post-box p {
-    font: normal 12px/24px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    padding: 0; }
-
-.post-box + .post-box {
-  margin-top: 12px; }
+      background: #fbfdfe; }
+  .content .social {
+    margin: 12px 0; }
 
 .comments {
   width: 100%;
-  background: #dbdbdb;
-  font: normal 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+  background: #f9f3ec;
+  color: #8f6d3d;
+  font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
   .comments .column {
-    padding: 24px 0; }
+    padding: 24px 24px; }
     .comments .column a.dsq-subscribe-email em, .comments .column a.dsq-subscribe-rss em {
       text-decoration: none; }
+  .comments a {
+    color: #cc8c33;
+    text-decoration: none; }
+  .comments a:hover {
+    color: #f0bd75; }
+
+.dsq-comment-text blockquote {
+  padding-left: 16px;
+  color: #777; }
 
 .nav {
-  background: #404040;
-  color: #888888;
-  font: normal 12px/18px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  background: #f0e7db;
+  color: #c2a070;
+  font: normal 12px/18px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   width: 100%; }
   .nav a {
-    color: #bbbbbb; }
+    color: #cc8c33; }
   .nav a:hover {
-    color: #85d65c; }
+    color: #f0bd75; }
   .nav code {
-    font: 14px Courier, monospace; }
+    font: 14px "Source Code Pro", Courier, monospace; }
   .nav h1 {
-    font: normal 20px "Varela Round", Courier, monospace;
-    color: #666666;
-    padding: 12px 0;
-    text-transform: lowercase; }
+    font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: #e0ba85;
+    padding: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    display: inline-block; }
   .nav ol, .nav ul {
     margin-left: 12px;
     padding-bottom: 12px; }
@@ -201,34 +203,45 @@ a {
   .nav p {
     padding-bottom: 12px; }
   .nav small {
-    color: #666666; }
+    color: #d9c3a5; }
 
-.nav.top {
-  height: 48px; }
-
-.nav.bottom .column {
-  max-width: 648px; }
 .nav.bottom table {
-  width: 100%;
-  border-spacing: 24px; }
+  width: 100%; }
   .nav.bottom table td {
-    width: 33%;
+    width: 50%;
     vertical-align: top; }
+  .nav.bottom table td.l {
+    padding-right: 12px; }
+  .nav.bottom table td.r {
+    padding-left: 12px; }
 
 img.rss {
   vertical-align: middle;
   padding-bottom: 3px; }
 
-.dsq-comment-text blockquote {
-  padding-left: 16px;
-  color: #777; }
+.post-box {
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  background: #f4f9fb;
+  padding: 6px 12px;
+  margin: 6px 0; }
+  .post-box h2 {
+    font: normal 16px/24px "Radley", Georgia, serif;
+    padding: 0; }
+  .post-box p {
+    font: normal 12px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    padding: 0; }
+
+.post-box + .post-box {
+  margin-top: 12px; }
 
 .highlight .c, .highlight .c1, .highlight .cm {
-  color: #a8aba8; }
+  color: #929ea5; }
 .highlight .k {
-  color: #339900; }
+  color: #0088cc; }
 .highlight .kd {
-  color: #009900; }
+  color: #0095b3; }
 .highlight .kt {
   color: #009999; }
 .highlight .o {
@@ -238,8 +251,47 @@ img.rss {
 .highlight .nc {
   color: #009999; }
 .highlight .p {
-  color: #8b8e8b; }
+  color: #6b7a83; }
 .highlight .s, .highlight .sc {
-  color: #cc8800; }
+  color: #cc7700; }
 .highlight .m, .highlight .mf {
   color: #0088cc; }
+
+@media only screen and (max-width: 479px) {
+  .content h1 {
+    font: normal 30px/40px "Radley", Georgia, serif; }
+    .content h1 code {
+      font: 30px "Source Code Pro", Courier, monospace; }
+  .content h2 {
+    font: normal 20px "Radley", Georgia, serif; }
+    .content h2 code {
+      font: 18px "Source Code Pro", Courier, monospace; }
+  .content h3 {
+    font: italic 18px/20px "Radley", Georgia, serif; }
+  .content h4 {
+    font: 10px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+  .content p {
+    font: normal 14px/20px "Radley", Georgia, serif;
+    padding: 8px 0; }
+  .content p + p {
+    padding-top: 12px; }
+  .content ol, .content ul {
+    margin-left: 12px; }
+  .content li {
+    font: normal 14px/20px "Radley", Georgia, serif; }
+  .content code {
+    font: 12px/16px "Source Code Pro", Courier, monospace; }
+  .content pre code {
+    font: 11px/14px "Source Code Pro", Courier, monospace; }
+  .content tt {
+    font: 11px/14px "Source Code Pro", Courier, monospace; }
+  .content blockquote p {
+    font: italic 14px/20px "Radley", Georgia, serif; }
+  .content .cite {
+    font: italic 12px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+  .content .update p {
+    font: 12px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+  .content table td {
+    font: normal 14px/20px "Radley", Georgia, serif; }
+  .content table thead td {
+    font: 12px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; } }

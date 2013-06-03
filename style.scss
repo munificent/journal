@@ -1,49 +1,50 @@
-$nav-font:            'Varela Round', Courier, monospace;
-$header-font:         'Varela Round', Georgia, serif;
-$body-font:           Georgia, serif;
-$sans:                'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-$code-font:           Courier, monospace;
+$serif: 'Radley', Georgia, serif;
+$sans:  'Open Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+$mono:  'Source Code Pro', Courier, monospace;
 
-$header-color:        #333;
-$text-color:          #333;
+$body-text:        16px/24px $serif;
 
-$link:                hsl(100, 100%, 30%);
-$link-hover:          hsl(100, 100%, 20%);
+$text-color:       #222;
 
-$code-bg:             hsl(100, 20%, 95%);
-$code-color:          mix($code-bg, #000, 40%);
+$link:             hsl(200, 100%, 30%);
+$link-hover:       hsl(200, 100%, 50%);
+$link-light:       hsl(200, 100%, 70%);
 
-$quote-bg:            hsl(220, 20%, 95%);
-$quote-color:         hsl(220, 20%, 60%);
-$quote-color-light:   hsl(220, 20%, 60%);
+$code-bg:          hsl(200, 30%, 97%);
+$code-color:       hsl(200, 25%, 25%);
 
-$nav-title:           #666;
-$nav-bg:              hsl(0, 0%, 25%);
-$nav-text:            #888;
-$nav-text-small:      #666;
-$nav-link:            #bbb;
-$nav-hover:           hsl(100, 60%, 60%);
+$quote-color:      mix($text-color, #fff, 60%);
+$cite-color:       mix($text-color, #fff, 40%);
 
-$comments-bg:         hsl(0, 0%, 86%);
-$box-bg:              hsl(0, 0%, 94%);
+$nav-bg:           hsl(35, 40%, 90%);
+$nav-text:         hsl(35, 40%, 60%);
+$nav-title:        hsl(35, 60%, 70%);
+$nav-text-small:   mix($nav-bg, $nav-text, 50%);
+$nav-link:         hsl(35, 60%, 50%);
+$nav-hover:        hsl(35, 80%, 70%);
 
-$update-bg:           hsl(40, 100%, 93%);
-$update-color:        hsl(40, 60%, 45%);
-$update-link:         hsl(40, 100%, 35%);
-$update-hover:        hsl(40, 100%, 25%);
+$comments-bg:      hsl(35, 50%, 95%);
+$comments-color:   hsl(35, 40%, 40%);
 
-$table-color:         mix($box-bg, $text-color, 20%);
-$table-head-color:    hsl(0, 0%, 60%);
-$table-alt-bg:        hsl(0, 0%, 97%);
+$box-bg:           hsl(200, 50%, 97%);
+
+$update-bg:        hsl(35, 100%, 96%);
+$update-color:     hsl(35, 60%, 45%);
+$update-link:      hsl(35, 100%, 65%);
+$update-hover:     hsl(35, 100%, 85%);
+
+$table-color:      mix($box-bg, $text-color, 20%);
+$table-head-color: hsl(200, 30%, 60%);
+$table-alt-bg:     hsl(200, 50%, 99%);
 
 @mixin box($color) {
-  border-radius: 6px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
   background: $color;
 }
 
-// Styles
+// Reset everything:
 
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
 acronym, address, cite, code, img, ins, q, s, samp, small, strike,
@@ -67,13 +68,10 @@ table {
 }
 
 a {
-  color: $link;
   text-decoration: none;
-
-  &:hover {
-    color: $link-hover;
-  }
 }
+
+// Basic layout:
 
 .right {
   text-align: right;
@@ -85,48 +83,66 @@ a {
   padding: 0 24px;
 }
 
-.grid {
-  background: url('image/grid.png');
-}
+// Post content:
 
 .content {
   padding: 0 0 12px 0;
 
   h1 {
-    font: normal 36px/48px $header-font;
-    padding: 36px 0 24px 0;
+    font: normal 36px/48px $serif;
+    font-weight: 700;
+    padding: 24px 0 0 0;
 
     a {
-      color: $header-color;
+      color: $text-color;
     }
 
     code {
       background: inherit;
       color: $code-color;
-      font: 36px $code-font;
+      font: 36px $mono;
     }
   }
 
   h2 {
-    font: normal 24px/48px $header-font;
-    color: $header-color;
+    font: normal 24px $serif;
+    padding-top: 12px;
+    font-weight: 700;
 
     code {
       background: inherit;
       color: $code-color;
-      font: 24px $code-font;
+      font: 20px $mono;
+      font-weight: 700;
+      padding: 0;
     }
   }
 
   h3 {
-    font: italic 18px/24px $header-font;
-    color: $header-color;
-    padding: 12px 0;
+    font: italic 20px/24px $serif;
+    padding: 12px 0 0 0;
+  }
+
+  h4 {
+    font: 12px $sans;
+    padding: 6px 0 18px 0;
+  }
+
+  a {
+    color: $link;
+  }
+
+  a:hover {
+    color: $link-hover;
   }
 
   p {
-    font: normal 16px/24px $body-font;
-    padding: 12px 0;
+    font: $body-text;
+    padding: 8px 0;
+  }
+
+  p + p {
+    padding-top: 12px;
   }
 
   ol, ul {
@@ -134,7 +150,7 @@ a {
   }
 
   li {
-    font: normal 16px/24px $body-font;
+    font: $body-text;
   }
 
   a, a code {
@@ -149,7 +165,7 @@ a {
     @include box($code-bg);
     padding: 2px 4px;
     color: $code-color;
-    font: 15px/20px $code-font;
+    font: 14px/18px $mono;
   }
 
   pre {
@@ -157,56 +173,52 @@ a {
     margin: 6px 0;
     padding: 6px 12px;
     color: $code-color;
-    font: 14px/24px $code-font;
     overflow: auto;
 
     code {
       padding: 0;
+      font: 13px/18px $mono;
     }
   }
 
   tt {
-    font: 15px/20px $code-font;
+    font: 13px/18px $mono;
     color: $code-color;
   }
 
   blockquote {
-    @include box($quote-bg);
     color: $quote-color;
-    padding: 6px 12px;
-    margin: 6px 0;
+    padding: 0 24px;
 
     p {
-      font: italic 16px/24px $body-font;
+      font: italic $body-text;
 
-      &:first-child {
-        padding-top: 0;
-      }
-
-      &:last-child {
-        padding-bottom: 0;
+      strong {
+        font-weight: 600;
       }
     }
   }
 
   .cite {
-    font: normal 13px/24px $sans;
-    color: $quote-color-light;
+    font: italic 13px/24px $sans;
+    color: $cite-color;
     display: block;
     text-align: right;
-    padding: 12px 24px 12px 0;
+    margin-top: 0;
+    padding: 0 24px 12px 0;
 
     &:before {
       content: '\2014\00A0';
     }
   }
 
-  blockquote.update {
-    background: $update-bg;
+  .update {
+    @include box($update-bg);
+    padding: 0 12px;
     color: $update-color;
 
     p {
-      font: normal 13px/24px $sans;
+      font: 13px/24px $sans;
     }
 
     a {
@@ -241,14 +253,15 @@ a {
     color: $table-color;
 
     td {
-      font: normal 16px/24px $body-font;
+      font: $body-text;
       padding: 0 6px;
     }
 
     thead {
       td {
         color: $table-head-color;
-        font: bold 14px/24px $sans;
+        font: 13px/24px $sans;
+        font-weight: 600;
       }
     }
 
@@ -256,51 +269,44 @@ a {
       background: $table-alt-bg;
     }
   }
-}
 
-// .overlay {
-//   background: url('24.png');
-//   width: 100%;
-//   height: 10000px;
-//   opacity: 0.5;
-//   z-index: 3;
-//   position: absolute;
-// }
-
-.post-box {
-  @include box($box-bg);
-  padding: 6px 12px;
-  margin: 6px 0;
-
-  h2 {
-    font: normal 16px/24px $header-font;
-    color: $header-color;
-    padding: 0; //12px 0;
-  }
-
-  p {
-    font: normal 12px/24px $sans;
-    padding: 0;
+  .social {
+    margin: 12px 0;
   }
 }
 
-.post-box + .post-box {
-  margin-top: 12px;
-}
+// The comment area:
 
 .comments {
   width: 100%;
   background: $comments-bg;
+  color: $comments-color;
   font: normal 13px $sans;
 
   .column {
-    padding: 24px 0;
+    padding: 24px 24px;
 
     a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
       text-decoration: none;
     }
   }
+
+  a {
+    color: $nav-link;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: $nav-hover;
+  }
 }
+
+.dsq-comment-text blockquote {
+  padding-left: 16px;
+  color: #777;
+}
+
+// The top and bottom navigation:
 
 .nav {
   background: $nav-bg;
@@ -316,14 +322,17 @@ a {
   }
 
   code {
-    font: 14px $code-font;
+    font: 14px $mono;
   }
 
   h1 {
-    font: normal 20px $nav-font;
+    font: normal 13px $sans;
     color: $nav-title;
-    padding: 12px 0;
-    text-transform: lowercase;
+    padding: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    display: inline-block;
   }
 
   ol, ul {
@@ -346,22 +355,21 @@ a {
   width: 100%;
 }
 
-.nav.top {
-  height: 48px;
-}
-
 .nav.bottom {
-  .column {
-    max-width: 648px; // extra 24px on each side to absorb border spacing
-  }
-
   table {
     width: 100%;
-    border-spacing: 24px;
 
     td {
-      width: 33%;
+      width: 50%;
       vertical-align: top;
+    }
+
+    td.l {
+      padding-right: 12px;
+    }
+
+    td.r {
+      padding-left: 12px;
     }
   }
 }
@@ -371,21 +379,128 @@ img.rss {
   padding-bottom: 3px;
 }
 
-.dsq-comment-text blockquote {
-  padding-left: 16px;
-  color: #777;
+// The little box for each post on post list pages:
+
+.post-box {
+  @include box($box-bg);
+  padding: 6px 12px;
+  margin: 6px 0;
+
+  h2 {
+    font: normal 16px/24px $serif;
+    padding: 0;
+  }
+
+  p {
+    font: normal 12px/24px $sans;
+    padding: 0;
+  }
 }
 
-// Syntax highlighting
+.post-box + .post-box {
+  margin-top: 12px;
+}
+
+// Syntax highlighting:
+
 .highlight {
   .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
-  .k           { color: hsl(100, 100%, 30%); } // keyword
-  .kd          { color: hsl(120, 100%, 30%); } // keyword declaration
+  .k           { color: hsl(200, 100%, 40%); } // keyword
+  .kd          { color: hsl(190, 100%, 35%); } // keyword declaration
   .kt          { color: hsl(180, 100%, 30%); } // keyword type
   .o           { color: hsl(200, 40%, 40%); } // operator
   .nb          { color: hsl(170, 100%, 30%); } // built-in name
   .nc          { color: hsl(180, 100%, 30%); } // class name
   .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
-  .s, .sc      { color: hsl(40, 100%, 40%); } // string
+  .s, .sc      { color: hsl(35, 100%, 40%); } // string
   .m, .mf      { color: hsl(200, 100%, 40%); } // number
+}
+
+
+// On small mobile devices, shrink the text and code, mainly so that the code
+// fits on screen:
+
+@media only screen and (max-width: 479px) {
+  .content {
+    h1 {
+      font: normal 30px/40px $serif;
+      code {
+        font: 30px $mono;
+      }
+    }
+
+    h2 {
+      font: normal 20px $serif;
+      code {
+        font: 18px $mono;
+      }
+    }
+
+    h3 {
+      font: italic 18px/20px $serif;
+    }
+
+    h4 {
+      font: 10px $sans;
+    }
+
+    p {
+      font: normal 14px/20px $serif;
+      padding: 8px 0;
+    }
+
+    p + p {
+      padding-top: 12px;
+    }
+
+    ol, ul {
+      margin-left: 12px;
+    }
+
+    li {
+      font: normal 14px/20px $serif;
+    }
+
+    code {
+      font: 12px/16px $mono;
+    }
+
+    pre {
+      code {
+        font: 11px/14px $mono;
+      }
+    }
+
+    tt {
+      font: 11px/14px $mono;
+    }
+
+    blockquote {
+      p {
+        font: italic 14px/20px $serif;
+      }
+    }
+
+    .cite {
+      font: italic 12px/20px $sans;
+    }
+
+    .update {
+      p {
+        font: 12px/20px $sans;
+      }
+    }
+
+    table {
+      td {
+        font: normal 14px/20px $serif;
+      }
+
+      thead {
+        td {
+          font: 12px/20px $sans;
+        }
+      }
+    }
+  }
 }

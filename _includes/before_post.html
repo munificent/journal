@@ -6,3 +6,4 @@
       {{ post.title | escape }}
     </a>
   </h1>
+  <h4><a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a> &mdash;  {{ post.categories | category_links }}</h4>

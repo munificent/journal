@@ -83,10 +83,10 @@ untyped[2] = 123; // not a string
 
 Here we're creating an array of strings. Then we assign it to a variable whose type is an array of objects (i.e. anything). Then we try to stuff something that isn't a string (but *is* an object) in it.
 
-<blockquote class="update">
+<div class="update">
 <p><em>Update 2011/10/23:</em> I was wrongly using an int array here. Changed it to <code>string[]</code>. I didn't realize only arrays of reference types are covariant in Java.
 </p>
-</blockquote>
+</div>
 
 The static type checker won't catch this because [arrays are covariant in Java](http://c2.com/cgi/wiki?JavaArraysBreakTypeSafety). That means that to ensure the last line doesn't crash your VM, it will do a *runtime* check every time you set an element in an array to make sure it's the right type.
 

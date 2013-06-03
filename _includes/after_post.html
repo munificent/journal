@@ -1,3 +1,35 @@
+    <div class="social">
+      <script type="text/javascript">
+        reddit_url = "http://journal.stuffwithstuff.com{{ post.url | escape }}/";
+        reddit_title = "{{ post.title | escape }}";
+      </script>
+      <script type="text/javascript"
+              src="http://www.reddit.com/static/button/button1.js">
+      </script>
+      <br/>
+      <a href="https://twitter.com/share" class="twitter-share-button"
+         data-url="http://journal.stuffwithstuff.com{{ post.url | escape }}"
+         data-text="{{ post.title | escape }}"
+         data-count="horizontal"
+         data-via="munificentbob">Tweet</a>
+      <script type="text/javascript" src="//platform.twitter.com/widgets.js">
+      </script>
+      <br/>
+      <div class="g-plusone" data-size="small" data-annotation="inline"
+        data-width="200"
+        href="http://journal.stuffwithstuff.com{{ post.url | escape }}">
+      </div>
+      <script type="text/javascript">
+        (function() {
+          var po = document.createElement('script');
+          po.type = 'text/javascript';
+          po.async = true;
+          po.src = 'https://apis.google.com/js/plusone.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(po, s);
+        })();
+      </script>
+    </div>
   </div>
 </div>
 {% if site.disqus %}

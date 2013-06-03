@@ -30,7 +30,7 @@ a {
 .content {
   padding: 0 0 12px 0; }
   .content h1 {
-    font: normal 36px/48px "Radley", Georgia, serif;
+    font: normal 32px/48px "Radley", Georgia, serif;
     font-weight: 700;
     padding: 24px 0 0 0; }
     .content h1 a {
@@ -40,7 +40,7 @@ a {
       color: #304550;
       font: 36px "Source Code Pro", Courier, monospace; }
   .content h2 {
-    font: normal 24px "Radley", Georgia, serif;
+    font: normal 20px "Radley", Georgia, serif;
     padding-top: 12px;
     font-weight: 700; }
     .content h2 code {
@@ -50,7 +50,7 @@ a {
       font-weight: 700;
       padding: 0; }
   .content h3 {
-    font: italic 20px/24px "Radley", Georgia, serif;
+    font: italic 18px/24px "Radley", Georgia, serif;
     padding: 12px 0 0 0; }
   .content h4 {
     font: 12px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
@@ -205,15 +205,17 @@ a {
   .nav small {
     color: #d9c3a5; }
 
-.nav.bottom table {
-  width: 100%; }
-  .nav.bottom table td {
-    width: 50%;
-    vertical-align: top; }
-  .nav.bottom table td.l {
-    padding-right: 12px; }
-  .nav.bottom table td.r {
-    padding-left: 12px; }
+.nav.bottom {
+  padding: 24px 0; }
+  .nav.bottom table {
+    width: 100%; }
+    .nav.bottom table td {
+      width: 50%;
+      vertical-align: top; }
+    .nav.bottom table td.l {
+      padding-right: 12px; }
+    .nav.bottom table td.r {
+      padding-left: 12px; }
 
 img.rss {
   vertical-align: middle;

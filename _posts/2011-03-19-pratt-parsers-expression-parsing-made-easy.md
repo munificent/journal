@@ -261,7 +261,7 @@ parsed before we got to the infix token. We'll wire this up to our parser by
 having another table of infix parselets.
 
 Having separate tables for prefix and infix expressions is important because
-we'll often both a prefix and infix parselet for a single `TokenType`. For
+we'll often have both a prefix and infix parselet for a single `TokenType`. For
 example, the prefix parselet for `(` handles grouping in an expression like `a
 * (b + c)`. Meanwhile, the *infix* parselet handles function calls like
 `a(b)`.
@@ -284,12 +284,13 @@ class Parser {
 
     Expression left = prefix.parse(this, token);
 
-    token = consume();
+    token = lookAhead(0);
     InfixParselet infix = mInfixParselets.get(token.getType());
 
     // No infix expression at this point, so we're done.
     if (infix == null) return left;
 
+    consume();
     return infix.parse(this, left, token);
   }
 
@@ -354,11 +355,11 @@ pretty small amount of code, we can parse expressions like `a + (b ? c! :
 Our parser *can* parse all of this stuff, but it doesn't parse it with the
 right precedence or associativity. If you throw `a - b - c` at it, it will
 parse it like `a - (b - c)`, which isn't right. (Well, actually it is
-*right*&mdash; associative that is. We need it to be *left*.)
+*right*&mdash;associative that is. We need it to be *left*.)
 
 And this *last* step is where Pratt parsers go from pretty nice to totally
 radical. We'll make two simple changes. We'll extend `parseExpression()` to
-take a *precedence*&mdash; a number that tells which expressions can be parsed by
+take a *precedence*&mdash;a number that tells which expressions can be parsed by
 that call. If it encounters an expression whose precedence is lower than we
 allow, it just stops parsing and returns what it has so far.
 

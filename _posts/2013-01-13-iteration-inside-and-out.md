@@ -86,7 +86,7 @@ Dead simple. One key property this has is that it *short-circuits*: it will stop
 
 ### Beautiful example 2: Interleaving two sequences
 
-Let's do something a bit more complex. Let's write a function that takes two sequences and returns a sequence that will alternate between items in each sequence. So if you throw `[1, 2, 3]` and `['a', 'b', 'c']`, you'll get back `1, 'a', 2, 'b', 3, 'c'`.
+Let's do something a bit more complex. Let's write a function that takes two sequences and returns a sequence that will alternate between items in each sequence. So if you throw `[1, 2, 3]` and `['a', 'b', 'c']` at it, you'll get back `1, 'a', 2, 'b', 3, 'c'`.
 
 {% highlight dart %}
 interleave(Iterable a, Iterable b) {

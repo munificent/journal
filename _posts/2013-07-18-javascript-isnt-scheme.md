@@ -80,7 +80,7 @@ Don't tell me it's got lexical scope, because JavaScript's scoping is an abomina
 
 But, to be fair, it does have *some* stuff in common. So maybe it's a fair comparison? I guess the real way to tell would be to compare Scheme to some other languages. The big feature that everyone harps on is closures. Maybe just having closures means you're basically Scheme.
 
-If that's true, then C#, Java 8, Lua, D, Erlang, Haskell, PHP, Scala, Go, Objective-C, Python, Ruby, and Smalltalk are basically Scheme. In other words, if JavaScript is Scheme by that criteria, then every language is Scheme, which of course means none of them are.
+If that's true, then C#, Lua, D, Erlang, Haskell, PHP, Scala, Go, Objective-C, Python, Ruby, and Smalltalk are basically Scheme. In other words, if JavaScript is Scheme by that criteria, then every language is Scheme, which of course means none of them are.
 
 This is why the "JS = Scheme" meme drives me crazy: it makes us dumber. It's a [thought-terminating cliché](http://en.wikipedia.org/wiki/Thought-terminating_clich%C3%A9). It carries negative informational content and makes people actually know less about languages than they did before.
 

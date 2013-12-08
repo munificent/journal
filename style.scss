@@ -411,16 +411,21 @@ img.rss {
 // Syntax highlighting:
 
 .highlight {
-  .c, .c1, .cm { color: mix($code-bg, $code-color, 50%); } // comment
-  .k           { color: hsl(200, 100%, 40%); } // keyword
-  .kd          { color: hsl(190, 100%, 35%); } // keyword declaration
-  .kt          { color: hsl(180, 100%, 30%); } // keyword type
-  .o           { color: hsl(200, 40%, 40%); } // operator
-  .nb          { color: hsl(170, 100%, 30%); } // built-in name
-  .nc          { color: hsl(180, 100%, 30%); } // class name
-  .p           { color: mix($code-bg, $code-color, 30%); } // punctuation
-  .s, .sc      { color: hsl(35, 100%, 40%); } // string
-  .m, .mf      { color: hsl(200, 100%, 40%); } // number
+  span.c,
+  span.c1,
+  span.cm  { color: mix($code-bg, $code-color, 50%); } // comment
+  span.k   { color: hsl(200, 100%, 40%); } // keyword
+  span.kd  { color: hsl(190, 100%, 35%); } // keyword declaration
+  span.kt  { color: hsl(180, 100%, 30%); } // keyword type
+  span.o   { color: hsl(200, 40%, 40%); } // operator
+  span.nb  { color: hsl(170, 100%, 30%); } // built-in name
+  span.nc  { color: hsl(180, 100%, 30%); } // class name
+  span.p   { color: mix($code-bg, $code-color, 30%); } // punctuation
+  span.s,
+  span.sc  { color: hsl(35, 100%, 40%); } // string
+  span.m,
+  span.mf  { color: hsl(200, 100%, 40%); } // number
+  span.cp  { color: hsl(300, 50%, 50%); } // preprocessor
 }
 
 

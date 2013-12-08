@@ -12,7 +12,7 @@ Before I convince you that it's crazy, let's step back a bit and ask why would J
 
 Way back in the misty primordial days of the web when "under construction" banners were everywhere and wild `<font>` tags roamed free, there was a mighty programmer named Brendan Eich. There is still a mighty programmer named Brendan Eich, but there was one then too.
 
-He appeared, in a curling cloud of smoke at the office of Netscape with a moral imperative to bring Scheme to the browser. Alas, the suits shut that shit down for reals, like they do most higher purposes. What he ended up slapping together in ten fevered days instead was JavaScript, a language designed to look like Java and act like anything but.
+He appeared, in a curling cloud of smoke, at the office of Netscape with a moral imperative to bring Scheme to the browser. Alas, the suits shut that shit down for reals, like they do most higher purposes. What he ended up slapping together in ten fevered days instead was JavaScript, a language designed to look like Java and act like anything but.
 
 Given that it didn't have Java's semantics, what semantics *did* it have? Later historiographers started trying to fill in that blank. Since Scheme was Eich's original <abbr title="best friend 4eva <3 <3 <3 ">BFF</abbr>, they surmised that's where it gots its semantics from. The hypothesis was that Eich garbed his creation in a sheepskin of semicolons and curly braces to appease his corporate overlords, but that sexy wolf was inside the whole time.
 
@@ -50,7 +50,7 @@ On the Radiohead end, you've got Common Lisp, Scheme, Smalltalk, and a few other
 
 For all of the people who found themselves using JavaScript but feeling that hot flush of shame, Crockford gave them an answer. JS wasn't some sell-out radio rock band. It was edgy, obscure. It was Scheme.
 
-Not just that, but it was *secretly* Scheme. So if you were into JS, not only were you using one of the coolest languages, you were one of the select enlightening few who knew how cool it was. You may be listening to Coldplay, but only because Brian Eno produced it.
+Not just that, but it was *secretly* Scheme. So if you were into JS, not only were you using one of the coolest languages, you were one of the select enlightened few who knew how cool it was. You may be listening to Coldplay, but only because Brian Eno produced it.
 
 This "JS = Scheme" meme was hugely legimitizing to a horde of programmers feeling unsure of themselves in the face of grizzly C programmers who allocated their own damn memory, probably right after building their own computer out of rocks and twigs.
 

@@ -241,26 +241,32 @@ img.rss {
 .post-box + .post-box {
   margin-top: 12px; }
 
-.highlight .c, .highlight .c1, .highlight .cm {
+.highlight span.c,
+.highlight span.c1,
+.highlight span.cm {
   color: #929ea5; }
-.highlight .k {
+.highlight span.k {
   color: #0088cc; }
-.highlight .kd {
+.highlight span.kd {
   color: #0095b3; }
-.highlight .kt {
+.highlight span.kt {
   color: #009999; }
-.highlight .o {
+.highlight span.o {
   color: #3d748f; }
-.highlight .nb {
+.highlight span.nb {
   color: #009980; }
-.highlight .nc {
+.highlight span.nc {
   color: #009999; }
-.highlight .p {
+.highlight span.p {
   color: #6b7a83; }
-.highlight .s, .highlight .sc {
+.highlight span.s,
+.highlight span.sc {
   color: #cc7700; }
-.highlight .m, .highlight .mf {
+.highlight span.m,
+.highlight span.mf {
   color: #0088cc; }
+.highlight span.cp {
+  color: #bf40bf; }
 
 @media only screen and (max-width: 479px) {
   .content h1 {

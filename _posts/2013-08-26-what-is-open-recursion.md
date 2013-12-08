@@ -32,7 +32,7 @@ makeCounter() {
     return count;
   }
 
-  set() {
+  set(value) {
     count = value;
   }
 
@@ -62,7 +62,7 @@ makeCounter() {
     return count;
   }
 
-  set() {
+  set(value) {
     count = value;
   }
 
@@ -106,7 +106,7 @@ makeCounter() {
     return count;
   };
 
-  set = () {
+  set = (value) {
     count = value;
   };
 
@@ -171,7 +171,7 @@ makeCounter(receiver) {
     return count;
   };
 
-  set = () {
+  set = (value) {
     count = value;
   };
 

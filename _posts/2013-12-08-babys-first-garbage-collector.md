@@ -1,0 +1,345 @@
+---
+layout: post
+title: "Baby's First Garbage Collector"
+categories: code c language
+---
+
+When I get stressed out and have too much to do, I have this paradoxical reaction where I escape from that by coming up with *another* thing to do. Usually it's a tiny self-contained program that I can write and finish.
+
+The other morning, I was freaking myself out about [the book I'm working on](gameprogrammingpatterns.com) and the [stuff I have to do at work](http://dartlang.org) and [a talk I'm preparing for Strange Loop](https://thestrangeloop.com/sessions/dart-for-the-language-enthusiast), and all of the sudden, I thought, "I should write a garbage collector."
+
+Yes, I realize how crazy that paragraph makes me seem. But my faulty wiring is your free tutorial on a fundamental piece of programming language implementation! In about a hundred lines of vanilla C, I managed to whip up a basic [mark-and-sweep](http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Na.C3.AFve_mark-and-sweep) collector that actually, you know, collects.
+
+Garbage collection is considered one of the more shark-infested waters of programming, but in this post, I'll give you a nice kiddie pool to paddle around in. There may still be sharks in it, but at least it will be shallower.
+
+## Reduce, reuse, recycle
+
+The basic idea behind garbage collection is that the language (for the most part) appears to have access to infinite memory. The developer can just keep allocating and allocating and allocating and, as if by magic, it never fails.
+
+Of course, machines don't have infinite memory. So the way the implementation does this is that when it needs to allocate a bit of memory and it realizes it's running low, it *collects garbage*.
+
+"Garbage" in this context means memory it previously allocated that is no longer being used. For the illusion of infinite memory to work, the language needs to be very safe about "no longer being used". It would be no fun if random objects just started getting reclaimed while your program was trying to use them.
+
+In order to be collectible, the language has to ensure there's no way for the program to use that object again. If it can't get a reference to the object, then it obviously can't use it again. So the definition of "in use" is actually pretty simple:
+
+1. Any object that's being referenced by a variable that's still in scope is in use.
+2. Any object that's referenced by another object that's in use is in use.
+
+The second rule is the recursive one. If object A is referenced by a variable, and it has some field that references object B, then B is in use since you can get to it through A.
+
+The end result is a graph of *reachable* objects&mdash;all of the objects in the world that you can get to by starting at a variable and traversing through objects. Any object *not* in that graph of reachable objects is dead to the program and its memory is ripe for a reaping.
+
+## Marking and sweeping
+
+There's a bunch of different ways you can implement the process of finding and reclaiming all of the unused objects, but the simplest and first algorithm ever invented for it is called "mark-sweep". It was invented by John McCarthy, the man who invented Lisp and beards, so you implementing it now is like communing with one of the Elder Gods, but hopefully not in some Lovecraftian way that ends with you having your mind and retinas blasted clean.
+
+It works almost exactly like our definition of reachability:
+
+1. Starting at the roots, traverse the entire object graph. Everytime you reach an object, set a "mark" bit on it to true.
+2. Once that's done, find all of the objects whose mark bits are *not* set and delete them.
+
+That's it. I know, you could have come up with that, right? If you had, *you'd* be the author of a paper cited hundreds of times. The lesson here is that to be famous in CS, you don't have to come up with really smart stuff, you just have to come up with dumb stuff *first*.
+
+## A pair of objects
+
+Before we can get to implementing those two steps, let's get a couple of preliminaries out of the way. We won't be actually implementing an interpreter for a language&mdash;no parser, bytecode, or any of that foolishness&mdash;but we do need some minimal amount of code to establish some context.
+
+Let's play pretend that we're writing an interpreter for a little language. It's dynamically typed, and has two types of objects: ints and pairs. Here's an enum to identify an object's type:
+
+{% highlight c %}
+typedef enum {
+  OBJ_INT,
+  OBJ_PAIR
+} ObjectType;
+{% endhighlight %}
+
+A pair can be a pair of anything, two ints, an int and another pair, whatever. You can go [surprisingly far](http://www.flickr.com/photos/raganwald/212588975/) with just that. Since an object in the VM can be either of these, the typical way in C to implement it is with a tagged union.
+
+We'll define it thusly:
+
+{% highlight c %}
+typedef struct sObject {
+  ObjectType type;
+
+  union {
+    /* OBJ_INT */
+    int value;
+
+    /* OBJ_PAIR */
+    struct {
+      struct sObject* head;
+      struct sObject* tail;
+    };
+  };
+} Object;
+{% endhighlight %}
+
+The main `Object` struct has a `type` field that identifies what kind of value it is&mdash; either an int or a pair. Then it has a union to hold the data for the int or pair. If your C is rusty, a union is a struct *where the fields overlap in memory*. Since a given object can only be an int *or* a pair, there's no reason to have memory in a single object for all three fields at the same time. A union does that. Groovy.
+
+## A minimal virtual machine
+
+Now we can wrap that in a little virtual machine structure. Its role in this story is to have a stack that stores the variables that are currently in scope. Most language VMs are either stack-based (like the JVM and CLR) or register-based (like Lua). In both cases, there is actually a still a stack. It's used to store local variables and temporary variables needed in the middle of an expression.
+
+We'll model that explitly and simply like so:
+
+{% highlight c %}
+#define STACK_MAX 256
+
+typedef struct {
+  Object* stack[STACK_MAX];
+  int stackSize;
+} VM;
+{% endhighlight %}
+
+Now that we've got our basic data structures in place, let's slap together a bit of code to create some stuff. First, let's write a function that creates and initializes a VM:
+
+{% highlight c %}
+VM* newVM() {
+  VM* vm = malloc(sizeof(VM));
+  vm->stackSize = 0;
+  return vm;
+}
+{% endhighlight %}
+
+Once we've got a VM, we need to be able to manipulate its stack:
+
+{% highlight c %}
+void push(VM* vm, Object* value) {
+  assert(vm->stackSize < STACK_MAX, "Stack overflow!");
+  vm->stack[vm->stackSize++] = value;
+}
+
+Object* pop(VM* vm) {
+  assert(vm->stackSize > 0, "Stack underflow!");
+  return vm->stack[--vm->stackSize];
+}
+{% endhighlight %}
+
+OK, now that we can stick stuff in "variables", we need to be able to actually create objects. First a little helper function:
+
+{% highlight c %}
+Object* newObject(VM* vm, ObjectType type) {
+  Object* object = malloc(sizeof(Object));
+  object->type = type;
+  return object;
+}
+{% endhighlight %}
+
+That does the actual memory allocation and sets the type tag. We'll be revisiting this in a bit. Now, using that, we can write functions to push each kind of object onto the VM's stack:
+
+{% highlight c %}
+void pushInt(VM* vm, int intValue) {
+  Object* object = allocate(vm, OBJ_INT);
+  object->value = intValue;
+  push(vm, object);
+}
+
+Object* pushPair(VM* vm) {
+  Object* object = allocate(vm, OBJ_PAIR);
+  object->tail = pop(vm);
+  object->head = pop(vm);
+
+  push(vm, object);
+  return object;
+}
+{% endhighlight %}
+
+And that's it for our little VM. If we had a parser and an interpreter that called those functions, we'd have an honest to God language on our hands. And, if we had infinite memory, it would even be able to run real programs. Since we don't, let's start collecting some garbage.
+
+## Marky mark
+
+The first phase is *marking*. We need to walk all of the reachable objects and set their mark bit. The first thing we need to do then is add a mark bit to `Object`:
+
+{% highlight c %}
+typedef struct sObject {
+  unsigned char marked;
+  /* Previous stuff... */
+} Object;
+{% endhighlight %}
+
+When we create a new object, we'll modify `newObject()` to initialize `marked` to zero. To mark all of the reachable objects, we start with the variables that are in memory, so that means walking the stack. That looks like this:
+
+{% highlight c %}
+void markAll(VM* vm)
+{
+  for (int i = 0; i < vm->stackSize; i++) {
+    mark(vm->stack[i]);
+  }
+}
+{% endhighlight %}
+
+That in turn calls `mark`. We'll build that in phases. First:
+
+{% highlight c %}
+void mark(Object* object) {
+  object->marked = 1;
+}
+{% endhighlight %}
+
+This is the most important bit, literally. We've marked the object itself as reachable, but remember we also need to handle references in objects: reachability is *recursive*. If the object is a pair, its two fields are reachable too. Handling that is simple:
+
+{% highlight c %}
+void mark(Object* object) {
+  object->marked = 1;
+
+  if (object->type == OBJ_PAIR) {
+    mark(object->head);
+    mark(object->tail);
+  }
+}
+{% endhighlight %}
+
+But there's a bug here. Do you see it? We're recursing now, but we aren't checking for *cycles*. If you have a bunch of pairs that point each other in a loop, this will overflow the stack and crash.
+
+To handle that, we just need to bail out if we get to an object that we've already processed. So the complete `mark()` function is:
+
+{% highlight c %}
+void mark(Object* object) {
+  /* If already marked, we're done. Check this first
+     to avoid recursing on cycles in the object graph. */
+  if (object->marked) return;
+
+  object->marked = 1;
+
+  if (object->type == OBJ_PAIR) {
+    mark(object->head);
+    mark(object->tail);
+  }
+}
+{% endhighlight %}
+
+Now we can call `markAll()` and it will correctly mark every reachable object in memory. We're halfway done!
+
+## Sweep
+
+The next phase is to sweep through all of the objects we've allocated and free any of them that aren't marked. But there's a problem here: all of the unmarked objects are, by definition, unreachable! We can't get to them!
+
+The VM has implemented the *language's* semantics for object references: so we're only storing pointers to objects in variables and the pair elements. As soon as an object is no longer pointed to by one of those, we've lost it entirely and actually leaked memory.
+
+The trick to solve this is that the VM can have its *own* references to objects that are distinct from the semantics that are visible to the language user. In other words, we can keep track of them ourselves.
+
+The simplest way to do this is to just maintain a linked list of every object we've ever allocated. We'll extend `Object` itself to be a node in that list:
+
+{% highlight c %}
+typedef struct sObject {
+  /* The next object in the list of all objects. */
+  struct sObject* next;
+
+  /* Previous stuff... */
+} Object;
+{% endhighlight %}
+
+The VM will keep track of the head of that list:
+
+{% highlight c %}
+typedef struct {
+  /* The first object in the list of all objects. */
+  Object* firstObject;
+
+  /* Previous stuff... */
+} VM;
+{% endhighlight %}
+
+Whenever we create an object, we'll add it to the list:
+
+{% highlight c %}
+Object* newObject(VM* vm, ObjectType type) {
+  Object* object = malloc(sizeof(Object));
+  object->type = type;
+  object->marked = 0;
+
+  /* Insert it into the list of allocated objects. */
+  object->next = vm->firstObject;
+  vm->firstObject = object;
+
+  return object;
+}
+{% endhighlight %}
+
+This way, even if the *language* can't find an object, the language *implementation* still can. To sweep through and delete the unmarked objects, we just need to traverse the list:
+
+{% highlight c %}
+void sweep(VM* vm)
+{
+  Object** object = &vm->firstObject;
+  while (*object) {
+    if (!(*object)->marked) {
+      /* This object wasn't reached, so remove it from the list
+         and free it. */
+      Object* unreached = *object;
+
+      *object = unreached->next;
+      free(unreached);
+    } else {
+      /* This object was reached, so unmark it (for the next GC)
+         and move on to the next. */
+      (*object)->marked = 0;
+      object = &(*object)->next;
+    }
+  }
+}
+{% endhighlight %}
+
+That code is a bit tricky to read because of that pointer to a pointer, but if you work through it, you can see it's pretty straightforward. It just walks the entire linked list. Whenever it hits an object that isn't marked, it frees its memory and removes it from the list. When this is done, we will have deleted every unreachable object.
+
+Congratulations! We have a garbage collector! There's just one missing piece: actually calling it. First let's wrap the two phases together:
+
+{% highlight c %}
+void gc(VM* vm) {
+  markAll(vm);
+  sweep(vm);
+}
+{% endhighlight %}
+
+You couldn't ask for a more obvious mark-sweep implementation. Now the trickiest part of all of this is figuring out when to actually call this. What does "low on memory" even mean, especially on modern computers with near-infinite virtual memory?
+
+It turns out there's no precise right or wrong answer here. It really depends on what you're using your VM for and what kind of hardware it runs on. To keep this example simple, we'll just collect after a certain number of allocations. That's actually how some language implementations work, and it's easy to implement.
+
+We'll extend `VM` to track how many we've created:
+
+{% highlight c %}
+typedef struct {
+  /* The total number of currently allocated objects. */
+  int numObjects;
+
+  /* The number of objects required to trigger a GC. */
+  int maxObjects;
+
+  /* Previous stuff... */
+} VM;
+{% endhighlight %}
+
+Then, whenever we create an object, we increment that and run a collection if it crosses some threshhold:
+
+{% highlight c %}
+Object* newObject(VM* vm, ObjectType type) {
+  if (vm->numObjects == vm->maxObjects) gc(vm);
+
+  /* Create object... */
+
+  vm->numObjects++;
+  return object;
+}
+{% endhighlight %}
+
+I won't bother showing it, but we'll also tweak `sweep()` to *decrement* `numObjects` every time it frees one. Finally, we'll modify `gc()` to update the max:
+
+{% highlight c %}
+void gc(VM* vm) {
+  int numObjects = vm->numObjects;
+
+  markAll(vm);
+  sweep(vm);
+
+  vm->maxObjects = vm->numObjects * 2;
+}
+{% endhighlight %}
+
+This way, the total heap size grows as the number of *live* objects increases. Likewise, it will shrink automatically if a bunch of objects end up being freed.
+
+## Simple
+
+You made it! If you followed all of this, you've now got a handle on a simple garbage collection algorithm. Let me stress here that while this collector is *simple*, it isn't a *toy*.
+
+There are a ton of optimizations you can build on top of this (and in things like GC and programming languages, optimization is 90% of the effort), but the core code here is a legitimate *real* GC. It's very similar to the collectors that were in Ruby and Lua until recently. You can ship production code that uses something exactly like this. Now go build something awesome!
+

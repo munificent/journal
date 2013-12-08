@@ -339,7 +339,6 @@ This way, the total heap size grows as the number of *live* objects increases. L
 
 ## Simple
 
-You made it! If you followed all of this, you've now got a handle on a simple garbage collection algorithm. Let me stress here that while this collector is *simple*, it isn't a *toy*.
+You made it! If you followed all of this, you've now got a handle on a simple garbage collection algorithm. If you want to see it all together, [here's the full code](https://github.com/munificent/mark-sweep). Let me stress here that while this collector is *simple*, it isn't a *toy*.
 
 There are a ton of optimizations you can build on top of this (and in things like GC and programming languages, optimization is 90% of the effort), but the core code here is a legitimate *real* GC. It's very similar to the collectors that were in Ruby and Lua until recently. You can ship production code that uses something exactly like this. Now go build something awesome!
-

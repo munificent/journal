@@ -6,11 +6,11 @@ categories: code c language
 
 When I get stressed out and have too much to do, I have this paradoxical reaction where I escape from that by coming up with *another* thing to do. Usually it's a tiny self-contained program that I can write and finish.
 
-The other morning, I was freaking myself out about [the book I'm working on](gameprogrammingpatterns.com) and the [stuff I have to do at work](http://dartlang.org) and [a talk I'm preparing for Strange Loop](https://thestrangeloop.com/sessions/dart-for-the-language-enthusiast), and all of the sudden, I thought, "I should write a garbage collector."
+The other morning, I was freaking myself out about [the book I'm working on](http://gameprogrammingpatterns.com) and the [stuff I have to do at work](http://dartlang.org) and [a talk I'm preparing for Strange Loop](https://thestrangeloop.com/sessions/dart-for-the-language-enthusiast), and all of the sudden, I thought, "I should write a garbage collector."
 
 Yes, I realize how crazy that paragraph makes me seem. But my faulty wiring is your free tutorial on a fundamental piece of programming language implementation! In about a hundred lines of vanilla C, I managed to whip up a basic [mark-and-sweep](http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Na.C3.AFve_mark-and-sweep) collector that actually, you know, collects.
 
-Garbage collection is considered one of the more shark-infested waters of programming, but in this post, I'll give you a nice kiddie pool to paddle around in. There may still be sharks in it, but at least it will be shallower.
+Garbage collection is considered one of the more shark-infested waters of programming, but in this post, I'll give you a nice kiddie pool to paddle around in. (There may still be sharks in it, but at least it will be shallower.)
 
 ## Reduce, reuse, recycle
 
@@ -18,7 +18,7 @@ The basic idea behind garbage collection is that the language (for the most part
 
 Of course, machines don't have infinite memory. So the way the implementation does this is that when it needs to allocate a bit of memory and it realizes it's running low, it *collects garbage*.
 
-"Garbage" in this context means memory it previously allocated that is no longer being used. For the illusion of infinite memory to work, the language needs to be very safe about "no longer being used". It would be no fun if random objects just started getting reclaimed while your program was trying to use them.
+"Garbage" in this context means memory it previously allocated that is no longer being used. For the illusion of infinite memory to work, the language needs to be very safe about "no longer being used". It would be no fun if random objects just started getting reclaimed while your program was trying to access them.
 
 In order to be collectible, the language has to ensure there's no way for the program to use that object again. If it can't get a reference to the object, then it obviously can't use it again. So the definition of "in use" is actually pretty simple:
 
@@ -31,18 +31,18 @@ The end result is a graph of *reachable* objects&mdash;all of the objects in the
 
 ## Marking and sweeping
 
-There's a bunch of different ways you can implement the process of finding and reclaiming all of the unused objects, but the simplest and first algorithm ever invented for it is called "mark-sweep". It was invented by John McCarthy, the man who invented Lisp and beards, so you implementing it now is like communing with one of the Elder Gods, but hopefully not in some Lovecraftian way that ends with you having your mind and retinas blasted clean.
+There's a [bunch of different ways](http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Tracing_garbage_collectors) you can implement the process of finding and reclaiming all of the unused objects, but the simplest and first algorithm ever invented for it is called "mark-sweep". It was invented by John McCarthy, the man who invented Lisp and beards, so you implementing it now is like communing with one of the Elder Gods, but hopefully not in some Lovecraftian way that ends with you having your mind and retinas blasted clean.
 
 It works almost exactly like our definition of reachability:
 
-1. Starting at the roots, traverse the entire object graph. Everytime you reach an object, set a "mark" bit on it to true.
+1. Starting at the roots, traverse the entire object graph. Every time you reach an object, set a "mark" bit on it to true.
 2. Once that's done, find all of the objects whose mark bits are *not* set and delete them.
 
 That's it. I know, you could have come up with that, right? If you had, *you'd* be the author of a paper cited hundreds of times. The lesson here is that to be famous in CS, you don't have to come up with really smart stuff, you just have to come up with dumb stuff *first*.
 
 ## A pair of objects
 
-Before we can get to implementing those two steps, let's get a couple of preliminaries out of the way. We won't be actually implementing an interpreter for a language&mdash;no parser, bytecode, or any of that foolishness&mdash;but we do need some minimal amount of code to establish some context.
+Before we can get to implementing those two steps, let's get a couple of preliminaries out of the way. We won't be actually implementing an interpreter for a language&mdash;no parser, bytecode, or any of that foolishness&mdash;but we do need some minimal amount of code to create some garbage to collect.
 
 Let's play pretend that we're writing an interpreter for a little language. It's dynamically typed, and has two types of objects: ints and pairs. Here's an enum to identify an object's type:
 
@@ -53,7 +53,7 @@ typedef enum {
 } ObjectType;
 {% endhighlight %}
 
-A pair can be a pair of anything, two ints, an int and another pair, whatever. You can go [surprisingly far](http://www.flickr.com/photos/raganwald/212588975/) with just that. Since an object in the VM can be either of these, the typical way in C to implement it is with a tagged union.
+A pair can be a pair of anything, two ints, an int and another pair, whatever. You can go [surprisingly far](http://www.flickr.com/photos/raganwald/212588975/) with just that. Since an object in the VM can be either of these, the typical way in C to implement it is with a [tagged union](http://en.wikipedia.org/wiki/Tagged_union).
 
 We'll define it thusly:
 
@@ -80,7 +80,7 @@ The main `Object` struct has a `type` field that identifies what kind of value i
 
 Now we can wrap that in a little virtual machine structure. Its role in this story is to have a stack that stores the variables that are currently in scope. Most language VMs are either stack-based (like the JVM and CLR) or register-based (like Lua). In both cases, there is actually a still a stack. It's used to store local variables and temporary variables needed in the middle of an expression.
 
-We'll model that explitly and simply like so:
+We'll model that explicitly and simply like so:
 
 {% highlight c %}
 #define STACK_MAX 256
@@ -125,7 +125,7 @@ Object* newObject(VM* vm, ObjectType type) {
 }
 {% endhighlight %}
 
-That does the actual memory allocation and sets the type tag. We'll be revisiting this in a bit. Now, using that, we can write functions to push each kind of object onto the VM's stack:
+That does the actual memory allocation and sets the type tag. We'll be revisiting this in a bit. Using that, we can write functions to push each kind of object onto the VM's stack:
 
 {% highlight c %}
 void pushInt(VM* vm, int intValue) {
@@ -148,7 +148,7 @@ And that's it for our little VM. If we had a parser and an interpreter that call
 
 ## Marky mark
 
-The first phase is *marking*. We need to walk all of the reachable objects and set their mark bit. The first thing we need to do then is add a mark bit to `Object`:
+The first phase is *marking*. We need to walk all of the reachable objects and set their mark bit. The first thing we need then is to add a mark bit to `Object`:
 
 {% highlight c %}
 typedef struct sObject {
@@ -189,7 +189,7 @@ void mark(Object* object) {
 }
 {% endhighlight %}
 
-But there's a bug here. Do you see it? We're recursing now, but we aren't checking for *cycles*. If you have a bunch of pairs that point each other in a loop, this will overflow the stack and crash.
+But there's a bug here. Do you see it? We're recursing now, but we aren't checking for *cycles*. If you have a bunch of pairs that point to each other in a loop, this will overflow the stack and crash.
 
 To handle that, we just need to bail out if we get to an object that we've already processed. So the complete `mark()` function is:
 
@@ -210,7 +210,7 @@ void mark(Object* object) {
 
 Now we can call `markAll()` and it will correctly mark every reachable object in memory. We're halfway done!
 
-## Sweep
+## Sweepy sweep
 
 The next phase is to sweep through all of the objects we've allocated and free any of them that aren't marked. But there's a problem here: all of the unmarked objects are, by definition, unreachable! We can't get to them!
 
@@ -240,7 +240,7 @@ typedef struct {
 } VM;
 {% endhighlight %}
 
-Whenever we create an object, we'll add it to the list:
+In `newVM()` we'll make sure to initialize `firstObject` to `NULL`. Whenever we create an object, we add it to the list:
 
 {% highlight c %}
 Object* newObject(VM* vm, ObjectType type) {
@@ -291,7 +291,7 @@ void gc(VM* vm) {
 }
 {% endhighlight %}
 
-You couldn't ask for a more obvious mark-sweep implementation. Now the trickiest part of all of this is figuring out when to actually call this. What does "low on memory" even mean, especially on modern computers with near-infinite virtual memory?
+You couldn't ask for a more obvious mark-sweep implementation. The trickiest part is figuring out when to actually call this. What does "low on memory" even mean, especially on modern computers with near-infinite virtual memory?
 
 It turns out there's no precise right or wrong answer here. It really depends on what you're using your VM for and what kind of hardware it runs on. To keep this example simple, we'll just collect after a certain number of allocations. That's actually how some language implementations work, and it's easy to implement.
 
@@ -309,7 +309,21 @@ typedef struct {
 } VM;
 {% endhighlight %}
 
-Then, whenever we create an object, we increment that and run a collection if it crosses some threshhold:
+And then initialize them:
+
+{% highlight c %}
+VM* newVM() {
+  /* Previous stuff... */
+
+  vm->numObjects = 0;
+  vm->maxObjects = INITIAL_GC_THRESHOLD;
+  return vm;
+}
+{% endhighlight %}
+
+The `INITIAL_GC_THRESHOLD` will be the number of objects at which you kick off the *first* GC. A smaller number is more conservative with memory, a larger number spends less time on garbage collection. Adjust to taste.
+
+Whenever we create an object, we increment `numObjects` and run a collection if it reaches the max:
 
 {% highlight c %}
 Object* newObject(VM* vm, ObjectType type) {
@@ -322,7 +336,7 @@ Object* newObject(VM* vm, ObjectType type) {
 }
 {% endhighlight %}
 
-I won't bother showing it, but we'll also tweak `sweep()` to *decrement* `numObjects` every time it frees one. Finally, we'll modify `gc()` to update the max:
+I won't bother showing it, but we'll also tweak `sweep()` to *decrement* `numObjects` every time it frees one. Finally, we modify `gc()` to update the max:
 
 {% highlight c %}
 void gc(VM* vm) {
@@ -335,7 +349,7 @@ void gc(VM* vm) {
 }
 {% endhighlight %}
 
-This way, the total heap size grows as the number of *live* objects increases. Likewise, it will shrink automatically if a bunch of objects end up being freed.
+After every collection, we update `maxObjects` based on the number of *live* objects left after the collection. The multiplier there lets our heap grow as the number of living objects increases. Likewise, it will shrink automatically if a bunch of objects end up being freed.
 
 ## Simple
 

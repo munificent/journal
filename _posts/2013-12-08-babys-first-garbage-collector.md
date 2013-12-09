@@ -129,13 +129,13 @@ That does the actual memory allocation and sets the type tag. We'll be revisitin
 
 {% highlight c %}
 void pushInt(VM* vm, int intValue) {
-  Object* object = allocate(vm, OBJ_INT);
+  Object* object = newObject(vm, OBJ_INT);
   object->value = intValue;
   push(vm, object);
 }
 
 Object* pushPair(VM* vm) {
-  Object* object = allocate(vm, OBJ_PAIR);
+  Object* object = newObject(vm, OBJ_PAIR);
   object->tail = pop(vm);
   object->head = pop(vm);
 

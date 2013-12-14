@@ -78,7 +78,7 @@ The main `Object` struct has a `type` field that identifies what kind of value i
 
 ## A minimal virtual machine
 
-Now we can wrap that in a little virtual machine structure. Its role in this story is to have a stack that stores the variables that are currently in scope. Most language VMs are either stack-based (like the JVM and CLR) or register-based (like Lua). In both cases, there is actually a still a stack. It's used to store local variables and temporary variables needed in the middle of an expression.
+Now we can wrap that in a little virtual machine structure. Its role in this story is to have a stack that stores the variables that are currently in scope. Most language VMs are either stack-based (like the JVM and CLR) or register-based (like Lua). In both cases, there is actually still a stack. It's used to store local variables and temporary variables needed in the middle of an expression.
 
 We'll model that explicitly and simply like so:
 

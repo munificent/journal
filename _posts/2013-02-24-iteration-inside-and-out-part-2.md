@@ -298,7 +298,7 @@ Double-plus good! We've got nice support for both internal and external iterator
 
 3. The next time you call `next` it picks up exactly where it left off. Somehow that entire callstack gets frozen and then thawed between each call to `next`.
 
-There must be some kind of data structure that represents an entire callstack. It doesn't reify a strack *frame* like generators, it reifies the whole *stack.*
+There must be some kind of data structure that represents an entire callstack. It doesn't reify a stack *frame* like generators, it reifies the whole *stack.*
 
 ## A fiber by any other name
 

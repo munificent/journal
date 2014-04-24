@@ -1,5 +1,5 @@
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
-acronym, address, cite, code, img, ins, q, s, samp, small, strike,
+acronym, address, cite, code, figure, img, ins, q, s, samp, small, strike,
 sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
 caption, tbody, tfoot, thead, tr, th, td {
   margin: 0;
@@ -137,6 +137,25 @@ a {
     margin: 6px auto; }
     .content img.framed {
       background: #f4f9fb; }
+  .content figure {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #f4f9fb;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px auto;
+    width: 100%; }
+    .content figure img {
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      width: 100%; }
+    .content figure figcaption {
+      color: #a6a6a6;
+      font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+      margin-top: 10px; }
   .content .table {
     border-radius: 4px;
     -moz-border-radius: 4px;

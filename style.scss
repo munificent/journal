@@ -47,7 +47,7 @@ $table-alt-bg:     hsl(200, 50%, 99%);
 // Reset everything:
 
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
-acronym, address, cite, code, img, ins, q, s, samp, small, strike,
+acronym, address, cite, code, figure, img, ins, q, s, samp, small, strike,
 sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
 caption, tbody, tfoot, thead, tr, th, td {
   margin: 0;
@@ -243,6 +243,28 @@ a {
 
     &.framed {
       background: $box-bg;
+    }
+  }
+
+  figure {
+    @include box($box-bg);
+    display: block;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px auto;
+    width: 100%;
+
+    img {
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+
+    figcaption {
+      color: $cite-color;
+      font: 13px $sans;
+      margin-top: 10px;
     }
   }
 

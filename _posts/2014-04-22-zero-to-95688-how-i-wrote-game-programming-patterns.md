@@ -11,11 +11,11 @@ About an hour ago, in the quiet of my living room, alone except for a sleeping d
   <figcaption>What I see now when I run the script that converts my Markdown manuscript to HTML.</figcaption>
 </figure>
 
-It feels weird writing a blog post that doesn't have any real content beyond my own personal story, but what the hell. It's not like I have anything better to do! I enjoy reading about other people finishing their books, out of some mixture of vicarious pleasure and seething envy, so I'll try to add to the canon.
+It feels weird writing a blog post that doesn't have any real content beyond my own personal story, but what the hell. It's not like I have anything better to do! I get some vicarious pleasure mixed with globs envy when I read about other people finishing their books, so I'll try to add to the canon.
 
 ## The Call to Adventure
 
-Like most stories, it starts with the hero having something bad happen to him. (Did I just call myself the hero? Seriously? God, success is already going my head.)
+Like most stories, it starts with the hero having something bad happen to him. (Did I just call myself the hero? Seriously? God, this is already going my head.)
 
 About five years ago, I was a game programmer at Electronic Arts in sunny Orlando, Florida. That's the studio that does Madden, NCAA Football, Madden, Tiger Woods Golf, Madden, and also this football game you've probably heard of. They did a few other one-off games too.
 
@@ -28,11 +28,7 @@ I'd been there seven years, which is an impressively long time to actively disli
 
 After we shipped, EA decided to never make that kind of mistake again and refocused on <del>suckling the withering teats of its aging cash cows</del> the shareholder-friendly profitability of beloved annual franchises. My entire team quit except me. I ended up bouncing around onto a bunch of different projects.
 
-I was so burned out chunks of char were falling off me, and I was really frustrated by how hard it was to ramp up every time I was airdropped into a new codebase. So much of the code I dealt with was an undocumented, disorganized hairball.
-
-What frustrated me most about the code at work was how much of it was clearly written in ignorance of basic software architecture ideas. You could see how they'd sort of reinvented some idea, but they still botched it half the time.
-
-Even crazier, these malignancies were often sitting just a few source files away from much cleaner implementations of the *exact same concept*. It's just that people weren't talking to each other about their craft and weren't learning.
+I was so burned out chunks of char were falling off me, and I was really frustrated by how hard it was to ramp up every time I was airdropped into a new team and its disorganized, deeply coupled, inconsistent code. I'd find bits of real elegance sitting just a few source files away from some hairball that would have benefitted from the exact same structure. People just weren't talking to each other about their craft and weren't learning.
 
 Game dev culture, at least at the studio I was at, is kind of weird. One quirk of it is that a lot of the programmers I worked with didn't give credence to ideas from the larger world of software. Things like *Design Patterns* were for Nancy-boy enterprise programmers, not *real* game coders.
 
@@ -219,6 +215,10 @@ I thought about doing something like SVG, but that seemed like a huge time sink 
   <img class="framed" src="image/2014/04/illustrations.jpg">
   <figcaption>Some of the 66 hand-drawn illustrations.</figcaption>
 </figure>
+
+### 7. Publish and fix bugs
+
+At this point, I think the chapter is done. I put it online and tell the world, and immediately they point out a bunch of glaringly obvious bugs that somehow survived several rounds of editing. I fix those, and *now* the chapter is mostly solid.
 
 ## The Long Road
 

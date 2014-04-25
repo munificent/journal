@@ -7,7 +7,7 @@ categories: book game-dev
 About an hour ago, in the quiet of my living room, alone except for a sleeping dog next to me, I accomplished the biggest goal of my life. I finished writing [Game Programming Patterns](http://gameprogrammingpatterns.com/). It's a book on game programming (it would be a weird title for a book ornithology) that I started writing about four years and a lifetime ago.
 
 <figure>
-  <img class="framed" src="image/2014/04/100-percent.png">
+  <img class="framed" src="/image/2014/04/100-percent.png">
   <figcaption>What I see now when I run the script that converts my Markdown manuscript to HTML.</figcaption>
 </figure>
 
@@ -22,7 +22,7 @@ About five years ago, I was a game programmer at Electronic Arts in sunny Orland
 I'd been there seven years, which is an impressively long time to actively dislike football while working in an office that lived and breathed it. The last game I worked on, [Henry Hatsworth in the Puzzling Adventure](http://en.wikipedia.org/wiki/Henry_Hatsworth_in_the_Puzzling_Adventure) was an absolute blast, the kind of dream project you imagine game development to be all about. Just seven dudes hanging out making a cool game they all loved.
 
 <figure>
-  <img class="framed" src="image/2014/04/hatsworth.jpg">
+  <img class="framed" src="/image/2014/04/hatsworth.jpg">
   <figcaption>My pixel art alter ego in the <a href="https://www.youtube.com/watch?v=xYztScHUmo0&index=53&list=PLqN7MzshdwZLGlQuTYkcANZFW_dWN3HIf">end credits</a>.</figcaption>
 </figure>
 
@@ -35,7 +35,7 @@ Game dev culture, at least at the studio I was at, is kind of weird. One quirk o
 On top of this stress, I'd just had a kid, an eventuality I did not plan for when I purchased a 900' house at the peak of the housing bubble. One frustrated drive home from work, I had an idea: I knew some basic software architecture. I liked writing stuff down. What if I wrote a book specifically targeted towards game developers about this? If I aimed it straight at them, maybe they wouldn't dismiss it out of hand.
 
 <figure>
-  <img class="framed" src="image/2014/04/notes.jpg">
+  <img class="framed" src="/image/2014/04/notes.jpg">
   <figcaption>A few notes from when I first started thinking about the book. Note that even then I was pandering to the masses on reddit!</figcaption>
 </figure>
 
@@ -46,7 +46,7 @@ Now, I am a world class project starter. I've got hard drives full of stories, v
 I was fully aware that taking on this project was pretty much doomed to failure. But, after visiting the Pacific Northwest, my wife and I *really* wanted to move, and a book would make for a nice bit of résumé padding to help me find a new job.
 
 <figure>
-  <img class="framed" src="image/2014/04/lake-crescent.jpg">
+  <img class="framed" src="/image/2014/04/lake-crescent.jpg">
   <figcaption>How could you <em>not</em> want to live here?</figcaption>
 </figure>
 
@@ -69,7 +69,7 @@ Now I couldn't get distracted by design, style, editors, or anything. Just me, S
 One thing I'd heard was that telling your friends and family that you intend to do something is a good way to keep yourself honest. So I totally made myself look like an ass and told everyone, "Hey, I'm gonna write a book. Because I'm so awesome. Don't you wish you were as erudite as me?" Maybe I didn't word it exactly like that, but I'm pretty sure that's how it came across.
 
 <figure>
-  <img class="framed" src="image/2014/04/shame.jpg">
+  <img class="framed" src="/image/2014/04/shame.jpg">
   <figcaption>After working at EA for seven years, they give you seven weeks off. I used some for my honeymoon and then started writing.</figcaption>
 </figure>
 
@@ -78,7 +78,7 @@ One thing I'd heard was that telling your friends and family that you intend to 
 I'd been blogging for a year or so and one thing I'd learned is that the possibility of a good reddit discussion about my writing was *incredibly* effective at getting me to complete something and put it out there. So I planned to put each chapter online as I finished it instead of waiting for the entire book to be done.
 
 <figure>
-  <img class="framed" src="image/2014/04/reddit.png">
+  <img class="framed" src="/image/2014/04/reddit.png">
   <figcaption>One of the first chapters posted.</figcaption>
 </figure>
 
@@ -189,7 +189,7 @@ I try to silence my internal critic during this phase so I can keep making forwa
 As soon as the first draft is done, I circle back and do the second. This involves fixing all of the mistakes, bad grammar, and poor flow of the first draft. Sometimes, there's major surgery here when I decide something I crammed in just isn't working. I make a *lot* of changes:
 
 <figure>
-  <img class="framed" src="image/2014/04/second-draft.png">
+  <img class="framed" src="/image/2014/04/second-draft.png">
   <figcaption>A chunk of <a href="https://github.com/munificent/game-programming-patterns/commit/911cb7606937d890c774d5503cb712b22bf1b08b">the diff from the first to second draft</a> of <a href="http://gameprogrammingpatterns.com/architecture-performance-and-games.html">the last chapter</a> I wrote.</figcaption>
 </figure>
 
@@ -212,7 +212,7 @@ I spent a lot of time trying to figure out how I wanted to illustrate the book. 
 I thought about doing something like SVG, but that seemed like a huge time sink to get the level of quality I wanted. Eventually, I hit upon the idea of going in the *other* direction. I decided to hand-draw and scan the illustrations. I could scan them at a high enough resolution to look sharp on a retina screen. More importantly, their *intentional* imperfection would help turn off the OCD part of my brain that would be unsatisfied with anything less than perfect [Edward Tufte](http://www.edwardtufte.com/tufte/)-quality diagrams.
 
 <figure>
-  <img class="framed" src="image/2014/04/illustrations.jpg">
+  <img class="framed" src="/image/2014/04/illustrations.jpg">
   <figcaption>Some of the 66 hand-drawn illustrations.</figcaption>
 </figure>
 

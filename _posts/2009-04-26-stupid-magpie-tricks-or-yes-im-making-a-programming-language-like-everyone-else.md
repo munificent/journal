@@ -12,7 +12,7 @@ to have a look, although it's got a good ways to go before I'd describe it as
 really useful.
 
 <div class="update">
-<p><strong>Update 2011/08/16:</strong> Magpie lives in <a href="http://github.com/munificent/magpie">github</a> now.</p>
+<p><em>Update 2011/08/16:</em> Magpie lives in <a href="http://github.com/munificent/magpie">github</a> now.</p>
 </div>
 
 I hate "general announcement" blog posts, especially on my blog because it's
@@ -53,7 +53,7 @@ Try *that* C# and C++!
 
 Functions in Magpie always take a single argument. To pass in multiple
 arguments, you use a tuple. Syntactically, it looks the same as other
-languages, but does have an interesting side-effect: you treat the entire
+languages, but does have an interesting side-effect: you can treat the entire
 batch of arguments as a single value to be played with:
 
 {% highlight magpie %}

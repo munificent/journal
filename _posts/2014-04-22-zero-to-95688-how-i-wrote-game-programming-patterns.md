@@ -4,14 +4,18 @@ title: "Zero to 95,688: How I wrote Game Programming Patterns"
 categories: book game-dev
 ---
 
-About an hour ago, in the quiet of my living room, alone except for a sleeping dog next to me, I accomplished the biggest goal of my life. I finished writing [Game Programming Patterns](http://gameprogrammingpatterns.com/). It's a book on game programming (it would be a weird title for a book ornithology) that I started writing about four years and a lifetime ago.
+<div class="update">
+<p><em>Update 2014/04/28:</em> In case you missed the link, the web site for my book is <a href="http://gameprogrammingpatterns.com">gameprogrammingpatterns.com</a>.</p>
+</div>
+
+About an hour ago, in the quiet of my living room, alone except for a sleeping dog next to me, I accomplished the biggest goal of my life. I finished writing [Game Programming Patterns](http://gameprogrammingpatterns.com/). It's a book on game programming (it would be a strange title for a book ornithology) that I started writing about four years and a lifetime ago.
 
 <figure>
   <img class="framed" src="/image/2014/04/100-percent.png">
   <figcaption>What I see now when I run the script that converts my Markdown manuscript to HTML.</figcaption>
 </figure>
 
-It feels weird writing a blog post that doesn't have any real content beyond my own personal story, but what the hell. It's not like I have anything better to do! I get some vicarious pleasure mixed with globs envy when I read about other people finishing their books, so I'll try to add to the canon.
+It feels weird writing a blog post that doesn't have any real content beyond my own personal story, but what the hell. It's not like I have anything better to do! I get some vicarious pleasure (mixed with heaps of envy) when I read about other people finishing their books, so I'll try to add to the canon.
 
 ## The Call to Adventure
 
@@ -60,7 +64,7 @@ Likewise, each chapter in *Design Patterns* has the same top level headings and 
 
 ### The workflow
 
-I'm an inveterate tinkerer and I knew if I didn't put the kibosh on that, I'd spend all day futzing with CSS or some other stupid thing that wasn't writing. So I spent a day or two putting together [a minimal script](https://github.com/munificent/game-programming-patterns/blob/master/script/format.py) that would take a file of Markdown for each chapter and convert it to HTML. Once I got it worked, I swore to myself that I wouldn't monkey with it (much).
+I'm an inveterate tinkerer and I knew if I didn't put the kibosh on that, I'd spend all day futzing with CSS or some other stupid thing that wasn't writing. So I spent a day or two putting together [a minimal script](https://github.com/munificent/game-programming-patterns/blob/master/script/format.py) that would take a file of Markdown for each chapter and convert it to HTML. Once I got it working, I swore to myself that I wouldn't monkey with it (much).
 
 Now I couldn't get distracted by design, style, editors, or anything. Just me, Sublime, and a handful of markdown syntax.
 
@@ -193,7 +197,7 @@ As soon as the first draft is done, I circle back and do the second. This involv
   <figcaption>A chunk of <a href="https://github.com/munificent/game-programming-patterns/commit/911cb7606937d890c774d5503cb712b22bf1b08b">the diff from the first to second draft</a> of <a href="http://gameprogrammingpatterns.com/architecture-performance-and-games.html">the last chapter</a> I wrote.</figcaption>
 </figure>
 
-The second draft is shorter than the first. I treat writing like pottery. I slap all the clay on the wheel in a big blob and then iteratively refine it down to the final work. I can get about 1,000 words of this done a day.
+The second draft is shorter than the first. Writing to me is like pottery. I slap all the clay on the wheel in a big blob and then gradually work it down to the final piece. I can get about 1,000 words of this done a day.
 
 I *love* this part. Feeling the prose get tigher and clearer is exactly as satisfying as refactoring messy code. It's less stressful because I feel like anything I do now just makes it better but the chapter is safely *complete* regardless. There's no more blank page so editing is just pure goodness.
 
@@ -201,15 +205,15 @@ I *love* this part. Feeling the prose get tigher and clearer is exactly as satis
 
 This is the home stretch. At this point, the chapter is almost in its final form. For this last pass, what I'm looking for is mistakes and rhythm.
 
-I read the entire chapter *out loud*. I can't stress enough how helpful it is. You can read something ten times and think it's fine but the first time you run it through your lips you'll find all of the wrinkles. This fixes awkward repetition and bad cadence. If the prose *reads* naturally and easily, that's not because I *wrote* it naturallly and easily. It's because I edited the hell out of it.
+I read the entire chapter *out loud*. I can't stress enough how helpful it is. You can read something ten times and think it's fine but the first time you run it through your lips you'll find all of the wrinkles. This fixes awkward repetition and bad cadence. If the prose *reads* naturally and easily, that's not because it was easy and natural to *write*. It's because I edited the hell out of it.
 
 ### 6. Illustrations
 
 The last thing I do is draw a few illustrations for the chapter. I think visuals are *hugely* important for making abstract concepts concrete in the user's mind.
 
-I spent a lot of time trying to figure out how I wanted to illustrate the book. I'd done a few illustrations in Photoshop, but didn't like how the text looked pixellated. It also made at a real pain to change the design of the site, and looked terrible when retina displays came on the scene.
+I spent a lot of time trying to figure out how I wanted to illustrate the book. I'd done a few illustrations in Photoshop, but didn't like how the text looked pixellated. It also made it a real pain to change the design of the site, and looked terrible when retina displays came on the scene.
 
-I thought about doing something like SVG, but that seemed like a huge time sink to get the level of quality I wanted. Eventually, I hit upon the idea of going in the *other* direction. I decided to hand-draw and scan the illustrations. I could scan them at a high enough resolution to look sharp on a retina screen. More importantly, their *intentional* imperfection would help turn off the OCD part of my brain that would be unsatisfied with anything less than perfect [Edward Tufte](http://www.edwardtufte.com/tufte/)-quality diagrams.
+I thought about using SVG, but that seemed like a huge time sink to get the level of quality I wanted. Eventually, I hit upon the idea of going in the *other* direction. I decided to hand-draw and scan the illustrations. I could scan them at a high enough resolution to look sharp on a retina screen. More importantly, their *intentional* imperfection would help turn off the OCD part of my brain that would be unsatisfied with anything less than perfect [Edward Tufte](http://www.edwardtufte.com/tufte/)-quality diagrams.
 
 <figure>
   <img class="framed" src="/image/2014/04/illustrations.jpg">

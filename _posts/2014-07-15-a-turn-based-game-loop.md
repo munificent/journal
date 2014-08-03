@@ -192,7 +192,7 @@ void handleInput(Keyboard keyboard) {
 }
 
 void walk(Direction dir) {
-  game.hero.setNextAction(action);
+  game.hero.setNextAction(new WalkAction(dir));
 }
 {% endhighlight %}
 

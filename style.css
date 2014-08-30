@@ -30,7 +30,7 @@ a {
 .content {
   padding: 0 0 12px 0; }
   .content h1 {
-    font: normal 32px/48px "PT Serif", Georgia, serif;
+    font: normal 32px/40px "PT Serif", Georgia, serif;
     font-weight: 700;
     padding: 24px 0 0 0; }
     .content h1 a {
@@ -54,7 +54,7 @@ a {
     padding: 12px 0 0 0; }
   .content h4 {
     font: 12px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    padding: 6px 0 18px 0; }
+    padding: 12px 0 18px 0; }
   .content a {
     color: #006699; }
   .content a:hover {

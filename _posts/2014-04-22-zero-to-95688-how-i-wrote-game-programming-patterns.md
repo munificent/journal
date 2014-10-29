@@ -8,7 +8,7 @@ categories: book game-dev
 <p><em>Update 2014/04/28:</em> In case you missed the link, the web site for my book is <a href="http://gameprogrammingpatterns.com">gameprogrammingpatterns.com</a>.</p>
 </div>
 
-About an hour ago, in the quiet of my living room, alone except for a sleeping dog next to me, I accomplished the biggest goal of my life. I finished writing [Game Programming Patterns](http://gameprogrammingpatterns.com/). It's a book on game programming (it would be a strange title for a book ornithology) that I started writing about four years and a lifetime ago.
+About an hour ago, in the quiet of my living room, alone except for a sleeping dog next to me, I accomplished the biggest goal of my life. I finished writing [Game Programming Patterns](http://gameprogrammingpatterns.com/). It's a book on game programming (it would be a strange title for a book on ornithology) that I started writing about four years and a lifetime ago.
 
 <figure>
   <img class="framed" src="/image/2014/04/100-percent.png">
@@ -23,7 +23,7 @@ Like most stories, it starts with the hero having something bad happen to him. (
 
 About five years ago, I was a game programmer at Electronic Arts in sunny Orlando, Florida. That's the studio that does Madden, NCAA Football, Madden, Tiger Woods Golf, Madden, and also this football game you've probably heard of. They did a few other one-off games too.
 
-I'd been there seven years, which is an impressively long time to actively dislike football while working in an office that lived and breathed it. The last game I worked on, [Henry Hatsworth in the Puzzling Adventure](http://en.wikipedia.org/wiki/Henry_Hatsworth_in_the_Puzzling_Adventure) was an absolute blast, the kind of dream project you imagine game development to be all about. Just seven dudes hanging out making a cool game they all loved.
+I'd been there seven years, which is an impressively long time to actively dislike football while working in an office that lived and breathed it. The last game I worked on, [Henry Hatsworth in the Puzzling Adventure](http://en.wikipedia.org/wiki/Henry_Hatsworth_in_the_Puzzling_Adventure), was an absolute blast, the kind of dream project you imagine game development to be all about. Just seven dudes hanging out making a cool game they all loved.
 
 <figure>
   <img class="framed" src="/image/2014/04/hatsworth.jpg">
@@ -110,7 +110,7 @@ During all of this, I was still writing and managed to get a couple more chapter
 
 I thought I was back on track but then something funny happened. It turned out I didn't need to pad my résumé after all. I got a new job. Outside of the game industry and in the city we were desperately hoping to move to.
 
-All of the sudden, we were packing up our belongings, kid, and pets; saying goodbye to friends and family; and moving along what is practically the [longest straight line move](https://www.google.com/maps/dir/Orlando,+FL/Seattle,+WA/@36.7354942,-119.5307801,4z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x88e773d8fecdbc77:0xac3b2063ca5bf9e!2m2!1d-81.3792365!2d28.5383355!1m5!1m1!1s0x5490102c93e83355:0x102565466944d59a!2m2!1d-122.3320708!2d47.6062095!3e4) you can make in the continental US. I was plunged headlong into learning all sorts of new stuff at work that had nothing to do with games. We got another dog and had another kid.
+All of a sudden, we were packing up our belongings, kid, and pets; saying goodbye to friends and family; and moving along what is practically the [longest straight line move](https://www.google.com/maps/dir/Orlando,+FL/Seattle,+WA/@36.7354942,-119.5307801,4z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x88e773d8fecdbc77:0xac3b2063ca5bf9e!2m2!1d-81.3792365!2d28.5383355!1m5!1m1!1s0x5490102c93e83355:0x102565466944d59a!2m2!1d-122.3320708!2d47.6062095!3e4) you can make in the continental US. I was plunged headlong into learning all sorts of new stuff at work that had nothing to do with games. We got another dog and had another kid.
 
 That writing scheduled was looking a little, uh, unrealistic. Eventually, I realized my heart just wasn't in the book anymore. I called my editor, apologized profusely, and backed out of my deal. Without the pressure to write, I forgot about the book almost completely. I hadn't *abandoned* it, really. I told myself I'd get back to is *some day*. It languished for a year. Then another.
 
@@ -261,7 +261,7 @@ Once I started putting chapters online again, people started noticing. I got tha
 
 Around this time, an editor at another publisher reached out to me. Now that I was working on the book again, would I be interested in a publishing deal? She was super nice and was very willing to work with me. I could keep the book online, I could be involved in the design and layout. It could be everything I wanted and more.
 
-I kind of dragged my feet for a while before I finally realized my reluctance was trying to tell me something. When I'd had publishers before, the power relationship felt really strange. O'Reilly and Apress were both great, but I felt like they were in charge, which is really bizarre when you think about how much effort the author puts into it compared to the publisher.
+I kind of dragged my feet for a while before I finally realized my reluctance was trying to tell me something. When I'd had publishers before, the power relationship felt really strange. O'Reilly and Apress were both great, but I felt like they were in charge, which is bizarre when you think about how much effort the author puts into it compared to the publisher.
 
 What I was finding was that I really liked it being *my* book. I'm not doing this for the money, which means I'm doing it for my personal satisfaction. And what's most satisfying to me is feeling like I got to put as much of my own creativity into it as possible without someone else calling the shots.
 

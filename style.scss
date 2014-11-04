@@ -261,6 +261,12 @@ a {
       width: 100%;
     }
 
+    // Center tweets.
+    iframe.twitter-tweet {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
     figcaption {
       color: $cite-color;
       font: 13px $sans;

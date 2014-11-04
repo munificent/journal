@@ -152,6 +152,9 @@ a {
       padding: 0;
       margin: 0;
       width: 100%; }
+    .content figure iframe.twitter-tweet {
+      margin-left: auto !important;
+      margin-right: auto !important; }
     .content figure figcaption {
       color: #a6a6a6;
       font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;

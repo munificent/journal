@@ -155,7 +155,7 @@ a {
     .content figure iframe.twitter-tweet {
       margin-left: auto !important;
       margin-right: auto !important; }
-    .content figure figcaption {
+    .content figure figcaption, .content figure label, .content figure input, .content figure output {
       color: #a6a6a6;
       font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
       margin-top: 10px; }

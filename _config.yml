@@ -6,7 +6,8 @@ markdown: kramdown
 exclude: [
   TODO,
   README.md,
-  style.scss
+  style.scss,
+  watch
 ]
 
 # Custom variables:

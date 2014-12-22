@@ -267,7 +267,7 @@ a {
       margin-right: auto !important;
     }
 
-    figcaption {
+    figcaption, label, input, output {
       color: $cite-color;
       font: 13px $sans;
       margin-top: 10px;

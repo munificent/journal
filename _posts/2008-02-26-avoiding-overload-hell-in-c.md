@@ -20,6 +20,7 @@ The tricky part is that each of those can take a bunch of different
 parameters. For our talk, we'll simplify it down:
 
   1. *Position:* You can specify where on the screen to write using a `Point`, x and y coordinates, or nothing to write at the current cursor position.
+
   2. *Color:* You can specify both the fore- and background color, just the foreground color, or neither to use the current colors.
 
 And that's it. Three methods, and two kinds of parameters with three options

@@ -12,3 +12,20 @@ exclude: [
 
 # Custom variables:
 disqus: "journal-stuffwithstuff"
+
+category_names:
+  "ai": "AI"
+  "blog": "This Blog"
+  "book": "The Book"
+  "c-sharp": "C#"
+  "code": "Coding"
+  "cpp": "C++"
+  "f-sharp": "F#"
+  "game-dev": "Game Development"
+  "javascript": "JavaScript"
+  "language": "Programming Languages"
+  "oop": "OOP"
+  "oscon": "OSCON"
+  "procedural-generation": "Procedural Generation"
+  "roguelike": "Roguelikes"
+  "typescript": "TypeScript"

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Iteration Inside and Out, Part 2"
-categories: code language magpie ruby dart lua golang python
+categories: code language magpie ruby dart lua go python
 ---
 
 *You'll probably want to have read [part one][] first unless you're feeling brave.*

@@ -75,9 +75,15 @@ module Jekyll
         template        = File.basename(template_path)
         # Read the YAML data from the layout page.
         self.read_yaml(template_dir, template)
-        self.data['category']    = category
+        self.data['category'] = category
+
         # Set the title for this page.
-        self.data['title']       = "Posts tagged &ldquo;#{category}&rdquo;"
+        title = site.config['category_names'][category]
+        if !title then
+          title = category.split('-').map(&:capitalize).join(' ')
+        end
+        self.data['title'] = "Stuff I Wrote About #{title}"
+
         # Set the meta-description for this page.
         meta_description_prefix  = site.config['category_meta_description_prefix'] || 'Category: '
         self.data['description'] = "#{meta_description_prefix}#{category}"

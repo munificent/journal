@@ -1,9 +1,20 @@
-<div class="content">
-  <div class="column">
-  <h1>
-    <a href="{{ post.url }}" rel="bookmark"
-       title="Permanent Link to {{ post.title | escape }}">
-      {{ post.title | escape }}
-    </a>
-  </h1>
-  <h4><a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a> &mdash;  {{ post.categories | category_links }}</h4>
+<article>
+<header>
+<h1>
+  <a href="{{ post.url }}" rel="bookmark"
+     title="Permanent Link to {{ post.title | escape }}">
+    {{ post.title | escape }}
+  </a>
+</h1>
+{% if page.previous.url %}
+  <a class="older" href="{{page.previous.url}}"
+     title="Older Post &ldquo;{{page.previous.title}}&rdquo;">&#8617;</a>
+{% endif %}
+{% if page.next.url %}
+  <a class="newer" href="{{page.next.url}}"
+     title="Newer Post &ldquo;{{page.next.title}}&rdquo;">&#8618;</a>
+{% endif %}
+</header>
+<h4><a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a>
+    <span class="tags">{{ post.categories | categorylinks }}</span>
+</h4>

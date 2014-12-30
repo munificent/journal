@@ -25,7 +25,7 @@ Worse is that to a *caller* of the function, there's no way to tell that
 `SomeMethod()` doesn't allow a `null` value for `foo` without looking at the
 method body (which may not be available to an API user).
 
-The [`Nullable&lt;T&gt;`](http://msdn2.microsoft.com/en-us/library/b3h38hb0.aspx) type in the [BCL](http://msdn2.microsoft.com/en-us/netframework/aa569603.aspx) (which is automatically aliased
+The [`Nullable<T>`](http://msdn2.microsoft.com/en-us/library/b3h38hb0.aspx) type in the [BCL](http://msdn2.microsoft.com/en-us/netframework/aa569603.aspx) (which is automatically aliased
 to it's [more familiar `?`](http://blogs.msdn.com/ericgu/archive/2004/05/27/143221.aspx), as in "`int?`") had me wondering. Can I make the opposite? A "not nullable?"
 
 ## NotNull&lt;T&gt;

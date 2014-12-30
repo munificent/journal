@@ -1,10 +1,10 @@
+{% capture currentyear %}{{post.date | date: "%Y"}}{% endcapture %}
+{% if currentyear != year %}
+  <h4>{{ currentyear }}</h4>
+  {% capture year %}{{currentyear}}{% endcapture %}
+{% endif %}
 <div class="post-box">
-  <h2>
-    <a href="{{ post.url }}" rel="bookmark"
-       title="Permanent Link to {{ post.title | escape }}">{{ post.title }}</a>
-  </h2>
-  <p>
-    Posted on <a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a>.
-    Tagged {{ post.categories | category_links }}.
-  </p>
+  <span class="date">{{ post.date | date: "%b %d" }}</span>
+  <a href="{{ post.url }}" class="title" rel="bookmark"
+   title="Permanent Link to {{ post.title | escape }}">{{ post.title }}</a>
 </div>

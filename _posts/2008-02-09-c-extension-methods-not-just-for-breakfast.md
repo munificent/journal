@@ -176,15 +176,11 @@ At the concept level, it's good advice, until you run into some issues:
 
 1.  You've just **changed the user's calling convention because of an implementation detail**. The fact that you can implement a method just using the public interface of the class is a facet of its *implementation*, just the kind of detail that encapsulation is supposed to *hide*. But now the user is forced to deal with that distinction because sometimes they call (in C#):
 
-{% highlight csharp %}
-foo.Bar(); // needs access to private members
-{% endhighlight %}
+        foo.Bar(); // needs access to private members
 
     and sometimes it's:
 
-{% highlight csharp %}
-FooHelper.Bar(foo); // doesn't need access to private members
-{% endhighlight %}
+        FooHelper.Bar(foo); // doesn't need access to private members
 
 2.  You also **threw away discoverability**. Users expect to find the capabilities of an object through the instance methods of that object. You can save a lot of time reading MSDN by just typing `foo.` and seeing what it lets you do. Shunting stuff over in a separate class means users need to know about it and seek it out.
 

@@ -3,56 +3,38 @@ module StuffWithStuff
   # occurrence counts.
   class AllCategoriesTag < Liquid::Tag
     def render(context)
-      html = ""
-      categories = context.registers[:site].categories.keys
-      categories.sort.each do |category|
+      # Sort the categories.
+      categories = context.registers[:site].categories.keys.sort do |a, b|
+        num_a = context.registers[:site].categories[a].size
+        num_b = context.registers[:site].categories[b].size
+
+        if num_a != num_b then
+          # Sort by number of posts (descending).
+          num_b <=> num_a
+        else
+          # Or by name if the count is the same.
+          a <=> b
+        end
+      end
+
+      html = "<ul>"
+      categories.each do |category|
         num_posts = context.registers[:site].categories[category].size
         html << "<li>"
-        html << "<a href=\"/category/#{category}\">#{category}</a> <small>#{num_posts}</small>"
+        html << "<a href=\"/category/#{category}\">#{category}</a> "
+        html << "<small>(#{num_posts})</small>"
         html << "</li>"
       end
+      html << "</ul>"
       html
     end
   end
 
   module CategoryLinksFilter
     def categorylinks(input)
-      html = ""
-      input.each do |category|
-        if html != "" then html << ", " end
-        html << "<a href=\"/category/#{category}\">#{category}</a>"
-      end
-      html
+      input.sort.map { |c| "<a href=\"/category/#{c}\">#{c}</a>" }.join(' ')
     end
   end
-
-  # Include the post slug to template data. (Not used right now.)
-=begin
-
-  # Generate a comma-separated hyperlinked list of the tags used on the current
-  # post.
-  class PostCategoriesTag < Liquid::Tag
-    def render(context)
-      # See: http://stackoverflow.com/questions/7478731/how-do-i-detect-the-current-page-in-a-jekyll-tag-plugin
-      page = context.environments.first["page"]
-      html = ""
-      page['categories'].sort.each do |category|
-        if html != "" then html << ", " end
-        html << "<a href=\"/category/#{category}\">#{category}</a>"
-      end
-      html
-    end
-  end
-
-  class Post
-    alias orig_to_liquid to_liquid
-    def to_liquid
-      hash = self.orig_to_liquid
-      hash['slug'] = self.slug
-      hash
-    end
-  end
-=end
 end
 
 Liquid::Template.register_tag('allcategories', StuffWithStuff::AllCategoriesTag)

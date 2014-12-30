@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Posts by Date
+title: Where Did All the Time Go?
 ---
-<div class="content">
-  <div class="column">
-    <h1>Posts by Date</h1>
-    {% for post in site.posts %}
-      {% include post_box.html %}
-    {% endfor %}
-  </div>
-</div>
+<article>
+<header>
+<h1>{{ page.title }}</h1>
+</header>
+{% for post in site.posts %}
+  {% include post_box.html %}
+{% endfor %}
+</article>

@@ -11,7 +11,8 @@ caption, tbody, tfoot, thead, tr, th, td {
 
 body {
   line-height: 1;
-  color: #222222; }
+  color: #222222;
+  background: #f8f5f2; }
 
 table {
   border-spacing: 0; }
@@ -19,60 +20,155 @@ table {
 a {
   text-decoration: none; }
 
+.column {
+  max-width: 984px;
+  margin: 0 auto;
+  position: relative; }
+
+.grid {
+  background: url("/image/grid.png");
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%; }
+
 .right {
   text-align: right; }
 
-.column {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 24px; }
+nav {
+  width: 192px;
+  float: right;
+  margin-top: 48px;
+  padding: 0 48px;
+  font: 13px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: #8f6d3d; }
+  nav img.bob {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: white;
+    width: 192px;
+    margin: -8px -8px 32px -8px;
+    border: solid 8px #fff;
+    border-radius: 4px; }
+  nav img.rss {
+    vertical-align: middle;
+    padding-bottom: 3px; }
+  nav h2 {
+    margin: 24px 0 4px 0;
+    color: #dbaf70;
+    font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px; }
+  nav code {
+    font: 13px "Source Code Pro", Courier, monospace; }
+  nav a {
+    color: #c38022; }
+  nav a:hover {
+    color: #f0bd75; }
+  nav p {
+    margin-bottom: 12px; }
+  nav ul {
+    padding-left: 24px;
+    margin-bottom: 12px; }
+  nav small {
+    font-size: 11px;
+    color: #c0ac90; }
+  nav .copyright {
+    font-size: 12px;
+    font-style: italic;
+    color: #c0ac90;
+    text-align: center; }
+  nav .archive {
+    padding-left: 24px;
+    font-style: italic;
+    color: #c0ac90; }
 
-.content {
-  padding: 0 0 12px 0; }
-  .content h1 {
-    font: normal 32px/40px "PT Serif", Georgia, serif;
-    font-weight: 700;
-    padding: 24px 0 0 0; }
-    .content h1 a {
+header {
+  position: relative;
+  display: table;
+  width: 100%;
+  height: 192px;
+  margin-bottom: 48px; }
+  header h1 {
+    display: table-cell;
+    vertical-align: middle;
+    font: normal 36px/48px "PT Serif", Georgia, serif; }
+    header h1 a {
       color: #222222; }
-    .content h1 code {
+    header h1 code {
       background: inherit;
       color: #304550;
       font: 36px "Source Code Pro", Courier, monospace; }
-  .content h2 {
-    font: normal 22px "PT Serif", Georgia, serif;
-    padding-top: 12px;
+  header a.older, header a.newer {
+    position: absolute;
+    font: normal 22px/40px "PT Serif", Georgia, serif;
+    background: #fff;
+    border-radius: 40px;
+    padding: 0 16px;
+    bottom: -80px;
+    color: #bcbcbc; }
+  header .older {
+    left: -68px; }
+  header .newer {
+    right: -68px; }
+
+article {
+  width: 600px;
+  padding: 48px;
+  background: #fff; }
+  article h2 {
+    font: normal 24px "PT Serif", Georgia, serif;
+    padding: 24px 0 12px 0;
     font-weight: 700; }
-    .content h2 code {
+    article h2 code {
       background: inherit;
       color: #304550;
       font: 20px "Source Code Pro", Courier, monospace;
       font-weight: 700;
       padding: 0; }
-  .content h3 {
+  article h3 {
     font: italic 19px/24px "PT Serif", Georgia, serif;
     padding: 12px 0 0 0; }
-  .content h4 {
-    font: 12px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    padding: 12px 0 18px 0; }
-  .content a {
+  article h4 {
+    font: 11px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    padding: 0 0 4px 0;
+    margin-bottom: 16px;
+    color: #bcbcbc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: solid 1px #eee; }
+    article h4 a {
+      color: #bcbcbc; }
+    article h4 .tags {
+      float: right; }
+      article h4 .tags a {
+        margin-left: 3px; }
+  article a {
     color: #006699; }
-  .content a:hover {
+  article a:hover {
     color: #00aaff; }
-  .content p {
+  article p {
     font: 16px/24px "PT Serif", Georgia, serif;
-    padding: 8px 0; }
-  .content p + p {
+    padding: 8px 0;
+    color: #222222;
+    letter-spacing: 0; }
+  article p + p {
     padding-top: 12px; }
-  .content ol, .content ul {
+  article ol, article ul {
     margin-left: 24px; }
-  .content li {
-    font: 16px/24px "PT Serif", Georgia, serif; }
-  .content a, .content a code {
+  article li {
+    font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    color: #bcbcbc;
+    letter-spacing: 1px; }
+  article a, article a code {
     color: #006699; }
-    .content a:hover, .content a code:hover {
+    article a:hover, article a code:hover {
       color: #00aaff; }
-  .content code {
+  article code {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -80,7 +176,7 @@ a {
     padding: 1px 3px;
     color: #304550;
     font: 15px/18px "Source Code Pro", Courier, monospace; }
-  .content pre {
+  article pre {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -89,45 +185,45 @@ a {
     padding: 6px 12px;
     color: #304550;
     overflow: auto; }
-    .content pre code {
+    article pre code {
       padding: 0;
       font: 13px/18px "Source Code Pro", Courier, monospace; }
-  .content tt {
+  article tt {
     font: 13px/18px "Source Code Pro", Courier, monospace;
     color: #304550; }
-  .content blockquote {
+  article blockquote {
     color: #7a7a7a;
     padding: 0 24px; }
-    .content blockquote p {
+    article blockquote p {
       font: italic 16px/24px "PT Serif", Georgia, serif; }
-      .content blockquote p strong {
+      article blockquote p strong {
         font-weight: 600; }
-  .content .cite {
+  article .cite {
     font: italic 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #a6a6a6;
     display: block;
     text-align: right;
     margin-top: 0;
     padding: 0 24px 12px 0; }
-    .content .cite:before {
+    article .cite:before {
       content: '\2014\00A0'; }
-  .content .update {
+  article .update {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     background: #fff7eb;
     padding: 0 12px;
     color: #ba945e; }
-    .content .update p {
+    article .update p {
       font: 13px/22px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-    .content .update code {
+    article .update code {
       background: #eee8de;
       font-size: 13px/22px; }
-    .content .update a {
+    article .update a {
       color: #da840b; }
-      .content .update a:hover {
+      article .update a:hover {
         color: #995900; }
-  .content img {
+  article img {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -135,9 +231,9 @@ a {
     display: block;
     padding: 6px;
     margin: 6px auto; }
-    .content img.framed {
+    article img.framed {
       background: #f4f9fb; }
-  .content figure {
+  article figure {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -147,52 +243,56 @@ a {
     padding: 10px;
     margin: 10px auto;
     width: 100%; }
-    .content figure img {
+    article figure img {
       border-radius: 0;
       padding: 0;
       margin: 0;
       width: 100%; }
-    .content figure iframe.twitter-tweet {
+    article figure iframe.twitter-tweet {
       margin-left: auto !important;
       margin-right: auto !important; }
-    .content figure figcaption, .content figure label, .content figure input, .content figure output {
+    article figure figcaption, article figure label, article figure input, article figure output {
       color: #a6a6a6;
       font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
       margin-top: 10px; }
-  .content .table {
+  article .table {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     background: #f4f9fb;
     padding: 6px;
     margin: 6px 0; }
-  .content table {
+  article table {
     width: 100%;
     border-collapse: collapse;
     color: #4c4d4d; }
-    .content table td {
+    article table td {
       font: 16px/24px "PT Serif", Georgia, serif;
       padding: 0 6px; }
-    .content table thead td {
+    article table thead td {
       color: #7aa3b8;
       font: 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
       font-weight: 600; }
-    .content table tbody tr:nth-child(odd) {
+    article table tbody tr:nth-child(odd) {
       background: #fbfdfe; }
-  .content .social {
-    margin: 12px 0; }
+
+.social {
+  padding: 24px 0 36px 0;
+  text-align: center; }
+  .social a {
+    color: #bcbcbc;
+    padding: 0 4px; }
 
 .comments {
-  width: 100%;
-  background: #f9f3ec;
+  margin: 0 -48px -48px -48px;
+  padding: 24px 48px;
+  background: #f1ece4;
   color: #8f6d3d;
   font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-  .comments .column {
-    padding: 24px 24px; }
-    .comments .column a.dsq-subscribe-email em, .comments .column a.dsq-subscribe-rss em {
-      text-decoration: none; }
+  .comments a.dsq-subscribe-email em, .comments a.dsq-subscribe-rss em {
+    text-decoration: none; }
   .comments a {
-    color: #cc8c33;
+    color: #c38022;
     text-decoration: none; }
   .comments a:hover {
     color: #f0bd75; }
@@ -201,67 +301,90 @@ a {
   padding-left: 16px;
   color: #777; }
 
+/*
 .nav {
-  background: #f0e7db;
-  color: #c2a070;
-  font: normal 12px/18px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  width: 100%; }
-  .nav a {
-    color: #cc8c33; }
-  .nav a:hover {
-    color: #f0bd75; }
-  .nav code {
-    font: 14px "Source Code Pro", Courier, monospace; }
-  .nav h1 {
-    font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    color: #e0ba85;
+  padding: 0 48px;
+  max-width: 600px;
+  background: $body-bg; // $nav-bg;
+  color: $nav-text;
+  font: normal 12px/18px $sans;
+
+  a {
+    color: $nav-link;
+  }
+
+  a:hover {
+    color: $nav-hover;
+  }
+
+  code {
+    font: 14px $mono;
+  }
+
+  h1 {
+    font: normal 13px $sans;
+    color: $nav-title;
     padding: 10px 0;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
-    display: inline-block; }
-  .nav ol, .nav ul {
+    display: inline-block;
+  }
+
+  ol, ul {
     margin-left: 12px;
-    padding-bottom: 12px; }
-  .nav li {
-    margin-left: 6px; }
-  .nav p {
-    padding-bottom: 12px; }
-  .nav small {
-    color: #d9c3a5; }
+    padding-bottom: 12px;
+  }
+
+  li {
+    margin-left: 6px;
+  }
+
+  p {
+    padding-bottom: 12px;
+  }
+
+  small {
+    color: $nav-text-small;
+  }
+
+  width: 100%;
+}
 
 .nav.bottom {
-  padding: 24px 0; }
-  .nav.bottom table {
-    width: 100%; }
-    .nav.bottom table td {
+  padding: 24px 0;
+
+  table {
+    width: 100%;
+
+    td {
       width: 50%;
-      vertical-align: top; }
-    .nav.bottom table td.l {
-      padding-right: 12px; }
-    .nav.bottom table td.r {
-      padding-left: 12px; }
+      vertical-align: top;
+    }
 
-img.rss {
-  vertical-align: middle;
-  padding-bottom: 3px; }
+    td.l {
+      padding-right: 12px;
+    }
 
+    td.r {
+      padding-left: 12px;
+    }
+  }
+}
+*/
 .post-box {
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  background: #f4f9fb;
-  padding: 6px 12px;
-  margin: 6px 0; }
-  .post-box h2 {
-    font: normal 16px/24px "PT Serif", Georgia, serif;
-    padding: 0; }
-  .post-box p {
-    font: normal 12px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    padding: 0; }
+  display: table; }
+  .post-box .date {
+    display: table-cell;
+    font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    width: 96px; }
+  .post-box .title {
+    display: table-cell;
+    padding: 0;
+    font: 15px/24px "PT Serif", Georgia, serif; }
 
-.post-box + .post-box {
-  margin-top: 12px; }
+.post-box + h4 {
+  margin-top: 24px; }
 
 .highlight span.c,
 .highlight span.c1,
@@ -290,41 +413,89 @@ img.rss {
 .highlight span.cp {
   color: #bf40bf; }
 
+/*
 @media only screen and (max-width: 479px) {
-  .content h1 {
-    font: normal 30px/40px "PT Serif", Georgia, serif; }
-    .content h1 code {
-      font: 30px "Source Code Pro", Courier, monospace; }
-  .content h2 {
-    font: normal 20px "PT Serif", Georgia, serif; }
-    .content h2 code {
-      font: 18px "Source Code Pro", Courier, monospace; }
-  .content h3 {
-    font: italic 18px/20px "PT Serif", Georgia, serif; }
-  .content h4 {
-    font: 10px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-  .content p {
-    font: normal 14px/20px "PT Serif", Georgia, serif;
-    padding: 8px 0; }
-  .content p + p {
-    padding-top: 12px; }
-  .content ol, .content ul {
-    margin-left: 12px; }
-  .content li {
-    font: normal 14px/20px "PT Serif", Georgia, serif; }
-  .content code {
-    font: 12px/16px "Source Code Pro", Courier, monospace; }
-  .content pre code {
-    font: 11px/14px "Source Code Pro", Courier, monospace; }
-  .content tt {
-    font: 11px/14px "Source Code Pro", Courier, monospace; }
-  .content blockquote p {
-    font: italic 14px/20px "PT Serif", Georgia, serif; }
-  .content .cite {
-    font: italic 12px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-  .content .update p {
-    font: 12px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
-  .content table td {
-    font: normal 14px/20px "PT Serif", Georgia, serif; }
-  .content table thead td {
-    font: 12px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; } }
+  .content {
+    h1 {
+      font: normal 30px/40px $serif;
+      code {
+        font: 30px $mono;
+      }
+    }
+
+    h2 {
+      font: normal 20px $serif;
+      code {
+        font: 18px $mono;
+      }
+    }
+
+    h3 {
+      font: italic 18px/20px $serif;
+    }
+
+    h4 {
+      font: 10px $sans;
+    }
+
+    p {
+      font: normal 14px/20px $serif;
+      padding: 8px 0;
+    }
+
+    p + p {
+      padding-top: 12px;
+    }
+
+    ol, ul {
+      margin-left: 12px;
+    }
+
+    li {
+      font: normal 14px/20px $serif;
+    }
+
+    code {
+      font: 12px/16px $mono;
+    }
+
+    pre {
+      code {
+        font: 11px/14px $mono;
+      }
+    }
+
+    tt {
+      font: 11px/14px $mono;
+    }
+
+    blockquote {
+      p {
+        font: italic 14px/20px $serif;
+      }
+    }
+
+    .cite {
+      font: italic 12px/20px $sans;
+    }
+
+    .update {
+      p {
+        font: 12px/20px $sans;
+      }
+    }
+
+    table {
+      td {
+        font: normal 14px/20px $serif;
+      }
+
+      thead {
+        td {
+          font: 12px/20px $sans;
+        }
+      }
+    }
+  }
+}
+*/

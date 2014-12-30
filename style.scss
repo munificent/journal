@@ -3,8 +3,9 @@ $sans:  'Open Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 $mono:  'Source Code Pro', Courier, monospace;
 
 $body-text:        16px/24px $serif;
-
+$body-bg:          hsl(35, 30%, 96%);
 $text-color:       #222;
+$gray:             mix($text-color, #fff, 30%);
 
 $link:             hsl(200, 100%, 30%);
 $link-hover:       hsl(200, 100%, 50%);
@@ -16,14 +17,14 @@ $code-color:       hsl(200, 25%, 25%);
 $quote-color:      mix($text-color, #fff, 60%);
 $cite-color:       mix($text-color, #fff, 40%);
 
-$nav-bg:           hsl(35, 40%, 90%);
-$nav-text:         hsl(35, 40%, 60%);
-$nav-title:        hsl(35, 60%, 70%);
+$nav-bg:           hsl(35, 30%, 92%);
+$nav-text:         hsl(35, 40%, 40%);
+$nav-title:        hsl(35, 60%, 65%);
 $nav-text-small:   mix($nav-bg, $nav-text, 50%);
-$nav-link:         hsl(35, 60%, 50%);
+$nav-link:         hsl(35, 70%, 45%);
 $nav-hover:        hsl(35, 80%, 70%);
 
-$comments-bg:      hsl(35, 50%, 95%);
+$comments-bg:      hsl(35, 30%, 92%);
 $comments-color:   hsl(35, 40%, 40%);
 
 $box-bg:           hsl(200, 50%, 97%);
@@ -61,6 +62,7 @@ caption, tbody, tfoot, thead, tr, th, td {
 body {
   line-height: 1;
   color: $text-color;
+  background: $body-bg;
 }
 
 table {
@@ -73,25 +75,112 @@ a {
 
 // Basic layout:
 
+.column {
+  max-width: 984px;
+  margin: 0 auto;
+
+  // For grid.
+  position: relative;
+}
+
+.grid {
+  background: url("/image/grid.png");
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .right {
   text-align: right;
 }
 
-.column {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 24px;
+nav {
+  width: 192px;
+  float: right;
+  margin-top: 48px;
+  padding: 0 48px;
+
+  font: 13px/20px $sans;
+  color: $nav-text;
+
+  img.bob {
+    @include box(#fff);
+    width: 192px;
+    margin: -8px -8px 32px -8px;
+    border: solid 8px #fff;
+    border-radius: 4px;
+  }
+
+  img.rss {
+    vertical-align: middle;
+    padding-bottom: 3px;
+  }
+
+  h2 {
+    margin: 24px 0 4px 0;
+    color: $nav-title;
+    font: normal 13px $sans;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  code {
+    font: 13px $mono;
+  }
+
+  a {
+    color: $nav-link;
+  }
+
+  a:hover {
+    color: $nav-hover;
+  }
+
+  p {
+    margin-bottom: 12px;
+  }
+
+  ul {
+    padding-left: 24px;
+    margin-bottom: 12px;
+  }
+
+  small {
+    font-size: 11px;
+    color: $nav-text-small;
+  }
+
+  .copyright {
+    font-size: 12px;
+    font-style: italic;
+    color: $nav-text-small;
+    text-align: center;
+  }
+
+  .archive {
+    padding-left: 24px;
+    font-style: italic;
+    color: $nav-text-small;
+  }
 }
 
 // Post content:
 
-.content {
-  padding: 0 0 12px 0;
+header {
+  position: relative;
+  display: table;
+  width: 100%;
+  height: 192px;
+  margin-bottom: 48px;
 
   h1 {
-    font: normal 32px/40px $serif;
-    font-weight: 700;
-    padding: 24px 0 0 0;
+    display: table-cell;
+    vertical-align: middle;
+    font: normal 36px/48px $serif;
 
     a {
       color: $text-color;
@@ -104,9 +193,33 @@ a {
     }
   }
 
+  a.older, a.newer {
+    position: absolute;
+    font: normal 22px/40px $serif;
+    background: #fff;
+    border-radius: 40px;
+    padding: 0 16px;
+    bottom: -80px;
+    color: $gray;
+  }
+
+  .older {
+    left: -68px;
+  }
+
+  .newer {
+    right: -68px;
+  }
+}
+
+article {
+  width: 600px;
+  padding: 48px;
+  background: #fff;
+
   h2 {
-    font: normal 22px $serif;
-    padding-top: 12px;
+    font: normal 24px $serif;
+    padding: 24px 0 12px 0;
     font-weight: 700;
 
     code {
@@ -124,8 +237,27 @@ a {
   }
 
   h4 {
-    font: 12px $sans;
-    padding: 12px 0 18px 0;
+    font: 11px $sans;
+    padding: 0 0 4px 0;
+    margin-bottom: 16px;
+
+    color: $gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    border-bottom: solid 1px #eee;
+
+    a {
+      color: $gray;
+    }
+
+    .tags {
+      float: right;
+
+      a {
+        margin-left: 3px;
+      }
+    }
   }
 
   a {
@@ -139,6 +271,10 @@ a {
   p {
     font: $body-text;
     padding: 8px 0;
+
+    // To cancel out list item tweaks.
+    color: $text-color;
+    letter-spacing: 0;
   }
 
   p + p {
@@ -150,7 +286,10 @@ a {
   }
 
   li {
-    font: $body-text;
+    // Style the numbers/bullets.
+    font: 13px $sans;
+    color: $gray;
+    letter-spacing: 1px;
   }
 
   a, a code {
@@ -302,26 +441,30 @@ a {
       background: $table-alt-bg;
     }
   }
+}
 
-  .social {
-    margin: 12px 0;
+.social {
+  padding: 24px 0 36px 0;
+  text-align: center;
+
+  a {
+    color: $gray;
+    padding: 0 4px;
   }
 }
 
 // The comment area:
 
 .comments {
-  width: 100%;
+  margin: 0 -48px -48px -48px;
+  padding: 24px 48px;
+
   background: $comments-bg;
   color: $comments-color;
   font: normal 13px $sans;
 
-  .column {
-    padding: 24px 24px;
-
-    a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
-      text-decoration: none;
-    }
+  a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
+    text-decoration: none;
   }
 
   a {
@@ -341,8 +484,11 @@ a {
 
 // The top and bottom navigation:
 
+/*
 .nav {
-  background: $nav-bg;
+  padding: 0 48px;
+  max-width: 600px;
+  background: $body-bg; // $nav-bg;
   color: $nav-text;
   font: normal 12px/18px $sans;
 
@@ -408,32 +554,26 @@ a {
     }
   }
 }
-
-img.rss {
-  vertical-align: middle;
-  padding-bottom: 3px;
-}
-
-// The little box for each post on post list pages:
+*/
 
 .post-box {
-  @include box($box-bg);
-  padding: 6px 12px;
-  margin: 6px 0;
+  display: table;
 
-  h2 {
-    font: normal 16px/24px $serif;
-    padding: 0;
+  .date {
+    display: table-cell;
+    font: 13px $sans;
+    width: 96px;
   }
 
-  p {
-    font: normal 12px/24px $sans;
+  .title {
+    display: table-cell;
     padding: 0;
+    font: 15px/24px $serif;
   }
 }
 
-.post-box + .post-box {
-  margin-top: 12px;
+.post-box + h4 {
+  margin-top: 24px;
 }
 
 // Syntax highlighting:
@@ -460,6 +600,7 @@ img.rss {
 // On small mobile devices, shrink the text and code, mainly so that the code
 // fits on screen:
 
+/*
 @media only screen and (max-width: 479px) {
   .content {
     h1 {
@@ -544,3 +685,4 @@ img.rss {
     }
   }
 }
+*/

@@ -1,2 +1,6 @@
-* Set up generator to generate css from scss
+* Get previous button appearing on index
+* Remove pagination
+* Responsive layout
 * Make separate pygments lexer for old magpie
+* Get syntax highlighting for code blocks inside markdown lists working
+* Clear out old SCSS

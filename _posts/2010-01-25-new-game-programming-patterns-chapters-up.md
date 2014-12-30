@@ -8,7 +8,9 @@ Programming Patterns](http://gameprogrammingpatterns.com/). They've been done fo
 rubber stamp from the Powers That Be before I could up them up. They are:
 
   * [Service Locator](http://gameprogrammingpatterns.com/service-locator.html)
+
   * [Type Object](http://gameprogrammingpatterns.com/type-object.html)
+
   * [Double Buffer](http://gameprogrammingpatterns.com/double-buffer.html)
 
 With this, I think I'm about a quarter of the way through what looks to be a

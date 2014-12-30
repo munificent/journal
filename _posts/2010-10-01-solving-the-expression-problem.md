@@ -36,8 +36,11 @@ to deal with documents generically.
 There are a couple of questions to answer:
 
   1. How do we organize the code for this?
+
   2. How do we add new columns (new types of documents)?
+
   3. How do we add new rows (new operations you can perform on any document)?
+
   4. How do we ensure all of the squares are covered?
 
 The way you'll answer those is strongly influenced by your choice of language.

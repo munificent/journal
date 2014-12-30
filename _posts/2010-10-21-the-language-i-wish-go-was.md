@@ -18,7 +18,7 @@ improvement.
 Much of this is based on my understanding of what Go is today. If I get stuff
 wrong, let me know.
 
-**tl, dr; This post ended up way longer than I expected. Super science summary: I wish Go had tuples, unions, constructors, no Nil, exceptions, generics, some syntax sugar, and ponies that shoot Cheez Whiz out of their noses.**
+**tl;dr: This post ended up way longer than I expected. Super science summary: I wish Go had tuples, unions, constructors, no Nil, exceptions, generics, some syntax sugar, and ponies that shoot Cheez Whiz out of their noses.**
 
 ## Syntax
 

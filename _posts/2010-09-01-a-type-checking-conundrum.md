@@ -16,7 +16,9 @@ Just to frame things since you are very likely not at all familiar with
 Magpie, here's the salient features of the language:
 
   1. It's a dynamically-typed OOP language like Python or Ruby.
+
   2. You can optionally add type annotations to method parameters or returns.
+
   3. After the top-level of a script is run, but before `main()` is called, it will statically type-check the script to look for errors based on the annotations you've provided.
 
 Here's a simple example:

@@ -61,19 +61,29 @@ I may be a bit hyperbolic. Just a tad. But I think that's roughly how we got her
 Well I, armed with an encyclopedic knowledge of programming languages and a not-as-dog-eared-as-I'd-like-to-admit copy of [SICP](http://mitpress.mit.edu/sicp/), *do*. We're gonna put this myth to bed right now. Here's the defining characterists of Scheme, the stuff whose *gestalt* makes Scheme special:
 
 1. Minimalism.
+
 1. [Lexical](http://c2.com/cgi/wiki?LexicalScoping) [block](http://docs.racket-lang.org/reference/let.html) scope.
+
 1. [Tail call elimination](http://stackoverflow.com/questions/310974/what-is-tail-call-optimization).
+
 1. [Continuations](http://lambda-the-ultimate.org/node/86).
+
 1. [Dynamic typing](http://c2.com/cgi/wiki?TypingQuadrant).
+
 1. [S-expression syntax](https://en.wikipedia.org/wiki/S-expression), and [homoiconicity](http://calculist.org/blog/2012/04/17/homoiconicity-isnt-the-point/).
+
 1. [First-class functions and closures](http://en.wikipedia.org/wiki/Closure_(computer_science)).
+
 1. [Macros](http://c2.com/cgi/wiki?SchemeMacroExamples).
+
 1. Distaste for mutation.
 
 I know we could fight about a few things on this list, but I think that's pretty tight. Now, for JavaScript to be "basically" Scheme, I'd expect a pretty close correspondence there. Of that list, here's what JS has:
 
 1. Minimalism.
+
 1. Dynamic typing.
+
 1. First-class functions and closures.
 
 Don't tell me it's got lexical scope, because JavaScript's scoping is an abomination in the face of God. Guy Steele isn't even dead and JS scope makes him pre-emptively roll in his not-yet-occupied grave. Likewise, claiming JS is homoiconic because you can eval strings of code is nonsense. If that's the only criteria for homoiconicity, then C is too, since you can treat an array of bytes as code and jump to it.

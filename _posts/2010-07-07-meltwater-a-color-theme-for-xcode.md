@@ -14,7 +14,7 @@ The theme is called "Meltwater", and it looks like this:
 
 <img alt="Screenshot of the Meltwater color theme" src="/image/2010/07/meltwater.gif" class="framed"/>
 
-(I'm also using Raph Levien's beautiful [Inconsolata](http://www.levien.com/type/myfonts/inconsolata.html) font) if you're
+(I'm also using Raph Levien's beautiful [Inconsolata](http://www.levien.com/type/myfonts/inconsolata.html) font if you're
 wondering.)
 
 You can download the theme from [here](http://bitbucket.org/munificent/support/src/tip/xcode/themes/), or click [here](http://bitbucket.org/munificent/support/raw/fcef2059a901/xcode/themes/Meltwater.xccolortheme) for a direct

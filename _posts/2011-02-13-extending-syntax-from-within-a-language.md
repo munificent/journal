@@ -303,10 +303,15 @@ Do you see the problem? Let's walk through how most interpreters (including
 Magpie) handle this:
 
   1. The user runs `magpie summon-ghost.mag`.
+
   2. The interpreter starts up.
+
   3. It reads `summon-ghost.mag` and parses it.
+
   4. It starts interpreting it…
+
   5. It evaluates the `import` and parses and runs `repeat.mag`
+
   6. It evaluates the `print("Beetlejuice " ~* 3)` line.
 
 Crap. It parses *all* of `summon-ghost.mag` before it has had a chance to

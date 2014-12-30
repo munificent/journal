@@ -16,8 +16,8 @@ not too bad, but objects are really nice to have.
 So I started working on a fresh Magpie interpreter in Java that's class-based
 and dynamically-typed. (As a nice bonus, Magpie going forward won't be as tied
 to the MS stack as [the old C# one](http://bitbucket.org/munificent/magpie/src/tip/csharp/) is.) This post is about one
-implementation detail I think is kind of interesting: *even though Magpie-the-
-language is class-based, under the hood, the interpreter uses prototypes.*
+implementation detail I think is kind of interesting: *even though
+Magpie-the-language is class-based, under the hood, the interpreter uses prototypes.*
 
 ## What's in a Class?
 

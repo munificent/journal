@@ -17,8 +17,11 @@ My hobby project lately has been working on a little [bytecode interpreter][1] f
 In all honesty, my usual process looks a bit like:
 
 1. "Hmm, I need to code up a floobinator. v8 has one. Let me see how they do it."
+
 2. *hunt through v8 code*
+
 3. "Ah, here it is."
+
 4. OH GOD, WHAT WIZARDRY IS THIS.
 
 About 90% of it is [over my head][], but I figure 10% of v8 is still a pretty good chunk of smart. There is one clever technique I learned from them that I *do* understand: macros that take macros as arguments. That's the point of this post.

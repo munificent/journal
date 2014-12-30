@@ -309,17 +309,29 @@ I may have missed something, but I believe `List` is the only type that needs an
 If you made it this far, you deserve a reward. Sadly, the best I can offer is a bullet list of what you've already read:
 
 *   All types are non-nullable by default.
+
 *   You define a nullable type by adding `?` after the type.
+
 *   Nested nullable types flatten: `A?? -> A?`.
+
 *   A non-nullable type is a subtype of its nullable type.
+
 *   No nullable *values*: no `option` or `Maybe`.
+
 *   Can assign back and forth between nullable and non-nullable types.
+
 *   Must initialize non-nullable variables to non-null values.
+
 *   Lets types document which things expect null.
+
 *   Catches invalid nulls early in checked mode.
+
 *   Most spec changes are just removing "or null".
+
 *   Most corelib changes are making some annotations nullable.
+
 *   Probably want to change `List` constructor to avoid implicit null fill values.
+
 *   This proposal is awesome.
 
 Do I have that right? Thoughts?

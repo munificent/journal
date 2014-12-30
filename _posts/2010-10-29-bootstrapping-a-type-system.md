@@ -147,13 +147,21 @@ The parser converts that into an [AST](http://en.wikipedia.org/wiki/Abstract_syn
 The type-checker walks that tree from the bottom to top. Something like this:
 
   1. Get the type of `1` (`Int`).
+
   2. Get the type of `2` (`Int`).
+
   3. Look up the type of `+` on the receiver's type (`Int`, from *1*).
+
   4. See if the parameter type for `+` (`Int`, from the declaration of `+`) matches the argument type (`Int`, from *2*). (It does.)
+
   5. Get the return type of that method (`Int`).
+
   6. Look up the type of `string` on the receiver's type (`Int`, from *5*).
+
   7. Get the return type of that method (`String`).
+
   8. Look up the type of `print`.
+
   9. See if the parameter type for `print` (`String`, from its declaration) matches the argument type (`String`, from *7*). (It does.)
 
 And we're done. Steps 3 6, and 8 are where we do `getMemberType`. Steps 4 and

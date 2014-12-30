@@ -23,6 +23,7 @@ Of course, machines don't have infinite memory. So the way the implementation do
 In order to be collectible, the language has to ensure there's no way for the program to use that object again. If it can't get a reference to the object, then it obviously can't use it again. So the definition of "in use" is actually pretty simple:
 
 1. Any object that's being referenced by a variable that's still in scope is in use.
+
 2. Any object that's referenced by another object that's in use is in use.
 
 The second rule is the recursive one. If object A is referenced by a variable, and it has some field that references object B, then B is in use since you can get to it through A.
@@ -36,6 +37,7 @@ There's a [bunch of different ways](http://en.wikipedia.org/wiki/Garbage_collect
 It works almost exactly like our definition of reachability:
 
 1. Starting at the roots, traverse the entire object graph. Every time you reach an object, set a "mark" bit on it to true.
+
 2. Once that's done, find all of the objects whose mark bits are *not* set and delete them.
 
 That's it. I know, you could have come up with that, right? If you had, *you'd* be the author of a paper cited hundreds of times. The lesson here is that to be famous in CS, you don't have to come up with really smart stuff, you just have to come up with dumb stuff *first*.

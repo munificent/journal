@@ -20,8 +20,11 @@ Now when any new type system comes out, my first thought is, "I wonder if it's g
 Some more caveats before I get going:
 
 * I literally spent five minutes poking at this, so I may have things wrong.
+
 * Compiling programs with a compiler that isn't 1.0 yet and claiming that says something about the language specification is asking for trouble.
+
 * I, despite my current occupation, am surprisingly bad at reading language specs.
+
 * I am currently drinking a [fairly strong beer](http://www.ratebeer.com/beer/elysian-bete-blanche-belgian-tripel-2011-and-later/138973/).
 
 OK, party time! After playing around with it a bit, as far as I can tell, *TypeScript's subtype relations are more permissive than I expected*. This isn't necessarily bad, just surprising. As a preamble, let's define a supertype and subtype:

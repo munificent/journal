@@ -44,8 +44,9 @@ I lump into this fuzzy category errors that can occur at runtime and either
 can't be programmatically prevented, or where doing so is as expensive as
 performing the operation itself. Some examples:
 
-  1. Working with files or the network
-  2. Parsing, formatting, or manipulating data
+  1. Working with files or the network.
+
+  2. Parsing, formatting, or manipulating data.
 
 These are the kinds of things we typically think of when we think of "errors".
 We want to notice when they've happened, and we will very likely need to write

@@ -27,10 +27,15 @@ rendering to a bunch of different terminal implementations.
 **[Amaranth](http://bitbucket.org/munificent/amaranth)** is the actual game, or the beginnings of one. I have lots of work left to do here, but a lot is also done. I'll be writing more about interesting bits of the engine I hope. In the meantime you'll just have to dig around in the code if you're curious. Some fun stuff it supports:
 
   * Game engine is completely decoupled from UI. It was designed so that if I later write a graphical front-end for it, *zero* engine code would need to change.
+
   * [Game loop](http://bitbucket.org/munificent/amaranth/src/tip/Amaranth.Engine/Classes/Game.cs#cl-255) handles different entity speeds, decoupling from UI, makes no distinction between player-controlled and AI entities, and makes clever use of coroutines.
+
   * [Game content](http://bitbucket.org/munificent/amaranth/src/tip/Amaranth.Data/Data/) is data-driven and loaded from [friendly human-readable text files](http://bitbucket.org/munificent/amaranth/src/tip/Amaranth.Data/Data/Monsters/J%20-%20Jelly.txt).
+
   * Expected roguelike features are in there: [random dungeons](http://bitbucket.org/munificent/amaranth/src/tip/Amaranth.Engine/Classes/Dungeon/Generation/FeatureCreepGenerator.cs), [line-of-sight](http://bitbucket.org/munificent/amaranth/src/2fc3311d903f/Amaranth.Engine/Classes/Los.cs), [field-of-view](http://bitbucket.org/munificent/amaranth/src/2fc3311d903f/Amaranth.Engine/Classes/Fov.cs), [inventory](http://bitbucket.org/munificent/amaranth/src/2fc3311d903f/Amaranth.Engine/Classes/Things/Items/Inventory.cs), [stores](http://bitbucket.org/munificent/amaranth/src/2fc3311d903f/Amaranth.Engine/Classes/Dungeon/Town/), [spells](http://bitbucket.org/munificent/amaranth/src/2fc3311d903f/Amaranth.Engine/Classes/Processing/Actions/Magic/), etc.
+
   * The game loop was designed to support emergent behavior and interactions between entities. For example, hitting a monster could cause it to explode in a fireball which will in turn light a nearby torch, blinding an adjacent zombie. (There isn't *content* for this stuff yet, though, just engine support.)
+
   * [No global state](http://bitbucket.org/munificent/amaranth/src/2fc3311d903f/Amaranth.Engine/Classes/Content/Content.cs). [Singletons](http://gameprogrammingpatterns.com/singleton.html) are for amateurs.
 
 It's all up on [bitbucket](http://bitbucket.org): [bramble](http://bitbucket.org/munificent/bramble), [malison](http://bitbucket.org/munificent/malison), [amaranth](http://bitbucket.org/munificent/amaranth).

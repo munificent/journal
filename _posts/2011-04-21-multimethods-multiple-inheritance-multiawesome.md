@@ -241,25 +241,22 @@ Since most dynamic languages don't have any concept of annotating a method's exp
 
 For a real world example, consider the magic `$()` function in [jQuery](http://jquery.com/). It's [documented like this](http://api.jquery.com/jQuery/):
 
-> `$( selector, [ context ] )`
->
-> `selector` A string containing a selector expression
->
-> `context` A DOM Element, Document, or jQuery to use as context
->
-> `$( element )`
->
-> `element` A DOM element to wrap in a jQuery object.
->
-> `$( elementArray )`
->
-> `elementArray` An array containing a set of DOM elements to wrap in a jQuery object.
->
-> `$( jQuery object )`
->
-> `jQuery` object An existing jQuery object to clone.
->
-> `$()`
+    $(selector, [context])
+    selector      - A string containing a selector expression.
+    context       - A DOM Element, Document, or jQuery to use as
+                    context.
+
+    $(element)
+    element       - A DOM element to wrap in a jQuery object.
+
+    $(elementArray)
+    elementArray  - An array containing a set of DOM elements to
+                    wrap in a jQuery object.
+
+    $(jQuery object)
+    jQuery object - An existing jQuery object to clone.
+
+    $()
 
 Those look an awful lot like overloads, which Javascript doesn't support. How do they do this? By making [one monolithic function](https://github.com/jquery/jquery/blob/master/src/core.js#L70) with a slew of `instanceof` checks interspersed throughout it. Eek!
 

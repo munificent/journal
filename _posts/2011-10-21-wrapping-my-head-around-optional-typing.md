@@ -120,17 +120,15 @@ Since Dart lets you mix untyped and typed code, it just embraces this model of v
     This is good for ensuring real errors don't get missed, but it's drag when
     it reports false positives. Consider:
 
-{% highlight dart %}
-bool contains(List<Object> collection, Object needle) {
-  for (final item in collection) {
-    if (item == needle) return true;
-  }
-  return false;
-}
+        bool contains(List<Object> collection, Object needle) {
+          for (final item in collection) {
+            if (item == needle) return true;
+          }
+          return false;
+        }
 
-var numbers = <int>[1, 2, 3, 4];
-print(numbers.contains(2));
-{% endhighlight %}
+        var numbers = <int>[1, 2, 3, 4];
+        print(numbers.contains(2));
 
     There's a type error here (according to most static type systems). We're
     passing a `List<int>` to a function that takes a `List<Object>`, which
@@ -234,7 +232,9 @@ By baking a certain flavor of assert (asserting on type) into the *syntax* of th
 "Type system" carries a lot of implied assumptions and meaning with it. If you take what you know about type systems and look at Dart through that lens, you will be one or more of:
 
 *   Disappointed
+
 *   Infuriated
+
 *   Confused
 
 This doesn't mean it's a *bad feature*, just that it's not what you think it is. Meatloaf is a pretty terrible dessert, but it's a fine entrée. If you don't think about type systems and just ask yourself "is the set of features that Dart provides helpful in writing code?", I think the answer is "yes". It's just not helpful in exactly the same way that type systems in other languages help.

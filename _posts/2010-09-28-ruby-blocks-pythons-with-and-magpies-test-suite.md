@@ -83,9 +83,13 @@ with open('somefile.text') as f:
 This does a few things in sequence:
 
   1. Evaluates the expression after `with`.
+
   2. If `as` is provided, binds the result to a named variable.
+
   3. Calls the `__enter__` method on the result. This is where it can perform setup work.
+
   4. Evaluates the body of the `with` statement.
+
   5. Finally, calls `__exit__` on the result so it can do teardown.
 
 Python's system is a good bit more complex, but it's also more object-oriented

@@ -17,7 +17,9 @@ So when I started designing loops in my little language [Magpie][], I figured it
 [magpie]: http://magpie-lang.org/
 
 1. Look at a bunch of other languages.
+
 2. See what the awesome-est one does.
+
 3. Do that.
 
 Now, of course, the first wrinkle is that this isn't just about looping a certain number of times, or through just a range of numbers. That's baby stuff. Hell, *C* can do that.
@@ -63,7 +65,9 @@ The `.iterator()`, `.moveNext()`, and `.current` calls are the *iteration protoc
 In statically typed languages, this "protocol" is actually an explicit interface:
 
 * Java: [`Iterable<T>`](http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Iterable.html)
+
 * C#: [`IEnumerable<T>`](http://msdn.microsoft.com/en-us/library/system.collections.ienumerable.aspx)
+
 * Dart: [`Iterable<T>`](http://api.dartlang.org/docs/bleeding_edge/dart_core/Iterator.html)
 
 In dynamically-typed languages, it's more informal, like Python's [iterator protocol](http://docs.python.org/2/library/stdtypes.html#iterator-types).
@@ -235,6 +239,7 @@ Right now, the Rubyists are grinning, the Smalltalkers are furiously waving thei
 Those languages (Smalltalk, Ruby by way of Smalltalk, and most Lisps) use *internal* iterators. When you're iterating you've got two chunks of code in play:
 
 1. The code responsible for generating the series of values.
+
 2. The code that takes that series of values and does something with it.
 
 With external iterators, (1) is the type implementing the iterator protocol and (2) is the body of the `for` loop. In that style, (2) is in charge. It decides when to invoke (1) to get the next value and can stop at any time.

@@ -6,7 +6,7 @@ categories: code language parsing
 I just got back from the unbelievably awesome [Emerging Languages Camp](http://emerginglangs.com/) at
 [OSCON](http://www.oscon.com/). I wish I could come up with a good way to get across how cool of
 an experience it was. All I can really say was that for the first time in a
-long, I felt like I was really around my people.
+long time, I felt like I was really around my people.
 
 A programming language nerd is a really specific kind of nerd and I don't
 really know many who share my obsession. For the last two days, I was in a
@@ -25,7 +25,7 @@ about it is this sense of pragmatic feature economy. Any time someone asks,
 "why doesn't Go have Foo", his answer tends to be "We found in practice that
 we don't miss it."
 
-Language designers can tend to be [magpies](http://bitbucket.org/munificent/magpie/src), wanting to cram in all of our
+Language designers can tend to be [magpies](http://magpie-lang.org), wanting to cram in all of our
 favorite features just because they're shiny or to have a longer bullet list
 than the other guy. If those features don't help real people solve real
 problems, you're just wasting your time and making things more complex for
@@ -36,8 +36,8 @@ approach that leads to them.
 ## Phil Mercurio (Thyrd)
 
 Phil's talk was one of a few on visual programming. Most of my experience with
-visual languages is that they're either toys or incomprehensible timecube-
-esque crankware.
+visual languages is that they're either toys or incomprehensible
+timecube-esque crankware.
 
 Phil got up and humbly walked through [his visual language](http://thyrd.org/). When he asked
 for questions at the end, there was a long pause before any hands went up.
@@ -56,7 +56,7 @@ functions and stuff but its *raison d'etre* is doing arithmetic with units,
 which it does so unbelievably comprehensively that it boggles the mind. From
 his talk, I can only assume that Alan's house is packed floor-to-ceiling with
 yellowing almanacs and dusty IEEE standards reports. Calling his knowledge of
-measure encyclopedic is giving encyclopedias too much credit.
+measure "encyclopedic" is giving encyclopedias too much credit.
 
 What I found interesting about Frink is that by limiting its focus to a single
 domain, Alan has ended up with a language that's *more* powerful and useful.

@@ -308,7 +308,9 @@ Then the real, hard work started. You see, all of that is just grunt work. You c
 First off, you want to minimize [widows and orphans](http://en.wikipedia.org/wiki/Widows_and_orphans)&mdash;things like when the last line of a paragraph is at the top of the next page. InDesign can automate this, and even handle more complex rules like:
 
 * Keep headers with at least a line or two of the paragraph that follows them.
+
 * Don't let a block of code be split across pages at all.
+
 * If a code block follows a paragraph of body copy, keep at least the last line of the body text with the code.
 
 This stuff is why people get all excited about InDesign. It rocks.
@@ -490,14 +492,19 @@ I fixed those, and uploaded it again. And... that's it. I know there are still m
 The print edition was done, and I made a slew of final changes to the eBook versions&mdash;mainly getting the cover in and working. Finally, only three things were left to do:
 
 1. Redo the front page of the site to mention the new formats.
+
 2. Upload everything to the various market places and put them on sale.
+
 3. Write this blog post.
 
 If you're reading this, it looks like I got those done too! You can see for youself:
 
 * **The [new site][gpp].**
+
 * **The [print version on Amazon][print].**
+
 * **The [Kindle version][kindle].**
+
 * **The [eBook at Smashwords][smash].**
 
 [print]: http://www.amazon.com/dp/0990582906

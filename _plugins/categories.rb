@@ -22,7 +22,7 @@ module StuffWithStuff
         num_posts = context.registers[:site].categories[category].size
         html << "<li>"
         html << "<a href=\"/category/#{category}\">#{category}</a> "
-        html << "<small>(#{num_posts})</small>"
+        html << "<small class='post-count'>#{num_posts}</small>"
         html << "</li>"
       end
       html << "</ul>"

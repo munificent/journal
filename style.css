@@ -86,6 +86,11 @@ nav {
     padding-left: 24px;
     font-style: italic;
     color: #c0ac90; }
+  nav .post-count {
+    background: #f2ede8;
+    margin-left: 2px;
+    padding: 0 3px;
+    border-radius: 4px; }
 
 header {
   position: relative;
@@ -127,12 +132,12 @@ article {
     article h2 code {
       background: inherit;
       color: #304550;
-      font: 20px "Source Code Pro", Courier, monospace;
+      font: 24px "Source Code Pro", Courier, monospace;
       font-weight: 700;
       padding: 0; }
   article h3 {
     font: italic 19px/24px "PT Serif", Georgia, serif;
-    padding: 12px 0 0 0; }
+    padding: 24px 0 12px 0; }
   article h4 {
     font: 11px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     padding: 0 0 4px 0;
@@ -146,7 +151,7 @@ article {
     article h4 .tags {
       float: right; }
       article h4 .tags a {
-        margin-left: 3px; }
+        margin-left: 5px; }
   article a {
     color: #006699; }
   article a:hover {
@@ -160,10 +165,8 @@ article {
     padding-top: 12px; }
   article ol, article ul {
     margin-left: 24px; }
-  article li {
-    font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    color: #bcbcbc;
-    letter-spacing: 1px; }
+  article ol li {
+    font: bold 13px "PT Serif", Georgia, serif; }
   article a, article a code {
     color: #006699; }
     article a:hover, article a code:hover {
@@ -195,7 +198,8 @@ article {
     color: #7a7a7a;
     padding: 0 24px; }
     article blockquote p {
-      font: italic 16px/24px "PT Serif", Georgia, serif; }
+      color: #7a7a7a;
+      font: italic 18px/26px "PT Serif", Georgia, serif; }
       article blockquote p strong {
         font-weight: 600; }
   article .cite {
@@ -212,10 +216,12 @@ article {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     background: #fff7eb;
+    margin: 12px 0;
     padding: 0 12px;
-    color: #ba945e; }
+    color: #b3884d; }
     article .update p {
-      font: 13px/22px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+      font: 14px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+      color: #b3884d; }
     article .update code {
       background: #eee8de;
       font-size: 13px/22px; }
@@ -252,29 +258,29 @@ article {
       margin-left: auto !important;
       margin-right: auto !important; }
     article figure figcaption, article figure label, article figure input, article figure output {
-      color: #a6a6a6;
+      color: #8b8d8e;
       font: 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
       margin-top: 10px; }
   article .table {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background: #f4f9fb;
+    background: #f8f5f2;
     padding: 6px;
     margin: 6px 0; }
   article table {
     width: 100%;
     border-collapse: collapse;
-    color: #4c4d4d; }
+    color: #4c4c4b; }
     article table td {
       font: 16px/24px "PT Serif", Georgia, serif;
       padding: 0 6px; }
     article table thead td {
-      color: #7aa3b8;
+      color: #b89e7a;
       font: 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
       font-weight: 600; }
     article table tbody tr:nth-child(odd) {
-      background: #fbfdfe; }
+      background: #fdfdfc; }
 
 .social {
   padding: 24px 0 36px 0;

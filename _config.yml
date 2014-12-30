@@ -1,4 +1,3 @@
-paginate: 1
 permalink: /:year/:month/:day/:title
 pygments: true
 markdown: kramdown

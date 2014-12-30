@@ -6,6 +6,7 @@ $body-text:        16px/24px $serif;
 $body-bg:          hsl(35, 30%, 96%);
 $text-color:       #222;
 $gray:             mix($text-color, #fff, 30%);
+$dark:             mix($text-color, #fff, 50%);
 
 $link:             hsl(200, 100%, 30%);
 $link-hover:       hsl(200, 100%, 50%);
@@ -28,15 +29,17 @@ $comments-bg:      hsl(35, 30%, 92%);
 $comments-color:   hsl(35, 40%, 40%);
 
 $box-bg:           hsl(200, 50%, 97%);
+$box-color:        mix($text-color, $box-bg, 50%);
 
 $update-bg:        hsl(35, 100%, 96%);
-$update-color:     hsl(35, 40%, 55%);
+$update-color:     hsl(35, 40%, 50%);
 $update-link:      hsl(35, 90%, 45%);
 $update-hover:     hsl(35, 100%, 30%);
 
-$table-color:      mix($box-bg, $text-color, 20%);
-$table-head-color: hsl(200, 30%, 60%);
-$table-alt-bg:     hsl(200, 50%, 99%);
+$table-bg:         hsl(35, 30%, 96%);
+$table-color:      mix($table-bg, $text-color, 20%);
+$table-head-color: hsl(35, 30%, 60%);
+$table-alt-bg:     hsl(35, 30%, 99%);
 
 @mixin box($color) {
   border-radius: 4px;
@@ -166,9 +169,14 @@ nav {
     font-style: italic;
     color: $nav-text-small;
   }
-}
 
-// Post content:
+  .post-count {
+    background: mix($nav-text-small, $body-bg, 10%);
+    margin-left: 2px;
+    padding: 0 3px;
+    border-radius: 4px;
+  }
+}
 
 header {
   position: relative;
@@ -225,7 +233,7 @@ article {
     code {
       background: inherit;
       color: $code-color;
-      font: 20px $mono;
+      font: 24px $mono;
       font-weight: 700;
       padding: 0;
     }
@@ -233,7 +241,7 @@ article {
 
   h3 {
     font: italic 19px/24px $serif;
-    padding: 12px 0 0 0;
+    padding: 24px 0 12px 0;
   }
 
   h4 {
@@ -255,7 +263,7 @@ article {
       float: right;
 
       a {
-        margin-left: 3px;
+        margin-left: 5px;
       }
     }
   }
@@ -285,11 +293,9 @@ article {
     margin-left: 24px;
   }
 
-  li {
-    // Style the numbers/bullets.
-    font: 13px $sans;
-    color: $gray;
-    letter-spacing: 1px;
+  // Smaller list numbers.
+  ol li {
+    font: bold 13px $serif;
   }
 
   a, a code {
@@ -330,7 +336,8 @@ article {
     padding: 0 24px;
 
     p {
-      font: italic $body-text;
+      color: $quote-color;
+      font: italic 18px/26px $serif;
 
       strong {
         font-weight: 600;
@@ -353,11 +360,13 @@ article {
 
   .update {
     @include box($update-bg);
+    margin: 12px 0;
     padding: 0 12px;
     color: $update-color;
 
     p {
-      font: 13px/22px $sans;
+      font: 14px/24px $sans;
+      color: $update-color;
     }
 
     code {
@@ -407,14 +416,14 @@ article {
     }
 
     figcaption, label, input, output {
-      color: $cite-color;
+      color: $box-color;
       font: 13px $sans;
       margin-top: 10px;
     }
   }
 
   .table {
-    @include box($box-bg);
+    @include box($table-bg);
     padding: 6px;
     margin: 6px 0;
   }

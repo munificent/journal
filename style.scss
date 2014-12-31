@@ -662,6 +662,18 @@ article {
     margin-top: 24px;
   }
 
+  .post-box {
+    .date {
+      font-size: 11px;
+      width: 48px;
+    }
+
+    .title {
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
   // Shrink the text.
   header {
     h1 {

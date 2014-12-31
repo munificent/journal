@@ -435,6 +435,13 @@ article {
   .nav-second h2 {
     margin-top: 24px; }
 
+  .post-box .date {
+    font-size: 11px;
+    width: 48px; }
+  .post-box .title {
+    font-size: 14px;
+    line-height: 22px; }
+
   header h1 {
     font-size: 28px;
     line-height: 36px; }

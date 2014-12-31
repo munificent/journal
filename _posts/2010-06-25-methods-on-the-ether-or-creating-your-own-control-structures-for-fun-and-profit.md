@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit"
-categories: code finch language parsing
+categories: code finch language
 ---
 
 One of my favorite things about [Lisp](http://en.wikipedia.org/wiki/Lisp_%28programming_language%29) and [Smalltalk](http://en.wikipedia.org/wiki/Smalltalk) is that they

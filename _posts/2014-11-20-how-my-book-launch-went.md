@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "How My Book Launch Went"
-categories: book game-dev design
+categories: book game-dev design game-patterns
 ---
 
 Greetings, superfans! When we [last tuned in][blog post], I was just about to "launch" [my self-published book][book]. I put that in quotes because it's an awfully serious-sounding word for what was really just doing some clicking on my laptop. If my last post was the climax of my book writing adventure, consider this the denouement. You've been with me this long, it's the least I can do.

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A Turn-Based Game Loop"
-categories: code game-dev roguelike dart hauberk
+categories: code game-dev roguelike dart
 ---
 
 <style>

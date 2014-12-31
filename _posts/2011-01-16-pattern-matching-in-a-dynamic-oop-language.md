@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Pattern Matching in a Dynamic OOP Language"
-categories: code
+categories: code language magpie c js
 ---
 Another long weekend and another fun milestone for [Magpie](http://github.com/munificent/magpie). I've finally
 managed to pull off something that I've wanted to support for a long time:

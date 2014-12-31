@@ -6,13 +6,13 @@
     {{ post.title | escape }}
   </a>
 </h1>
-{% if page.previous.url %}
-  <a class="older" href="{{page.previous.url}}"
-     title="Older Post &ldquo;{{page.previous.title}}&rdquo;">&#8617;</a>
+{% if post.previous.url %}
+  <a class="older" href="{{post.previous.url}}"
+     title="Older Post &ldquo;{{post.previous.title}}&rdquo;">&#8617;</a>
 {% endif %}
-{% if page.next.url %}
-  <a class="newer" href="{{page.next.url}}"
-     title="Newer Post &ldquo;{{page.next.title}}&rdquo;">&#8618;</a>
+{% if post.next.url %}
+  <a class="newer" href="{{post.next.url}}"
+     title="Newer Post &ldquo;{{post.next.title}}&rdquo;">&#8618;</a>
 {% endif %}
 </header>
 <h4><a href="/archive">{{ post.date | date: "%B %d, %Y" }}</a>

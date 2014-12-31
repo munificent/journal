@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Dropping Loot"
-categories: code game-dev roguelike dart hauberk
+categories: code game-dev roguelike dart
 ---
 
 I got started hacking on my own roguelike after spending several years avidly playing [Angband][]. Like most projects, I had a few itches I wanted to scratch and it kind of took on a life of its own. One thing that annoyed me about Angband was how monsters dropped loot when they died.

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Zero to 353 Pages: Bringing My Web Book to Print and eBook"
-categories: book game-dev design
+categories: book game-dev design game-patterns
 ---
 
 <figure>

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Rooms and Mazes: A Procedural Dungeon Generator"
-categories: code game-dev roguelike dart hauberk procedural-generation
+categories: code game-dev roguelike dart
 ---
 
 <style>

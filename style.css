@@ -21,7 +21,7 @@ a {
   text-decoration: none; }
 
 .column {
-  max-width: 984px;
+  max-width: 960px;
   margin: 0 auto;
   position: relative; }
 
@@ -39,9 +39,11 @@ a {
 
 nav {
   width: 192px;
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
   margin-top: 48px;
-  padding: 0 48px;
+  padding: 0 48px 24px 48px;
   font: 13px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   color: #8f6d3d; }
   nav img.bob {
@@ -76,18 +78,18 @@ nav {
     margin-bottom: 12px; }
   nav small {
     font-size: 11px;
-    color: #c0ac90; }
+    color: #bca78a; }
   nav .copyright {
     font-size: 12px;
     font-style: italic;
-    color: #c0ac90;
+    color: #bca78a;
     text-align: center; }
   nav .archive {
     padding-left: 24px;
     font-style: italic;
-    color: #c0ac90; }
+    color: #bca78a; }
   nav .post-count {
-    background: #f2ede8;
+    background: #f2ede7;
     margin-left: 2px;
     padding: 0 3px;
     border-radius: 4px; }
@@ -122,8 +124,8 @@ header {
     right: -68px; }
 
 article {
-  width: 600px;
   padding: 48px;
+  margin-right: 288px;
   background: #fff; }
   article h2 {
     font: normal 24px "PT Serif", Georgia, serif;
@@ -139,6 +141,7 @@ article {
     font: italic 19px/24px "PT Serif", Georgia, serif;
     padding: 24px 0 12px 0; }
   article h4 {
+    position: relative;
     font: 11px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     padding: 0 0 4px 0;
     margin-bottom: 16px;
@@ -149,7 +152,9 @@ article {
     article h4 a {
       color: #bcbcbc; }
     article h4 .tags {
-      float: right; }
+      position: absolute;
+      top: 0;
+      right: 0; }
       article h4 .tags a {
         margin-left: 5px; }
   article a {
@@ -199,7 +204,8 @@ article {
     padding: 0 24px; }
     article blockquote p {
       color: #7a7a7a;
-      font: italic 18px/26px "PT Serif", Georgia, serif; }
+      font: italic 18px/26px "PT Serif", Georgia, serif;
+      padding: 4px 0; }
       article blockquote p strong {
         font-weight: 600; }
   article .cite {
@@ -307,77 +313,6 @@ article {
   padding-left: 16px;
   color: #777; }
 
-/*
-.nav {
-  padding: 0 48px;
-  max-width: 600px;
-  background: $body-bg; // $nav-bg;
-  color: $nav-text;
-  font: normal 12px/18px $sans;
-
-  a {
-    color: $nav-link;
-  }
-
-  a:hover {
-    color: $nav-hover;
-  }
-
-  code {
-    font: 14px $mono;
-  }
-
-  h1 {
-    font: normal 13px $sans;
-    color: $nav-title;
-    padding: 10px 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-    display: inline-block;
-  }
-
-  ol, ul {
-    margin-left: 12px;
-    padding-bottom: 12px;
-  }
-
-  li {
-    margin-left: 6px;
-  }
-
-  p {
-    padding-bottom: 12px;
-  }
-
-  small {
-    color: $nav-text-small;
-  }
-
-  width: 100%;
-}
-
-.nav.bottom {
-  padding: 24px 0;
-
-  table {
-    width: 100%;
-
-    td {
-      width: 50%;
-      vertical-align: top;
-    }
-
-    td.l {
-      padding-right: 12px;
-    }
-
-    td.r {
-      padding-left: 12px;
-    }
-  }
-}
-*/
 .post-box {
   display: table; }
   .post-box .date {
@@ -419,89 +354,140 @@ article {
 .highlight span.cp {
   color: #bf40bf; }
 
-/*
-@media only screen and (max-width: 479px) {
-  .content {
-    h1 {
-      font: normal 30px/40px $serif;
-      code {
-        font: 30px $mono;
-      }
-    }
+@media only screen and (max-width: 1008px) {
+  header {
+    display: block;
+    height: inherit; }
+    header h1 {
+      display: block; }
 
-    h2 {
-      font: normal 20px $serif;
-      code {
-        font: 18px $mono;
-      }
-    }
+  article {
+    margin: 0 48px;
+    padding-top: 96px; }
 
-    h3 {
-      font: italic 18px/20px $serif;
-    }
+  nav {
+    position: relative;
+    display: table;
+    margin: 0 48px;
+    padding-top: 48px;
+    width: inherit;
+    background: #eae2d7; }
 
-    h4 {
-      font: 10px $sans;
-    }
+  .nav-first, .nav-second {
+    display: table-cell;
+    vertical-align: top;
+    width: 50%; }
 
-    p {
-      font: normal 14px/20px $serif;
-      padding: 8px 0;
-    }
+  .nav-first {
+    padding-right: 24px; }
 
-    p + p {
-      padding-top: 12px;
-    }
+  .nav-second {
+    padding-left: 24px; }
+    .nav-second h2 {
+      margin-top: 0; } }
+@media only screen and (max-width: 640px) {
+  article, nav {
+    margin: 0; }
 
-    ol, ul {
-      margin-left: 12px;
-    }
+  header a.older {
+    left: -52px; }
+  header a.newer {
+    right: -52px; } }
+@media only screen and (max-width: 480px) {
+  article {
+    padding: 72px 24px 24px 24px; }
 
-    li {
-      font: normal 14px/20px $serif;
-    }
+  nav {
+    padding: 24px; }
 
-    code {
-      font: 12px/16px $mono;
-    }
+  .comments {
+    margin: 0 -24px -24px -24px;
+    padding: 24px; }
 
-    pre {
-      code {
-        font: 11px/14px $mono;
-      }
-    }
+  header a.older, header a.newer {
+    background: #f8f5f2;
+    top: -72px;
+    bottom: inherit; }
+  header a.older {
+    left: -24px;
+    padding: 0 14px 4px 6px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0; }
+  header a.newer {
+    right: -24px;
+    padding: 0 6px 4px 14px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0; }
 
-    tt {
-      font: 11px/14px $mono;
-    }
+  nav {
+    display: inherit; }
+    nav img.bob {
+      display: block;
+      margin: -8px auto 16px; }
 
-    blockquote {
-      p {
-        font: italic 14px/20px $serif;
-      }
-    }
+  .nav-first, .nav-second {
+    display: inherit;
+    width: inherit;
+    padding: 0; }
 
-    .cite {
-      font: italic 12px/20px $sans;
-    }
+  .nav-second h2 {
+    margin-top: 24px; }
 
-    .update {
-      p {
-        font: 12px/20px $sans;
-      }
-    }
+  header h1 {
+    font-size: 28px;
+    line-height: 36px; }
+    header h1 code {
+      font-size: 24px; }
 
-    table {
-      td {
-        font: normal 14px/20px $serif;
-      }
-
-      thead {
-        td {
-          font: 12px/20px $sans;
-        }
-      }
-    }
-  }
-}
-*/
+  article h2 {
+    font-size: 20px;
+    padding: 20px 0 10px 0; }
+    article h2 code {
+      font-size: 20px; }
+  article h3 {
+    font-size: 17px;
+    line-height: 20px;
+    padding: 20px 0 10px 0; }
+  article h4 {
+    font-size: 10px;
+    margin-bottom: 6px; }
+    article h4 .tags a {
+      margin-left: 2px;
+      letter-spacing: 0; }
+  article p {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 6px 0; }
+  article ol li {
+    font-size: 11px; }
+  article code {
+    padding: 1px 3px;
+    font-size: 13px; }
+  article pre {
+    margin: 0;
+    padding: 4px 6px; }
+    article pre code {
+      font-size: 12px; }
+  article blockquote p {
+    font-size: 15px;
+    line-height: 24px; }
+  article .cite {
+    font-size: 12px; }
+  article .update p {
+    font-size: 12px;
+    line-height: 20px; }
+  article .update code {
+    font-size: 12px;
+    line-height: 20px; }
+  article figure figcaption, article figure label, article figure input, article figure output {
+    font-size: 11px; }
+  article .table {
+    padding: 2px;
+    margin: 4px 0; }
+  article table td {
+    font-size: 12px;
+    padding: 0 3px; }
+  article table thead td {
+    font-size: 12px; } }

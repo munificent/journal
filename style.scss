@@ -18,7 +18,7 @@ $code-color:       hsl(200, 25%, 25%);
 $quote-color:      mix($text-color, #fff, 60%);
 $cite-color:       mix($text-color, #fff, 40%);
 
-$nav-bg:           hsl(35, 30%, 92%);
+$nav-bg:           hsl(35, 30%, 88%);
 $nav-text:         hsl(35, 40%, 40%);
 $nav-title:        hsl(35, 60%, 65%);
 $nav-text-small:   mix($nav-bg, $nav-text, 50%);
@@ -79,7 +79,7 @@ a {
 // Basic layout:
 
 .column {
-  max-width: 984px;
+  max-width: 960px;
   margin: 0 auto;
 
   // For grid.
@@ -102,9 +102,12 @@ a {
 
 nav {
   width: 192px;
-  float: right;
+
+  position: absolute;
+  right: 0;
+  top: 0;
   margin-top: 48px;
-  padding: 0 48px;
+  padding: 0 48px 24px 48px;
 
   font: 13px/20px $sans;
   color: $nav-text;
@@ -221,8 +224,8 @@ header {
 }
 
 article {
-  width: 600px;
   padding: 48px;
+  margin-right: 288px;
   background: #fff;
 
   h2 {
@@ -245,6 +248,7 @@ article {
   }
 
   h4 {
+    position: relative;
     font: 11px $sans;
     padding: 0 0 4px 0;
     margin-bottom: 16px;
@@ -260,7 +264,9 @@ article {
     }
 
     .tags {
-      float: right;
+      position: absolute;
+      top: 0;
+      right: 0;
 
       a {
         margin-left: 5px;
@@ -338,6 +344,7 @@ article {
     p {
       color: $quote-color;
       font: italic 18px/26px $serif;
+      padding: 4px 0;
 
       strong {
         font-weight: 600;
@@ -491,80 +498,6 @@ article {
   color: #777;
 }
 
-// The top and bottom navigation:
-
-/*
-.nav {
-  padding: 0 48px;
-  max-width: 600px;
-  background: $body-bg; // $nav-bg;
-  color: $nav-text;
-  font: normal 12px/18px $sans;
-
-  a {
-    color: $nav-link;
-  }
-
-  a:hover {
-    color: $nav-hover;
-  }
-
-  code {
-    font: 14px $mono;
-  }
-
-  h1 {
-    font: normal 13px $sans;
-    color: $nav-title;
-    padding: 10px 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-    display: inline-block;
-  }
-
-  ol, ul {
-    margin-left: 12px;
-    padding-bottom: 12px;
-  }
-
-  li {
-    margin-left: 6px;
-  }
-
-  p {
-    padding-bottom: 12px;
-  }
-
-  small {
-    color: $nav-text-small;
-  }
-
-  width: 100%;
-}
-
-.nav.bottom {
-  padding: 24px 0;
-
-  table {
-    width: 100%;
-
-    td {
-      width: 50%;
-      vertical-align: top;
-    }
-
-    td.l {
-      padding-right: 12px;
-    }
-
-    td.r {
-      padding-left: 12px;
-    }
-  }
-}
-*/
-
 .post-box {
   display: table;
 
@@ -605,93 +538,237 @@ article {
   span.cp  { color: hsl(300, 50%, 50%); } // preprocessor
 }
 
+@media only screen and (max-width: 1008px) {
+  // Move the navigation to the bottom and split it into two columns.
+  header {
+    display: block;
+    height: inherit;
 
-// On small mobile devices, shrink the text and code, mainly so that the code
-// fits on screen:
-
-/*
-@media only screen and (max-width: 479px) {
-  .content {
     h1 {
-      font: normal 30px/40px $serif;
-      code {
-        font: 30px $mono;
-      }
+      display: block;
     }
+  }
+
+  article {
+    margin: 0 48px;
+    padding-top: 96px;
+  }
+
+  nav {
+    position: relative;
+    display: table;
+    margin: 0 48px;
+    padding-top: 48px;
+    width: inherit;
+
+    background: $nav-bg;
+  }
+
+  .nav-first, .nav-second {
+    display: table-cell;
+    vertical-align: top;
+    width: 50%;
+  }
+
+  .nav-first {
+    padding-right: 24px;
+  }
+
+  .nav-second {
+    padding-left: 24px;
 
     h2 {
-      font: normal 20px $serif;
+      margin-top: 0;
+    }
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  // Kill the margins.
+  article, nav {
+    margin: 0;
+  }
+
+  // Bring in the older/newer buttons.
+  header {
+    a.older {
+      left: -52px;
+    }
+
+    a.newer {
+      right: -52px;
+    }
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  // Narrower padding.
+  article {
+    padding: 72px 24px 24px 24px;
+  }
+
+  nav {
+    padding: 24px;
+  }
+
+  // TODO: fix.
+  .comments {
+    //display: none;
+    margin: 0 -24px -24px -24px;
+    padding: 24px;
+  }
+
+  // Move older/newer buttons to top corners.
+  header {
+    a.older, a.newer {
+      background: $body-bg;
+      top: -72px;
+      bottom: inherit;
+    }
+
+    a.older {
+      left: -24px;
+      padding: 0 14px 4px 6px;
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    a.newer {
+      right: -24px;
+      padding: 0 6px 4px 14px;
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  nav {
+    display: inherit;
+
+    img.bob {
+      display: block;
+      margin: -8px auto 16px;
+    }
+  }
+
+  .nav-first, .nav-second {
+    display: inherit;
+    width: inherit;
+    padding: 0;
+  }
+
+  .nav-second h2 {
+    margin-top: 24px;
+  }
+
+  // Shrink the text.
+  header {
+    h1 {
+      font-size: 28px;
+      line-height: 36px;
       code {
-        font: 18px $mono;
+        font-size: 24px;
+      }
+    }
+  }
+
+  article {
+    h2 {
+      font-size: 20px;
+      padding: 20px 0 10px 0;
+
+      code {
+        font-size: 20px;
       }
     }
 
     h3 {
-      font: italic 18px/20px $serif;
+      font-size: 17px;
+      line-height: 20px;
+      padding: 20px 0 10px 0;
     }
 
     h4 {
-      font: 10px $sans;
-    }
+      font-size: 10px;
+      margin-bottom: 6px;
 
-    p {
-      font: normal 14px/20px $serif;
-      padding: 8px 0;
-    }
-
-    p + p {
-      padding-top: 12px;
-    }
-
-    ol, ul {
-      margin-left: 12px;
-    }
-
-    li {
-      font: normal 14px/20px $serif;
-    }
-
-    code {
-      font: 12px/16px $mono;
-    }
-
-    pre {
-      code {
-        font: 11px/14px $mono;
+      .tags a {
+        margin-left: 2px;
+        letter-spacing: 0;
       }
     }
 
-    tt {
-      font: 11px/14px $mono;
+    p {
+      font-size: 14px;
+      line-height: 20px;
+      padding: 6px 0;
+    }
+
+    // Smaller list numbers.
+    ol li {
+      font-size: 11px;
+    }
+
+    code {
+      padding: 1px 3px;
+      font-size: 13px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 4px 6px;
+
+      code {
+        font-size: 12px;
+      }
     }
 
     blockquote {
       p {
-        font: italic 14px/20px $serif;
+        font-size: 15px;
+        line-height: 24px;
       }
     }
 
     .cite {
-      font: italic 12px/20px $sans;
+      font-size: 12px;
     }
 
     .update {
       p {
-        font: 12px/20px $sans;
+        font-size: 12px;
+        line-height: 20px;
       }
+
+      code {
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+
+    figure {
+      figcaption, label, input, output {
+        font-size: 11px;
+      }
+    }
+
+    .table {
+      padding: 2px;
+      margin: 4px 0;
     }
 
     table {
       td {
-        font: normal 14px/20px $serif;
+        font-size: 12px;
+        padding: 0 3px;
       }
 
       thead {
         td {
-          font: 12px/20px $sans;
+          font-size: 12px;
         }
       }
     }
   }
 }
-*/

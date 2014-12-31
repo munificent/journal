@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "JavaScript Isn't Scheme"
-categories: code language javascript scheme
+categories: code language js scheme
 ---
 
 It seems like I can't spend five minutes on reddit these days without someone playing the [JS-is-Scheme is card](http://www.reddit.com/r/programming/comments/1g7gw7/the_angular_team_is_porting_angularjs_to_dart/cahzqav). I see everything from the innocuous, "JavaScript has a lot in common with Scheme", all the way up to, "JavaScript is basically Scheme." This is basically crazy. Or, at least it has a lot in common with crazy.

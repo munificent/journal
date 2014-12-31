@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Debunking C# vs C++ Performance"
-categories: blog c-sharp code cpp optimization
+categories: c-sharp code cpp optimization
 ---
 If you were on [reddit](http://www.reddit.com/r/programming/) today, you probably saw [this article](http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/),
 damning C#'s performance as being **ten times worse than C++'s**. Holy shit
@@ -23,74 +23,74 @@ Running his C# code, here are the results I got:
 </tr>
 </thead>
 <tr>
-<td class="right"><tt>1024</tt></td>
-<td class="right"><tt>10.7162</tt></td>
-<td class="right"><tt>2.3441</tt></td>
-<td class="right"><tt>3.8781</tt></td>
-<td class="right"><tt>1.1366</tt></td>
+<td class="right">1024</td>
+<td class="right">10.7162</td>
+<td class="right">2.3441</td>
+<td class="right">3.8781</td>
+<td class="right">1.1366</td>
 </tr>
 <tr>
-<td class="right"><tt>2048</tt></td>
-<td class="right"><tt>22.9509</tt></td>
-<td class="right"><tt>4.3889</tt></td>
-<td class="right"><tt>8.4408</tt></td>
-<td class="right"><tt>1.8714</tt></td>
+<td class="right">2048</td>
+<td class="right">22.9509</td>
+<td class="right">4.3889</td>
+<td class="right">8.4408</td>
+<td class="right">1.8714</td>
 </tr>
 <tr>
-<td class="right"><tt>4096</tt></td>
-<td class="right"><tt>49.3709</tt></td>
-<td class="right"><tt>8.4452</tt></td>
-<td class="right"><tt>17.3883</tt></td>
-<td class="right"><tt>3.7319</tt></td>
+<td class="right">4096</td>
+<td class="right">49.3709</td>
+<td class="right">8.4452</td>
+<td class="right">17.3883</td>
+<td class="right">3.7319</td>
 </tr>
 <tr>
-<td class="right"><tt>8192</tt></td>
-<td class="right"><tt>103.5701</tt></td>
-<td class="right"><tt>18.5369</tt></td>
-<td class="right"><tt>38.1285</tt></td>
-<td class="right"><tt>8.0310</tt></td>
+<td class="right">8192</td>
+<td class="right">103.5701</td>
+<td class="right">18.5369</td>
+<td class="right">38.1285</td>
+<td class="right">8.0310</td>
 </tr>
 <tr>
-<td class="right"><tt>16384</tt></td>
-<td class="right"><tt>220.9323</tt></td>
-<td class="right"><tt>39.6958</tt></td>
-<td class="right"><tt>80.9258</tt></td>
-<td class="right"><tt>18.5821</tt></td>
+<td class="right">16384</td>
+<td class="right">220.9323</td>
+<td class="right">39.6958</td>
+<td class="right">80.9258</td>
+<td class="right">18.5821</td>
 </tr>
 <tr>
-<td class="right"><tt>32768</tt></td>
-<td class="right"><tt>469.5507</tt></td>
-<td class="right"><tt>84.5129</tt></td>
-<td class="right"><tt>172.2964</tt></td>
-<td class="right"><tt>41.2126</tt></td>
+<td class="right">32768</td>
+<td class="right">469.5507</td>
+<td class="right">84.5129</td>
+<td class="right">172.2964</td>
+<td class="right">41.2126</td>
 </tr>
 <tr>
-<td class="right"><tt>65536</tt></td>
-<td class="right"><tt>1016.2149</tt></td>
-<td class="right"><tt>188.6718</tt></td>
-<td class="right"><tt>380.3507</tt></td>
-<td class="right"><tt>93.2924</tt></td>
+<td class="right">65536</td>
+<td class="right">1016.2149</td>
+<td class="right">188.6718</td>
+<td class="right">380.3507</td>
+<td class="right">93.2924</td>
 </tr>
 <tr>
-<td class="right"><tt>131072</tt></td>
-<td class="right"><tt>2156.4188</tt></td>
-<td class="right"><tt>399.7299</tt></td>
-<td class="right"><tt>791.6437</tt></td>
-<td class="right"><tt>210.9526</tt></td>
+<td class="right">131072</td>
+<td class="right">2156.4188</td>
+<td class="right">399.7299</td>
+<td class="right">791.6437</td>
+<td class="right">210.9526</td>
 </tr>
 <tr>
-<td class="right"><tt>262144</tt></td>
-<td class="right"><tt>4616.3540</tt></td>
-<td class="right"><tt>847.9829</tt></td>
-<td class="right"><tt>1692.9814</tt></td>
-<td class="right"><tt>467.6020</tt></td>
+<td class="right">262144</td>
+<td class="right">4616.3540</td>
+<td class="right">847.9829</td>
+<td class="right">1692.9814</td>
+<td class="right">467.6020</td>
 </tr>
 <tr>
-<td class="right"><tt>524288</tt></td>
-<td class="right"><tt>9732.4311</tt></td>
-<td class="right"><tt>1793.9729</tt></td>
-<td class="right"><tt>3545.2089</tt></td>
-<td class="right"><tt>1038.2164</tt></td>
+<td class="right">524288</td>
+<td class="right">9732.4311</td>
+<td class="right">1793.9729</td>
+<td class="right">3545.2089</td>
+<td class="right">1038.2164</td>
 </tr>
 </table>
 </div>
@@ -141,74 +141,74 @@ class with an array. Here's the results:
 </tr>
 </thead>
 <tr>
-<td class="right"><tt>1024</tt></td>
-<td class="right"><tt>0.3605</tt></td>
-<td class="right"><tt>0.3626</tt></td>
-<td class="right"><tt>0.4150</tt></td>
-<td class="right"><tt>0.5918</tt></td>
+<td class="right">1024</td>
+<td class="right">0.3605</td>
+<td class="right">0.3626</td>
+<td class="right">0.4150</td>
+<td class="right">0.5918</td>
 </tr>
 <tr>
-<td class="right"><tt>2048</tt></td>
-<td class="right"><tt>0.7651</tt></td>
-<td class="right"><tt>0.7446</tt></td>
-<td class="right"><tt>0.8749</tt></td>
-<td class="right"><tt>0.5021</tt></td>
+<td class="right">2048</td>
+<td class="right">0.7651</td>
+<td class="right">0.7446</td>
+<td class="right">0.8749</td>
+<td class="right">0.5021</td>
 </tr>
 <tr>
-<td class="right"><tt>4096</tt></td>
-<td class="right"><tt>1.6434</tt></td>
-<td class="right"><tt>1.6094</tt></td>
-<td class="right"><tt>1.9468</tt></td>
-<td class="right"><tt>1.2030</tt></td>
+<td class="right">4096</td>
+<td class="right">1.6434</td>
+<td class="right">1.6094</td>
+<td class="right">1.9468</td>
+<td class="right">1.2030</td>
 </tr>
 <tr>
-<td class="right"><tt>8192</tt></td>
-<td class="right"><tt>3.6497</tt></td>
-<td class="right"><tt>3.5216</tt></td>
-<td class="right"><tt>4.1014</tt></td>
-<td class="right"><tt>2.3926</tt></td>
+<td class="right">8192</td>
+<td class="right">3.6497</td>
+<td class="right">3.5216</td>
+<td class="right">4.1014</td>
+<td class="right">2.3926</td>
 </tr>
 <tr>
-<td class="right"><tt>16384</tt></td>
-<td class="right"><tt>7.9555</tt></td>
-<td class="right"><tt>8.0842</tt></td>
-<td class="right"><tt>9.3324</tt></td>
-<td class="right"><tt>5.4752</tt></td>
+<td class="right">16384</td>
+<td class="right">7.9555</td>
+<td class="right">8.0842</td>
+<td class="right">9.3324</td>
+<td class="right">5.4752</td>
 </tr>
 <tr>
-<td class="right"><tt>32768</tt></td>
-<td class="right"><tt>21.1833</tt></td>
-<td class="right"><tt>19.1183</tt></td>
-<td class="right"><tt>23.1170</tt></td>
-<td class="right"><tt>15.1998</tt></td>
+<td class="right">32768</td>
+<td class="right">21.1833</td>
+<td class="right">19.1183</td>
+<td class="right">23.1170</td>
+<td class="right">15.1998</td>
 </tr>
 <tr>
-<td class="right"><tt>65536</tt></td>
-<td class="right"><tt>54.6938</tt></td>
-<td class="right"><tt>53.4892</tt></td>
-<td class="right"><tt>72.3932</tt></td>
-<td class="right"><tt>34.6554</tt></td>
+<td class="right">65536</td>
+<td class="right">54.6938</td>
+<td class="right">53.4892</td>
+<td class="right">72.3932</td>
+<td class="right">34.6554</td>
 </tr>
 <tr>
-<td class="right"><tt>131072</tt></td>
-<td class="right"><tt>122.5008</tt></td>
-<td class="right"><tt>114.1937</tt></td>
-<td class="right"><tt>141.3504</tt></td>
-<td class="right"><tt>75.9064</tt></td>
+<td class="right">131072</td>
+<td class="right">122.5008</td>
+<td class="right">114.1937</td>
+<td class="right">141.3504</td>
+<td class="right">75.9064</td>
 </tr>
 <tr>
-<td class="right"><tt>262144</tt></td>
-<td class="right"><tt>279.8014</tt></td>
-<td class="right"><tt>262.5908</tt></td>
-<td class="right"><tt>343.4204</tt></td>
-<td class="right"><tt>160.8344</tt></td>
+<td class="right">262144</td>
+<td class="right">279.8014</td>
+<td class="right">262.5908</td>
+<td class="right">343.4204</td>
+<td class="right">160.8344</td>
 </tr>
 <tr>
-<td class="right"><tt>524288</tt></td>
-<td class="right"><tt>598.5605</tt></td>
-<td class="right"><tt>577.7487</tt></td>
-<td class="right"><tt>759.4405</tt></td>
-<td class="right"><tt>359.7824</tt></td>
+<td class="right">524288</td>
+<td class="right">598.5605</td>
+<td class="right">577.7487</td>
+<td class="right">759.4405</td>
+<td class="right">359.7824</td>
 </tr>
 </table>
 </div>
@@ -228,24 +228,24 @@ Let's compare the last lines of each:
 </thead>
 <tr>
 <td>struct/fixed</td>
-<td class="right"><tt>9732.4311</tt></td>
-<td class="right"><tt>1793.9729</tt></td>
-<td class="right"><tt>3545.2089</tt></td>
-<td class="right"><tt>1038.2164</tt></td>
+<td class="right">9732.4311</td>
+<td class="right">1793.9729</td>
+<td class="right">3545.2089</td>
+<td class="right">1038.2164</td>
 </tr>
 <tr>
 <td>class</td>
-<td class="right"><tt>598.5605</tt></td>
-<td class="right"><tt>577.7487</tt></td>
-<td class="right"><tt>759.4405</tt></td>
-<td class="right"><tt>359.7824</tt></td>
+<td class="right">598.5605</td>
+<td class="right">577.7487</td>
+<td class="right">759.4405</td>
+<td class="right">359.7824</td>
 </tr>
 <tr>
 <td>how much faster</td>
-<td class="right"><tt><b>16.259x</b></tt></td>
-<td class="right"><tt><b>3.105x</b></tt></td>
-<td class="right"><tt><b>4.668x</b></tt></td>
-<td class="right"><tt><b>2.885x</b></tt></td>
+<td class="right"><b>16.259x</b></td>
+<td class="right"><b>3.105x</b></td>
+<td class="right"><b>4.668x</b></td>
+<td class="right"><b>2.885x</b></td>
 </tr>
 </table>
 </div>

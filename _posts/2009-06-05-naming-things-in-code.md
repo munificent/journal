@@ -149,7 +149,7 @@ Good: list.Add(item);
 Bad:  list.GetCountInt();
 Good: list.GetCount();
       message.GetIntValue();
-      mmessage.GetFloatValue();
+      message.GetFloatValue();
 {% endhighlight %}
 
 ### Don't use "And" or "Or" in a function name.

@@ -96,9 +96,9 @@ With her OK, I started working on a plan. Since padding my résumé was a primar
 
 I spent a bunch of time reading submission guidelines. They usually want an outline (check) and some sample chapters (oops). So I spent a couple of weeks writing and revising a couple of chapters. This was a nice trial to see if I could actually write something that looked like a book chapter. Miracle of miracles, I could! For the record, the first chapter I wrote was [Object Pool](http://gameprogrammingpatterns.com/object-pool.html).
 
-I carefully looked at a range of different publishers and their compensation packages before making an educated choice about which ones to submit too. And by that I mean I sent it to O'Reilly because OMG having a book with an animal on it like [Perl's camel book](http://shop.oreilly.com/product/9780596000271.do) would be SO RAD.
+I carefully looked at a range of different publishers and their compensation packages before making an educated choice about which ones to submit to. And by that I mean I sent it to O'Reilly because OMG having a book with an animal on it like [Perl's camel book](http://shop.oreilly.com/product/9780596000271.do) would be SO RAD.
 
-I emailed them the submission with butterflies in my stomach which, when you think about it, is an absolutely pointless physiological reaction given that I was in my house all alone staring at my computer and not being attacked by a sabretooth tiger. A heightened sympathetic nervous system does not actually make email arrive faster.
+I emailed them the submission with butterflies in my stomach which, when you think about it, is an absolutely pointless physiological reaction given that I was in my house all alone staring at my computer and not being attacked by a sabre-toothed tiger. A heightened sympathetic nervous system does not actually make email arrive faster.
 
 Unbelievably, they got back in touch. They were interested! I had an editor! He had feedback! He talked to me like I was an actual writer and not some jackass who decided he was an author because he thought it sounded cool. There was talk of a (small) advance. I felt like hot shit.
 
@@ -112,9 +112,9 @@ I thought I was back on track but then something funny happened. It turned out I
 
 All of a sudden, we were packing up our belongings, kid, and pets; saying goodbye to friends and family; and moving along what is practically the [longest straight line move](https://www.google.com/maps/dir/Orlando,+FL/Seattle,+WA/@36.7354942,-119.5307801,4z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x88e773d8fecdbc77:0xac3b2063ca5bf9e!2m2!1d-81.3792365!2d28.5383355!1m5!1m1!1s0x5490102c93e83355:0x102565466944d59a!2m2!1d-122.3320708!2d47.6062095!3e4) you can make in the continental US. I was plunged headlong into learning all sorts of new stuff at work that had nothing to do with games. We got another dog and had another kid.
 
-That writing scheduled was looking a little, uh, unrealistic. Eventually, I realized my heart just wasn't in the book anymore. I called my editor, apologized profusely, and backed out of my deal. Without the pressure to write, I forgot about the book almost completely. I hadn't *abandoned* it, really. I told myself I'd get back to is *some day*. It languished for a year. Then another.
+That writing scheduled was looking a little, uh, unrealistic. Eventually, I realized my heart just wasn't in the book anymore. I called my editor, apologized profusely, and backed out of my deal. Without the pressure to write, I forgot about the book almost completely. I hadn't *abandoned* it, really. I told myself I'd get back to it *some day*. It languished for a year. Then another.
 
-It would have gone into my overflowing bucket of unfinished projects if it wasn't for one thing: *people kept emailing me about it.* You see, I'd put the entire table of contents online along with the handful of chapters I had written. Every now and then I would get a long, wonderful email from someone telling me how a chapter really helped some abstract concept click in their mind and how they couldn't wait for the next chapter. Good god, their enthusiasm made me feel terrible.
+It would have gone into my overflowing bucket of unfinished projects if it wasn't for one thing: *people kept emailing me about it.* You see, I'd put the entire table of contents online along with the handful of chapters I had written. Every now and then I would get a long, wonderful email from someone telling me how a chapter really helped some abstract concept click in their mind and how they couldn't wait for the next chapter. Good God, their enthusiasm made me feel terrible.
 
 ## Resurrection and Rebirth
 
@@ -126,11 +126,11 @@ Around this time, I'd stumbled onto [that article about Jerry Seinfeld's trick f
 
 Without putting much thought into it, I figured I'd give it a try.  I hadn't written a word on the book in well over a year, but on June 7th, I started a new chapter on [Game Loops](http://gameprogrammingpatterns.com/game-loop.html). I wrote 777 words of first draft, less than an hour of work.
 
-The next day, I wrote 489 words. Then a meager 178. But it wasn't *zero*. This weird desire not to break the chain made me drag myself off my ass and at least write *something*, and once those 178 words were done, I was that much closer to the end. The next day, I did 889 words. The day after that, I finished the first draft.
+The next day, I wrote 489 words. Then a meager 178. But it wasn't *zero*. This weird desire not to break the chain made me drag myself off my ass and at least write *something*, and once those 178 words were done, I was that much closer to the end. The next day, I did 889 words. The day after that, I finished the first draft of the chapter.
 
 ## Interlude: How a Chapter is Made!
 
-I got so wrapped up in my own little narcissistic narrative I forgot to tell you anything useful about the actual mechanics of how I write! Since I decided to post chapters online as I completed them, I knew I couldn't just do a first draft of the whole book before revising anything. Trust me, no one wants to read a first draft. Instead, I treat each chapter like a little standalone piece of writing. I do it like this:
+I got so wrapped up in my own little narcissistic narrative I forgot to tell you anything useful about the actual mechanics of how I write! Since I decided to post chapters online as I completed them, I knew I couldn't just do a first draft of the whole book before revising anything. Trust me, *no one* wants to read a first draft. Instead, I treat each chapter like a little standalone piece of writing. I do it like this:
 
 ### 1. Outline the chapter
 
@@ -154,7 +154,7 @@ I don't think those bullet points or indentation even mean anything. It's just w
 
 The outline will hint at the example code so I know what blocks of code need to be written. Then I come back and write the actual code. Sometimes I'll interleave this with writing the text, other times I'll do all of the code up front.
 
-I write the code in [separate C++ source files](https://github.com/munificent/game-programming-patterns/tree/master/code/cpp) so that I can compile it and makes sure it's free of errors. For some chapters, I even wrote unit tests. The script that converts the Markdown to HTML pulls in the code snippets directly from those files.
+I write the code in [separate C++ source files](https://github.com/munificent/game-programming-patterns/tree/master/code/cpp) so that I can compile it and make sure it's free of errors. For some chapters, I even wrote unit tests. The script that converts the Markdown to HTML pulls in the code snippets directly from those files.
 
 Here's a bit of markdown for the prototype chapter:
 
@@ -199,7 +199,7 @@ As soon as the first draft is done, I circle back and do the second. This involv
 
 The second draft is shorter than the first. Writing to me is like pottery. I slap all the clay on the wheel in a big blob and then gradually work it down to the final piece. I can get about 1,000 words of this done a day.
 
-I *love* this part. Feeling the prose get tigher and clearer is exactly as satisfying as refactoring messy code. It's less stressful because I feel like anything I do now just makes it better but the chapter is safely *complete* regardless. There's no more blank page so editing is just pure goodness.
+I *love* this part. Feeling the prose get tigher and clearer is exactly as satisfying as refactoring messy code. It's less stressful because I feel like anything I do now just makes it better but the chapter is safely *complete* regardless. There's no more scary blank page, so editing is just pure goodness.
 
 ### 5. Do the third draft
 
@@ -287,7 +287,7 @@ That left marketing and advertising&mdash;making sure people knew about the book
 
 Once I had that decided and squared away, all that was left was to write the rest of the chapters. So I wrote. And wrote. And wrote. Every single day. I wrote while my wife gave the kids a bath. I wrote at five in the morning before we went on day trips. I wrote when I was sick. I wrote on Halloween, Thanksgiving, Christmas, and New Year's.
 
-When I finished a chapter, I'd spent a few days where "writing" consisted of fixing bugs, responding to email and other minutia. But then I'd get to the next chapter.
+When I finished a chapter, I'd spend a few days where "writing" consisted of fixing bugs, responding to email and other minutia. But then I'd get to the next chapter.
 
 After a while, writing the book receded into the back of my mind. It wasn't something I thought much about during the day. When people asked what I did outside of work, I'd forget to include it sometimes. It was just ever-present background noise. Exactly 322 days after I started the first draft of Game Loop, all of these little slices of low thread priority background work on the book added up.
 

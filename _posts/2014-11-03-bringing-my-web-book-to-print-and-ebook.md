@@ -71,7 +71,7 @@ Now you're 90% of the way to having an eBook. It's the other 10% that makes you 
 
 Worse, eBook readers handle CSS about as well as Netscape Navigator and IE4 did. If you lived through the horror show that was web design in the '90s where you had three browsers open all day, you know what I'm talking about. Except that now each of those "browsers" is a separate physical device that you have to jump through hoops to get your "site" on.
 
-Getting an updated `.mobi` file into the Kindle app on my tablet involved some combination of DropBox, an Android file manager, going to the Amazon website to delete the previous version, sending an email to a mysterious dead drop address granted me by Amazon, waiting for the Kindle app to crash a few times, and, on occasion, blood sacrifice.
+Getting an updated `.mobi` file into the Kindle app on my tablet involved some combination of Dropbox, an Android file manager, going to the Amazon website to delete the previous version, sending an email to a mysterious dead drop address granted me by Amazon, waiting for the Kindle app to crash a few times, and, on occasion, blood sacrifice.
 
 The things I do for love.
 
@@ -115,7 +115,7 @@ If you ignore the fact that it took about a hundred iterations to please the [EP
 
 Warning: Seriously ardent exposition on design lies ahead. The rest of this post will be like watching two of your best friends who after years of awkward sexual tension finally hook up and now aren't so much showering you with public displays of affection as they are public displays of not-always-entirely-dry humping. I really *really* like fonts.
 
-When I first first started the book, I wrote a little promise to myself in my pink locked diary that I never show anyone. (Except now you, I guess, Dearest Reader.) That promise was, "If I can finish writing this whole damn manuscript, I will let myself typeset it."
+When I first started the book, I wrote a little promise to myself in my pink locked diary that I never show anyone. (Except now you, I guess, Dearest Reader.) That promise was, "If I can finish writing this whole damn manuscript, I will let myself typeset it."
 
 I know that probably sounds strange but if you haven't figured out I'm a bit off center by now, you must be skimming this post for the pictures.
 
@@ -175,7 +175,7 @@ That just left a body font, the most important font in the book. Like I do, I ov
 
 * **But not *too* small.** The prose is heavily seasoned with `inline code`, so the body and code fonts need to have similar vertical metrics or it will look like Danny DeVito and Arnold Schwarzenegger in *Twins*.
 
-* **I love [Old Style][] typefaces.** Garamond, Jenson, and Bembo are my homeboys. Low contrast in line thickness, angled stress and a bit of humanist irregularity, *aww yiss.* I can't stand the wimpy vertical strokes of Didone fonts. I seriously get irrationally angered by them.
+* **I love [Old Style][] typefaces.** Garamond, Jenson, and Bembo are my homeboys. Low contrast in line thickness, angled stress and a bit of humanist irregularity, *aww yiss.* I can't stand the wimpy horizontal strokes of Didone fonts. I seriously get irrationally angered by them.
 
 * **But a font that's *too* calligraphic would clash with the other fonts.** A page should look like a cohesive whole. That won't happen if the body text looks enscribed by a medieval monk's quill pen while the code and headers are machined out by a robot.
 
@@ -242,7 +242,7 @@ I set up a running footer, and designed the section and chapter headers. Not gon
 
 Once I had my grid and fonts, all that was left to do was typeset the whole book. That meant bringing in all of the text. I couldn't just copy and paste the web pages into InDesign. I'd already carefully authored (in markdown) emphasis, bold, lists, headers, subheaders, etc. I did *not* want to start from plaintext and do that all over again.
 
-Fortunately, InDesign has a feature called "XML import". You can take an arbitrary XML document, import it to InDesign, and automatically map XML tags to paragraphic and character styles you've created in InDesign. Unfortunately, this features seems to have been implemented by a narcoleptic intern who sidestepped any code review process.
+Fortunately, InDesign has a feature called "XML import". You can take an arbitrary XML document, import it to InDesign, and automatically map XML tags to paragraphic and character styles you've created in InDesign. Unfortunately, this feature seems to have been implemented by a narcoleptic intern who sidestepped any code review process.
 
 It's one of the buggiest pieces of nominally commercial-grade software I've ever used. I, on more than one occasion, managed to get it to completely corrupt an InDesign file beyond repair. (Fortunately, help was just a `git reset` away.)
 
@@ -469,11 +469,11 @@ Eventually, I found a way out: decimal inches. Most of my print work has used...
 
 After a bunch of monkeying around, I found a new grid. Instead of a vertical grid where prose is every three grid lines and code is every two, I bumped the fraction to 3/4. This opened up the code and asides a bit relative to the text. I brought down the top margin and gave myself more than enough breathing room near the spine.
 
-All that was left to do was update all of the pages. By this point, I was angry and fired up. I was *so close* to thinking the book was done and I just wanted it to be over. I *burned* through those pages working on them practically every waking moment. This time, I got the whole three-hundred-something pages done in a week:
+All that was left to do was update all of the pages. By this point, I was angry and fired up. I was *so close* to thinking the book was done and I just wanted it to be over. I *burned* through those pages, working on them practically every waking moment. This time, I got the whole three-hundred-something pages done in a week:
 
 <figure>
   <iframe width="560" height="315" src="//www.youtube.com/embed/ikirNuS7jrI" frameborder="0" allowfullscreen></iframe>
-  <figcaption>Fortunately, years playing Pokemon have given fantastic grinding skills.</figcaption>
+  <figcaption>Fortunately, years playing Pokemon have given me fantastic grinding skills.</figcaption>
 </figure>
 
 I uploaded a new PDF, crossed my fingers and waited for the new proof to arrive. When it did... God what a sigh of relief. It looked fine. Totally readable. Hallelujah.

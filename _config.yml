@@ -5,8 +5,10 @@ markdown: kramdown
 exclude: [
   TODO,
   README.md,
-  style.scss,
-  watch
+  develop,
+  build,
+  Gemfile,
+  Gemfile.lock
 ]
 
 # Custom variables:

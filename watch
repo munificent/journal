@@ -1,5 +1,0 @@
-#!/bin/sh
-
-sass --watch style.scss:style.css &
-
-jekyll serve --watch

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What Color is Your Function?"
-categories: code language dart lua golang javascript
+categories: code language dart lua go javascript
 ---
 
 I don't know about you, but nothing gets me going in the morning quite like a

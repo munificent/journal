@@ -58,7 +58,7 @@ wrote that sentence, and I don't even know what the hell that means.
 The [BETA book](http://daimi.au.dk/~beta/Books/index.html#betabook_download) is
 a bit... dense. Or maybe it's just that the syntax is so... *weird*:
 
-{% highlight text %}
+```text
 Account:
   (# balance: @integer;
     Deposit:
@@ -75,13 +75,13 @@ Account:
       exit balance
       #);
   #)
-{% endhighlight %}
+```
 
 I pride myself on being able to grok syntax on a pretty wide variety of
 languages but I'm not even sure what's a *comment* there. I *think* if you
 translated that to JavaScript, it would be something like:
 
-{% highlight javascript %}
+```javascript
 var account = {
   balance: undefined,
 
@@ -93,7 +93,7 @@ var account = {
     return this.balance -= amount;
   }
 };
-{% endhighlight %}
+```
 
 Like avant garde jazz, this may be genius, but it's so out there and
 unapproachable, it's hard to tell. Fortunately, the Self guys have deciphered
@@ -118,7 +118,7 @@ prototypal languages too, with a couple of names changed.
 
 Here's an example:
 
-{% highlight java %}
+```java
 class Account {
   int balance = 0;
   int deposit(int amount) {
@@ -133,14 +133,14 @@ class CrappyBankAccount extends Account {
     super.deposit(amount - 2);
   }
 }
-{% endhighlight %}
+```
 
 So now, if you do something like this:
 
-{% highlight java %}
+```java
 Account account = new CrappyBankAccount();
 account.deposit(23);
-{% endhighlight %}
+```
 
 First, it invokes `CrappyBankAccount#deposit()`. Then, when that calls
 `super.deposit()`, it chains to the base `Account#deposit()` method.
@@ -158,7 +158,7 @@ constraints that I want my class to ensure.
 
 For example:
 
-{% highlight java %}
+```java
 class GameObject {
   float x, y;
 
@@ -173,7 +173,7 @@ class ScaryMonster extends GameObject {
     renderer.drawImage(Images.SCARY_MONSTER);
   }
 }
-{% endhighlight %}
+```
 
 Here we're making a game with a base class for a character in the world. It
 provides a default `render()` method that tells the renderer where to render.
@@ -194,7 +194,7 @@ you did the right thing.
 To solve this, what I (and lots of other people) do is split these into two
 methods, like so:
 
-{% highlight java %}
+```java
 class GameObject {
   float x, y;
 
@@ -211,7 +211,7 @@ class ScaryMonster extends GameObject {
     renderer.drawImage(Images.SCARY_MONSTER);
   }
 }
-{% endhighlight %}
+```
 
 Our public `render()` method is now designed to *not* be overridden. (In C++ or
 C# you'd make it non-virtual.) It does the set-up it needs and calls the
@@ -247,7 +247,7 @@ like we want in the `GameObject` example) and then walks down to the subclasses
 at the superclass's whim. In other words, our example with BETA-style
 overriding would look like:
 
-{% highlight java %}
+```java
 class GameObject {
   float x, y;
 
@@ -262,13 +262,13 @@ class ScaryMonster extends GameObject {
     renderer.drawImage(Images.SCARY_MONSTER);
   }
 }
-{% endhighlight %}
+```
 
 If you chain more than two levels of subclasses, BETA scales better because you
 don't need to keep coming up with new names. It has some other neat attributes
 too.
 
-{% highlight java %}
+```java
 class GameObject {
   float x, y;
 
@@ -284,7 +284,7 @@ class ScaryMonster extends GameObject {
     renderer.drawImage(Images.SCARY_MONSTER);
   }
 }
-{% endhighlight %}
+```
 
 Here, we've added a call to `restoreState()` after the call to `inner()`. By
 giving control of the dispatch to the base class, it can execute code both

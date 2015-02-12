@@ -13,7 +13,7 @@ Not only can you now define your own infix operators, including specifying
 precedence and associativity, but other large chunks of Magpie syntax are now
 defined at the library level. Take this chunk of (meaningless) code:
 
-{% highlight magpie %}
+```magpie
 def doStuff(a, b)
     if a and b then
         print("Both " ~ a ~ " and " ~ b ~ " are truthy")
@@ -21,7 +21,7 @@ def doStuff(a, b)
         print("Their sum is " ~ a + b)
     end
 end
-{% endhighlight %}
+```
 
 The operators you see there, `+` and `~` (for string concatenation) are both
 [implemented in Magpie](https://github.com/munificent/magpie/blob/master/base/operators.mag). So is the `and` keyword. (It's [particularly
@@ -45,7 +45,7 @@ have a secret weapon.
 Here's the Java code that parses expressions in Magpie (which means it parses
 pretty much everything since Magpie doesn't have statements):
 
-{% highlight java %}
+```java
 public Expr parseExpression(int stickiness) {
   Token token = consume();
   PrefixParser prefix = mGrammar.getPrefixParser(token);
@@ -61,7 +61,7 @@ public Expr parseExpression(int stickiness) {
 
   return left;
 }
-{% endhighlight %}
+```
 
 That's it, for reals. Precedence, associativity, infix operators, they all get
 handled by that little chunk of code. You may be thinking that `mGrammars`
@@ -72,7 +72,7 @@ the plus operator, and it returns a parser object that knows how to parse an
 addition expression. Prefix and infix parsers are just objects that implement
 one of these dead simple interfaces:
 
-{% highlight java %}
+```java
 interface PrefixParser {
   Expr parse(MagpieParser parser, Token token);
 }
@@ -81,7 +81,7 @@ interface InfixParser {
   Expr parse(MagpieParser parser, Expr left, Token token);
   int getStickiness();
 }
-{% endhighlight %}
+```
 
 I won't go into detail about how these work (I'm trying to throw together a
 more complete post about just Pratt parsers later), but the important bit is
@@ -106,7 +106,7 @@ To fix that, we'll build a shim. What we need is a Java object that implements
 `PrefixParser` or `InfixParser` but which actually runs Magpie code to do the
 parsing. I'll pick infix here just 'cause. It looks like this:
 
-{% highlight java %}
+```java
 private static class MagpieInfixParser extends InfixParser {
   public MagpieInfixParser(Interpreter interpreter, Obj parser) {
     mInterpreter = interpreter;
@@ -137,7 +137,7 @@ private static class MagpieInfixParser extends InfixParser {
   private Interpreter mInterpreter;
   private Obj mParser;
 }
-{% endhighlight %}
+```
 
 There are a couple of important bits here. The `Obj` class is the core class
 in the interpreter that represents a Magpie object. If `Object` is any object
@@ -160,7 +160,7 @@ back (an expression) and marshalls that back to Java and returns it.
 
 Over in Magpie, it looks like this:
 
-{% highlight magpie %}
+```magpie
 class AndParser
     def parse(parser MagpieParser, left Expression,
               token Token -> Expression)
@@ -180,7 +180,7 @@ class AndParser
 end
 
 MagpieParser registerInfixParser("and", AndParser new())
-{% endhighlight %}
+```
 
 The Magpie side of the parser is just a class with a `parse` method. The first
 two lines parse the rest of the expression (the left-hand side of the operator
@@ -191,17 +191,17 @@ Like the Lisp languages, Magpie lets you treat code as data, and has classes
 to let you build objects that represent bits of code. Doing that manually is
 kind of lame though:
 
-{% highlight magpie %}
+```magpie
 CallExpression new(MessageExpression(name: "+"),
     TupleExpression new(List of(
         IntExpression new(1), IntExpression new(2))))
-{% endhighlight %}
+```
 
 Quotations let you write that out just like it would appear in code:
 
-{% highlight magpie %}
+```magpie
 { 1 + 2 }
-{% endhighlight %}
+```
 
 If you surround an expression in curlies, you'll get an object representing
 the expression back, instead of evaluating it. Inside a quotation, you can
@@ -221,13 +221,13 @@ Once this parser is all hooked up, when an `and` is encountered, the parser
 will desugar it to a little pattern match that does the right thing. In other
 words, if you type:
 
-{% highlight magpie %}
+```magpie
 happy and know(it)
-{% endhighlight %}
+```
 
 It will expand to:
 
-{% highlight magpie %}
+```magpie
 do
     var temp__ = happy
     match temp__ true?
@@ -235,7 +235,7 @@ do
         else temp__
     end
 end
-{% endhighlight %}
+```
 
 That looks a little weird, but if you think about it, it does the right thing.
 If `happy` is truthy, it will return `know(it)`. Otherwise, it will short-
@@ -251,27 +251,27 @@ times. Do I have to write a whole class just to do that?
 The answer is "no", of course. If you just want an infix operator that
 desugars to a function call, look no further than:
 
-{% highlight magpie %}
+```magpie
 definfix ~* 60 (left String, count Int -> String)
     var result = ""
     for i = 1 to(count) do result = result ~ left
     result
 end
-{% endhighlight %}
+```
 
 Here `60` defines the precedence level so it knows how to parse our new
 operator if you're crazy enough to mix it in with others without parentheses.
 Now when the parser encounters:
 
-{% highlight magpie %}
+```magpie
 "Beetlejuice " ~* 3
-{% endhighlight %}
+```
 
 It will transform that to a call to:
 
-{% highlight magpie %}
+```magpie
 ~*("Beetlejuice ", 3)
-{% endhighlight %}
+```
 
 You may be wondering where `definfix` comes from. Why, it's a custom parser
 [written in Magpie](https://github.com/munificent/magpie/blob/master/base/syntax/OperatorParser.mag), of course! Turtles all the way down!
@@ -281,23 +281,23 @@ You may be wondering where `definfix` comes from. Why, it's a custom parser
 I got all of this working and then ran into a real snag. Let's say we have
 some module that defines a new operator:
 
-{% highlight magpie %}
+```magpie
 // In repeat.mag:
 definfix ~* 60(left String, count Int -> String)
     var result = ""
     for i = 1 to(count) do result = result ~ left
     result
 end
-{% endhighlight %}
+```
 
 Then we want to import it and use it in another one:
 
-{% highlight magpie %}
+```magpie
 // In summon-ghost.mag:
 import("repeat.mag")
 
 print("Beetlejuice " ~* 3)
-{% endhighlight %}
+```
 
 Do you see the problem? Let's walk through how most interpreters (including
 Magpie) handle this:
@@ -329,7 +329,7 @@ each expression in a file *incrementally*. Getting this working was actually
 [a tiny code change](https://github.com/munificent/magpie/commit/bffe49291e9709b5bfc960420fcc6f5a4b1614bd) and means you can now extend the syntax *and then use
 that extension immediately in the same file*. This is perfectly valid:
 
-{% highlight magpie %}
+```magpie
 definfix ~* 60(left String, count Int -> String)
     var result = ""
     for i = 1 to(count) do result = result ~ left
@@ -337,7 +337,7 @@ definfix ~* 60(left String, count Int -> String)
 end
 
 print("Beetlejuice " ~* 3)
-{% endhighlight %}
+```
 
 The only limitation is that you have to do this at the top-level. Given that
 most languages don't let you do *any* of this, that doesn't seem like too much

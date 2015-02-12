@@ -12,7 +12,7 @@ This is a fake post to check out all of the different kinds of formatting that n
 
 Here is a code block with the maximum code width (70 characters):
 
-{% highlight java %}
+```java
          1         2         3         4         5         6         7
 1234567890123456789012345678901234567890123456789012345678901234567890
 class Parser {
@@ -35,7 +35,7 @@ class Parser {
   private final Map<TokenType, PrefixParselet> mPrefixParselets =
       new HashMap<TokenType, PrefixParselet>();
 }
-{% endhighlight %}
+```
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed luctus suscipit elit mattis blandit. Sed dolor metus, fermentum vitae vestibulum ut, sollicitudin at tortor. Donec ac lobortis tortor. Proin id magna nisl. Pellentesque porttitor rutrum orci non dignissim. Morbi eros tortor, ultrices id aliquet quis, commodo ut purus. Suspendisse eget nunc lacus. In id sodales tortor.
 

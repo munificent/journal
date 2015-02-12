@@ -17,7 +17,7 @@ they work. First, Java, a typical static OOP language:
 If you look at a Java source file, there are almost two distinct languages
 mixed together. Consider this simple program:
 
-{% highlight java %}
+```java
 public class Hello {
     public static void main() {
         Hello hello = new Hello();
@@ -28,7 +28,7 @@ public class Hello {
         System.out.println(greeting);
     }
 }
-{% endhighlight %}
+```
 
 At the top level is the language of *definitions*. This language owns keywords
 like `public`, `class`, and `implements`. It's used for creating types,
@@ -58,14 +58,14 @@ program runs.
 In contrast, a dynamic language like Python only has a single language: the
 language of statements. Consider this little script:
 
-{% highlight python %}
+```python
 class Hello:
     def say(self, greeting):
         print greeting
 
 hello = Hello()
 hello.say("Hello!")
-{% endhighlight %}
+```
 
 It does pretty much the same thing as the Java program, but there's an
 important distinction. Instead of having a special `main()` method that gets
@@ -91,7 +91,7 @@ follows in Python's footsteps. There is no special definition/statement
 dichotomy, and classes are created, extended, and modified imperatively at
 runtime. This is a valid Magpie program and runs without any type-checking:
 
-{% highlight magpie %}
+```magpie
 class Hello
 end
 
@@ -99,13 +99,13 @@ def Hello say(greeting) print(greeting)
 
 var hello = Hello new
 hello say("Hello!")
-{% endhighlight %}
+```
 
 If we *did* want to type-check it, only a simple change is needed (in addition
 to actually adding some type annotations, of course): create a `main()`
 function:
 
-{% highlight magpie %}
+```magpie
 class Hello
 end
 
@@ -115,7 +115,7 @@ var main()
     var hello = Hello new
     hello say("Hello!")
 end
-{% endhighlight %}
+```
 
 This program will now type-check that the argument you pass to `hello()`
 matches the declared type, `String`. It will do this *before* `main()` is
@@ -163,7 +163,7 @@ modify classes at any point, and we can execute any imperative code after
 type-checking, then what's to prevent us from modifying a class after it's
 been type-checked into something that will no longer work? For example:
 
-{% highlight magpie %}
+```magpie
 class Foo
 end
 
@@ -177,7 +177,7 @@ var main(->)
     var foo = Foo new
     foo bar
 end
-{% endhighlight %}
+```
 
 When `main()` is type-checked, `Foo` has a method called `bar` so it looks
 fine. But by the time we get to executing it, we've actually yanked that

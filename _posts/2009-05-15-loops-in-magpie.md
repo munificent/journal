@@ -43,17 +43,17 @@ user wants a new variable for the current item. Also, iterating through
 multiple collections simultaneously should be fairly easy to do. This leads me
 to adding just one new keyword:
 
-{% highlight magpie %}
+```magpie
 for <var> <- <generator> do
     ...
 end
-{% endhighlight %}
+```
 
 In addition, multiple `for` clauses can be provided (but only one `do`) to
 iterate through multiple collections in parallel. I still need to work out the
 details, but I'm thinking that that will be syntactic sugar for:
 
-{% highlight magpie %}
+```magpie
 // evaluate the generator expression once
 def _generator <- Generate <generator>
 
@@ -64,11 +64,11 @@ while Not _generator.IsDone do
     ...
     _generator.MoveNext
 end
-{% endhighlight %}
+```
 
 Using that, the use cases I have can be solved by:
 
-{% highlight magpie %}
+```magpie
 // iterating through a collection
 for item <- someList do
     Print item
@@ -99,7 +99,7 @@ end
 for i <- Range (10, 30)
     Print i.String
 end
-{% endhighlight %}
+```
 
 In those examples, `Reverse`, `Indexes`, `Times`, and `Range` can all be
 simple library functions. There's nothing magical about them. This may change

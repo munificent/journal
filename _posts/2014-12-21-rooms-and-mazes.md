@@ -198,9 +198,9 @@ Earlier, I said that I don't want a perfect dungeon because they make for crappy
 
 Fixing that is pretty simple. In step 3, when we cull the unneeded connectors, we give them a *slight* chance of being opened up. Something like:
 
-{% highlight dart %}
+```dart
 if (rng.oneIn(50)) _carve(pos, CELL_DOOR);
-{% endhighlight %}
+```
 
 This occasionally carves an extra opening between regions. That gives us the imperfect loops we want to make the dungeon more fun to play in. Note that this is also easily tunable. If we make the chance more likely, we get more densely connected dungeons.
 

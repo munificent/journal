@@ -10,7 +10,7 @@ trying to solve anyway.
 
 Here's one:
 
-{% highlight csharp %}
+```csharp
 [Flags]
 public enum Fruits
 {
@@ -20,7 +20,7 @@ public enum Fruits
     Date        = 8,
     Eggplant    = 16
 }
-{% endhighlight %}
+```
 
 Nice, clean syntax. The way they solved C++'s name collision issues with enum
 values is genius: `Fruits.Apple`. Clearly these guys are using the old noggin.
@@ -30,9 +30,9 @@ values is genius: `Fruits.Apple`. Clearly these guys are using the old noggin.
 The one thing that *does* annoy me about flag enums is the syntax to see if a
 given flag (or set of flags) is set:
 
-{% highlight csharp %}
+```csharp
 if ((myFruit & Fruits.Date) == Fruits.Date)
-{% endhighlight %}
+```
 
 I'm not afraid of bitwise operators, but there's some serious lameness in
 here. Needing to specify the explicit `==` for type safety and having to use
@@ -43,7 +43,7 @@ Gross.
 
 Behold the solution:
 
-{% highlight csharp %}
+```csharp
 public static class FruitsExtensions
 {
     public static bool IsSet(this Fruits fruits, Fruits flags)
@@ -51,17 +51,17 @@ public static class FruitsExtensions
         return (fruits & flags) == flags;
     }
 }
-{% endhighlight %}
+```
 
 With that, you can just do:
 
-{% highlight csharp %}
+```csharp
 if (myFruit.IsSet(Fruits.Date))
-{% endhighlight %}
+```
 
 Much nicer. For kicks, here's some other useful methods:
 
-{% highlight csharp %}
+```csharp
 public static class FruitsExtensions
 {
     public static bool IsSet(this Fruits fruits, Fruits flags)
@@ -84,7 +84,7 @@ public static class FruitsExtensions
         return fruits & (~flags);
     }
 }
-{% endhighlight %}
+```
 
 Useful, no?
 
@@ -94,7 +94,7 @@ So, if you're like me and [this guy](http://devlicious.com/blogs/christopher_ben
 just fixes one enum. Can I solve it for all enums?" Ideally, you'd do
 something like:
 
-{% highlight csharp %}
+```csharp
 public static class EnumExtensions
 {
     public static bool IsSet<T>(this T value, T flags) where T : Enum
@@ -102,13 +102,13 @@ public static class EnumExtensions
         return (value & flags) == flags;
     }
 }
-{% endhighlight %}
+```
 
 Unfortunately, that doesn't fly. You can't use `Enum` as a constraint.
 Likewise, there's no way to require a typeparam to implement an operator (like
 `&` above). You *can* implement a generic solution for this:
 
-{% highlight csharp %}
+```csharp
 public static class EnumExtensions
 {
     public static bool IsSet<T>(this T value, T flags)
@@ -175,6 +175,6 @@ public static class EnumExtensions
         return op((T)value, (T)flags);
     }
 }
-{% endhighlight %}
+```
 
 &hellip;but, yeah, not exactly fun using reflection for this.

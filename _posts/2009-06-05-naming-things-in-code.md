@@ -26,26 +26,26 @@ but work more or less for any language.
 
 ### The name should be a noun phrase.
 
-{% highlight text %}
+```text
 Bad:  Happy
 Good: Happiness
-{% endhighlight %}
+```
 
 ### Do not use namespace-like prefixes.
 
 That's what namespaces are for.
 
-{% highlight text %}
+```text
 Bad:  SystemOnlineMessage
 Good: System::Online::Message
-{% endhighlight %}
+```
 
 ### Use just enough adjectives to be clear.
 
-{% highlight text %}
+```text
 Bad:  IAbstractFactoryPatternBase
 Good: IFactory
-{% endhighlight %}
+```
 
 ### Do not use "Manager" or "Helper" or other null words in a type name.
 
@@ -53,104 +53,104 @@ If you need to add "Manager" of "Helper" to a type name, the type is either
 poorly named or poorly designed. Likely the latter. Types should manage and
 help themselves.
 
-{% highlight text %}
+```text
 Bad:  ConnectionManager
       XmlHelper
 Good: Connection
       XmlDocument, XmlNode, etc.
-{% endhighlight %}
+```
 
 ### If a class doesn't represent something easily comprehensible, consider a concrete metaphor.
 
-{% highlight text %}
+```text
 Bad:  IncomingMessageQueue
       CharacterArray
       SpatialOrganizer
 Good: Mailbox
       String
       Map
-{% endhighlight %}
+```
 
 ### If you use a metaphor, use it consistently.
 
-{% highlight text %}
+```text
 Bad:  Mailbox, DestinationID
 Good: Mailbox, Address
-{% endhighlight %}
+```
 
 ## Functions (Methods, Procedures)
 
 ### Be terse.
 
-{% highlight text %}
+```text
 Bad:  list.GetNumberOfItems();
 Good: list.Count();
-{% endhighlight %}
+```
 
 ### Don't be too terse.
 
-{% highlight text %}
+```text
 Bad:  list.Verify();
 Good: list.ContainsNull();
-{% endhighlight %}
+```
 
 ### Avd abbrvtn.
 
-{% highlight text %}
+```text
 Bad:  list.Srt();
 Good: list.Sort();
-{% endhighlight %}
+```
 
 ### Name functions that do things using verbs.
 
-{% highlight text %}
+```text
 Bad:  obj.RefCount();
 Good: list.Clear();
       list.Sort();
       obj.AddReference();
-{% endhighlight %}
+```
 
 ### Name functions that return a boolean (i.e. predicates) like questions.
 
-{% highlight text %}
+```text
 Bad:  list.Empty();
 Good: list.IsEmpty();
       list.Contains(item);
-{% endhighlight %}
+```
 
 ### Name functions that just return a property and don't change state using nouns.
 
-{% highlight text %}
+```text
 Bad:  list.GetCount();
 Good: list.Count();
-{% endhighlight %}
+```
 
 (In C#, you'd actually use properties for this.)
 
 ### Don't make the name redundant with an argument.
 
-{% highlight text %}
+```text
 Bad:  list.AddItem(item);
       handler.ReceiveMessage(msg);
 Good: list.Add(item);
       handler.Receive(msg);
-{% endhighlight %}
+```
 
 ### Don't make the name redundant with the receiver.
 
-{% highlight text %}
+```text
 Bad:  list.AddToList(item);
 Good: list.Add(item);
-{% endhighlight %}
+```
 
 ### Only describe the return in the name if there are identical functions that return different types.
 
-{% highlight text %}
+```text
 Bad:  list.GetCountInt();
 Good: list.GetCount();
       message.GetIntValue();
       message.GetFloatValue();
-{% endhighlight %}
+```
 
 ### Don't use "And" or "Or" in a function name.
 
@@ -160,11 +160,11 @@ much. Break it into smaller pieces and name accordingly.
 If you want to ensure this is an atomic operation, consider creating a name
 for that entire operation, or possibly a class that encapsulates it.
 
-{% highlight text %}
+```text
 Bad:  mail.VerifyAddressAndSendStatus();
 Good: mail.VerifyAddress();
       mail.SendStatus();
-{% endhighlight %}
+```
 
 ## Does it Matter?
 

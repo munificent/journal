@@ -29,31 +29,31 @@ Some more caveats before I get going:
 
 OK, party time! After playing around with it a bit, as far as I can tell, *TypeScript's subtype relations are more permissive than I expected*. This isn't necessarily bad, just surprising. As a preamble, let's define a supertype and subtype:
 
-{% highlight dart %}
+```dart
 class Base {}
 class Derived extends Base {}
-{% endhighlight %}
+```
 
 Now consider:
 
-{% highlight dart %}
+```dart
 class Box<T> {
   constructor(public value: T) {}
 };
-{% endhighlight %}
+```
 
 This is the simplest possible generic type.
 
-{% highlight dart %}
+```dart
 var a : Box<Base> = new Box<Base>(null);
 var b : Box<Derived> = new Box<Derived>(null);
-{% endhighlight %}
+```
 
 These are both fine, as you would expect.
 
-{% highlight dart %}
+```dart
 new Box<number>("not num")
-{% endhighlight %}
+```
 
 This gives:
 
@@ -64,21 +64,21 @@ This gives:
 
 Looks about right. Now let's try covariance:
 
-{% highlight dart %}
+```dart
 var c : Box<Base> = new Box<Derived>(null);
-{% endhighlight %}
+```
 
 No errors. Contravariance?
 
-{% highlight dart %}
+```dart
 var d : Box<Derived> = new Box<Base>(null);
-{% endhighlight %}
+```
 
 Still no errors. This, I think, makes its type system looser than arrays in Java, and more permissive than Dart. Generics are *bi*variant in TypeScript.
 
-{% highlight dart %}
+```dart
 var e : Box<number> = new Box<string>(null);
-{% endhighlight %}
+```
 
 As a sanity check, this *does* give an error.
 
@@ -90,7 +90,7 @@ So it doesn't just *ignore* the type parameters, it really is bivariant: it will
 
 Part of this may be because TypeScript's type system is structural (neat!). For example:
 
-{% highlight dart %}
+```dart
 class A {
   foo(arg : Base) {}
 }
@@ -98,26 +98,26 @@ class A {
 class B {
   foo(arg : Derived) {}
 }
-{% endhighlight %}
+```
 
 Here we have two unrelated types that happen to have the same shape (method names and signatures). Perhaps surprisingly, there's no error here:
 
-{% highlight dart %}
+```dart
 var f : A = new B();
 var g : B = new A();
-{% endhighlight %}
+```
 
 This is perhaps extra surprising because `A` and `B` don't have the *exact* same signatures: their parameter types for `arg` are different. So the type system is both structural and allows either supertype or subtypes on parameters.
 
 If the type system is structural, maybe the `Box<T>` examples only worked then because it had no methods (aside from the `value` property) that used the type parameter. What if we make sure `T` shows up in parameter and return positions?
 
-{% highlight dart %}
+```dart
 class Box<T> {
   constructor(public value: T) {}
   takeParam(arg: T) {}
   returnType(): T { return null; }
 };
-{% endhighlight %}
+```
 
 Nope, this makes no difference. Still same behavior as before.
 
@@ -131,7 +131,7 @@ I believe the relevant bits of the spec are:
 
 I think this basically says that generics are structurally typed and the type relation is determined based on the *expanded* type where type arguments have been applied. In other words, generic types don't have type relations, just generic type *applications*. For example:
 
-{% highlight dart %}
+```dart
 class Generic<T> {
   method(arg: T) {}
 }
@@ -141,7 +141,7 @@ class NotGeneric {
 }
 
 var h : NotGeneric = new Generic<number>();
-{% endhighlight %}
+```
 
 This is fine in TypeScript unlike most nominally-typed languages. Pretty neat!
 

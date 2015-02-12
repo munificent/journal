@@ -20,9 +20,9 @@ wondering.)
 You can download the theme from [here](http://bitbucket.org/munificent/support/src/tip/xcode/themes/), or click [here](http://bitbucket.org/munificent/support/raw/fcef2059a901/xcode/themes/Meltwater.xccolortheme) for a direct
 download link. Save it into your XCode preferences directory here:
 
-{% highlight text %}
+```text
 ~/Library/Application Support/XCode/Color Themes
-{% endhighlight %}
+```
 
 Then you should be able to see "Meltwater" in XCode in the list of color
 themes. Enjoy!

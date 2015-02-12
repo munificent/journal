@@ -32,17 +32,17 @@ So the normal way to address this is by overloading `Write()`, `Fill()`, and
 `Draw()`. If we go with the vanilla overload solution, we have 27 overloaded
 methods to implement every combination. Using the code looks like this:
 
-{% highlight csharp %}
+```csharp
 Terminal terminal = new Terminal();
 
 terminal.Write("foo");
 terminal.Fill(1, 2, Color.Red);
 terminal.Draw(Color.Green, Color.Blue);
-{% endhighlight %}
+```
 
 Not bad. But implementing it looks like:
 
-{% highlight csharp %}
+```csharp
 public class Terminal
 {
     public void Write(Point pos,
@@ -99,7 +99,7 @@ public class Terminal
     public void Draw(int x, int y) { /* stuff... */ }
     public void Draw() { /* stuff... */ }
 }
-{% endhighlight %}
+```
 
 Lame! Worse, if you start adding more options, it goes up combinatorially. 27
 is just for our *toy* terminal. For my actual terminal lib, it would take
@@ -113,17 +113,17 @@ variable length argument lists. Maybe that's a solution that lets us pass in a
 variety of options without having to overload. Calling it would still look
 like:
 
-{% highlight csharp %}
+```csharp
 Terminal terminal = new Terminal();
 
 terminal.Write("foo");
 terminal.Fill(1, 2, Color.Red);
 terminal.Draw(Color.Green, Color.Blue);
-{% endhighlight %}
+```
 
 But the class itself just looks like:
 
-{% highlight csharp %}
+```csharp
 public class Terminal
 {
     public void Write(string text,
@@ -131,11 +131,11 @@ public class Terminal
     public void Fill(params object[] options) { /* stuff... */ }
     public void Draw(params object[] options) { /* stuff... */ }
 }
-{% endhighlight %}
+```
 
 That doesn't look so bad. Except when you try to implement one of the methods:
 
-{% highlight csharp %}
+```csharp
 public void Write(string text, params object[] options)
 {
     Point pos = mCurrentPos;
@@ -167,15 +167,15 @@ public void Write(string text, params object[] options)
 
     // write using pos, color, etc.
 }
-{% endhighlight %}
+```
 
 That's… just… no. And that doesn't even have any error handling. The following
 is totally valid:
 
-{% highlight csharp %}
+```csharp
 terminal.Write("foo", 17, Color.White, Color.Aqua,
     Color.Beige, "wtf?");
-{% endhighlight %}
+```
 
 OK, scratch that.
 
@@ -187,7 +187,7 @@ solution.
 
 We define a class something like:
 
-{% highlight csharp %}
+```csharp
 public class TerminalParams
 {
     // use nullable so that null = default value
@@ -195,11 +195,11 @@ public class TerminalParams
     public Color? Fore;
     public Color? Back;
 }
-{% endhighlight %}
+```
 
 And our `Terminal` looks something like:
 
-{% highlight csharp %}
+```csharp
 public class Terminal
 {
     public void Write(TerminalParams paramObj, string text)
@@ -209,11 +209,11 @@ public class Terminal
     public void Draw(TerminalParams paramObj)
         { /* stuff... */ }
 }
-{% endhighlight %}
+```
 
 In C# 3.0 with [object initializers](http://weblogs.asp.net/scottgu/archive/2007/03/08/new-c-orcas-language-features-automatic-properties-object-initializers-and-collection-initializers.aspx), we can call it something like:
 
-{% highlight csharp %}
+```csharp
 Terminal terminal = new Terminal();
 
 terminal.Write(new TerminalParams(), "foo");
@@ -221,7 +221,7 @@ terminal.Fill(new TerminalParams
         { Pos = new Point(1, 2), Fore = Color.Red });
 terminal.Draw(new TerminalParams
         { Fore = Color.Green, Back = Color.Blue });
-{% endhighlight %}
+```
 
 I won't say that's the greatest thing ever, but it's not too bad. Of course,
 if you're not on 3.0 yet, you're up a creek. All you've basically accomplished
@@ -234,24 +234,24 @@ TerminalParams {`" and "`new Point(...)`", none of that really adds value.
 Really, the overloaded methods do have the best _calling convention_ so far.
 Let's look at it a little closer:
 
-{% highlight csharp %}
+```csharp
 terminal.Write(1, 2, Color.Blue, Color.Red, "foo");
-{% endhighlight %}
+```
 
 While that's an uninterrupted list of parameters, they're conceptually grouped
 like this:
 
-{% highlight csharp %}
+```csharp
 terminal.Write(  1, 2,     Color.Blue, Color.Red, "foo"  );
 //              (position) (color              )  (text)
-{% endhighlight %}
+```
 
 How cool would it be if we could actually group the parameters like that in
 the code? Something like:
 
-{% highlight csharp %}
+```csharp
 terminal.Write(1, 2)(Color.Blue, Color.Red)("foo");
-{% endhighlight %}
+```
 
 C# doesn't have functors, but maybe we're on to something.
 
@@ -260,9 +260,9 @@ that return delegates, etc.*
 
 Or… not. But let's not give up yet. Let's try re-arranging things:
 
-{% highlight csharp %}
+```csharp
 terminal.Write("foo")(1, 2)(Color.Blue, Color.Red);
-{% endhighlight %}
+```
 
 This is a little better because it puts the method (`Write()`) next to the one
 parameter it really needs, the string. The problem is that that line, if it
@@ -271,9 +271,9 @@ write before we looked at the parameters.
 
 Let's do some more shuffling:
 
-{% highlight csharp %}
+```csharp
 terminal(1, 2)(Color.Blue, Color.Red).Write("foo");
-{% endhighlight %}
+```
 
 This looks promising, but we're stuck with the fact that C# doesn't have
 functors. We can't do `terminal()`. Is there anything that sort of *looks*
@@ -286,18 +286,18 @@ object level?" Astute readers are already thinking it: *indexers*. Right now,
 some of you may be shuddering in horror at the weirdness we're about to
 unleash, but let's do it anyway. Can we make all of these lines of code work:
 
-{% highlight csharp %}
+```csharp
 terminal.Write("foo");
 terminal[new Point(3, 4)].Write("foo");
 terminal[1, 2][Color.Red].Write("foo");
 terminal[Color.Brown].Write("foo");
 terminal[Color.Green, Color.Blue].Draw();
-{% endhighlight %}
+```
 
 And can we make them work all at the same time? Not only that, can we make the
 following *not* work:
 
-{% highlight csharp %}
+```csharp
 // bad, cannot specify position twice
 terminal[1, 2][new Point(3, 4)].Write("foo");
 
@@ -307,12 +307,12 @@ terminal[1].Write("foo");
 // sorta bad, for consistency would always like
 // to have position before color
 terminal[Color.Brown][1, 2].Write("foo");
-{% endhighlight %}
+```
 
 It turns out, we can. The core idea is to define a chain of interfaces that
 inherit from each other.
 
-{% highlight csharp %}
+```csharp
 public interface ITerminalMethods
 {
     void Write(string text);
@@ -333,7 +333,7 @@ public interface ITerminalPosColor : ITerminalColor
 }
 
 public interface ITerminal : ITerminalPosColor { }
-{% endhighlight %}
+```
 
 Each one represents one of the parameter types: position, color, etc. The
 innermost one, `ITerminalMethods`, contains the actual methods, `Write()`,
@@ -349,13 +349,13 @@ interface inherits from it.
 
 Calling it looks like:
 
-{% highlight csharp %}
+```csharp
 terminal.Write("foo");
 terminal[new Point(3, 4)].Write("foo");
 terminal[1, 2][Color.Red].Write("foo");
 terminal[Color.Brown].Write("foo");
 terminal[Color.Green, Color.Blue].Draw();
-{% endhighlight %}
+```
 
 This is all well and good for *defining* it, but is it possible to actually
 *implement* this thing?
@@ -369,7 +369,7 @@ changed. All of the indexers then basically create new Terminals that write to
 the same core terminal data but keep their own copy of the position and color.
 Like so:
 
-{% highlight csharp %}
+```csharp
 public class TerminalData
 {
     // terminal core data:
@@ -433,7 +433,7 @@ public class Terminal : ITerminal
     private Color mFore;
     private Color mBack;
 }
-{% endhighlight %}
+```
 
 ## Is it Worth Doing?
 

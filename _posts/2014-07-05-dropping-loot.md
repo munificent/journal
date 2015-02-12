@@ -108,13 +108,13 @@ A few years ago, I ported the game to [Dart]. When I did, I tried to simplify as
 
 Instead of building some complex general-purpose loot DSL and then implementing this logic using that, I just built sequences directly into the loot code. When defining a monster (now we're in Dart code), you'd list the drops:
 
-{% highlight dart %}
+```dart
 breed("goblin peon", lightBrown, 16, [
   attack("stab[s]", 6)
 ], drop: [
   chanceOf(10, "Spear")
 ]);
-{% endhighlight %}
+```
 
 The "Spear" means it tends to drop spears. But it also implicitly means it can drop other items in the same sequence that spears are in. This lets you express both a sequence and how deep into the sequence a monster should tend to drop. To have a stronger monster drop items from the deep end of the sequence, just name an item from that end.
 
@@ -134,14 +134,14 @@ I'm not generally a fan of hierarchies but I found it surprisingly easy to lump 
 
 When specifying a drop for a monster, I can specify an item name to drop that specific item. But I can also specify the name of part of the path and a level, like:
 
-{% highlight dart %}
+```dart
 breed("goblin peon", lightBrown, 16, [
   attack("stab[s]", 6)
 ], drop: [
   chanceOf(10, "spear:3"),
   chanceOf(5, "healing:2"),
 ], meander: 2, flags: "few open-doors");
-{% endhighlight %}
+```
 
 The `"spear:3"` means "drop something from the 'spear' group around level 3". You don't have to specify the entire path since path components are unique. So "spear" is equivalent to "equipment/weapon/spear".
 
@@ -151,25 +151,25 @@ Any monster has a chance of dropping almost any item, so you have that pleasant 
 
 When specifying a drop, you can also directly specify one of the parent groups. For example:
 
-{% highlight dart %}
+```dart
 breed("goblin warrior", gray, 32, [
   attack("stab[s]", 14)
 ], drop: [
   chanceOf(20, "equipment:6")
 ], meander: 1, flags: "protective open-doors");
-{% endhighlight %}
+```
 
 Here, the `"equipment:6"` means a goblin may drop *any* kind of equipment. This makes it really easy to specify monsters that define wide sets of drops. That's good for high level boss monsters that can serve up an assortment of loot.
 
 At the same time, defining the items is pretty simple. You basically just need to categorize and assign a level for each item. It looks like this:
 
-{% highlight dart %}
+```dart
 group(r"\", "equipment/weapon/spear");
 weapon("Pointed Stick", 5, brown, "stab[s]", 7);
 weapon("Spear", 25, gray, "stab[s]", 12);
 weapon("Angon", 35, lightGray, "stab[s]", 16);
 weapon("Lance", 45, white, "stab[s]", 24);
 weapon("Partisan", 55, darkGray, "stab[s]", 36);
-{% endhighlight %}
+```
 
 (The numbers after the name are their levels.) Once you do that, all of the rest of the drop behavior falls out naturally. If I add a new item to an existing group, every monster will then start dropping it, with the right probabilities.

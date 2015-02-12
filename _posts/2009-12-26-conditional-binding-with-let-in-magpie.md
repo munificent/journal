@@ -15,22 +15,22 @@ Before I explain it, let's go over a couple of examples in other languages
 where it would be useful. First up: converting strings to other types. In C#,
 you'd do something like:
 
-{% highlight csharp %}
+```csharp
 int value = Int32.Parse("1234");
 // do something with value
-{% endhighlight %}
+```
 
 That's fine and dandy except that the parse can fail and throw an exception.
 If you don't want to deal with the exception, the easier solution is to use
 the conveniently provided `TryParse` function:
 
-{% highlight csharp %}
+```csharp
 int value;
 if (Int32.TryParse("1234", out value))
 {
     // do something with value
 }
-{% endhighlight %}
+```
 
 That's the idiomatic way to convert strings to ints in C#. Aside from the
 cumbersome out parameter, what's lame about it is that `value` is scoped
@@ -42,18 +42,18 @@ Here's another example: downcasting. Let's say we have a variable of type
 `Base` and we want to downcast it to a `Derived` subclass. The normal way to
 do this is:
 
-{% highlight csharp %}
+```csharp
 Derived derived = someBase as Derived;
 if (derived != null)
 {
     // do something with derived
 }
-{% endhighlight %}
+```
 
 A third and final example: looking up a value in a dictionary. If you aren't
 sure the key exists, the typical solution is:
 
-{% highlight csharp %}
+```csharp
 Dictionary<string, int> dict = // get dictionary...
 
 int value;
@@ -61,7 +61,7 @@ if (dict.TryGetValue("key", out value))
 {
     // do something with value
 }
-{% endhighlight %}
+```
 
 You're seeing the pattern by now. All of these have the exact same structure.
 We have some operation that may return a value or may fail for some reason. If
@@ -73,7 +73,7 @@ The `let` keyword in Magpie lets you implement that pattern directly, without
 the gross scoping issues or output parameters. The above examples in Magpie
 would look like:
 
-{% highlight magpie %}
+```magpie
 // parse
 let value <- "1234".AsInt then
     // do something with value
@@ -88,15 +88,15 @@ end
 let value <- Find (dict, "key") then
     // do something with value
 end
-{% endhighlight %}
+```
 
 The way this works is pretty simple. Magpie has an `Option` type, which is the
 same as F#'s [option](http://msdn.microsoft.com/en-us/library/dd233245%28VS.100%29.aspx) or Haskell's [Maybe](http://en.wikibooks.org/wiki/Haskell/Hierarchical_libraries/Maybe). A `let` expression looks
 like:
 
-{% highlight magpie %}
+```magpie
 let <variable> <- <expression> then <body>
-{% endhighlight %}
+```
 
 The `<expression>` is expected to return an `Option` value. If it evaluates to
 `Some`, then the value is extracted and assigned to `<variable>` and the
@@ -113,14 +113,14 @@ impossible to access that variable incorrectly when the expression fails.
 Because `let` is essentially another kind of `if`, it also supports an `else`
 clause:
 
-{% highlight magpie %}
+```magpie
 // parse
 let value <- "1234".AsInt then
     // do something with value
 else
     Print "Couldn't parse string."
 end
-{% endhighlight %}
+```
 
 ## A Bit on Naming
 

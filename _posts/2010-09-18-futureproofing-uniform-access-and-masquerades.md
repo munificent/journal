@@ -5,12 +5,12 @@ categories: c-sharp code java language magpie
 ---
 Take a look at this Java code:
 
-{% highlight java %}
+```java
 public class Person {
     public String name;
     public int age;
 }
-{% endhighlight %}
+```
 
 Does it make you cringe a little bit? If so, I'm guessing it's because those
 fields aren't wrapped in nice getters and setters.
@@ -34,7 +34,7 @@ proofing practices I see.
 
 Java loves this one:
 
-{% highlight java %}
+```java
 class PersonFactory {
     public Person create() {
         return new Person();
@@ -45,7 +45,7 @@ void doSomething(PersonFactory factory) {
     Person person = factory.create();
     // ...
 }
-{% endhighlight %}
+```
 
 Assuming you can dodge the infinite regress of
 `FactoryFactoryFactoryFactories`, this helps abstract out the places where you
@@ -56,7 +56,7 @@ the concrete class being constructed.
 
 This pattern looks like this (here in C#, where its most applicable):
 
-{% highlight csharp %}
+```csharp
 interface IPerson
 {
     string Name { get; set; }
@@ -73,7 +73,7 @@ void DoSomethingWithPerson(IPerson person)
 {
     // ...
 }
-{% endhighlight %}
+```
 
 All of your concrete classes get squirrelled away and you only ever visibly
 deal with the interface types. I've seen entire codebases designed around
@@ -190,44 +190,44 @@ and still solve the above two problems? I think so.
 Constructors are the easy one. Magpie has no special syntax for constructors.
 `new` is just a method you call on a class object:
 
-{% highlight magpie %}
+```magpie
 var bob = Person new("Bob")
-{% endhighlight %}
+```
 
 If you later decide you need that to construct a different type, you can
 always swap out the method:
 
-{% highlight magpie %}
+```magpie
 Person defineMethod("rawNew", Person getMethod("new"))
 def Person new(name)
     // don't want to create a person...
     Dude new(name)
 end
-{% endhighlight %}
+```
 
 To be honest, though, that's kinda gross. Try not to do that. A better
 solution really is to use a factory here: some object that you can swap out
 that will create people. Fortunately, Magpie makes this a bit easier too: a
 class *is* a factory:
 
-{% highlight magpie %}
+```magpie
 var makeSomeone(name, factory)
     factory new(name)
 end
 
 makeSomeone("Bob", Person) // makes a person
 makeSomeone("Bob", Hero)   // makes a hero
-{% endhighlight %}
+```
 
 Since classes are first, uh, class, you can just pass them around and use them
 like factories as-is. Because they're also instances of a class (their
 metaclass), they can even implement interfaces:
 
-{% highlight magpie %}
+```magpie
 interface NamedFactory
     new(name String)
 end
-{% endhighlight %}
+```
 
 Now any class that has a constructor that takes a string will implicitly
 implement that interface. You get type-safe factories without having to
@@ -244,7 +244,7 @@ reuse any of the code from the base class, so why am I inheriting it?
 Instead, Magpie has (will have) a relatively simple feature called
 *masquerades*. Say we have a concrete class like:
 
-{% highlight magpie %}
+```magpie
 class Person
     this (name)
         this name = name
@@ -252,29 +252,29 @@ class Person
 
     greet() print("Hi, I'm " + name)
 end
-{% endhighlight %}
+```
 
 We're using it like this:
 
-{% highlight magpie %}
+```magpie
 var greetEachOther(a Person, b Person)
     a greet
     b greet
 end
-{% endhighlight %}
+```
 
 In most static languages, since `greetEachOther` is typed to expect instances
 of the concrete `Person`, the only other option you have is passing in a
 subclass. Magpie gives you another alternative. Here's the class we want to
 use in place of a person:
 
-{% highlight magpie %}
+```magpie
 class Robot
     name = "Robot"
 
     greet() print("Greetings, fleshy human.")
 end
-{% endhighlight %}
+```
 
 This class has no relation to `Person` in the class hierarchy. But it *does*
 happen to have all of the methods that `Person` has. If there was some
@@ -283,7 +283,7 @@ implement it too. Masquerades let us approximate that. You can ask an object
 of one type to masquerade as another. As long as they have compatible methods,
 it will succeed, *even though both types are concrete and unrelated*:
 
-{% highlight magpie %}
+```magpie
 var main(->)
     var robot = Robot new
     // robot's type is Robot
@@ -292,7 +292,7 @@ var main(->)
     // and this is now type-safe:
     greetEachOther(Person new("Bob"), imposter)
 end
-{% endhighlight %}
+```
 
 As far as I know, this is a novel feature in programming languages, but I
 think it's a useful one. I would definitely appreciate any feedback on it

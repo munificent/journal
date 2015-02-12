@@ -8,7 +8,7 @@ better. There is now [syntactic sugar](http://en.wikipedia.org/wiki/Syntactic_su
 
 When Finch starts up, it runs a "[main](http://bitbucket.org/munificent/finch/src/tip/base/main.fin)" Finch script that builds a bunch of the standard objects and environment. It used to have a lot of code that looked like this:
 
-{% highlight finch %}
+```finch
 True addMethod: "not" body: { False }
 
 ' define a for-style loop
@@ -33,12 +33,12 @@ Array prototype addMethod: "++" body: {
 
     result
 }
-{% endhighlight %}
+```
 
 The change is a new "bind" expression using `::`. This gets rid of the
 explicit calls to `addMethod:body:` and replaces them with this:
 
-{% highlight finch %}
+```finch
 True :: not { False }
 
 ' define a for-style loop
@@ -60,7 +60,7 @@ Array prototype :: ++ right {
 
     result
 }
-{% endhighlight %}
+```
 
 It's a little shorter and cleaner, but what I really like is that it lets the
 parser validate your method signature a bit. Where `addMethod:body:` takes any

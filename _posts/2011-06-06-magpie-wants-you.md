@@ -22,7 +22,7 @@ Magpie is a dynamically-typed language (flirtations with optional static
 typing notwithstanding). But in Magpie, every method is a multimethod, which
 means you can overload them.
 
-{% highlight magpie %}
+```magpie
 def (this is String) split()
     this split(" ")
 end
@@ -30,26 +30,26 @@ end
 def (this is String) split(separator is String)
     ...
 end
-{% endhighlight %}
+```
 
 Here we've defined two `split` methods on strings. The first takes no
 arguments, and the second takes a separator. This means you can do:
 
-{% highlight magpie %}
+```magpie
 "eenie-meenie-miney-moe" split("-")
-{% endhighlight %}
+```
 
 or
 
-{% highlight magpie %}
+```magpie
 "eenie-meenie-miney-moe" split()
-{% endhighlight %}
+```
 
 In most dynamic languages, you'd have to handle that by doing some manual
 `instanceof` or `!== undefined` checks. In Magpie, it just works. You can
 overload by arity or type, or both:
 
-{% highlight magpie %}
+```magpie
 def (this is String) split(maxResults is Int)
     ...
 end
@@ -57,7 +57,7 @@ end
 def (this is String) split(separator is String, maxResults is Int)
     ...
 end
-{% endhighlight %}
+```
 
 Pretty much any kind of argument list can be overloaded and it will pick the
 right one at runtime based on what you actually pass it.
@@ -101,7 +101,7 @@ file IO, concurrency, networking, etc. I have a *ton* of work to do here
 (hopefully with your help!) but at least now you can read files and spawn
 threads. To prove it, here's a toy asynchronous web server:
 
-{% highlight magpie %}
+```magpie
 import io
 import net
 import async
@@ -122,7 +122,7 @@ while true do
         socket close()
     end
 end
-{% endhighlight %}
+```
 
 ## Where You Come In
 

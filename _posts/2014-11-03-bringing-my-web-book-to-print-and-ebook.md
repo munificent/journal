@@ -61,11 +61,11 @@ If you've never done an eBook before (you lucky devil, you), they come in two pr
 
 An EPUB file is basically a zip file containing a web site. Seriously. Take your static site and run this on it:
 
-{% highlight bash %}
+```bash
 cd my_awesome_site
 zip -X0 my_awesome_site.epub mimetype
 zip -Xur9D my_awesome_site.epub *
-{% endhighlight %}
+```
 
 Now you're 90% of the way to having an eBook. It's the other 10% that makes you want to claw your eyes out. See, eBooks are a lot like web sites... circa 2004. Instead of this fancy HTML5 stuff which is clearly, like, living in the future with all of its new tags that don't need to be closed, EPUB requires XHTML, the evil mutant offspring of HTML and XML. The turducken of the markup world.
 
@@ -81,7 +81,7 @@ Oh, and did I mention the XML? SO MUCH XML. The [EPUB format][epub] was clearly 
 
 The `.opf` file needs a `<spine>` tag containing the ordered list of stuff in the book. And a `<guide>` containing... an ordered list of the stuff in the book. Also, there's a separate&mdash;mandatory, of course!&mdash;`toc.nxc` file containing, you guessed it, an ordered list of the stuff in the book. Not only that, each item in the TOC is not just in order but *explicitly manually numbered*:
 
-{% highlight xml %}
+```xml
 <navPoint id="copyright" playOrder="1">
   <navLabel><text>Copyright</text></navLabel>
   <content src="copyright.html" />
@@ -96,7 +96,7 @@ The `.opf` file needs a `<spine>` tag containing the ordered list of stuff in th
   <navLabel><text>Dedication</text></navLabel>
   <content src="dedication.html" />
 </navPoint>
-{% endhighlight %}
+```
 
 See those little `playOrder` attributes? It's like double-entry bookkeeping, minus the fun and excitement of double-entry bookkeeping.
 
@@ -248,7 +248,7 @@ It's one of the buggiest pieces of nominally commercial-grade software I've ever
 
 I cracked open my little Python script and hacked it up to convert the markdown to HTML and then, through an unholy series of regexes, mash that into something approximating XML. Stuff like:
 
-{% highlight python %}
+```python
 def clean_up_code_xml(code):
   # Ditch most code formatting tags.
   code = re.sub(r'<span class="(k|kt|mi|n|nb|nc|nf)">([^<]+)</span>',
@@ -257,11 +257,11 @@ def clean_up_code_xml(code):
   # Turn comments into something InDesign can map to a style.
   code = re.sub(r'<span class="(c1|cn)">([^<]+)</span>',
                 r"<comment>\2</comment>", code)
-{% endhighlight %}
+```
 
 And:
 
-{% highlight python %}
+```python
 def clean_up_xhtml(html):
   # Ditch newlines in the middle of blocks of text. Out of sheer malice,
   # even though they are meaningless in actual XML, InDesign treats them
@@ -284,7 +284,7 @@ def clean_up_xhtml(html):
   html = html.replace("</blockquote>", "</blockquote>\n")
 
   return html
-{% endhighlight %}
+```
 
 Forgive me Father, for I have sinned. In my defense, I wasn't writing a program to convert *any* HTML to XML. As long as it worked on the 90k words of *my* book, it was Correct&trade; as far as I'm concerned. This gave me a folder full of more-or-less XML files, one for each chapter. All that was left was to typeset them.
 

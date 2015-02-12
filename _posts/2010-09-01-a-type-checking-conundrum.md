@@ -23,30 +23,30 @@ Magpie, here's the salient features of the language:
 
 Here's a simple example:
 
-{% highlight magpie %}
+```magpie
 var say(what String ->)
     print(what)
 end
 
 say("hey")
-{% endhighlight %}
+```
 
 This program will run fine and do what you expect. Now consider this one:
 
-{% highlight magpie %}
+```magpie
 var say(what String ->)
     print(what)
 end
 
 say(123)
-{% endhighlight %}
+```
 
 This one will actually run without errors too (and print "123″ since `print`
 converts its argument to a string anyway). That's because the call to
 `say(123)` is at the top-level, which is run before type-checking. If we
 change it to this:
 
-{% highlight magpie %}
+```magpie
 var say(what String ->)
     print(what)
 end
@@ -54,7 +54,7 @@ end
 var main(->)
     say(123)
 end
-{% endhighlight %}
+```
 
 Now we'll correctly get a error that `say` expects a `String` and is being
 passed an `Int`. It will then stop without ever calling `main()`.
@@ -64,13 +64,13 @@ passed an `Int`. It will then stop without ever calling `main()`.
 All that so far is fine and dandy. Now lets consider something a little…
 softer:
 
-{% highlight magpie %}
+```magpie
 var returnString(-> String)
     var a = 123
     a = "string"
     return a
 end
-{% endhighlight %}
+```
 
 This type-checks fine too. At the point that we're returning `a`, the type-
 checker knows its a `String` as expected. But this hilights an important
@@ -80,7 +80,7 @@ features like [or types](http://journal.stuffwithstuff.com/2010/08/23/void-null-
 
 Unfortunately, it's also the heart of the problem. Consider this example:
 
-{% highlight magpie %}
+```magpie
 var a = 123
 
 var returnInt(-> Int)
@@ -89,7 +89,7 @@ end
 
 a = "string"
 returnInt()
-{% endhighlight %}
+```
 
 The type-checker runs through that top-down. First it evaluates `var a = 123`
 and records that `a` is defined with the type of `123`: `Int`. Then it

@@ -26,7 +26,7 @@ But I'm getting ahead of myself. First, let me rewind and set up some preliminar
 
 When you hear "scope" you probably think something like this:
 
-{% highlight c %}
+```c
 {
   int a = 1;
   {
@@ -35,7 +35,7 @@ When you hear "scope" you probably think something like this:
   }
   printf("%d", a);
 }
-{% endhighlight %}
+```
 
 The curly braces in C++ define *block scopes*. When you declare a local variable, it goes in the nearest enclosing scope. When the compiler sees a use of a variable (here `a`), it looks in the surrounding scopes to figure out what it's bound to.
 
@@ -53,11 +53,11 @@ Both of these kinds of scope have something in common: they use *[lexical scopin
 
 This is all well and good for scoping *variables*, but for the sake of this post, I'll widen the term to talk about any kind of identifier that appears in a program. Variables aren't the only place names appear in many languages. Consider this bit of JavaScript:
 
-{% highlight javascript %}
+```javascript
 function(who) {
   alert(who.favoriteColor);
 }
-{% endhighlight %}
+```
 
 Here we have two names in the program (ignoring `alert`), `who` and `favoriteColor`. We need to figure out what they represent in order to run the code. `who` is easy, it's just a lexically scoped variable and we can see that it's bound to whatever you pass to the function.
 
@@ -75,9 +75,9 @@ Just one: *lexical block scope.*
 
 Magpie is a [class-based][] [object-oriented][] language, and its syntax is designed to look (more or less) like one. It doesn't use a dot to separate the "receiver" from the method or property, but it otherwise looks like it *would* have object, method, and static scope:
 
-{% highlight magpie %}
+```magpie
 list add(item)
-{% endhighlight %}
+```
 
 [class-based]: http://magpie-lang.org/classes.html
 [object-oriented]: http://magpie-lang.org/objects.html
@@ -101,7 +101,7 @@ If methods aren't looked up on the object (or on its class), how do we get polym
 
 The answer is that all methods in Magpie are [multimethods][]. The [docs][] have the full story, but here's the TL;DR: You can define multiple methods with the same name but different argument [patterns][], like so:
 
-{% highlight magpie %}
+```magpie
 def (list is List) add(item)
     // add stuff to list...
 end
@@ -113,7 +113,7 @@ end
 def (map is Map) add(item)
     // add stuff to map...
 end
-{% endhighlight %}
+```
 
 In C, this would just be an error because the names collide. In Magpie, it's A-OK. What this does is a create a *single* `add()` *multi*method that contains those three methods. When you call `add()`, it looks at the types of the arguments at runtime and picks the right method to call. Instead of using *scoping* for polymorphism, it essentially uses [pattern matching][].
 
@@ -126,7 +126,7 @@ In C, this would just be an error because the names collide. In Magpie, it's A-O
 
 That probably all sounds a bit hand-wavey. Let's walk through a concrete example and see how all of the moving parts mesh together. First, let's make a module that defines a class and some methods for it.
 
-{% highlight magpie %}
+```magpie
 // sandwich.mag
 defclass Sandwich
     val meat
@@ -140,20 +140,20 @@ end
 def (sandwich is Sandwich) toString
     "A tasty " + meat + " and " + condiment + " sandwich"
 end
-{% endhighlight %}
+```
 
 So we have a class `Sandwich`. This will also automatically give us getter methods for `meat` and `condiment` that will return the appropriate fields given a `Sandwich` instance on the left. In addition, we add another method `isVegetarian`. It takes a sandwich and returns `true` if it doesn't have any meat in it. Finally, we give it a `toString` method so you can print it and stuff.
 
 Now let's make another module that uses this one:
 
-{% highlight magpie %}
+```magpie
 // main.mag
 import sandwich
 
 val sandwich = Sandwich new(meat: "ham", condiment: "mayo")
 print("veggie? " + sandwich isVegetarian)
 print(sandwich)
-{% endhighlight %}
+```
 
 Seems pretty simple, right? It turns out that not binding methods to classes leads to a couple of subtle but deep problems. (At least they were subtle to *me*. I didn't realize them until I'd implemented the intepreter and ran straight into them.)
 
@@ -163,27 +163,27 @@ These problems all turn out to be related exactly to the original question of th
 
 So what happens when we run this example? Let's say for now that methods are scoped just like variables, which is how Magpie *used* to work. We'll walk through it a line at a time.
 
-{% highlight magpie %}
+```magpie
 import sandwich
-{% endhighlight %}
+```
 
 This takes all of the top-level variables and methods in `sandwich.mag` and binds them to the same names in `main.mag`. After that `Sandwich`, `meat`, `condiment`, `isVegetarian`, and `toString` are all available for use.
 
-{% highlight magpie %}
+```magpie
 val sandwich = Sandwich new(meat: "ham", condiment: "mayo")
-{% endhighlight %}
+```
 
 This creates a new `Sandwich` instance and stores it in a variable `sandwich`.
 
-{% highlight magpie %}
+```magpie
 print("veggie? " + sandwich isVegetarian)
-{% endhighlight %}
+```
 
 This calls `isVegetarian`. We've imported that method, so there's no problem here. Now consider the last line:
 
-{% highlight magpie %}
+```magpie
 print(sandwich)
-{% endhighlight %}
+```
 
 `print()` is a built-in method that takes an object, converts it to a string by calling `toString` on it, and then displays it. "Built-in" just means it's defined in another `core` module and is automatically imported, so we do indeed have access to it from `main.mag`. So we call it and pass in the sandwich. What happens next?
 
@@ -197,7 +197,7 @@ Ouch. Our intent in `sandwich.mag` is that defining `toString` would work like [
 
 My [fix][] for this was to change what it means to import a multimethod. In our little example, the import graph is like:
 
-{% highlight text %}
+```text
 core
   ^
   |\
@@ -207,7 +207,7 @@ core
   | /
   |/
  main
-{% endhighlight %}
+```
 
 `main.mag` imports `sandwich.mag` and they both also (implicitly) import `core`. Core itself contains a `toString` method with specializations for the atomic types like numbers and strings.
 
@@ -221,7 +221,7 @@ This works because `core` is the first module that created it, and our other two
 
 Problem solved, right? Well, not so fast. After I did this, I ran into the next issue. Here's another example. We've got these two modules:
 
-{% highlight magpie %}
+```magpie
 // pal.mag
 defclass Pal
     val name
@@ -231,11 +231,11 @@ end
 defclass Pet
     val name
 end
-{% endhighlight %}
+```
 
 They both define classes that have `name` fields. That means they both implicitly create `name` methods. Then we use them:
 
-{% highlight magpie %}
+```magpie
 // main.mag
 import Pal
 import Pet
@@ -246,7 +246,7 @@ end
 
 greet(Pal new(name: "Fred"))
 greet(Pet new(name: "Rex"))
-{% endhighlight %}
+```
 
 The intent here is clear: `greet()` should be able to print anything that has a `name` getter. What happens if we run this with our current semantics? It turns out we don't get very far.
 
@@ -254,13 +254,13 @@ The `import Pal` line works fine. It brings `Pal` and `name` into `main.mag`. Th
 
 We didn't have a name collision in the first example. Even though `toString` got imported into `main.mag` both from `core` and `sandwich.mag`, they were the exact same object, so we could just safely ignore it. Here, though, that isn't the case. The import graph is like:
 
-{% highlight text %}
+```text
 pal  pet
  ^    ^
   \  /
    \/
   main
-{% endhighlight %}
+```
 
 There is no root module where a single `name` multimethod is being created. Instead, `pal.mag` and `pet.mag` both create their own unrelated `name` multimethods. When `main.mag` tries to import them both, they aren't the same object, so they collide.
 
@@ -268,7 +268,7 @@ There is no root module where a single `name` multimethod is being created. Inst
 
 My first stab at "fixing" this was to just declare those semantics are How It Should Be. If you have colliding method names, you just rename on import, like:
 
-{% highlight magpie %}
+```magpie
 // main.mag
 import Pal with
     name as pal.name
@@ -276,7 +276,7 @@ end
 import Pet with
     name as pet.name
 end
-{% endhighlight %}
+```
 
 That works, but it's really ugly. I found in practice that method collisions were surprisingly common, almost always coming from fields with simple names like `name`. Having to qualify those at every use site sucks:
 
@@ -310,7 +310,7 @@ But global scope is [bad][], right? I felt like I was committing some cardinal s
 
 Consider your favorite conventional OOP language. We'll do Ruby because it looks nice here:
 
-{% highlight ruby %}
+```ruby
 class Cow
     def speak()
         puts "moo"
@@ -322,13 +322,13 @@ class Dog
         puts "woof"
     end
 end
-{% endhighlight %}
+```
 
 We have two classes that both define `speak` methods. We don't think of `speak` as being "global" here because you get to the `speak` methods *through* an instance of `Cow` or `Dog`. Once you do, the method will correctly be associated with the right type and do the right thing. You can't call `Dog`'s `speak` on an instance of `Cow` or some other unrelated type. Likewise, if you don't have a dog or a cow, you can't get to `speak` at all.
 
 Now consider the Magpie equivalent, and assume that multimethods are globally scoped:
 
-{% highlight magpie %}
+```magpie
 defclass Cow
 end
 
@@ -342,7 +342,7 @@ end
 def (is Dog) speak
     print("woof")
 end
-{% endhighlight %}
+```
 
 How does it compare? Like the Ruby solution, you can't call `Cow`'s `speak` method using a `Dog` or some other type. If you don't have a dog or a cow, you can't get to `speak` at all.
 
@@ -354,7 +354,7 @@ In other words, globally scoped multimethods in Magpie are isomorphic to methods
 
 Multimethods match on *all* of their arguments, not just the "receiver" on the left-hand side. Let's go back to our Ruby example. Say we need to serialize Dogs and Cows to a stream. Since classes in Ruby are open for extension, we can do:
 
-{% highlight ruby %}
+```ruby
 class Dog
     def serialize(stream)
         stream write("dog")
@@ -366,11 +366,11 @@ class Cow
         stream write("cow")
     end
 end
-{% endhighlight %}
+```
 
 Swell. But then someone else on our team gets tasked with making dogs and cows support serializing to XML. If they aren't aware of *our* monkey-patch and add:
 
-{% highlight ruby %}
+```ruby
 class Dog
     def serialize(xmlWriter)
         xmlWriter write("<dog></dog>")
@@ -382,13 +382,13 @@ class Cow
         xmlWriter write("<cow></cow>")
     end
 end
-{% endhighlight %}
+```
 
 Then those `serialize` methods will obliterate the ones for writing to a stream. Or maybe the other way around. It depends on whose code gets to run last. Nasty.
 
 Meanwhile, in Magpie:
 
-{% highlight magpie %}
+```magpie
 def (dog is Dog) write(stream is Stream)
     stream write("dog")
 end
@@ -404,7 +404,7 @@ end
 def (cow is Cow) write(writer is XmlWriter)
     writer write("<cow></cow>")
 end
-{% endhighlight %}
+```
 
 Here, there is no collision at all. When you call `write`, it will look at both the left-hand argument (a `Cow` or a `Dog`) *and* the right-hand side (a `Stream` or an `XmlWriter`) and pick the one perfect method for those types.
 

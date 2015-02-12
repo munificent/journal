@@ -51,7 +51,7 @@ At the core of the game engine is the [game loop][]. Its job is to iterate over 
 
 [game loop]: http://gameprogrammingpatterns.com/game-loop.html
 
-{% highlight dart %}
+```dart
 void gameLoop() {
   while (stillPlaying) {
     for (var actor in actors) {
@@ -59,7 +59,7 @@ void gameLoop() {
     }
   }
 }
-{% endhighlight %}
+```
 
 However, since the engine is decoupled from the user interface, it is driven externally. The engine has a main [`Game`][game] class. The UI owns an instance of that and tells it to process. The engine only processes one "step" of gameplay before returning control back to the UI.
 
@@ -69,7 +69,7 @@ However, since the engine is decoupled from the user interface, it is driven ext
 
 What this means is that `Game` needs to track the last actor who took a turn so it can pick up where it left off. Something like:
 
-{% highlight dart %}
+```dart
 class Game {
   final actors = <Actor>[];
   int _currentActor = 0;
@@ -79,7 +79,7 @@ class Game {
     _currentActor = (_currentActor + 1) % actors.length;
   }
 }
-{% endhighlight %}
+```
 
 Astute readers like yourself are probably thinking this sounds like a good case for a [generator][]. Indeed, in the previous C# incarnation of my game, [I did exactly that][amaranth]. When Dart gets generators, I'll probably use them. In the meantime, it's just a bit more verbose.
 
@@ -100,13 +100,13 @@ Instead, we'll make a classic game architecture decision. We'll separate *decidi
 
 The game loop asks each actor to give it an action, then it tells the action to execute *itself*, like:
 
-{% highlight dart %}
+```dart
 void process() {
   var action = actors[_currentActor].getAction();
   action.perform();
   _currentActor = (_currentActor + 1) % actors.length;
 }
-{% endhighlight %}
+```
 
 There are different action classes for each atomic thing an actor in the world can do. There is a [`WalkAction`][walk], [`OpenDoorAction`][open], [`EatAction`][eat], etc.
 
@@ -172,7 +172,7 @@ We already have two constraints that make this harder:
 
 When the game loop asks a hero for its action, the hero can't just stop the game and wait for the player to push a button. Instead, we'll let the user interface *inject* input into the game. The input handling code can create an action for the hero *ex-nihilo* and jam it in the engine's piehole, like:
 
-{% highlight dart %}
+```dart
 void handleInput(Keyboard keyboard) {
   switch (keyboard.lastPressed) {
     case KeyCode.G:
@@ -194,11 +194,11 @@ void handleInput(Keyboard keyboard) {
 void walk(Direction dir) {
   game.hero.setNextAction(new WalkAction(dir));
 }
-{% endhighlight %}
+```
 
 That call to `setNextAction()` stuffs the given action into a field in the hero. When the game loop asks the hero what it wants to do, it barfs that back up:
 
-{% highlight dart %}
+```dart
 class Hero extends Actor {
   Action _nextAction;
 
@@ -215,7 +215,7 @@ class Hero extends Actor {
 
   // Other heroic stuff...
 }
-{% endhighlight %}
+```
 
 (In the actual game, there's actually a level of indirection here to handle [multi-step behaviors like running][running], but we'll ignore that here.)
 
@@ -225,7 +225,7 @@ This keeps the engine from reaching out to the user interface and lets the UI pa
 
 To handle that, the loop just checks for the actor failing to cough up an action. When that happens, it bails and returns control back to the user interface:
 
-{% highlight dart %}
+```dart
 void process() {
   var action = actors[_currentActor].getAction();
 
@@ -235,7 +235,7 @@ void process() {
   action.perform();
   _currentActor = (_currentActor + 1) % actors.length;
 }
-{% endhighlight %}
+```
 
 If the interface tells the game engine to process but hasn't given instructions to the hero, the engine does nothing and bounces control back to the UI. Note how `setNextAction()` can be called at any point in time. This works seamlessly with the speed system without the UI having to be aware of it. It just throws hero actions at the engine and tells it to process. The engine takes care to ensure the simulation only ratchets forward at the right time.
 
@@ -257,7 +257,7 @@ But doing that validation is actually pretty complex. Maybe the hero has an insu
 
 What I'm describing are *game mechanics*, and game mechanics belong in the engine. In particular, most of them belong in actions. We'll put the solution to this problem in there too. When an action is processed, we'll let it return a value indicating success. If it fails, the game loop considers it to have never happened. It's as simple as:
 
-{% highlight dart %}
+```dart
 void process() {
   var action = actors[_currentActor].getAction();
   if (action == null) return;
@@ -269,7 +269,7 @@ void process() {
 
   _currentActor = (_currentActor + 1) % actors.length;
 }
-{% endhighlight %}
+```
 
 This makes the engine more robust: you can throw arbitrary actions at it and it will handle them gracefully. It also keeps all of the code for a single mechanic&mdash;including validation&mdash;in one place: in the relevant action. Yay for encapsulation!
 
@@ -287,7 +287,7 @@ When an action is validating itself, it can fail outright like we saw, but it ca
 
 Since the `perform()` method on `Action` can return success, failure, or another action, we'll make a little class to wrap that up:
 
-{% highlight dart %}
+```dart
 class ActionResult {
   static final SUCCESS = const ActionResult(true);
   static final FAILURE = const ActionResult(false);
@@ -306,13 +306,13 @@ class ActionResult {
   const ActionResult.alternate(this.alternative)
   : succeeded = true;
 }
-{% endhighlight %}
+```
 
 When an action is executing, it returns `ActionResult.SUCCESS` to say everything went fine, `ActionResult.FAILURE` to say nothing happened, or it can return an `ActionResult` with `.alternate` pointing to a new action to perform instead.
 
 The game loop processes that:
 
-{% highlight dart %}
+```dart
 void process() {
   var action = actors[_currentActor].getAction();
   if (action == null) return;
@@ -326,7 +326,7 @@ void process() {
 
   _currentActor = (_currentActor + 1) % actors.length;
 }
-{% endhighlight %}
+```
 
 We do this in a loop because an alternate may itself return an alternate, so we keep trying until we bottom out on an action that succeeds or fails. This turns out to be a handy feature for a number of things in the full game:
 

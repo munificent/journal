@@ -98,13 +98,13 @@ Running his C# code, here are the results I got:
 Pretty slow! So I took a look at the code. The first thing that would catch
 the eye of any C# programmer is this:
 
-{% highlight csharp %}
+```csharp
 unsafe struct Data
 {
     public int key;
     public fixed char data[128];
 }
-{% endhighlight %}
+```
 
 *That's* the data structure he's sorting. An unsafe struct with a fixed array?
 I had to look up `fixed` to even know what that *means*. Now, I understand
@@ -114,7 +114,7 @@ point. If you're going to compare two languages, using their *built-in typical
 sort functions*, shouldn't you use their typical *data structures* too? Here's
 what how a regular C# developer would define `Data`:
 
-{% highlight csharp %}
+```csharp
 class Data
 {
     public int key;
@@ -122,7 +122,7 @@ class Data
 
     public Data() { data = new char[128]; }
 }
-{% endhighlight %}
+```
 
 No unmanaged code, no structs (which are rarely used in C#). Just a regular
 class with an array. Here's the results:
@@ -272,7 +272,7 @@ the data structures (which he did not do) used by each language.
 Aside from the `Data` change above, I cleaned up some of the copy and paste in
 his code. Here's what I used:
 
-{% highlight csharp %}
+```csharp
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -442,4 +442,4 @@ namespace CachePressureCS
         }
     }
 }
-{% endhighlight %}
+```

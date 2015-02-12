@@ -26,7 +26,7 @@ know Smalltalk, feel free to skip this.
 
 Let's consider a fairly boring chunk of code in a curly language:
 
-{% highlight c %}
+```c
 if (numWeasels > numCakes) {
     print("Not enough cakes!");
 } else {
@@ -34,12 +34,12 @@ if (numWeasels > numCakes) {
         print("A weasel eats a cake!");
     }
 }
-{% endhighlight %}
+```
 
 We've got three keywords there: `if`, `else`, and `for`. Here's how that code
 would look in Smalltalk:
 
-{% highlight smalltalk %}
+```smalltalk
 numWeasels > numCakes ifTrue: [
     "Not enough cakes!" print
 ] ifFalse: [
@@ -49,7 +49,7 @@ numWeasels > numCakes ifTrue: [
         i := i + 1
     ]
 ]
-{% endhighlight %}
+```
 
 Whoa, what? First, we'll gloss over the basic stuff we don't care about here:
 `.` is used to separate statements, `:=` is for assignment, and the function
@@ -57,13 +57,13 @@ Whoa, what? First, we'll gloss over the basic stuff we don't care about here:
 
 The control flow part of that code is this:
 
-{% highlight smalltalk %}
+```smalltalk
 ... ifTrue: [
     ...
 ] ifFalse: [
     [ ... ] whileTrue: [ ... ]
 ]
-{% endhighlight %}
+```
 
 You may think that all we've done is simple replacement: curlies become square
 brackets, `if` becomes `ifTrue:`, etc. Not so fast. `ifTrue:`, `IfFalse:`, and
@@ -76,9 +76,9 @@ boolean condition to check, a block of code to execute if the condition is
 true and (optionally) a block to execute if the condition is false. If you
 were to declare a "function" for if/then in C, it would look like:
 
-{% highlight c %}
+```c
 void IfThen(bool condition, code ifTrue, code ifFalse);
-{% endhighlight %}
+```
 
 The problem, of course, is that `code` isn't a type in C: there's no easy way
 to pass around a reference to a chunk of code outside of function pointers.
@@ -88,16 +88,16 @@ That's what the square brackets are doing in the original example. They create
 a block: a chunk of unevaluated code encapsulated as an object. If you do
 this:
 
-{% highlight smalltalk %}
+```smalltalk
 [ "hi" print ]
-{% endhighlight %}
+```
 
 It doesn't print "hi". Instead, it creates an object representing that chunk
 of code. If you then *call* the block by sending it a `value` message:
 
-{% highlight smalltalk %}
+```smalltalk
 [ "hi" print ] value
-{% endhighlight %}
+```
 
 *Then* it will print the string. Of course, you don't have to call a block
 immediately, or at all. You can store it in a variable, pass it to another
@@ -130,7 +130,7 @@ I wanted Finch to have that power but look less funny. (According to my
 definition of "funny", of course. Smalltalkers think their language looks
 perfectly normal.) Here's how our example would look in Finch:
 
-{% highlight finch %}
+```finch
 if: numWeasels > numCakes then: {
     write: "Not enough cakes!"
 } else: {
@@ -138,7 +138,7 @@ if: numWeasels > numCakes then: {
         write: "A weasel eats a cake!"
     }
 }
-{% endhighlight %}
+```
 
 The first minor change is using curlies to define blocks instead of square
 brackets. The more interesting change is that `if:then:else:` doesn't seem to
@@ -179,7 +179,7 @@ For example, the `from:to:do:` block we saw earlier is actually written in
 Finch. It uses `while:do:` which is the only looping construct explicitly
 built into the interpreter. Its definition is:
 
-{% highlight finch %}
+```finch
 Ether :: from: start to: end do: block {
     i <- start
     while: { i <= end } do: {
@@ -187,4 +187,4 @@ Ether :: from: start to: end do: block {
         i <-- i + 1
     }
 }
-{% endhighlight %}
+```

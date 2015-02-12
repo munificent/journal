@@ -48,7 +48,7 @@ Depending on how rich your language is, you'll have quite a few different AST cl
 
 These are relatively simple types. A (greatly!) simplified one looks a bit like:
 
-{% highlight cpp %}
+```cpp
 class BinaryOpExpr : public Expression {
   BinaryOpExpr(Expression* left, Expression* right)
   : left(left),
@@ -65,7 +65,7 @@ private:
   Expression* left;
   Expression* right;
 };
-{% endhighlight %}
+```
 
 Imagine thirty-something-odd more classes like this and you've got the right idea. There isn't *too* much we can do in C++ to simplify these definitions themselves. Each class is different enough that it's simplest and clearest to just write them out.
 
@@ -73,7 +73,7 @@ Where the tedium really comes in is all of the surrounding code that *uses* thes
 
 [visitor]: http://code.google.com/p/v8/source/browse/trunk/src/ast.h#2151
 
-{% highlight cpp %}
+```cpp
 class AstVisitor {
 public:
   ~virtual AstVisitor() {}
@@ -88,11 +88,11 @@ public:
   virtual void visitIfThenStmt(IfThenStmt* expr) = 0;
   // 30 more of these, you get the idea...
 };
-{% endhighlight %}
+```
 
 That code really *is* just repetitive boilerplate. There's more. It's useful to also have an enum for each AST node type so that we can also `switch` directly on the type of a node without having to go through a visitor for everything. So you'll want something like:
 
-{% highlight cpp %}
+```cpp
 enum AstType {
   kBoolLiteral,
   kNumLiteral,
@@ -101,11 +101,11 @@ enum AstType {
   kBinaryOpExpr,
   // again, you get the idea...
 };
-{% endhighlight %}
+```
 
 For debugging, it's handy to be able to get a string representation for an AST node's type too:
 
-{% highlight cpp %}
+```cpp
 const char* typeString(AstType type) {
   switch (type) {
     case kBoolLiteral:  return "BoolLiteral";
@@ -116,7 +116,7 @@ const char* typeString(AstType type) {
     // yup...
   }
 }
-{% endhighlight %}
+```
 
 C++'s usual abstraction facilities won't help us here: in all of these cases the repetition is in the *middle* of some type definition or statement. C++ is really only designed to let you abstract over entire statements (by making functions) or types (by making templates or base classes).
 
@@ -128,14 +128,14 @@ More often than not, that fact makes it too blunt of an instrument to be wielded
 
 Let's try doing something like this:
 
-{% highlight cpp %}
+```cpp
 #define DEFINE_VISIT(type)  \
     virtual void visit##type(type* expr) = 0
-{% endhighlight %}
+```
 
 With this, we can simplify our visitor class to:
 
-{% highlight cpp %}
+```cpp
 class AstVisitor {
 public:
   ~virtual AstVisitor() {}
@@ -150,31 +150,31 @@ public:
   DEFINE_VISIT(IfThenStmt);
   // 30 more of these, you get the idea...
 };
-{% endhighlight %}
+```
 
 That's a *little* better, I guess. But not really. This trick doesn't help at all with the enum, and only helps a little in `typeString()`. The problem is that it's the "for each AST type" part of our problem where the repetition really is. It's the *loop itself* we want to abstract over more than the loop *body*.
 
 What we want is a macro that will *itself* walk over all of the types, like:
 
-{% highlight cpp %}
+```cpp
 #define AST_NODE_LIST   \
     BoolLiteral         \
     NumLiteral          \
     StringLiteral       \
     UnaryOpExpr         \
     ...
-{% endhighlight %}
+```
 
 But of course, that one doesn't do anything useful. We don't want it to just expand to the type names themselves. It needs to do something with them. But that something is different for each problem area. We need it to take a parameter that is the chunk of code that we generate for each type. Like:
 
-{% highlight cpp %}
+```cpp
 #define AST_NODE_LIST(code) \
     code(BoolLiteral)       \
     code(NumLiteral)        \
     code(StringLiteral)     \
     code(UnaryOpExpr)       \
     ...
-{% endhighlight %}
+```
 
 ## Macros Taking Macros... We Must Go Deeper
 
@@ -182,7 +182,7 @@ Now the fun part. When we use that `AST_NODE_LIST` macro, what is that `code` ar
 
 Until I saw this in V8, I didn't even know you *could* pass macros to macros. But indeed you can. Using the `AST_NODE_LIST` we just defined, our visitor becomes:
 
-{% highlight cpp %}
+```cpp
 class AstVisitor {
 public:
   ~virtual AstVisitor() {}
@@ -192,23 +192,23 @@ public:
   AST_NODE_LIST(DEFINE_VISIT)
   #undef DEFINE_VISIT // Clean it up since we're done with it.
 };
-{% endhighlight %}
+```
 
 When `AST_NODE_LIST` is expanded, it will expand to one call to `DEFINE_VISIT` for each of the AST node types. Then *those* will in turn be expanded to define the visitor method for that type.
 
 Likewise, our enum becomes:
 
-{% highlight cpp %}
+```cpp
 #define DEFINE_ENUM_TYPE(type) k##type,
 enum AstType {
   AST_NODE_LIST(DEFINE_ENUM_TYPE)
 };
 #undef DEFINE_ENUM_TYPE
-{% endhighlight %}
+```
 
 That's the whole thing in its entirety. Finally, the function for converting it to a string:
 
-{% highlight cpp %}
+```cpp
 #define DEFINE_TYPE_STRING(type) case k##type: return #type;
 const char* typeString(AstType type) {
   switch (type) {
@@ -216,7 +216,7 @@ const char* typeString(AstType type) {
   }
 }
 #undef DEFINE_TYPE_STRING
-{% endhighlight %}
+```
 
 Note that we're using [stringification][] and [token pasting][] here to not just literally substitute in the AST node class's name, but also to use it as a string, or to build a larger name (like `kBinaryOpExpr`) out of it.
 

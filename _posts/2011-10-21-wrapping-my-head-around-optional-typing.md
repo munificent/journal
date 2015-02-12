@@ -14,21 +14,21 @@ Before I go into how I *think* about them, I should probably lay down the basic 
 
 At it's heart, Dart is a dynamically-typed language, so you can code without any annotations:
 
-{% highlight dart %}
+```dart
 sum(a, b) {
   var result = a + b;
   return result;
 }
-{% endhighlight %}
+```
 
 Here, you've said that `a`, `b`, and `result` can be any type at all and that's OK. But you can also choose to provide a type annotation in all of the usual places: variable declarations, function parameters, or fields, and return types. So this is valid too:
 
-{% highlight dart %}
+```dart
 num sum(num a, num b) {
   var result = a + b;
   return result;
 }
-{% endhighlight %}
+```
 
 Now we've stated our intent that `a` and `b` be numbers. We've also said that `sum` should return a number. Note that we didn't annotate `result`. It can still be anything. Dart lets you mix and match untyped and typed code, so here the result of a `a + b` is assigned to an untyped variable. Likewise, we get the untyped `result` and use it as the return value for a function with a typed return.
 
@@ -48,38 +48,38 @@ The next step up on the scale of usefulness is that, since they're in the code, 
 
 But tooling is gilding the lily. When you're talking about types, you expect, you know, a *type-checker*. You have that too (at least in the VM&mdash; what types mean when compiled to JS is another interesting story). When you run in checked mode, every type annotation gets checked at runtime. It's as if every line of code like this:
 
-{% highlight dart %}
+```dart
 int i = someFunction();
-{% endhighlight %}
+```
 
 Turns into (more or less, simplifying things a bit) this:
 
-{% highlight dart %}
+```dart
 var _temp = someFunction();
 if (_temp is! int) throw 'Type error! Run for your life!';
 var i = _temp;
-{% endhighlight %}
+```
 
 You can think of every type annotation as an *expectation*: this thing *should* be a number here. In checked mode, the VM will constantly validate your expectations and stop if something doesn't hold.
 
 It's important to note that these checks are done *dynamically*, at runtime. There isn't a separate static type checking pass. For example, if you have code like this:
 
-{% highlight dart %}
+```dart
 if (2 == 3) {
   // should never get here
   int i = 'not int';
 }
-{% endhighlight %}
+```
 
 You won't see a type error here because it will never actually get inside the `if` block. You may be rightly wondering why in the hell you'd want to wait until runtime to find a type error instead of doing it statically. Dart's take is that you can do both.
 
 Note that we said earlier that tools *can* do static type-checking if they want. What Dart does is *also* give you the option to perform those checks at runtime. This is actually how most static languages work too. Very few languages are *not* unsound, and in the presence of unsoundness, they have to check at runtime. Consider this Java code:
 
-{% highlight java %}
+```java
 String[] array = new String[5];
 Object[] untyped = array;
 untyped[2] = 123; // not a string
-{% endhighlight %}
+```
 
 Here we're creating an array of strings. Then we assign it to a variable whose type is an array of objects (i.e. anything). Then we try to stuff something that isn't a string (but *is* an object) in it.
 
@@ -92,12 +92,12 @@ The static type checker won't catch this because [arrays are covariant in Java](
 
 There's another common case where you skirt around the static checker and rely on dynamic type tests: casts.
 
-{% highlight java %}
+```java
 void callback(Object data) {
   // It's my callback, so I know the data is an int
   int value = (Integer) data;
 }
-{% endhighlight %}
+```
 
 There are times when you know more than the type system does and you just forcibly assert your knowledge. Doing so shouldn't let you just take down the VM (unlike in C++ where an improper type cast *can* set your house on fire), so every cast does a runtime check too.
 
@@ -144,12 +144,12 @@ Since Dart lets you mix untyped and typed code, it just embraces this model of v
 
 This is where things get weird. (Actually, if you're a type system person, they're already weird because covariant generics are wrong wrong wrong.) I've been talking about checked mode, but there's another mode: production mode. In that mode, the type annotations *completely ignored*. In other words, it will let you run this:
 
-{% highlight dart %}
+```dart
 int i = 'not int';
 bool b = 'not a bool either';
 num wtf = i + b;
 print(wtf); // not intnot a bool either
-{% endhighlight %}
+```
 
 This probably seems a little odd.
 
@@ -157,12 +157,12 @@ This probably seems a little odd.
 
 Maybe more than a little odd. In production mode, Dart behaves exactly as if it were a dynamically-typed language. Imagine if you decided to write your JavaScript like this (not that anyone would be [crazy enough to do that](http://code.google.com/closure/compiler/docs/js-for-compiler.html)):
 
-{% highlight javascript %}
+```javascript
 var /* int */ i = 'not int';
 var /* bool */ b = 'not a bool either';
 var /* num */ wtf = i + b;
 print(wtf); // not intnot a bool either
-{% endhighlight %}
+```
 
 Unsurprisingly, those comments won't do anything at runtime. That's how Dart runs in production mode.
 
@@ -176,12 +176,12 @@ That... doesn't really sound much like a "type system" compared to other languag
 
 If you've done C or C++ programming, you've probably used [`assert()`](http://en.wikipedia.org/wiki/Assertion_%28computing%29) or some flavor of it. If not, it looks like this:
 
-{% highlight c %}
+```c
 float divide(float num, float denom) {
   assert(denom != 0);
   return num / denom;
 }
-{% endhighlight %}
+```
 
 That `assert` statement evaluates the condition in it. If it comes up false, then it stops the show and starts ringing the alarm bells. Actually, that's not entirely true. *If you run it in debug mode* and the assertion fails, then it halts. Most projects have at least two build configurations.
 
@@ -217,11 +217,11 @@ It turns out that removing your asserts at runtime actually has a few advantages
 
 So what Dart does is apply that reasoning to the type assertions themselves. You can really think of type annotations in Dart as being syntactic sugar for this:
 
-{% highlight dart %}
+```dart
 var _temp = someFunction();
 assert(_temp is int);
 var i = _temp;
-{% endhighlight %}
+```
 
 As a developer, you can run in checked mode and Dart gives you much of the benefit of a typed language. All those asserts help you enforce API requirements just like they do in C++ or other languages. In fact, you could adopt this style in JavaScript if you really wanted to.
 

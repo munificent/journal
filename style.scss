@@ -248,6 +248,13 @@ article {
   h3 {
     font: italic 19px/24px $serif;
     padding: 24px 0 12px 0;
+
+    code {
+      background: inherit;
+      color: $code-color;
+      font: italic 19px $mono;
+      padding: 0;
+    }
   }
 
   h4 {
@@ -535,10 +542,12 @@ article {
   span.nc  { color: hsl(180, 100%, 30%); } // class name
   span.p   { color: mix($code-bg, $code-color, 30%); } // punctuation
   span.s,
+  span.s1,
+  span.s2,
   span.sc  { color: hsl(35, 100%, 40%); } // string
   span.m,
   span.mf  { color: hsl(200, 100%, 40%); } // number
-  span.cp  { color: hsl(300, 50%, 50%); } // preprocessor
+  span.cp  { color: hsl(320, 50%, 45%); } // preprocessor
 }
 
 @media only screen and (max-width: 1008px) {

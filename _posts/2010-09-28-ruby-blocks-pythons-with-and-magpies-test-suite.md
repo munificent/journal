@@ -12,7 +12,7 @@ for the language, written in itself.
 RubySpec is built on top of RSpec, a Ruby library that provides a DSL-like API
 for writing tests. Here's what a chunk of spec looks like:
 
-{% highlight ruby %}
+```ruby
 describe "The 'and' statement" do
   it "short-circuits evaluation at the first false condition" do
     x = nil
@@ -30,7 +30,7 @@ describe "The 'and' statement" do
     (1 and "yes").should == "yes"
   end
 end
-{% endhighlight %}
+```
 
 I find that wonderful to read. This is exactly the kind of thing that I think
 gets people excited about Ruby. It relies on two nice features Ruby has: open
@@ -47,21 +47,21 @@ Block arguments are then what get used to create the block structure you see
 where it appears that `describe` and `it` are keyword-like. The actual
 semantics are delightfully simple. If you do something like this in Ruby:
 
-{% highlight ruby %}
+```ruby
 blocky("bar") do
     puts "hi"
 end
-{% endhighlight %}
+```
 
 The block after `do` gets wrapped in something like a lambda and passed to the
 method (`blocky` here) as another (unnamed) argument. That code basically gets
 desugared to:
 
-{% highlight ruby %}
+```ruby
 blocky("bar", lambda {
     puts "hi"
 })
-{% endhighlight %}
+```
 
 The method that receives the block can then do stuff before and after it, and
 invoke it by using `yield`. It's the ability to do stuff before and after
@@ -75,10 +75,10 @@ When I thought "context manager", that called to mind a [similar feature](http:/
 in Python: `with`. Python's system is a bit more complex and more directly
 tied to scoped behavior. It looks like this:
 
-{% highlight python %}
+```python
 with open('somefile.text') as f:
     contents = f.read()
-{% endhighlight %}
+```
 
 This does a few things in sequence:
 
@@ -104,7 +104,7 @@ implement one in terms of the other. Ruby's system is much simpler, so here's
 `with` implemented using it (minus important exception-handling stuff that
 I'll ignore for now):
 
-{% highlight ruby %}
+```ruby
 class Object
     def with(obj)
         obj.__enter__
@@ -112,15 +112,15 @@ class Object
         obj.__exit__
     end
 end
-{% endhighlight %}
+```
 
 With that, you can do:
 
-{% highlight ruby %}
+```ruby
 with File.open("somefile.text", "r") do |f|
     contents = f.read
 end
-{% endhighlight %}
+```
 
 (Of course, you wouldn't actually do this in Ruby since its built-in `File`
 class already has a nice method to do just this.)
@@ -145,7 +145,7 @@ bound to `it`.
 With this in place, I can start moving Magpie's test suite to something that
 looks like:
 
-{% highlight magpie %}
+```magpie
 specify("An 'and' expression") with
     it should("return the first arg if it is false.") with
         (0 and false) shouldBe(0)
@@ -161,7 +161,7 @@ specify("An 'and' expression") with
         called shouldBe(false)
     end
 end
-{% endhighlight %}
+```
 
 Here, `specify` is a global function the test infrastructure provides. It will
 call the block argument and pass in a test runner object that gets bound to
@@ -175,7 +175,7 @@ doesn't require much language support or monkey patching.
 
 Here's some other fun stuff it enables:
 
-{% highlight magpie %}
+```magpie
 // functional idioms
 var waldo = people find with it name == "waldo"
 var positives = numbers filter with it > 0
@@ -184,18 +184,18 @@ var positives = numbers filter with it > 0
 File open("name.text") use with
     while it eof not do print(it readLine)
 end
-{% endhighlight %}
+```
 
 In the last example, `use` is a method that can be mixed into a class to call
 setup and teardown methods on the receiver, like:
 
-{% highlight magpie %}
+```magpie
 def File use(block)
     this setup
     block(this)
     this teardown
 end
-{% endhighlight %}
+```
 
 ## Multiple Arguments
 
@@ -204,10 +204,10 @@ what if you actually want to pass multiple arguments to the block? To enable
 that, I'm planning to add an optional parameter list following `with`. If it's
 there, it will use that instead of `it`:
 
-{% highlight magpie %}
+```magpie
 // sort by name
 collection sort with(a, b) a name compareTo(b name)
-{% endhighlight %}
+```
 
 And that's about it. Not too bad for a handful of code, eh? Now I just have to
 rewrite Magpie's entire test suite to use it&hellip;

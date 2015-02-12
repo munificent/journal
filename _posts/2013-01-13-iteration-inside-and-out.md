@@ -6,11 +6,11 @@ categories: code language magpie ruby dart
 
 You would think iteration, you know *looping over stuff*, would be a solved problem in programming languages. Seriously, here's some *FORTRAN* code that does a loop and would run on a computer fifty years ago:
 
-{% highlight fortran %}
+```fortran
 do i=1,10
     print i
 end do
-{% endhighlight %}
+```
 
 So when I started designing loops in my little language [Magpie][], I figured it would be pretty straightforward:
 
@@ -38,10 +38,10 @@ The first side of the coin is *external* iterators. If you code in C++, Java, C#
 
 [single-dispatch]: http://en.wikipedia.org/wiki/Dynamic_dispatch#Single_and_multiple_dispatch
 
-{% highlight dart %}
+```dart
 var elements = [1, 2, 3, 4, 5];
 for (var i in elements) print(i);
-{% endhighlight %}
+```
 
 (This is [Dart][] if you were wondering.)
 
@@ -49,14 +49,14 @@ for (var i in elements) print(i);
 
 What the compiler sees is a little different. If you squint through the Matrix, then a loop like the above is really:
 
-{% highlight dart %}
+```dart
 var elements = [1, 2, 3, 4, 5];
 var __iterator = elements.iterator();
 while (__iterator.moveNext()) {
   var i = __iterator.current;
   print(i);
 }
-{% endhighlight %}
+```
 
 The `.iterator()`, `.moveNext()`, and `.current` calls are the *iteration protocol*. If you want to define your own iterable thing, you create a type that supports that protocol. Since a `for` statement compiles down to that (or "[desugars][]" if you're hip to PL nerd lingo), supporting that protocol lets your type work seamlessly inside a loop.
 
@@ -76,7 +76,7 @@ In dynamically-typed languages, it's more informal, like Python's [iterator prot
 
 Here's a simple example where it works well. Let's write a function that returns `true` if a sequence contains a given item and `false` if it doesn't. I'll use Dart again because I think Dart actually works pretty well as an *Ur*-language that most programmers can grok:
 
-{% highlight dart %}
+```dart
 find(Iterable haystack, needle) {
   for (var item in haystack) {
     if (item == needle) return true;
@@ -84,7 +84,7 @@ find(Iterable haystack, needle) {
 
   return false;
 }
-{% endhighlight %}
+```
 
 Dead simple. One key property this has is that it *short-circuits*: it will stop iterating as soon as it finds the item. This is not just an optimization, but critical when you consider that some sequences (like reading the lines in a file) may have side-effects, or you may have an infinite sequence.
 
@@ -92,17 +92,17 @@ Dead simple. One key property this has is that it *short-circuits*: it will stop
 
 Let's do something a bit more complex. Let's write a function that takes two sequences and returns a sequence that will alternate between items in each sequence. So if you throw `[1, 2, 3]` and `['a', 'b', 'c']` at it, you'll get back `1, 'a', 2, 'b', 3, 'c'`.
 
-{% highlight dart %}
+```dart
 interleave(Iterable a, Iterable b) {
   return new InterleaveIterable(a, b);
 }
-{% endhighlight %}
+```
 
 This just delegates to an object, because you need some type to hang the iterator protocol off of. Here's that type:
 
 [short-hand]: http://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#functions
 
-{% highlight dart %}
+```dart
 class InterleaveIterable {
   Iterable a;
   Iterable b;
@@ -112,11 +112,11 @@ class InterleaveIterable {
     return new InterleaveIterator(a.iterator(), b.iterator());
   }
 }
-{% endhighlight %}
+```
 
 OK, again just another bit of delegation. This is because most iterator protocols separate the "thing that can be iterated" from the object representing the *current* iteration state. The former is not modified by being iterated over, but the latter is. So now let's get to the real meat:
 
-{% highlight dart %}
+```dart
 class InterleaveIterator {
   Iterator a;
   Iterator b;
@@ -135,7 +135,7 @@ class InterleaveIterator {
 
   get current => a.current;
 }
-{% endhighlight %}
+```
 
 This is a bit verbose, but it's pretty straightforward. Each time you call `moveNext()`, it reads from one of the iterators and then swaps them. It stops as soon as either one is done. Pretty groovy.
 
@@ -143,37 +143,37 @@ This is a bit verbose, but it's pretty straightforward. Each time you call `move
 
 Now let's see the ugly side of this. Let's say we've got a simple binary tree class, like:
 
-{% highlight dart %}
+```dart
 class Tree {
   Tree left;
   String label;
   Tree right;
 }
-{% endhighlight %}
+```
 
 Now say we want to print the tree's labels *in-order*, meaning we print everything on the left first (recursively), then print the label, then the right. The implementation is as simple as the description:
 
-{% highlight dart %}
+```dart
 printTree(Tree tree) {
   if (tree.left != null) printTree(tree.left);
   print(tree.label);
   if (tree.right != null) printTree(tree.right);
 }
-{% endhighlight %}
+```
 
 Later, we realize we need to do other stuff on trees in order. Maybe we need to convert it to JSON, or just count the number of nodes or something. What'd we'd really like is to be able to *iterate* over the nodes in order and then do whatever we want with each item. So the above function becomes:
 
-{% highlight dart %}
+```dart
 printTree(Tree tree) {
   for (var node in tree) {
     print(node.label);
   }
 }
-{% endhighlight %}
+```
 
 For this to work, `Tree` will have to implement the iterator protocol. What does that look like? It's best just to swallow the whole bitter pill at once:
 
-{% highlight dart %}
+```dart
 class Tree implements Iterable<Tree> {
   Tree left;
   String label;
@@ -226,7 +226,7 @@ class TreeIterator implements Iterator<Tree> {
 
   Tree current;
 }
-{% endhighlight %}
+```
 
 Sweet Mother of Turing, what the hell happened here? This exact same behavior was a *three line* recursive function and now it's a fifty line monstrosity.
 
@@ -246,10 +246,10 @@ With external iterators, (1) is the type implementing the iterator protocol and 
 
 Internal iterators reverse that power dynamic. With an internal iterator, the code that generates values decides when to invoke the code that uses that value. For example, here's how you print the Beatles in Ruby:
 
-{% highlight ruby %}
+```ruby
 beatles = ['George', John', 'Paul', 'Ringo']
 beatles.each { |beatle| puts beatle }
-{% endhighlight %}
+```
 
 That `each` method on `Array` is the iterator. Its job is to walk over each item in the array. The `{ |beatle| puts beatle }` is the code we want to run for each item. The curlies define a *block* in Ruby: a first-class chunk of code you can pass around.
 
@@ -259,7 +259,7 @@ So what this does is bundle up that `puts` expression into an object and send it
 
 Let's see what our ugly external iterator example looks like in Ruby. First, we'll define the tree:
 
-{% highlight ruby %}
+```ruby
 class Tree
   attr_accessor :left, :label, :right
 
@@ -269,17 +269,17 @@ class Tree
     @right = right
   end
 end
-{% endhighlight %}
+```
 
 To walk the tree using an internal iterator style, we'll want this to magically work:
 
-{% highlight ruby %}
+```ruby
 tree.in_order { |node| puts node.label }
-{% endhighlight %}
+```
 
 Implementing that iterator in Dart (or Java, or C#) was about 50 lines of code. Here it is in Ruby:
 
-{% highlight ruby %}
+```ruby
 class Tree
   def in_order(&code)
     @left.in_order &code if @left
@@ -287,17 +287,17 @@ class Tree
     @right.in_order &code if @right
   end
 end
-{% endhighlight %}
+```
 
 Yup, that's it. It looks pretty much like the original recursive function, because it *is* just like that function. The only difference is where that Dart function was hard-coded to just call `print()`, this one takes a *block*, basically a callback to invoke with each value. In fact, we can implement the same thing in any language with anonymous functions. Here's Dart:
 
-{% highlight dart %}
+```dart
 inOrder(Tree tree, callback(Tree tree)) {
   if (tree.left != null) inOrder(tree.left);
   callback(tree);
   if (tree.right != null) inOrder(tree.right);
 }
-{% endhighlight %}
+```
 
 You couldn't do this in Java (...[yet](http://openjdk.java.net/projects/lambda/)), but in most OOP languages you can passably fake internal iterator style. It's just not idiomatic in those languages.
 
@@ -307,33 +307,33 @@ Internal iteration is definitely beating external style in this tree example. Le
 
 OK, let's say we're using Ruby and we want to write a method that, given any iterable object, sees if it contains some object. By "any iterable object", we'll mean "has an `each`" method, which is the canonical way to iterate. Something like:
 
-{% highlight ruby %}
+```ruby
 def contains(haystack, needle)
   haystack.each { |item| return true if item == needle }
   false
 end
-{% endhighlight %}
+```
 
 Not bad! So we're two-for-two on internal style. Let's transmogrify this into Dart:
 
-{% highlight dart %}
+```dart
 contains(Iterable haystack, needle) {
   haystack.forEach((item) {
     if (item == needle) return true;
   });
   return false;
 }
-{% endhighlight %}
+```
 
 Still pretty terse! Except there's one problem: *it doesn't actually work.*
 
 What's the difference? In both examples, there's a little chunk of code: `return true`. The intent of that code is to cause the `contains()` method to return `true`. But in the Dart example, that `return` statement is contained inside a lambda, a little anonymous function:
 
-{% highlight dart %}
+```dart
 (item) {
   if (item == needle) return true;
 }
-{% endhighlight %}
+```
 
 So all it does is cause that *function* to return. So it ends, and returns back to `forEach()` which then proceeds along its merry way onto the next item. In Ruby, that `return` doesn't return from the *block* that contains it, it returns from the *method* that contains it. A `return` will walk up any enclosing blocks, returning from *all* of them until it hits an honest-to-God method and then make *that* return.
 
@@ -363,7 +363,7 @@ You probably don't think about it like this, but *the callstack is a data struct
 
 You get another bit of extra data for free too: the current execution pointer. The callstack keeps track of where you are in your function. For example:
 
-{% highlight dart %}
+```dart
 lameExample() {
   print("I'm at the top");
   doSomething();
@@ -371,17 +371,17 @@ lameExample() {
   doSomething();
   print("Dead last like a chump");
 }
-{% endhighlight %}
+```
 
 We kind of take this for granted, but each time `doSomething()` returns to this `lameExample()`, it picks up right where it left off. That's handy. Remember our recursive tree traversal:
 
-{% highlight dart %}
+```dart
 printTree(Tree tree) {
   if (tree.left != null) printTree(tree.left);
   print(tree.label);
   if (tree.right != null) printTree(tree.right);
 }
-{% endhighlight %}
+```
 
 After calling `printTree()` on the left branch, it resumed where it left off, printed the label, and went to the next branch. Once you throw in recursion, you also get the ability to represent a *stack* of these implicit data structures. The callstack itself (hence the name) will track which parent branches we're in the middle of traversing.
 
@@ -395,7 +395,7 @@ The lesson here is that stack frames are an amazingly terse way of storing state
 
 This is the key we need to see why each iteration style sucks for some things. It's a question of who gets to control the callstack. Earlier, I said that there are two chunks of code involved in iteration: the code generating the values, and the code doing stuff with them. In an external iterator, your callstack looks like this:
 
-{% highlight text %}
+```text
 +------------+
 | moveNext() |
 +------------+
@@ -404,7 +404,7 @@ This is the key we need to see why each iteration style sucks for some things. I
   ...
 
   main()
-{% endhighlight %}
+```
 
 The method containing the loop calls `moveNext()`, which pushes it on top of the stack. It can in turn call whatever it wants, so it *temporarily* has free reign on the callstack. But it has to return, unwind, and discard all of that state to return to the loop body before it can generate the next value.
 
@@ -412,7 +412,7 @@ That's why the tree example was so verbose. Since all of that state would be tra
 
 With an internal iterator, it's like this:
 
-{% highlight text %}
+```text
 +------------------------+
 | each                   |
 +------------------------+
@@ -421,11 +421,11 @@ With an internal iterator, it's like this:
   ...
 
   main()
-{% endhighlight %}
+```
 
 Now the iterator is on top. It can build up whatever stack frames it wants, and then, whenever its convenient, invoke the block:
 
-{% highlight text %}
+```text
 +------------------------+
 | block                  |
 +------------------------+
@@ -438,7 +438,7 @@ Now the iterator is on top. It can build up whatever stack frames it wants, and 
   ...
 
   main()
-{% endhighlight %}
+```
 
 The *block* now has to return to `each` (or whatever `each` calls). So the iterator can keep whatever state on the callstack it wants, since it's in control. But, as you can see, you really need non-local returns for this to work well. Because, when the block *does* want to stop iteration, it needs a way to unwind all the way through `stuff...` and `each` all the way back to the method.
 

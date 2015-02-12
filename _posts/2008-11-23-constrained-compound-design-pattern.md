@@ -47,7 +47,7 @@ says, "Here's where you do your work." If you've minimized global and static
 objects then the limited parameters to the sandbox say, "You only really have
 access to the methods in `this`" so just use those. Here's an example:
 
-{% highlight csharp %}
+```csharp
 public abstract class Widget
 {
     // the sandbox
@@ -71,7 +71,7 @@ public class MyWidget : Widget
         }
     }
 }
-{% endhighlight %}
+```
 
 If you try to go down this path, one limitation you will quickly realize is
 that often the base class itself doesn't have enough contextual information to
@@ -79,7 +79,7 @@ provide those atomic functions. That needs to be pased in, but you don't want
 the sandbox to have it (since it could then poke at it directly). Here's a
 typical way around it:
 
-{% highlight csharp %}
+```csharp
 public abstract class Widget
 {
     // the public API
@@ -104,7 +104,7 @@ public abstract class Widget
 
     private DrawContext mContext;
 }
-{% endhighlight %}
+```
 
 Now `DrawString()`, etc. have access to the DrawContext, but the derived
 widget itself does not.
@@ -118,7 +118,7 @@ implicit argument to the sandbox method `Draw()`. Instead of using `this` you
 can always make those operations an explicit parameter. Here's a way to use
 that to have different widgets draw differently without using inheritance:
 
-{% highlight csharp %}
+```csharp
 public class Widget
 {
     public Widget(Action<DrawOperations> drawFunc)
@@ -166,7 +166,7 @@ public Widget MakeMyWidget()
 
     return widget;
 }
-{% endhighlight %}
+```
 
 This has the advantage of letting you later change how a widget draws without
 baking it into the class hierarchy, but may be a bit odd to people with only

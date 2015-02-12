@@ -48,18 +48,18 @@ Before we can get to implementing those two steps, let's get a couple of prelimi
 
 Let's play pretend that we're writing an interpreter for a little language. It's dynamically typed, and has two types of objects: ints and pairs. Here's an enum to identify an object's type:
 
-{% highlight c %}
+```c
 typedef enum {
   OBJ_INT,
   OBJ_PAIR
 } ObjectType;
-{% endhighlight %}
+```
 
 A pair can be a pair of anything, two ints, an int and another pair, whatever. You can go [surprisingly far](http://www.flickr.com/photos/raganwald/212588975/) with just that. Since an object in the VM can be either of these, the typical way in C to implement it is with a [tagged union](http://en.wikipedia.org/wiki/Tagged_union).
 
 We'll define it thusly:
 
-{% highlight c %}
+```c
 typedef struct sObject {
   ObjectType type;
 
@@ -74,7 +74,7 @@ typedef struct sObject {
     };
   };
 } Object;
-{% endhighlight %}
+```
 
 The main `Object` struct has a `type` field that identifies what kind of value it is&mdash; either an int or a pair. Then it has a union to hold the data for the int or pair. If your C is rusty, a union is a struct *where the fields overlap in memory*. Since a given object can only be an int *or* a pair, there's no reason to have memory in a single object for all three fields at the same time. A union does that. Groovy.
 
@@ -84,28 +84,28 @@ Now we can wrap that in a little virtual machine structure. Its role in this sto
 
 We'll model that explicitly and simply like so:
 
-{% highlight c %}
+```c
 #define STACK_MAX 256
 
 typedef struct {
   Object* stack[STACK_MAX];
   int stackSize;
 } VM;
-{% endhighlight %}
+```
 
 Now that we've got our basic data structures in place, let's slap together a bit of code to create some stuff. First, let's write a function that creates and initializes a VM:
 
-{% highlight c %}
+```c
 VM* newVM() {
   VM* vm = malloc(sizeof(VM));
   vm->stackSize = 0;
   return vm;
 }
-{% endhighlight %}
+```
 
 Once we've got a VM, we need to be able to manipulate its stack:
 
-{% highlight c %}
+```c
 void push(VM* vm, Object* value) {
   assert(vm->stackSize < STACK_MAX, "Stack overflow!");
   vm->stack[vm->stackSize++] = value;
@@ -115,21 +115,21 @@ Object* pop(VM* vm) {
   assert(vm->stackSize > 0, "Stack underflow!");
   return vm->stack[--vm->stackSize];
 }
-{% endhighlight %}
+```
 
 OK, now that we can stick stuff in "variables", we need to be able to actually create objects. First a little helper function:
 
-{% highlight c %}
+```c
 Object* newObject(VM* vm, ObjectType type) {
   Object* object = malloc(sizeof(Object));
   object->type = type;
   return object;
 }
-{% endhighlight %}
+```
 
 That does the actual memory allocation and sets the type tag. We'll be revisiting this in a bit. Using that, we can write functions to push each kind of object onto the VM's stack:
 
-{% highlight c %}
+```c
 void pushInt(VM* vm, int intValue) {
   Object* object = newObject(vm, OBJ_INT);
   object->value = intValue;
@@ -144,7 +144,7 @@ Object* pushPair(VM* vm) {
   push(vm, object);
   return object;
 }
-{% endhighlight %}
+```
 
 And that's it for our little VM. If we had a parser and an interpreter that called those functions, we'd have an honest to God language on our hands. And, if we had infinite memory, it would even be able to run real programs. Since we don't, let's start collecting some garbage.
 
@@ -152,35 +152,35 @@ And that's it for our little VM. If we had a parser and an interpreter that call
 
 The first phase is *marking*. We need to walk all of the reachable objects and set their mark bit. The first thing we need then is to add a mark bit to `Object`:
 
-{% highlight c %}
+```c
 typedef struct sObject {
   unsigned char marked;
   /* Previous stuff... */
 } Object;
-{% endhighlight %}
+```
 
 When we create a new object, we'll modify `newObject()` to initialize `marked` to zero. To mark all of the reachable objects, we start with the variables that are in memory, so that means walking the stack. That looks like this:
 
-{% highlight c %}
+```c
 void markAll(VM* vm)
 {
   for (int i = 0; i < vm->stackSize; i++) {
     mark(vm->stack[i]);
   }
 }
-{% endhighlight %}
+```
 
 That in turn calls `mark`. We'll build that in phases. First:
 
-{% highlight c %}
+```c
 void mark(Object* object) {
   object->marked = 1;
 }
-{% endhighlight %}
+```
 
 This is the most important bit, literally. We've marked the object itself as reachable, but remember we also need to handle references in objects: reachability is *recursive*. If the object is a pair, its two fields are reachable too. Handling that is simple:
 
-{% highlight c %}
+```c
 void mark(Object* object) {
   object->marked = 1;
 
@@ -189,13 +189,13 @@ void mark(Object* object) {
     mark(object->tail);
   }
 }
-{% endhighlight %}
+```
 
 But there's a bug here. Do you see it? We're recursing now, but we aren't checking for *cycles*. If you have a bunch of pairs that point to each other in a loop, this will overflow the stack and crash.
 
 To handle that, we just need to bail out if we get to an object that we've already processed. So the complete `mark()` function is:
 
-{% highlight c %}
+```c
 void mark(Object* object) {
   /* If already marked, we're done. Check this first
      to avoid recursing on cycles in the object graph. */
@@ -208,7 +208,7 @@ void mark(Object* object) {
     mark(object->tail);
   }
 }
-{% endhighlight %}
+```
 
 Now we can call `markAll()` and it will correctly mark every reachable object in memory. We're halfway done!
 
@@ -222,29 +222,29 @@ The trick to solve this is that the VM can have its *own* references to objects 
 
 The simplest way to do this is to just maintain a linked list of every object we've ever allocated. We'll extend `Object` itself to be a node in that list:
 
-{% highlight c %}
+```c
 typedef struct sObject {
   /* The next object in the list of all objects. */
   struct sObject* next;
 
   /* Previous stuff... */
 } Object;
-{% endhighlight %}
+```
 
 The VM will keep track of the head of that list:
 
-{% highlight c %}
+```c
 typedef struct {
   /* The first object in the list of all objects. */
   Object* firstObject;
 
   /* Previous stuff... */
 } VM;
-{% endhighlight %}
+```
 
 In `newVM()` we'll make sure to initialize `firstObject` to `NULL`. Whenever we create an object, we add it to the list:
 
-{% highlight c %}
+```c
 Object* newObject(VM* vm, ObjectType type) {
   Object* object = malloc(sizeof(Object));
   object->type = type;
@@ -256,11 +256,11 @@ Object* newObject(VM* vm, ObjectType type) {
 
   return object;
 }
-{% endhighlight %}
+```
 
 This way, even if the *language* can't find an object, the language *implementation* still can. To sweep through and delete the unmarked objects, we just need to traverse the list:
 
-{% highlight c %}
+```c
 void sweep(VM* vm)
 {
   Object** object = &vm->firstObject;
@@ -280,18 +280,18 @@ void sweep(VM* vm)
     }
   }
 }
-{% endhighlight %}
+```
 
 That code is a bit tricky to read because of that pointer to a pointer, but if you work through it, you can see it's pretty straightforward. It just walks the entire linked list. Whenever it hits an object that isn't marked, it frees its memory and removes it from the list. When this is done, we will have deleted every unreachable object.
 
 Congratulations! We have a garbage collector! There's just one missing piece: actually calling it. First let's wrap the two phases together:
 
-{% highlight c %}
+```c
 void gc(VM* vm) {
   markAll(vm);
   sweep(vm);
 }
-{% endhighlight %}
+```
 
 You couldn't ask for a more obvious mark-sweep implementation. The trickiest part is figuring out when to actually call this. What does "low on memory" even mean, especially on modern computers with near-infinite virtual memory?
 
@@ -299,7 +299,7 @@ It turns out there's no precise right or wrong answer here. It really depends on
 
 We'll extend `VM` to track how many we've created:
 
-{% highlight c %}
+```c
 typedef struct {
   /* The total number of currently allocated objects. */
   int numObjects;
@@ -309,11 +309,11 @@ typedef struct {
 
   /* Previous stuff... */
 } VM;
-{% endhighlight %}
+```
 
 And then initialize them:
 
-{% highlight c %}
+```c
 VM* newVM() {
   /* Previous stuff... */
 
@@ -321,13 +321,13 @@ VM* newVM() {
   vm->maxObjects = INITIAL_GC_THRESHOLD;
   return vm;
 }
-{% endhighlight %}
+```
 
 The `INITIAL_GC_THRESHOLD` will be the number of objects at which you kick off the *first* GC. A smaller number is more conservative with memory, a larger number spends less time on garbage collection. Adjust to taste.
 
 Whenever we create an object, we increment `numObjects` and run a collection if it reaches the max:
 
-{% highlight c %}
+```c
 Object* newObject(VM* vm, ObjectType type) {
   if (vm->numObjects == vm->maxObjects) gc(vm);
 
@@ -336,11 +336,11 @@ Object* newObject(VM* vm, ObjectType type) {
   vm->numObjects++;
   return object;
 }
-{% endhighlight %}
+```
 
 I won't bother showing it, but we'll also tweak `sweep()` to *decrement* `numObjects` every time it frees one. Finally, we modify `gc()` to update the max:
 
-{% highlight c %}
+```c
 void gc(VM* vm) {
   int numObjects = vm->numObjects;
 
@@ -349,7 +349,7 @@ void gc(VM* vm) {
 
   vm->maxObjects = vm->numObjects * 2;
 }
-{% endhighlight %}
+```
 
 After every collection, we update `maxObjects` based on the number of *live* objects left after the collection. The multiplier there lets our heap grow as the number of living objects increases. Likewise, it will shrink automatically if a bunch of objects end up being freed.
 

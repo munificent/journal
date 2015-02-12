@@ -38,16 +38,16 @@ I'm picking JS *not* because that's what this post is about. It's just that
 it's the language you, statistical representation of the average reader, are
 most likely to be able grok. Voilà:
 
-{% highlight js %}
+```js
 function thisIsAFunction() {
   return "It's awesome";
 }
-{% endhighlight %}
+```
 
 Because our strawman is a *modern* (shitty) language, we also have first-class
 functions. So you can make something like like:
 
-{% highlight js %}
+```js
 // Return a list containing all of the elements in collection
 // that match predicate.
 function filter(collection, predicate) {
@@ -57,7 +57,7 @@ function filter(collection, predicate) {
   }
   return result;
 }
-{% endhighlight %}
+```
 
 This is one of those *higher-order* functions, and, like the name implies, they
 are classy as all get out and super useful. You're probably used to them for
@@ -66,22 +66,22 @@ start using them damn near everywhere.
 
 Maybe in your testing framework:
 
-{% highlight js %}
+```js
 describe("An apple", function() {
   it("ain't no orange", function() {
     expect("Apple").not.toBe("Orange");
   });
 });
-{% endhighlight %}
+```
 
 Or when you need to parse some data:
 
-{% highlight js %}
+```js
 tokens.match(Token.LEFT_BRACKET, function(token) {
   // Parse a list literal...
   tokens.consume(Token.RIGHT_BRACKET);
 });
-{% endhighlight %}
+```
 
 So you go to town and write all sorts of awesome reusable libraries and
 applications passing around functions, calling functions, returning functions.
@@ -98,7 +98,7 @@ Each function&mdash;anonymous callback or regular named one&mdash;is either red
 or blue. Since my blog's code highlighter can't handle actual color, we'll say
 the syntax is like:
 
-{% highlight js %}
+```js
 blue•function doSomethingAzure() {
   // This is a blue function...
 }
@@ -106,7 +106,7 @@ blue•function doSomethingAzure() {
 red•function doSomethingCarnelian() {
   // This is a red function...
 }
-{% endhighlight %}
+```
 
 There are *no* colorless functions in the language. Want to make a function?
 Gotta pick a color. Them's the rules. And, actually, there are a couple more
@@ -116,10 +116,10 @@ rules you have to follow too:
 
 Imagine a "blue call" syntax and a "red call" syntax. Something like:
 
-{% highlight js %}
+```js
 doSomethingAzure(...)•blue;
 doSomethingCarnelian()•red;
-{% endhighlight %}
+```
 
 If you get it wrong&mdash;call a red function with `•blue` after the
 parentheses or vice versa&mdash;it does something bad. Dredge up some
@@ -133,19 +133,19 @@ Annoying rule, right? Oh, and one more:
 
 You *can* call a blue function from with a red one. This is kosher:
 
-{% highlight js %}
+```js
 red•function doSomethingCarnelian() {
   doSomethingAzure()•blue;
 }
-{% endhighlight %}
+```
 
 But you can't go the other way. If you try to do this:
 
-{% highlight js %}
+```js
 blue•function doSomethingAzure() {
   doSomethingCarnelian()•red;
 }
-{% endhighlight %}
+```
 
 Well, you're gonna get a visit from old Spidermouth the Night Clown.
 
@@ -387,7 +387,7 @@ JS, the browser's event loop&mdash;copes with this in some way.
 Node with its ever-marching-to-the-right callbacks stuffs all of those
 callframes in closures. When you do:
 
-{% highlight js %}
+```js
 function makeSundae(callback) {
   scoopIceCream(function (iceCream) {
     warmUpCaramel(function (caramel) {
@@ -395,7 +395,7 @@ function makeSundae(callback) {
     });
   });
 }
-{% endhighlight %}
+```
 
 Each of those function expressions *closes* over all of its surrounding
 context. That moves parameters like `iceCream` and `caramel` off the callstack

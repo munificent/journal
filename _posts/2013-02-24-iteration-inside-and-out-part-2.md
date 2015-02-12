@@ -22,7 +22,7 @@ Now we'll see some techniques to deal with this. The basic idea is [*reification
 
 Say we want to define a method that concatenates two sequences. We don't want to actually create a data structure that contains the elements of both, we just want to return an iterator that walks the first sequence and then the second one. Here's how you could do that in C#:
 
-{% highlight csharp %}
+```csharp
 IEnumerable Concat(IEnumerable a, IEnumerable b)
 {
   return new ConcatEnumerable(a, b);
@@ -78,19 +78,19 @@ class ConcatEnumerator
     get { return onFirst ? a.Current : b.Current; }
   }
 }
-{% endhighlight %}
+```
 
 Oof, that seems like a pile of code for such a simple goal. The problem is that we've got all of this state to maintain: the two sequences being iterated, which one we're in, and where we are in it. Since this is an *external* iterator, we can't just store that as local variables on the stack because we have to return from `MoveNext()` between each item.
 
 But but but! C# has something called *iterators*. (A confusing name. What other languages call "iterators", C# calls "enumerators". So "iterator" means something special in C#-land.) The above code can also be written:
 
-{% highlight csharp %}
+```csharp
 IEnumerable Concat(IEnumerable a, IEnumerable b)
 {
   foreach (var item in a) yield return item;
   foreach (var item in b) yield return item;
 }
-{% endhighlight %}
+```
 
 How's that for an improvement? (Note: if your employer pays you by the line, you'll want to avoid this.) The magic here is `yield return`. When a method contains it, the compiler turns the method into an *iterator*. You can think of it sort of as a "resumable method". When you call `Concat()`, it runs to the first `yield`, then stops. Then when you resume it, it picks up where it left after the `yield`.
 
@@ -100,12 +100,12 @@ The return type here clarifies that. When you call `Concat()`, what you get back
 
 So, given the above, we've got a nice solution to our original problem. We can use it like:
 
-{% highlight csharp %}
+```csharp
 foreach (var item in Concat(stuff, moreStuff))
 {
   Console.WriteLine(item);
 }
-{% endhighlight %}
+```
 
 Using `yield` lets us store all of the interesting state&mdash;the two sequences and our current location in them&mdash; just as local variables right in the `Concat()` method. C# will *reify* that stuff for us so that when the `Concat()` method "returns", that data gets squirreled away somewhere safe.
 
@@ -115,7 +115,7 @@ You may wonder how it does that. That's kind of the funny bit. In the case of C#
 
 In the last post, I crafted some glorious ASCII art showing where all of the state is being stored. The main problem was that the state for the code generating values and the state for the code consuming them both live on the stack. Using an iterator, though, gives you this:
 
-{% highlight text %}
+```text
   stack                       heap
 +---------------------+
 | iterator.MoveNext() |
@@ -125,7 +125,7 @@ In the last post, I crafted some glorious ASCII art showing where all of the sta
   ...
 
   main()
-{% endhighlight %}
+```
 
 So the stack has the state for the code consuming values. But the state needed to generate values lives on the *heap*. There's an instance of this little class that the compiler created for us. When `MoveNext()` returns, we don't trash the state because it's still over there in the heap available the next time we call `MoveNext()`.
 
@@ -136,7 +136,7 @@ There are a few other languages that do (or will) work this way. Python calls th
 
 There's a limitation here, though. You can only yield from the method itself. Let's say (for whatever reason) we wanted to organize our C# code like:
 
-{% highlight csharp %}
+```csharp
 IEnumerable Concat(IEnumerable a, IEnumerable b)
 {
   WalkFirst(a);
@@ -152,11 +152,11 @@ IEnumerable WalkSecond(IEnumerable a)
 {
   foreach (var item in a) yield return item;
 }
-{% endhighlight %}
+```
 
 What we *want* to have happen is that the `yield return` in `WalkFirst()` and `WalkSecond()` will cause `Concat()` itself to yield and return, but it doesn't work that way. Iterators/generators reify a stack frame for you, but they only reify *one*. If you want to have your iteration logic call other methods which also yield, you have to manually reify every level yourself by walking the sequence at each level. Something like:
 
-{% highlight csharp %}
+```csharp
 IEnumerable Concat(IEnumerable a, IEnumerable b)
 {
   foreach (var item in WalkFirst(a)) yield return item;
@@ -172,7 +172,7 @@ IEnumerable WalkSecond(IEnumerable a)
 {
   foreach (var item in a) yield return item;
 }
-{% endhighlight %}
+```
 
 You see how we're doing `foreach` and `yield return` both in the `Walk_` methods *and* in `Concat` itself? We're explicitly making *every* level of the callstack an iterator. That makes sure every call frame gets reified like we need. Can we do better?
 
@@ -180,7 +180,7 @@ You see how we're doing `foreach` and `yield return` both in the `Walk_` methods
 
 The above example can be translated to Python like so:
 
-{% highlight python %}
+```python
 def concat(a, b):
   for item in walkFirst(a): yield item
   for item in walkSecond(a): yield item
@@ -190,11 +190,11 @@ def walkFirst(a):
 
 def walkSecond(a):
   for item in b: yield item
-{% endhighlight %}
+```
 
 Aside from being more terse, this is a one-to-one mapping with the C# code. But Python 3.3 adds [something new](http://www.python.org/dev/peps/pep-0380/) for us here. Let's use it:
 
-{% highlight python %}
+```python
 def concat(a, b):
   yield from walkFirst(a)
   yield from walkSecond(a)
@@ -204,7 +204,7 @@ def walkFirst(a):
 
 def walkSecond(a):
   for item in b: yield item
-{% endhighlight %}
+```
 
 The explicit loops in `concat()` have been replaced with a new `yield from` statement. Nice. This makes composing generators a little cleaner. But there's no real magic here. We still have to have `yield` at every level of our iteration code.
 
@@ -220,7 +220,7 @@ In Ruby, iteration is usually internal. The idiomatic way to go through a collec
 
 Let's dig up an example from the previous post. Here's some Ruby code for defining a tree and iterating over the nodes of the tree in order:
 
-{% highlight ruby %}
+```ruby
 class Tree
   attr_accessor :left, :label, :right
 
@@ -236,19 +236,19 @@ class Tree
     @right.each &code if @right
   end
 end
-{% endhighlight %}
+```
 
 We can use it like:
 
-{% highlight ruby %}
+```ruby
 tree.each { |node| puts node.label }
-{% endhighlight %}
+```
 
 This is using internal iteration. We pass in that `{ |node| ... }` block and the Tree class itself recursively walks the nodes and invokes the callback on each node.
 
 Now let's say we want this to be an external iterator. Maybe we want to walk two trees in parallel to see if they have the same labels. We can do this something like:
 
-{% highlight ruby %}
+```ruby
 class Tree
   # Mixin all of the enumerable methods to our class.
   include Enumerable
@@ -260,7 +260,7 @@ b = another tree...
 if a.zip(b).each.all? { |pair| pair[0] == pair[1] }
   puts "Equal!"
 end
-{% endhighlight %}
+```
 
 The `zip` method takes an enumerable on the left and another on the right and "zips" them together one pair at a time. The result is an array of pairs of elements. If you zip `[1, 2, 3]` and `['a', 'b', 'c']` together, you get `[[1, 'a'], [2, 'b'], [3, 'c']]`. Neat.
 
@@ -270,23 +270,23 @@ But there's a subtle problem here. The `zip` method converts its arguments to *a
 
 What we'd like is a way to walk those two trees *iteratively* without creating any intermediate arrays. The `each` method on Tree does that, but it's an internal iterator. External iterators are perfect for this task. Can we convert it? In Ruby, that's as easy as:
 
-{% highlight ruby %}
+```ruby
 a = some tree...
 b = another tree...
 
 a_enum = a.to_enum
 b_enum = b.to_enum
-{% endhighlight %}
+```
 
 That little `to_enum` method takes an object that implements `each` and returns an external iterator. We can use these iterators like so:
 
-{% highlight ruby %}
+```ruby
 loop do
   if a_enum.next != b_enum.next
     puts "Not equal!"
   end
 end
-{% endhighlight %}
+```
 
 The protocol here is that `next` returns the next item in the sequence. If there are no more items, it raises a `StopIteration` error (which `loop` conveniently handles).
 
@@ -312,17 +312,17 @@ This is the special sauce we need for `to_enum`. When you call it, it spins up a
 
 In other words, a simplified implementation of `to_enum` looks a bit like:
 
-{% highlight ruby %}
+```ruby
 class Object
   def to_enum
     MyEnumerator.new self
   end
 end
-{% endhighlight %}
+```
 
 And the MyEnumerator class (which is simplified from [this excellent StackOverflow answer](http://stackoverflow.com/a/1437678/9457)) is:
 
-{% highlight ruby %}
+```ruby
 class MyEnumerator
   include Enumerable
 
@@ -341,7 +341,7 @@ class MyEnumerator
                            # resume the fiber.
   end
 end
-{% endhighlight %}
+```
 
 ## Iteration or concurrency?
 

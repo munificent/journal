@@ -34,7 +34,7 @@ The "move" here is the command pattern. The basic idea is that you have a
 procedure needs. You can think of it like a function call and its parameters
 bottled up together to be opened up later by someone else. A vanilla implementation is something like:
 
-{% highlight csharp %}
+```csharp
 interface ICommand
 {
     void Invoke();
@@ -51,13 +51,13 @@ class MovePieceCommand : ICommand
         Piece.MoveTo(X, Y);
     }
 }
-{% endhighlight %}
+```
 
 We'll also create a little command factory for creating the commands. This
 isn't necessary now, but it'll make sense later when we start moving things
 around.
 
-{% highlight csharp %}
+```csharp
 static class Commands
 {
     // create a command to move a piece
@@ -71,11 +71,11 @@ static class Commands
         return command;
     }
 }
-{% endhighlight %}
+```
 
 To complete this first pass, here's a little block to test our code:
 
-{% highlight csharp %}
+```csharp
 class Program
 {
     public static Main(string[] args)
@@ -88,7 +88,7 @@ class Program
         command.Invoke();
     }
 }
-{% endhighlight %}
+```
 
 ## The First Change: Delegates
 
@@ -99,7 +99,7 @@ just use that instead. We'll define a delegate type for a function that takes
 no arguments and returns nothing, just like the `Invoke()` method in
 `ICommand`.
 
-{% highlight csharp %}
+```csharp
 delegate CommandDel();
 
 class MovePieceCommand
@@ -140,7 +140,7 @@ class Program
         command();
     }
 }
-{% endhighlight %}
+```
 
 Not much different, although we did get to ditch the interface without any
 loss in functionality.
@@ -152,7 +152,7 @@ function. Let's see if we can pull that out. C# has "anonymous delegates",
 which are basically functions defined within the body of another function.
 We'll try that.
 
-{% highlight csharp %}
+```csharp
 class MovePieceCommand
 {
     public Piece Piece;
@@ -178,7 +178,7 @@ static class Commands
         return invoke;
     }
 }
-{% endhighlight %}
+```
 
 Now instead of an `Invoke()` *method* we have an anonymous function stored in
 a local `invoke` variable. But this local function isn't a method, so it
@@ -207,7 +207,7 @@ anyway, there's no reason to bundle them into an object. Let's kill it.
 To clean things up a bit more, we'll also define the delegate using C#'s newer
 [lambda syntax](http://msdn.microsoft.com/en-us/library/bb397687.aspx). It does the exact same thing, but more tersely.
 
-{% highlight csharp %}
+```csharp
 static class Commands
 {
     // create a command to move a piece
@@ -216,7 +216,7 @@ static class Commands
         return () => piece.MoveTo(x, y);
     }
 }
-{% endhighlight %}
+```
 
 And just like that, our whole command pattern has become a single line of
 code.

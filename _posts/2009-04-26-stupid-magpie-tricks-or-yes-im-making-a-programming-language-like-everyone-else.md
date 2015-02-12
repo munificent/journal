@@ -27,7 +27,7 @@ In Magpie, almost everything is a function, including constructors. Since it
 doesn't have an explicit `new` keyword, you can pass around a reference to a
 constructor like you can any other function.
 
-{% highlight magpie %}
+```magpie
 // define a type
 struct Point
     X Int
@@ -45,7 +45,7 @@ TakeRef (func fn (Int, Int -> Point))
 
     Print (point.X.String + ", " + point.Y.String)
 end
-{% endhighlight %}
+```
 
 Try *that* C# and C++!
 
@@ -56,7 +56,7 @@ arguments, you use a tuple. Syntactically, it looks the same as other
 languages, but does have an interesting side-effect: you can treat the entire
 batch of arguments as a single value to be played with:
 
-{% highlight magpie %}
+```magpie
 // define a function that takes three args
 Sum (a Int, b Int, c Int -> Int) a + b + c
 
@@ -77,7 +77,7 @@ end
 
 // this function returns a tuple
 GetArgs (-> (Int, Int, Int)) (4, 5, 6)
-{% endhighlight %}
+```
 
 ## Is That It?
 

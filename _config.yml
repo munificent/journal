@@ -1,6 +1,6 @@
 permalink: /:year/:month/:day/:title
 highlighter: pygments
-markdown: kramdown
+markdown: redcarpet
 
 exclude: [
   TODO,
@@ -10,6 +10,9 @@ exclude: [
   Gemfile,
   Gemfile.lock
 ]
+
+redcarpet:
+  extensions: ["smart"]
 
 # Custom variables:
 disqus: "journal-stuffwithstuff"

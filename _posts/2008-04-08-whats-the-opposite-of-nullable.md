@@ -8,14 +8,14 @@ same time, I *do* like having my code check its arguments.
 
 After a while, I noticed that half of the functions I wrote looked like this
 
-{% highlight csharp %}
+```csharp
 void SomeMethod(Foo foo)
 {
     if (foo == null) throw new ArgumentNullException("foo");
 
     // ...
 }
-{% endhighlight %}
+```
 
 That's good code in the sense that it bails on `null`, but it's got a couple
 of things I don't like. First, I have to keep copying and pasting that exception line in every method. I know, it's just one line, but it started to
@@ -34,7 +34,7 @@ Let's build it a bit at a time. The core not-very-clever idea is just a class
 that wraps a reference. When you construct it, it throws our familiar
 `ArgumentNullException` if the reference is `null`:
 
-{% highlight csharp %}
+```csharp
 public class NotNull<T>
 {
     public T Value
@@ -54,51 +54,51 @@ public class NotNull<T>
 
     private T mValue;
 }
-{% endhighlight %}
+```
 
 Definitely not rocket science. Now you can define methods like this:
 
-{% highlight csharp %}
+```csharp
 void SomeMethod(NotNull<Foo> foo) {}
-{% endhighlight %}
+```
 
 By the time you get to your method body, you can be sure that `foo` is not
 `null`. Unfortunately, your call sites just got uglier:
 
-{% highlight csharp %}
+```csharp
 SomeMethod(new NotNull(myFoo));
-{% endhighlight %}
+```
 
 A conversion operator will fix that:
 
-{% highlight csharp %}
+```csharp
 // in NotNull<T>
 public static implicit operator NotNull<T>(T maybeNull)
 {
     return new NotNull<T>(maybeNull);
 }
-{% endhighlight %}
+```
 
 Now the call sites are unchanged:
 
-{% highlight csharp %}
+```csharp
 SomeMethod(mFoo);
-{% endhighlight %}
+```
 
 and when you make the call, it will automatically call the conversion, which
 will in turn bail if `myFoo` is `null`. We can make things a little easier by
 providing a conversion the other way too:
 
-{% highlight csharp %}
+```csharp
 public static implicit operator T(NotNull<T> notNull)
 {
     return notNull.Value;
 }
-{% endhighlight %}
+```
 
 Now you can do this:
 
-{% highlight csharp %}
+```csharp
 void SomeMethod(NotNull<Foo> foo)
 {
     // will automatically convert on assign :)
@@ -108,7 +108,7 @@ void SomeMethod(NotNull<Foo> foo)
     // can't do foo.SomeFooProperty, have to do:
     foo.Value.SomeFooProperty;
 }
-{% endhighlight %}
+```
 
 Not too shabby. The bonus, and the real reason I like this is that you've now
 **decorated the function signature itself with its requirements**. Any caller
@@ -125,9 +125,9 @@ value type to `null`. If you can figure out a way around this, holler.
 
 **Edit:** as Brad points out below, this does work with interfaces… sort of. The limitation is that implicit conversion operators don't work with them. The actual wrapping and `null` checks are fine. It's just that to use it with an interface, you have to do:
 
-{% highlight csharp %}
+```csharp
 SomeMethod(new NotNull(myInterfaceFoo));
-{% endhighlight %}
+```
 
 which is kind of lame. But aside from that, you can use interfaces with this.
 Thanks, B-Rad!
@@ -137,7 +137,7 @@ Thanks, B-Rad!
 Oh, and here's a prettier version with comments and stuff. Don't say I never
 gave you nothing:
 
-{% highlight csharp %}
+```csharp
 /// <summary>
 /// <para>
 /// Wrapper around a reference that ensures the reference is not <c>null</c>.
@@ -211,11 +211,11 @@ public class NotNull<T>
 
     private T mValue;
 }
-{% endhighlight %}
+```
 
 and a unit test:
 
-{% highlight csharp %}
+```csharp
 [TestFixture]
 public class NotNullFixture
 {
@@ -265,4 +265,4 @@ public class NotNullFixture
 
     public class Foo { }
 }
-{% endhighlight %}
+```

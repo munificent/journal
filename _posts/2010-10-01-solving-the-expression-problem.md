@@ -17,7 +17,7 @@ that it can work with: Text, Drawings, and Spreadsheets. And we've got a few
 operations we need to be able to do with a document: draw it to the screen,
 load it, and save it to disc. They form a grid, like so:
 
-{% highlight text %}
+```text
             Text       Drawing   Spreadsheet
         +-----------+-----------+-----------+
 draw()  |           |           |           |
@@ -26,7 +26,7 @@ load()  |           |           |           |
         +-----------+-----------+-----------+
 save()  |           |           |           |
         +-----------+-----------+-----------+
-{% endhighlight %}
+```
 
 Each cell in that grid is a chunk of code we've got to write. We need to draw
 text, load a drawing, save a spreadsheet, etc. All nine combinations will be
@@ -53,7 +53,7 @@ These are the most popular languages on the block today, and include C++, Java
 and C#. They organize code into classes, and put operations as methods on
 those classes. A Java implementation of the above would look something like:
 
-{% highlight java %}
+```java
 public interface Document {
     void draw();
     void load();
@@ -77,7 +77,7 @@ public class SpreadsheetDocument implements Document {
     public void load() { /* load spreadsheet... */ }
     public void save() { /* save spreadsheet... */ }
 }
-{% endhighlight %}
+```
 
 An OOP language answers question 1 by saying that all operations for a single
 type should be lumped together. Everything you can do with a spreadsheet&mdash;
@@ -117,7 +117,7 @@ the *functions* (the rows).
 
 A Caml implementation of our example would look like:
 
-{% highlight ocaml %}
+```ocaml
 type document
   = Text
   | Drawing
@@ -134,7 +134,7 @@ fun load (Text)        = (* load text doc... *)
 fun save (Text)        = (* save text doc... *)
   | save (Drawing)     = (* save drawing doc... *)
   | save (Spreadsheet) = (* save spreadsheet... *)
-{% endhighlight %}
+```
 
 (At least, I hope that's right. Please let me know what I get wrong.)
 
@@ -199,17 +199,17 @@ forgot something or messed something up.
 Here's how you'd accomplish this in Magpie. First, we'll define an interface
 that all documents will implement:
 
-{% highlight magpie %}
+```magpie
 interface Document
     draw()
     load()
     save()
 end
-{% endhighlight %}
+```
 
 Then we'll create some classes that implement them:
 
-{% highlight magpie %}
+```magpie
 class TextDocument
     draw() // draw text doc...
     load() // load text doc...
@@ -227,7 +227,7 @@ class SpreadsheetDocument
     load() // load spreadsheet...
     save() // save spreadsheet...
 end
-{% endhighlight %}
+```
 
 So far, this looks pretty much like the static OOP solution with a bit less
 boilerplate. The biggest difference is that there's no explicit `implements
@@ -246,22 +246,22 @@ Here is where it gets interesting. Now we decide we want to add printing
 support. In Magpie, classes and interfaces are open for extension. So we can
 just do:
 
-{% highlight magpie %}
+```magpie
 extend interface Document
     print()
 end
-{% endhighlight %}
+```
 
 If we try to run the program now, we'll get type-check errors every place we
 pass a concrete document class to something that expects the interface: the
 classes no longer implement it since they lack the required `print()` method.
 To patch that up, we'll implement those:
 
-{% highlight magpie %}
+```magpie
 def TextDocument print() // print text doc...
 def DrawingDocument print() // print drawing...
 def SpreadsheetDocument print() // print spreadsheet...
-{% endhighlight %}
+```
 
 (`def` is one of two syntaxes for adding members to a class. It's nice for
 adding a single member to a class. If you're adding a bunch of members to one

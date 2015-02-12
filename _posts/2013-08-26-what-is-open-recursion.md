@@ -17,7 +17,7 @@ Now the question is, if you were to just have maps of functions, what would you 
 
 Say you want to make an "object" that represents a counter. It exposes three operations:  `increment`, `get`, and `set`. You could make such an object in our Dart subset like this:
 
-{% highlight dart %}
+```dart
 makeCounter() {
   // Declare the instance state for the "object".
   var count = 0;
@@ -43,11 +43,11 @@ makeCounter() {
     'increment': increment
   };
 }
-{% endhighlight %}
+```
 
 Great. This works fine. But let's say we wanted to implement `increment` in terms of `get` and `set`. One common feature of methods is that they can call each other. Let's try:
 
-{% highlight dart %}
+```dart
 makeCounter() {
   // Declare the instance state for the "object".
   var count = 0;
@@ -73,7 +73,7 @@ makeCounter() {
     'increment': increment
   };
 }
-{% endhighlight %}
+```
 
 Oops! This doesn't work. The problem is that `increment` is calling `get` and `set` here, but those functions haven't been declared yet. [Unlike JavaScript](http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html), Dart doesn't silently hoist function declarations up. So at the point that we're defining `increment`, `get` and `set` aren't declared.
 
@@ -89,7 +89,7 @@ So by "recursion" here, what he means is **the definitions of the methods are mu
 
 We can fake mutually recursive definitions in our mini-Dart by using function expressions and reassigning variables like this:
 
-{% highlight dart %}
+```dart
 makeCounter() {
   // Declare the instance state for the "object".
   var count = 0;
@@ -117,7 +117,7 @@ makeCounter() {
     'increment': increment
   };
 }
-{% endhighlight %}
+```
 
 Note the `=` between the method names and `()` now. That means we're assigning anonymous functions to the already-declared variables.
 
@@ -127,7 +127,7 @@ Another defining feature of object-oriented languages is inheritance (or "delega
 
 Let's try to do that. We'll try to make a counter that logs itself. To avoid re-implementation, we'll piggyback the existing counter code:
 
-{% highlight dart %}
+```dart
 makeLoggingCounter() {
   var counter = makeCounter();
 
@@ -146,7 +146,7 @@ makeLoggingCounter() {
     }
   };
 }
-{% endhighlight %}
+```
 
 How did we do? When we call `get` and `set` on our logging counter, it does correctly print "get!" and "set!" and then update the counter appropriately. The problem comes when we call `increment`. That *does* print "increment!". But, remember, `increment` is implemented in terms of `get` and `set` now.
 
@@ -154,7 +154,7 @@ Since we intended to *override* those methods in our logging object, calling `in
 
 In C++ parlance, they are [non-virtual](http://en.wikipedia.org/wiki/Virtual_function). Our mini-Dart language isn't expressive enough to handle virtual methods. The problem is that inside `makeCounter`, we don't see the instance of the logging counter at all. To fix this, we have to pass that object in explicitly:
 
-{% highlight dart %}
+```dart
 makeCounter(receiver) {
   // Declare the instance state for the "object".
   var count = 0;
@@ -180,11 +180,11 @@ makeCounter(receiver) {
   receiver['set'] = set;
   receiver['increment'] = increment;
 }
-{% endhighlight %}
+```
 
 Note how now `increment`'s definition looks up `get` and `set` on that passed in `receiver` object. Now to create the logging counter, we'll do:
 
-{% highlight dart %}
+```dart
 makeLoggingCounter() {
   // Create a blank object.
   counter = {};
@@ -215,7 +215,7 @@ makeLoggingCounter() {
 
   return counter;
 }
-{% endhighlight %}
+```
 
 Ta-da!
 

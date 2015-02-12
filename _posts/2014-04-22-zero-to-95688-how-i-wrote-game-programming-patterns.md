@@ -169,7 +169,7 @@ Here's a bit of markdown for the prototype chapter:
 
 The little `^code` tells my script to hunt in the C++ code until it finds:
 
-{% highlight cpp %}
+```cpp
 void test()
 {
   //^spawn-ghost-clone
@@ -178,7 +178,7 @@ void test()
   //^spawn-ghost-clone
   use(ghostSpawner);
 }
-{% endhighlight %}
+```
 
 It stitches in those two lines of code and we're good!
 

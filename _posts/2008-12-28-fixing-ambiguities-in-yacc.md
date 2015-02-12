@@ -62,13 +62,13 @@ Binary operators are left-associative and all have the same precedence. In
 other words, unlike in arithmetic, `+` and `*` have the same order of
 operations. Here are some examples:
 
-{% highlight cpp %}
+```cpp
 123;                // an int
 foo bar 1;          // pass 1 to bar, pass the result to foo
 6 + 2 * 3 / 4;      // binary operators (result = 6)
 foo 1 + bar 2;      // mix operators and functions
 foo (1 + bar 2);    // parentheses for grouping
-{% endhighlight %}
+```
 
 Pretty simple, but already you can see the trouble spots. In the third
 example, how does the grammar know to make it left-associative? In the fourth,
@@ -93,7 +93,7 @@ integers:
 
 ### Integers
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -102,7 +102,7 @@ Expression:
 
 Primary:
     | INT                           { Int $1 }
-{% endhighlight %}
+```
 
 This is a little more complicated than necessary, but it'll make sense later.
 Our entrypoint basically says we're parsing a single expression terminated
@@ -114,11 +114,11 @@ now parse `123`. Break open the champagne bottles.
 
 Let's throw operators in:
 
-{% highlight text %}
+```text
 Expression:
     | Primary                        { $1 }
     | Expression OPERATOR Expression { Operator ($1, $2, $3) }
-{% endhighlight %}
+```
 
 Try compiling that and watch a yacc barf on your screen. yacc can handle
 recursive rules pretty well, but that operator one is a doozy. Not only is it
@@ -137,7 +137,7 @@ We fix it by simply specifically ruling out one of those cases. If one side of
 an operator can *only* be contain an integer, then half of that ambiguity
 disappears. Behold:
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -147,7 +147,7 @@ Expression:
 
 Primary:
     | INT                           { Int $1 }
-{% endhighlight %}
+```
 
 Note that the `Operator` rule now has `Primary` on the right of the operator
 now. What we've done is required the `Operator` rule to only be recursive on
@@ -161,11 +161,11 @@ solve half our ambiguity problems.
 
 Let's throw functions in. Consider just this:
 
-{% highlight text %}
+```text
 Expression:
     | Primary                       { $1 }
     | FUNCTION Expression           { Function ($1, $2) }
-{% endhighlight %}
+```
 
 Now an expression can either be an integer, or a function applied to an
 expression. Making the rule recursive like that lets us handle not only `foo
@@ -173,7 +173,7 @@ expression. Making the rule recursive like that lets us handle not only `foo
 
 Pretty good. Now mix it in with our operator rule:
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -184,7 +184,7 @@ Expression:
 
 Primary:
     | INT                           { Int $1 }
-{% endhighlight %}
+```
 
 yacc vomit covers your screen. Given `foo 1 + 2`, yacc says, "Well 'foo' is a
 function and '1 + 2' is an expression so I can pick the function rule. But
@@ -203,7 +203,7 @@ I described the rules as a cascading series from complex to simple? Another
 way to look at those is as *explicit order of operations*, from last to first.
 Let's split out the rules a bit:
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -220,14 +220,14 @@ Function:
 
 Primary:
     | INT                           { Int $1 }
-{% endhighlight %}
+```
 
 That doesn't actually fix anything for us, yet. The problem is that the
 `Expression`, `Operator`, and `Function` rules all recursively point to each
 other. Our neat cascade is trying to flow uphill. The trick, and the fix for
 our issue, is to simply *not allow any rule to reference a rule above it*:
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -244,7 +244,7 @@ Function:
 
 Primary:
     | INT                           { Int $1 }
-{% endhighlight %}
+```
 
 This is better, but we just broke a bunch of stuff. Since nothing bounces back
 up to `Expression`, there isn't a way to actually terminate anything with an
@@ -259,7 +259,7 @@ the next highest level. Thus, anywhere we can use a function, we can also use
 a primary, and anywhere we can use an operator, we can also use a function.
 Like so:
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -276,7 +276,7 @@ Function:
 
 Primary:
     | INT                           { Int $1 }
-{% endhighlight %}
+```
 
 Congratulations, we've fixed our precedence problem. Our parser will now
 correctly parse `foo 1 / bar 2 + 3` as `((foo 1) / (bar 2)) + 3`. As a nice
@@ -290,7 +290,7 @@ One last thing: with any expression system, users will also want to be able to
 use parentheses to override the default order of operations. This is fixed by
 adding a simple rule at the very end:
 
-{% highlight text %}
+```text
 start:
     | Expression SEMI               { $1 }
 
@@ -308,7 +308,7 @@ Function:
 Primary:
     | INT                           { Int $1 }
     | LPAREN Expression RPAREN      { $2 }
-{% endhighlight %}
+```
 
 All the way at the highest level of precedence, you can now use `()` to start
 the cascade back over at the lowest predecence level (`Expression`). This

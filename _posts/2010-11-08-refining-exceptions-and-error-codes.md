@@ -91,18 +91,18 @@ effective, and does the same thing in practice.
 
 For example, a method for accessing an item in a collection could look like:
 
-{% highlight magpie %}
+```magpie
 def Collection getItemAt(index Int -> Item)
     if index < 0 or index > count then OutOfBoundsError throw()
 
     // do stuff with index...
 end
-{% endhighlight %}
+```
 
 That is a bit tedious, though. I'd likely refactor that into a separate
 function, like:
 
-{% highlight magpie %}
+```magpie
 def Int checkBounds(count Int ->)
     if this < 0 or this > count then OutOfBoundsError throw()
 end
@@ -112,7 +112,7 @@ def Collection getItemAt(index Int -> Item)
 
     // do stuff with index...
 end
-{% endhighlight %}
+```
 
 Not exactly rocket science, but I think it gets the job done. Let's skip
 runtime errors and move on to the other easy one:
@@ -127,12 +127,12 @@ the interpreter itself.
 On the off chance that you *do* want to catch one, you can use a regular catch
 block:
 
-{% highlight magpie %}
+```magpie
 try
     // allocate a huge array...
 catch (err OutOfMemoryError)
 end
-{% endhighlight %}
+```
 
 Familiar territory. If you've used exceptions a lot, you've noticed one
 annoying thing with them is that they're syntactically cumbersome: you have to
@@ -143,7 +143,7 @@ might just be really dumb: treat *every* block as a `try` block.
 The basic idea is that any block can have `catch` clauses at the end of it,
 and having them implicitly makes it a `try` block. That should get code like:
 
-{% highlight magpie %}
+```magpie
 def copy(source String, dest String ->)
     try
         // copy files...
@@ -151,17 +151,17 @@ def copy(source String, dest String ->)
         // handle error...
     end
 end
-{% endhighlight %}
+```
 
 And simplify it to:
 
-{% highlight magpie %}
+```magpie
 def copy(source String, dest String ->)
     // copy files...
 catch (e IOError)
     // handle error...
 end
-{% endhighlight %}
+```
 
 I'll have to try it out to see if it causes any problems in the grammar, but
 my hope is it will work OK. I'm curious to see if just making exceptions a
@@ -178,7 +178,7 @@ Instead, we'll need to support both.
 Here's my plan. For our example, we'll consider a simple one: parsing. Let's
 say we have a function to parse strings to booleans:
 
-{% highlight magpie %}
+```magpie
 def parseBool(text String -> Bool)
     match text
     case "true" then true
@@ -186,19 +186,19 @@ def parseBool(text String -> Bool)
     else // ??? what do we do here?
     end
 end
-{% endhighlight %}
+```
 
 This can be called like:
 
-{% highlight magpie %}
+```magpie
 var b = parseBool("true")
-{% endhighlight %}
+```
 
 Of course, the question is what happens if it fails? Since this may be common,
 we want it to be easy to handle the failure case. Unions are a good fit for
 that. We'll change the function to:
 
-{% highlight magpie %}
+```magpie
 def parseBool(text String -> Bool | Nothing)
     match text
     case "true" then true
@@ -206,30 +206,30 @@ def parseBool(text String -> Bool | Nothing)
     else nothing
     end
 end
-{% endhighlight %}
+```
 
 Now it will return a boolean value if the parse succeeds, or the special
 `nothing` value if it fails. Note that this is *not* like just returning
 `null`: the return type of `parseBool` is different now. That means you can't
 do this anymore:
 
-{% highlight magpie %}
+```magpie
 var b = parseBool("true")
 var notB = b not
-{% endhighlight %}
+```
 
 The `not` method is a method on booleans, and `b` isnt' a boolean, it's a
 `Bool | Nothing`. To treat it like a boolean, you first have to check its
 type. The canonical way to do that in Magpie is using `let`:
 
-{% highlight magpie %}
+```magpie
 let b = parseBool("true")
     // in here, b is a Bool
     var notB = b not // this is fine
 else
     // parse failed...
 end
-{% endhighlight %}
+```
 
 This is great for cases where parsing is likely to fail. It makes sure you
 always handle the common failure case by giving you a type-check error before
@@ -247,7 +247,7 @@ We'll just add a simple method to `Object` that tests to see if its of an
 expected type. If not, it will throw, otherwise it will return itself, but
 statically-typed to the expected type. Like so:
 
-{% highlight magpie %}
+```magpie
 def Object expecting[T]
     let cast = this as[T] then
         cast
@@ -255,31 +255,31 @@ def Object expecting[T]
         "Expected type " + T + " but was " + this type,
         this)
 end
-{% endhighlight %}
+```
 
 Now, if we have a function that returns a union containing an error, we can
 translate that to an exception instead like this:
 
-{% highlight magpie %}
+```magpie
 // doesn't expect a parse error
 var b = parseBool("true") expecting[Bool]
 var notB = b not // ok, since b is a Bool
-{% endhighlight %}
+```
 
 Using this, almost all functions that can have runtime errors will be
 implemented by returning a union of success and an error code, like:
 
-{% highlight magpie %}
+```magpie
 def readFile(path String -> String | IOError)
     if pathExists(path) then
         // return contents of file...
     else IOError new("Could not find " + path)
 end
-{% endhighlight %}
+```
 
 Then code that uses it can handle the error in place if that makes sense:
 
-{% highlight magpie %}
+```magpie
 def printFile(path String ->)
     var result = readFile(path)
     let contents = result as[String] then
@@ -288,18 +288,18 @@ def printFile(path String ->)
         print("Error!")
     end
 end
-{% endhighlight %}
+```
 
 (Yes, `else let` is a bit tedious. Better pattern-matching syntax for unions
 is still in the works.) Meanwhile, code that doesn't care to handle the error
 right there can pass the buck:
 
-{% highlight magpie %}
+```magpie
 def printFile(path String ->)
     var contents = readFile(path) expecting[String]
     print(contents)
 end
-{% endhighlight %}
+```
 
 Of course, none of this is any real innovation. My goal here is just to round
 off some of the sharp corners of exceptions and return codes and see if I can

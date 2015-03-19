@@ -105,7 +105,7 @@ class ConditionalExpression implements Expression {
 }
 ```
 
-(You gotta love Java's "please sign it in quadruplicate" level of beaurcracy
+(You gotta love Java's "please sign it in quadruplicate" level of bureaucracy
 here. Like I said, if you can do this in Java, you can do it in *any*
 language.)
 

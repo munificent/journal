@@ -59,7 +59,7 @@ Pratt parsing is really helpful, but that should be enough to convince of its
 usefulness.
 
 Even though it's simple, it has a full gamut of operators: prefix (`+`, `-`,
-`~`, `~`), postfix (`!`), infix (`+`, `-`, `*`, `/`, `^`), and even a mixfix
+`~`, `!`), postfix (`!`), infix (`+`, `-`, `*`, `/`, `^`), and even a mixfix
 conditional operator (`?:`). It has multiple precedence levels and both right
 and left associative operators. It also has assignment, function calls and
 parentheses for grouping. If we can parse this, we can parse anything.

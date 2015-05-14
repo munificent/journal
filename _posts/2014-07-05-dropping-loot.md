@@ -147,7 +147,7 @@ The `"spear:3"` means "drop something from the 'spear' group around level 3". Yo
 
 So far, this is pretty much equivalent to the sequences from before. The neat part is what happens when the drop is generated. When picking an item, there's a small chance that it will walk up the group chain. So "spear:3" will usually drop a spear, but there's a chance it will drop any weapon (the parent group). There's an even smaller chance it will drop any piece of equipment (the grandparent).
 
-Any monster has a chance of dropping almost any item, so you have that pleasant anticipation. At the time time, the probabilities are weighted so that each monster still has a unique "feel" to their drops, and you can seek out monsters that are more likely to drop what you want.
+Any monster has a chance of dropping almost any item, so you have that pleasant anticipation. At the same time, the probabilities are weighted so that each monster still has a unique "feel" to their drops, and you can seek out monsters that are more likely to drop what you want.
 
 When specifying a drop, you can also directly specify one of the parent groups. For example:
 

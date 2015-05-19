@@ -41,7 +41,7 @@ The first operation is a test for assignment compatibility (i.e. the subtype
 relation). Put plainly, if we have a variable of type `A`, and we're trying to
 assign to it a value of type `B`, is that kosher? This sounds like it's
 limited to variables, but that core operation covers almost everything you
-need to do with a type. It's equivalent to asking, "Is `B` is a subtype of
+need to do with a type. It's equivalent to asking, "Is `B` a subtype of
 `A`?" and covers things like, "Can I pass an argument of type `A` to a
 function declared to expect type `B`?"
 

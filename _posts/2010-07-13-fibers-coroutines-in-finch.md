@@ -143,36 +143,37 @@ slice of time each turn. Each entity will have an `Update()` that takes one
 step and then returns, so a monster that just patrols back and forth, waiting
 a bit at each end will have something like:
 
-    ::cpp
-    Patroller::Update() {
-        switch (state_) {
-            case WALK_LEFT:
-                x_ -= WALK_SPEED;
-                if (x_ <= MIN_X) {
-                    state_ = WAIT_LEFT;
-                    wait_ = WAIT_FRAMES;
-                }
-                break;
+```cpp
+Patroller::Update() {
+    switch (state_) {
+        case WALK_LEFT:
+            x_ -= WALK_SPEED;
+            if (x_ <= MIN_X) {
+                state_ = WAIT_LEFT;
+                wait_ = WAIT_FRAMES;
+            }
+            break;
 
-            case WAIT_LEFT:
-                wait_--;
-                if (wait_ == 0) state_ = WALK_RIGHT;
-                break;
+        case WAIT_LEFT:
+            wait_--;
+            if (wait_ == 0) state_ = WALK_RIGHT;
+            break;
 
-            case WALK_RIGHT:
-                x_ += WALK_SPEED;
-                if (x_ >= MAX_X) {
-                    state_ = WAIT_RIGHT;
-                    wait_ = WAIT_FRAMES;
-                }
-                break;
+        case WALK_RIGHT:
+            x_ += WALK_SPEED;
+            if (x_ >= MAX_X) {
+                state_ = WAIT_RIGHT;
+                wait_ = WAIT_FRAMES;
+            }
+            break;
 
-            case WAIT_RIGHT:
-                wait_--;
-                if (wait_ == 0) state_ = WALK_LEFT;
-                break;
-        }
+        case WAIT_RIGHT:
+            wait_--;
+            if (wait_ == 0) state_ = WALK_LEFT;
+            break;
     }
+}
+```
 
 You can see that the logic has to be split up into separate pieces and a bunch
 of data (`state_`, `wait_`) has to be pushed into member variables so that it

@@ -845,7 +845,7 @@ to dartfmt's richer chunk/rule/span system.
 
 [clang-format]: http://clang.llvm.org/docs/ClangFormat.html
 
-I tool a lot of walks along the bike trail next to work trying to think through
+I took a lot of walks along the bike trail next to work trying to think through
 a way to get graph search working when the two numbers being optimized (overflow
 characters and cost) are in direct opposition, and we don't even know what the
 goal state looks like. It took a long time before it clicked. Even then, it

@@ -62,10 +62,10 @@ English is either so brief that it's ambiguous, or so long that no one reads it.
 [dart]: https://www.dartlang.org/
 [style guide]: https://www.dartlang.org/articles/style-guide/
 
-Go's ["gofmt"][] tool showed a better solution: automatically format everything.
-Code easier to read and contribute to because it's already in the style you're
-used to. Even if the output of the formatter isn't great, it ends those
-interminable soul-crushing arguments on code reviews about formatting.
+Go's ["gofmt"][gofmt] tool showed a better solution: automatically format
+everything. Code easier to read and contribute to because it's already in the
+style you're used to. Even if the output of the formatter isn't great, it ends
+those interminable soul-crushing arguments on code reviews about formatting.
 
 [gofmt]: https://golang.org/cmd/gofmt/
 

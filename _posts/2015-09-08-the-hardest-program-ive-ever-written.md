@@ -111,7 +111,7 @@ There are thirteen places where a line break is possible here according to our
 style rules. That's 8,192 different combinations if we brute force them all <a
 href="#1" class="skull">1</a>. The search space we have to cover is
 *exponentially* large, and even ranking different solutions is a subtle problem.
-Is it be better to split before the `.any()`? Why or why not?
+Is it better to split before the `.any()`? Why or why not?
 
 <div class="update">
 

@@ -63,7 +63,7 @@ English is either so brief that it's ambiguous, or so long that no one reads it.
 [style guide]: https://www.dartlang.org/articles/style-guide/
 
 Go's ["gofmt"][gofmt] tool showed a better solution: automatically format
-everything. Code easier to read and contribute to because it's already in the
+everything. Code is easier to read and contribute to because it's already in the
 style you're used to. Even if the output of the formatter isn't great, it ends
 those interminable soul-crushing arguments on code reviews about formatting.
 
@@ -449,7 +449,7 @@ first(line);
 second(line);
 ```
 
-We know that how we split the first statement has no affect on the second one.
+We know that how we split the first statement has no effect on the second one.
 So we run through the list of chunks and break them into shorter lists whenever
 we hit a hard split that isn't nested inside an expression.
 

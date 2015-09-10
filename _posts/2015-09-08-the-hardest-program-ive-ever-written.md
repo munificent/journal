@@ -5,7 +5,7 @@ categories: dart code
 ---
 
 <style>
-.skull {
+.skull, .skull-note {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -16,7 +16,7 @@ categories: dart code
   padding: 1px;
 }
 
-.skull::before {
+.skull::before, .skull-note::before {
   content: "\01f480";
   margin-right: -2px;
 }
@@ -27,7 +27,7 @@ a.skull {
   font-size: 80%;
 }
 
-a.skull:hover {
+a.skull:hover, a.skull-note:hover {
   color: hsl(35, 100%, 30%);
 }
 </style>
@@ -109,7 +109,7 @@ experimentalBootstrap = document.querySelectorAll('link').any((link) =>
 
 There are thirteen places where a line break is possible here according to our
 style rules. That's 8,192 different combinations if we brute force them all <a
-href="#1" class="skull">1</a>. The search space we have to cover is
+id="1" href="#1-note" class="skull">1</a>. The search space we have to cover is
 *exponentially* large, and even ranking different solutions is a subtle problem.
 Is it better to split before the `.any()`? Why or why not?
 
@@ -178,8 +178,8 @@ sophisticated ranking rules to find the best set of line breaks from an
 exponential solution space. Note that "best" is a property of the *entire
 statement* being formatted. A line break changes the indentation of the
 remainder of the statement, which in turn affects which other line breaks are
-needed. Sorry, Knuth. No [dynamic programming][] this time <a href="#2"
-class="skull">2</a>.
+needed. Sorry, Knuth. No [dynamic programming][] this time <a id="2"
+href="#2-note" class="skull">2</a>.
 
 [dynamic programming]: https://en.wikipedia.org/wiki/Dynamic_programming
 
@@ -193,11 +193,11 @@ indistinguishable from `cat`.
 
 As you'd expect from a program that works on source code, the formatter is
 structured much like a compiler. It has a [front end][] that parses your code
-and converts that to an [intermediate representation][ir] <a href="#3"
-class="skull">3</a>. It does some optimization and clean up on that <a href="#4"
-class="skull">4</a>, and then the IR goes to a back end <a href="#5"
-class="skull">5</a> that produces the final output. The main objects here are
-**chunks**, **rules**, and **spans**.
+and converts that to an [intermediate representation][ir] <a id="3"
+href="#3-note" class="skull">3</a>. It does some optimization and clean up on
+that <a id="4" href="#4-note" class="skull">4</a>, and then the IR goes to a
+back end <a id="5" href="#5-note" class="skull">5</a> that produces the final
+output. The main objects here are **chunks**, **rules**, and **spans**.
 
 
 [front end]: https://en.wikipedia.org/wiki/Compiler#Structure_of_a_compiler
@@ -219,7 +219,8 @@ We break it into these chunks: `format` `/* comment */` `this;`.
 Chunks are similar to a [token][] in a conventional compiler, but they tend to
 be, well, *chunkier*. Often, the text for several tokens ends up in the same
 chunk, like `this` and `;` here. If a line break can never occur between two
-tokens, they end up in the same chunk <a href="#6" class="skull">6</a>.
+tokens, they end up in the same chunk <a id="6" href="#6-note"
+class="skull">6</a>.
 
 [token]: https://en.wikipedia.org/wiki/Lexical_analysis#Token
 
@@ -232,10 +233,10 @@ some(nested, function(ca + ll))
 We chunk it to the flat list: `some(` `nested,` `function(` `ca +` `ll))`.
 
 We could treat an entire source file like a single flat sequence of chunks, but
-it would take forever and a day to line break the whole thing <a href="#7"
-class="skull">7</a>. With things like long chains of asynchronous code, a single
-"statement" may be hundreds of lines of code containing several nested functions
-or collections that each contain their own piles of code.
+it would take forever and a day to line break the whole thing <a id="7"
+href="#7-note" class="skull">7</a>. With things like long chains of asynchronous
+code, a single "statement" may be hundreds of lines of code containing several
+nested functions or collections that each contain their own piles of code.
 
 We can't treat those nested functions or collection literals entirely
 independently because the surrounding expression affects how they are indented.
@@ -243,21 +244,22 @@ That in turn affects how long their lines are. Indent a function body two more
 spaces and now its statements have two fewer spaces before they hit the end of
 the line.
 
-Instead, we treat nested block bodies as their a separate little list of chunks
-to be formatted mostly on their own but subordinate to where they appear. The
-chunk that begins one of these literals, like the `{` preceding a function or
-map, contains a list of child *block chunks* for the contained block. In other
-words, chunks do form a tree, but one that only reflects block nesting, not
+Instead, we treat nested block bodies as a separate little list of chunks to be
+formatted mostly on their own but subordinate to where they appear. The chunk
+that begins one of these literals, like the `{` preceding a function or map,
+contains a list of child *block chunks* for the contained block. In other words,
+chunks do form a tree, but one that only reflects block nesting, not
 expressions.
 
 The end of a chunk marks the point where a split may occur in the final output,
-and the chunk has some data describing it <a href="#8" class="skull">8</a>. It
-keeps track of whether a blank line should be added between the chunks (like
+and the chunk has some data describing it <a id="8" href="#8-note"
+class="skull">8</a>. It keeps track of whether a blank line should be added
+between the chunks (like
 between two class definitions), how much the next line should be indented, and
 the expression nesting depth at that point in the code.
 
 The most important bit of data about the split is the *rule* that controls it <a
-href="#9" class="skull">9</a>.
+id="9" href="#9-note" class="skull">9</a>.
 
 ### Rules
 
@@ -276,7 +278,7 @@ value, the rule will tell you which of its chunks get split.
 The simplest rule is a ["hard split" rule][hard]. It says that its chunk
 *always* splits, so it only has one value: `0`. This is useful for things like
 line comments where you always need to split after it, even in the middle of an
-expression <a href="#10" class="skull">10</a>.
+expression <a id="10" href="#10-note" class="skull">10</a>.
 
 [hard]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart#L85
 
@@ -350,11 +352,12 @@ to interact. If the `+` takes value `1`, the list rule needs to as well. To
 support this, rules can *constrain* each other. Any rule can limit the values
 another rule is allowed to take based on its own value. Typically, this is used
 to make a rule inside a nested expression force the rules surrounding itself to
-split when it does <a href="#11" class="skull">11</a>.
+split when it does <a id="11" href="#11-note" class="skull">11</a>.
 
 Finally, each rule has a *cost*. This is a numeric penalty that applies when any
 of that rule's chunks are split. This helps us determine which sets of splits
-are better or worse than others <a href="#12" class="skull">12</a>.
+are better or worse than others <a id="12" href="#12-note"
+class="skull">12</a>.
 
 Rule costs are only part of how overall fitness is calculated. Most of the cost
 calculation comes from *spans*.
@@ -489,10 +492,10 @@ graphs for pathfinding. Graphs out the wazoo. I can do BFS in my sleep now.
 [hauberk]: https://github.com/munificent/hauberk
 
 Naturally, after several other failed approaches, I found that line splitting
-can be handled like a graph search problem <a href="#13" class="skull">13</a>.
-Each node in the graph represents a [*solution*][solution]&mdash;a set of values
-for each rule. Solutions can be *partial*: some rules may be left with their
-values unbound.
+can be handled like a graph search problem <a id="13" href="#13-note"
+class="skull">13</a>. Each node in the graph represents a
+[*solution*][solution]&mdash;a set of values for each rule. Solutions can be
+*partial*: some rules may be left with their values unbound.
 
 [solution]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart
 
@@ -528,16 +531,16 @@ We are trying to minimize two soft constraints at the same time:
 The first constraint dominates the second: we'll prefer a solution with any cost
 if it fits one more character in. In practice, there is almost always a solution
 that does fit, so it usually comes down to picking the lowest cost solution <a
-href="#14" class="skull">14</a>.
+id="14" href="#14-note" class="skull">14</a>.
 
 We don't know *a priori* what the cost of the winning solution will be, but we
 do know one useful piece of information: *forcing a rule to split always
 increases the cost*.
 
-If we treat any unbound rule as being implicitly unsplit <a href="#15"
-class="skull">15</a>, that means the starting solution with everything unbound
-always has the lowest cost (zero). We can then explore outward from there in
-order of increasing cost by adding one rule at a time.
+If we treat any unbound rule as being implicitly unsplit <a id="15"
+href="#15-note" class="skull">15</a>, that means the starting solution with
+everything unbound always has the lowest cost (zero). We can then explore
+outward from there in order of increasing cost by adding one rule at a time.
 
 This is a basic [best-first search][bfs]: we keep a [running queue][] of all of
 the partial solutions we've haven't explored yet, sorted from lowest cost to
@@ -583,8 +586,8 @@ So, when we are expanding a partial solution, we only bind [rules that have
 chunks *on overflowing lines*][live]. If all of a rule's chunks are on lines
 that already fit, we don't mess with it. In fact, we don't even worry about
 rules on any overflowing line but the first. Since tweaking the first line will
-affect the others, there's no reason to worry about them yet <a href="#16"
-class="skull">16</a>.
+affect the others, there's no reason to worry about them yet <a id="16"
+href="#16-note" class="skull">16</a>.
 
 [live]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart#L28
 
@@ -645,7 +648,7 @@ If all of those are true, then the one with a lower cost will always lead to
 solutions that also have a lower cost. Its entire branch wins. We can [discard
 the other solution][overlap] and everything that it leads to. Once I got *this*
 working, the formatter could line split damn near anything in record time <a
-href="#17" class="skull">17</a>.
+id="17" href="#17-note" class="skull">17</a>.
 
 [overlap]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state_queue.dart#L124
 
@@ -719,14 +722,15 @@ work just to add or remove a few spaces!
 
 ### Footnotes
 
-<span class="skull" id="1">1</span> Yes, I really did brute force all of the
-combinations at first. It let me focus on getting the output correct before I
-worried about performance. Speed was fine for most statements. The other few
-wouldn't finish until after the heat death of the universe.
+<a id="1-note" href="#1" class="skull-note">1</a> Yes, I really did brute force
+all of the combinations at first. It let me focus on getting the output correct
+before I worried about performance. Speed was fine for most statements. The
+other few wouldn't finish until after the heat death of the universe.
 
-<span class="skull" id="2">2</span> For most of the time, the formatter *did*
-use dynamic programming and memoization. I felt like a wizard when I first
-figured out how to do it. It worked fairly well, but was a nightmare to debug.
+<a id="2-note" href="#2" class="skull-note">2</a> For most of the time, the
+formatter *did* use dynamic programming and memoization. I felt like a wizard
+when I first figured out how to do it. It worked fairly well, but was a
+nightmare to debug.
 
 It was *highly* recursive, and ensuring that the keys to the memoization table
 were precise enough to not cause bugs but not *so* precise that the cache
@@ -735,21 +739,21 @@ data needed to uniquely identify the state of a subproblem grew, including
 things like the entire expression nesting stack at a point in the line, and the
 memoization table performed worse and worse.
 
-<span class="skull" id="3">3</span> The IR evolved constantly. Spans and rules
-were later additions. Even the way chunks tracked indentation changed
-frequently. Indentation used to be stored in levels, where each level was two
-spaces. Then directly in spaces. Expression nesting went through a number of
-representations.
+<a id="3-note" href="#3" class="skull-note">3</a> The IR evolved constantly.
+Spans and rules were later additions. Even the way chunks tracked indentation
+changed frequently. Indentation used to be stored in levels, where each level
+was two spaces. Then directly in spaces. Expression nesting went through a
+number of representations.
 
 In all of this, the IR's job is to balance being easy for the front-end to
 *produce* while being efficient for the back end to *consume*. The back end
 really drives this. The IR is structured to be the right data structure for the
 algorithm the back end wants to use.
 
-<span class="skull" id="4">4</span> Comments were the one of the biggest
-challenges. The formatter initially assumed there would be no newlines in some
-places. Who would expect a newline, say, between the keywords in `abstract
-class`? Alas, there's nothing preventing a user from doing:
+<a id="4-note" href="#4" class="skull-note">4</a> Comments were the one of the
+biggest challenges. The formatter initially assumed there would be no newlines
+in some places. Who would expect a newline, say, between the keywords in
+`abstract class`? Alas, there's nothing preventing a user from doing:
 
 ```dart
 abstract // Oh, crap. A line comment.
@@ -760,46 +764,46 @@ So I had to do a ton of work to make it resilient in the face of comments and
 newlines appearing in all sorts of weird places. There's no single clean
 solution for this, just lots of edge cases and special handling.
 
-<span class="skull" id="5">5</span> The back end is where all of the performance
-challenges come from, and it went through two almost complete rewrites before it
-ended up where it is today.
+<a id="5-note" href="#5" class="skull-note">5</a> The back end is where all of
+the performance challenges come from, and it went through two almost complete
+rewrites before it ended up where it is today.
 
-<span class="skull" id="6">6</span> I started from a simpler formatter written
-by a teammate that treated text, whitespace, and splits all as separate chunks.
-I unified those so that each chunk included non-whitespace text, line split
-information, and whitespace information if it didn't split. That simplified a
-lot.
+<a id="6-note" href="#6" class="skull-note">6</a> I started from a simpler
+formatter written by a teammate that treated text, whitespace, and splits all as
+separate chunks. I unified those so that each chunk included non-whitespace
+text, line split information, and whitespace information if it didn't split.
+That simplified a lot.
 
-<span class="skull" id="7">7</span> When I added support for better indentation
-of nested functions, that broke the code that split source into separately
-splittable regions. For a while, a single top-level statement would be split as
-a single unit, even if it contained nested functions with hundreds of lines of
-code. It was&hellip; not fast.
+<a id="7-note" href="#7" class="skull-note">7</a> When I added support for
+better indentation of nested functions, that broke the code that split source
+into separately splittable regions. For a while, a single top-level statement
+would be split as a single unit, even if it contained nested functions with
+hundreds of lines of code. It was&hellip; not fast.
 
-<span class="skull" id="8">8</span> Ideally, the split information in a chunk
-would describe the split *before* the chunk's text. This would avoid the
-pointless split information on the last chunk, and also solve annoying
+<a id="8-note" href="#8" class="skull-note">8</a> Ideally, the split information
+in a chunk would describe the split *before* the chunk's text. This would avoid
+the pointless split information on the last chunk, and also solve annoying
 special-case handling of the indentation before the very first chunk.
 
 I've tried to correct this mistake a number of times, but it causes a
 near-infinite number of off-by-one bugs and I just haven't had the time to push
 it all the way through and fix everything.
 
-<span class="skull" id="9">9</span> Rules are a relatively recent addition.
-Originally each chunk's split was handled independently. You could specify some
-relations between them like "if this chunk splits then this other one has to as
-well", but you could not express things like "only one of these three chunks may
-split"
+<a id="9-note" href="#9" class="skull-note">9</a> Rules are a relatively recent
+addition. Originally each chunk's split was handled independently. You could
+specify some relations between them like "if this chunk splits then this other
+one has to as well", but you could not express things like "only one of these
+three chunks may split"
 
 Eventually, I realized the latter is what I really needed to get argument lists
 formatting well, so I conceived of rules as a separate concept and rewrote the
 front and line splitter to work using those.
 
-<span class="skull" id="10">10</span> At first, I thought hard splits weren't
-needed. Any place a mandatory newline appears (like between two statements) is a
-place where you could just break the list of chunks in two and line split each
-half independently. From the line splitter's perspective, there would be no hard
-splits.
+<a id="10-note" href="#10" class="skull-note">10</a> At first, I thought hard
+splits weren't needed. Any place a mandatory newline appears (like between two
+statements) is a place where you could just break the list of chunks in two and
+line split each half independently. From the line splitter's perspective, there
+would be no hard splits.
 
 Which would work... except for line comments:
 
@@ -813,22 +817,21 @@ This has to be split as a single unit to get the expression nesting and
 indentation correct, but it also contains a mandatory newline after the line
 comment.
 
-<span class="skull" id="11">11</span> There used to be a separate class for a
-"multisplit" to handle this case directly. It would force a stack of nested
-splits to split if one of the inner ones did.
+<a id="11-note" href="#11" class="skull-note">11</a> There used to be a separate
+class for a "multisplit" to directly handle forcing outer expressions to split
+when inner ones did. Once rules came along, they also needed to express
+constraints between them, and eventually those constraints were expressive
+enough to be able to handle the multisplit behavior directly and multisplits
+were removed.
 
-Once rules came along, they also needed to express constraints between them, and
-eventually those constraints were expressive enough to be able to handle the
-multisplit behavior directly and multisplits were removed.
-
-<span class="skull" id="12">12</span> I spent a *lot* of time tuning costs for
-different grammar productions to control how tightly bound different expressions
-were. The goal was to allow splits at the places where the reader thought code
-was "loosest", so stuff like higher precedence expressions would have higher
-costs.
+<a id="12-note" href="#12" class="skull-note">12</a> I spent a *lot* of time
+tuning costs for different grammar productions to control how tightly bound
+different expressions were. The goal was to allow splits at the places where the
+reader thought code was "loosest", so stuff like higher precedence expressions
+would have higher costs.
 
 Tuning these costs was a nightmare. It was like a hanging mobile where tweaking
-one cost would unbalance all of the others. On my than one occasion, I found
+one cost would unbalance all of the others. On more than one occasion, I found
 myself considering making them floating point instead of integers, a sure sign
 of madness.
 
@@ -839,9 +842,9 @@ around the deeper nested operands. The parse tree gives it to you for free.
 These days, almost every chunk and span has a cost of 1, and it's the *quantity*
 of nested spans and contained chunks that determine where it splits.
 
-<span class="skull" id="13">13</span> I had known that [clang-format][] worked
-this way for a long time, but I could never wrap my head around how to apply it
-to dartfmt's richer chunk/rule/span system.
+<a id="13-note" href="#13" class="skull-note">13</a> I had known that
+[clang-format][] worked this way for a long time, but I could never wrap my head
+around how to apply it to dartfmt's richer chunk/rule/span system.
 
 [clang-format]: http://clang.llvm.org/docs/ClangFormat.html
 
@@ -852,20 +855,23 @@ goal state looks like. It took a long time before it clicked. Even then, it
 didn't work at all until I figured out the right heuristics to use to optimize
 it.
 
-<span class="skull" id="14">14</span> For a long time, these were treated as a
-single cost function. Every overflow character just added a very high value to
-the cost to make the splitter strongly want to avoid them.
+<a id="14-note" href="#14" class="skull-note">14</a> For a long time, overflow
+and cost were treated as a single fitness function. Every overflow character
+just added a very high value to the cost to make the splitter strongly want to
+avoid them.
 
 Splitting overflow out as a separate metric turned out to be key to getting the
 graph search to work because it let us order the solutions by cost independently
 of overflow characters.
 
-<span class="skull" id="15">15</span> I went back and forth on this. Treating
-unbound rules as implicitly split gives you solutions with fewer overflow
-characters sooner. Treating them as unsplit gives you lower costs.
+<a id="15-note" href="#15" class="skull-note">15</a> I went back and forth on
+how an unbound rule should implicitly behave. Treating it as implicitly split
+gives you solutions with fewer overflow characters sooner. Treating it as
+unsplit gives you lower costs.
 
-<span class="skull" id="16">16</span> Oh, God. I tried a million different ways
-to reduce the branchiness before I hit on this. I'm still amazed that it works.
+<a id="16-note" href="#16" class="skull-note">16</a> Oh, God. I tried a million
+different ways to reduce the branchiness before I hit on only looking at rules
+in the first long line. I'm still amazed that it works.
 
 I could also talk about how controlling branchiness lets us avoid reaching the
 same state from multiple different paths. After all, it's a *graph*, but
@@ -877,11 +883,11 @@ Before I got that working, I had to keep a "visited" set to make sure we didn't
 explore the same regions twice, but just maintaining that set was a big
 performance sink.
 
-<span class="skull" id="17">17</span> This is the last macro-optimization I did
-and its behavior is very subtle. Correctly detecting when two partial solutions
-overlap took a *lot* of iteration. Every time I thought I had it, one random
-weird test would fail where it accidentally collapsed two branches that *would*
-eventually diverge.
+<a id="17-note" href="#17" class="skull-note">17</a> Discarding overlapping
+branches is the last macro-optimization I did and its behavior is very subtle.
+Correctly detecting when two partial solutions overlap took a *lot* of
+iteration. Every time I thought I had it, one random weird test would fail where
+it accidentally collapsed two branches that *would* eventually diverge.
 
 That bullet list was paid for in blood, sweat, and tears. I honestly don't think
 I could have figured them out at all until late in the project when I had a

@@ -178,7 +178,7 @@ class AnnualHolidaySale {
 
 In practice, this means that the more deeply nested a name is, the more surrounding context it has. That in turn means it usually has a shorter name. The effect is that identifiers with shorter scopes have shorter names.
 
-### 4. Omit nonce words that don't mean much of anything
+### 4. Omit words that don't mean much of anything
 
 I used to see this a lot in the game industry. Some people succumb to the temptation to inflate their identifiers by adding Serious Business sounding words. I guess it makes their code feel more important and, by extension, makes *them* feel more important.
 

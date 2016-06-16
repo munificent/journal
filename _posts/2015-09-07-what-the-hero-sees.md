@@ -213,7 +213,7 @@ The math is a kind of fussy, but it's:
 ```dart
 /// Creates a [Shadow] that corresponds to the projected
 /// silhouette of the tile at [row], [col].
-Shadow projectTile(int col, int row) {
+Shadow projectTile(int row, int col) {
   var topLeft = col / (row + 2);
   var bottomRight = (col + 1) / (row + 1);
   return new Shadow(topLeft, bottomRight);
@@ -284,7 +284,7 @@ for (var col = 0; col <= row; col++) {
 ## Inky pools of shadows
 
 We can calculate which tiles are obscured by the shadow line, but that isn't
-very useful since our shadow line is always right now. Let's fix that.
+very useful since our shadow line is always empty right now. Let's fix that.
 
 As we trace the row, each time we hit an opaque tile, we add it to the shadow
 line. If the shadow line was a simple list of these little shadow segments, the

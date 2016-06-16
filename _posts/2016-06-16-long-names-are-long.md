@@ -87,11 +87,11 @@ name should reflect that.
 ```dart
 // Bad:
 List<DateTime> holidayDateList;
-Map<String, EmployeeRole> employeeRoleHashMap;
+Map<Employee, Role> employeeRoleHashMap;
 
 // Better:
 List<DateTime> holidays;
-Map<String, EmployeeRole> roles;
+Map<Employee, Role> employeeRoles;
 ```
 
 This also applies to method names. The method name doesn't need to describe its

@@ -72,11 +72,11 @@ rightfully abandoned [Hungarian notation][]. *Let it go.*
 ```dart
 // Bad:
 String nameString;
-DialogButton cancelDialogButton;
+DockableModelessWindow dockableModelessWindow;
 
 // Better:
 String name;
-DialogButton cancel;
+DockableModelessWindow window;
 ```
 
 In particular, for collections, it's almost always better to just use a plural

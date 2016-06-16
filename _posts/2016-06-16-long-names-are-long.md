@@ -193,37 +193,46 @@ Ask yourself "Would this identifier mean the same thing if I removed the word?" 
 To give you a feel for how these rules work in practice, here's an example that breaks all of these rules. This contrived example is heart-breakingly close to real code I've seen in reviews:
 
 ```dart
-DeliciousBelgianWaffleObject
-    .garnishDeliciousBelgianWaffleWithStrawberryList(
-        List<Strawberry> strawberryList)
+class DeliciousBelgianWaffleObject {
+  void garnishDeliciousBelgianWaffleWithStrawberryList(
+      List<Strawberry> strawberryList) { ... }
+}
 ```
 
 We know from the type that it takes a list of strawberries (#1), so let's cut that out:
 
 ```dart
-DeliciousBelgianWaffleObject.garnishDeliciousBelgianWaffle(
-    List<Strawberry> strawberries)
+class DeliciousBelgianWaffleObject {
+    void garnishDeliciousBelgianWaffle(
+        List<Strawberry> strawberries) { ... }
+}
 ```
 
 Unless our program has foul-tasting Belgian waffles, or waffles of other nationalities, we can drop those adjectives (#2):
 
 ```dart
-WaffleObject.garnishWaffle(List<Strawberry> strawberries)
+class WaffleObject {
+  void garnishWaffle(List<Strawberry> strawberries) { ... }
+}
 ```
 
 The method is inside a ```WaffleObject```, so we know what it's going to garnish (#3):
 
 ```dart
-WaffleObject.garnish(List<Strawberry> strawberries)
+class WaffleObject {
+  void garnish(List<Strawberry> strawberries) { ... }
+}
 ```
 
 Obviously it's an object. Everything is an object. That's kind of what "object-oriented" means (#4):
 
 ```dart
-Waffle.garnish(List<Strawberry> strawberries)
+class Waffle {
+  void garnish(List<Strawberry> strawberries) { ... }
+}
 ```
 
-There, much better. From 109 characters to 45. Now we don't have to line-break it or force the reader to scroll horizontally.
+There, much better.
 
 I think these are pretty simple guidelines. You may think it's pointless to worry about this stuff, but I believe that [naming things][] is one of the most fundamental tasks we do when programming. Names are the structure we impose on the formless sea of bits that is computing.
 

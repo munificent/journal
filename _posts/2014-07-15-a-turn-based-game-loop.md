@@ -283,7 +283,7 @@ Success/failure handles cases where the action the player picked is totally bogu
 
 I know this sounds obvious, but you'd be surprised how many roguelikes don't do this. Improving usability is one of my main goals for my game, so I care about this stuff. I've got a pretty simple solution too.
 
-When an action is validating itself, it can fail outright like we saw, but it can also respond with an *alternate action*. It let's the action say, "no, you really mean this".
+When an action is validating itself, it can fail outright like we saw, but it can also respond with an *alternate action*. It lets the action say, "no, you really mean this".
 
 Since the `perform()` method on `Action` can return success, failure, or another action, we'll make a little class to wrap that up:
 

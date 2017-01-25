@@ -32,7 +32,7 @@ The end result is a graph of *reachable* objects&mdash;all of the objects in the
 
 ## Marking and sweeping
 
-There's a [bunch of different ways](http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Tracing_garbage_collectors) you can implement the process of finding and reclaiming all of the unused objects, but the simplest and first algorithm ever invented for it is called "mark-sweep". It was invented by John McCarthy, the man who invented Lisp and beards, so you implementing it now is like communing with one of the Elder Gods, but hopefully not in some Lovecraftian way that ends with you having your mind and retinas blasted clean.
+There's a [bunch of different ways](http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Tracing_garbage_collectors) you can implement the process of finding and reclaiming all of the unused objects, but the simplest and first algorithm ever invented for it is called "mark-sweep". It was invented by John McCarthy, the man who invented Lisp and beards, so you know implementing it now is like communing with one of the Elder Gods, but hopefully not in some Lovecraftian way that ends with you having your mind and retinas blasted clean.
 
 It works almost exactly like our definition of reachability:
 

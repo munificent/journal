@@ -16,7 +16,7 @@ tools designed for the manicured hands of expert craftspersons such as
 ourselves.)
 
 Of course, as the *author* of said screed, I run a risk. The language I mock
-could be one you like! Without realizing it, I could let have the rabble into
+could be one you like! Without realizing it, I could have let the rabble into
 my blog, pitchforks and torches at the ready, and my fool-hardy pamphlet could
 draw their ire!
 
@@ -121,11 +121,11 @@ doSomethingAzure(...)•blue;
 doSomethingCarnelian()•red;
 ```
 
-If you get it wrong&mdash;call a red function with `•blue` after the
-parentheses or vice versa&mdash;it does something bad. Dredge up some
-long-forgotten nightmare from your childhood like a clown with snakes for arms
-under your bed. That jumps out of your monitor and sucks out your vitreous
-humour.
+When calling a function, you need to use the call that corresponds to its color.
+If you get it wrong&mdash;call a red function with `•blue` after the parentheses
+or vice versa&mdash;it does something bad. Dredge up some long-forgotten
+nightmare from your childhood like a clown with snakes for arms hiding under
+your bed. That jumps out of your monitor and sucks out your vitreous humour.
 
 Annoying rule, right? Oh, and one more:
 

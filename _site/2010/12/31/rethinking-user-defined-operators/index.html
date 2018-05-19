@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Rethinking User-defined Operators
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/12/31/rethinking-user-defined-operators/" rel="bookmark"
+     title="Permanent Link to Rethinking User-defined Operators">
+    Rethinking User-defined Operators
+  </a>
+</h1>
+
+  <a class="older" href="/2010/12/14/the-trouble-with-constructors/"
+     title="Older Post &ldquo;The Trouble with Constructors&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/"
+     title="Newer Post &ldquo;Pattern Matching in a Dynamic OOP Language&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">December 31, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/cpp">cpp</a> <a href="/category/go">go</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/parsing">parsing</a></span>
+</h4>
+
+<p>I just made a radical change with how Magpie handles infix operators&ndash; stuff
+like <code>+</code> and <code>==</code>. If that kind of programming language minutiae is up your
+alley, read on for how it works now and the reasoning behind it. I don&rsquo;t think
+it&rsquo;s perfect, but I think it&rsquo;s pretty solid. At the least, it&rsquo;s flexible
+enough to let you have something better than <code>equals()</code> in Java.</p>
+
+<h2>A History Lesson</h2>
+
+<p>There are a couple of different camps that most languages fall into regarding
+operator syntax and semantics. Just so we&rsquo;re all together, I&rsquo;ll run through
+them:</p>
+
+<h3>No Infix at All</h3>
+
+<p>The Lisp family simply ditches them altogether. Functions are always in prefix
+form, and operators are just another kind of valid function name. An
+expression like <code>1 + 2 * 3</code> becomes:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(+ 1 (* 2 3))
+</code></pre></div>
+<p>Since most Lisps aren&rsquo;t OOP (ignoring CLOS for the moment), these functions
+are basically global and aren&rsquo;t bound to any arguments. Forth works about the
+same way, but in postfix fashion:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>2 3 * 1 +
+</code></pre></div>
+<p>Again, operators are just regular functions who happen to have names like
+comic book profanity. This solution is dead simple, and quite flexible. You
+just have to give up the ability to write <code>1 + 2</code> the way you&rsquo;ve been writing
+it since grade school.</p>
+
+<h3>Fixed Syntax, Fixed Semantics</h3>
+
+<p>This is a common option, and a fan of people who fear their coworkers.
+Languages like C, Java, and Go have a fixed set of operators baked into the
+language along with fixed predefined semantics. Addition does what the
+language designers say it does forever and ever amen.</p>
+
+<p>By baking a set of operators into the language, you can support the &ldquo;Please
+Excuse My Dead Aunt Sally&rdquo; operator precedence most users expect and do things
+like unary operators without ambiguity.</p>
+
+<p>It&rsquo;s also great for what some people call &ldquo;auditability&rdquo; or &ldquo;context-free&rdquo;
+code. If you look at an expression with operators, you can figure out what
+it&rsquo;s doing without knowing much about the operands. (In fact the operators
+will illuminate their arguments. If you see a minus sign, the arguments must
+be numbers.)</p>
+
+<p>The downside, of course, is that it isn&rsquo;t flexible. Want to add two numbers in
+Java? It&rsquo;s <code>a + b</code>. Want to add two BigDecimals? Better get used to
+<code>a.add(b)</code>. The syntax of the language treats library-defined types as
+second-class citizens.</p>
+
+<h3>Fixed Syntax, Extensible Semantics</h3>
+
+<p>A slightly more flexible approach, and a nice compromise, is what C++ and C#
+do: fix the syntax and grammar, but let users overload the semantics for their
+own types. You get the convenience of &ldquo;normal&rdquo; operator precedence levels and
+stay clear of the scary <a href="http://jim-mcbeath.blogspot.com/2008/12/scala-operator-cheat-sheet.html">operator jungle</a> apparently waiting just off the beaten path.</p>
+
+<p>At the same time, users get a nice syntax for their own types. Your complex
+number library can do <code>a + b</code>. If you&rsquo;ve used a good vector or matrix library
+in C++, you&rsquo;ve seen how much of a boon that can be for readability.</p>
+
+<h3>Fixed Syntax, No Fixed Operators</h3>
+
+<p>And last, but not least, my personal favorite, the Smalltalk approach. Like
+Lisp or Forth, Smalltalk has no built-in operators. <code>+</code> and <code>==</code> are just
+methods like any other whose names happen to be hard to pronounce.</p>
+
+<p>Unlike Lisp and Forth, though Smalltalk puts them in <em>infix</em> position, so they
+look like you expect. It&rsquo;s <code>a + b</code>, not <code>(+ a b)</code>. The rule is pretty simple:
+if an identifier is just punctuation characters, it&rsquo;s an operator and <em>must</em>
+occur in infix position. All operators have the same precedence and associate
+left-to-right.</p>
+
+<p>Like many things in Smalltalk, this solution is radically simple while still
+being expressive and extensible. You lose some of the subtlety of a hard-coded
+operator grammar, but you gain the ability to define your own operators or
+overload existing ones.</p>
+
+<p>The semantics are equally simple: an operator is just a method call on the
+left-hand operand. The right-hand operand is passed to it as the argument. In
+other words, <code>a + b</code> in Smalltalk would look like <code>a.+(b)</code> in Java or C++.</p>
+
+<h2>Magpie: Round One</h2>
+
+<p>If Magpie had a bumper sticker, it would likely read WWAKD, so I initially
+took the Smalltalk approach. It&rsquo;s workable, keeps the grammar and parser nice
+and small, and fits with Magpie&rsquo;s philosophy of letting users express things
+the way they want.</p>
+
+<p>I plodded along this way for months. Every time I had to deal with operators,
+they were always a bit… annoying, but I labored through it. After immersing
+myself in it for a while, I had a pretty good catalog of what I didn&rsquo;t like
+about it. Here it is:</p>
+
+<h3>It&rsquo;s Asymmetric</h3>
+
+<p>An expression like <code>a + b</code> always give <code>a</code> control over how the operator is
+interpreted. I suppose that&rsquo;s fine for some things, but many, if not most,
+operators are conceptually symmetric. It&rsquo;s really weird then that the
+implementation isn&rsquo;t. That leads to weird undesirable behavior. For example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">a</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1">// &quot;11&quot;</span>
+<span class="k">var</span> <span class="err">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="s">&quot;1&quot;</span> <span class="c1">// error!</span>
+</code></pre></div>
+<p>String&rsquo;s implementation of <code>+</code> would coerce the right-hand operand to a
+string. Meanwhile, Int&rsquo;s implementation would just bail if the other operand
+wasn&rsquo;t an Int too. I could have made Int&rsquo;s implementation of <code>+</code> coerce
+<em>itself</em> to a string if the argument was a string, but that&rsquo;s just weird.
+First, it&rsquo;s redundant code. Why should I have that logic in two places?
+Second, why should Int know <em>anything</em> about strings?</p>
+
+<h3>It&rsquo;s Tedious</h3>
+
+<p>Magpie&rsquo;s type system is <a href="http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system/">implemented in Magpie</a>. This means that operators
+on types are just regular Magpie operators. One common operator is <code>|</code>. It
+creates a <a href="http://en.wikipedia.org/wiki/Union*%28computer*science%29">union type</a> out of two types. If you have a variable of type
+<code>Int | String</code> then at runtime it can hold a value that&rsquo;s an Int or a String.</p>
+
+<p>You should be able to apply this operator on any two types. There are a bunch
+of different classes that define types, things like arrays, interfaces,
+functions, and tuples (and Class itself, the class of classes). Since <code>|</code> is
+just a method on those classes, they all need to have it.</p>
+
+<p>Fortunately, classes are open in Magpie, so I can extend all of those classes
+in one place and add that method. Like so:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">extend</span> <span class="n">interface</span> <span class="n">Type</span>
+    <span class="k">def</span> <span class="o">|</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="n">Class</span> <span class="o">|</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">)</span> <span class="n">OrType</span> <span class="n">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">FunctionType</span> <span class="o">|</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">)</span> <span class="n">OrType</span> <span class="n">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">Interface</span> <span class="o">|</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">)</span> <span class="n">OrType</span> <span class="n">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">OrType</span> <span class="o">|</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">)</span> <span class="n">OrType</span> <span class="n">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">Tuple</span> <span class="o">|</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">)</span> <span class="n">OrType</span> <span class="n">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+</code></pre></div>
+<p>But this is still kind of lame. It&rsquo;s particularly annoying because I have to
+add another row here every time a new class of types is defined. I <em>hate</em>
+repeating myself.</p>
+
+<h3>It Passes the Buck on Its Semantics</h3>
+
+<p>When I reason about an operator, I tend to assume it has the same semantics
+regardless of its operands. If we&rsquo;re talking <code>==</code> for equality, I sure as hell
+expect it to be symmetric, transitive, and reflexive.</p>
+
+<p>But with the operators-as-methods solution, there&rsquo;s no single point of control
+to enshrine those invariants. It&rsquo;s up to each class implementing that operator
+to play along with the others.</p>
+
+<p>A real-world example of how tricky this is is <code>equals()</code> in Java. Implementing
+that correctly is so hard that Josh Bloch had to dedicate a chapter to it in
+<a href="http://java.sun.com/docs/books/effective/">Effective Java</a>.</p>
+
+<h2>Magpie: Round Two</h2>
+
+<p>Those issues were enough to make me want a different solution. I kept coming
+back to the idea of just making operators be standalone global functions, but
+there&rsquo;s one really nice facet of the Smalltalk solution I didn&rsquo;t want to give
+up: dynamic dispatch.</p>
+
+<p>By making operators methods, you get class-specific behavior for free. Getting
+<code>+</code> to do addition for numbers and concatenation for strings is as simple as
+having the methods on those two classes do different things.</p>
+
+<p>It finally dawned on me that I can have my cake and eat it too. After all, if
+an operator is just a global function with two arguments, there&rsquo;s nothing
+preventing the implementation of that function from just immediately calling a
+method on one of its arguments. I could make <code>+</code> a global function and still
+get the exact same behavior as before just by doing this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="o">+</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+   <span class="n">left</span> <span class="n">add</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The <code>add</code> replaces our old plus-operator-as-method, and we&rsquo;re back in
+business. But what&rsquo;s great about this is that I don&rsquo;t <em>have</em> to do this.</p>
+
+<h3>Central Point of Control</h3>
+
+<p>The key idea is that an operator function becomes a central point of control
+that gets first dibs at defining the semantics for that operator. It <em>may</em>
+just call a method on one of its arguments, but it doesn&rsquo;t have to. There&rsquo;s
+now a single place in code where you can define the global invariants for the
+operator and it can control what responsibility it delegates to its operands.</p>
+
+<p>For example, it we want to ensure <code>==</code> is symmetric, we can just do:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+    <span class="n">left</span> <span class="n">equals</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="k">and</span> <span class="n">right</span> <span class="n">equals</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Want to make sure its reflexive?</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+    <span class="c1">// same? tests for identity, i.e. reference equality</span>
+    <span class="k">if</span> <span class="n">Reflect</span> <span class="n">same</span><span class="o">?</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="k">then</span> <span class="k">return</span> <span class="k">true</span>
+
+    <span class="n">left</span> <span class="n">equals</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="k">and</span> <span class="n">right</span> <span class="n">equals</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Ever get tired of having to make sure to check for <code>null</code> before you call
+<code>equals</code> in Java? A clever <code>==</code> in Magpie can handle that for you too:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+    <span class="c1">// same? tests for identity, i.e. reference equality</span>
+    <span class="k">if</span> <span class="n">Reflect</span> <span class="n">same</span><span class="o">?</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="k">then</span> <span class="k">return</span> <span class="k">true</span>
+
+    <span class="k">if</span> <span class="n">left</span> <span class="o">==</span> <span class="k">nothing</span> <span class="k">then</span> <span class="k">return</span> <span class="k">false</span>
+    <span class="k">if</span> <span class="n">right</span> <span class="o">==</span> <span class="k">nothing</span> <span class="k">then</span> <span class="k">return</span> <span class="k">false</span>
+
+    <span class="n">left</span> <span class="n">equals</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="k">and</span> <span class="n">right</span> <span class="n">equals</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>(I should point out that Magpie&rsquo;s equivalent to <code>null</code>, <code>nothing</code>, is a valid
+object too, so you could always implement <code>equals</code> on it and then ditch the
+explicit checks here. Either way works.)</p>
+
+<p>But maybe you don&rsquo;t want to leave equality determination up to the instance
+itself at all? One guideline for equality is that two objects should be
+equatable only if they&rsquo;re the exact same class. That presents the opportunity
+to have the class itself do the comparison (i.e. as a static method on the
+class):</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+    <span class="c1">// must be same class</span>
+    <span class="k">var</span> <span class="n">leftClass</span> <span class="o">=</span> <span class="n">Reflect</span> <span class="n">getClass</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">rightClass</span> <span class="o">=</span> <span class="n">Reflect</span> <span class="n">getClass</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">Reflect</span> <span class="n">same</span><span class="o">?</span><span class="p">(</span><span class="n">leftClass</span><span class="p">,</span> <span class="n">rightClass</span><span class="p">)</span> <span class="k">not</span> <span class="k">then</span> <span class="k">return</span> <span class="k">false</span>
+
+    <span class="c1">// now let the class itself determine it</span>
+    <span class="n">leftClass</span> <span class="n">equal</span><span class="o">?</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>I&rsquo;m still working out what the exact implementation of this should be, but I
+think it&rsquo;s really nice that I can do that figuring in a single place in code.
+And, of course, this addresses my other complaints too:</p>
+
+<h3>Symmetry</h3>
+
+<p>Since an operator is just a function with two arguments, there&rsquo;s nothing
+special about either one. It&rsquo;s symmetric by default. You&rsquo;ll note that all of
+the implementations of <code>==</code> treat both of their arguments identically. If you
+<em>don&rsquo;t</em> want an operator to be symmetric, you can do that too, but it&rsquo;s up to
+you.</p>
+
+<h3>No More Redundancy</h3>
+
+<p>Now that operators aren&rsquo;t bound to classes, things like the <code>|</code> operator just
+need to be defined in one place:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>def |(left Type, right Type -&gt; Type) OrType combine(left, right)
+</code></pre></div>
+<p>You know how every single time in every class that overloads <code>==</code> in C++ or
+C#, you have to remember to also overload <code>!=</code> too? Not in Magpie:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>def !=(left, right -&gt; Bool) (left == right) not
+</code></pre></div>
+<h2>Not All Sunshine and Roses</h2>
+
+<p>Alas, nothing is perfect in this world. There&rsquo;s two problems I&rsquo;ve stumbled
+onto with this approach.</p>
+
+<h3>Name Squatting</h3>
+
+<p>The first is relatively minor, I think. Because these operators aren&rsquo;t bound
+to a class, they&rsquo;re essentially global now, with all of the negative
+implications of sticking a name in global namespace. There can only be one
+implementation of any given operator function.</p>
+
+<p>When Magpie has namespaces, that will mitigate it, but many operators will
+still likely be in the global namespace. Users probably don&rsquo;t want to have to
+import <code>+</code>.</p>
+
+<p>My hope is that smart implementations of these functions will defer to their
+operands appropriately so that the single point of control doesn&rsquo;t become a
+bottleneck. It just becomes a question of good library design. I&rsquo;ll have to
+see how it plays out.</p>
+
+<p>Because Magpie is pretty flexible, you can always take the nuclear option:
+just replace the old definition of the operator with your own. Everything&rsquo;s
+mutable at load time! But let&rsquo;s hope we don&rsquo;t have to go there.</p>
+
+<h3>Return Types</h3>
+
+<p>This is the real annoyance, and is only a problem because Magpie has static
+typing. Because there&rsquo;s only a single function for the operator, it only has a
+single return type. In the old system where operators are methods, <code>+</code> on
+String was defined to return a string, and <code>+</code> on Int return a number. It
+worked just like you expected.</p>
+
+<p>Now that there&rsquo;s just one <code>+</code> function that isn&rsquo;t possible. Honestly, I was
+never that crazy about using <code>+</code> for string concatenation anyway, so this may
+not be a big loss. My short-term solution was to just create a new operator
+(tilde: <code>~</code>) for string concatenation instead of overloading <code>+</code>.</p>
+
+<p>Still, there are other operators where variable return types will probably be
+desired. A <code>++</code> operator that concatenates two lists should return a list with
+the right item type. I&rsquo;m still working out Magpie&rsquo;s generics story (which is
+fiendishly hard for a language whose static type system is as unusual as this
+one), but my hunch is that it will help here.</p>
+
+<h2>Writing the Code</h2>
+
+<p>Despite those problems, I still think this is a big improvement over the
+Smalltalk (and Scala) solution. I&rsquo;ve got it implemented and working now, and
+the code feels cleaner and simpler, which is always a good sign. Still, there
+may be pitfalls I&rsquo;m not noticing so let me know if you see any.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators//&amp;t=Rethinking User-defined Operators" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators/&amp;text=%22Rethinking User-defined Operators%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

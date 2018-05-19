@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Checking Flags in C# Enums
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2008/03/05/checking-flags-in-c-enums/" rel="bookmark"
+     title="Permanent Link to Checking Flags in C# Enums">
+    Checking Flags in C# Enums
+  </a>
+</h1>
+
+  <a class="older" href="/2008/02/26/avoiding-overload-hell-in-c/"
+     title="Older Post &ldquo;Avoiding Overload Hell in C#&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2008/04/08/whats-the-opposite-of-nullable/"
+     title="Newer Post &ldquo;What's the Opposite of "nullable"?&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">March 05, 2008</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a></span>
+</h4>
+
+<p>I like C# <a href="http://msdn2.microsoft.com/en-us/library/sbbt4032(VS.80).aspx">enums</a> and I also like using them as <a href="http://msdn2.microsoft.com/en-us/library/system.flagsattribute(VS.80).aspx">bitfields</a>, even
+though apparently <a href="http://cleveralias.blogs.com/thought_spearmints/2004/01/more_c_enum_wac.html">not everyone does</a>. I realize they aren&rsquo;t perfectly
+typesafe, but then I don&rsquo;t think that&rsquo;s the problem <a href="http://blogs.msdn.com/brada/">Abrams</a> and co. were
+trying to solve anyway.</p>
+
+<p>Here&rsquo;s one:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="na">[Flags]</span>
+<span class="k">public</span> <span class="k">enum</span> <span class="n">Fruits</span>
+<span class="p">{</span>
+    <span class="n">Apple</span>       <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+    <span class="n">Banana</span>      <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+    <span class="n">Cherry</span>      <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+    <span class="n">Date</span>        <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+    <span class="n">Eggplant</span>    <span class="p">=</span> <span class="m">16</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Nice, clean syntax. The way they solved C++&lsquo;s name collision issues with enum
+values is genius: <code>Fruits.Apple</code>. Clearly these guys are using the old noggin.</p>
+
+<h2>The Annoying Bit (Argh, a Pun)</h2>
+
+<p>The one thing that <em>does</em> annoy me about flag enums is the syntax to see if a
+given flag (or set of flags) is set:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">if</span> <span class="p">((</span><span class="n">myFruit</span> <span class="p">&amp;</span> <span class="n">Fruits</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span> <span class="p">==</span> <span class="n">Fruits</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+</code></pre></div>
+<p>I&rsquo;m not afraid of bitwise operators, but there&rsquo;s some serious lameness in
+here. Needing to specify the explicit <code>==</code> for type safety and having to use
+the parenthesis because the operator precedence puts <code>==</code> before <code>&amp;</code> first?
+Gross.</p>
+
+<h2>For Every Nail There is a Hammer</h2>
+
+<p>Behold the solution:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">FruitsExtensions</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsSet</span><span class="p">(</span><span class="k">this</span> <span class="n">Fruits</span> <span class="n">fruits</span><span class="p">,</span> <span class="n">Fruits</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">fruits</span> <span class="p">&amp;</span> <span class="n">flags</span><span class="p">)</span> <span class="p">==</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>With that, you can just do:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">myFruit</span><span class="p">.</span><span class="n">IsSet</span><span class="p">(</span><span class="n">Fruits</span><span class="p">.</span><span class="n">Date</span><span class="p">))</span>
+</code></pre></div>
+<p>Much nicer. For kicks, here&rsquo;s some other useful methods:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">FruitsExtensions</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsSet</span><span class="p">(</span><span class="k">this</span> <span class="n">Fruits</span> <span class="n">fruits</span><span class="p">,</span> <span class="n">Fruits</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">fruits</span> <span class="p">&amp;</span> <span class="n">flags</span><span class="p">)</span> <span class="p">==</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsNotSet</span><span class="p">(</span><span class="k">this</span> <span class="n">Fruits</span> <span class="n">fruits</span><span class="p">,</span> <span class="n">Fruits</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">fruits</span> <span class="p">&amp;</span> <span class="p">(~</span><span class="n">flags</span><span class="p">))</span> <span class="p">==</span> <span class="m">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Fruits</span> <span class="nf">Set</span><span class="p">(</span><span class="k">this</span> <span class="n">Fruits</span> <span class="n">fruits</span><span class="p">,</span> <span class="n">Fruits</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fruits</span> <span class="p">|</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Fruits</span> <span class="nf">Clear</span><span class="p">(</span><span class="k">this</span> <span class="n">Fruits</span> <span class="n">fruits</span><span class="p">,</span> <span class="n">Fruits</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">fruits</span> <span class="p">&amp;</span> <span class="p">(~</span><span class="n">flags</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Useful, no?</p>
+
+<h2>Why Solve 1 When You Can Solve n?</h2>
+
+<p>So, if you&rsquo;re like me and <a href="http://devlicious.com/blogs/christopher_bennage/archive/2007/09/13/my-new-little-friend-enum-lt-t-gt.aspx">this guy</a>, right now you&rsquo;re thinking, &ldquo;This
+just fixes one enum. Can I solve it for all enums?&rdquo; Ideally, you&rsquo;d do
+something like:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">EnumExtensions</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">IsSet</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">T</span> <span class="k">value</span><span class="p">,</span> <span class="n">T</span> <span class="n">flags</span><span class="p">)</span> <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="n">Enum</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">value</span> <span class="p">&amp;</span> <span class="n">flags</span><span class="p">)</span> <span class="p">==</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Unfortunately, that doesn&rsquo;t fly. You can&rsquo;t use <code>Enum</code> as a constraint.
+Likewise, there&rsquo;s no way to require a typeparam to implement an operator (like
+<code>&amp;</code> above). You <em>can</em> implement a generic solution for this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">EnumExtensions</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">IsSet</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">T</span> <span class="k">value</span><span class="p">,</span> <span class="n">T</span> <span class="n">flags</span><span class="p">)</span>
+        <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="k">struct</span>
+    <span class="p">{</span>
+        <span class="n">Type</span> <span class="n">type</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+
+        <span class="c1">// only works with enums</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">type</span><span class="p">.</span><span class="n">IsEnum</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">ArgumentException</span><span class="p">(</span>
+            <span class="s">&quot;The type parameter T must be an enum type.&quot;</span><span class="p">);</span>
+
+        <span class="c1">// handle each underlying type</span>
+        <span class="n">Type</span> <span class="n">numberType</span> <span class="p">=</span> <span class="n">Enum</span><span class="p">.</span><span class="n">GetUnderlyingType</span><span class="p">(</span><span class="n">type</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">sbyte</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">sbyte</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">byte</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">short</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">short</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">ushort</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">ushort</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">uint</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">long</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">ulong</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">ulong</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">numberType</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="kt">char</span><span class="p">)))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">Box</span><span class="p">&lt;</span><span class="kt">char</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="p">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">==</span> <span class="n">b</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentException</span><span class="p">(</span>
+                <span class="s">&quot;Unknown enum underlying type &quot;</span> <span class="p">+</span>
+                <span class="n">numberType</span><span class="p">.</span><span class="n">Name</span> <span class="p">+</span> <span class="s">&quot;.&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// Helper function for handling the value types. Boxes the</span>
+    <span class="c1">/// params to object so that the cast can be called on them.</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Box</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="kt">object</span> <span class="k">value</span><span class="p">,</span> <span class="kt">object</span> <span class="n">flags</span><span class="p">,</span>
+        <span class="n">Func</span><span class="p">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="kt">bool</span><span class="p">&gt;</span> <span class="n">op</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">op</span><span class="p">((</span><span class="n">T</span><span class="p">)</span><span class="k">value</span><span class="p">,</span> <span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="n">flags</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>&hellip;but, yeah, not exactly fun using reflection for this.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums//&amp;t=Checking Flags in C# Enums" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums/&amp;text=%22Checking Flags in C# Enums%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2008/03/05/checking-flags-in-c-enums/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

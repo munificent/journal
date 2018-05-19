@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Visualizing the Democratic Primary
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2008/05/12/visualizing-the-democratic-primary/" rel="bookmark"
+     title="Permanent Link to Visualizing the Democratic Primary">
+    Visualizing the Democratic Primary
+  </a>
+</h1>
+
+  <a class="older" href="/2008/04/24/incremental-development-for-games-is-hard/"
+     title="Older Post &ldquo;Incremental Development for Games (Is Hard)&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2008/11/17/using-an-iterator-as-a-game-loop/"
+     title="Newer Post &ldquo;Using an Iterator as a Game Loop&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">May 12, 2008</a>
+    <span class="tags"><a href="/category/politics">politics</a> <a href="/category/visualization">visualization</a></span>
+</h4>
+
+<p>Like lots and lots of people, I&rsquo;ve been following this year&rsquo;s election very
+closely. I&rsquo;m not into sports, so this is about the closest to it I get. And,
+like an avid sports fan, I&rsquo;m transfixed by the stats: the numbers that tell
+how the teams are doing. Here&rsquo;s how <a href="http://www.cnn.com/ELECTION/2008/">CNN</a> shows it (as of 5/12/09):</p>
+
+<p><img src="/image/2008/05/cnn.png" alt="CNN’s election results “graph”"></p>
+
+<p>Very pretty. Lots of smiling faces and exciting vertical lines. Unfortunately,
+for all those pixels, there&rsquo;s a hell of a lot of <a href="http://en.wikipedia.org/wiki/Chartjunk">chartjunk</a>. It&rsquo;s enough
+to drive a <a href="http://www.edwardtufte.com/tufte/newet">Tufte</a>-fanboy like me crazy.</p>
+
+<p>Lets focus on just the actual chart part of the image:</p>
+
+<p><img src="/image/2008/05/cnn-bars.png" alt="Where’s the top?"></p>
+
+<p>See anything missing? I&rsquo;ll give you a hint. This is showing the status of the
+democratic candidate <em>race</em>. Don&rsquo;t races usually have finish lines? For all we
+can tell, Obama and Clinton are neck and neck (argh, graphical pun not
+intended)… somewhere… in the middle of the race.</p>
+
+<p>But that isn&rsquo;t the case at all. Let&rsquo;s see if we can improve it a bit:</p>
+
+<p><img src="/image/2008/05/ok-graph.png" alt="Here at least we can see the goal line"></p>
+
+<p>This actually shows the status of the race <em>relative to the finish line</em>. As
+you can see, the finish line is looming but Obama and Clinton are still pretty
+close. Clinton has about 89% of the votes that Obama has so far.</p>
+
+<p>But actually, I still don&rsquo;t think this is the best we can do. The way I look
+at it, the accumulated votes aren&rsquo;t as important as the <em>remaining votes
+needed</em>. It&rsquo;s distance from the finish line that matters. If you&rsquo;re running a
+500 meter sprint and you&rsquo;re 20 meters behind your opponent 100 meters in,
+you&rsquo;ve still got 400 meters to catch up. If you&rsquo;re 20 meters behind and 40
+from the finish line, it&rsquo;s over.</p>
+
+<p>It&rsquo;s the relative remaining distance that matters. Let&rsquo;s focus on that:</p>
+
+<p><img src="/image/2008/05/better-graph.png" alt="The democratic candidate race"></p>
+
+<p>Now things don&rsquo;t look so close. Now lets see what the upcoming races can hope
+to do:</p>
+
+<p><img src="/image/2008/05/upcoming-graph.png" alt="Upcoming primaries shown to scale"></p>
+
+<p>Now it becomes obvious how much of a challenge Clinton has ahead of her.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2008/05/12/visualizing-the-democratic-primary//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2008/05/12/visualizing-the-democratic-primary//&amp;t=Visualizing the Democratic Primary" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2008/05/12/visualizing-the-democratic-primary/&amp;text=%22Visualizing the Democratic Primary%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2008/05/12/visualizing-the-democratic-primary/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2008/05/12/visualizing-the-democratic-primary/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2008/05/12/visualizing-the-democratic-primary/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

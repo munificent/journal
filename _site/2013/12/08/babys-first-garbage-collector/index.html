@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Baby's First Garbage Collector
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2013/12/08/babys-first-garbage-collector/" rel="bookmark"
+     title="Permanent Link to Baby&#39;s First Garbage Collector">
+    Baby&#39;s First Garbage Collector
+  </a>
+</h1>
+
+  <a class="older" href="/2013/08/26/what-is-open-recursion/"
+     title="Older Post &ldquo;What is "Open Recursion"?&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2014/03/02/nostalgia-rathole/"
+     title="Newer Post &ldquo;Nostalgia Rathole&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">December 08, 2013</a>
+    <span class="tags"><a href="/category/c">c</a> <a href="/category/code">code</a> <a href="/category/language">language</a></span>
+</h4>
+
+<p>When I get stressed out and have too much to do, I have this paradoxical reaction where I escape from that by coming up with <em>another</em> thing to do. Usually it&rsquo;s a tiny self-contained program that I can write and finish.</p>
+
+<p>The other morning, I was freaking myself out about <a href="http://gameprogrammingpatterns.com">the book I&rsquo;m working on</a> and the <a href="http://dartlang.org">stuff I have to do at work</a> and <a href="https://thestrangeloop.com/sessions/dart-for-the-language-enthusiast">a talk I&rsquo;m preparing for Strange Loop</a>, and all of the sudden, I thought, &ldquo;I should write a garbage collector.&rdquo;</p>
+
+<p>Yes, I realize how crazy that paragraph makes me seem. But my faulty wiring is your free tutorial on a fundamental piece of programming language implementation! In about a hundred lines of vanilla C, I managed to whip up a basic <a href="http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Na.C3.AFve_mark-and-sweep">mark-and-sweep</a> collector that actually, you know, collects.</p>
+
+<p>Garbage collection is considered one of the more shark-infested waters of programming, but in this post, I&rsquo;ll give you a nice kiddie pool to paddle around in. (There may still be sharks in it, but at least it will be shallower.)</p>
+
+<h2>Reduce, reuse, recycle</h2>
+
+<p>The basic idea behind garbage collection is that the language (for the most part) appears to have access to infinite memory. The developer can just keep allocating and allocating and allocating and, as if by magic, it never fails.</p>
+
+<p>Of course, machines don&rsquo;t have infinite memory. So the way the implementation does this is that when it needs to allocate a bit of memory and it realizes it&rsquo;s running low, it <em>collects garbage</em>.</p>
+
+<p>&ldquo;Garbage&rdquo; in this context means memory it previously allocated that is no longer being used. For the illusion of infinite memory to work, the language needs to be very safe about &ldquo;no longer being used&rdquo;. It would be no fun if random objects just started getting reclaimed while your program was trying to access them.</p>
+
+<p>In order to be collectible, the language has to ensure there&rsquo;s no way for the program to use that object again. If it can&rsquo;t get a reference to the object, then it obviously can&rsquo;t use it again. So the definition of &ldquo;in use&rdquo; is actually pretty simple:</p>
+
+<ol>
+<li><p>Any object that&rsquo;s being referenced by a variable that&rsquo;s still in scope is in use.</p></li>
+<li><p>Any object that&rsquo;s referenced by another object that&rsquo;s in use is in use.</p></li>
+</ol>
+
+<p>The second rule is the recursive one. If object A is referenced by a variable, and it has some field that references object B, then B is in use since you can get to it through A.</p>
+
+<p>The end result is a graph of <em>reachable</em> objects&mdash;all of the objects in the world that you can get to by starting at a variable and traversing through objects. Any object <em>not</em> in that graph of reachable objects is dead to the program and its memory is ripe for a reaping.</p>
+
+<h2>Marking and sweeping</h2>
+
+<p>There&rsquo;s a <a href="http://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#Tracing_garbage_collectors">bunch of different ways</a> you can implement the process of finding and reclaiming all of the unused objects, but the simplest and first algorithm ever invented for it is called &ldquo;mark-sweep&rdquo;. It was invented by John McCarthy, the man who invented Lisp and beards, so you implementing it now is like communing with one of the Elder Gods, but hopefully not in some Lovecraftian way that ends with you having your mind and retinas blasted clean.</p>
+
+<p>It works almost exactly like our definition of reachability:</p>
+
+<ol>
+<li><p>Starting at the roots, traverse the entire object graph. Every time you reach an object, set a &ldquo;mark&rdquo; bit on it to true.</p></li>
+<li><p>Once that&rsquo;s done, find all of the objects whose mark bits are <em>not</em> set and delete them.</p></li>
+</ol>
+
+<p>That&rsquo;s it. I know, you could have come up with that, right? If you had, <em>you&rsquo;d</em> be the author of a paper cited hundreds of times. The lesson here is that to be famous in CS, you don&rsquo;t have to come up with really smart stuff, you just have to come up with dumb stuff <em>first</em>.</p>
+
+<h2>A pair of objects</h2>
+
+<p>Before we can get to implementing those two steps, let&rsquo;s get a couple of preliminaries out of the way. We won&rsquo;t be actually implementing an interpreter for a language&mdash;no parser, bytecode, or any of that foolishness&mdash;but we do need some minimal amount of code to create some garbage to collect.</p>
+
+<p>Let&rsquo;s play pretend that we&rsquo;re writing an interpreter for a little language. It&rsquo;s dynamically typed, and has two types of objects: ints and pairs. Here&rsquo;s an enum to identify an object&rsquo;s type:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
+  <span class="n">OBJ_INT</span><span class="p">,</span>
+  <span class="n">OBJ_PAIR</span>
+<span class="p">}</span> <span class="n">ObjectType</span><span class="p">;</span>
+</code></pre></div>
+<p>A pair can be a pair of anything, two ints, an int and another pair, whatever. You can go <a href="http://www.flickr.com/photos/raganwald/212588975/">surprisingly far</a> with just that. Since an object in the VM can be either of these, the typical way in C to implement it is with a <a href="http://en.wikipedia.org/wiki/Tagged_union">tagged union</a>.</p>
+
+<p>We&rsquo;ll define it thusly:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">sObject</span> <span class="p">{</span>
+  <span class="n">ObjectType</span> <span class="n">type</span><span class="p">;</span>
+
+  <span class="k">union</span> <span class="p">{</span>
+    <span class="cm">/* OBJ_INT */</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+
+    <span class="cm">/* OBJ_PAIR */</span>
+    <span class="k">struct</span> <span class="p">{</span>
+      <span class="k">struct</span> <span class="n">sObject</span><span class="o">*</span> <span class="n">head</span><span class="p">;</span>
+      <span class="k">struct</span> <span class="n">sObject</span><span class="o">*</span> <span class="n">tail</span><span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span> <span class="n">Object</span><span class="p">;</span>
+</code></pre></div>
+<p>The main <code>Object</code> struct has a <code>type</code> field that identifies what kind of value it is&mdash; either an int or a pair. Then it has a union to hold the data for the int or pair. If your C is rusty, a union is a struct <em>where the fields overlap in memory</em>. Since a given object can only be an int <em>or</em> a pair, there&rsquo;s no reason to have memory in a single object for all three fields at the same time. A union does that. Groovy.</p>
+
+<h2>A minimal virtual machine</h2>
+
+<p>Now we can wrap that in a little virtual machine structure. Its role in this story is to have a stack that stores the variables that are currently in scope. Most language VMs are either stack-based (like the JVM and CLR) or register-based (like Lua). In both cases, there is actually still a stack. It&rsquo;s used to store local variables and temporary variables needed in the middle of an expression.</p>
+
+<p>We&rsquo;ll model that explicitly and simply like so:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="cp">#define STACK_MAX 256</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="n">Object</span><span class="o">*</span> <span class="n">stack</span><span class="p">[</span><span class="n">STACK_MAX</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">stackSize</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">VM</span><span class="p">;</span>
+</code></pre></div>
+<p>Now that we&rsquo;ve got our basic data structures in place, let&rsquo;s slap together a bit of code to create some stuff. First, let&rsquo;s write a function that creates and initializes a VM:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="n">VM</span><span class="o">*</span> <span class="nf">newVM</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">VM</span><span class="o">*</span> <span class="n">vm</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">VM</span><span class="p">));</span>
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">stackSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">vm</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Once we&rsquo;ve got a VM, we need to be able to manipulate its stack:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">,</span> <span class="n">Object</span><span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">stackSize</span> <span class="o">&lt;</span> <span class="n">STACK_MAX</span><span class="p">,</span> <span class="s">&quot;Stack overflow!&quot;</span><span class="p">);</span>
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">stack</span><span class="p">[</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">stackSize</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Object</span><span class="o">*</span> <span class="nf">pop</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">stackSize</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Stack underflow!&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">vm</span><span class="o">-&gt;</span><span class="n">stack</span><span class="p">[</span><span class="o">--</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">stackSize</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>OK, now that we can stick stuff in &ldquo;variables&rdquo;, we need to be able to actually create objects. First a little helper function:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="n">Object</span><span class="o">*</span> <span class="nf">newObject</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">,</span> <span class="n">ObjectType</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Object</span><span class="o">*</span> <span class="n">object</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Object</span><span class="p">));</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That does the actual memory allocation and sets the type tag. We&rsquo;ll be revisiting this in a bit. Using that, we can write functions to push each kind of object onto the VM&rsquo;s stack:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">pushInt</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">,</span> <span class="kt">int</span> <span class="n">intValue</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Object</span><span class="o">*</span> <span class="n">object</span> <span class="o">=</span> <span class="n">newObject</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="n">OBJ_INT</span><span class="p">);</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">intValue</span><span class="p">;</span>
+  <span class="n">push</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="n">object</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Object</span><span class="o">*</span> <span class="nf">pushPair</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Object</span><span class="o">*</span> <span class="n">object</span> <span class="o">=</span> <span class="n">newObject</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="n">OBJ_PAIR</span><span class="p">);</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">tail</span> <span class="o">=</span> <span class="n">pop</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="n">pop</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+
+  <span class="n">push</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="n">object</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>And that&rsquo;s it for our little VM. If we had a parser and an interpreter that called those functions, we&rsquo;d have an honest to God language on our hands. And, if we had infinite memory, it would even be able to run real programs. Since we don&rsquo;t, let&rsquo;s start collecting some garbage.</p>
+
+<h2>Marky mark</h2>
+
+<p>The first phase is <em>marking</em>. We need to walk all of the reachable objects and set their mark bit. The first thing we need then is to add a mark bit to <code>Object</code>:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">sObject</span> <span class="p">{</span>
+  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">marked</span><span class="p">;</span>
+  <span class="cm">/* Previous stuff... */</span>
+<span class="p">}</span> <span class="n">Object</span><span class="p">;</span>
+</code></pre></div>
+<p>When we create a new object, we&rsquo;ll modify <code>newObject()</code> to initialize <code>marked</code> to zero. To mark all of the reachable objects, we start with the variables that are in memory, so that means walking the stack. That looks like this:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">markAll</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vm</span><span class="o">-&gt;</span><span class="n">stackSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">mark</span><span class="p">(</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">stack</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That in turn calls <code>mark</code>. We&rsquo;ll build that in phases. First:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">mark</span><span class="p">(</span><span class="n">Object</span><span class="o">*</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">marked</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This is the most important bit, literally. We&rsquo;ve marked the object itself as reachable, but remember we also need to handle references in objects: reachability is <em>recursive</em>. If the object is a pair, its two fields are reachable too. Handling that is simple:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">mark</span><span class="p">(</span><span class="n">Object</span><span class="o">*</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">marked</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">==</span> <span class="n">OBJ_PAIR</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">mark</span><span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">);</span>
+    <span class="n">mark</span><span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">tail</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>But there&rsquo;s a bug here. Do you see it? We&rsquo;re recursing now, but we aren&rsquo;t checking for <em>cycles</em>. If you have a bunch of pairs that point to each other in a loop, this will overflow the stack and crash.</p>
+
+<p>To handle that, we just need to bail out if we get to an object that we&rsquo;ve already processed. So the complete <code>mark()</code> function is:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">mark</span><span class="p">(</span><span class="n">Object</span><span class="o">*</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* If already marked, we&#39;re done. Check this first</span>
+<span class="cm">     to avoid recursing on cycles in the object graph. */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">marked</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">marked</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">==</span> <span class="n">OBJ_PAIR</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">mark</span><span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">);</span>
+    <span class="n">mark</span><span class="p">(</span><span class="n">object</span><span class="o">-&gt;</span><span class="n">tail</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now we can call <code>markAll()</code> and it will correctly mark every reachable object in memory. We&rsquo;re halfway done!</p>
+
+<h2>Sweepy sweep</h2>
+
+<p>The next phase is to sweep through all of the objects we&rsquo;ve allocated and free any of them that aren&rsquo;t marked. But there&rsquo;s a problem here: all of the unmarked objects are, by definition, unreachable! We can&rsquo;t get to them!</p>
+
+<p>The VM has implemented the <em>language&rsquo;s</em> semantics for object references: so we&rsquo;re only storing pointers to objects in variables and the pair elements. As soon as an object is no longer pointed to by one of those, we&rsquo;ve lost it entirely and actually leaked memory.</p>
+
+<p>The trick to solve this is that the VM can have its <em>own</em> references to objects that are distinct from the semantics that are visible to the language user. In other words, we can keep track of them ourselves.</p>
+
+<p>The simplest way to do this is to just maintain a linked list of every object we&rsquo;ve ever allocated. We&rsquo;ll extend <code>Object</code> itself to be a node in that list:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">sObject</span> <span class="p">{</span>
+  <span class="cm">/* The next object in the list of all objects. */</span>
+  <span class="k">struct</span> <span class="n">sObject</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+
+  <span class="cm">/* Previous stuff... */</span>
+<span class="p">}</span> <span class="n">Object</span><span class="p">;</span>
+</code></pre></div>
+<p>The VM will keep track of the head of that list:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="cm">/* The first object in the list of all objects. */</span>
+  <span class="n">Object</span><span class="o">*</span> <span class="n">firstObject</span><span class="p">;</span>
+
+  <span class="cm">/* Previous stuff... */</span>
+<span class="p">}</span> <span class="n">VM</span><span class="p">;</span>
+</code></pre></div>
+<p>In <code>newVM()</code> we&rsquo;ll make sure to initialize <code>firstObject</code> to <code>NULL</code>. Whenever we create an object, we add it to the list:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="n">Object</span><span class="o">*</span> <span class="nf">newObject</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">,</span> <span class="n">ObjectType</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Object</span><span class="o">*</span> <span class="n">object</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Object</span><span class="p">));</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span><span class="p">;</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">marked</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="cm">/* Insert it into the list of allocated objects. */</span>
+  <span class="n">object</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">vm</span><span class="o">-&gt;</span><span class="n">firstObject</span><span class="p">;</span>
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">firstObject</span> <span class="o">=</span> <span class="n">object</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This way, even if the <em>language</em> can&rsquo;t find an object, the language <em>implementation</em> still can. To sweep through and delete the unmarked objects, we just need to traverse the list:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">sweep</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">Object</span><span class="o">**</span> <span class="n">object</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">firstObject</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">object</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">marked</span><span class="p">)</span> <span class="p">{</span>
+      <span class="cm">/* This object wasn&#39;t reached, so remove it from the list</span>
+<span class="cm">         and free it. */</span>
+      <span class="n">Object</span><span class="o">*</span> <span class="n">unreached</span> <span class="o">=</span> <span class="o">*</span><span class="n">object</span><span class="p">;</span>
+
+      <span class="o">*</span><span class="n">object</span> <span class="o">=</span> <span class="n">unreached</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+      <span class="n">free</span><span class="p">(</span><span class="n">unreached</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="cm">/* This object was reached, so unmark it (for the next GC)</span>
+<span class="cm">         and move on to the next. */</span>
+      <span class="p">(</span><span class="o">*</span><span class="n">object</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">marked</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">object</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="o">*</span><span class="n">object</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That code is a bit tricky to read because of that pointer to a pointer, but if you work through it, you can see it&rsquo;s pretty straightforward. It just walks the entire linked list. Whenever it hits an object that isn&rsquo;t marked, it frees its memory and removes it from the list. When this is done, we will have deleted every unreachable object.</p>
+
+<p>Congratulations! We have a garbage collector! There&rsquo;s just one missing piece: actually calling it. First let&rsquo;s wrap the two phases together:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">gc</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">markAll</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+  <span class="n">sweep</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>You couldn&rsquo;t ask for a more obvious mark-sweep implementation. The trickiest part is figuring out when to actually call this. What does &ldquo;low on memory&rdquo; even mean, especially on modern computers with near-infinite virtual memory?</p>
+
+<p>It turns out there&rsquo;s no precise right or wrong answer here. It really depends on what you&rsquo;re using your VM for and what kind of hardware it runs on. To keep this example simple, we&rsquo;ll just collect after a certain number of allocations. That&rsquo;s actually how some language implementations work, and it&rsquo;s easy to implement.</p>
+
+<p>We&rsquo;ll extend <code>VM</code> to track how many we&rsquo;ve created:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="cm">/* The total number of currently allocated objects. */</span>
+  <span class="kt">int</span> <span class="n">numObjects</span><span class="p">;</span>
+
+  <span class="cm">/* The number of objects required to trigger a GC. */</span>
+  <span class="kt">int</span> <span class="n">maxObjects</span><span class="p">;</span>
+
+  <span class="cm">/* Previous stuff... */</span>
+<span class="p">}</span> <span class="n">VM</span><span class="p">;</span>
+</code></pre></div>
+<p>And then initialize them:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="n">VM</span><span class="o">*</span> <span class="nf">newVM</span><span class="p">()</span> <span class="p">{</span>
+  <span class="cm">/* Previous stuff... */</span>
+
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">numObjects</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">maxObjects</span> <span class="o">=</span> <span class="n">INITIAL_GC_THRESHOLD</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">vm</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>INITIAL_GC_THRESHOLD</code> will be the number of objects at which you kick off the <em>first</em> GC. A smaller number is more conservative with memory, a larger number spends less time on garbage collection. Adjust to taste.</p>
+
+<p>Whenever we create an object, we increment <code>numObjects</code> and run a collection if it reaches the max:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="n">Object</span><span class="o">*</span> <span class="nf">newObject</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">,</span> <span class="n">ObjectType</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">vm</span><span class="o">-&gt;</span><span class="n">numObjects</span> <span class="o">==</span> <span class="n">vm</span><span class="o">-&gt;</span><span class="n">maxObjects</span><span class="p">)</span> <span class="n">gc</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+
+  <span class="cm">/* Create object... */</span>
+
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">numObjects</span><span class="o">++</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>I won&rsquo;t bother showing it, but we&rsquo;ll also tweak <code>sweep()</code> to <em>decrement</em> <code>numObjects</code> every time it frees one. Finally, we modify <code>gc()</code> to update the max:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">gc</span><span class="p">(</span><span class="n">VM</span><span class="o">*</span> <span class="n">vm</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">numObjects</span> <span class="o">=</span> <span class="n">vm</span><span class="o">-&gt;</span><span class="n">numObjects</span><span class="p">;</span>
+
+  <span class="n">markAll</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+  <span class="n">sweep</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+
+  <span class="n">vm</span><span class="o">-&gt;</span><span class="n">maxObjects</span> <span class="o">=</span> <span class="n">vm</span><span class="o">-&gt;</span><span class="n">numObjects</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>After every collection, we update <code>maxObjects</code> based on the number of <em>live</em> objects left after the collection. The multiplier there lets our heap grow as the number of living objects increases. Likewise, it will shrink automatically if a bunch of objects end up being freed.</p>
+
+<h2>Simple</h2>
+
+<p>You made it! If you followed all of this, you&rsquo;ve now got a handle on a simple garbage collection algorithm. If you want to see it all together, <a href="https://github.com/munificent/mark-sweep">here&rsquo;s the full code</a>. Let me stress here that while this collector is <em>simple</em>, it isn&rsquo;t a <em>toy</em>.</p>
+
+<p>There are a ton of optimizations you can build on top of this (and in things like GC and programming languages, optimization is 90% of the effort), but the core code here is a legitimate <em>real</em> GC. It&rsquo;s very similar to the collectors that were in Ruby and Lua until recently. You can ship production code that uses something exactly like this. Now go build something awesome!</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector//&amp;t=Baby&#39;s First Garbage Collector" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/&amp;text=%22Baby&#39;s First Garbage Collector%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

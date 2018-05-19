@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      A Type-checking Conundrum!
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/09/01/a-type-checking-conundrum/" rel="bookmark"
+     title="Permanent Link to A Type-checking Conundrum!">
+    A Type-checking Conundrum!
+  </a>
+</h1>
+
+  <a class="older" href="/2010/08/31/type-checking-a-dynamic-language/"
+     title="Older Post &ldquo;Type-checking a Dynamic Language&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/09/18/futureproofing-uniform-access-and-masquerades/"
+     title="Newer Post &ldquo;Future-proofing, Uniform Access, and Masquerades&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">September 01, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>Ever since I decided to mesh the worlds of static and dynamic typing together
+in Magpie, I&rsquo;ve been wondering when the gears would really grind together and
+halt. Today is the day.</p>
+
+<p>The issue I&rsquo;m running into is one of hidden state, both in closures and in
+objects. Consider this post a plea for assistance or ideas.</p>
+
+<h2>A Quick Intro</h2>
+
+<p>Just to frame things since you are very likely not at all familiar with
+Magpie, here&rsquo;s the salient features of the language:</p>
+
+<ol>
+<li><p>It&rsquo;s a dynamically-typed OOP language like Python or Ruby.</p></li>
+<li><p>You can optionally add type annotations to method parameters or returns.</p></li>
+<li><p>After the top-level of a script is run, but before <code>main()</code> is called, it will statically type-check the script to look for errors based on the annotations you&rsquo;ve provided.</p></li>
+</ol>
+
+<p>Here&rsquo;s a simple example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">say</span><span class="p">(</span><span class="s">&quot;hey&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This program will run fine and do what you expect. Now consider this one:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">say</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+</code></pre></div>
+<p>This one will actually run without errors too (and print &ldquo;123″ since <code>print</code>
+converts its argument to a string anyway). That&rsquo;s because the call to
+<code>say(123)</code> is at the top-level, which is run before type-checking. If we
+change it to this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">var</span> <span class="n">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+    <span class="n">say</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now we&rsquo;ll correctly get a error that <code>say</code> expects a <code>String</code> and is being
+passed an <code>Int</code>. It will then stop without ever calling <code>main()</code>.</p>
+
+<h2>Conundrum!</h2>
+
+<p>All that so far is fine and dandy. Now lets consider something a little…
+softer:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">returnString</span><span class="p">(</span><span class="o">-&gt;</span> <span class="n">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="err">a</span> <span class="o">=</span> <span class="mi">123</span>
+    <span class="err">a</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
+    <span class="k">return</span> <span class="err">a</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This type-checks fine too. At the point that we&rsquo;re returning <code>a</code>, the type-
+checker knows its a <code>String</code> as expected. But this hilights an important
+feature: variables can change their type. That makes sense given that Magpie
+is at its core a dynamic language. It also plays nicely with some other
+features like <a href="http://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/">or types</a>.</p>
+
+<p>Unfortunately, it&rsquo;s also the heart of the problem. Consider this example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">a</span> <span class="o">=</span> <span class="mi">123</span>
+
+<span class="k">var</span> <span class="n">returnInt</span><span class="p">(</span><span class="o">-&gt;</span> <span class="n">Int</span><span class="p">)</span>
+    <span class="k">return</span> <span class="err">a</span>
+<span class="k">end</span>
+
+<span class="err">a</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
+<span class="n">returnInt</span><span class="p">()</span>
+</code></pre></div>
+<p>The type-checker runs through that top-down. First it evaluates <code>var a = 123</code>
+and records that <code>a</code> is defined with the type of <code>123</code>: <code>Int</code>. Then it
+verifies that <code>returnInt()</code> returns its declared type (<code>Int</code>), it looks at the
+body of the function. It&rsquo;s just returning <code>a</code>. It&rsquo;s already noted that <code>a</code>&lsquo;s
+type is <code>Int</code>, so everything looks fine. Later it updates the type of <code>a</code> to
+<code>String</code> but at that point, the damage is done.</p>
+
+<p>When this program is run, <code>returnInt()</code> will return a <code>String</code> even though the
+type-checker didn&rsquo;t notice the error.</p>
+
+<p>In this example, the problem manifests through a closure (accessing a variable
+declared outside of a function&rsquo;s scope), but objects can have the exact same
+problem. A method&rsquo;s return type may be based on a field, but that field&rsquo;s type
+could change at any time.</p>
+
+<h2>Options</h2>
+
+<p>So, how should Magpie handle this? Options I can think of are:</p>
+
+<ol>
+<li><p><strong>Do some really smart analysis to look at <em>every</em> place a field or
+closed-over variable is assigned to and set its type to the union of all of those.</strong></p>
+
+<p>That seems like the Right Thing to Do, but I&rsquo;m pretty sure it&rsquo;s
+undecidable/intractable/impossible given recursion and other circular
+references.</p></li>
+<li><p><strong>Do nothing. Change a variable&rsquo;s type at your own risk.</strong></p>
+
+<p>From the static type system point of view, that seems… dirty. But Magpie
+never promises perfect type-checking, just a little more than you get from a
+completely dynamic language. It doesn&rsquo;t give type guarantees, just type
+gentleman&rsquo;s agreements.</p>
+
+<p>Also, like a dynamic language, it won&rsquo;t completely die if you pass a variable of the wrong type to a method, it&rsquo;ll just end up with some &quot;method not found&rdquo; error. In other words, the &ldquo;wrong&rdquo; behavior here is no worse than every other dynamic language on Earth.</p></li>
+<li><p><strong>Don&rsquo;t allow variables to change type.</strong></p>
+
+<p>This is the static language solution. If a variable can&rsquo;t change type after
+initialization, this problem vanishes completely. But it feels like a weird
+thing for a dynamic language to do.</p></li>
+</ol>
+
+<h2>Now What?</h2>
+
+<p>Not that anyone but me really cares about Magpie, but if you do care enough to
+have a suggestion, I&rsquo;m all ears. I tried scanning through the literature on
+gradual and optional typing, but I didn&rsquo;t see anything that caught my eye. (I
+believe <a href="http://ecee.colorado.edu/%7Esiek/gradualtyping.html">Siek&rsquo;s</a> solution is to disallow references to change type.)</p>
+
+<p>For now, I&rsquo;ll just default to &ldquo;do nothing&rdquo;, but if there&rsquo;s a cleaner solution
+that can help users catch real type errors before their programs run, that
+would be super awesome.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum//&amp;t=A Type-checking Conundrum!" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum/&amp;text=%22A Type-checking Conundrum!%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

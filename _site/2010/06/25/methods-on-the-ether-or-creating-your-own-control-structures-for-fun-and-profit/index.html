@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/" rel="bookmark"
+     title="Permanent Link to Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit">
+    Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit
+  </a>
+</h1>
+
+  <a class="older" href="/2010/06/11/amaranth-an-open-source-roguelike-in-c/"
+     title="Older Post &ldquo;Amaranth, an Open Source Roguelike in C#&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/07/02/new-syntax-for-binding-methods-in-finch/"
+     title="Newer Post &ldquo;New Syntax for Binding Methods in Finch&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">June 25, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/finch">finch</a> <a href="/category/language">language</a></span>
+</h4>
+
+<p>One of my favorite things about <a href="http://en.wikipedia.org/wiki/Lisp_%28programming_language%29">Lisp</a> and <a href="http://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a> is that they
+don&rsquo;t have special syntax for control structures. Sometimes the most elegant
+way to express a solution to a problem requires a <a href="http://en.wikipedia.org/wiki/Domain-specific_language">unique flow control
+construct</a>. Beyond that, there&rsquo;s something appealingly minimal about a
+language that doesn&rsquo;t have a fixed set of hardcoded magic keywords.</p>
+
+<p>Unfortunately, languages like Lisp and Smalltalk that have this feature
+typically marry it to a syntax that looks strange to the large number of the
+world&rsquo;s programmers who were weaned on C and other curly brace languages. To
+explore a couple of a ideas, I started tinkering on a little interpreted
+language called <a href="http://bitbucket.org/munificent/finch">Finch</a>. Here, I&rsquo;ll try to explain how I addressed the
+build-your-own-control-flow problem while (I hope) keeping the syntax
+relatively readable to most people.</p>
+
+<h2>A Smalltalk Primer</h2>
+
+<p>Finch is inspired directly by Smalltalk (by way of <a href="http://en.wikipedia.org/wiki/Self_%28programming_language%29">Self</a>), so it&rsquo;ll help
+to review how Smalltalk handles control flow before we get to Finch. If you
+know Smalltalk, feel free to skip this.</p>
+
+<p>Let&rsquo;s consider a fairly boring chunk of code in a curly language:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">numWeasels</span> <span class="o">&gt;</span> <span class="n">numCakes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">&quot;Not enough cakes!&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numWeasels</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">print</span><span class="p">(</span><span class="s">&quot;A weasel eats a cake!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>We&rsquo;ve got three keywords there: <code>if</code>, <code>else</code>, and <code>for</code>. Here&rsquo;s how that code
+would look in Smalltalk:</p>
+<div class="highlight"><pre><code class="language-smalltalk" data-lang="smalltalk"><span></span><span class="nv">numWeasels</span> <span class="nf">&gt;</span> <span class="nv">numCakes</span> <span class="nb">ifTrue:</span> [
+    <span class="c">&quot;Not enough cakes!&quot;</span> <span class="nv">print</span>
+] <span class="nb">ifFalse:</span> [
+    <span class="nv">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">.</span>
+    [ <span class="nv">i</span> <span class="nf">&lt;</span> <span class="nv">numWeasels</span> ] <span class="nb">whileTrue:</span> [
+        <span class="c">&quot;A weasel eats a cake!&quot;</span> <span class="nv">print</span><span class="p">.</span>
+        <span class="nv">i</span> <span class="o">:=</span> <span class="nv">i</span> <span class="nf">+</span> <span class="m">1</span>
+    ]
+]
+</code></pre></div>
+<p>Whoa, what? First, we&rsquo;ll gloss over the basic stuff we don&rsquo;t care about here:
+<code>.</code> is used to separate statements, <code>:=</code> is for assignment, and the function
+(method) comes after the argument instead of before.</p>
+
+<p>The control flow part of that code is this:</p>
+<div class="highlight"><pre><code class="language-smalltalk" data-lang="smalltalk"><span></span>... <span class="err">ifTrue:</span> [
+    ...
+] <span class="nb">ifFalse:</span> [
+    [ ... ] <span class="nb">whileTrue:</span> [ ... ]
+]
+</code></pre></div>
+<p>You may think that all we&rsquo;ve done is simple replacement: curlies become square
+brackets, <code>if</code> becomes <code>ifTrue:</code>, etc. Not so fast. <code>ifTrue:</code>, <code>IfFalse:</code>, and
+<code>whileTrue:</code> aren&rsquo;t reserved words in Smalltalk. They aren&rsquo;t special at all,
+in fact: you could implement them in Smalltalk itself if you wanted to. Here&rsquo;s
+how:</p>
+
+<p>An if/then construct is basically a &ldquo;procedure&rdquo; that takes three arguments: a
+boolean condition to check, a block of code to execute if the condition is
+true and (optionally) a block to execute if the condition is false. If you
+were to declare a &ldquo;function&rdquo; for if/then in C, it would look like:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">void</span> <span class="nf">IfThen</span><span class="p">(</span><span class="kt">bool</span> <span class="n">condition</span><span class="p">,</span> <span class="n">code</span> <span class="n">ifTrue</span><span class="p">,</span> <span class="n">code</span> <span class="n">ifFalse</span><span class="p">);</span>
+</code></pre></div>
+<p>The problem, of course, is that <code>code</code> isn&rsquo;t a type in C: there&rsquo;s no easy way
+to pass around a reference to a chunk of code outside of function pointers.
+Smalltalk doesn&rsquo;t have that problem&ndash; it has <em>blocks</em>.</p>
+
+<p>That&rsquo;s what the square brackets are doing in the original example. They create
+a block: a chunk of unevaluated code encapsulated as an object. If you do
+this:</p>
+<div class="highlight"><pre><code class="language-smalltalk" data-lang="smalltalk"><span></span>[ <span class="c">&quot;hi&quot;</span> <span class="nv">print</span> ]
+</code></pre></div>
+<p>It doesn&rsquo;t print &ldquo;hi&rdquo;. Instead, it creates an object representing that chunk
+of code. If you then <em>call</em> the block by sending it a <code>value</code> message:</p>
+<div class="highlight"><pre><code class="language-smalltalk" data-lang="smalltalk"><span></span>[ <span class="c">&quot;hi&quot;</span> <span class="nv">print</span> ] <span class="nf">value</span>
+</code></pre></div>
+<p><em>Then</em> it will print the string. Of course, you don&rsquo;t have to call a block
+immediately, or at all. You can store it in a variable, pass it to another
+function, call it repeatedly, etc.</p>
+
+<p>The other piece of syntax to understand is Smalltalk&rsquo;s notion of a &ldquo;keyword&rdquo;.
+In most languages, keywords are reserved words built into the language. In
+Smalltalk, keywords are just another kind of user-defined function like
+regular method calls or operators. Keywords are identified by ending the name
+with a colon (<code>:</code>). They&rsquo;re used in Smalltalk to send messages to objects with
+multiple arguments. Where in C you would do <code>AddKeyValue(dictionary, &quot;key&quot;,
+&quot;value&quot;)</code>, in Smalltalk you&rsquo;d say <code>dictionary addKey: &quot;key&quot; value: &quot;value&quot;</code>.</p>
+
+<p>Now we can understand how the original Smalltalk code works. <code>numWeasels &gt;
+numCakes</code> is an expression that returns a boolean value. <code>ifTrue:ifFalse:</code> is
+then a message sent to that boolean. It takes two arguments, a &ldquo;then&rdquo; block
+and an &ldquo;else&rdquo; else block. If the boolean value is true, it evaluates the
+&ldquo;then&rdquo; block, otherwise it evaluates the &ldquo;else&rdquo; block. No special syntax
+required.</p>
+
+<p>Keywords and blocks are a fantastically powerful system. Blocks may also take
+arguments and can access variables declared outside of their scopes (i.e. they
+are <a href="http://en.wikipedia.org/wiki/Closure_%28computer_science%29">closures</a>), which means you&rsquo;ve got a very simple syntax that lets you
+create all sorts of control structures and functional idioms like <code>map</code> and
+<code>filter</code>. It just looks funny.</p>
+
+<h2>Back to Finch</h2>
+
+<p>I wanted Finch to have that power but look less funny. (According to my
+definition of &ldquo;funny&rdquo;, of course. Smalltalkers think their language looks
+perfectly normal.) Here&rsquo;s how our example would look in Finch:</p>
+<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span></span><span class="k">if:</span> <span class="n">numWeasels</span> <span class="ow">&gt;</span> <span class="n">numCakes</span> <span class="k">then:</span> <span class="p">{</span>
+    <span class="k">write:</span> <span class="s">&quot;Not enough cakes!&quot;</span>
+<span class="p">}</span> <span class="k">else:</span> <span class="p">{</span>
+    <span class="k">from:</span> <span class="mi">1</span> <span class="k">to:</span> <span class="n">numWeasels</span> <span class="k">do:</span> <span class="p">{</span>
+        <span class="k">write:</span> <span class="s">&quot;A weasel eats a cake!&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The first minor change is using curlies to define blocks instead of square
+brackets. The more interesting change is that <code>if:then:else:</code> doesn&rsquo;t seem to
+have a receiver&mdash; an object that the method is acting on.</p>
+
+<p>You&rsquo;ll remember in Smalltalk that the condition <code>numWeasels &gt; numCakes</code> comes
+<em>before</em> the <code>ifTrue:ifFalse</code> message. That&rsquo;s because <code>ifTrue:ifFalse</code> is a
+method on boolean objects.</p>
+
+<p>That&rsquo;s a smart solution for Smalltalk, but it seemed strange to me to see the
+condition first. I think most programmers want to see the keyword to
+understand what that condition is for before seeing the expression itself.
+Hence <code>if:</code> comes before <code>numWeasels &gt; numCakes</code>.</p>
+
+<p>So how do I square that with the fact that Finch is OOP and every method must
+be a method on some object?</p>
+
+<h2>Enter the Ether</h2>
+
+<p>The answer is: through a little parser trick. If the parser encounters a
+keyword message before it&rsquo;s encountered a receiver to send that message to
+(i.e. it parses <code>foo: bar</code> instead of <code>obj foo: bar</code> as expected), it
+automatically inserts <code>Ether</code> before it. &ldquo;Ether&rdquo; is a special global object
+that represents the implicit receiver of keyword messages if the receiver is
+omitted. (In some ways, this is similar to how you can omit <code>this</code> in most OOP
+languages.)</p>
+
+<p>When you call <code>if:then:else:</code> in Finch, you&rsquo;re sending that message to Ether,
+which is what handles the message. The result, I think, is a syntax as
+powerful as Smalltalk, but one that reads more naturally.</p>
+
+<p>At the same time, we haven&rsquo;t given up any of the flexibility of a dynamic OOP
+language. Ether is just a normal global object, which means you can add your
+own methods to it as you see fit. This lets you create top-level control
+structures in Finch that look just like &ldquo;real&rdquo; ones.</p>
+
+<p>For example, the <code>from:to:do:</code> block we saw earlier is actually written in
+Finch. It uses <code>while:do:</code> which is the only looping construct explicitly
+built into the interpreter. Its definition is:</p>
+<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span></span><span class="vg">Ether</span> <span class="err">::</span> <span class="k">from:</span> <span class="n">start</span> <span class="k">to:</span> <span class="n">end</span> <span class="k">do:</span> <span class="n">block</span> <span class="p">{</span>
+    <span class="n">i</span> <span class="o">&lt;-</span> <span class="n">start</span>
+    <span class="k">while:</span> <span class="p">{</span> <span class="n">i</span> <span class="ow">&lt;=</span> <span class="n">end</span> <span class="p">}</span> <span class="k">do:</span> <span class="p">{</span>
+        <span class="n">block</span> <span class="k">call:</span> <span class="n">i</span>
+        <span class="n">i</span> <span class="o">&lt;--</span> <span class="n">i</span> <span class="ow">+</span> <span class="mi">1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit//&amp;t=Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/&amp;text=%22Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

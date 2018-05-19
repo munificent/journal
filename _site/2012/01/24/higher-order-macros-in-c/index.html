@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Higher Order Macros in C++
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2012/01/24/higher-order-macros-in-c/" rel="bookmark"
+     title="Permanent Link to Higher Order Macros in C++">
+    Higher Order Macros in C++
+  </a>
+</h1>
+
+  <a class="older" href="/2011/10/29/a-proposal-for-null-safety-in-dart/"
+     title="Older Post &ldquo;A Proposal for Null-safety in Dart&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2012/06/12/multimethods-global-scope-and-monkey-patching/"
+     title="Newer Post &ldquo;Multimethods, Global Scope, and Monkey-Patching&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">January 24, 2012</a>
+    <span class="tags"><a href="/category/c">c</a> <a href="/category/code">code</a> <a href="/category/cpp">cpp</a></span>
+</h4>
+
+<p>My hobby project lately has been working on a little <a href="https://github.com/munificent/magpie">bytecode interpreter</a> for <a href="http://magpie-lang.org/">Magpie</a> in C++. As an ex-game programmer, I&rsquo;m pretty sad at how rusty my C++ has gotten. To try to make things a bit easier on myself, I&rsquo;ve been borrowing from the masters whenever possible. That means I usually have <a href="http://code.google.com/p/v8/">v8</a>&lsquo;s source code open in another window.</p>
+
+<p>(Aside: if you&rsquo;re interested in programming languages, it is <em>so awesome</em> that implementations like v8 and <a href="http://hg.mozilla.org/mozilla-central/file/1982c882af0f/js/src">spidermonkey</a> are open source and just a click away. Learning from them is a bit like taking your first martial arts lesson from an angry Bruce Lee, but it&rsquo;s still amazing that industry-leading codebases are just there waiting for your perusal.)</p>
+
+<p>In all honesty, my usual process looks a bit like:</p>
+
+<ol>
+<li><p>&ldquo;Hmm, I need to code up a floobinator. v8 has one. Let me see how they do it.&rdquo;</p></li>
+<li><p><em>hunt through v8 code</em></p></li>
+<li><p>&ldquo;Ah, here it is.&rdquo;</p></li>
+<li><p>OH GOD, WHAT WIZARDRY IS THIS.</p></li>
+</ol>
+
+<p>About 90% of it is <a href="http://code.google.com/p/v8/source/browse/trunk/src/ia32/codegen-ia32.cc#295">over my head</a>, but I figure 10% of v8 is still a pretty good chunk of smart. There is one clever technique I learned from them that I <em>do</em> understand: macros that take macros as arguments. That&rsquo;s the point of this post.</p>
+
+<h2>The Problem</h2>
+
+<p>C++ is a pretty powerful language for defining abstractions which let you get rid of redundancy. Functions and methods address duplicate chunks of imperative code. Base classes let you reuse data definitions. Templates let you do&hellip; well&hellip; <a href="http://crazycpp.wordpress.com/category/template-metaprogramming/">almost anything</a>.</p>
+
+<p>Even so, there&rsquo;s still often hunks of repetition that you can&rsquo;t seem to eliminate. For example, let&rsquo;s say we&rsquo;re working with a language&rsquo;s syntax. Typically, the <a href="https://github.com/munificent/finch/blob/master/src/Syntax/Parser.h">parser</a> generates an <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</a> which then gets passed to the <a href="https://github.com/munificent/finch/blob/master/src/Compiler/Compiler.h">compiler</a>. The compiler walks the AST using <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Ye Olde Visitor Patterne</a> and generates some <a href="https://github.com/munificent/finch/blob/master/src/Compiler/Block.h">lower-level representation</a> for it.</p>
+
+<p>Depending on how rich your language is, you&rsquo;ll have quite a few different AST classes to represent the different syntactic elements: literals, unary operators, infix expressions, statements, flow control, definitions, etc. V8, for example, has <a href="http://code.google.com/p/v8/source/browse/trunk/src/ast.h#123">40</a> classes to cover everything you can express in JavaScript.</p>
+
+<p>These are relatively simple types. A (greatly!) simplified one looks a bit like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">class</span> <span class="nc">BinaryOpExpr</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Expression</span> <span class="p">{</span>
+  <span class="n">BinaryOpExpr</span><span class="p">(</span><span class="n">Expression</span><span class="o">*</span> <span class="n">left</span><span class="p">,</span> <span class="n">Expression</span><span class="o">*</span> <span class="n">right</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">left</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
+    <span class="n">right</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">accept</span><span class="p">(</span><span class="n">AstVisitor</span><span class="o">&amp;</span> <span class="n">visitor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">visitor</span><span class="p">.</span><span class="n">visitBinaryOpExpr</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">Expression</span><span class="o">*</span> <span class="n">left</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">left</span><span class="p">;</span> <span class="p">}</span>
+  <span class="n">Expression</span><span class="o">*</span> <span class="n">right</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">right</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">Expression</span><span class="o">*</span> <span class="n">left</span><span class="p">;</span>
+  <span class="n">Expression</span><span class="o">*</span> <span class="n">right</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Imagine thirty-something-odd more classes like this and you&rsquo;ve got the right idea. There isn&rsquo;t <em>too</em> much we can do in C++ to simplify these definitions themselves. Each class is different enough that it&rsquo;s simplest and clearest to just write them out.</p>
+
+<p>Where the tedium really comes in is all of the surrounding code that <em>uses</em> these classes. First up is the aforementioned <a href="http://code.google.com/p/v8/source/browse/trunk/src/ast.h#2151">visitor</a>. To make it easy for the compiler to dispatch to different code based on the different AST classes, you&rsquo;ll typically define a class like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">class</span> <span class="nc">AstVisitor</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="o">~</span><span class="k">virtual</span> <span class="n">AstVisitor</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">visitBoolLiteral</span><span class="p">(</span><span class="n">BoolLiteral</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitNumLiteral</span><span class="p">(</span><span class="n">NumLiteral</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitStringLiteral</span><span class="p">(</span><span class="n">StringLiteral</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitUnaryOpExpr</span><span class="p">(</span><span class="n">UnaryOpExpr</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitBinaryOpExpr</span><span class="p">(</span><span class="n">BinaryOpExpr</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitAssignmentExpr</span><span class="p">(</span><span class="n">AssignmentExpr</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitConditionalExpr</span><span class="p">(</span><span class="n">ConditionalExpr</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">visitIfThenStmt</span><span class="p">(</span><span class="n">IfThenStmt</span><span class="o">*</span> <span class="n">expr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="c1">// 30 more of these, you get the idea...</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>That code really <em>is</em> just repetitive boilerplate. There&rsquo;s more. It&rsquo;s useful to also have an enum for each AST node type so that we can also <code>switch</code> directly on the type of a node without having to go through a visitor for everything. So you&rsquo;ll want something like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">enum</span> <span class="n">AstType</span> <span class="p">{</span>
+  <span class="n">kBoolLiteral</span><span class="p">,</span>
+  <span class="n">kNumLiteral</span><span class="p">,</span>
+  <span class="n">kStringLiteral</span><span class="p">,</span>
+  <span class="n">kUnaryOpExpr</span><span class="p">,</span>
+  <span class="n">kBinaryOpExpr</span><span class="p">,</span>
+  <span class="c1">// again, you get the idea...</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>For debugging, it&rsquo;s handy to be able to get a string representation for an AST node&rsquo;s type too:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">typeString</span><span class="p">(</span><span class="n">AstType</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">kBoolLiteral</span><span class="p">:</span>  <span class="k">return</span> <span class="s">&quot;BoolLiteral&quot;</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nl">kIntLiteral</span><span class="p">:</span>   <span class="k">return</span> <span class="s">&quot;IntLiteral&quot;</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nl">kNumLiteral</span><span class="p">:</span>   <span class="k">return</span> <span class="s">&quot;NumLiteral&quot;</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nl">kUnaryOpExpr</span><span class="p">:</span>  <span class="k">return</span> <span class="s">&quot;UnaryOpLiteral&quot;</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nl">kBinaryOpExpr</span><span class="p">:</span> <span class="k">return</span> <span class="s">&quot;BinaryOpLiteral&quot;</span><span class="p">;</span>
+    <span class="c1">// yup...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>C++&rsquo;s usual abstraction facilities won&rsquo;t help us here: in all of these cases the repetition is in the <em>middle</em> of some type definition or statement. C++ is really only designed to let you abstract over entire statements (by making functions) or types (by making templates or base classes).</p>
+
+<h2>Let&rsquo;s Get Dirty</h2>
+
+<p>But there is, of course, one grease-covered rusty tool in the C and C++ toolbox that doesn&rsquo;t give a damn about actual syntactic elements: <em>the preprocessor.</em> It doesn&rsquo;t even know what a statement is! It just sees chunks of text.</p>
+
+<p>More often than not, that fact makes it too blunt of an instrument to be wielded indiscriminately without risking bloodshed but here it&rsquo;s just what we need. In all of our problem examples, we want to be able to say &ldquo;for each AST node type, insert this chunk of code but with the node&rsquo;s class name inserted in it in a few places.&rdquo;</p>
+
+<p>Let&rsquo;s try doing something like this:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#define DEFINE_VISIT(type)  \</span>
+<span class="cp">    virtual void visit##type(type* expr) = 0</span>
+</code></pre></div>
+<p>With this, we can simplify our visitor class to:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">class</span> <span class="nc">AstVisitor</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="o">~</span><span class="k">virtual</span> <span class="n">AstVisitor</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">BoolLiteral</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">NumLiteral</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">StringLiteral</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">UnaryOpExpr</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">BinaryOpExpr</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">AssignmentExpr</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">ConditionalExpr</span><span class="p">);</span>
+  <span class="n">DEFINE_VISIT</span><span class="p">(</span><span class="n">IfThenStmt</span><span class="p">);</span>
+  <span class="c1">// 30 more of these, you get the idea...</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>That&rsquo;s a <em>little</em> better, I guess. But not really. This trick doesn&rsquo;t help at all with the enum, and only helps a little in <code>typeString()</code>. The problem is that it&rsquo;s the &ldquo;for each AST type&rdquo; part of our problem where the repetition really is. It&rsquo;s the <em>loop itself</em> we want to abstract over more than the loop <em>body</em>.</p>
+
+<p>What we want is a macro that will <em>itself</em> walk over all of the types, like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#define AST_NODE_LIST   \</span>
+<span class="cp">    BoolLiteral         \</span>
+<span class="cp">    NumLiteral          \</span>
+<span class="cp">    StringLiteral       \</span>
+<span class="cp">    UnaryOpExpr         \</span>
+<span class="cp">    ...</span>
+</code></pre></div>
+<p>But of course, that one doesn&rsquo;t do anything useful. We don&rsquo;t want it to just expand to the type names themselves. It needs to do something with them. But that something is different for each problem area. We need it to take a parameter that is the chunk of code that we generate for each type. Like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#define AST_NODE_LIST(code) \</span>
+<span class="cp">    code(BoolLiteral)       \</span>
+<span class="cp">    code(NumLiteral)        \</span>
+<span class="cp">    code(StringLiteral)     \</span>
+<span class="cp">    code(UnaryOpExpr)       \</span>
+<span class="cp">    ...</span>
+</code></pre></div>
+<h2>Macros Taking Macros&hellip; We Must Go Deeper</h2>
+
+<p>Now the fun part. When we use that <code>AST_NODE_LIST</code> macro, what is that <code>code</code> argument going to be? It needs to be a thing that&rsquo;s available at preprocess time, can take an argument, and can generate a chunk of code. That leaves only one answer: a macro.</p>
+
+<p>Until I saw this in V8, I didn&rsquo;t even know you <em>could</em> pass macros to macros. But indeed you can. Using the <code>AST_NODE_LIST</code> we just defined, our visitor becomes:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">class</span> <span class="nc">AstVisitor</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="o">~</span><span class="k">virtual</span> <span class="n">AstVisitor</span><span class="p">()</span> <span class="p">{}</span>
+
+  <span class="cp">#define DEFINE_VISIT(type)  \</span>
+<span class="cp">  virtual void visit##type(type* expr) = 0</span>
+  <span class="n">AST_NODE_LIST</span><span class="p">(</span><span class="n">DEFINE_VISIT</span><span class="p">)</span>
+  <span class="cp">#undef DEFINE_VISIT </span><span class="c1">// Clean it up since we&#39;re done with it.</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>When <code>AST_NODE_LIST</code> is expanded, it will expand to one call to <code>DEFINE_VISIT</code> for each of the AST node types. Then <em>those</em> will in turn be expanded to define the visitor method for that type.</p>
+
+<p>Likewise, our enum becomes:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#define DEFINE_ENUM_TYPE(type) k##type,</span>
+<span class="k">enum</span> <span class="n">AstType</span> <span class="p">{</span>
+  <span class="n">AST_NODE_LIST</span><span class="p">(</span><span class="n">DEFINE_ENUM_TYPE</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="cp">#undef DEFINE_ENUM_TYPE</span>
+</code></pre></div>
+<p>That&rsquo;s the whole thing in its entirety. Finally, the function for converting it to a string:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#define DEFINE_TYPE_STRING(type) case k##type: return #type;</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">typeString</span><span class="p">(</span><span class="n">AstType</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">AST_NODE_LIST</span><span class="p">(</span><span class="n">DEFINE_TYPE_STRING</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">#undef DEFINE_TYPE_STRING</span>
+</code></pre></div>
+<p>Note that we&rsquo;re using <a href="http://gcc.gnu.org/onlinedocs/cpp/Stringification.html">stringification</a> and <a href="http://gcc.gnu.org/onlinedocs/cpp/Concatenation.html">token pasting</a> here to not just literally substitute in the AST node class&rsquo;s name, but also to use it as a string, or to build a larger name (like <code>kBinaryOpExpr</code>) out of it.</p>
+
+<p>This gets rid of some tedious code, but it has another nice side-effect. If you later need to add a new node class, you just add it to <code>AST_NODE_LIST</code>. Once it&rsquo;s there, every place that&rsquo;s using that will automatically pick it up. That way you don&rsquo;t have to remember to touch <code>AstVisitor</code>, <code>AstType</code> and <code>typeString()</code>.</p>
+
+<p>I can&rsquo;t tell if this is crazy awesome, or just plain crazy, but it&rsquo;s not something you see every day. What other interesting stuff is hiding in the bowels of your favorite open source project?</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2012/01/24/higher-order-macros-in-c//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2012/01/24/higher-order-macros-in-c//&amp;t=Higher Order Macros in C++" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2012/01/24/higher-order-macros-in-c/&amp;text=%22Higher Order Macros in C++%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2012/01/24/higher-order-macros-in-c/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2012/01/24/higher-order-macros-in-c/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2012/01/24/higher-order-macros-in-c/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

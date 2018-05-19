@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Closures and the Command Pattern
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2009/07/02/closures-and-the-command-pattern/" rel="bookmark"
+     title="Permanent Link to Closures and the Command Pattern">
+    Closures and the Command Pattern
+  </a>
+</h1>
+
+  <a class="older" href="/2009/06/05/naming-things-in-code/"
+     title="Older Post &ldquo;Naming Things in Code&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2009/10/12/the-book/"
+     title="Newer Post &ldquo;The Book&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">July 02, 2009</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/design">design</a></span>
+</h4>
+
+<p>Like a lot of OOP programmers, I&rsquo;m a fan of <a href="http://www.c2.com/cgi/wiki?DesignPatterns">Design Patterns</a>. While I
+don&rsquo;t treat it like the sacred tome that many think it is, I learned a lot of
+design tricks for solving problems from it. As I&rsquo;ve moved from C++ towards
+other languages, it&rsquo;s become clear that many patterns in it exist just to get
+around limitations in C++.</p>
+
+<p>The anti-C++ crowd just uses this as evidence that C++ sucks since you have to
+write a whole book to get around its shortcomings. Let&rsquo;s not go there.</p>
+
+<p>Instead, I want to see if I can show you a bit about a language feature that
+C++ lacks and that you may not know (<a href="http://en.wikipedia.org/wiki/Closure_%28computer_science%29">closures</a>) by getting there from
+something familiar to an average C++ OOP programmer (the <a href="http://en.wikipedia.org/wiki/Command_pattern">Command
+Pattern</a>) and changing it in stages. I&rsquo;ll use C# as the example language
+here, but any language with closures would work: Lua, Scheme, etc.</p>
+
+<h2>The Command Pattern</h2>
+
+<p>Let&rsquo;s say you&rsquo;re writing a chess program. You want it to support both regular
+human players and built-in AI players. The core chess engine doesn&rsquo;t care
+about what kind of players it&rsquo;s dealing wth. All it needs to know is for a
+given player, what that player&rsquo;s move is.</p>
+
+<p>For a human player, the UI code will get the user&rsquo;s move selection and pass
+that to the engine. For an AI player, the AI rules select the best move and
+pass it in.</p>
+
+<p>The &ldquo;move&rdquo; here is the command pattern. The basic idea is that you have a
+<em>command</em> class that encapsulates some procedure to perform and any data that
+procedure needs. You can think of it like a function call and its parameters
+bottled up together to be opened up later by someone else. A vanilla implementation is something like:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">interface</span> <span class="n">ICommand</span>
+<span class="p">{</span>
+    <span class="k">void</span> <span class="nf">Invoke</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">MovePieceCommand</span> <span class="p">:</span> <span class="n">ICommand</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Piece</span> <span class="n">Piece</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span>   <span class="n">X</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span>   <span class="n">Y</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Invoke</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Piece</span><span class="p">.</span><span class="n">MoveTo</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>We&rsquo;ll also create a little command factory for creating the commands. This
+isn&rsquo;t necessary now, but it&rsquo;ll make sense later when we start moving things
+around.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">static</span> <span class="k">class</span> <span class="nc">Commands</span>
+<span class="p">{</span>
+    <span class="c1">// create a command to move a piece</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">ICommand</span> <span class="nf">MovePiece</span><span class="p">(</span><span class="n">Piece</span> <span class="n">piece</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MovePieceCommand</span><span class="p">();</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Piece</span> <span class="p">=</span> <span class="n">piece</span><span class="p">;</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">X</span>     <span class="p">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Y</span>     <span class="p">=</span> <span class="n">y</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">command</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>To complete this first pass, here&rsquo;s a little block to test our code:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// ui or ai creates command</span>
+        <span class="kt">var</span> <span class="n">piece</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Piece</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span>  <span class="n">Commands</span><span class="p">.</span><span class="n">MovePiece</span><span class="p">(</span><span class="n">piece</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">);</span>
+
+        <span class="c1">// chess engine invokes it</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Invoke</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>The First Change: Delegates</h2>
+
+<p>The first change we&rsquo;ll make is a pretty minor one. The <code>ICommand</code> interface
+only has a single method, <code>Invoke()</code>, so there&rsquo;s no real reason to make an
+interface for it. Since delegates in C# work fine on instance methods, we can
+just use that instead. We&rsquo;ll define a delegate type for a function that takes
+no arguments and returns nothing, just like the <code>Invoke()</code> method in
+<code>ICommand</code>.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">delegate</span> <span class="nf">CommandDel</span><span class="p">();</span>
+
+<span class="k">class</span> <span class="nc">MovePieceCommand</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Piece</span> <span class="n">Piece</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span>   <span class="n">X</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span>   <span class="n">Y</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Invoke</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Piece</span><span class="p">.</span><span class="n">MoveTo</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="k">class</span> <span class="nc">Commands</span>
+<span class="p">{</span>
+    <span class="c1">// create a command to move a piece</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">CommandDel</span> <span class="nf">MovePiece</span><span class="p">(</span><span class="n">Piece</span> <span class="n">piece</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MovePieceCommand</span><span class="p">();</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Piece</span> <span class="p">=</span> <span class="n">piece</span><span class="p">;</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">X</span>     <span class="p">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Y</span>     <span class="p">=</span> <span class="n">y</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">command</span><span class="p">.</span><span class="n">Invoke</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// ui or ai creates command</span>
+        <span class="kt">var</span> <span class="n">piece</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Piece</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span>  <span class="n">Commands</span><span class="p">.</span><span class="n">MovePiece</span><span class="p">(</span><span class="n">piece</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">);</span>
+
+        <span class="c1">// chess engine invokes it</span>
+        <span class="n">command</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Not much different, although we did get to ditch the interface without any
+loss in functionality.</p>
+
+<h2>The Second Change: Ditch Invoke</h2>
+
+<p>That <code>Invoke()</code> method up there really doesn&rsquo;t do much. It just calls another
+function. Let&rsquo;s see if we can pull that out. C# has &ldquo;anonymous delegates&rdquo;,
+which are basically functions defined within the body of another function.
+We&rsquo;ll try that.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="nc">MovePieceCommand</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Piece</span> <span class="n">Piece</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span>   <span class="n">X</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">int</span>   <span class="n">Y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="k">class</span> <span class="nc">Commands</span>
+<span class="p">{</span>
+    <span class="c1">// create a command to move a piece</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Action</span> <span class="nf">MovePiece</span><span class="p">(</span><span class="n">Piece</span> <span class="n">piece</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MovePieceCommand</span><span class="p">();</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Piece</span> <span class="p">=</span> <span class="n">piece</span><span class="p">;</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">X</span>     <span class="p">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">command</span><span class="p">.</span><span class="n">Y</span>     <span class="p">=</span> <span class="n">y</span><span class="p">;</span>
+
+        <span class="n">CommandDelegate</span> <span class="n">invoke</span> <span class="p">=</span> <span class="k">delegate</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">command</span><span class="p">.</span><span class="n">Piece</span><span class="p">.</span><span class="n">MoveTo</span><span class="p">(</span><span class="n">command</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">command</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+            <span class="p">};</span>
+
+        <span class="k">return</span> <span class="n">invoke</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now instead of an <code>Invoke()</code> <em>method</em> we have an anonymous function stored in
+a local <code>invoke</code> variable. But this local function isn&rsquo;t a method, so it
+doesn&rsquo;t have a <code>this</code> reference. How does it get access to the
+<code>MovePieceCommand</code> that stores the piece and location to move it to?</p>
+
+<p>Like a little magic trick, the body of the <code>invoke</code> delegate actually accesses
+the <code>MovePieceCommand</code> stored in <code>command</code>, a local variable defined <em>outside</em>
+of itself in <code>MovePiece</code>. <em>That&rsquo;s</em> a closure: a local function that references
+a variable defined outside of its scope.</p>
+
+<p>In C#, the compiler will make sure those closed over local variables get moved
+to the heap, so that our delegate still has access to them even after
+<code>MovePiece</code> has returned. It actually does this by building a little class
+like our old <code>MovePieceCommand</code> and turns the delegate we just made back into
+a method. The advantage is that the <em>compiler</em> writes the class for us. We
+don&rsquo;t have to. Call me lazy, but if there&rsquo;s anything I like, it&rsquo;s <em>doing
+less</em>.</p>
+
+<h2>Clean Up</h2>
+
+<p>By now it&rsquo;s clear <code>MovePieceCommand</code> isn&rsquo;t doing much. It&rsquo;s just a bag of
+data. If our anonymous delegate can access local variables outside its scope
+anyway, there&rsquo;s no reason to bundle them into an object. Let&rsquo;s kill it.</p>
+
+<p>To clean things up a bit more, we&rsquo;ll also define the delegate using C#&lsquo;s newer
+<a href="http://msdn.microsoft.com/en-us/library/bb397687.aspx">lambda syntax</a>. It does the exact same thing, but more tersely.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">static</span> <span class="k">class</span> <span class="nc">Commands</span>
+<span class="p">{</span>
+    <span class="c1">// create a command to move a piece</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Action</span> <span class="nf">MovePiece</span><span class="p">(</span><span class="n">Piece</span> <span class="n">piece</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">piece</span><span class="p">.</span><span class="n">MoveTo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>And just like that, our whole command pattern has become a single line of
+code.</p>
+
+<h2>Conclusion</h2>
+
+<p>There are plenty of cases where it&rsquo;s still useful to implement a full command
+pattern: maybe you need to be able to invoke the command in multiple ways, or
+undo it. However, for simple problems, I go for the simple solution. If you&rsquo;re
+working in a language with closures, it doesn&rsquo;t get simpler than this.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern//&amp;t=Closures and the Command Pattern" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern/&amp;text=%22Closures and the Command Pattern%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2009/07/02/closures-and-the-command-pattern/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      What the Hero Sees: Field-of-View for Roguelikes
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2015/09/07/what-the-hero-sees/" rel="bookmark"
+     title="Permanent Link to What the Hero Sees: Field-of-View for Roguelikes">
+    What the Hero Sees: Field-of-View for Roguelikes
+  </a>
+</h1>
+
+  <a class="older" href="/2015/02/01/what-color-is-your-function/"
+     title="Older Post &ldquo;What Color is Your Function?&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2015/09/08/the-hardest-program-ive-ever-written/"
+     title="Newer Post &ldquo;The Hardest Program I've Ever Written&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">September 07, 2015</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/game">game</a> <a href="/category/roguelike">roguelike</a></span>
+</h4>
+
+<style>
+canvas {
+  display: inline-block;
+  max-width: 100%;
+  cursor: crosshair;
+}
+</style>
+
+<p>This is a record for me. I&rsquo;ve been procrastinating this post for eight years. I
+moved four times, got married, had two kids, and ported my roguelike to <a href="https://www.dartlang.org/">a
+language</a> that didn&rsquo;t exist when I first wrote the code this post is
+about. You can thank Simon Andersson for prodding me to finally write it down.</p>
+
+<p>Every good game, or genre of games, has a pyramid of rewards. From simple
+pleasures that mete out a droplet of endorphins when you click the next button
+up to the deep, abiding feeling of accomplishment you get from slaying the final
+boss on nightmare mode.</p>
+
+<p>The roguelike genre standardizes many of these, and one of my favorites is the
+joy of <em>exploring the dungeon</em>. You start out on a black screen, only one tiny
+room visible. As you walk around, the map incrementally fills in&mdash;a perfect
+graphical representation of your own knowledge and mastery increasing.</p>
+
+<figure>
+  <canvas id="explore">Sorry, you need canvas support for this demo.</canvas>
+  <figcaption>Click and drag the hero to explore. Click walls and floors to
+  alter the dungeon.</figcaption>
+</figure>
+
+<p>There wouldn&rsquo;t be much to explore if your hero could see through walls. The
+second they entered the dungeon, the entire map would be filled in, all of the
+crypt&rsquo;s hidden secrets laid bare to warrior and player alike. To prevent that,
+we need to simulate something that seems trivial: <em>walls blocking the hero&rsquo;s
+view</em>.</p>
+
+<p>In the roguelike scene, this is referred to as <em>field of view</em>, and there are <a href="http://www.roguebasin.com/index.php?title=Field_of_Vision">a
+number of ways to do it</a>. Many of the posts linked there talk about &ldquo;light&rdquo;
+and &ldquo;shadow&rdquo; as well, but they calculate the same thing as visilibity. In both
+cases, we&rsquo;re trying to find the set of tiles that can be reached by rays
+emanating from some point source. I&rsquo;ll use both terms interchangeably.</p>
+
+<h2>Brute force line-of-sight?</h2>
+
+<p>The simplest solution is to repurpose your line-of-sight code. You already need
+code to determine if there is an open line from one point to another on the map.
+You use that to tell if things like arrows and fireballs reach their target or
+bounce harmlessly off the dungeon wall.</p>
+
+<p>This is invariably done using <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham&rsquo;s line algorithm</a>. It&rsquo;s one
+of the true classics of graphics programming&mdash;an elegant, simple algorithm
+from 1962 that&rsquo;s still useful today. (This kind of living connection to CS&rsquo;s
+past is one of the things I love about hacking on a roguelike. How often do you
+have a good reason to recode a procedure originally devised for a 1950s-era drum
+plotter?)</p>
+
+<p>As you&rsquo;d imagine for an algorithm designed to run on a machine that took punch
+cards, it&rsquo;s very efficient&hellip; for tracing a line between <em>two points</em>. But field
+of view is different: we need to scan the entire dungeon&mdash;or at least the
+part that fits on the player&rsquo;s screen&mdash;and calculate the visibility of
+<em>every</em> tile.</p>
+
+<p>You actually <em>can</em> run Bresenham a few thousand times whenever the hero moves on
+a modern machine, but doing that feels, well, like cheating somehow. Can we come
+up with something more efficient?</p>
+
+<p>The answer is, of course, &ldquo;yes&rdquo;. (It would be a short post if it wasn&rsquo;t.) And,
+in fact, a lot of others have already done so. But, one lazy sunny Saturday
+morning in 2006, I didn&rsquo;t see any I liked and wanted to come up with one that
+made more sense to me.</p>
+
+<h2>Pieces of eight</h2>
+
+<p>If you have the mind of a programmer, the first thing you do when presented with
+a problem is to break it into multiple (hopefully) smaller problems. Our goal is
+to calculate the entire field of view surrounding the hero, but we can slice
+that 360&deg; problem into 45&deg; pie pieces. One looks like this:</p>
+
+<figure>
+  <canvas id="octant">Sorry, you need canvas support for this demo.</canvas>
+  <figcaption>Click to paint a wedge.</figcaption>
+</figure>
+
+<p>This wedge is called an <a href="https://en.wikipedia.org/wiki/Octant_(plane_geometry)"><em>octant</em></a>, and it&rsquo;s common in 2D algorithms. We
+can paint every tile in that triangle like so:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">row</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">maxDistance</span><span class="p">;</span> <span class="n">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">col</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">col</span> <span class="o">&lt;=</span> <span class="n">row</span><span class="p">;</span> <span class="n">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="n">x</span> <span class="o">=</span> <span class="n">hero</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">col</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="n">y</span> <span class="o">=</span> <span class="n">hero</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">row</span><span class="p">;</span>
+
+    <span class="n">paint</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If we take that wedge and apply some transformations, we can cover the entire
+field around the hero. The above code is most of the way there. If you squint,
+you can see there are two coordinate systems. The <code>row</code> and <code>col</code> variables are
+in the octant&rsquo;s coordinate space. Meanwhile, <code>x</code> and <code>y</code> are in real tile
+space&mdash;what you see on screen.</p>
+
+<p>The first two lines inside the loops map octant space to tile space. Using just
+<code>+</code> and <code>-</code> and <code>row</code> and <code>col</code>, there are eight ways to calculate <code>x</code> and <code>y</code>.
+Each represents a reflection or 90&deg; rotation of the original octant. If we
+enumerate them all, we get:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="n">Vec</span> <span class="n">transformOctant</span><span class="p">(</span><span class="kt">int</span> <span class="n">row</span><span class="p">,</span> <span class="kt">int</span> <span class="n">col</span><span class="p">,</span> <span class="kt">int</span> <span class="n">octant</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">octant</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="m">0</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span> <span class="n">col</span><span class="p">,</span> <span class="o">-</span><span class="n">row</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">1</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span> <span class="n">row</span><span class="p">,</span> <span class="o">-</span><span class="n">col</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">2</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span> <span class="n">row</span><span class="p">,</span>  <span class="n">col</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">3</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span> <span class="n">col</span><span class="p">,</span>  <span class="n">row</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">4</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span><span class="o">-</span><span class="n">col</span><span class="p">,</span>  <span class="n">row</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">5</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span><span class="o">-</span><span class="n">row</span><span class="p">,</span>  <span class="n">col</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">6</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span><span class="o">-</span><span class="n">row</span><span class="p">,</span> <span class="o">-</span><span class="n">col</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">7</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="n">Vec</span><span class="p">(</span><span class="o">-</span><span class="n">col</span><span class="p">,</span> <span class="o">-</span><span class="n">row</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Each case represents a different octant, starting at the top and going clockwise
+around the circle. Painting them all covers the whole view (with a bit of
+innocuous overlap):</p>
+
+<figure>
+  <canvas id="octants">Sorry, you need canvas support for this demo.</canvas>
+  <figcaption>Click to paint the whole view.</figcaption>
+</figure>
+
+<p>From here on out, we only have deal with a single triangle&rsquo;s worth of <code>row</code> and
+<code>col</code>, and we can cover the entire field of view just by running the same code
+eight times, once for each octant.</p>
+
+<h2>A Line of Shadows</h2>
+
+<p>Another way to approach a problem is to negate it, and that&rsquo;s what this
+algorithm does. Instead of calculating which tiles are visible, it figures out
+which are hidden, which put it in a family of algorithms that do &ldquo;shadow
+casting&rdquo;. Before I explain it, try it out yourself:</p>
+
+<figure>
+  <canvas id="shadow-cast">Sorry, you need canvas support for this demo.</canvas>
+  <figcaption>Drag the slider up to advance the shadow line. Click anywhere
+  else to change the dungeon.</figcaption>
+</figure>
+
+<p>We start at the hero and work upwards one row at a time. As we sweep through the
+octant, we incrementally update a data structure called the <em>shadow line</em>. It&rsquo;s
+the white line you see next to the slider. It tracks which parts of the row are
+in the shade of opaque tiles on previous rows and which aren&rsquo;t.</p>
+
+<p>The line is a series of segments, each representing one obscured region of the
+line. We can define this like so:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="kd">class</span> <span class="nc">ShadowLine</span> <span class="p">{</span>
+  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Shadow</span><span class="o">&gt;</span> <span class="n">_shadows</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Shadow</span> <span class="p">{</span>
+  <span class="kt">num</span> <span class="n">start</span><span class="p">;</span>
+  <span class="kt">num</span> <span class="n">end</span><span class="p">;</span>
+
+  <span class="n">Shadow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">start</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="n">end</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The interesting question is, &ldquo;What is the <em>range</em> of <code>start</code> and <code>end</code>?&rdquo; The
+naïve answer is to use tile coordinates. If we&rsquo;re five rows in and the shadow
+line is five tiles long, the segment coordinates would range from 0 to 5.</p>
+
+<p>The problem is that since light expands outwards from a point, the shadows
+stretch out as they get farther away. We don&rsquo;t want to have to recalculate the
+segment positions each time we advance a row and the rays spread out.</p>
+
+<p>Instead, we store their <em>slopes</em>. Regardless of what row we&rsquo;re on, they always
+range from 0 (the short edge of the octant) to 1 (the diagonal edge). They are
+distance-independent. This is what the black line in the demo above shows. As
+you click to add and remove wall, you can see new shadows appear, but they don&rsquo;t
+move or grow as you sweep the row up and down.</p>
+
+<h2>Projecting a tile</h2>
+
+<p>The tricky part is calculating those slopes given some tile in the octant. There
+are a couple of corner cases to consider. Literally. A tile is a square, and the
+shadow it projects goes from one corner of the square to another.</p>
+
+<p>Given our canonical octant, we know the tile will be above and to the right of
+the hero. That means the projected shadow&rsquo;s extent will always be from the
+top-left corner of a tile to the bottom-right corner. The other two corners lie
+in the middle of the shadow. (This isn&rsquo;t strictly true if the tile is straight
+up from the hero, but we can safely ignore that.)</p>
+
+<p>What we need, then, is to calculate the slopes of those two corners of a tile.
+The math is a kind of fussy, but it&rsquo;s:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="c1">/// Creates a [Shadow] that corresponds to the projected</span>
+<span class="c1">/// silhouette of the tile at [row], [col].</span>
+<span class="n">Shadow</span> <span class="n">projectTile</span><span class="p">(</span><span class="kt">int</span> <span class="n">row</span><span class="p">,</span> <span class="kt">int</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="n">topLeft</span> <span class="o">=</span> <span class="n">col</span> <span class="o">/</span> <span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="m">2</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="n">bottomRight</span> <span class="o">=</span> <span class="p">(</span><span class="n">col</span> <span class="o">+</span> <span class="m">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="m">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="n">Shadow</span><span class="p">(</span><span class="n">topLeft</span><span class="p">,</span> <span class="n">bottomRight</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This function has two uses. The obvious one is that we call this for each opaque
+tile and add its result to the shadow line. But the projection comes into play
+before that too.</p>
+
+<p>You can think of the result of this function as the shadow that the tile casts
+<em>past</em> itself, but it also describes the projection from the hero <em>to</em> this
+tile. In other words, it describes which angles need to be unblocked for this
+tile to be visible.</p>
+
+<p>When we scan a row, we call <code>projectTile()</code> on every tile&mdash;transparent or
+opaque&mdash; and compare it to the existing shadow line. If the tile&rsquo;s
+projection is covered by the shadow line, we know it can&rsquo;t be seen. If it isn&rsquo;t,
+it can.</p>
+
+<p>An interesting edge case is tiles whose projection is <em>partially</em> covered by the
+shadow line. Different games take different approaches here. Mine is considered
+<em>permissive</em>: if you can see any part of a tile, it&rsquo;s visible. A tile&rsquo;s
+projection has to be totally covered by the shadow to be hidden. If you want
+something less permissive, this algorithm is easy to tweak.</p>
+
+<p>Let&rsquo;s code! First, we&rsquo;ll add a method to see if one shadow totally covers
+another:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="kd">class</span> <span class="nc">Shadow</span> <span class="p">{</span>
+  <span class="c1">/// Returns `true` if [other] is completely covered by this shadow.</span>
+  <span class="kt">bool</span> <span class="n">contains</span><span class="p">(</span><span class="n">Shadow</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="p">.</span><span class="n">start</span> <span class="o">&amp;&amp;</span> <span class="n">end</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="p">.</span><span class="n">end</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Then we use that to see if any shadow in the line covers the tile:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="kd">class</span> <span class="nc">ShadowLine</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">isInShadow</span><span class="p">(</span><span class="n">Shadow</span> <span class="n">projection</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">shadow</span> <span class="k">in</span> <span class="n">_shadows</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">shadow</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">projection</span><span class="p">))</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Using that, we can determine the visibility of every tile in a row. Given a
+ShadowLine in <code>line</code>, and a set of tiles in <code>tiles</code>, it&rsquo;s:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">col</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">col</span> <span class="o">&lt;=</span> <span class="n">row</span><span class="p">;</span> <span class="n">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">_projectTile</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">transformOctant</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">octant</span><span class="p">);</span>
+  <span class="n">tiles</span><span class="p">[</span><span class="n">pos</span><span class="p">].</span><span class="n">isVisible</span> <span class="o">=</span> <span class="o">!</span><span class="n">line</span><span class="p">.</span><span class="n">isInShadow</span><span class="p">(</span><span class="n">projection</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>Inky pools of shadows</h2>
+
+<p>We can calculate which tiles are obscured by the shadow line, but that isn&rsquo;t
+very useful since our shadow line is always empty right now. Let&rsquo;s fix that.</p>
+
+<p>As we trace the row, each time we hit an opaque tile, we add it to the shadow
+line. If the shadow line was a simple list of these little shadow segments, the
+list would get longer and longer. In a dense dungeon, the hero may be near
+hundreds of solid tiles. Having to walk through an increasingly long list of
+shadow segments to see if a tile is obscured would get slower and slower.</p>
+
+<p>Fortunately, I have a simple fix that makes the algorithm get <em>faster</em> as tiles
+occlude more of the view. <em>This</em> is the part where I think my algorithm is
+pretty cool, and it&rsquo;s why I&rsquo;m excited to share it with you.</p>
+
+<p>Often, when a new segment is added to the shadow line, it overlaps other
+shadows. When that happens, we <em>merge</em> it with the existing shadows. The end
+result is that the shadow line will have a single <code>Shadow</code> object for each
+<em>contiguous</em> range of obscured area.</p>
+
+<p>This does mean adding a new shadow to the line is more complex. There are a
+handful of cases:</p>
+
+<ol>
+<li><p><strong>The shadow is contained within an existing one.</strong> That means the new shadow
+doesn&rsquo;t cover any new territory, so we can discard it.</p></li>
+<li><p><strong>The shadow doesn&rsquo;t overlap any other ones.</strong> In this case, we insert it in
+sorted order between the segments that come before and after it.</p></li>
+<li><p><strong>The shadow overlaps another shadow on its starting edge.</strong> We take the
+previous shadow and grow it to encompass the new shadow&rsquo;s endpoint and
+discard the new one.</p></li>
+<li><p><strong>The shadow overlaps another shadow on its ending edge.</strong> Do the same thing,
+but in reverse: grow the following shadow to cover the new one.</p></li>
+<li><p><strong>The shadow overlaps shadows on <em>both</em> ends.</strong> This is the fun one. We take
+the previous shadow and extend it to cover the <em>next</em> shadow&rsquo;s endpoint. Then
+we discard both the new shadow and that next one.</p></li>
+</ol>
+
+<p>The first case doesn&rsquo;t change the list of shadows at all. In the second case,
+the list of shadows gets longer. In the next two, adding a new shadow doesn&rsquo;t
+grow the list, it just shifts an endpoint. The last case is the fun one: there,
+the list gets <em>shorter</em>.</p>
+
+<p>(Pop quiz! Why don&rsquo;t we have to worry about cases where a shadow overlaps more
+than two existing ones?)</p>
+
+<p>Here&rsquo;s the entire method to add a shadow to the line:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="kd">class</span> <span class="nc">ShadowLine</span> <span class="p">{</span>
+  <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="n">Shadow</span> <span class="n">shadow</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Figure out where to slot the new shadow in the list.</span>
+    <span class="kd">var</span> <span class="n">index</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">_shadows</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">index</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Stop when we hit the insertion point.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_shadows</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">start</span> <span class="o">&gt;=</span> <span class="n">shadow</span><span class="p">.</span><span class="n">start</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// The new shadow is going here. See if it overlaps the</span>
+    <span class="c1">// previous or next.</span>
+    <span class="kd">var</span> <span class="n">overlappingPrevious</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="o">&amp;&amp;</span> <span class="n">_shadows</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="m">1</span><span class="p">].</span><span class="n">end</span> <span class="o">&gt;</span> <span class="n">shadow</span><span class="p">.</span><span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">overlappingPrevious</span> <span class="o">=</span> <span class="n">_shadows</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="m">1</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="n">overlappingNext</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">_shadows</span><span class="p">.</span><span class="n">length</span> <span class="o">&amp;&amp;</span>
+        <span class="n">_shadows</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">start</span> <span class="o">&lt;</span> <span class="n">shadow</span><span class="p">.</span><span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">overlappingNext</span> <span class="o">=</span> <span class="n">_shadows</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Insert and unify with overlapping shadows.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">overlappingNext</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">overlappingPrevious</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Overlaps both, so unify one and delete the other.</span>
+        <span class="n">overlappingPrevious</span><span class="p">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">overlappingNext</span><span class="p">.</span><span class="n">end</span><span class="p">;</span>
+        <span class="n">_shadows</span><span class="p">.</span><span class="n">removeAt</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Overlaps the next one, so unify it with that.</span>
+        <span class="n">overlappingNext</span><span class="p">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">shadow</span><span class="p">.</span><span class="n">start</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">overlappingPrevious</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Overlaps the previous one, so unify it with that.</span>
+        <span class="n">overlappingPrevious</span><span class="p">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">shadow</span><span class="p">.</span><span class="n">end</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Does not overlap anything, so insert.</span>
+        <span class="n">_shadows</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">shadow</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>OK, so that&rsquo;s kind of hairy, but it&rsquo;s not deep magic, just a bunch of different
+cases to handle. Clever readers are probably wondering why we don&rsquo;t do a binary
+search to find the insertion point. The list is sorted after all. If you want to
+be super smart, go for it. In practice, I don&rsquo;t think it makes much of a
+difference. The maximum size of the list is small enough that a linear search
+may actually be faster.</p>
+
+<p>(Pop quiz two! What <em>is</em> the maximum size of the list? Show your work.)</p>
+
+<p>Very clever readers may have noticed we don&rsquo;t check for the first case, a
+completely contained shadow here. That&rsquo;s because we&rsquo;ve already done that check.
+Earlier, when we detect if this tile is visible, that also tells us if it&rsquo;s
+shadow is contained. If it is, we don&rsquo;t bother calling <code>add()</code>.</p>
+
+<p>There&rsquo;s another simple optimization we can do. If we get to the point where the
+shadow line is a single segment from 0 to 1&mdash;in other words, the whole line
+is in shadow&mdash;then we can skip all of the projection calculation, updating,
+etc. Every tile will be hidden after that. Here&rsquo;s how we detect that:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="kd">class</span> <span class="nc">ShadowLine</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="kd">get</span> <span class="n">isFullShadow</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">_shadows</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="m">1</span> <span class="o">&amp;&amp;</span>
+        <span class="n">_shadows</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">start</span> <span class="o">==</span> <span class="m">0</span> <span class="o">&amp;&amp;</span>
+        <span class="n">_shadows</span><span class="p">[</span><span class="m">0</span><span class="p">].</span><span class="n">end</span> <span class="o">==</span> <span class="m">1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>Putting it all together</h2>
+
+<p>OK, so we have code to:</p>
+
+<ol>
+<li><p>Walk over every octant.</p></li>
+<li><p>Walk every tile in an octant.</p></li>
+<li><p>Update the tile&rsquo;s visibility.</p></li>
+<li><p>Update the shadow line if the tile is opaque.</p></li>
+</ol>
+
+<p>Let&rsquo;s stitch the last few pieces together along with a dash of bounds checking.
+Building on top of what we have above, here&rsquo;s the top-level code to update the
+visibility of the whole dungeon:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span></span><span class="kt">void</span> <span class="n">refreshVisibility</span><span class="p">(</span><span class="n">Vec</span> <span class="n">hero</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">octant</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">octant</span> <span class="o">&lt;</span> <span class="m">8</span><span class="p">;</span> <span class="n">octant</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">refreshOctant</span><span class="p">(</span><span class="n">hero</span><span class="p">,</span> <span class="n">octant</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">refreshOctant</span><span class="p">(</span><span class="n">Vec</span> <span class="n">hero</span><span class="p">,</span> <span class="kt">int</span> <span class="n">octant</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="n">line</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShadowLine</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="n">fullShadow</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">row</span> <span class="o">=</span> <span class="m">1</span><span class="p">;;</span> <span class="n">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Stop once we go out of bounds.</span>
+    <span class="kd">var</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">hero</span> <span class="o">+</span> <span class="n">transformOctant</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">octant</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tiles</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span> <span class="k">break</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="n">col</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">col</span> <span class="o">&lt;=</span> <span class="n">row</span><span class="p">;</span> <span class="n">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">hero</span> <span class="o">+</span> <span class="n">transformOctant</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">octant</span><span class="p">);</span>
+
+      <span class="c1">// If we&#39;ve traversed out of bounds, bail on this row.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tiles</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span> <span class="k">break</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">fullShadow</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">tiles</span><span class="p">[</span><span class="n">pos</span><span class="p">].</span><span class="n">isVisible</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">projectTile</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">);</span>
+
+        <span class="c1">// Set the visibility of this tile.</span>
+        <span class="kd">var</span> <span class="n">visible</span> <span class="o">=</span> <span class="o">!</span><span class="n">line</span><span class="p">.</span><span class="n">isInShadow</span><span class="p">(</span><span class="n">projection</span><span class="p">);</span>
+        <span class="n">tiles</span><span class="p">[</span><span class="n">pos</span><span class="p">].</span><span class="n">isVisible</span> <span class="o">=</span> <span class="n">visible</span><span class="p">;</span>
+
+        <span class="c1">// Add any opaque tiles to the shadow map.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">visible</span> <span class="o">&amp;&amp;</span> <span class="n">tiles</span><span class="p">[</span><span class="n">pos</span><span class="p">].</span><span class="n">isWall</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">line</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">projection</span><span class="p">);</span>
+          <span class="n">fullShadow</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="n">isFullShadow</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>And there we have it. It runs very fast in wide open areas since there will be
+few shadow segments and the list is short. Likewise, it runs fast in closed
+areas since the shadow list will also be short&mdash;it will contain a small
+number of long segments. It performs the worst in &ldquo;spotty&rdquo; areas with lots of
+small trees or pillars, but even there, the performance is pretty solid.</p>
+
+<p>I&rsquo;d love to say I implemented a bunch of other algorithms and this one came out
+the winner, but honestly I was too lazy to that. I will say that this has never
+showed up as a hot spot when I&rsquo;ve profiled the game. That&rsquo;s good enough for me,
+and I hope this will be helpful for you too.</p>
+
+<p>If you want to see all of the code for these demos, it&rsquo;s <a href="https://github.com/munificent/fov">here</a>. Or, in
+the context of <a href="https://github.com/munificent/hauberk">my game</a> <a href="https://github.com/munificent/hauberk/blob/master/lib/src/engine/fov.dart">here</a>.</p>
+
+<script type="application/dart" src="/code/2015-09-07-what-the-hero-sees/main.dart"></script>
+
+<script src="/code/2015-09-07-what-the-hero-sees/packages/browser/dart.js"></script>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees//&amp;t=What the Hero Sees: Field-of-View for Roguelikes" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/&amp;text=%22What the Hero Sees: Field-of-View for Roguelikes%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

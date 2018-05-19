@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Class in the Front, Proto in the Back
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/08/01/class-in-the-front-proto-in-the-back" rel="bookmark"
+     title="Permanent Link to Class in the Front, Proto in the Back">
+    Class in the Front, Proto in the Back
+  </a>
+</h1>
+
+  <a class="older" href="/2010/07/24/killing-primitive-loops-and-conditionals"
+     title="Older Post &ldquo;Killing Primitive Loops and Conditionals&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/08/23/void-null-maybe-and-nothing"
+     title="Newer Post &ldquo;void, null, Maybe and nothing&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">August 01, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>Inspired by what I learned and saw at the <a href="http://emerginglangs.com/">Emerging Languages Camp</a>, I&rsquo;ve
+started working on <a href="http://bitbucket.org/munificent/magpie">Magpie</a> again. It&rsquo;s more or less been dormant while I
+figured out what kind of language I wanted it to be.</p>
+
+<p>One big change is that Magpie Redux is going to be object-oriented where the
+original Magpie was procedural. Magpie was an experiment to see if a
+procedural language can be as nice to use as an OOP one if you give it memory
+management and a decent type system. For my purposes, the answer was that it&rsquo;s
+not too bad, but objects are really nice to have.</p>
+
+<p>So I started working on a fresh Magpie interpreter in Java that&rsquo;s class-based
+and dynamically-typed. (As a nice bonus, Magpie going forward won&rsquo;t be as tied
+to the MS stack as <a href="http://bitbucket.org/munificent/magpie/src/tip/csharp/">the old C# one</a> is.) This post is about one
+implementation detail I think is kind of interesting: <em>even though
+Magpie-the-language is class-based, under the hood, the interpreter uses prototypes.</em></p>
+
+<h2>What&rsquo;s in a Class?</h2>
+
+<p>Before we get too far, let&rsquo;s make sure we&rsquo;re all talking about the same thing.
+In Magpie, all objects are instances of a class. The class determines what
+methods an object has. The pseudocode for invoking a method is:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">methodName</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+    <span class="n">class</span> <span class="o">=</span> <span class="n">obj.getClass</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">class.findMethod</span><span class="p">(</span><span class="n">methodName</span><span class="p">)</span>
+    <span class="n">method.invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Under the hood then, a class is a bag of methods, something like:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">ClassObj</span> <span class="o">{</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Method</span><span class="o">&gt;</span> <span class="n">methods</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>And an object is just a reference to its class (and some data, but we won&rsquo;t
+worry about that here):</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">Obj</span> <span class="o">{</span>
+    <span class="n">ClassObj</span> <span class="n">theClass</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>However, there are actually <em>two</em> kinds of methods. There are regular instance
+methods, like we&rsquo;ve seen and &ldquo;static&rdquo; or &ldquo;class&rdquo; methods that you invoke
+directly on the class. These include things like constructors (which are like
+Ruby&rsquo;s <a href="http://www.devx.com/enterprise/Article/30917/0/page/3">new</a> methods). For example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">foo</span> <span class="o">=</span> <span class="n">Foo.new</span>   <span class="c1">// call a class method on Foo</span>
+<span class="n">foo.toString</span>        <span class="c1">// call an instance method on a Foo</span>
+</code></pre></div>
+<p>So our class object really needs <em>two</em> dictionaries, one for class and one for
+instance methods:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">ClassObj</span> <span class="o">{</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Method</span><span class="o">&gt;</span> <span class="n">classMethods</span><span class="o">;</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Method</span><span class="o">&gt;</span> <span class="n">instanceMethods</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>It also ends up needing to duplicate the API for using them: separate methods
+for defining a method, looking one up, invoking one, etc. I <em><a href="http://en.wikipedia.org/wiki/DRY">hate</a></em> redundancy so this rubbed me the wrong way.</p>
+
+<h2>Split-aparts</h2>
+
+<p>Instead of having a single class object that does <em>two</em> things, I thought why
+not split that up into two separate objects? One represents the <em>class itself</em>
+and has the static or class methods like constructors. The other represents
+the set of methods you can call on an <em>instance</em> of the class.</p>
+
+<p>My <code>ClassObj</code> type disappeared, to just be:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">Obj</span> <span class="o">{</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Method</span><span class="o">&gt;</span> <span class="n">methods</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>The only missing piece was that an instance of some object needed to have a
+reference to the other object that contains its methods, like so:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">Obj</span> <span class="o">{</span>
+    <span class="n">Obj</span> <span class="n">parent</span><span class="o">;</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Method</span><span class="o">&gt;</span> <span class="n">methods</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Now our pseudo-code for invoking a method is:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">methodName</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+    <span class="n">thisObj</span> <span class="o">=</span> <span class="n">obj</span>
+    <span class="n">loop</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">thisObj.findMethod</span><span class="p">(</span><span class="n">methodName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">!=</span> <span class="n">null</span> <span class="k">then</span>
+            <span class="k">return</span> <span class="n">method.invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="k">end</span>
+        <span class="c1">// walk up the parent chain</span>
+        <span class="n">thisObj</span> <span class="o">=</span> <span class="n">obj.parent</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>You&rsquo;ll note that this pseudocode handles <em>both</em> instance and class methods.
+With instance methods, <code>obj</code> will be the class object itself (since classes
+are first-class objects) and it will find the method and immediately invoke
+it.</p>
+
+<p>With instance methods, the object&rsquo;s parent will be the special object that
+holds all of the instance methods. So we&rsquo;ll fail to find the method on the
+object itself, walk up to its parent, find it and be done.</p>
+
+<h2>Familiar?</h2>
+
+<p>This started to look pretty familiar. I had an object that represented a
+class, and another object that represented the methods all objects of that
+class have in common. There&rsquo;s a name for that second object: a <em>prototype</em>. In
+the name of getting rid of duplicate code, I basically stumbled backwards onto
+the same type system that Javascript and <a href="http://finch.stuffwithstuff.com/">Finch</a> use.</p>
+
+<p>The interesting part is that this is hidden completely from the user. Magpie
+code is still written using classes and instances. If you have this in Magpie:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Foo</span>
+    <span class="k">def</span> <span class="n">sayHi</span> <span class="p">()</span> <span class="n">print</span> <span class="s">&quot;hi&quot;</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="err">a</span> <span class="o">=</span> <span class="n">Foo.new</span>
+<span class="k">def</span> <span class="err">b</span> <span class="o">=</span> <span class="n">Foo.new</span>
+<span class="n">a.sayHi</span>
+<span class="n">b.sayHi</span>
+</code></pre></div>
+<p>At runtime, the interpreter will build this object hierarchy:</p>
+
+<p><img src="/image/2010/08/prototype-hierarchy.png" alt="Object hierarchy for a class Foo and two instances of it" title="Object Hierarchy"></p>
+
+<p>Every box represents an object and is of the same Java class in the
+interpreter (<code>Obj</code>). Objects <code>a</code> and <code>b</code> both have <code>Foo proto</code> as their
+parent, which is the prototype object holding the instance methods. The class
+methods like <code>new</code> are held in a separate object <code>Foo class</code> representing the
+class itself and bound to the variable <code>Foo</code>.</p>
+
+<p>The class and proto objects don&rsquo;t have each other as parents because they
+aren&rsquo;t directly related (i.e. there&rsquo;s no &ldquo;is-a&rdquo; relationship between them).
+Instead, the class stores a reference to the prototype in a &ldquo;proto&rdquo; field so
+that it can find it when it needs to create new instances. Conversely, the
+prototype stores a reference to the class so that it can find it when you ask
+an instance what its class is.</p>
+
+<p>Doing things this way let me simplify a lot of the underlying code while still
+having the convenience of classes at the user level. This is the best of both
+worlds: prototypes are easier for the language implementer to code and classes
+are easier for the user to use.</p>
+
+<p>Of course, I still have a ton of work to do before Magpie is anywhere near
+usable again and this may all be nullified by something I run into along the
+way, but so far it seems to be working.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/08/01/class-in-the-front-proto-in-the-back/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/08/01/class-in-the-front-proto-in-the-back/&amp;t=Class in the Front, Proto in the Back" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/08/01/class-in-the-front-proto-in-the-back&amp;text=%22Class in the Front, Proto in the Back%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/08/01/class-in-the-front-proto-in-the-back" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/08/01/class-in-the-front-proto-in-the-back" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/08/01/class-in-the-front-proto-in-the-back";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

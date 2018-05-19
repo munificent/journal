@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Bootstrapping a Type System
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/10/29/bootstrapping-a-type-system" rel="bookmark"
+     title="Permanent Link to Bootstrapping a Type System">
+    Bootstrapping a Type System
+  </a>
+</h1>
+
+  <a class="older" href="/2010/10/21/the-language-i-wish-go-was"
+     title="Older Post &ldquo;The Language I Wish Go Was&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/11/08/refining-exceptions-and-error-codes"
+     title="Newer Post &ldquo;Refining Exceptions and Error Codes&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">October 29, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>Magpie has reached a strange but neat little milestone on the road from &ldquo;weird
+experiment&rdquo; to &ldquo;real language&rdquo;: the type system is now bootstrapped. I&rsquo;m not
+aware of any other languages where a statement like that is even <em>meaningful</em>
+(maybe <a href="http://www.ccs.neu.edu/home/samth/typed-scheme/">Typed Scheme</a>?), much less <em>true</em>, so I&rsquo;ll try to break that down.</p>
+
+<p>Even if you&rsquo;re not interested in Magpie, my hope is that you can at least get
+a better picture of how type systems work in general from this. But, as a
+warning, this ventures into an echelon of programming language nerdery that
+few care to explore. I&rsquo;ll try not to be too boring, but no promises.</p>
+
+<h2>What is a Type?</h2>
+
+<p>&ldquo;Type&rdquo; like a lot of other simple words (&ldquo;object&rdquo; anybody?) ends up with a lot
+of fuzzy overlapping definitions in programming: classes, runtime types,
+prototypes, type objects. In dynamically-typed languages you&rsquo;ll hear &ldquo;values
+have type&rdquo; while others say those languages have no types.</p>
+
+<p>Magpie makes this distinction <em>very</em> blurry, but for our purposes what I care
+about is the static definition of a type: it&rsquo;s the stuff that the type-checker
+works with. For example, say you create a variable:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">i</span> <span class="o">=</span> <span class="mi">123</span>
+</code></pre></div>
+<p>The type-checker will track that <code>i</code> is an integer. It does so by associating an
+object&mdash; a <em>thing</em>&mdash; with that name. That object is a type. If you
+think of types as objects that the type-checker works with, that leads to the
+natural question, &ldquo;What operations on types do we need to support?&rdquo;</p>
+
+<p>For Magpie, there are two important ones:</p>
+
+<h3>Assignment Compatibility</h3>
+
+<p>The first operation is a test for assignment compatibility (i.e. the subtype
+relation). Put plainly, if we have a variable of type <code>A</code>, and we&rsquo;re trying to
+assign to it a value of type <code>B</code>, is that kosher? This sounds like it&rsquo;s
+limited to variables, but that core operation covers almost everything you
+need to do with a type. It&rsquo;s equivalent to asking, &ldquo;Is <code>B</code> a subtype of
+<code>A</code>?&rdquo; and covers things like, &ldquo;Can I pass an argument of type <code>A</code> to a
+function declared to expect type <code>B</code>?&rdquo;</p>
+
+<p>So, with this operation, we can track how types are related to each other, and
+make sure we don&rsquo;t pass or assign values of the wrong type.</p>
+
+<h3>Member Type</h3>
+
+<p>The other operation, which is a little more OOP-specific, is determining if a
+type has a member with a given name, and, if so, what its type is. This helps
+us ensure we aren&rsquo;t calling unsupported methods or accessing undefined fields
+on a class. For example, if we have a chunk of code like:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>list add(&quot;item&quot;)
+</code></pre></div>
+<p>The type-checker needs to get the type of the <code>list</code> variable and ask it what
+the type of its <code>add</code> member is. If the answer to that is nothing (i.e. it
+doesn&rsquo;t have that member) or not a function that accepts a string, then that
+method call is an error.</p>
+
+<h2>An Interface for Types</h2>
+
+<p>If you have an OOP mindset, you can look at those two operations as defining
+an interface. If you were implementing a type-checker in Java, you could
+define a type to be any class that implements:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">interface</span> <span class="nc">Type</span> <span class="o">{</span>
+    <span class="kt">boolean</span> <span class="nf">canAssignFrom</span><span class="o">(</span><span class="n">Type</span> <span class="n">other</span><span class="o">);</span>
+    <span class="n">Type</span> <span class="nf">getMemberType</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>The concrete classes that represented kinds of types (say &ldquo;Class&rdquo;,
+&ldquo;Interface&rdquo;, &ldquo;Array&rdquo;, etc.) would then implement that interface and you&rsquo;re
+good to go. Magpie does exactly that.</p>
+
+<h2>First-Class Types</h2>
+
+<p>It&rsquo;s just that <em>where</em> it does that is kind of unusual. In Magpie, all types
+are first-class, like Ruby or Python. For example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">monkey</span> <span class="o">=</span> <span class="n">Monkey</span> <span class="n">new</span><span class="p">(</span><span class="s">&quot;Bobo&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>In this code, <code>Monkey</code> is just a global variable whose value is an object
+representing the <code>Monkey</code> class. So classes are first-class objects.</p>
+
+<p>But there are <em>types</em> that are not <em>classes</em>. For example, &ldquo;array of ints&rdquo; is
+a type, but it&rsquo;s not a class. Magpie also has <a href="http://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/">ad-hoc unions</a>, so &ldquo;int or
+string&rdquo; is a type, but it&rsquo;s not a class.</p>
+
+<p>It would be perfectly valid for <em>classes</em> to be first-class, without having
+all types be first-class, except for one important thing: generics. Magpie has
+generics because I&rsquo;m firmly of the opinion that a type system without generics
+is about as useful as a language with functions but no parameters. Do you
+really want a language whose type system is as expressive as <code>GOSUB</code> in BASIC?</p>
+
+<p>Given generics, you should be able to instantiate them with any <em>type</em>, not
+just any <em>class</em>. That way, you can create things like &ldquo;collection of array of
+ints&rdquo;. It&rsquo;s also important for type arguments in generics to be <a href="http://stackoverflow.com/questions/557340/c-generic-list-t-how-to-get-the-type-of-t/557355#557355">reified</a>
+(unlike <a href="http://en.wikipedia.org/wiki/Generics_in_Java#Type_erasure">Java&rsquo;s short bus generics</a>). If you have a &ldquo;list of ints&rdquo; it
+should <em>know</em> that it&rsquo;s a list of ints and be able to act on that fact.</p>
+
+<p>Those last two points: that any type can be a type argument in a generic, and
+that type arguments should be reified means that all types really do need to
+be first-class objects in Magpie.</p>
+
+<h2>Piercing the Veil</h2>
+
+<p>So, going down this path, we find ourselves in a weird place. Over in the Java
+type-checking code, we have some <code>Type</code> interface and a bunch of classes that
+implement it. The type system is fully fleshed out in Java. Meanwhile, on the
+other side of the veil we have these first-class objects in Magpie that also
+fully implement the type system.</p>
+
+<p>That&rsquo;s redundant, kind of ugly, and hard to manage. To get rid of that
+redundancy, we&rsquo;ll kill one side. Which one? We know we need types to be first-
+class in Magpie, so that really only leaves one option: yank the type system
+out of Java.</p>
+
+<h2>What A Type-Checker Does</h2>
+
+<p>A type-checker is actually a pretty simple piece of software. It basically
+walks through a chunk of code tracking the types of the operations and
+checking them for validity. For example, consider:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>print((1 + 2) string)
+</code></pre></div>
+<p>The parser converts that into an <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</a>, a little tree like:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>(print)
+   |
+(string)
+   |
+  (+)
+  / \
+(1) (2)
+</code></pre></div>
+<p>The type-checker walks that tree from the bottom to top. Something like this:</p>
+
+<ol>
+<li><p>Get the type of <code>1</code> (<code>Int</code>).</p></li>
+<li><p>Get the type of <code>2</code> (<code>Int</code>).</p></li>
+<li><p>Look up the type of <code>+</code> on the receiver&rsquo;s type (<code>Int</code>, from <em>1</em>).</p></li>
+<li><p>See if the parameter type for <code>+</code> (<code>Int</code>, from the declaration of <code>+</code>) matches the argument type (<code>Int</code>, from <em>2</em>). (It does.)</p></li>
+<li><p>Get the return type of that method (<code>Int</code>).</p></li>
+<li><p>Look up the type of <code>string</code> on the receiver&rsquo;s type (<code>Int</code>, from <em>5</em>).</p></li>
+<li><p>Get the return type of that method (<code>String</code>).</p></li>
+<li><p>Look up the type of <code>print</code>.</p></li>
+<li><p>See if the parameter type for <code>print</code> (<code>String</code>, from its declaration) matches the argument type (<code>String</code>, from <em>7</em>). (It does.)</p></li>
+</ol>
+
+<p>And we&rsquo;re done. Steps 3 6, and 8 are where we do <code>getMemberType</code>. Steps 4 and
+9 and where we use <code>canAssignFrom</code>. Nothing too crazy. In Magpie, this is
+basically <a href="http://bitbucket.org/munificent/magpie/src/tip/src/com/stuffwithstuff/magpie/interpreter/ExprChecker.java">one file</a>.</p>
+
+<h2>Re-piercing the Veil</h2>
+
+<p>Here&rsquo;s where it gets weird. We need to get this working with first-class
+types. That means that <code>getMemberType</code> and <code>canAssignFrom</code> will be methods
+written in Magpie.</p>
+
+<p>To do this, the type-checker will do something unusual. In the middle of
+<em>statically</em> checking a chunk of code, it will periodically switch to
+<em>dynamically</em> evaluating some Magpie code. Whenever it needs to compare two
+types or look up a method, it will hand off to the interpreter which will call
+the appropriate method and and pass the result back to the type-checker.</p>
+
+<p>This is slightly less crazy than it seems because the code being dynamically
+evaluated (methods on the type objects) is generally not the code being type-
+checked (any random piece of Magpie code like <code>1 + 2</code>). Keeping track of which
+context the interpreter is in is a little bit confusing, but it works.</p>
+
+<h2>Bootstrapping</h2>
+
+<p>Magpie has worked this way successfully for several months. This is possible
+because at its core, Magpie is dynamic: it can execute a chunk of Magpie code
+without having done any compilation or type-checking on it. So I could write
+the classes that defined the type system in Magpie without using any type
+annotations and they&rsquo;d run happily along like any dynamic language.</p>
+
+<p>It worked that way, with the type system itself being dynamically-typed until
+I had enough type system features in place to actually be able to express all
+of the types I needed.</p>
+
+<p>In the last week or so, I finally reached that point. The most important part
+was interfaces. I needed the ability to define an interface for <code>Type</code> that
+the different type classes (<code>ArrayType</code>, <code>Class</code>, <code>Tuple</code>, etc.) could
+implement. Interface types are defined entirely within Magpie, there isn&rsquo;t a
+single line of Java code related to them.</p>
+
+<p>Once I had that working, I could use that to define a <code>Type</code> interface (an
+instance of the Magpie class <code>Interface</code>). Then I could turn around and use
+that type to annotate the types of the different methods that the type system
+requires. Where before, methods like <code>canAssignFrom(other)</code> were dynamically
+typed, now I could do <code>canAssignFrom(other Type)</code>.</p>
+
+<p>The end result was, by far, the most mind-crushingly meta thing I&rsquo;ve ever had
+to wade through. Behold:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>interface Type
+    canAssignFrom(other Type -&gt; Bool)
+    getMemberType(name String -&gt; Type | Nothing)
+    // some other stuff...
+end
+</code></pre></div>
+<p>That chunk of Magpie code defines an interface <code>Type</code> that the type classes in
+Magpie must implement. You&rsquo;ll note that it&rsquo;s recursive: most of its methods
+take arguments of type <code>Type</code>.</p>
+
+<p>Every class that defines a type in Magpie implements that. Interfaces are a
+type, so <a href="http://bitbucket.org/munificent/magpie/src/8865c82a958d/base/Interface.mag"><code>Interface</code></a> implements it, of course:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Interface</span>
+    <span class="n">canAssignFrom</span><span class="p">(</span><span class="n">other</span> <span class="n">Type</span> <span class="o">-&gt;</span> <span class="n">Bool</span><span class="p">)</span>
+        <span class="c1">// Check that other type has every member of this one.</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="o">=</span> <span class="n">members</span> <span class="k">do</span>
+            <span class="k">var</span> <span class="n">type</span> <span class="o">=</span> <span class="n">member</span> <span class="n">memberType</span><span class="p">()</span>
+            <span class="n">let</span> <span class="n">otherMem</span> <span class="o">=</span> <span class="n">other</span> <span class="n">getMemberType</span><span class="p">(</span><span class="n">member</span> <span class="n">name</span><span class="p">)</span> <span class="k">then</span>
+                <span class="c1">// Must be assignable.</span>
+                <span class="k">if</span> <span class="n">type</span> <span class="n">canAssignFrom</span><span class="p">(</span><span class="n">otherMem</span><span class="p">)</span> <span class="k">not</span> <span class="k">then</span>
+                    <span class="k">return</span> <span class="k">false</span>
+                <span class="k">end</span>
+            <span class="k">else</span> <span class="k">return</span> <span class="k">false</span> <span class="c1">// Must have members</span>
+        <span class="k">end</span>
+
+        <span class="c1">// If we got here, every method was found and matched.</span>
+        <span class="k">true</span>
+    <span class="k">end</span>
+
+    <span class="n">getMemberType</span><span class="p">(</span><span class="n">name</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">Type</span> <span class="o">|</span> <span class="n">Nothing</span><span class="p">)</span>
+        <span class="n">let</span> <span class="n">member</span> <span class="o">=</span> <span class="n">members</span> <span class="n">first</span><span class="p">(</span>
+            <span class="k">fn</span> <span class="p">(</span><span class="err">m</span> <span class="n">Member</span> <span class="o">-&gt;</span> <span class="n">Bool</span><span class="p">)</span> <span class="err">m</span> <span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">)</span> <span class="k">then</span>
+            <span class="n">member</span> <span class="n">memberType</span><span class="p">()</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="c1">// other stuff...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>So we have a Magpie class, <code>Interface</code> that implements an interface, <code>Type</code>,
+that is in turn an instance of that same <code>Interface</code> class.</p>
+
+<p>Now that all of the methods in the classes defining the type system have type
+annotations, this means the type-checker will check them too. So when a Magpie
+program is type-checked, it will also type-check the type system itself.</p>
+
+<h2>A Side-Effect: One Less Language</h2>
+
+<p>With all types being actual live Magpie objects, that raises an odd question:
+&ldquo;What is a type annotation?&rdquo; In most languages, there are actually two
+languages mixed together: the language of expressions and the language of
+types. So, in Java, there are value expressions like <code>1 + 2</code> but also type
+expressions like <code>List&lt;Int&gt;</code>, and these are two totally separate languages.</p>
+
+<p>But in Magpie, even type expressions need to yield Magpie objects, so there is
+no meaningful distinction between expressions and type annotations. Type
+annotations are just regular Magpie expressions, evaluated dynamically during
+type-checking. If you have a function like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">parseNumber</span><span class="p">(</span><span class="n">value</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">Int</span> <span class="o">|</span> <span class="n">Nothing</span><span class="p">)</span>
+    <span class="c1">// ...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>That <code>String</code> is just a regular Magpie expression, as is <code>Int | Nothing</code>. In
+the case of the latter, <code>|</code> is just an operator on the <code>Class</code> class.</p>
+
+<p>This means that not only is Magpie&rsquo;s type system extensible, even its type
+<em>annotations</em> are. If you wanted to, you could define new operators or
+functions and use them in type annotations:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">what</span><span class="p">(</span><span class="n">arg</span> <span class="n">doSomething</span><span class="p">(</span><span class="n">Very</span> <span class="o">*</span> <span class="n">Strange</span><span class="p">))</span>
+</code></pre></div>
+<p>I honestly don&rsquo;t know if that&rsquo;s a useful feature, but I do like the idea of
+not having the type system welded into the language. If you like prototypes,
+or algebraic data types, wouldn&rsquo;t it be nice if you could add them to the
+language yourself? Or maybe that&rsquo;s just crazy talk.</p>
+
+<h2>Why?</h2>
+
+<p>You may be asking why the hell I went so far down the rabbit hole here. I
+didn&rsquo;t intend to, honest. I really don&rsquo;t want Magpie to be some weird esoteric
+language. All I wanted was:</p>
+
+<ol>
+<li><p>The ability to imperatively modify classes like you can in Python and Ruby.</p></li>
+<li><p>Static type-checking (after that imperative modification has happened).</p></li>
+</ol>
+
+<p>This just seemed like the most straight-forward way to pull that off, but if
+you got any better ideas, I&rsquo;m all ears.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system/&amp;t=Bootstrapping a Type System" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system&amp;text=%22Bootstrapping a Type System%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

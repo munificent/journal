@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      C# Extension Methods: Not Just for Breakfast
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2008/02/09/c-extension-methods-not-just-for-breakfast" rel="bookmark"
+     title="Permanent Link to C# Extension Methods: Not Just for Breakfast">
+    C# Extension Methods: Not Just for Breakfast
+  </a>
+</h1>
+
+
+  <a class="newer" href="/2008/02/26/avoiding-overload-hell-in-c"
+     title="Newer Post &ldquo;Avoiding Overload Hell in C#&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">February 09, 2008</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a></span>
+</h4>
+
+<p>When I first started reading about C# 3.0, one of the new features that caught
+my eye was extension methods. I really like <code>foo.Bar()</code> syntax because with
+auto-complete it helps users find out what methods are available for a class.
+With extension methods, I could add new behavior to other classes and still
+keep that calling convention. Yay.</p>
+
+<p>But after thinking about it for a while, I realized there&rsquo;s some interesting
+capabilities that this simple feature provides. While at one level, extension
+methods are just <a href="http://weblog.raganwald.com/2007/04/writing-programs-for-people-to-read.html">syntactic sugar</a>, I think they open up the possibility
+for some deeper architecture implications.</p>
+
+<h2>The Normal Thing</h2>
+
+<p>Before I go off the deep end, let&rsquo;s make sure we&rsquo;re all together. Here&rsquo;s the
+canonical use case for extension methods. Let&rsquo;s say you have some class
+created by an external developer (read &ldquo;Microsoft&rdquo;). We&rsquo;ll pick String because
+<a href="http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx">everyone</a> <a href="http://www.developer.com/net/csharp/article.php/3592216">else</a> <a href="http://msdn2.microsoft.com/en-us/library/bb383977.aspx">does</a>. Let&rsquo;s say you want a method to tell if a
+string contains only letters. Here&rsquo;s how you&rsquo;d normally do it:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">StringUtils</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsAlpha</span><span class="p">(</span><span class="kt">string</span> <span class="n">text</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">char</span> <span class="n">c</span> <span class="k">in</span> <span class="n">text</span><span class="p">.</span><span class="n">ToLower</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">Char</span><span class="p">.</span><span class="n">IsLetter</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That works, but the calling convention is kind of lame:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="kt">bool</span> <span class="n">isAlpha</span> <span class="p">=</span> <span class="n">StringUtils</span><span class="p">.</span><span class="n">IsAlpha</span><span class="p">(</span><span class="n">someString</span><span class="p">);</span>
+</code></pre></div>
+<p>Not only is it backwards from normal &ldquo;noun.verb&rdquo; OOP syntax, it&rsquo;s got this
+useless &ldquo;<code>StringUtils</code>&rdquo; in there. Worse, your users have to <em>know</em> that
+<code>StringUtils</code> even exists before they can find the method. <code>IsAlpha</code> is no
+longer an easily discoverable property of all strings. So here&rsquo;s the fancy C#
+3.0 way using an extension method:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">StringUtils</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">IsAlpha</span><span class="p">(</span><span class="k">this</span> <span class="kt">string</span> <span class="n">text</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">string</span> <span class="n">letters</span> <span class="p">=</span> <span class="s">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span><span class="p">;</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">char</span> <span class="n">c</span> <span class="k">in</span> <span class="n">text</span><span class="p">.</span><span class="n">ToLower</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">letters</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Not much different right? Just add a little <code>this</code> in the declaration. The
+difference is in the calling convention:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="kt">bool</span> <span class="n">isAlpha</span> <span class="p">=</span> <span class="n">someString</span><span class="p">.</span><span class="n">IsAlpha</span><span class="p">();</span>
+</code></pre></div>
+<p>Much better. So this is about as far as I think most people get with them.
+&ldquo;Extension method&rdquo; = &ldquo;friendlier calling convention.&rdquo; Now let&rsquo;s see if there
+are any other rabbits we can pull out of this hat.</p>
+
+<h2>Reuse Methods Without Inheritance</h2>
+
+<p>Ever wish you could reuse a method across five different classes that don&rsquo;t
+share a base class? In most cases, that usually means some seriously extensive
+refactoring. In many cases, it isn&rsquo;t even <em>possible</em> with single inheritance.
+Maybe your classes already have distinct base classes for good reasons.</p>
+
+<p>Here&rsquo;s what I&rsquo;m talkin&rsquo; about. Let&rsquo;s say you&rsquo;re writing a game and you&rsquo;ve got
+something like this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">IPosition</span>
+<span class="p">{</span>
+    <span class="kt">float</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">float</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Monster</span> <span class="p">:</span> <span class="n">Actor</span><span class="p">,</span> <span class="n">IPosition</span> <span class="p">{</span> <span class="cm">/* implementation... */</span> <span class="p">}</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Treasure</span><span class="p">:</span> <span class="n">Item</span><span class="p">,</span> <span class="n">IPosition</span> <span class="p">{</span> <span class="cm">/* implementation... */</span> <span class="p">}</span>
+</code></pre></div>
+<p>Often, you want to look through a collection of these to find the first one at
+a given position.</p>
+
+<p>The normal solution is to just derive your own collection and implement it
+there:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">MonsterCollection</span> <span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Monster</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Monster</span> <span class="nf">GetAt</span><span class="p">(</span><span class="n">IPosition</span> <span class="n">pos</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The problem is you&rsquo;ve now got to derive a new collection for every class with
+a position and copy <code>GetAt()</code> in every one. Sure you could do an abstract
+collection for a collection of things with positions but that doesn&rsquo;t cover
+different <em>kinds</em> of collections. What if you need lists and queues and stacks
+of monsters?</p>
+
+<p>Extension methods to the rescue! You can define extension methods <em>on
+interfaces</em>. In fact, you can even define them on <em>generic</em> interfaces. Like
+<code>IEnumerable&lt;T&gt;</code>. Ooh!</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">IPositionExtensions</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">T</span> <span class="n">GetAt</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">col</span><span class="p">,</span>
+        <span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">)</span> <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="n">IPosition</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">T</span> <span class="n">item</span> <span class="k">in</span> <span class="n">col</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">item</span><span class="p">.</span><span class="n">X</span> <span class="p">==</span> <span class="n">x</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">Y</span> <span class="p">==</span> <span class="n">y</span><span class="p">))</span> <span class="k">return</span> <span class="n">item</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nf">default</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now you can do:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">List</span><span class="p">&lt;</span><span class="n">Monster</span><span class="p">&gt;</span> <span class="n">monsters</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Monster</span><span class="p">&gt;();</span>
+<span class="n">monsters</span><span class="p">.</span><span class="n">GetAt</span><span class="p">(</span><span class="m">1.0f</span><span class="p">,</span> <span class="m">2.0f</span><span class="p">);</span>
+</code></pre></div>
+<p>Along with:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Stack</span><span class="p">&lt;</span><span class="n">Treasure</span><span class="p">&gt;</span> <span class="n">treasures</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="p">&lt;</span><span class="n">Treasure</span><span class="p">&gt;();</span>
+<span class="n">treasures</span><span class="p">.</span><span class="n">GetAt</span><span class="p">(</span><span class="m">1.0f</span><span class="p">,</span> <span class="m">2.0f</span><span class="p">);</span>
+</code></pre></div>
+<p>Heck, even:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Monster</span><span class="p">&gt;</span> <span class="n">monsters</span> <span class="p">=</span>
+    <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Monster</span><span class="p">&gt;();</span>
+<span class="n">monsters</span><span class="p">.</span><span class="n">Values</span><span class="p">.</span><span class="n">GetAt</span><span class="p">(</span><span class="m">1.0f</span><span class="p">,</span> <span class="m">2.0f</span><span class="p">);</span>
+</code></pre></div>
+<p>This means <strong>you can define methods that say, &ldquo;if this class provides this
+capability, then it also has this capability&rdquo;</strong>. Whoawesome!</p>
+
+<h2>Make Scott Meyers Happy</h2>
+
+<p>One of the guidelines in <a href="http://www.aristeia.com/">long-haired viking Scott Meyers&rsquo;</a> legendary tome
+<a href="http://www.amazon.com/dp/0201924889">Effective C++</a> is &ldquo;<a href="http://www.aristeia.com/effective-c++_frames.html">prefer non-friend non-member functions to member
+functions</a>&rdquo;. You could translate that in C# to, &ldquo;prefer static methods of
+a helper class to instance methods&rdquo;.</p>
+
+<p>His reasoning is sound. Most people agree that the more you can hide
+information (i.e. prevent access to private members), the stronger and less
+coupled your code. His guideline just extends that to methods of a class: If
+you can implement a method just using other public methods of a class, why
+give it access to the private members at all? Why not decouple even parts of
+the class from itself?</p>
+
+<p>At the concept level, it&rsquo;s good advice, until you run into some issues:</p>
+
+<ol>
+<li><p>You&rsquo;ve just <strong>changed the user&rsquo;s calling convention because of an implementation detail</strong>. The fact that you can implement a method just using the public interface of the class is a facet of its <em>implementation</em>, just the kind of detail that encapsulation is supposed to <em>hide</em>. But now the user is forced to deal with that distinction because sometimes they call (in C#):</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">foo</span><span class="p">.</span><span class="n">Bar</span><span class="p">();</span> <span class="c1">// needs access to private members</span>
+</code></pre></div>
+<p>and sometimes it&rsquo;s:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">FooHelper</span><span class="p">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">foo</span><span class="p">);</span> <span class="c1">// doesn&#39;t need access to private members</span>
+</code></pre></div></li>
+<li><p>You also <strong>threw away discoverability</strong>. Users expect to find the capabilities of an object through the instance methods of that object. You can save a lot of time reading MSDN by just typing <code>foo.</code> and seeing what it lets you do. Shunting stuff over in a separate class means users need to know about it and seek it out.</p></li>
+<li><p>Also, you just <strong>pitched out some extensibility</strong>. The fact that you can implement a method as a non-instance <em>now</em> doesn&rsquo;t mean you <em>always will</em> be able to. If you decide that <code>FooHelper.Bar()</code> really does need to use that private cache inside <code>Foo</code> for performance: too bad. You either have to make your helper class a friend (kinda defeats the purpose) or worse: force all of your users to change their code.</p></li>
+</ol>
+
+<p>By now, you&rsquo;ve probably noticed that extension methods neatly address all of
+those issues, while still providing the same benefits. Simply change
+<code>FooHelper.Bar(foo)</code> to an extension method. Now the calling convention is the
+same as an instance method (point #1), the IDE will show it in auto-complete
+(#2), and since the calling convention is the same, you could move <code>Bar()</code>
+from <code>FooHelper</code> into <code>Foo</code> later if you needed without having to change any
+calling code (#3). Score!</p>
+
+<h2>Separate Your Concerns</h2>
+
+<p>So while the points above were running through my head in a kind of &ldquo;Oh,
+here&rsquo;s an interesting abstract programming thing&rdquo; way, I was dealing with a
+much more tangible real problem with some projects I was working on:
+separating back-end code from UI code. (Or <a href="http://en.wikipedia.org/wiki/Model-view-controller">MVC</a>, or &ldquo;<a href="http://en.wikipedia.org/wiki/Separation_of_presentation_and_content">separating
+presentation and content</a>&rdquo;, or &ldquo;<a href="http://en.wikipedia.org/wiki/Separation_of_concerns">separation of concerns</a>&rdquo;, or whatever
+buzzphrase you prefer.) Any engineer worth their <a href="http://en.wikipedia.org/wiki/Salt_%28cryptography%29">salt</a> gets this concept.
+Smearing UI logic, or printing, or serialization, or <em>whatever</em> throughout the
+rest of your code is dumb.</p>
+
+<p>For example, let&rsquo;s say we have a monster. (Who wouldn&rsquo;t want a pet monster?)</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">namespace</span> <span class="nn">Engine</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Monster</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">float</span> <span class="n">X</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">float</span> <span class="n">Y</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Type</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">ProcessAI</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="c1">// stuff...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This class defines what a monster <em>is</em> in the abstract data sense. We want to
+isolate it from anything specific to UI or rendering because while <em>right now</em>
+the UI is kicking <a href="http://www.rephial.org">old school</a> <a href="http://angband.oook.cz/screen-show.php?id=1358">ASCII</a>, it may get graphics in the
+future. That change shouldn&rsquo;t affect the engine one bit.</p>
+
+<p>But our uber-modern ASCII UI needs to know what character to use to draw a
+given monster. Ideally:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">Draw</span><span class="p">(</span><span class="n">Monster</span> <span class="n">monster</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">monster</span><span class="p">.</span><span class="n">Character</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>So we can solve this like this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">namespace</span> <span class="nn">UI</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">MonsterExtensions</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">char</span> <span class="nf">GetCharacter</span><span class="p">(</span><span class="k">this</span> <span class="n">Monster</span> <span class="n">monster</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="s">&quot;orc&quot;</span><span class="p">)</span> <span class="k">return</span> <span class="sc">&#39;o&#39;</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="s">&quot;kobold&quot;</span><span class="p">)</span> <span class="k">return</span> <span class="sc">&#39;k&#39;</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="s">&quot;dragon&quot;</span><span class="p">)</span> <span class="k">return</span> <span class="sc">&#39;d&#39;</span><span class="p">;</span>
+            <span class="k">return</span> <span class="sc">&#39;?&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now code that is using the UI namespace sees <code>GetCharacter()</code> as an intrinsic
+capability of monsters, but code that only uses the engine doesn&rsquo;t. And since
+we can define <code>GetCharacter()</code> in a separate assembly, we can <em>totally</em>
+separate it from the engine even while keeping the usability of having it
+<em>seem</em> to be part of <code>Monster</code>.</p>
+
+<p>You can apply this to almost all of the concerns of a class, provided the
+concern doesn&rsquo;t require it&rsquo;s own data. If you take this is far as you can, you
+end up with a core class whose job is to hold state and ensure that it&rsquo;s
+internally consistent. Then the various capabilities of the object: display,
+serialization, printing, etc. can be implemented as distinct sets of extension
+methods on it, defined in separate assemblies.</p>
+
+<h2>Limitations</h2>
+
+<p>I&rsquo;m pretty excited about extension methods, but they aren&rsquo;t without their
+limitations. The two big ones are that C# doesn&rsquo;t support extension properties
+(boo), and that obviously extension methods can&rsquo;t add fields to a class. But
+if all you&rsquo;re trying to do is add new behavior I think extension methods are a
+cool way to do it while keeping things as decoupled as possible.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast/&amp;t=C# Extension Methods: Not Just for Breakfast" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast&amp;text=%22C# Extension Methods: Not Just for Breakfast%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Outsourced Blog Comments
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2008/11/28/outsourced-blog-comments" rel="bookmark"
+     title="Permanent Link to Outsourced Blog Comments">
+    Outsourced Blog Comments
+  </a>
+</h1>
+
+  <a class="older" href="/2008/11/23/constrained-compound-design-pattern"
+     title="Older Post &ldquo;"Constrained Compound" Design Pattern&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2008/12/28/fixing-ambiguities-in-yacc"
+     title="Newer Post &ldquo;Fixing Ambiguities in Grammars&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">November 28, 2008</a>
+    <span class="tags"><a href="/category/blog">blog</a> <a href="/category/code">code</a></span>
+</h4>
+
+<div class="update">
+<p><em>Update 2011/08/16:</em> This post is about an older version of the blog. I used to use WordPress and redesigned the template a while back.
+</p>
+</div>
+
+<p>I just finished redoing the template for this here blog thing, and the most
+significant change is that there are no longer comments on it.</p>
+
+<p>I reached this decision starting from a simple engineering observation: a good
+piece of software does <a href="http://en.wikiquote.org/wiki/Antoine_de_Saint_Exup%C3%A9ry" title="Perfection is attained, not when no more can be added, but when no more can be removed.">few things</a> and does them well. It shouldn&rsquo;t re-
+invent things, and it certainly shouldn&rsquo;t re-invent things <em>poorly</em>. Looking
+at it like that, it&rsquo;s obvious that the core feature of the blog is my text
+(whether that feature <em>sucks</em> or not I&rsquo;ll leave up to you). The comment engine
+is peripheral, and, frankly, not very well done. There&rsquo;s no threading, up
+/down-voting, user information, good formatting, etc. It&rsquo;s pretty lame.</p>
+
+<p>So I figured it would be better to re-use an existing comment system.
+<a href="http://www.reddit.com/">Reddit</a> is <a href="http://code.reddit.com/">open source</a> so I could, in theory, use that. But
+thinking about it a bit more, the obvious problem is that the best feature of
+reddit (and <a href="http://digg.com/">digg</a>&lsquo;s, <a href="http://www.dzone.com">dzone</a>&rsquo;s, etc.) comment systems isn&rsquo;t the
+<em>code</em>, it&rsquo;s the <em>people</em>. So the solution is simple: take comments off my
+blog and just direct people to comment on one of those sites. Odds are good
+that they&rsquo;re already a member of one or more of them anyway so there&rsquo;s isn&rsquo;t a
+lot of hassle there.</p>
+
+<h2>Downsides</h2>
+
+<p>One of the obvious downsides is that conversation about what I write is no
+longer on my territory. I lose the ability to moderate them or decide how long
+they&rsquo;re online. If reddit kills the thread for one of my posts there&rsquo;s nothing
+I can do about it. If some guy on digg thinks I&rsquo;m an ass, I&rsquo;m powerless to
+silence him.</p>
+
+<p>If I cared about traffic or &ldquo;stickiness&rdquo; or something it might also bother me
+that people will no longer come to <em>my</em> site to see further comments. They&rsquo;ll
+go to reddit, or digg, or wherever.</p>
+
+<p>But I don&rsquo;t care about any of those. Honestly, traffic to my server is a net
+negative. Bandwidth costs me money. What motivates me is writing, and having
+people read it and discuss it. Deleting spam comments is not how I get my
+rocks off.</p>
+
+<h2>Upside</h2>
+
+<p>From that perspective, offloading comments makes a lot of sense. My little
+<a href="http://wordpress.org/">Wordpress</a> blog can&rsquo;t hope to provide a comment UI anywhere near as good
+as most news aggregators out there. Every time I saw someone posting a comment
+with code on my blog followed by another comment apologizing for the way
+WordPress ate its formatting, I cringed. Now I don&rsquo;t have that problem: reddit
+has <a href="http://daringfireball.net/projects/markdown/">markdown</a>.</p>
+
+<p>Likewise, I don&rsquo;t have to moderate comments anymore. News aggregators are
+centered almost precisely on that problem and they do it far better than I
+can.</p>
+
+<p>More importantly, they provide a better community for discussing my writing
+than I can. It&rsquo;s a bit odd, but more people will comment about a blog post of
+mine on another site than they will on the post itself. The logic is obvious.
+You don&rsquo;t get reddit karma for commenting on my blog <em>on my blog</em> but you do
+if you comment on it on reddit. Since commenting on another site is clearly
+better, I may as well make it the <em>only</em> choice.</p>
+
+<h2>The Real Downside</h2>
+
+<p>There is one very real bad part about the change, though. If you&rsquo;ve been kind
+enough to comment on my blog before, your comment is no longer online. This
+isn&rsquo;t because your comments weren&rsquo;t good. The quality of comments I received
+was always stellar, even when you fought with the limitations of the system.
+I&rsquo;m sorry your words are no longer up here.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2008/11/28/outsourced-blog-comments/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2008/11/28/outsourced-blog-comments/&amp;t=Outsourced Blog Comments" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2008/11/28/outsourced-blog-comments&amp;text=%22Outsourced Blog Comments%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2008/11/28/outsourced-blog-comments" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2008/11/28/outsourced-blog-comments" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2008/11/28/outsourced-blog-comments";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      The Trouble with Constructors
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/12/14/the-trouble-with-constructors" rel="bookmark"
+     title="Permanent Link to The Trouble with Constructors">
+    The Trouble with Constructors
+  </a>
+</h1>
+
+  <a class="older" href="/2010/11/26/the-biology-of-sloppy-code"
+     title="Older Post &ldquo;The Biology of Sloppy Code&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/12/31/rethinking-user-defined-operators"
+     title="Newer Post &ldquo;Rethinking User-defined Operators&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">December 14, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>Every fledgling programming language exists somewhere on the continuum between
+&ldquo;scratchings in a notebook&rdquo; and &ldquo;making Java nervous&rdquo;. Right now, Magpie is
+farther to the right than total vaporware, but it&rsquo;s not yet at the point where
+I actually want people to use it (though you&rsquo;re certainly <a href="https://github.com/munificent/magpie">welcome to
+try</a>). The big reason for that is that there&rsquo;s some core pieces I&rsquo;m still
+figuring out. Without those in place, any attempts to use the language will
+either fail or just be invalidated when I change something.</p>
+
+<p>The biggest piece of that is the object system: how classes work. The two
+challenging parts of <em>that</em> are inheritance and constructors. I think I&rsquo;ve got
+a few ideas that are finally starting to stick there, so I thought I&rsquo;d start
+documenting them to make sure I&rsquo;ve got it clear in my head, and hopefully get
+some feedback.</p>
+
+<p>In this post, I&rsquo;ll just worry about constructors. The way Magpie handles
+constructing instances of classes is a bit… uh… odd. I&rsquo;ll explain
+<a href="http://www.imdb.com/title/tt0209144/">Memento</a>-style, starting with the end and working backwards to see how I
+got there. By the end (or is it the beginning?) it should hopefully make
+sense.</p>
+
+<h2>Making an Object</h2>
+
+<p>To see where we end up, here&rsquo;s a simple class in Magpie:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Point</span>
+    <span class="k">var</span> <span class="err">x</span> <span class="n">Int</span>
+    <span class="k">var</span> <span class="err">y</span> <span class="n">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Pretty basic. It has two fields. Because those fields don&rsquo;t have initializers
+(i.e. they aren&rsquo;t like <code>var z = 123</code>), they need to get those values passed
+in. Given that class up there, you can do that and make an instance like this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span> <span class="n">new</span><span class="p">(</span><span class="err">x:</span> <span class="mi">1</span> <span class="err">y:</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<p>That doesn&rsquo;t look very special. So <code>new</code> is just a static method on a class,
+and you pass in named arguments? That&rsquo;s half right. <code>new</code> is just a static
+(&ldquo;shared&rdquo; in Magpie-ese) method. Magpie doesn&rsquo;t have named arguments. What it
+has are <em>records</em>. The above is identical to:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">coords</span> <span class="o">=</span> <span class="err">x:</span> <span class="mi">1</span> <span class="err">y:</span> <span class="mi">2</span>
+<span class="k">var</span> <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span> <span class="n">new</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+</code></pre></div>
+<p>Records in Magpie are as they are in ML: <a href="http://en.wikipedia.org/wiki/Structural*type*system">structurally-typed</a> anonymous
+structs. A series of <code>keyword: value</code> pairs forms a single expression that
+evaluates to a record value. Sort of like object literals in Javascript,
+although they&rsquo;re statically-typed in Magpie.</p>
+
+<p>So, this is pretty straightforward. When you define a class, it automatically
+gets a shared method called <code>new</code> that expects a record with fields that match
+all of the required fields of the class?</p>
+
+<p>Well, sort of. Actually, <code>new</code> doesn&rsquo;t do much at all. It&rsquo;s just:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">new</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="n">construct</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</code></pre></div>
+<p>OK, so what&rsquo;s <code>construct</code>?</p>
+
+<h2>Raw Constructors</h2>
+
+<p>Raw constructors are the real way that instances of a named class are created
+in Magpie. Each class automatically gets a shared <code>construct</code> method. That
+method (like <code>new</code>) takes a record with fields for all of the fields of the
+class. It then builds an instance of the class and copies those field values
+over.</p>
+
+<p>So raw constructors are the real way that instances of a class are created in
+Magpie. So what is <code>new</code> for then?</p>
+
+<h2>A Time To Initialize</h2>
+
+<p>Calling <code>construct</code> is the raw way to create an instance, but many (most?)
+classes need to perform some initialization when an instance is created, or
+maybe they&rsquo;ll calculate the values of some of the fields instead of just
+taking them in as arguments. <code>new</code> exists to give you a place to do that.</p>
+
+<p>For example, lets say we actually wanted to create points using polar
+coordinates, even though it stores Cartesian. In that case, we could define it
+like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Point</span>
+    <span class="n">shared</span> <span class="k">def</span> <span class="n">new</span><span class="p">(</span><span class="n">theta</span> <span class="n">Int</span><span class="p">,</span> <span class="n">radius</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">Point</span><span class="p">)</span>
+        <span class="k">var</span> <span class="err">x</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span>
+        <span class="k">var</span> <span class="err">y</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span>
+        <span class="n">construct</span><span class="p">(</span><span class="err">x:</span> <span class="err">x</span> <span class="err">y:</span> <span class="err">y</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">var</span> <span class="err">x</span> <span class="n">Int</span>
+    <span class="k">var</span> <span class="err">y</span> <span class="n">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>As you can see <code>new</code> is basically a factory method. It does some calculation,
+and then the very last thing it does is call <code>construct</code>, the <em>real</em> way to
+create an object, and returns the result. (Like Ruby, a function implicitly
+returns the result of its last expression.)</p>
+
+<p>The reason Magpie always gives you <em>both</em> <code>construct</code> and <code>new</code> is for
+<a href="http://journal.stuffwithstuff.com/2010/09/18/futureproofing-uniform-access-and-masquerades/">forward-compatibility</a>. <code>new</code> is the way you should generally be creating
+instances, so it gives you a default one that forwards to <code>construct</code>. If you
+later realize you need to do more initialization than just a straight call to
+<code>construct</code>, you can replace <code>new</code> without having to change every place you&rsquo;re
+creating an object.</p>
+
+<h2>OK, But Why?</h2>
+
+<p>So that seems pretty strange. Why on Earth would I design things this way
+instead of just using normal constructors like most other languages?</p>
+
+<p>Let&rsquo;s imagine that Magpie <em>did</em> have normal constructors (which it did until a
+few days ago, actually). Let&rsquo;s translate our Point class to use that:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Point</span>
+    <span class="c1">// &#39;this&#39; here defines a constructor method</span>
+    <span class="n">this</span><span class="p">(</span><span class="err">x</span> <span class="n">Int</span><span class="p">,</span> <span class="err">y</span> <span class="n">Int</span><span class="p">)</span>
+        <span class="n">this</span> <span class="err">x</span> <span class="o">=</span> <span class="err">x</span>
+        <span class="n">this</span> <span class="err">y</span> <span class="o">=</span> <span class="err">y</span>
+    <span class="k">end</span>
+
+    <span class="k">var</span> <span class="err">x</span> <span class="n">Int</span>
+    <span class="k">var</span> <span class="err">y</span> <span class="n">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Pretty straightforward, and it works fine. Now let&rsquo;s break it:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Point</span>
+    <span class="n">this</span><span class="p">(</span><span class="err">x</span> <span class="n">Int</span><span class="p">,</span> <span class="err">y</span> <span class="n">Int</span><span class="p">)</span>
+        <span class="n">this</span> <span class="err">x</span> <span class="o">=</span> <span class="err">x</span>
+    <span class="k">end</span>
+
+    <span class="k">var</span> <span class="err">x</span> <span class="n">Int</span>
+    <span class="k">var</span> <span class="err">y</span> <span class="n">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Here, we&rsquo;re failing to initialize the <code>y</code> field. What is its value? We can fix
+that the way Java does with <code>final</code> fields by statically checking for
+<a href="http://java.sun.com/docs/books/jls/first*edition/html/16.doc.html">definite assignment</a>. Part of the type-checking process will be to walk
+through the constructor function and make sure every declared field in the
+class gets assigned to. This isn&rsquo;t rocket science, and I went ahead and
+<a href="https://bitbucket.org/munificent/magpie/src/74a3467d69c1/src/com/stuffwithstuff/magpie/interpreter/DefiniteFieldAssignment.java">implemented that</a> in Magpie too.</p>
+
+<p>So we&rsquo;re good, right? Well, what about this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Point</span>
+    <span class="n">this</span><span class="p">(</span><span class="err">x</span> <span class="n">Int</span><span class="p">,</span> <span class="err">y</span> <span class="n">Int</span><span class="p">)</span>
+        <span class="n">doSomethingWithAPoint</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+        <span class="n">this</span> <span class="err">x</span> <span class="o">=</span> <span class="err">x</span>
+        <span class="n">this</span> <span class="err">y</span> <span class="o">=</span> <span class="err">y</span>
+    <span class="k">end</span>
+
+    <span class="k">var</span> <span class="err">x</span> <span class="n">Int</span>
+    <span class="k">var</span> <span class="err">y</span> <span class="n">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>In the constructor, we&rsquo;re passing <code>this</code> to another function. That function,
+reasonably enough, expects the Point it receives to be fully initialized, but
+at this point it isn&rsquo;t. So that&rsquo;s bad.</p>
+
+<p>We can fix that by making the static analysis even more comprehensive. While
+we check for definite assignment, we&rsquo;ll also track and make sure that <code>this</code>
+isn&rsquo;t used until all fields are definitely assigned.</p>
+
+<p>Of course, you need to be able to use <code>this</code> to actually assign the fields. So
+we&rsquo;ll need to special-case that. At this point, it starts to look like we&rsquo;re
+building some ad-hoc typestate system where the static &ldquo;type&rdquo; of <code>this</code>
+mutates as we walk through the body of the constructor and gets tagged with
+all of the fields that have been assigned to it. Like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">this</span><span class="p">(</span><span class="err">x</span> <span class="n">Int</span><span class="p">,</span> <span class="err">y</span> <span class="n">Int</span><span class="p">)</span>
+    <span class="c1">// here &#39;this&#39; is &quot;Point with no fields assigned&quot;</span>
+    <span class="n">this</span> <span class="err">x</span> <span class="o">=</span> <span class="err">x</span>
+    <span class="c1">// now it&#39;s &quot;Point with x&quot;</span>
+    <span class="n">this</span> <span class="err">y</span> <span class="o">=</span> <span class="err">y</span>
+    <span class="c1">// now it&#39;s &quot;Point with x and y&quot; and we&#39;re good</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This is doable, but it&rsquo;s a bit of a chore to implement. Much worse is that
+it&rsquo;s a real chore for any (purely hypothetical at this point) Magpie user to
+have to know. In order to understand the weird type-check errors you can get
+in a constructor, you&rsquo;ll have to fully understand all of this flow analysis I
+just described.</p>
+
+<p>I&rsquo;m trying to keep Magpie as simple as I can, and this is definitely not it.</p>
+
+<h2>Why Don&rsquo;t Other Languages Have This Problem?</h2>
+
+<p>Here is where we get to the real motivation that leads to all of this. Java
+and C# don&rsquo;t have this issue with their constructors. It&rsquo;s perfectly valid to
+do this in Java:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">Point</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">Point</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">doSomethingWithPoint</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">y</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>It&rsquo;s bad form, but it&rsquo;s safe. The reason why is because Java has <em>default
+initialization</em>. Before you ever assign to a field in Java, it still has a
+well-defined value. Numbers are 0, booleans are false, and reference types are
+<code>null</code>.</p>
+
+<p>Whoops! That last one is a <a href="http://lambda-the-ultimate.org/node/3186">doozy</a>. I <em>hate</em> having to check for <code>null</code> at
+runtime. One of the major motivations for designing Magpie was to have it
+<a href="http://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/">statically eliminate</a> the need for those. If I say a variable is of type
+<code>Monkey</code>, I want it to always be a <em>monkey</em>, not &ldquo;possibly a monkey, but also
+possibly this other magical missing monkey value&rdquo;.</p>
+
+<p>The problem then is that it isn&rsquo;t always possible to create a value of some
+arbitrary type <em>ex nihilo</em>. We can&rsquo;t just default initialize a field of
+<code>Monkey</code> by creating a new monkey from scratch. Maybe it needs arguments to be
+constructed.</p>
+
+<p>So default initialization has to go. Every field in an instance of a class
+will need to be explicitly initialized before anyone can use that instance. In
+other words, until its fully set-up, <code>this</code> is verboten.</p>
+
+<p>(C++ has its own solution for this, of course: constructor initialization
+lists. They solve this problem neatly, but at the expense of adding a non-
+trivial amount of complexity to the language.)</p>
+
+<p>The most straight-forward solution I could come up with was this: <em>create the
+instance as a single atomic operation</em>. To do this, we&rsquo;ll need to pass in
+<em>all</em> of the fields the instance needs, and it will return us a fully-
+initialized ready-to-use object. That&rsquo;s <code>construct</code>.</p>
+
+<p>What&rsquo;s nice about this is that it&rsquo;s dead-simple. There&rsquo;s almost no special
+support in Magpie for constructors. No syntax for defining them. No special
+definite assignment for tracking that fields are initialized. Just a single
+built-in <code>construct</code> method auto-generated by the interpreter for each class,
+and you&rsquo;re good to go.</p>
+
+<p>It&rsquo;s not all rosy, though. Doing things this way can be kind of gross if your
+class has a lot of fields to initialize. You end up having to build a big
+record as the last expression in your <code>new</code> method.</p>
+
+<p>The other challenge is that circular immutable data structures aren&rsquo;t really
+feasible. (Magpie doesn&rsquo;t have immutable fields yet, but it will.) Haskell has
+it even worse than Magpie since <em>everything</em> is immutable and it&rsquo;s actually
+<a href="http://www.haskell.org/haskellwiki/Tying*the*Knot">surprisingly tricky</a> to solve it.</p>
+
+<p>What may be the biggest drawback, though, is that it&rsquo;s unusual. Unfamiliarity
+is its own steep cost, especially in a fledgling language.</p>
+
+<h2>Rewind</h2>
+
+<p>So, going from cause to effect, it&rsquo;s:</p>
+
+<ol>
+<li><p>To get rid of null references, I had to get rid of default initialization.</p></li>
+<li><p>To get rid of default initialization, I had to get rid of access to <code>this</code>
+before an object has been fully-constructed.</p></li>
+<li><p>To do that, I turned construction into a single <code>construct</code> method that
+takes all of the required state and returns a new instance all in one step.</p></li>
+<li><p>Then, to get user-defined initialization back, I wrapped that in a <code>new</code>
+method that you can swap out to do what you want.</p></li>
+</ol>
+
+<p>The reasoning seemed pretty sound to me, but I&rsquo;m always eager to hear what
+others think about it.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors/&amp;t=The Trouble with Constructors" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors&amp;text=%22The Trouble with Constructors%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

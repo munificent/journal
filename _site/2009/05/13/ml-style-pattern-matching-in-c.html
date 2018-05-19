@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      ML-style Pattern Matching in C#
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2009/05/13/ml-style-pattern-matching-in-c" rel="bookmark"
+     title="Permanent Link to ML-style Pattern Matching in C#">
+    ML-style Pattern Matching in C#
+  </a>
+</h1>
+
+  <a class="older" href="/2009/05/05/one-and-only-one"
+     title="Older Post &ldquo;One and Only One&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2009/05/15/loops-in-magpie"
+     title="Newer Post &ldquo;Loops in Magpie&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">May 13, 2009</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/f-sharp">f-sharp</a> <a href="/category/language">language</a></span>
+</h4>
+
+<p>There&rsquo;s nothing like travelling abroad to make you see your home country with
+new eyes. While your first fascination with everything new and different in
+the foreign land may enventually be replaced by homesickness, you always want
+to bring back a souvenir, a little bit of the best of where you&rsquo;ve been.</p>
+
+<p>C# is my home country these days, but I&rsquo;ve been vacationing in F#. There&rsquo;s a
+lot there that&rsquo;s absolutely brilliant, like <a href="http://en.wikipedia.org/wiki/Currying">currying</a> and <a href="http://ejohn.org/blog/partial-functions-in-javascript/">partial
+application</a>, <a href="http://www.infoq.com/articles/pickering-fsharp-workflow">workflows</a>, and <a href="http://www.markhneedham.com/blog/2009/01/02/f-option-types/">option types</a> (no more
+<a href="http://qconlondon.com/london-2009/presentation/Null+References:+The+Billion+Dollar+Mistake">NullReferenceExceptions</a>!). But one of the first things I fell in love
+with in the language was pattern matching. Pattern matching in F# (and its
+ancestors ML and OCaml) is something like <code>switch/case</code> on steroids. Here&rsquo;s a
+simple example of a <code>switch/case</code> in C#:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">2</span><span class="p">;</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="m">0</span><span class="p">:</span>  <span class="n">Print</span><span class="p">(</span><span class="s">&quot;zero&quot;</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">1</span><span class="p">:</span>  <span class="n">Print</span><span class="p">(</span><span class="s">&quot;one&quot;</span><span class="p">);</span>
+    <span class="k">case</span> <span class="m">2</span><span class="p">:</span>  <span class="n">Print</span><span class="p">(</span><span class="s">&quot;two&quot;</span><span class="p">);</span>
+    <span class="k">default</span><span class="p">:</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;some other value&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Here&rsquo;s what the same logic would look like in F#:</p>
+<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="k">let</span> <span class="nv">i</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">match</span> <span class="n">i</span> <span class="k">with</span>
+<span class="o">|</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;zero&quot;</span><span class="o">)</span>
+<span class="o">|</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;one&quot;</span><span class="o">)</span>
+<span class="o">|</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;two&quot;</span><span class="o">)</span>
+<span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;some other value&quot;</span><span class="o">)</span>
+</code></pre></div>
+<p>You can probably infer what&rsquo;s going on. Pretty similar to our familiar
+<code>switch/case</code>. It checks each value and executes the clause on the right the
+first time it finds a match. The <code>_</code> bit on the last line is equivalent to
+<code>default</code> in a <code>switch/case</code>: it always gets matched if we get that far. Basic
+stuff, but pattern matching can do so much more. Before I can explain <em>that</em>,
+though, we&rsquo;ll need to take a little side trip to see another F# feature:
+<a href="http://en.wikipedia.org/wiki/Variant_record">discriminated unions</a>.</p>
+
+<h2>Discriminated Unions</h2>
+
+<p>Where C# has enums, F# has discriminated unions. The main difference between
+the two is that each value in the union can have additional data fields.
+Imagine you want to enumerate the different kinds of <a href="http://en.wikipedia.org/wiki/Image_macro">image macros</a>:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">enum</span> <span class="n">ImageMacro</span>
+<span class="p">{</span>
+    <span class="n">Lolcat</span><span class="p">,</span>
+    <span class="n">Lolrus</span><span class="p">,</span>
+    <span class="n">ORlyOwl</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Pretty basic. Now if it&rsquo;s a <a href="http://en.wikipedia.org/wiki/Lolcat">lolcat</a>, we also want to note the text of the
+caption, and if it&rsquo;s a <a href="http://icanhascheezburger.com/2007/01/14/i-has-a-bucket/">lolrus</a>, we want to note how many buckets it has.
+In C#, we&rsquo;d have to ditch the enum and resort to a class hierarchy:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ImageMacro</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Lolcat</span> <span class="p">:</span> <span class="n">ImageMacro</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Caption</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nf">Lolcat</span><span class="p">(</span><span class="kt">string</span> <span class="n">caption</span><span class="p">)</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="n">caption</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Lolrus</span> <span class="p">:</span> <span class="n">ImageMacro</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Buckets</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nf">Lolrus</span><span class="p">(</span><span class="kt">int</span> <span class="n">buckets</span><span class="p">)</span> <span class="p">{</span> <span class="n">Buckets</span> <span class="p">=</span> <span class="n">buckets</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">ORlyOwl</span> <span class="p">:</span> <span class="n">ImageMacro</span> <span class="p">{</span> <span class="p">}</span>
+</code></pre></div>
+<p>Classic OOP design, and it gets the job done. In F#, you can simply add fields
+to a discriminated union and accomplish the exact same thing:</p>
+<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="k">type</span> <span class="nc">ImageMacro</span> <span class="o">=</span>
+    <span class="o">|</span> <span class="n">Lolcat</span>    <span class="k">of</span> <span class="kt">string</span>
+    <span class="o">|</span> <span class="n">Lolrus</span>    <span class="k">of</span> <span class="n">int</span>
+    <span class="o">|</span> <span class="n">ORlyOwl</span>
+</code></pre></div>
+<p>The &ldquo;of string&rdquo; says that when you make a Lolcat ImageMacro (and <em>only</em> a
+Lolcat) that you must also provide a caption. Likewise, the &ldquo;of int&rdquo; says that
+a Lolrus needs a number of buckets.</p>
+
+<h2>Pattern Matching Discriminated Unions</h2>
+
+<p>These two features, pattern matching and discriminated unions, go together in
+F# like gondolas and striped shirts. Each is much less awesome without the
+other. Now let&rsquo;s get back to pattern matching and see something it can do that
+a <code>switch/case</code> definitely can&rsquo;t. Given our above ImageMacro type, let&rsquo;s say
+we want to print it out:</p>
+<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="n">Lolcat</span><span class="o">(</span><span class="s">&quot;I made you a cookie&quot;</span><span class="o">)</span>
+<span class="k">match</span> <span class="n">image</span> <span class="k">with</span>
+<span class="o">|</span> <span class="n">Lolcat</span><span class="o">(</span><span class="n">caption</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="o">+</span> <span class="n">caption</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="o">)</span>
+<span class="o">|</span> <span class="n">Lolrus</span><span class="o">(</span><span class="n">buckets</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;Lolrus has &quot;</span> <span class="o">+</span> <span class="n">buckets</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="o">)</span>
+<span class="o">|</span> <span class="n">ORlyOwn</span>         <span class="o">-&gt;</span> <span class="n">Print</span><span class="o">(</span><span class="s">&quot;O RLY?&quot;</span><span class="o">)</span>
+</code></pre></div>
+<p>Now <em>that&rsquo;s</em> pretty nice. Not only does it switch on what kind of image macro
+it is, it also pulls out the data associated with each one (&ldquo;destructures&rdquo; in
+the local parlance). This would definitely be nice to have in C#.</p>
+
+<h2>A Little Souvenir: Pattern.Match</h2>
+
+<p>So can we bring discriminated union pattern matching back to C#? Since C#
+doesn&rsquo;t have discriminated unions, we&rsquo;ll have to make it work with the little
+inheritance tree up there. Here&rsquo;s what I got:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">ImageMacro</span> <span class="n">image</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Lolcat</span><span class="p">(</span><span class="s">&quot;I made you a cookie&quot;</span><span class="p">);</span>
+<span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="n">image</span><span class="p">).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolcat</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span> <span class="p">(</span><span class="n">c</span>  <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="p">+</span> <span class="n">c</span> <span class="p">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolrus</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span>    <span class="p">(</span><span class="n">b</span>  <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="p">+</span> <span class="n">b</span> <span class="p">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">ORlyOwl</span><span class="p">&gt;</span>        <span class="p">(()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span>
+</code></pre></div>
+<p>A little strange, but not <em>too</em> bad. Looks kind of like a <code>switch/case</code> but
+switches based on type. For <code>Lolcat</code> and <code>Lolrus</code>, we pull out the caption and
+number of buckets. How does this work? Let&rsquo;s build it from the bottom up.</p>
+
+<h2>Case()</h2>
+
+<p>A single case in our pattern matcher needs to specify three things: the type
+being selected (Lolcat, Lolrus, etc.), the field(s) to pull out (if any), and
+the action to perform when the case is successfully matched. Let&rsquo;s start with
+the simplest possible system: one that can only match a single value based on
+type, with no fields. Here&rsquo;s the basic class:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">Matcher</span><span class="p">(</span><span class="n">T</span> <span class="k">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">mValue</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="n">Case</span><span class="p">&lt;</span><span class="n">TCase</span><span class="p">&gt;(</span><span class="n">Action</span> <span class="n">action</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mValue</span> <span class="k">is</span> <span class="n">TCase</span><span class="p">)</span> <span class="n">action</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">T</span> <span class="n">mValue</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The action being passed in is a delegate, and we construct it using C# 3.5&rsquo;s
+handy lambda notation. For the ORlyOwl, it&rsquo;s:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Aside from being a nice clean notation, the other nice thing about lambdas
+(and anonymous delegates) is that they can access variables defined in the
+outside scope. This lets our <code>Case</code> clauses do everything a regular <code>case</code> can
+do in a vanilla <code>switch/case</code>.</p>
+
+<h3>Chaining Cases Using a Fluent Interface</h3>
+
+<p>What we have so far is simple, but it only lets us select a single case. To be
+able to chain multiple cases together, we&rsquo;re going to use something the hip
+kids are calling a &ldquo;fluent interface&rdquo;. The basic idea is to make methods
+return <code>this</code> so that you can call multiple methods on the same object by
+<code>chaining.Them().Like().This()</code>:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Case</span><span class="p">&lt;</span><span class="n">TCase</span><span class="p">&gt;(</span><span class="n">Action</span> <span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mValue</span> <span class="k">is</span> <span class="n">TCase</span><span class="p">)</span> <span class="n">action</span><span class="p">();</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Preventing Multiple Matches</h3>
+
+<p>There&rsquo;s a problem here. A pattern should only match the <em>first</em> successful
+case. If we just allow arbitrary chaining, it would be possible to have
+multiple matches. Here&rsquo;s a solution:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">virtual</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Case</span><span class="p">&lt;</span><span class="n">TCase</span><span class="p">&gt;(</span><span class="n">Action</span> <span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mValue</span> <span class="k">is</span> <span class="n">TCase</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">action</span><span class="p">();</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">NullMatcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now when we have a successful match, instead of continuing the fluent
+interface and returning <code>this</code>, we return a <code>NullMatcher&lt;T&gt;</code> As you can
+probably guess, that class has the same methods as <code>Matcher&lt;T&gt;</code>, but never
+actually matches:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NullMatcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">override</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Case</span><span class="p">&lt;</span><span class="n">TCase</span><span class="p">&gt;(</span><span class="n">Action</span> <span class="n">action</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Extracting Fields</h3>
+
+<p>So far, we&rsquo;re up to being able to do this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="n">image</span><span class="p">).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolcat</span><span class="p">&gt;</span>    <span class="p">(</span><span class="n">caption</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;?&#39;&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolrus</span><span class="p">&gt;</span>    <span class="p">(</span><span class="n">buckets</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;Lolrus has ? buckets&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">ORlyOwl</span><span class="p">&gt;</span>   <span class="p">(()</span>      <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span>
+</code></pre></div>
+<p>The last remaining step is to pull out the <code>caption</code> and <code>buckets</code> from the
+<code>Lolcat</code> and <code>Lolrus</code> types. We&rsquo;ll do this by overloading <code>Case()</code>:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">virtual</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Case</span><span class="p">&lt;</span><span class="n">TCase</span><span class="p">,</span> <span class="n">TArg</span><span class="p">&gt;(</span><span class="n">Action</span> <span class="p">&lt;</span><span class="n">TArg</span><span class="p">&gt;</span> <span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">IMatchable</span><span class="p">&lt;</span><span class="n">TArg</span><span class="p">&gt;</span> <span class="n">matchable</span> <span class="p">=</span> <span class="n">mValue</span> <span class="k">as</span> <span class="n">IMatchable</span><span class="p">&lt;</span><span class="n">TArg</span><span class="p">&gt;;</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">matchable</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">mValue</span> <span class="k">is</span> <span class="n">TCase</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">action</span><span class="p">(</span><span class="n">matchable</span><span class="p">.</span><span class="n">GetArg</span><span class="p">());</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">NullMatcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>What this does is both check the type and see if it implements
+<code>IMatchable&lt;T&gt;</code>. This little interface just lets a class expose a field for
+pattern matching. (We could also do this using reflection. That would free us
+up from having explicitly implement pattern matching support in classes, but
+would also incur a performance penalty and bind the pattern matching to the
+internals of the matched classes.) Here&rsquo;s the interface and it&rsquo;s
+implementation in our macro classes:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">interface</span> <span class="n">IMatchable</span><span class="p">&lt;</span><span class="n">TArg</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="n">TArg</span> <span class="nf">GetArg</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Lolcat</span> <span class="p">:</span> <span class="n">ImageMacro</span><span class="p">,</span> <span class="n">IMatchable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Caption</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nf">Lolcat</span><span class="p">(</span><span class="kt">string</span> <span class="n">caption</span><span class="p">)</span> <span class="p">{</span> <span class="n">Caption</span> <span class="p">=</span> <span class="n">caption</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">string</span> <span class="n">IMatchable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;.</span><span class="n">GetArg</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Caption</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Lolrus</span> <span class="p">:</span> <span class="n">ImageMacro</span><span class="p">,</span> <span class="n">IMatchable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">NumBuckets</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nf">Lolrus</span><span class="p">(</span><span class="kt">int</span> <span class="n">numBuckets</span><span class="p">)</span> <span class="p">{</span> <span class="n">NumBuckets</span> <span class="p">=</span> <span class="n">numBuckets</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">IMatchable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;.</span><span class="n">GetArg</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">NumBuckets</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>I&rsquo;m using explicit interface implementation here, because users only really
+care about using <code>GetArg()</code> when they&rsquo;re doing pattern matching. Otherwise,
+there&rsquo;s no reason to make it a visible part of the class&rsquo;s interface.</p>
+
+<h3>Pattern</h3>
+
+<p>We&rsquo;ve built back almost up the to the top. The last little bit left is the
+simplest:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</code></pre></div>
+<p><code>Pattern</code> is simply a static class with one method <code>Match()</code>:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="nc">Pattern</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">Match</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">T</span> <span class="k">value</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Matcher</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">value</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The Pattern class exists simply because C# requires all functions to be in a
+class. However, constructing Matchers through <code>Match&lt;T&gt;</code> does have one nice
+side-effect: it lets the compiler infer the type parameter so you don&rsquo;t have
+to explicitly write it out like you would when calling a constructor.</p>
+
+<p>With this little bit in place, we&rsquo;ve reached our goal of being able to get
+something like matching discriminated unions working in C#:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="n">image</span><span class="p">).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolcat</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span> <span class="p">(</span><span class="n">c</span>  <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="p">+</span> <span class="n">c</span> <span class="p">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolrus</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span>    <span class="p">(</span><span class="n">b</span>  <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="p">+</span> <span class="n">b</span> <span class="p">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">ORlyOwl</span><span class="p">&gt;</span>           <span class="p">(()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span>
+</code></pre></div>
+<h2>But Wait, That&rsquo;s Not All!</h2>
+
+<p>This is only the beginning of what we can do with our little matching class.
+Here are a few other things the full code lets you do:</p>
+
+<h3>Extracting Multiple Fields</h3>
+
+<p>In the example above, we only pull a single field out of a given case. F#
+supports multiple fields as well, as does the Matcher class (up to four):</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Case</span><span class="p">&lt;</span><span class="n">Loldog</span><span class="p">,</span> <span class="kt">string</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span> <span class="p">((</span><span class="n">caption</span><span class="p">,</span> <span class="n">dogs</span><span class="p">)</span> <span class="p">=&gt;</span>
+    <span class="n">Print</span><span class="p">(</span><span class="s">&quot;&#39;&quot;</span> <span class="p">+</span> <span class="n">caption</span> <span class="p">+</span> <span class="s">&quot;&#39;, says &quot;</span> <span class="p">+</span> <span class="n">dogs</span> <span class="p">+</span> <span class="s">&quot; hotdogs&quot;</span><span class="p">)).</span>
+</code></pre></div>
+<h3>Default Case</h3>
+
+<p>It&rsquo;s also useful to have a <code>default</code>-like case that will always succeed if
+reached:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="n">image</span><span class="p">).</span>
+    <span class="n">Case</span><span class="p">&lt;</span><span class="n">Lolrus</span><span class="p">,</span> <span class="kt">int</span><span class="p">&gt;</span> <span class="p">(</span><span class="n">b</span>  <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="p">+</span> <span class="n">buckets</span> <span class="p">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
+    <span class="n">Default</span>                 <span class="p">(()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">));</span>
+</code></pre></div>
+<h3>Equality Matching</h3>
+
+<p>Another way to match values is if they are equal. We can do this generically
+since <code>Equals()</code> is part of the .NET framework.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">).</span>
+    <span class="n">Case</span><span class="p">(</span><span class="s">&quot;not&quot;</span><span class="p">,</span>      <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;should not match&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;should match&quot;</span><span class="p">));</span>
+</code></pre></div>
+<p>The example here uses strings, but this works with any type as long as it
+implements <code>Equals()</code> correctly.</p>
+
+<h3>Matching on Any Predicate</h3>
+
+<p>As you can see, there are a bunch of different ways users may want to match
+data, and it&rsquo;s futile to try to bake all of them into the class. The most
+obvious solution then is to simply let users pass in an arbitrary predicate (a
+predicate is a function that returns a bool) and have the match succeed based
+on that:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span><span class="m">123</span><span class="p">).</span>
+    <span class="n">Case</span><span class="p">(</span><span class="k">value</span> <span class="p">=&gt;</span> <span class="k">value</span> <span class="p">&lt;</span> <span class="m">100</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;less than 100&quot;</span><span class="p">)).</span>
+    <span class="n">Case</span><span class="p">(</span><span class="k">value</span> <span class="p">=&gt;</span> <span class="k">value</span> <span class="p">&gt;</span> <span class="m">100</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">Print</span><span class="p">(</span><span class="s">&quot;greater than 100&quot;</span><span class="p">));</span>
+</code></pre></div>
+<p>You&rsquo;ll note that in the final code below, all of the other matching types are
+built on top of this.</p>
+
+<h3>Returning a Value</h3>
+
+<p>F#, unlike C#, treats everything as an expression, even flow control
+statements like <code>if/then</code> and <code>match</code>. This means a match can return a result:</p>
+<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="c1">// F#:</span>
+<span class="k">let</span> <span class="nv">isTwo</span> <span class="o">=</span> <span class="k">match</span> <span class="mi">2</span> <span class="k">with</span>
+            <span class="o">|</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="k">true</span>
+            <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="k">false</span>
+</code></pre></div>
+<p>where in C# you&rsquo;d have to do an assignment:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="c1">// C#</span>
+<span class="kt">bool</span> <span class="n">isTwo</span><span class="p">;</span>
+<span class="k">switch</span> <span class="p">(</span><span class="m">2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="m">2</span><span class="p">:</span>  <span class="n">isTwo</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="k">default</span><span class="p">:</span> <span class="n">isTwo</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Our pattern matching class can do this too, even within C#:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="kt">bool</span> <span class="n">isTwo</span> <span class="p">=</span> <span class="n">Pattern</span><span class="p">.</span><span class="n">Match</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">bool</span><span class="p">&gt;(</span><span class="m">2</span><span class="p">).</span>
+                 <span class="n">Case</span><span class="p">(</span><span class="m">2</span><span class="p">,</span>  <span class="k">true</span><span class="p">).</span>
+                 <span class="n">Default</span><span class="p">(</span> <span class="k">false</span><span class="p">);</span>
+</code></pre></div>
+<h2>Conclusion</h2>
+
+<p>They say you never know your home until you travel abroad. I&rsquo;ve been enjoying
+F# a lot, but C# still feels more comfortable to me. However, it&rsquo;s always
+useful to see how other languages solve problems, and see what new techniques
+can be brought home with you. While our pattern matching class isn&rsquo;t quite as
+clean in C# as it is in F#, I think it&rsquo;s a useful tool in its own right.</p>
+
+<p>If you&rsquo;d like to play with it, <a href="http://bitbucket.org/munificent/pattern_matching/">I&rsquo;ve put it up on bitbucket</a>. Have fun!</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c/&amp;t=ML-style Pattern Matching in C#" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c&amp;text=%22ML-style Pattern Matching in C#%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

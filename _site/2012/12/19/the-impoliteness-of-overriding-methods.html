@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      The Impoliteness of Overriding Methods
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2012/12/19/the-impoliteness-of-overriding-methods" rel="bookmark"
+     title="Permanent Link to The Impoliteness of Overriding Methods">
+    The Impoliteness of Overriding Methods
+  </a>
+</h1>
+
+  <a class="older" href="/2012/06/12/multimethods-global-scope-and-monkey-patching"
+     title="Older Post &ldquo;Multimethods, Global Scope, and Monkey-Patching&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2013/01/13/iteration-inside-and-out"
+     title="Newer Post &ldquo;Iteration Inside and Out&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">December 19, 2012</a>
+    <span class="tags"><a href="/category/beta">beta</a> <a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/oop">oop</a></span>
+</h4>
+
+<p>Over the weekend, I was reading one of the shagadelic papers on <a href="http://selflanguage.org">Self</a>,
+<a href="http://selflanguage.org/documentation/published/parents-shared-parts.html">Parents are Shared Parts of Objects: Inheritance and Encapsulation in SELF</a>.
+What can I say, I have a weird idea of fun. If you&rsquo;re interested in prototypes,
+or you&rsquo;re a Javascripter (but I repeat myself) you owe it to yourself to read
+these papers. They are gems.</p>
+
+<p>But this post isn&rsquo;t about prototypes, it&rsquo;s about something the Self folks
+mention in passing:</p>
+
+<blockquote>
+<p>In BETA, virtual functions are invoked from least specific to most specific,
+with the keyword <code>inner</code> being used to invoke the next more specific method.
+This mechanism is a product of the philosophy in BETA that subclasses should
+be behavioral extensions to their superclasses and therefore specialize the
+behavior of their superclasses at well-defined points (i.e. at calls to <code>inner</code>).</p>
+</blockquote>
+
+<p>It took me a while to tease out what this is saying, but once I did, it was
+like a dim little light bulb flickered on in my head.</p>
+
+<h2>What&rsquo;s BETA?</h2>
+
+<p>Before I get into the lightbulb part, a bit of history. <a href="http://daimi.au.dk/%7Ebeta">BETA</a> is a language
+that came out of the &ldquo;Scandinavian School&rdquo; in Denmark, the <a href="http://en.wikipedia.org/wiki/Kristen_Nygaard">same people</a> that
+brought you <a href="http://en.wikipedia.org/wiki/Simula">Simula</a> and kicked off the object-oriented revolution. Alan Kay
+may have coined &ldquo;object-oriented programming&rdquo;, but it was Simula that gave him
+the idea. Chances are, the language you should be coding in right now instead
+of slacking off reading my blog was directly inspired by these guys.</p>
+
+<p>So after Simula, they went off and made BETA. I think this is more or less
+equivalent to &ldquo;famous rock band goes into hiding for ten years and emerges with
+avant garde free jazz album&rdquo;. BETA was used as a teaching language, I think,
+and there were some papers about it, but I don&rsquo;t know if many people seriously
+used it in anger.</p>
+
+<p>(Trivia time! Some of the guys who made <a href="http://code.google.com/p/v8/">V8</a>, the famously-fast JavaScript
+engine in Chrome <em>did</em> use BETA. &ldquo;V8&rdquo; got its name because it&rsquo;s the eighth
+virtual machine that Lars Bak created. His first VM? A BETA one.)</p>
+
+<p>Part of the reason BETA didn&rsquo;t flourish may have to do with terminology.
+Instead of <em>classes</em> and <em>methods</em>, BETA has <em>patterns</em> which subsume both,
+somehow, and aren&rsquo;t related to other uses of the term in other languages. I
+wrote that sentence, and I don&rsquo;t even know what the hell that means.</p>
+
+<p>The <a href="http://daimi.au.dk/%7Ebeta/Books/index.html#betabook_download">BETA book</a> is
+a bit&hellip; dense. Or maybe it&rsquo;s just that the syntax is so&hellip; <em>weird</em>:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Account:
+  (# balance: @integer;
+    Deposit:
+      (# amount: @integer
+      enter amount
+      do balance+amount-&gt;balance
+      exit balance
+      #);
+
+    Withdraw:
+      (# amount: @integer
+      enter amount
+      do balance-amount-&gt;balance
+      exit balance
+      #);
+  #)
+</code></pre></div>
+<p>I pride myself on being able to grok syntax on a pretty wide variety of
+languages but I&rsquo;m not even sure what&rsquo;s a <em>comment</em> there. I <em>think</em> if you
+translated that to JavaScript, it would be something like:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">var</span> <span class="nx">account</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">balance</span><span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+
+  <span class="nx">deposit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">amount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">balance</span> <span class="o">+=</span> <span class="nx">amount</span><span class="p">;</span>
+  <span class="p">},</span>
+
+  <span class="nx">withdraw</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">amount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">balance</span> <span class="o">-=</span> <span class="nx">amount</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Like avant garde jazz, this may be genius, but it&rsquo;s so out there and
+unapproachable, it&rsquo;s hard to tell. Fortunately, the Self guys have deciphered
+some of the mystery and left that little nugget in their paper.</p>
+
+<h2>Overriding and <code>super()</code></h2>
+
+<p>Let&rsquo;s cover one last bit of context before I get to the point. If you&rsquo;re using
+any OOP language, you&rsquo;re hopefully familiar with overriding methods. Details
+vary between languages, but the two main points are:</p>
+
+<ol>
+<li><p>A subclass can <em>override</em> a method in its superclass. When you invoke the
+method on an instance of the subclass, the derived method gets called <em>first</em>.</p></li>
+<li><p>In the body of the overriding method, it can invoke the base class method
+directly in order to chain the two methods together. In Java, you do so by
+calling <code>super.someMethod()</code>. In C# it&rsquo;s <code>base.someMethod()</code>. In CLOS, you use
+<code>call-next-method</code>. You get the idea.</p></li>
+</ol>
+
+<p>I&rsquo;m using class terminology here, but all of the above applies equally well to
+prototypal languages too, with a couple of names changed.</p>
+
+<p>Here&rsquo;s an example:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">Account</span> <span class="o">{</span>
+  <span class="kt">int</span> <span class="n">balance</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+  <span class="kt">int</span> <span class="nf">deposit</span><span class="o">(</span><span class="kt">int</span> <span class="n">amount</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">balance</span> <span class="o">+=</span> <span class="n">amount</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">CrappyBankAccount</span> <span class="kd">extends</span> <span class="n">Account</span> <span class="o">{</span>
+  <span class="kt">int</span> <span class="nf">deposit</span><span class="o">(</span><span class="kt">int</span> <span class="n">amount</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Service charge, sucker!</span>
+    <span class="n">CrappyBank</span><span class="o">.</span><span class="na">mainAccount</span><span class="o">.</span><span class="na">deposit</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">deposit</span><span class="o">(</span><span class="n">amount</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>So now, if you do something like this:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="n">Account</span> <span class="n">account</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CrappyBankAccount</span><span class="o">();</span>
+<span class="n">account</span><span class="o">.</span><span class="na">deposit</span><span class="o">(</span><span class="mi">23</span><span class="o">);</span>
+</code></pre></div>
+<p>First, it invokes <code>CrappyBankAccount#deposit()</code>. Then, when that calls
+<code>super.deposit()</code>, it chains to the base <code>Account#deposit()</code> method.</p>
+
+<h2>Who&rsquo;s in Charge Here?</h2>
+
+<p>What this means is that the <em>subclass</em> is in control of the dispatch chain.
+When you override a method in Java, you get to decide if you do stuff before
+calling <code>super</code> or after. You can change the arguments you pass to it, or even
+skip calling it entirely.</p>
+
+<p>This is great for flexibility, but as an API designer, that can be frustrating.
+When I&rsquo;m making a class that&rsquo;s designed to be subclassed, I often have
+constraints that I want my class to ensure.</p>
+
+<p>For example:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">GameObject</span> <span class="o">{</span>
+  <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">;</span>
+
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">setTransform</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ScaryMonster</span> <span class="kd">extends</span> <span class="n">GameObject</span> <span class="o">{</span>
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">render</span><span class="o">(</span><span class="n">renderer</span><span class="o">);</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">drawImage</span><span class="o">(</span><span class="n">Images</span><span class="o">.</span><span class="na">SCARY_MONSTER</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Here we&rsquo;re making a game with a base class for a character in the world. It
+provides a default <code>render()</code> method that tells the renderer where to render.
+The subclass overrides it and draws the specific image that&rsquo;s appropriate for
+that character.</p>
+
+<p>There&rsquo;s an implied requirement here: if you override <code>render()</code> in a subclass,
+you <em>must</em> call <code>super.render()</code> <em>before</em> you do any drawing. If you don&rsquo;t, the
+transform won&rsquo;t be set and it&rsquo;ll draw wrong.</p>
+
+<p>These hidden requirements rub me the wrong way. If you&rsquo;re implementing a
+subclass of <code>GameObject</code>, how are you supposed to know that you need to do that?
+You can document it, but it would be better if the base class itself made sure
+you did the right thing.</p>
+
+<h2><code>render()</code> and <code>onRender()</code></h2>
+
+<p>To solve this, what I (and lots of other people) do is split these into two
+methods, like so:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">GameObject</span> <span class="o">{</span>
+  <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">;</span>
+
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">setTransform</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+    <span class="n">onRender</span><span class="o">(</span><span class="n">renderer</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">onRender</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ScaryMonster</span> <span class="kd">extends</span> <span class="n">GameObject</span> <span class="o">{</span>
+  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onRender</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">drawImage</span><span class="o">(</span><span class="n">Images</span><span class="o">.</span><span class="na">SCARY_MONSTER</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Our public <code>render()</code> method is now designed to <em>not</em> be overridden. (In C++ or
+C# you&rsquo;d make it non-virtual.) It does the set-up it needs and calls the
+protected abstract <code>onRender()</code> method. That method <em>is</em> intended to be
+overridden, and by making it protected and abstract, it&rsquo;s clear you <em>must</em>
+override it. Marking it abstract also makes it clear that you don&rsquo;t need to
+call <code>super()</code>.</p>
+
+<p>This lets the base class stay in control of the dispatch process. It can do
+set-up before and after the subclass&rsquo;s &ldquo;overridden&rdquo; method gets called. The
+dispatch order is reversed now. When you call <code>render()</code>, you hit the
+superclass <em>first</em> and then it calls <code>onRender()</code> in the subclass.</p>
+
+<p>This is almost always how I design classes that I intend to be subclassed. It&rsquo;s
+rare that I override methods in my code that aren&rsquo;t abstract, and I&rsquo;ve been on
+teams with style guides that enforced this pattern.</p>
+
+<h2>Back to BETA</h2>
+
+<p>Of course, the problem with this is that it <em>is</em> a pattern. You have to make a
+pair of methods, and every time you have another level of subclassing, you need
+a new name. (If there was a subclass of <code>ScaryMonster</code> that wanted to override
+<code>onRender()</code> then <code>ScaryMonster</code> would have to add a <code>onOnRender()</code>.) This
+brings us back to BETA.</p>
+
+<p>Overriding methods in BETA works exactly like this pattern, but baked right
+into the language. Instead of calling <code>super()</code> in the <em>derived</em> class, you
+call <code>inner()</code> in the <em>base</em> class. That tells it to chain <em>down</em> to the
+subclass at that point.</p>
+
+<p>When you invoke an overridden method, dispatch starts at the <em>base</em> class (just
+like we want in the <code>GameObject</code> example) and then walks down to the subclasses
+at the superclass&rsquo;s whim. In other words, our example with BETA-style
+overriding would look like:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">GameObject</span> <span class="o">{</span>
+  <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">;</span>
+
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">setTransform</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+    <span class="n">inner</span><span class="o">(</span><span class="n">renderer</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ScaryMonster</span> <span class="kd">extends</span> <span class="n">GameObject</span> <span class="o">{</span>
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">drawImage</span><span class="o">(</span><span class="n">Images</span><span class="o">.</span><span class="na">SCARY_MONSTER</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>If you chain more than two levels of subclasses, BETA scales better because you
+don&rsquo;t need to keep coming up with new names. It has some other neat attributes
+too.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="kd">class</span> <span class="nc">GameObject</span> <span class="o">{</span>
+  <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">;</span>
+
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">setTransform</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+    <span class="n">inner</span><span class="o">(</span><span class="n">renderer</span><span class="o">);</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">restoreState</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">ScaryMonster</span> <span class="kd">extends</span> <span class="n">GameObject</span> <span class="o">{</span>
+  <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="n">Renderer</span> <span class="n">renderer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="na">drawImage</span><span class="o">(</span><span class="n">Images</span><span class="o">.</span><span class="na">SCARY_MONSTER</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Here, we&rsquo;ve added a call to <code>restoreState()</code> after the call to <code>inner()</code>. By
+giving control of the dispatch to the base class, it can execute code both
+before <em>and</em> after the derived class code. <code>super()</code> doesn&rsquo;t let you do that.
+(Though <code>super()</code> does let you handle the opposite case: you can put code
+before and after the <em>base</em> class code in the derived method that calls
+<code>super()</code>.)</p>
+
+<p>It also gives you a convenient way to control which methods are virtual and
+which aren&rsquo;t: if a method doesn&rsquo;t call <code>inner()</code> it implicitly can&rsquo;t be
+overridden since it cedes no control to a subclass.</p>
+
+<p>What this means is that base classes have explicit control over how they can be
+extended. Outside of programming &ldquo;override&rdquo; has negative connotations: it means
+you&rsquo;re hijacking something without its consent and indeed overriding does kind
+of work like that in most languages.</p>
+
+<p>In the early days of class-based OOP, people thought any old class could be
+spontaneously subclassed. You could just override some stuff and it would all
+magically work out. What we&rsquo;ve finally realized is that the API you expose to
+subclasses is another boundary layer that needs to be carefully designed.
+Ad-hoc subclassing rarely works and classes generally need to be designed up
+front in order to be subclassed.</p>
+
+<p>BETA was designed around that model. With typical Scandinavian politeness, you
+don&rsquo;t <em>override</em> your base class, you politely request permission to extend it.
+I think right now, the style of a lot of OOP code today fits that model better.</p>
+
+<p>Most languages chose a different path than BETA, but this makes me wonder if
+Kristen and company had it right all along.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/&amp;t=The Impoliteness of Overriding Methods" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods&amp;text=%22The Impoliteness of Overriding Methods%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

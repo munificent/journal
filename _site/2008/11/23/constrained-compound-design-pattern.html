@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      "Constrained Compound" Design Pattern
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2008/11/23/constrained-compound-design-pattern" rel="bookmark"
+     title="Permanent Link to &quot;Constrained Compound&quot; Design Pattern">
+    &quot;Constrained Compound&quot; Design Pattern
+  </a>
+</h1>
+
+  <a class="older" href="/2008/11/17/using-an-iterator-as-a-game-loop"
+     title="Older Post &ldquo;Using an Iterator as a Game Loop&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2008/11/28/outsourced-blog-comments"
+     title="Newer Post &ldquo;Outsourced Blog Comments&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">November 23, 2008</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/design">design</a></span>
+</h4>
+
+<p>I&rsquo;ve seen a lot of people argue that inheritance is an anti-feature in a
+language and that it&rsquo;s never necessary. That rubbed me the wrong way because I
+use it pretty frequently in a recurring pattern, and I think it works well. I
+figured the least I could do was try to document it and add to the design
+pattern language. After thinking about it a bit more, I realized actually I
+<em>don&rsquo;t</em> need inheritance to do it anyway. So, here&rsquo;s a little design pattern
+for you, solved with and without inheritance:</p>
+
+<blockquote>
+<p><strong>Problem:</strong></p>
+
+<p>Often you need to define a number of behaviors in terms of (and only in terms
+of) a small set of atomic operations that can be freely combined.</p>
+</blockquote>
+
+<p>Consider a UI framework that draws widgets. Each widget needs to be drawn its
+own way, but all of them are drawn using a few primitive drawing operations:
+text, lines, and shapes. Since this drawing will happen frequently and at
+unpredictable times, you want to encourage the widget implementers to only use
+those basic operations and not call into all sorts of places in the codebase.</p>
+
+<p>As the API developer, there&rsquo;s basically two things you want to provide to your
+clients: the set of operations, and the sandbox to combine them in. If you
+make both of those apparent enough, then <a href="http://blogs.msdn.com/brada/archive/2003/10/02/50420.aspx">they&rsquo;ll stick to those
+operations</a>.</p>
+
+<blockquote>
+<p><strong>Solution:</strong></p>
+
+<p>Allow the user to define a function whose body has access to an object (either
+<code>this</code> or an explicit parameter) that contains only the operations they should
+use to implement the function.</p>
+</blockquote>
+
+<p>There&rsquo;s two ways I&rsquo;ve found myself providing this kind of system, one of which
+uses inheritance, one of which does not.</p>
+
+<h2>Atomic Operations as Protected Methods</h2>
+
+<p>The most frequent way I use the pattern is by defining a base class with a
+number of protected methods and a single abstract one. The protected methods
+are the atomic operations, and the abstract one is the sandbox where they&rsquo;re
+used. By making them protected (but not virtual), the implication is clear to
+derivers: &ldquo;these methods are here for your use.&rdquo; The abstract sandbox methods
+says, &ldquo;Here&rsquo;s where you do your work.&rdquo; If you&rsquo;ve minimized global and static
+objects then the limited parameters to the sandbox say, &ldquo;You only really have
+access to the methods in <code>this</code>&rdquo; so just use those. Here&rsquo;s an example:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="c1">// the sandbox</span>
+    <span class="k">public</span> <span class="k">abstract</span> <span class="k">void</span> <span class="nf">Draw</span><span class="p">();</span>
+
+    <span class="k">protected</span> <span class="k">void</span> <span class="nf">DrawString</span><span class="p">(</span><span class="kt">string</span> <span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+    <span class="k">protected</span> <span class="k">void</span> <span class="nf">DrawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+    <span class="k">protected</span> <span class="k">void</span> <span class="nf">DrawRect</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">MyWidget</span> <span class="p">:</span> <span class="n">Widget</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Draw</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">DrawString</span><span class="p">(</span><span class="s">&quot;MyWidget&quot;</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">3</span><span class="p">);</span>
+        <span class="n">DrawRect</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">200</span><span class="p">,</span> <span class="m">20</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">x</span> <span class="p">&lt;</span> <span class="m">200</span><span class="p">;</span> <span class="n">x</span> <span class="p">+=</span> <span class="m">5</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">DrawLine</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="m">15</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="m">20</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If you try to go down this path, one limitation you will quickly realize is
+that often the base class itself doesn&rsquo;t have enough contextual information to
+provide those atomic functions. That needs to be pased in, but you don&rsquo;t want
+the sandbox to have it (since it could then poke at it directly). Here&rsquo;s a
+typical way around it:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="c1">// the public API</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Draw</span><span class="p">(</span><span class="n">DrawContext</span> <span class="n">context</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// store what we need to implement the atomic operations</span>
+        <span class="n">mContext</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+
+        <span class="c1">// but don&#39;t give it to the sandbox</span>
+        <span class="n">DrawInternal</span><span class="p">();</span>
+
+        <span class="c1">// done with it</span>
+        <span class="n">mContext</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// the sandbox</span>
+    <span class="k">protected</span> <span class="k">abstract</span> <span class="k">void</span> <span class="nf">DrawInternal</span><span class="p">();</span>
+
+    <span class="k">protected</span> <span class="k">void</span> <span class="nf">DrawString</span><span class="p">(</span><span class="kt">string</span> <span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+    <span class="k">protected</span> <span class="k">void</span> <span class="nf">DrawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+    <span class="k">protected</span> <span class="k">void</span> <span class="nf">DrawRect</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">DrawContext</span> <span class="n">mContext</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now <code>DrawString()</code>, etc. have access to the DrawContext, but the derived
+widget itself does not.</p>
+
+<h2>Atomic Operations as Object Parameter</h2>
+
+<p>If you&rsquo;re not a fan of OOP or inheritance, here&rsquo;s another way to do the
+pattern. If you notice above, what we&rsquo;re basically doing is providing all of
+the atomic operations as methods available on <code>this</code>, which is then an
+implicit argument to the sandbox method <code>Draw()</code>. Instead of using <code>this</code> you
+can always make those operations an explicit parameter. Here&rsquo;s a way to use
+that to have different widgets draw differently without using inheritance:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Widget</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">Widget</span><span class="p">(</span><span class="n">Action</span><span class="p">&lt;</span><span class="n">DrawOperations</span><span class="p">&gt;</span> <span class="n">drawFunc</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">mDrawFunc</span> <span class="p">=</span> <span class="n">drawFunc</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Draw</span><span class="p">(</span><span class="n">DrawContext</span> <span class="n">context</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">mDrawFunc</span><span class="p">(</span><span class="k">new</span> <span class="n">DrawOperations</span><span class="p">(</span><span class="n">context</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">class</span> <span class="nc">DrawOperations</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="nf">DrawOperations</span><span class="p">(</span><span class="n">DrawContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">mContext</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">DrawString</span><span class="p">(</span><span class="kt">string</span> <span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">DrawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">DrawRect</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* */</span> <span class="p">}</span>
+
+        <span class="k">private</span> <span class="n">DrawContext</span> <span class="n">mContext</span><span class="p">;</span>
+
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">DrawOperations</span><span class="p">&gt;</span> <span class="n">mDrawFunc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="n">Widget</span> <span class="nf">MakeMyWidget</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Widget</span> <span class="n">widget</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">(</span>
+        <span class="n">operations</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="n">operations</span><span class="p">.</span><span class="n">DrawString</span><span class="p">(</span><span class="s">&quot;MyWidget&quot;</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">3</span><span class="p">);</span>
+            <span class="n">operations</span><span class="p">.</span><span class="n">DrawRect</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">200</span><span class="p">,</span> <span class="m">20</span><span class="p">);</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">x</span> <span class="p">&lt;</span> <span class="m">200</span><span class="p">;</span> <span class="n">x</span> <span class="p">+=</span> <span class="m">5</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">operations</span><span class="p">.</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="m">15</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="m">20</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">widget</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This has the advantage of letting you later change how a widget draws without
+baking it into the class hierarchy, but may be a bit odd to people with only
+class-based OOP language experience.</p>
+
+<h2>A Note on Patterns</h2>
+
+<p>There&rsquo;s a lot of hype that surrounds the idea of <a href="http://en.wikipedia.org/wiki/Design_pattern_(computer_science)">design patterns</a>. When
+<a href="http://en.wikipedia.org/wiki/Design_Patterns">the book</a> first came out, C++ people who were struggling to understand
+OOP swarmed to it like it contained revelation from on high. After a while,
+people (especially non-OOP people) rejected that outright and claimed Design
+Patterns was simply a collection of boilerplate to get around the limitations
+of crappy OOP languages. Neither of those were ever the intent of
+<a href="http://many.corante.com/archives/2004/04/26/a_city_is_not_a_tree.php">Alexander&rsquo;s</a> <a href="http://en.wikipedia.org/wiki/A_Pattern_Language">Pattern Language</a> concept. Patterns are supposed to be
+a simple clarification of things people are already doing, and the language of
+patterns is intended to always be evolving and growing. It&rsquo;s neither
+revelation nor prescription (do this, don&rsquo;t do that). It&rsquo;s simply &ldquo;here&rsquo;s this
+problem we see often and here&rsquo;s a good way we see people solve it.&rdquo;</p>
+
+<p>Patterns are <em>not</em> supposed to be a brand-new high-tech innovation (an
+excellent pattern in A Pattern Language encourages you to put a bench by your
+front door). If you read the Constrained Compound pattern above and thought,
+&ldquo;Oh yeah, I&rsquo;ve done something similar a bunch of times,&rdquo; then <em>good</em>. It&rsquo;s
+familiarity means it&rsquo;s a good solution because a lot of people have used it
+and is worth adding to the language. Now it has a name.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern/" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern/&amp;t=&quot;Constrained Compound&quot; Design Pattern" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern&amp;text=%22&quot;Constrained Compound&quot; Design Pattern%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
+    <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
+    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">github</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">twitter</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+
+    <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

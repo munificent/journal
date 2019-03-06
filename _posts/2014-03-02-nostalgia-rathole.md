@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Nostalgia Rathole"
-categories: music ai
+categories: music ai personal
 ---
 
 Every couple of years, I switch how I get music. It used to be CDs, actual honest-to-God discs full of bits. Then I switched to buying MP3s from Amazon, then the iTunes music store. About three years after the rest of the world, I caught up to the swiftly-departing Spotify bandwagon and dragged myself on. Then I hopped over to Google Play Music All Access, mainly because it gives me typing practice to write out its name.

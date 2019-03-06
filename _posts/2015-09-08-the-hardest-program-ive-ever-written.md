@@ -55,7 +55,7 @@ formatter][dartfmt].
 ## Introducing dartfmt
 
 I work on the [Dart][] programming language. Part of my job is helping make more
-Dart code, readable, idiomatic, and consistent, which is why I ended up writing
+Dart code readable, idiomatic, and consistent, which is why I ended up writing
 our [style guide][]. That was a good first step, but any style guide written in
 English is either so brief that it's ambiguous, or so long that no one reads it.
 

@@ -545,6 +545,7 @@ article {
   span.s1,
   span.s2,
   span.sc  { color: hsl(35, 100%, 40%); } // string
+  span.si  { color: hsl(27, 100%, 40%); } // string interpolation
   span.m,
   span.mf  { color: hsl(200, 100%, 40%); } // number
   span.cp  { color: hsl(320, 50%, 45%); } // preprocessor

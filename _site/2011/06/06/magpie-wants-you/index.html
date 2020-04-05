@@ -62,12 +62,12 @@ stuff they enable:</p>
 <p>Magpie is a dynamically-typed language (flirtations with optional static
 typing notwithstanding). But in Magpie, every method is a multimethod, which
 means you can overload them.</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">()</span>
-    <span class="n">this</span> <span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="bp">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">()</span>
+    <span class="bp">this</span> <span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="k">def</span> <span class="p">(</span><span class="n">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">(</span><span class="n">separator</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="p">(</span><span class="bp">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">(</span><span class="n">separator</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span>
+    <span class="k">...</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Here we&rsquo;ve defined two <code>split</code> methods on strings. The first takes no
@@ -80,12 +80,12 @@ arguments, and the second takes a separator. This means you can do:</p>
 <p>In most dynamic languages, you&rsquo;d have to handle that by doing some manual
 <code>instanceof</code> or <code>!== undefined</code> checks. In Magpie, it just works. You can
 overload by arity or type, or both:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">(</span><span class="n">maxResults</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span>
-    <span class="o">...</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="bp">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">(</span><span class="n">maxResults</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span>
+    <span class="k">...</span>
 <span class="k">end</span>
 
-<span class="k">def</span> <span class="p">(</span><span class="n">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">(</span><span class="n">separator</span> <span class="k">is</span> <span class="n">String</span><span class="p">,</span> <span class="n">maxResults</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="p">(</span><span class="bp">this</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="n">split</span><span class="p">(</span><span class="n">separator</span> <span class="k">is</span> <span class="n">String</span><span class="p">,</span> <span class="n">maxResults</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span>
+    <span class="k">...</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Pretty much any kind of argument list can be overloaded and it will pick the
@@ -131,20 +131,20 @@ file IO, concurrency, networking, etc. I have a <em>ton</em> of work to do here
 threads. To prove it, here&rsquo;s a toy asynchronous web server:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">import</span> <span class="n">io</span>
 <span class="k">import</span> <span class="n">net</span>
-<span class="k">import</span> <span class="k">async</span>
+<span class="k">import</span> <span class="n">async</span>
 
-<span class="k">val</span> <span class="n">server</span> <span class="o">=</span> <span class="n">ServerSocket</span> <span class="n">new</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
-<span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
-    <span class="k">val</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">server</span> <span class="n">accept</span><span class="p">()</span>
+<span class="k">val</span> <span class="n">server</span> <span class="err">=</span> <span class="n">ServerSocket</span> <span class="n">new</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+<span class="k">while</span> <span class="nb">true</span> <span class="k">do</span>
+    <span class="k">val</span> <span class="n">socket</span> <span class="err">=</span> <span class="n">server</span> <span class="n">accept</span><span class="p">()</span>
     <span class="c1">// Start a new thread to respond to the request.</span>
-    <span class="n">run</span> <span class="k">with</span>
+    <span class="n">run</span> <span class="n">with</span>
         <span class="c1">// Process the request (assume its a GET).</span>
-        <span class="k">val</span> <span class="n">path</span> <span class="o">=</span> <span class="n">socket</span> <span class="n">readLine</span><span class="p">()</span> <span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">val</span> <span class="n">path</span> <span class="err">=</span> <span class="n">socket</span> <span class="n">readLine</span><span class="p">()</span> <span class="n">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1">// Open the file being served.</span>
-        <span class="n">open</span><span class="p">(</span><span class="s">&quot;.&quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span> <span class="n">use</span> <span class="k">with</span>
+        <span class="n">open</span><span class="p">(</span><span class="s">&quot;.&quot;</span> <span class="err">+</span> <span class="n">path</span><span class="p">)</span> <span class="n">use</span> <span class="n">with</span>
             <span class="c1">// Read it and write it to the socket.</span>
-            <span class="n">socket</span> <span class="n">write</span><span class="p">(</span><span class="n">it</span> <span class="n">read</span><span class="p">())</span>
+            <span class="n">socket</span> <span class="n">write</span><span class="p">(</span><span class="bp">it</span> <span class="n">read</span><span class="p">())</span>
         <span class="k">end</span>
         <span class="n">socket</span> <span class="n">close</span><span class="p">()</span>
     <span class="k">end</span>
@@ -255,7 +255,7 @@ get a free hug.</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -268,9 +268,9 @@ get a free hug.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

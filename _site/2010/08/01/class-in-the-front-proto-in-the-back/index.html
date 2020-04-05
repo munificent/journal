@@ -66,9 +66,9 @@ Magpie-the-language is class-based, under the hood, the interpreter uses prototy
 In Magpie, all objects are instances of a class. The class determines what
 methods an object has. The pseudocode for invoking a method is:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">methodName</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
-    <span class="n">class</span> <span class="o">=</span> <span class="n">obj.getClass</span>
-    <span class="n">method</span> <span class="o">=</span> <span class="n">class.findMethod</span><span class="p">(</span><span class="n">methodName</span><span class="p">)</span>
-    <span class="n">method.invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+    <span class="n">class</span> <span class="err">=</span> <span class="n">obj</span><span class="k">.</span><span class="n">getClass</span>
+    <span class="n">method</span> <span class="err">=</span> <span class="n">class</span><span class="k">.</span><span class="n">findMethod</span><span class="p">(</span><span class="n">methodName</span><span class="p">)</span>
+    <span class="n">method</span><span class="k">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Under the hood then, a class is a bag of methods, something like:</p>
@@ -86,8 +86,8 @@ worry about that here):</p>
 methods, like we&rsquo;ve seen and &ldquo;static&rdquo; or &ldquo;class&rdquo; methods that you invoke
 directly on the class. These include things like constructors (which are like
 Ruby&rsquo;s <a href="http://www.devx.com/enterprise/Article/30917/0/page/3">new</a> methods). For example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">foo</span> <span class="o">=</span> <span class="n">Foo.new</span>   <span class="c1">// call a class method on Foo</span>
-<span class="n">foo.toString</span>        <span class="c1">// call an instance method on a Foo</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">foo</span> <span class="err">=</span> <span class="n">Foo</span><span class="k">.</span><span class="n">new</span>   <span class="c1">// call a class method on Foo</span>
+<span class="n">foo</span><span class="k">.</span><span class="n">toString</span>        <span class="c1">// call an instance method on a Foo</span>
 </code></pre></div>
 <p>So our class object really needs <em>two</em> dictionaries, one for class and one for
 instance methods:</p>
@@ -120,14 +120,14 @@ reference to the other object that contains its methods, like so:</p>
 </code></pre></div>
 <p>Now our pseudo-code for invoking a method is:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">methodName</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
-    <span class="n">thisObj</span> <span class="o">=</span> <span class="n">obj</span>
+    <span class="n">thisObj</span> <span class="err">=</span> <span class="n">obj</span>
     <span class="n">loop</span>
-        <span class="n">method</span> <span class="o">=</span> <span class="n">thisObj.findMethod</span><span class="p">(</span><span class="n">methodName</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">method</span> <span class="o">!=</span> <span class="n">null</span> <span class="k">then</span>
-            <span class="k">return</span> <span class="n">method.invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="n">method</span> <span class="err">=</span> <span class="n">thisObj</span><span class="k">.</span><span class="n">findMethod</span><span class="p">(</span><span class="n">methodName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="err">!=</span> <span class="n">null</span> <span class="k">then</span>
+            <span class="k">return</span> <span class="n">method</span><span class="k">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
         <span class="k">end</span>
         <span class="c1">// walk up the parent chain</span>
-        <span class="n">thisObj</span> <span class="o">=</span> <span class="n">obj.parent</span>
+        <span class="n">thisObj</span> <span class="err">=</span> <span class="n">obj</span><span class="k">.</span><span class="n">parent</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -154,10 +154,10 @@ code is still written using classes and instances. If you have this in Magpie:</
     <span class="k">def</span> <span class="n">sayHi</span> <span class="p">()</span> <span class="n">print</span> <span class="s">&quot;hi&quot;</span>
 <span class="k">end</span>
 
-<span class="k">def</span> <span class="err">a</span> <span class="o">=</span> <span class="n">Foo.new</span>
-<span class="k">def</span> <span class="err">b</span> <span class="o">=</span> <span class="n">Foo.new</span>
-<span class="n">a.sayHi</span>
-<span class="n">b.sayHi</span>
+<span class="k">def</span> <span class="n">a</span> <span class="err">=</span> <span class="n">Foo</span><span class="k">.</span><span class="n">new</span>
+<span class="k">def</span> <span class="n">b</span> <span class="err">=</span> <span class="n">Foo</span><span class="k">.</span><span class="n">new</span>
+<span class="n">a</span><span class="k">.</span><span class="n">sayHi</span>
+<span class="n">b</span><span class="k">.</span><span class="n">sayHi</span>
 </code></pre></div>
 <p>At runtime, the interpreter will build this object hierarchy:</p>
 
@@ -237,7 +237,7 @@ way, but so far it seems to be working.</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -250,9 +250,9 @@ way, but so far it seems to be working.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

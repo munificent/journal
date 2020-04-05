@@ -201,14 +201,14 @@
 <p>But this is great news, because it means that our trick of not allowing inheriting the same class twice will also dramatically simplify linearization of multimethods.</p>
 
 <p>Can multimethods in turn help us out with our root class problem? Indeed, they can! When you define a method in a language that supports multimethods, you provide a pattern that describes the arguments that method accepts. For example (finally switching to Magpie syntax), a method like this:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">overloaded</span><span class="p">(</span><span class="err">a</span> <span class="k">is</span> <span class="n">Base</span><span class="p">,</span> <span class="err">b</span> <span class="k">is</span> <span class="n">Derived</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">overloaded</span><span class="p">(</span><span class="n">a</span> <span class="k">is</span> <span class="n">Base</span><span class="p">,</span> <span class="n">b</span> <span class="k">is</span> <span class="n">Derived</span><span class="p">)</span>
     <span class="n">print</span><span class="p">(</span><span class="s">&quot;base derived&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Will match a first argument of type <code>Base</code> (or a subclass of it) and a second of type <code>Derived</code> (again, or a subclass). They say that this method is <em>specialize</em> to those types.</p>
 
 <p>But it isn&rsquo;t necessary to specialize an argument at all. A type pattern is just one kind of pattern. You can also define a method like this:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">overloaded</span><span class="p">(</span><span class="err">a</span><span class="p">,</span> <span class="err">b</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">overloaded</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
     <span class="n">print</span><span class="p">(</span><span class="s">&quot;who knows?!&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -262,12 +262,12 @@ $()
 <p>Those look an awful lot like overloads, which Javascript doesn&rsquo;t support. How do they do this? By making <a href="https://github.com/jquery/jquery/blob/master/src/core.js#L70">one monolithic function</a> with a slew of <code>instanceof</code> checks interspersed throughout it. Eek!</p>
 
 <p>In Magpie you can just do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="o">$</span><span class="p">(</span><span class="n">selector</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="o">...</span>
-<span class="k">def</span> <span class="o">$</span><span class="p">(</span><span class="n">selector</span> <span class="k">is</span> <span class="n">String</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span> <span class="o">...</span>
-<span class="k">def</span> <span class="o">$</span><span class="p">(</span><span class="n">element</span> <span class="k">is</span> <span class="n">Element</span><span class="p">)</span> <span class="o">...</span>
-<span class="k">def</span> <span class="o">$</span><span class="p">(</span><span class="n">elementArray</span> <span class="k">is</span> <span class="n">List</span><span class="p">)</span> <span class="o">...</span>
-<span class="k">def</span> <span class="o">$</span><span class="p">(</span><span class="n">object</span> <span class="k">is</span> <span class="n">JQuery</span><span class="p">)</span> <span class="o">...</span>
-<span class="k">def</span> <span class="o">$</span><span class="p">()</span> <span class="o">...</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="err">$</span><span class="p">(</span><span class="n">selector</span> <span class="k">is</span> <span class="n">String</span><span class="p">)</span> <span class="k">...</span>
+<span class="k">def</span> <span class="err">$</span><span class="p">(</span><span class="n">selector</span> <span class="k">is</span> <span class="n">String</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span> <span class="k">...</span>
+<span class="k">def</span> <span class="err">$</span><span class="p">(</span><span class="n">element</span> <span class="k">is</span> <span class="n">Element</span><span class="p">)</span> <span class="k">...</span>
+<span class="k">def</span> <span class="err">$</span><span class="p">(</span><span class="n">elementArray</span> <span class="k">is</span> <span class="n">List</span><span class="p">)</span> <span class="k">...</span>
+<span class="k">def</span> <span class="err">$</span><span class="p">(</span><span class="n">object</span> <span class="k">is</span> <span class="n">JQuery</span><span class="p">)</span> <span class="k">...</span>
+<span class="k">def</span> <span class="err">$</span><span class="p">()</span> <span class="k">...</span>
 </code></pre></div>
 <p>The language itself will then take care of picking the appropriate method for you and doing all of the <code>instanceof</code> checks and variable binding itself. The nice thing about that is that it happens atomically. You don&rsquo;t have to worry about bugs where you <em>think</em> <code>selector</code> is a string, but you forgot the <code>instanceof</code> check. If it picks the first method up there, you know for certain <code>selector</code> will be a string.</p>
 
@@ -276,16 +276,16 @@ $()
 <p>Magpie doesn&rsquo;t have built-in operators, so you&rsquo;re free to define your own and overload existing ones (but, for the love of God, please don&rsquo;t go <a href="http://jim-mcbeath.blogspot.com/2008/12/scala-operator-cheat-sheet.html">all Scala on it</a>). Multimethods are a big help here.</p>
 
 <p>A simple example is <code>!=</code>. In C# and C++ when you overload <code>==</code>, you have to remember to also overload <code>!=</code> since that&rsquo;s also a method on the class you&rsquo;re overloading it for. In Magpie, a single definition of <code>!=</code> serves to cover all cases:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">right</span><span class="p">)</span>
-    <span class="k">not</span><span class="p">(</span><span class="n">left</span> <span class="o">==</span> <span class="n">right</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="err">!=</span> <span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="n">not</span><span class="p">(</span><span class="n">left</span> <span class="err">==</span> <span class="n">right</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Now if you overload <code>==</code>, you get <code>!=</code> for free.</p>
 
 <p>Another example is <code>+</code>. Magpie uses it for both numeric addition and string contenation. Many languages have to build that directly into the language to get that overloading to work right. In Magpie, it&rsquo;s just:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">left</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="o">...</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">left</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="err">+</span> <span class="p">(</span><span class="n">right</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="k">...</span>
 
-<span class="k">def</span> <span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span><span class="p">)</span>
+<span class="k">def</span> <span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="err">+</span> <span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="n">concatenate</span><span class="p">(</span><span class="n">left</span> <span class="n">string</span><span class="p">,</span> <span class="n">right</span> <span class="n">string</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -296,7 +296,7 @@ $()
 <p>We&rsquo;ve covered methods that specialize on types and ones that allow an argument of any type. There&rsquo;s another flavor of pattern too: <em>value patterns</em>. Those let you define methods that only match on specific argument values. Consider the venerable Fibonacci function. With value patterns, you can implement it like this:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">fib</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="mi">0</span>
 <span class="k">def</span> <span class="n">fib</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="mi">1</span>
-<span class="k">def</span> <span class="n">fib</span><span class="p">(</span><span class="err">n</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="n">fib</span><span class="p">(</span><span class="err">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="err">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="err">-</span> <span class="mi">2</span><span class="p">)</span> <span class="err">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="err">-</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
 <p>Note that the order these are defined doesn&rsquo;t matter. The linearization algorithm takes care of picking the first two methods for those values of <code>n</code>: a value pattern always wins over a type pattern.</p>
 
@@ -310,7 +310,7 @@ $()
 <p>Classes are first class in Magpie too, so it worked that way for a while. That meant making a pair of classes for each class and <a href="http://en.wikipedia.org/wiki/File:Smalltalk_80_metaclasses.svg">a fairly confusing metaclass hierarchy</a>.</p>
 
 <p>With multimethods, that all <a href="https://github.com/munificent/magpie/commit/424b2724af47fffc426c1e432c8fae051ce3a0d1#L6L18">just goes away</a>. Instead, a &ldquo;static&rdquo; method is just a method that matches on a class <em>by value</em>:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="o">==</span> <span class="n">Int</span><span class="p">)</span> <span class="n">parse</span><span class="p">(</span><span class="n">text</span> <span class="n">String</span><span class="p">)</span> <span class="o">...</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="err">==</span> <span class="n">Int</span><span class="p">)</span> <span class="n">parse</span><span class="p">(</span><span class="n">text</span> <span class="n">String</span><span class="p">)</span> <span class="k">...</span>
 </code></pre></div>
 <p>The <code>(== Int)</code> pattern here means we match on <code>Int</code> by value as opposed to <code>(is Int)</code> which means to match on it by type.</p>
 
@@ -327,19 +327,19 @@ $()
 <div class="highlight"><pre><code class="language-java" data-lang="java"><span></span><span class="n">Collections</span><span class="o">.</span><span class="na">reverse</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
 </code></pre></div>
 <p>But I want to avoid the chaos of monkey-patching. Multimethods are a neat solution to this. With multimethods, the methods aren&rsquo;t directly tied to classes at all. You&rsquo;re perfectly free to define a <code>reverse</code> method like this:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">list</span> <span class="k">is</span> <span class="n">List</span><span class="p">)</span> <span class="n">reverse</span><span class="p">()</span> <span class="o">...</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="n">list</span> <span class="k">is</span> <span class="n">List</span><span class="p">)</span> <span class="n">reverse</span><span class="p">()</span> <span class="k">...</span>
 </code></pre></div>
 <p>And then you can call <code>reverse()</code> as it if were a native method on Lists. Because you aren&rsquo;t cracking open the class itself, this is nice and modular. Code that imports the module where you define that will get your <code>reverse()</code> method, and modules that don&rsquo;t won&rsquo;t. If they define their own <code>reverse()</code>, there&rsquo;s no collision. You could even access both within the same module by renaming when you import:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">import</span> <span class="n">bobs.list.methods</span> <span class="k">with</span>
-    <span class="n">reverse</span> <span class="n">as</span> <span class="n">bobs.reverse</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">import</span> <span class="n">bobs</span><span class="k">.</span><span class="n">list</span><span class="k">.</span><span class="n">methods</span> <span class="n">with</span>
+    <span class="n">reverse</span> <span class="n">as</span> <span class="n">bobs</span><span class="k">.</span><span class="n">reverse</span>
 <span class="k">end</span>
-<span class="k">import</span> <span class="n">your.list.methods</span> <span class="k">with</span>
-    <span class="n">reverse</span> <span class="n">as</span> <span class="n">your.reverse</span>
+<span class="k">import</span> <span class="n">your</span><span class="k">.</span><span class="n">list</span><span class="k">.</span><span class="n">methods</span> <span class="n">with</span>
+    <span class="n">reverse</span> <span class="n">as</span> <span class="n">your</span><span class="k">.</span><span class="n">reverse</span>
 <span class="k">end</span>
 
-<span class="k">var</span> <span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="n">list</span> <span class="n">bobs.reverse</span><span class="p">()</span>
-<span class="n">list</span> <span class="n">your.reverse</span><span class="p">()</span>
+<span class="k">var</span> <span class="n">list</span> <span class="err">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">list</span> <span class="n">bobs</span><span class="k">.</span><span class="n">reverse</span><span class="p">()</span>
+<span class="n">list</span> <span class="n">your</span><span class="k">.</span><span class="n">reverse</span><span class="p">()</span>
 </code></pre></div>
 <p>(Here, the <code>.</code> is just part of the method name. It looks funny at first, but hopefully not <em>too</em> funny.)</p>
 
@@ -409,7 +409,7 @@ $()
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -422,9 +422,9 @@ $()
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

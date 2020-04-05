@@ -64,7 +64,7 @@ serve as a cautionary tale for other, smarter language designers.</p>
 Magpie&rsquo;s concurrency story. Its model is based on <a href="http://en.wikipedia.org/wiki/Green_threads">fibers</a> and <a href="http://golang.org/doc/effective_go.html#channels">channels</a>,
 much like <a href="http://golang.org/">Go</a> or other <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a>-inspired languages. You can spin up a new
 fiber using the <code>async</code> keyword:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
     <span class="n">print</span><span class="p">(</span><span class="s">&quot;I&#39;m in another fiber!&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -72,7 +72,7 @@ fiber using the <code>async</code> keyword:</p>
 do something that requires waiting. Usually that means IO. So if you do the
 above, you won&rsquo;t see that message get printed until something causes the main
 fiber to yield. For example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
     <span class="n">print</span><span class="p">(</span><span class="s">&quot;I&#39;m in another fiber!&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 
@@ -94,13 +94,13 @@ other. For that, we&rsquo;ve got channels.</p>
 
 <p>A channel is a simple object that you can send objects into and then receive
 them from another channel. You can create one like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">Channel</span> <span class="n">new</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">channel</span> <span class="err">=</span> <span class="n">Channel</span> <span class="n">new</span>
 </code></pre></div>
 <p>To send a value along it, just do:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">channel</span> <span class="n">send</span><span class="p">(</span><span class="s">&quot;My value&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>And you can receive it like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">result</span> <span class="o">=</span> <span class="n">channel</span> <span class="n">receive</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">result</span> <span class="err">=</span> <span class="n">channel</span> <span class="n">receive</span>
 </code></pre></div>
 <p>The fun bit is that when a fiber sends a value along a channel, it causes that
 fiber to suspend until some <em>other</em> fiber shows up to receive the value. A send
@@ -116,10 +116,10 @@ just communicate but also <em>synchronize.</em></p>
 receive no more values from it. The question I ran into was, &ldquo;what happens to
 fibers that are waiting to receive on a channel when it gets closed?&rdquo; For
 example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">Channel</span> <span class="n">new</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">channel</span> <span class="err">=</span> <span class="n">Channel</span> <span class="n">new</span>
 
 <span class="c1">// Wait for a value and print it.</span>
-<span class="k">async</span> <span class="n">print</span><span class="p">(</span><span class="n">channel</span> <span class="n">receive</span><span class="p">)</span>
+<span class="n">async</span> <span class="n">print</span><span class="p">(</span><span class="n">channel</span> <span class="n">receive</span><span class="p">)</span>
 
 <span class="c1">// From the main fiber, close the channel.</span>
 <span class="n">channel</span> <span class="n">close</span>
@@ -131,7 +131,7 @@ notified?</p>
 
 <p>One option would be have <code>receive</code> <a href="http://magpie-lang.org/error-handling.html">throw an error</a> when the channel gets
 closed. So you&rsquo;d handle it something like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
     <span class="k">do</span>
         <span class="n">print</span><span class="p">(</span><span class="n">channel</span> <span class="n">receive</span><span class="p">)</span>
     <span class="k">catch</span> <span class="n">err</span> <span class="k">is</span> <span class="n">ChannelClosedError</span> <span class="k">then</span>
@@ -141,7 +141,7 @@ closed. So you&rsquo;d handle it something like:</p>
 </code></pre></div>
 <p>Actually, any <a href="http://magpie-lang.org/blocks.html">block</a> can have a <code>catch</code> clause in Magpie, so the explicit
 <code>do</code> here is redundant. You&rsquo;d really just do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
     <span class="n">print</span><span class="p">(</span><span class="n">channel</span> <span class="n">receive</span><span class="p">)</span>
 <span class="k">catch</span> <span class="n">err</span> <span class="k">is</span> <span class="n">ChannelClosedError</span> <span class="k">then</span>
     <span class="n">print</span><span class="p">(</span><span class="s">&quot;Sorry, no value for you&quot;</span><span class="p">)</span>
@@ -151,14 +151,14 @@ closed. So you&rsquo;d handle it something like:</p>
 cases, you&rsquo;ll receive something from a channel and do different stuff based on
 what you get. Channels are often used for <em>messages</em> and the specific message
 will often cause different behavior. You can imagine something like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">Channel</span> <span class="n">new</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">channel</span> <span class="err">=</span> <span class="n">Channel</span> <span class="n">new</span>
 
-<span class="k">async</span>
-    <span class="k">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
+<span class="n">async</span>
+    <span class="k">var</span> <span class="n">count</span> <span class="err">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="nb">true</span> <span class="k">do</span>
         <span class="k">match</span> <span class="n">channel</span> <span class="n">receive</span>
-            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -166,12 +166,12 @@ will often cause different behavior. You can imagine something like:</p>
 <p>Here we&rsquo;ve got a little concurrent counter that you can send messages to in
 order to increment and decrement the value. If it also needs to handle the
 channel closing, you&rsquo;d need to do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
-    <span class="k">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
+    <span class="k">var</span> <span class="n">count</span> <span class="err">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="nb">true</span> <span class="k">do</span>
         <span class="k">match</span> <span class="n">channel</span> <span class="n">receive</span>
-            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">end</span>
     <span class="k">catch</span> <span class="n">err</span> <span class="k">is</span> <span class="n">ChannelClosedError</span> <span class="k">then</span>
         <span class="n">print</span><span class="p">(</span><span class="s">&quot;Closed&quot;</span><span class="p">)</span>
@@ -203,12 +203,12 @@ channel. Receivers wouldn&rsquo;t be able to tell the difference.</p>
 
 <p>So I made another singleton value: <code>done</code>. It exists solely to represent &ldquo;no
 more values&rdquo;. With this, the above code is like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
-    <span class="k">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
+    <span class="k">var</span> <span class="n">count</span> <span class="err">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="nb">true</span> <span class="k">do</span>
         <span class="k">match</span> <span class="n">channel</span> <span class="n">receive</span>
-            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">case</span> <span class="n">done</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Closed&quot;</span><span class="p">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
@@ -257,12 +257,12 @@ is that you often read from a channel repeatedly. See that <code>while true do</
 up there? That seemed a bit silly. Magpie has <code>for</code> loops. Like <a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html">most</a>
 <a href="http://msdn.microsoft.com/en-us/library/78dfe2yb.aspx">languages</a>, those are syntactic sugar for an
 <a href="http://docs.python.org/2/c-api/iter.html">iteration protocol</a>. If I made channels support that directly, you could do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
-    <span class="k">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">for</span> <span class="n">value</span> <span class="k">in</span> <span class="n">channel</span> <span class="n">receive</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">async</span>
+    <span class="k">var</span> <span class="n">count</span> <span class="err">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="n">in</span> <span class="n">channel</span> <span class="n">receive</span>
         <span class="k">match</span> <span class="n">value</span>
-            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;inc&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="n">count</span> <span class="err">=</span> <span class="n">count</span> <span class="err">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
     <span class="n">print</span><span class="p">(</span><span class="s">&quot;Closed&quot;</span><span class="p">)</span>
@@ -307,38 +307,38 @@ implementing your own sequences is a little easier.</p>
 those workhorse methods that transform sequences. Good old <a href="http://en.wikipedia.org/wiki/Map_(higher-order_function)"><code>map</code></a>,
 <a href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)"><code>filter</code></a>, <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)"><code>fold</code></a>, etc. This gives you a feel for what they
 look like in Magpie:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
-<span class="n">list</span> <span class="n">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="err">i</span><span class="p">)</span> <span class="err">i</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">// 3, 6, 9, 12</span>
-<span class="n">list</span> <span class="n">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="err">i</span><span class="p">)</span> <span class="err">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// 2, 4</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">list</span> <span class="err">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">list</span> <span class="n">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="n">i</span> <span class="err">*</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">// 3, 6, 9, 12</span>
+<span class="n">list</span> <span class="n">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="n">i</span> <span class="err">%</span> <span class="mi">2</span> <span class="err">==</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// 2, 4</span>
 </code></pre></div>
 <p>Since I specialized these on Iterable, that means any iterable type, including
 channels, gets them. For a longer example, Go has <a href="http://golang.org/doc/play/sieve.go">an example</a>
 showing a concurrent <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve of Eratosthenes</a>. Ported to Magpie, it looks like:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c1">// Send the sequence 2, 3, 4, ... to &#39;channel&#39;.</span>
-<span class="k">def</span> <span class="n">generate</span><span class="p">(</span><span class="n">channel</span> <span class="k">is</span> <span class="n">Channel</span><span class="p">)</span> <span class="k">async</span>
-    <span class="k">for</span> <span class="err">i</span> <span class="k">in</span> <span class="mf">2.</span><span class="o">.</span><span class="mi">9999</span> <span class="k">do</span> <span class="n">channel</span> <span class="n">send</span><span class="p">(</span><span class="err">i</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">generate</span><span class="p">(</span><span class="n">channel</span> <span class="k">is</span> <span class="n">Channel</span><span class="p">)</span> <span class="n">async</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mf">2.</span><span class="k">.</span><span class="mi">9999</span> <span class="k">do</span> <span class="n">channel</span> <span class="n">send</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="c1">// Copy the values from &#39;input&#39; to &#39;out&#39;,</span>
 <span class="c1">// removing those divisible by &#39;prime&#39;.</span>
-<span class="k">def</span> <span class="n">filter</span><span class="p">(</span><span class="n">input</span> <span class="k">is</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">out</span> <span class="k">is</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">prime</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="k">async</span>
-    <span class="n">input</span> <span class="n">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="err">i</span><span class="p">)</span> <span class="err">i</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">pipeTo</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">filter</span><span class="p">(</span><span class="n">input</span> <span class="k">is</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">out</span> <span class="k">is</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">prime</span> <span class="k">is</span> <span class="n">Int</span><span class="p">)</span> <span class="n">async</span>
+    <span class="n">input</span> <span class="n">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="n">i</span> <span class="err">%</span> <span class="n">prime</span> <span class="err">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">pipeTo</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="c1">// The prime sieve: Daisy-chain Filter processes.</span>
-<span class="k">var</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">Channel</span> <span class="n">new</span>
+<span class="k">var</span> <span class="n">channel</span> <span class="err">=</span> <span class="n">Channel</span> <span class="n">new</span>
 <span class="n">generate</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="c1">// Spawn generate fiber.</span>
 
-<span class="k">for</span> <span class="err">i</span> <span class="k">in</span> <span class="mf">0.</span><span class="o">.</span><span class="mi">50</span> <span class="k">do</span>
-    <span class="k">val</span> <span class="n">prime</span> <span class="o">=</span> <span class="n">print</span><span class="p">(</span><span class="n">channel</span> <span class="n">receive</span><span class="p">)</span>
-    <span class="k">val</span> <span class="n">sieve</span> <span class="o">=</span> <span class="n">Channel</span> <span class="n">new</span>
+<span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mf">0.</span><span class="k">.</span><span class="mi">50</span> <span class="k">do</span>
+    <span class="k">val</span> <span class="n">prime</span> <span class="err">=</span> <span class="n">print</span><span class="p">(</span><span class="n">channel</span> <span class="n">receive</span><span class="p">)</span>
+    <span class="k">val</span> <span class="n">sieve</span> <span class="err">=</span> <span class="n">Channel</span> <span class="n">new</span>
     <span class="n">filter</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">sieve</span><span class="p">,</span> <span class="n">prime</span><span class="p">)</span>
-    <span class="n">channel</span> <span class="o">=</span> <span class="n">sieve</span>
+    <span class="n">channel</span> <span class="err">=</span> <span class="n">sieve</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>I won&rsquo;t walk you through the whole thing, but I do think it&rsquo;s pretty rad. The
 neat bit is this line:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">input</span> <span class="n">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="err">i</span><span class="p">)</span> <span class="err">i</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">pipeTo</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">input</span> <span class="n">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="n">i</span> <span class="err">%</span> <span class="n">prime</span> <span class="err">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">pipeTo</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 </code></pre></div>
 <p>Here, <code>where</code> is Magpie&rsquo;s filter function. It takes an iterable on the left
 and a predicate function on the right. It returns an iterable generating all of
@@ -376,7 +376,7 @@ we have this <code>done</code> value laying around, we can use it here too. So t
 <code>done</code> that means &ldquo;stop iterating now&rdquo;.</p>
 
 <p>For example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="n">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="err">i</span><span class="p">)</span> <span class="k">if</span> <span class="err">i</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="k">then</span> <span class="err">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">done</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="n">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="err">&lt;</span> <span class="mi">3</span> <span class="k">then</span> <span class="n">i</span> <span class="err">*</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">done</span><span class="p">)</span>
 </code></pre></div>
 <p>This will not only transform the values (i.e. what <code>map</code> usually does), but it
 will also truncate the sequence and just return <code>[2, 4]</code>.</p>
@@ -437,7 +437,7 @@ one little sentinel value.</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -450,9 +450,9 @@ one little sentinel value.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

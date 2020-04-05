@@ -53,11 +53,11 @@ As far as the core language is concerned, it doesn&rsquo;t even <em>have</em> op
 <p>Not only can you now define your own infix operators, including specifying
 precedence and associativity, but other large chunks of Magpie syntax are now
 defined at the library level. Take this chunk of (meaningless) code:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">doStuff</span><span class="p">(</span><span class="err">a</span><span class="p">,</span> <span class="err">b</span><span class="p">)</span>
-    <span class="k">if</span> <span class="err">a</span> <span class="k">and</span> <span class="err">b</span> <span class="k">then</span>
-        <span class="n">print</span><span class="p">(</span><span class="s">&quot;Both &quot;</span> <span class="o">~</span> <span class="err">a</span> <span class="o">~</span> <span class="s">&quot; and &quot;</span> <span class="o">~</span> <span class="err">b</span> <span class="o">~</span> <span class="s">&quot; are truthy&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">doStuff</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="k">and</span> <span class="n">b</span> <span class="k">then</span>
+        <span class="n">print</span><span class="p">(</span><span class="s">&quot;Both &quot;</span> <span class="err">~</span> <span class="n">a</span> <span class="err">~</span> <span class="s">&quot; and &quot;</span> <span class="err">~</span> <span class="n">b</span> <span class="err">~</span> <span class="s">&quot; are truthy&quot;</span><span class="p">)</span>
     <span class="k">else</span>
-        <span class="n">print</span><span class="p">(</span><span class="s">&quot;Their sum is &quot;</span> <span class="o">~</span> <span class="err">a</span> <span class="o">+</span> <span class="err">b</span><span class="p">)</span>
+        <span class="n">print</span><span class="p">(</span><span class="s">&quot;Their sum is &quot;</span> <span class="err">~</span> <span class="n">a</span> <span class="err">+</span> <span class="n">b</span><span class="p">)</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -190,20 +190,20 @@ back (an expression) and marshalls that back to Java and returns it.</p>
 <p>Over in Magpie, it looks like this:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">AndParser</span>
     <span class="k">def</span> <span class="n">parse</span><span class="p">(</span><span class="n">parser</span> <span class="n">MagpieParser</span><span class="p">,</span> <span class="n">left</span> <span class="n">Expression</span><span class="p">,</span>
-              <span class="n">token</span> <span class="n">Token</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">)</span>
+              <span class="n">token</span> <span class="n">Token</span> <span class="k">-&gt;</span> <span class="n">Expression</span><span class="p">)</span>
         <span class="c1">// Ignore a newline after &quot;and&quot;.</span>
         <span class="n">parser</span> <span class="n">matchToken</span><span class="p">(</span><span class="n">TokenType</span> <span class="n">line</span><span class="p">)</span>
-        <span class="k">var</span> <span class="n">right</span> <span class="o">=</span> <span class="n">parser</span> <span class="n">parseExpression</span><span class="p">(</span><span class="n">stickiness</span><span class="p">)</span>
+        <span class="k">var</span> <span class="n">right</span> <span class="err">=</span> <span class="n">parser</span> <span class="n">parseExpression</span><span class="p">(</span><span class="n">stickiness</span><span class="p">)</span>
         <span class="p">{</span> <span class="k">do</span>
-            <span class="k">var</span> <span class="n">temp__</span> <span class="o">=</span> <span class="err">`</span><span class="n">left</span>
-            <span class="k">match</span> <span class="n">temp__</span> <span class="k">true</span><span class="o">?</span>
-                <span class="k">case</span> <span class="k">true</span> <span class="k">then</span> <span class="err">`</span><span class="n">right</span>
+            <span class="k">var</span> <span class="n">temp__</span> <span class="err">=</span> <span class="err">`</span><span class="n">left</span>
+            <span class="k">match</span> <span class="n">temp__</span> <span class="nb">true</span><span class="err">?</span>
+                <span class="k">case</span> <span class="nb">true</span> <span class="k">then</span> <span class="err">`</span><span class="n">right</span>
                 <span class="k">else</span> <span class="n">temp__</span>
             <span class="k">end</span>
         <span class="k">end</span> <span class="p">}</span>
     <span class="k">end</span>
 
-    <span class="n">get</span> <span class="n">stickiness</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">get</span> <span class="n">stickiness</span> <span class="n">Int</span> <span class="err">=</span> <span class="mi">30</span>
 <span class="k">end</span>
 
 <span class="n">MagpieParser</span> <span class="n">registerInfixParser</span><span class="p">(</span><span class="s">&quot;and&quot;</span><span class="p">,</span> <span class="n">AndParser</span> <span class="n">new</span><span class="p">())</span>
@@ -221,7 +221,7 @@ kind of lame though:</p>
         <span class="n">IntExpression</span> <span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">IntExpression</span> <span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">))))</span>
 </code></pre></div>
 <p>Quotations let you write that out just like it would appear in code:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="p">{</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">}</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="p">{</span> <span class="mi">1</span> <span class="err">+</span> <span class="mi">2</span> <span class="p">}</span>
 </code></pre></div>
 <p>If you surround an expression in curlies, you&rsquo;ll get an object representing
 the expression back, instead of evaluating it. Inside a quotation, you can
@@ -240,13 +240,13 @@ the grammar dictionary.</p>
 <p>Once this parser is all hooked up, when an <code>and</code> is encountered, the parser
 will desugar it to a little pattern match that does the right thing. In other
 words, if you type:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">happy</span> <span class="k">and</span> <span class="n">know</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">happy</span> <span class="k">and</span> <span class="n">know</span><span class="p">(</span><span class="bp">it</span><span class="p">)</span>
 </code></pre></div>
 <p>It will expand to:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">do</span>
-    <span class="k">var</span> <span class="n">temp__</span> <span class="o">=</span> <span class="n">happy</span>
-    <span class="k">match</span> <span class="n">temp__</span> <span class="k">true</span><span class="o">?</span>
-        <span class="k">case</span> <span class="k">true</span> <span class="k">then</span> <span class="n">know</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">temp__</span> <span class="err">=</span> <span class="n">happy</span>
+    <span class="k">match</span> <span class="n">temp__</span> <span class="nb">true</span><span class="err">?</span>
+        <span class="k">case</span> <span class="nb">true</span> <span class="k">then</span> <span class="n">know</span><span class="p">(</span><span class="bp">it</span><span class="p">)</span>
         <span class="k">else</span> <span class="n">temp__</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -264,19 +264,19 @@ times. Do I have to write a whole class just to do that?</p>
 
 <p>The answer is &ldquo;no&rdquo;, of course. If you just want an infix operator that
 desugars to a function call, look no further than:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">definfix</span> <span class="o">~*</span> <span class="mi">60</span> <span class="p">(</span><span class="n">left</span> <span class="n">String</span><span class="p">,</span> <span class="n">count</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">)</span>
-    <span class="k">var</span> <span class="n">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-    <span class="k">for</span> <span class="err">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">to</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">do</span> <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">~</span> <span class="n">left</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">definfix</span> <span class="err">~*</span> <span class="mi">60</span> <span class="p">(</span><span class="n">left</span> <span class="n">String</span><span class="p">,</span> <span class="n">count</span> <span class="n">Int</span> <span class="k">-&gt;</span> <span class="n">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">result</span> <span class="err">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="err">=</span> <span class="mi">1</span> <span class="n">to</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">do</span> <span class="n">result</span> <span class="err">=</span> <span class="n">result</span> <span class="err">~</span> <span class="n">left</span>
     <span class="n">result</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Here <code>60</code> defines the precedence level so it knows how to parse our new
 operator if you&rsquo;re crazy enough to mix it in with others without parentheses.
 Now when the parser encounters:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="mi">3</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="s">&quot;Beetlejuice &quot;</span> <span class="err">~*</span> <span class="mi">3</span>
 </code></pre></div>
 <p>It will transform that to a call to:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="o">~*</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="err">~*</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <p>You may be wondering where <code>definfix</code> comes from. Why, it&rsquo;s a custom parser
 <a href="https://github.com/munificent/magpie/blob/master/base/syntax/OperatorParser.mag">written in Magpie</a>, of course! Turtles all the way down!</p>
@@ -286,9 +286,9 @@ Now when the parser encounters:</p>
 <p>I got all of this working and then ran into a real snag. Let&rsquo;s say we have
 some module that defines a new operator:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c1">// In repeat.mag:</span>
-<span class="n">definfix</span> <span class="o">~*</span> <span class="mi">60</span><span class="p">(</span><span class="n">left</span> <span class="n">String</span><span class="p">,</span> <span class="n">count</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">)</span>
-    <span class="k">var</span> <span class="n">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-    <span class="k">for</span> <span class="err">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">to</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">do</span> <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">~</span> <span class="n">left</span>
+<span class="k">definfix</span> <span class="err">~*</span> <span class="mi">60</span><span class="p">(</span><span class="n">left</span> <span class="n">String</span><span class="p">,</span> <span class="n">count</span> <span class="n">Int</span> <span class="k">-&gt;</span> <span class="n">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">result</span> <span class="err">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="err">=</span> <span class="mi">1</span> <span class="n">to</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">do</span> <span class="n">result</span> <span class="err">=</span> <span class="n">result</span> <span class="err">~</span> <span class="n">left</span>
     <span class="n">result</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -296,7 +296,7 @@ some module that defines a new operator:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c1">// In summon-ghost.mag:</span>
 <span class="k">import</span><span class="p">(</span><span class="s">&quot;repeat.mag&quot;</span><span class="p">)</span>
 
-<span class="n">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="err">~*</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <p>Do you see the problem? Let&rsquo;s walk through how most interpreters (including
 Magpie) handle this:</p>
@@ -324,13 +324,13 @@ nested, of course, but at the top level, it&rsquo;s a list.)</p>
 each expression in a file <em>incrementally</em>. Getting this working was actually
 <a href="https://github.com/munificent/magpie/commit/bffe49291e9709b5bfc960420fcc6f5a4b1614bd">a tiny code change</a> and means you can now extend the syntax <em>and then use
 that extension immediately in the same file</em>. This is perfectly valid:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">definfix</span> <span class="o">~*</span> <span class="mi">60</span><span class="p">(</span><span class="n">left</span> <span class="n">String</span><span class="p">,</span> <span class="n">count</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="p">)</span>
-    <span class="k">var</span> <span class="n">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-    <span class="k">for</span> <span class="err">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">to</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">do</span> <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">~</span> <span class="n">left</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">definfix</span> <span class="err">~*</span> <span class="mi">60</span><span class="p">(</span><span class="n">left</span> <span class="n">String</span><span class="p">,</span> <span class="n">count</span> <span class="n">Int</span> <span class="k">-&gt;</span> <span class="n">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">result</span> <span class="err">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="err">=</span> <span class="mi">1</span> <span class="n">to</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="k">do</span> <span class="n">result</span> <span class="err">=</span> <span class="n">result</span> <span class="err">~</span> <span class="n">left</span>
     <span class="n">result</span>
 <span class="k">end</span>
 
-<span class="n">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="err">~*</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <p>The only limitation is that you have to do this at the top-level. Given that
 most languages don&rsquo;t let you do <em>any</em> of this, that doesn&rsquo;t seem like too much
@@ -389,7 +389,7 @@ building internal DSLs, and the core language itself becomes <em>simpler</em>.</
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -402,9 +402,9 @@ building internal DSLs, and the core language itself becomes <em>simpler</em>.</
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

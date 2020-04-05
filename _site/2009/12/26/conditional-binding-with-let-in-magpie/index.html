@@ -102,24 +102,24 @@ it succeeds, we want to do something with the returned value.</p>
 the gross scoping issues or output parameters. The above examples in Magpie
 would look like:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c1">// parse</span>
-<span class="n">let</span> <span class="n">value</span> <span class="o">&lt;-</span> <span class="s">&quot;1234&quot;</span><span class="o">.</span><span class="n">AsInt</span> <span class="k">then</span>
+<span class="n">let</span> <span class="n">value</span> <span class="k">&lt;-</span> <span class="s">&quot;1234&quot;</span><span class="k">.</span><span class="n">AsInt</span> <span class="k">then</span>
     <span class="c1">// do something with value</span>
 <span class="k">end</span>
 
 <span class="c1">// downcast</span>
-<span class="n">let</span> <span class="n">derived</span> <span class="o">&lt;-</span> <span class="n">someBase.As</span><span class="sc">&#39;Derived then</span>
+<span class="n">let</span> <span class="n">derived</span> <span class="k">&lt;-</span> <span class="n">someBase</span><span class="k">.</span><span class="n">As</span><span class="err">&#39;</span><span class="n">Derived</span> <span class="k">then</span>
     <span class="c1">// do something with derived</span>
 <span class="k">end</span>
 
 <span class="c1">// look up in dictionary</span>
-<span class="n">let</span> <span class="n">value</span> <span class="o">&lt;-</span> <span class="n">Find</span> <span class="p">(</span><span class="n">dict</span><span class="p">,</span> <span class="s">&quot;key&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="n">let</span> <span class="n">value</span> <span class="k">&lt;-</span> <span class="n">Find</span> <span class="p">(</span><span class="n">dict</span><span class="p">,</span> <span class="s">&quot;key&quot;</span><span class="p">)</span> <span class="k">then</span>
     <span class="c1">// do something with value</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The way this works is pretty simple. Magpie has an <code>Option</code> type, which is the
 same as F#&lsquo;s <a href="http://msdn.microsoft.com/en-us/library/dd233245%28VS.100%29.aspx">option</a> or Haskell&rsquo;s <a href="http://en.wikibooks.org/wiki/Haskell/Hierarchical_libraries/Maybe">Maybe</a>. A <code>let</code> expression looks
 like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">let</span> <span class="o">&lt;</span><span class="n">variable</span><span class="o">&gt;</span> <span class="o">&lt;-</span> <span class="o">&lt;</span><span class="n">expression</span><span class="o">&gt;</span> <span class="k">then</span> <span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">let</span> <span class="err">&lt;</span><span class="n">variable&gt;</span> <span class="k">&lt;-</span> <span class="err">&lt;</span><span class="n">expression&gt;</span> <span class="k">then</span> <span class="err">&lt;</span><span class="n">body&gt;</span>
 </code></pre></div>
 <p>The <code>&lt;expression&gt;</code> is expected to return an <code>Option</code> value. If it evaluates to
 <code>Some</code>, then the value is extracted and assigned to <code>&lt;variable&gt;</code> and the
@@ -136,7 +136,7 @@ impossible to access that variable incorrectly when the expression fails.</p>
 <p>Because <code>let</code> is essentially another kind of <code>if</code>, it also supports an <code>else</code>
 clause:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c1">// parse</span>
-<span class="n">let</span> <span class="n">value</span> <span class="o">&lt;-</span> <span class="s">&quot;1234&quot;</span><span class="o">.</span><span class="n">AsInt</span> <span class="k">then</span>
+<span class="n">let</span> <span class="n">value</span> <span class="k">&lt;-</span> <span class="s">&quot;1234&quot;</span><span class="k">.</span><span class="n">AsInt</span> <span class="k">then</span>
     <span class="c1">// do something with value</span>
 <span class="k">else</span>
     <span class="n">Print</span> <span class="s">&quot;Couldn&#39;t parse string.&quot;</span>
@@ -206,7 +206,7 @@ man&rsquo;s pattern matching. This isn&rsquo;t far from the truth, but I do thin
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -219,9 +219,9 @@ man&rsquo;s pattern matching. This isn&rsquo;t far from the truth, but I do thin
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

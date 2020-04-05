@@ -50,7 +50,7 @@ better. There is now <a href="http://en.wikipedia.org/wiki/Syntactic_sugar">synt
 <p>When Finch starts up, it runs a &ldquo;<a href="http://bitbucket.org/munificent/finch/src/tip/base/main.fin">main</a>&rdquo; Finch script that builds a bunch of the standard objects and environment. It used to have a lot of code that looked like this:</p>
 <div class="highlight"><pre><code class="language-finch" data-lang="finch"><span></span><span class="vg">True</span> <span class="k">addMethod:</span> <span class="s">&quot;not&quot;</span> <span class="k">body:</span> <span class="p">{</span> <span class="vg">False</span> <span class="p">}</span>
 
-<span class="err">&#39;</span> <span class="n">define</span> <span class="n">a</span> <span class="n">for-style</span> <span class="n">loop</span>
+<span class="c1">&#39; define a for-style loop</span>
 <span class="vg">Ether</span> <span class="k">addMethod:</span> <span class="s">&quot;from:to:step:do:&quot;</span> <span class="p">{</span>
     <span class="kd">|</span><span class="nv">start</span><span class="w"> </span><span class="nv">end</span><span class="w"> </span><span class="nv">step</span><span class="w"> </span><span class="nv">block</span><span class="kd">|</span>
 
@@ -62,7 +62,7 @@ better. There is now <a href="http://en.wikipedia.org/wiki/Syntactic_sugar">synt
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="err">&#39;</span> <span class="n">concatenate</span> <span class="n">two</span> <span class="n">arrays</span>
+<span class="c1">&#39; concatenate two arrays</span>
 <span class="vg">Array</span> <span class="n">prototype</span> <span class="k">addMethod:</span> <span class="s">&quot;++&quot;</span> <span class="k">body:</span> <span class="p">{</span>
     <span class="kd">|</span><span class="nv">right</span><span class="kd">|</span>
     <span class="n">result</span> <span class="o">&lt;-</span> <span class="p">[]</span>
@@ -77,7 +77,7 @@ better. There is now <a href="http://en.wikipedia.org/wiki/Syntactic_sugar">synt
 explicit calls to <code>addMethod:body:</code> and replaces them with this:</p>
 <div class="highlight"><pre><code class="language-finch" data-lang="finch"><span></span><span class="vg">True</span> <span class="err">::</span> <span class="n">not</span> <span class="p">{</span> <span class="vg">False</span> <span class="p">}</span>
 
-<span class="err">&#39;</span> <span class="n">define</span> <span class="n">a</span> <span class="n">for-style</span> <span class="n">loop</span>
+<span class="c1">&#39; define a for-style loop</span>
 <span class="vg">Ether</span> <span class="err">::</span> <span class="k">from:</span> <span class="n">start</span> <span class="k">to:</span> <span class="n">end</span> <span class="k">step:</span> <span class="n">step</span> <span class="k">do:</span> <span class="n">block</span> <span class="p">{</span>
     <span class="n">i</span> <span class="o">&lt;-</span> <span class="n">start</span>
 
@@ -87,7 +87,7 @@ explicit calls to <code>addMethod:body:</code> and replaces them with this:</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="err">&#39;</span> <span class="n">concatenate</span> <span class="n">two</span> <span class="n">arrays</span>
+<span class="c1">&#39; concatenate two arrays</span>
 <span class="vg">Array</span> <span class="n">prototype</span> <span class="err">::</span> <span class="ow">++</span> <span class="n">right</span> <span class="p">{</span>
     <span class="n">result</span> <span class="o">&lt;-</span> <span class="p">[]</span>
 
@@ -160,7 +160,7 @@ other, of course), or an argument for each keyword for a keyword message.</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -173,9 +173,9 @@ other, of course), or an argument for each keyword for a keyword message.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

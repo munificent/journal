@@ -163,9 +163,9 @@ content. In Magpie, those are:</p>
 are like the literals after the <code>case</code> in a <code>switch</code> statement, but Magpie
 lets you use pretty much any expression. These are valid value patterns:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="mi">123</span>
-<span class="k">true</span>
+<span class="nb">true</span>
 <span class="s">&quot;a string&quot;</span>
-<span class="mi">3</span> <span class="o">+</span> <span class="mi">5</span>
+<span class="mi">3</span> <span class="err">+</span> <span class="mi">5</span>
 </code></pre></div>
 <p>Testing against a value is simple: it&rsquo;s just an equality check. A <code>2</code> pattern
 matches if the value is also <code>2</code>. Magpie does this by just calling the <code>==</code>
@@ -179,7 +179,7 @@ operator, so it&rsquo;s even possible to use your own types here.</p>
 composing bigger patterns that do more stuff. A tuple pattern is just like a
 <a href="http://journal.stuffwithstuff.com/2009/05/05/one-and-only-one/">tuple expression</a>: it&rsquo;s a series of patterns separated by commas. For
 example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;four&quot;</span><span class="p">,</span> <span class="k">false</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;four&quot;</span><span class="p">,</span> <span class="nb">false</span>
 </code></pre></div>
 <p>Here we have a tuple of three value patterns. A tuple pattern matches if all
 of the fields match the fields of the value. In other words, it walks through
@@ -193,7 +193,7 @@ give the patterns of its fields the chance to do so.</p>
 
 <p>The twin brother to tuple patterns, a record pattern does the same thing, but
 for a named record (or any other type with named members). Here&rsquo;s one:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="err">x:</span> <span class="mi">1</span><span class="p">,</span> <span class="err">y:</span> <span class="mi">2</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">x</span><span class="err">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="err">:</span> <span class="mi">2</span>
 </code></pre></div>
 <p>That pattern will match any object with an <code>x</code> field whose value is <code>1</code>, and a
 <code>y</code> field whose value is <code>2</code>.</p>
@@ -204,10 +204,10 @@ for a named record (or any other type with named members). Here&rsquo;s one:</p>
 greatest departure from ML. A variable pattern has a <em>name</em> and an optional
 <em>type annotation</em>. The name can be <code>_</code> if you don&rsquo;t really care about it.
 Here&rsquo;s some:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="err">_</span>              <span class="c1">// no name or type</span>
-<span class="err">a</span>              <span class="c1">// name but no type</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">_</span>              <span class="c1">// no name or type</span>
+<span class="n">a</span>              <span class="c1">// name but no type</span>
 <span class="n">position</span> <span class="n">Point</span> <span class="c1">// name and type</span>
-<span class="err">_</span> <span class="n">Int</span> <span class="o">|</span> <span class="n">String</span> <span class="c1">// no name but type</span>
+<span class="n">_</span> <span class="n">Int</span> <span class="err">|</span> <span class="n">String</span> <span class="c1">// no name but type</span>
 </code></pre></div>
 <p>A variable pattern matches if the <em>type</em> of the value matches the variable
 pattern&rsquo;s type. If the pattern doesn&rsquo;t have a type, it always succeeds.</p>
@@ -219,7 +219,7 @@ get destructuring automagically. If we take this value:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">name</span><span class="err">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>And match it against this pattern:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">name</span><span class="err">:</span> <span class="err">n</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="err">a</span><span class="p">,</span> <span class="err">b</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">name</span><span class="err">:</span> <span class="n">n</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </code></pre></div>
 <p>The match will succeed, and <code>n</code> will be <code>&quot;Dan&quot;</code>, <code>a</code> will be <code>&quot;Sam&quot;</code>, and <code>b</code>
 will be <code>&quot;Ed&quot;</code>.</p>
@@ -230,11 +230,11 @@ will be <code>&quot;Ed&quot;</code>.</p>
 of places. We&rsquo;ll start with the most obvious one: <code>match</code> expressions&mdash;
 Magpie&rsquo;s souped-up version of <code>switch</code>. Our first example looks like this in
 Magpie:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="err">i</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="n">i</span>
     <span class="k">case</span> <span class="mi">1</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="mi">2</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="mi">3</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;third&quot;</span><span class="p">)</span>
-    <span class="k">case</span> <span class="err">_</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;uh...&quot;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">_</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;uh...&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The semantics are what you expect. It tests each pattern (the bit between
@@ -244,10 +244,10 @@ richer example showing all of the awesome looks like:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="n">name</span><span class="err">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">name</span><span class="err">:</span> <span class="s">&quot;Dave&quot;</span> <span class="k">then</span>
         <span class="s">&quot;don&#39;t care about Dave&#39;s friends&quot;</span>
-    <span class="k">case</span> <span class="n">name</span><span class="err">:</span> <span class="err">a</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="k">nothing</span> <span class="k">then</span>
-        <span class="s">&quot;aww, &quot;</span> <span class="o">~</span> <span class="err">a</span> <span class="o">~</span> <span class="s">&quot; has no friends&quot;</span>
-    <span class="k">case</span> <span class="n">name</span><span class="err">:</span> <span class="err">n</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="err">a</span><span class="p">,</span> <span class="err">b</span><span class="p">)</span> <span class="k">then</span>
-        <span class="err">n</span> <span class="o">~</span> <span class="s">&quot; is pals with &quot;</span> <span class="o">~</span> <span class="err">a</span> <span class="o">~</span> <span class="s">&quot; and &quot;</span> <span class="o">~</span> <span class="err">b</span>
+    <span class="k">case</span> <span class="n">name</span><span class="err">:</span> <span class="n">a</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="nb">nothing</span> <span class="k">then</span>
+        <span class="s">&quot;aww, &quot;</span> <span class="err">~</span> <span class="n">a</span> <span class="err">~</span> <span class="s">&quot; has no friends&quot;</span>
+    <span class="k">case</span> <span class="n">name</span><span class="err">:</span> <span class="n">n</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">then</span>
+        <span class="n">n</span> <span class="err">~</span> <span class="s">&quot; is pals with &quot;</span> <span class="err">~</span> <span class="n">a</span> <span class="err">~</span> <span class="s">&quot; and &quot;</span> <span class="err">~</span> <span class="n">b</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -262,7 +262,7 @@ example up there becomes:</p>
     <span class="c1">// Do something crazy...</span>
 <span class="k">catch</span> <span class="n">ex</span> <span class="n">ParseException</span> <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Parse error!&quot;</span><span class="p">)</span>
 <span class="k">catch</span> <span class="n">ex</span> <span class="n">IOException</span>    <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;IO error!&quot;</span><span class="p">)</span>
-<span class="k">catch</span> <span class="err">_</span>                 <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">)</span>
+<span class="k">catch</span> <span class="n">_</span>                 <span class="k">then</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3>Variables</h3>
 
@@ -271,13 +271,13 @@ separate special case <code>var</code> expression that just creates a single nam
 variable? Nope. We can just make it take a single pattern. If the pattern is a
 variable pattern with no type, it degenerates to a regular variable
 declaration like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">i</span> <span class="o">=</span> <span class="s">&quot;the queen of France&quot;</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">i</span> <span class="err">=</span> <span class="s">&quot;the queen of France&quot;</span>
 </code></pre></div>
 <p>But you can also use tuple and record patterns to destructure:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">name</span><span class="err">:</span> <span class="err">n</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="err">a</span><span class="p">,</span> <span class="err">b</span><span class="p">)</span> <span class="o">=</span> <span class="n">name</span><span class="err">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
-<span class="n">print</span><span class="p">(</span><span class="err">n</span><span class="p">)</span> <span class="c1">// &quot;Dan&quot;</span>
-<span class="n">print</span><span class="p">(</span><span class="err">a</span><span class="p">)</span> <span class="c1">// &quot;Sam&quot;</span>
-<span class="n">print</span><span class="p">(</span><span class="err">b</span><span class="p">)</span> <span class="c1">// &quot;Ed&quot;</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">name</span><span class="err">:</span> <span class="n">n</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="err">=</span> <span class="n">name</span><span class="err">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
+<span class="n">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1">// &quot;Dan&quot;</span>
+<span class="n">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c1">// &quot;Sam&quot;</span>
+<span class="n">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="c1">// &quot;Ed&quot;</span>
 </code></pre></div>
 <p>So now we&rsquo;ve got destructuring for free. Swell!</p>
 
@@ -287,10 +287,10 @@ declaration like:</p>
 there, it looks an awful lot like a function type declaration. That&rsquo;s not a
 coincidence either. We can now just use a pattern to define a function&rsquo;s
 parameter type, like so:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">foo</span><span class="p">(</span><span class="n">name</span><span class="err">:</span> <span class="err">n</span> <span class="n">String</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="err">a</span> <span class="n">String</span><span class="p">,</span> <span class="err">b</span> <span class="n">String</span><span class="p">))</span>
-    <span class="n">print</span><span class="p">(</span><span class="err">n</span><span class="p">)</span> <span class="c1">// &quot;Dan&quot;</span>
-    <span class="n">print</span><span class="p">(</span><span class="err">a</span><span class="p">)</span> <span class="c1">// &quot;Sam&quot;</span>
-    <span class="n">print</span><span class="p">(</span><span class="err">b</span><span class="p">)</span> <span class="c1">// &quot;Ed&quot;</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">foo</span><span class="p">(</span><span class="n">name</span><span class="err">:</span> <span class="n">n</span> <span class="n">String</span><span class="p">,</span> <span class="n">pals</span><span class="err">:</span> <span class="p">(</span><span class="n">a</span> <span class="n">String</span><span class="p">,</span> <span class="n">b</span> <span class="n">String</span><span class="p">))</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1">// &quot;Dan&quot;</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c1">// &quot;Sam&quot;</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="c1">// &quot;Ed&quot;</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The syntax of variable patterns was designed specifically around this. My goal
@@ -298,7 +298,7 @@ was to make the patterns used for function parameters look familiar to someone
 new to the language while hiding greater flexibility under the surface. I
 think most programmers can figure out what this means:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">sayAge</span><span class="p">(</span><span class="n">name</span> <span class="n">String</span><span class="p">,</span> <span class="n">age</span> <span class="n">Int</span><span class="p">)</span>
-    <span class="n">print</span><span class="p">(</span><span class="n">name</span> <span class="o">~</span> <span class="s">&quot; is &quot;</span> <span class="o">~</span> <span class="n">age</span> <span class="o">~</span> <span class="s">&quot; years old&quot;</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">name</span> <span class="err">~</span> <span class="s">&quot; is &quot;</span> <span class="err">~</span> <span class="n">age</span> <span class="err">~</span> <span class="s">&quot; years old&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>without ever realizing the <code>name String, age Int</code> is something special.</p>
@@ -313,7 +313,7 @@ statically tell that this is an error:</p>
 </code></pre></div>
 <p>because the pattern type doesn&rsquo;t match the value. And using that exact same
 code, we can also tell that this is an error:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">expectInt</span><span class="p">(</span><span class="err">i</span> <span class="n">Int</span><span class="p">)</span> <span class="n">print</span><span class="p">(</span><span class="err">i</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">expectInt</span><span class="p">(</span><span class="n">i</span> <span class="n">Int</span><span class="p">)</span> <span class="n">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 <span class="n">expectInt</span><span class="p">(</span><span class="s">&quot;not an int&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>The end result of all of this is that the total amount of code in the
@@ -377,7 +377,7 @@ before. Or, in the words of the immortal John &ldquo;Hannibal&rdquo; Smith:</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -390,9 +390,9 @@ before. Or, in the words of the immortal John &ldquo;Hannibal&rdquo; Smith:</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

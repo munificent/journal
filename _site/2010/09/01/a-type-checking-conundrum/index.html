@@ -63,14 +63,14 @@ Magpie, here&rsquo;s the salient features of the language:</p>
 </ol>
 
 <p>Here&rsquo;s a simple example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
     <span class="n">print</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">say</span><span class="p">(</span><span class="s">&quot;hey&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>This program will run fine and do what you expect. Now consider this one:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
     <span class="n">print</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
 <span class="k">end</span>
 
@@ -80,11 +80,11 @@ Magpie, here&rsquo;s the salient features of the language:</p>
 converts its argument to a string anyway). That&rsquo;s because the call to
 <code>say(123)</code> is at the top-level, which is run before type-checking. If we
 change it to this:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">say</span><span class="p">(</span><span class="n">what</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
     <span class="n">print</span><span class="p">(</span><span class="n">what</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="k">var</span> <span class="n">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+<span class="k">var</span> <span class="n">main</span><span class="p">(</span><span class="k">-&gt;</span><span class="p">)</span>
     <span class="n">say</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -95,10 +95,10 @@ passed an <code>Int</code>. It will then stop without ever calling <code>main()<
 
 <p>All that so far is fine and dandy. Now lets consider something a little…
 softer:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">returnString</span><span class="p">(</span><span class="o">-&gt;</span> <span class="n">String</span><span class="p">)</span>
-    <span class="k">var</span> <span class="err">a</span> <span class="o">=</span> <span class="mi">123</span>
-    <span class="err">a</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
-    <span class="k">return</span> <span class="err">a</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">returnString</span><span class="p">(</span><span class="k">-&gt;</span> <span class="n">String</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">a</span> <span class="err">=</span> <span class="mi">123</span>
+    <span class="n">a</span> <span class="err">=</span> <span class="s">&quot;string&quot;</span>
+    <span class="k">return</span> <span class="n">a</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>This type-checks fine too. At the point that we&rsquo;re returning <code>a</code>, the type-
@@ -108,13 +108,13 @@ is at its core a dynamic language. It also plays nicely with some other
 features like <a href="http://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/">or types</a>.</p>
 
 <p>Unfortunately, it&rsquo;s also the heart of the problem. Consider this example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">a</span> <span class="o">=</span> <span class="mi">123</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">a</span> <span class="err">=</span> <span class="mi">123</span>
 
-<span class="k">var</span> <span class="n">returnInt</span><span class="p">(</span><span class="o">-&gt;</span> <span class="n">Int</span><span class="p">)</span>
-    <span class="k">return</span> <span class="err">a</span>
+<span class="k">var</span> <span class="n">returnInt</span><span class="p">(</span><span class="k">-&gt;</span> <span class="n">Int</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span>
 <span class="k">end</span>
 
-<span class="err">a</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
+<span class="n">a</span> <span class="err">=</span> <span class="s">&quot;string&quot;</span>
 <span class="n">returnInt</span><span class="p">()</span>
 </code></pre></div>
 <p>The type-checker runs through that top-down. First it evaluates <code>var a = 123</code>
@@ -221,7 +221,7 @@ would be super awesome.</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -234,9 +234,9 @@ would be super awesome.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

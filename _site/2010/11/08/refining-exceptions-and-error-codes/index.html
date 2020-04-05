@@ -132,19 +132,19 @@ that isn&rsquo;t expected to be caught&rdquo;. Aborting with a stack dump is equ
 effective, and does the same thing in practice.</p>
 
 <p>For example, a method for accessing an item in a collection could look like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">Collection</span> <span class="n">getItemAt</span><span class="p">(</span><span class="n">index</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">Item</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">or</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="n">count</span> <span class="k">then</span> <span class="n">OutOfBoundsError</span> <span class="k">throw</span><span class="p">()</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">Collection</span> <span class="n">getItemAt</span><span class="p">(</span><span class="n">index</span> <span class="n">Int</span> <span class="k">-&gt;</span> <span class="n">Item</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="err">&lt;</span> <span class="mi">0</span> <span class="k">or</span> <span class="n">index</span> <span class="err">&gt;</span> <span class="n">count</span> <span class="k">then</span> <span class="n">OutOfBoundsError</span> <span class="k">throw</span><span class="p">()</span>
 
     <span class="c1">// do stuff with index...</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>That is a bit tedious, though. I&rsquo;d likely refactor that into a separate
 function, like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">Int</span> <span class="n">checkBounds</span><span class="p">(</span><span class="n">count</span> <span class="n">Int</span> <span class="o">-&gt;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">this</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">or</span> <span class="n">this</span> <span class="o">&gt;</span> <span class="n">count</span> <span class="k">then</span> <span class="n">OutOfBoundsError</span> <span class="k">throw</span><span class="p">()</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">Int</span> <span class="n">checkBounds</span><span class="p">(</span><span class="n">count</span> <span class="n">Int</span> <span class="k">-&gt;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">this</span> <span class="err">&lt;</span> <span class="mi">0</span> <span class="k">or</span> <span class="bp">this</span> <span class="err">&gt;</span> <span class="n">count</span> <span class="k">then</span> <span class="n">OutOfBoundsError</span> <span class="k">throw</span><span class="p">()</span>
 <span class="k">end</span>
 
-<span class="k">def</span> <span class="n">Collection</span> <span class="n">getItemAt</span><span class="p">(</span><span class="n">index</span> <span class="n">Int</span> <span class="o">-&gt;</span> <span class="n">Item</span><span class="p">)</span>
+<span class="k">def</span> <span class="n">Collection</span> <span class="n">getItemAt</span><span class="p">(</span><span class="n">index</span> <span class="n">Int</span> <span class="k">-&gt;</span> <span class="n">Item</span><span class="p">)</span>
     <span class="n">index</span> <span class="n">checkBounds</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
 
     <span class="c1">// do stuff with index...</span>
@@ -175,18 +175,18 @@ might just be really dumb: treat <em>every</em> block as a <code>try</code> bloc
 
 <p>The basic idea is that any block can have <code>catch</code> clauses at the end of it,
 and having them implicitly makes it a <code>try</code> block. That should get code like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">copy</span><span class="p">(</span><span class="n">source</span> <span class="n">String</span><span class="p">,</span> <span class="n">dest</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">copy</span><span class="p">(</span><span class="n">source</span> <span class="n">String</span><span class="p">,</span> <span class="n">dest</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
     <span class="n">try</span>
         <span class="c1">// copy files...</span>
-    <span class="k">catch</span> <span class="p">(</span><span class="err">e</span> <span class="n">IOError</span><span class="p">)</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="n">e</span> <span class="n">IOError</span><span class="p">)</span>
         <span class="c1">// handle error...</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>And simplify it to:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">copy</span><span class="p">(</span><span class="n">source</span> <span class="n">String</span><span class="p">,</span> <span class="n">dest</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">copy</span><span class="p">(</span><span class="n">source</span> <span class="n">String</span><span class="p">,</span> <span class="n">dest</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
     <span class="c1">// copy files...</span>
-<span class="k">catch</span> <span class="p">(</span><span class="err">e</span> <span class="n">IOError</span><span class="p">)</span>
+<span class="k">catch</span> <span class="p">(</span><span class="n">e</span> <span class="n">IOError</span><span class="p">)</span>
     <span class="c1">// handle error...</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -204,25 +204,25 @@ Instead, we&rsquo;ll need to support both.</p>
 
 <p>Here&rsquo;s my plan. For our example, we&rsquo;ll consider a simple one: parsing. Let&rsquo;s
 say we have a function to parse strings to booleans:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">parseBool</span><span class="p">(</span><span class="n">text</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">Bool</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">parseBool</span><span class="p">(</span><span class="n">text</span> <span class="n">String</span> <span class="k">-&gt;</span> <span class="n">Bool</span><span class="p">)</span>
     <span class="k">match</span> <span class="n">text</span>
-    <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="k">true</span>
-    <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="k">false</span>
+    <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="nb">true</span>
+    <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="nb">false</span>
     <span class="k">else</span> <span class="c1">// ??? what do we do here?</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>This can be called like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">b</span> <span class="o">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">b</span> <span class="err">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Of course, the question is what happens if it fails? Since this may be common,
 we want it to be easy to handle the failure case. Unions are a good fit for
 that. We&rsquo;ll change the function to:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">parseBool</span><span class="p">(</span><span class="n">text</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">Bool</span> <span class="o">|</span> <span class="n">Nothing</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">parseBool</span><span class="p">(</span><span class="n">text</span> <span class="n">String</span> <span class="k">-&gt;</span> <span class="n">Bool</span> <span class="err">|</span> <span class="n">Nothing</span><span class="p">)</span>
     <span class="k">match</span> <span class="n">text</span>
-    <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="k">true</span>
-    <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="k">false</span>
-    <span class="k">else</span> <span class="k">nothing</span>
+    <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="nb">true</span>
+    <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="nb">false</span>
+    <span class="k">else</span> <span class="nb">nothing</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -230,15 +230,15 @@ that. We&rsquo;ll change the function to:</p>
 <code>nothing</code> value if it fails. Note that this is <em>not</em> like just returning
 <code>null</code>: the return type of <code>parseBool</code> is different now. That means you can&rsquo;t
 do this anymore:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="err">b</span> <span class="o">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
-<span class="k">var</span> <span class="n">notB</span> <span class="o">=</span> <span class="err">b</span> <span class="k">not</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">b</span> <span class="err">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="k">var</span> <span class="n">notB</span> <span class="err">=</span> <span class="n">b</span> <span class="n">not</span>
 </code></pre></div>
 <p>The <code>not</code> method is a method on booleans, and <code>b</code> isnt&rsquo; a boolean, it&rsquo;s a
 <code>Bool | Nothing</code>. To treat it like a boolean, you first have to check its
 type. The canonical way to do that in Magpie is using <code>let</code>:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">let</span> <span class="err">b</span> <span class="o">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">let</span> <span class="n">b</span> <span class="err">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
     <span class="c1">// in here, b is a Bool</span>
-    <span class="k">var</span> <span class="n">notB</span> <span class="o">=</span> <span class="err">b</span> <span class="k">not</span> <span class="c1">// this is fine</span>
+    <span class="k">var</span> <span class="n">notB</span> <span class="err">=</span> <span class="n">b</span> <span class="n">not</span> <span class="c1">// this is fine</span>
 <span class="k">else</span>
     <span class="c1">// parse failed...</span>
 <span class="k">end</span>
@@ -258,34 +258,34 @@ problem. I think we can handle that too.</p>
 <p>We&rsquo;ll just add a simple method to <code>Object</code> that tests to see if its of an
 expected type. If not, it will throw, otherwise it will return itself, but
 statically-typed to the expected type. Like so:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">Object</span> <span class="n">expecting</span><span class="p">[</span><span class="err">T</span><span class="p">]</span>
-    <span class="n">let</span> <span class="n">cast</span> <span class="o">=</span> <span class="n">this</span> <span class="n">as</span><span class="p">[</span><span class="err">T</span><span class="p">]</span> <span class="k">then</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">Object</span> <span class="n">expecting</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+    <span class="n">let</span> <span class="n">cast</span> <span class="err">=</span> <span class="bp">this</span> <span class="n">as</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="k">then</span>
         <span class="n">cast</span>
     <span class="k">else</span> <span class="n">UnexpectedTypeError</span> <span class="k">throw</span><span class="p">(</span>
-        <span class="s">&quot;Expected type &quot;</span> <span class="o">+</span> <span class="err">T</span> <span class="o">+</span> <span class="s">&quot; but was &quot;</span> <span class="o">+</span> <span class="n">this</span> <span class="n">type</span><span class="p">,</span>
-        <span class="n">this</span><span class="p">)</span>
+        <span class="s">&quot;Expected type &quot;</span> <span class="err">+</span> <span class="n">T</span> <span class="err">+</span> <span class="s">&quot; but was &quot;</span> <span class="err">+</span> <span class="bp">this</span> <span class="n">type</span><span class="p">,</span>
+        <span class="bp">this</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Now, if we have a function that returns a union containing an error, we can
 translate that to an exception instead like this:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c1">// doesn&#39;t expect a parse error</span>
-<span class="k">var</span> <span class="err">b</span> <span class="o">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span> <span class="n">expecting</span><span class="p">[</span><span class="n">Bool</span><span class="p">]</span>
-<span class="k">var</span> <span class="n">notB</span> <span class="o">=</span> <span class="err">b</span> <span class="k">not</span> <span class="c1">// ok, since b is a Bool</span>
+<span class="k">var</span> <span class="n">b</span> <span class="err">=</span> <span class="n">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span> <span class="n">expecting</span><span class="p">[</span><span class="n">Bool</span><span class="p">]</span>
+<span class="k">var</span> <span class="n">notB</span> <span class="err">=</span> <span class="n">b</span> <span class="n">not</span> <span class="c1">// ok, since b is a Bool</span>
 </code></pre></div>
 <p>Using this, almost all functions that can have runtime errors will be
 implemented by returning a union of success and an error code, like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">readFile</span><span class="p">(</span><span class="n">path</span> <span class="n">String</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="o">|</span> <span class="n">IOError</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">readFile</span><span class="p">(</span><span class="n">path</span> <span class="n">String</span> <span class="k">-&gt;</span> <span class="n">String</span> <span class="err">|</span> <span class="n">IOError</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pathExists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">then</span>
         <span class="c1">// return contents of file...</span>
-    <span class="k">else</span> <span class="n">IOError</span> <span class="n">new</span><span class="p">(</span><span class="s">&quot;Could not find &quot;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span> <span class="n">IOError</span> <span class="n">new</span><span class="p">(</span><span class="s">&quot;Could not find &quot;</span> <span class="err">+</span> <span class="n">path</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Then code that uses it can handle the error in place if that makes sense:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">printFile</span><span class="p">(</span><span class="n">path</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
-    <span class="k">var</span> <span class="n">result</span> <span class="o">=</span> <span class="n">readFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-    <span class="n">let</span> <span class="n">contents</span> <span class="o">=</span> <span class="n">result</span> <span class="n">as</span><span class="p">[</span><span class="n">String</span><span class="p">]</span> <span class="k">then</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">printFile</span><span class="p">(</span><span class="n">path</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">result</span> <span class="err">=</span> <span class="n">readFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">let</span> <span class="n">contents</span> <span class="err">=</span> <span class="n">result</span> <span class="n">as</span><span class="p">[</span><span class="n">String</span><span class="p">]</span> <span class="k">then</span>
         <span class="n">print</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
-    <span class="k">else</span> <span class="n">let</span> <span class="n">error</span> <span class="o">=</span> <span class="n">result</span> <span class="n">as</span><span class="p">[</span><span class="n">IOError</span><span class="p">]</span> <span class="k">then</span>
+    <span class="k">else</span> <span class="n">let</span> <span class="n">error</span> <span class="err">=</span> <span class="n">result</span> <span class="n">as</span><span class="p">[</span><span class="n">IOError</span><span class="p">]</span> <span class="k">then</span>
         <span class="n">print</span><span class="p">(</span><span class="s">&quot;Error!&quot;</span><span class="p">)</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -293,8 +293,8 @@ implemented by returning a union of success and an error code, like:</p>
 <p>(Yes, <code>else let</code> is a bit tedious. Better pattern-matching syntax for unions
 is still in the works.) Meanwhile, code that doesn&rsquo;t care to handle the error
 right there can pass the buck:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">printFile</span><span class="p">(</span><span class="n">path</span> <span class="n">String</span> <span class="o">-&gt;</span><span class="p">)</span>
-    <span class="k">var</span> <span class="n">contents</span> <span class="o">=</span> <span class="n">readFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="n">expecting</span><span class="p">[</span><span class="n">String</span><span class="p">]</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="n">printFile</span><span class="p">(</span><span class="n">path</span> <span class="n">String</span> <span class="k">-&gt;</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">contents</span> <span class="err">=</span> <span class="n">readFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="n">expecting</span><span class="p">[</span><span class="n">String</span><span class="p">]</span>
     <span class="n">print</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -355,7 +355,7 @@ Thoughts?</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -368,9 +368,9 @@ Thoughts?</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

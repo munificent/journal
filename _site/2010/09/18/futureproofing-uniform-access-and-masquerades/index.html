@@ -221,7 +221,7 @@ and still solve the above two problems? I think so.</p>
 
 <p>Constructors are the easy one. Magpie has no special syntax for constructors.
 <code>new</code> is just a method you call on a class object:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">bob</span> <span class="o">=</span> <span class="n">Person</span> <span class="n">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">bob</span> <span class="err">=</span> <span class="n">Person</span> <span class="n">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>If you later decide you need that to construct a different type, you can
 always swap out the method:</p>
@@ -264,17 +264,17 @@ reuse any of the code from the base class, so why am I inheriting it?</p>
 <p>Instead, Magpie has (will have) a relatively simple feature called
 <em>masquerades</em>. Say we have a concrete class like:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Person</span>
-    <span class="n">this</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">this</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="bp">this</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">this</span> <span class="n">name</span> <span class="err">=</span> <span class="n">name</span>
     <span class="k">end</span>
 
-    <span class="n">greet</span><span class="p">()</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Hi, I&#39;m &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">greet</span><span class="p">()</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Hi, I&#39;m &quot;</span> <span class="err">+</span> <span class="n">name</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>We&rsquo;re using it like this:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">greetEachOther</span><span class="p">(</span><span class="err">a</span> <span class="n">Person</span><span class="p">,</span> <span class="err">b</span> <span class="n">Person</span><span class="p">)</span>
-    <span class="err">a</span> <span class="n">greet</span>
-    <span class="err">b</span> <span class="n">greet</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">greetEachOther</span><span class="p">(</span><span class="n">a</span> <span class="n">Person</span><span class="p">,</span> <span class="n">b</span> <span class="n">Person</span><span class="p">)</span>
+    <span class="n">a</span> <span class="n">greet</span>
+    <span class="n">b</span> <span class="n">greet</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>In most static languages, since <code>greetEachOther</code> is typed to expect instances
@@ -282,7 +282,7 @@ of the concrete <code>Person</code>, the only other option you have is passing i
 subclass. Magpie gives you another alternative. Here&rsquo;s the class we want to
 use in place of a person:</p>
 <div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">class</span> <span class="n">Robot</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Robot&quot;</span>
+    <span class="n">name</span> <span class="err">=</span> <span class="s">&quot;Robot&quot;</span>
 
     <span class="n">greet</span><span class="p">()</span> <span class="n">print</span><span class="p">(</span><span class="s">&quot;Greetings, fleshy human.&quot;</span><span class="p">)</span>
 <span class="k">end</span>
@@ -293,10 +293,10 @@ hypothetical <code>IPerson</code> interface that <code>Person</code> implemented
 implement it too. Masquerades let us approximate that. You can ask an object
 of one type to masquerade as another. As long as they have compatible methods,
 it will succeed, <em>even though both types are concrete and unrelated</em>:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
-    <span class="k">var</span> <span class="n">robot</span> <span class="o">=</span> <span class="n">Robot</span> <span class="n">new</span>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="n">main</span><span class="p">(</span><span class="k">-&gt;</span><span class="p">)</span>
+    <span class="k">var</span> <span class="n">robot</span> <span class="err">=</span> <span class="n">Robot</span> <span class="n">new</span>
     <span class="c1">// robot&#39;s type is Robot</span>
-    <span class="k">var</span> <span class="n">imposter</span> <span class="o">=</span> <span class="n">robot</span> <span class="n">masqueradeAs</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span>
+    <span class="k">var</span> <span class="n">imposter</span> <span class="err">=</span> <span class="n">robot</span> <span class="n">masqueradeAs</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span>
     <span class="c1">// imposter&#39;s type is Person but is still a reference to robot</span>
     <span class="c1">// and this is now type-safe:</span>
     <span class="n">greetEachOther</span><span class="p">(</span><span class="n">Person</span> <span class="n">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">),</span> <span class="n">imposter</span><span class="p">)</span>
@@ -372,7 +372,7 @@ can&rsquo;t.&rdquo; That, to me, is a sign of a good language.</p>
 
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left.</p>
     <p>I wrote a book called <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a>. I'm working on another book called
-    <a href="http://craftinginterpreters.com">Crafting Interpreters</a></p>
+    <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
 
     <h2>Elsewhere</h2>
@@ -385,9 +385,9 @@ can&rsquo;t.&rdquo; That, to me, is a sign of a good language.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>41</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/book">book</a> <small class='post-count'>3</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">74 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
     <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>

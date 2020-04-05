@@ -355,6 +355,8 @@ article {
 .highlight span.s2,
 .highlight span.sc {
   color: #cc7700; }
+.highlight span.si {
+  color: #cc5c00; }
 .highlight span.m,
 .highlight span.mf {
   color: #0088cc; }

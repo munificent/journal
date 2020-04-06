@@ -208,7 +208,7 @@ I [wrote my first book in Markdown][gpp md]. I slapped together [a tiny Python
 script][gpp script] that converts the Markdown to HTML and transcludes the code
 snippets which are stored in separate C++ files. When I started my second book,
 I took that script and started growing it. It evolved throughout writing the
-book, but in the end it, here is how it works.
+book, but in the end, here is how it works.
 
 [gpp md]: https://github.com/munificent/game-programming-patterns/tree/master/book
 [gpp script]: https://github.com/munificent/game-programming-patterns/blob/master/script/format.py
@@ -556,8 +556,8 @@ with the same letter over and over.
 </figure>
 
 I also wanted to make sure that the illustrations and text matched each other
-across the book. To make give the text a consistent size, I printed a little
-height guide:
+across the book. To give the text a consistent size, I printed a little height
+guide:
 
 <figure>
   <img class="framed" src="/image/2020/04/metrics.jpg">

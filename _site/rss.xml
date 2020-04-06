@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Sun, 05 Apr 2020 21:42:59 -0700</pubDate>
-    <lastBuildDate>Sun, 05 Apr 2020 21:42:59 -0700</lastBuildDate>
+    <pubDate>Mon, 06 Apr 2020 10:45:01 -0700</pubDate>
+    <lastBuildDate>Mon, 06 Apr 2020 10:45:01 -0700</lastBuildDate>
 
     
     <item>
@@ -203,7 +203,7 @@ time to create some tools.&lt;/p&gt;
 script&lt;/a&gt; that converts the Markdown to HTML and transcludes the code
 snippets which are stored in separate C++ files. When I started my second book,
 I took that script and started growing it. It evolved throughout writing the
-book, but in the end it, here is how it works.&lt;/p&gt;
+book, but in the end, here is how it works.&lt;/p&gt;
 
 &lt;p&gt;All of the code for the interpreters are stored in separate source files. I have
 a &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/tree/master/java/com/craftinginterpreters&quot;&gt;Java project&lt;/a&gt; that contains the complete Java interpreter that you get
@@ -525,8 +525,8 @@ with the same letter over and over.&lt;/p&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;I also wanted to make sure that the illustrations and text matched each other
-across the book. To make give the text a consistent size, I printed a little
-height guide:&lt;/p&gt;
+across the book. To give the text a consistent size, I printed a little height
+guide:&lt;/p&gt;
 
 &lt;figure&gt;
   &lt;img class=&quot;framed&quot; src=&quot;/image/2020/04/metrics.jpg&quot;&gt;

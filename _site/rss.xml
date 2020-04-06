@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Sun, 05 Apr 2020 13:55:21 -0700</pubDate>
-    <lastBuildDate>Sun, 05 Apr 2020 13:55:21 -0700</lastBuildDate>
+    <pubDate>Sun, 05 Apr 2020 21:42:59 -0700</pubDate>
+    <lastBuildDate>Sun, 05 Apr 2020 21:42:59 -0700</lastBuildDate>
 
     
     <item>
@@ -46,7 +46,7 @@ years.&lt;/p&gt;
 to teach it to other people. Hermione Granger, arm waving feverishly to get the
 teacher&amp;rsquo;s attention, is my spirit animal. It was inevitable that I would write
 something about interpreters. But I couldn&amp;rsquo;t just drop one half-finished book to
-start another. I have gigs of unfinished projects laying around but &amp;ndash; maybe
+start another. I have gigs of unfinished projects laying around, but &amp;ndash; maybe
 because the completed chapteres were already online &amp;ndash; I couldn&amp;rsquo;t bear to
 abandon Game Programming Patterns.&lt;/p&gt;
 
@@ -181,7 +181,7 @@ that I can build up a chapter at a time?&lt;/p&gt;
 I didn&amp;rsquo;t get into languages until later in my career was because I was
 intimidated by the reputation compilers have as being only for hardcore computer
 science wizard types. I&amp;rsquo;m a college dropout, so I felt I wasn&amp;rsquo;t smart enough, or
-least wasn&amp;rsquo;t educated enough to hack it. Eventually I discovered that those
+at least wasn&amp;rsquo;t educated enough to hack it. Eventually I discovered that those
 barriers existed only in my mind and that anyone &lt;em&gt;can&lt;/em&gt; learn this.&lt;/p&gt;
 
 &lt;p&gt;My main overarching goal of the book is to pass on that feeling, to get readers
@@ -250,7 +250,7 @@ book &amp;ndash; is much harder.&lt;/p&gt;
 &lt;p&gt;I had already harvested a little &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/blob/master/util/test.py&quot;&gt;test runner&lt;/a&gt; from Wren and ported most of
 Wren&amp;rsquo;s tests over to be &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/tree/master/test&quot;&gt;Lox tests&lt;/a&gt;. (I changed the name of the language in
 the book since there was already a language out there named &amp;ldquo;Vox.&amp;rdquo;). I took that
-test runner and extended it to be able to run each the tests on each chapter&amp;rsquo;s
+test runner and extended it to be able to run the tests on each chapter&amp;rsquo;s
 version of the interpreters. Of course, the tests don&amp;rsquo;t all pass &amp;ndash; the
 interpreters aren&amp;rsquo;t complete! So I added metadata to track which tests I
 expected to pass by which point in the book. With this in place, I could
@@ -457,13 +457,13 @@ work ahead of me, and all of the fun was done.&lt;/p&gt;
 book, I hand-drew little sketchy diagrams to show various bits of architecture.
 I wanted even more illustrations for this book to make the concepts less
 abstract, less opaque. Unlike a videogame, you can&amp;rsquo;t &lt;em&gt;see&lt;/em&gt; a garbage collector
-doing it&amp;rsquo;s thing. Visual metaphors really help.&lt;/p&gt;
+doing its thing. Visual metaphors really help.&lt;/p&gt;
 
 &lt;p&gt;I liked the hand-drawn look. It furthered my meta-goal of making the material
 more approachable, more human. But I wanted to up the quality. I wanted them to
 be more intricate and contain more information. I wanted the drawings to be more
-detailed. Less margin doodles and more, well, &lt;em&gt;illustrations&lt;/em&gt;. Maybe even some
-lowercase letters.&lt;/p&gt;
+detailed. Less like margin doodles and more like, well, &lt;em&gt;illustrations&lt;/em&gt;. Maybe
+even some lowercase letters.&lt;/p&gt;
 
 &lt;p&gt;The ultimate goal for me is a print book, so I stuck with black and white ink. I
 wanted a tighter, more &amp;ldquo;spidery&amp;rdquo; style, so I got some technical pens. People
@@ -597,7 +597,7 @@ sketch pad, and several pens. I drew 181 illustrations.&lt;/p&gt;
 just writing all the words and drawing all the pictures. So that&amp;rsquo;s what I did. I
 started at chapter one and started writing. For each chapter, I wrote an outline
 and then a first draft. I did an editing pass over that to fix all the major
-problems. Then a second pass where I read the whole chapter out load to fix
+problems. Then a second pass where I read the whole chapter out loud to fix
 cadence and other stuff.&lt;/p&gt;
 
 &lt;p&gt;This is the same process I used for the first book. I stumbled onto something

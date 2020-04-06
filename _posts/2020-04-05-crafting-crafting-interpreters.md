@@ -42,7 +42,7 @@ I have a personality quirk where when I'm excited about something I just *have*
 to teach it to other people. Hermione Granger, arm waving feverishly to get the
 teacher's attention, is my spirit animal. It was inevitable that I would write
 something about interpreters. But I couldn't just drop one half-finished book to
-start another. I have gigs of unfinished projects laying around but -- maybe
+start another. I have gigs of unfinished projects laying around, but -- maybe
 because the completed chapteres were already online -- I couldn't bear to
 abandon Game Programming Patterns.
 
@@ -186,7 +186,7 @@ I made this problem harder for myself because of the meta-goal I had. One reason
 I didn't get into languages until later in my career was because I was
 intimidated by the reputation compilers have as being only for hardcore computer
 science wizard types. I'm a college dropout, so I felt I wasn't smart enough, or
-least wasn't educated enough to hack it. Eventually I discovered that those
+at least wasn't educated enough to hack it. Eventually I discovered that those
 barriers existed only in my mind and that anyone *can* learn this.
 
 My main overarching goal of the book is to pass on that feeling, to get readers
@@ -271,7 +271,7 @@ book -- is much harder.
 I had already harvested a little [test runner][] from Wren and ported most of
 Wren's tests over to be [Lox tests][]. (I changed the name of the language in
 the book since there was already a language out there named "Vox."). I took that
-test runner and extended it to be able to run each the tests on each chapter's
+test runner and extended it to be able to run the tests on each chapter's
 version of the interpreters. Of course, the tests don't all pass -- the
 interpreters aren't complete! So I added metadata to track which tests I
 expected to pass by which point in the book. With this in place, I could
@@ -488,13 +488,13 @@ Well, not all of the fun. I did still have the illustrations to do. With my last
 book, I hand-drew little sketchy diagrams to show various bits of architecture.
 I wanted even more illustrations for this book to make the concepts less
 abstract, less opaque. Unlike a videogame, you can't *see* a garbage collector
-doing it's thing. Visual metaphors really help.
+doing its thing. Visual metaphors really help.
 
 I liked the hand-drawn look. It furthered my meta-goal of making the material
 more approachable, more human. But I wanted to up the quality. I wanted them to
 be more intricate and contain more information. I wanted the drawings to be more
-detailed. Less margin doodles and more, well, *illustrations*. Maybe even some
-lowercase letters.
+detailed. Less like margin doodles and more like, well, *illustrations*. Maybe
+even some lowercase letters.
 
 The ultimate goal for me is a print book, so I stuck with black and white ink. I
 wanted a tighter, more "spidery" style, so I got some technical pens. People
@@ -628,7 +628,7 @@ I had the code, and I had a process for illustrations. The remaining work was
 just writing all the words and drawing all the pictures. So that's what I did. I
 started at chapter one and started writing. For each chapter, I wrote an outline
 and then a first draft. I did an editing pass over that to fix all the major
-problems. Then a second pass where I read the whole chapter out load to fix
+problems. Then a second pass where I read the whole chapter out loud to fix
 cadence and other stuff.
 
 This is the same process I used for the first book. I stumbled onto something

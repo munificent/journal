@@ -591,6 +591,6 @@ of the features I listed here, then there's always C++. The stuff that's bad
 about it is still there, and still bad, but it's the only game in town if you
 want control over memory and generics.
 
-For me, I'm gonna get back to working on [my little language](http://bitbucket.org/munificent/magpie). Meanwhile,
+For me, I'm gonna get back to working on [my little language](https://magpie-lang.org/). Meanwhile,
 if there's anything here that the Go community is interested in, I'm more than
 up for the challenge of actually implementing it.

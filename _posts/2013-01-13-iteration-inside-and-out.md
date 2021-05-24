@@ -247,7 +247,7 @@ With external iterators, (1) is the type implementing the iterator protocol and 
 Internal iterators reverse that power dynamic. With an internal iterator, the code that generates values decides when to invoke the code that uses that value. For example, here's how you print the Beatles in Ruby:
 
 ```ruby
-beatles = ['George', John', 'Paul', 'Ringo']
+beatles = ['George', 'John', 'Paul', 'Ringo']
 beatles.each { |beatle| puts beatle }
 ```
 

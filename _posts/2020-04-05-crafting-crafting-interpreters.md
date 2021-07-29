@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Crafting "Crafting Interpreters"
-categories: book language personal
+categories: book design language personal
 ---
 
 It took three years and 200,000 words more than I expected, but my second
@@ -43,7 +43,7 @@ to teach it to other people. Hermione Granger, arm waving feverishly to get the
 teacher's attention, is my spirit animal. It was inevitable that I would write
 something about interpreters. But I couldn't just drop one half-finished book to
 start another. I have gigs of unfinished projects laying around, but -- maybe
-because the completed chapteres were already online -- I couldn't bear to
+because the completed chapters were already online -- I couldn't bear to
 abandon Game Programming Patterns.
 
 So I made a promise to myself. If I finished that book, then I would let myself

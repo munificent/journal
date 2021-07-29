@@ -24,725 +24,610 @@
 <article>
 <header>
 <h1>
-  <a href="/2020/04/05/crafting-crafting-interpreters/" rel="bookmark"
-     title="Permanent Link to Crafting &quot;Crafting Interpreters&quot;">
-    Crafting &quot;Crafting Interpreters&quot;
+  <a href="/2021/07/29/640-pages-in-15-months/" rel="bookmark"
+     title="Permanent Link to 640 Pages in 15 Months">
+    640 Pages in 15 Months
   </a>
 </h1>
 
-  <a class="older" href="/2018/05/19/40-songs/"
-     title="Older Post &ldquo;40 Songs&rdquo;">&#8617;</a>
+  <a class="older" href="/2020/04/05/crafting-crafting-interpreters/"
+     title="Older Post &ldquo;Crafting "Crafting Interpreters"&rdquo;">&#8617;</a>
 
 
 </header>
-<h4><a href="/archive">April 05, 2020</a>
-    <span class="tags"><a href="/category/book">book</a> <a href="/category/language">language</a> <a href="/category/personal">personal</a></span>
+<h4><a href="/archive">July 29, 2021</a>
+    <span class="tags"><a href="/category/book">book</a> <a href="/category/design">design</a> <a href="/category/language">language</a> <a href="/category/personal">personal</a></span>
 </h4>
 
-<p>It took three years and 200,000 words more than I expected, but my second
-book, <a href="http://craftinginterpreters.com/">Crafting Interpreters</a>, is complete. I finished the third draft of
-the last chapter today, marking the last of around 1,400 days of continuous
-writing.</p>
+<p>My book <a href="http://craftinginterpreters.com/"><em>Crafting Interpreters</em></a> on programming languages is done. OK, OK.
+I know <a href="/2020/04/05/crafting-crafting-interpreters/">I said it was done like fifteen months ago</a>. But now it&rsquo;s <em>really</em>
+done. And by that I mean, the print, ebook and PDF versions are done. <strong>You can
+<a href="http://craftinginterpreters.com/">buy it</a>.</strong> You can hold it in your hands. And I do mean &ldquo;hands&rdquo; plural.
+Because this little &ldquo;handbook&rdquo; turned out way larger than I anticipated:</p>
 
-<p>This book was <em>much</em> harder than my <a href="http://gameprogrammingpatterns.com/">first book</a>, along every axis. It&rsquo;s
-larger, more technically complex, much more deeply intertwined, and it had the
-misfortune of aligning with a really difficult period in my life. Today feels
-less like coasting past the finish line at the Tour de France, arms raised in
-triumph, and more like dragging myself onto the beach, clutching sand in relief
-after a storm-thrashed ordeal at sea.</p>
+<figure>
+  <a href="http://craftinginterpreters.com/"><img class="framed" src="/image/2021/07/book.jpg"></a>
+  <figcaption>This is a proof copy, so it looks a little different than the final design.</figcaption>
+</figure>
 
-<p>Before I get into all that, I have a minor confession to make. When I finished
-my first book, I wrote <a href="/2014/04/22/zero-to-95688-how-i-wrote-game-programming-patterns/">a long post</a> about how I cobbled together enough
-willpower to reach the end of the last page. Everything in there is true, but
-there is one fact I superstitiously omitted.</p>
+<p>Look at that thing. 640 pages, eight inches wide, ten inches tall. If you get
+tired of reading it, it can serve as a doorstop or protect you from small-arms
+fire.</p>
 
-<p>Halfway through writing Game Programming Patterns, I discovered a new passion:
-programming languages. It had been a long time since a topic ignited my brain to
-the same degree, and I was <em>on fire</em>. I spent basically every free hour (and
-many not-so-free hours &ndash; sorry, family) designing and hacking on programming
-languages. I read <a href="https://twitter.com/munificentbob/status/901543375945388032">every book I could get my hands on</a>, <a href="/2010/07/23/what-i-learned-at-the-emerging-languages-camp/">went to
-conferences</a>, <a href="/category/language/">blogged</a>, I even <em>dreamed</em> about programming languages.
-This infatuation was the main reason I stopped working on my first book for two
-years.</p>
+<p>Remember back on Mr. Roger&rsquo;s Neighborhood when he would take you to a factory
+and show you how pencils or umbrellas are made? I love that stuff, so I thought
+maybe you might like to see what I spent the past year on. You can read this as
+a peek behind the curtain, or maybe a long apology for why it took so long.</p>
 
-<p>I have a personality quirk where when I&rsquo;m excited about something I just <em>have</em>
-to teach it to other people. Hermione Granger, arm waving feverishly to get the
-teacher&rsquo;s attention, is my spirit animal. It was inevitable that I would write
-something about interpreters. But I couldn&rsquo;t just drop one half-finished book to
-start another. I have gigs of unfinished projects laying around, but &ndash; maybe
-because the completed chapteres were already online &ndash; I couldn&rsquo;t bear to
-abandon Game Programming Patterns.</p>
+<h2>Where I left off</h2>
 
-<p>So I made a promise to myself. If I finished that book, then I would let myself
-write a second book on interpreters. In part because of that promise, I <em>did</em>
-manage to complete the chapters, and then <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/">the print and eBook editions</a>.
-What I thought was merely a hobby and personal goal turned out to be a
-<a href="/2014/11/20/how-my-book-launch-went/">life-changing experience</a>. My little self-published vanity project has
-<a href="https://www.amazon.com/dp/0990582906">hundreds of five-star reviews</a>, and has been translated to Korean,
-Japanese, Chinese, German, and Polish. The book did so much better than I
-expected that I&rsquo;m still not sure how to process it, beyond feeling immense
-gratitude to everyone who read it, bought a copy, or cheered me on.</p>
+<p>What I said in my last post was that <em>Crafting Interpreters</em> was <em>finished</em>, and
+by that I meant that I&rsquo;d written all the code, dotted the last sentence, and
+scanned the last illustration. The <em>content</em> of the book was complete. But it
+wasn&rsquo;t a book yet. Just a pile of Markdown and PNG files that my embarrassingly
+bad Python code would begrudgingly turn into a website.</p>
 
-<h2>The Seed of a Book</h2>
+<p>My original goal was always to make a real book, with pages and everything.
+Completing the content was just one (granted, the most important) step in that
+journey. Once I finished the last chapter and put it online, I took about a
+month-long break. I had been writing <a href="https://github.com/munificent/craftinginterpreters/blob/master/note/log.txt">every single day for almost four
+years</a> and I was <em>fried</em>. Also, in case you don&rsquo;t remember, early 2020 was
+not exactly a Totally Fine Time in World History.</p>
 
-<p>Once I finished the print edition of &ldquo;Game Programming Patterns&rdquo;, I took some
-time off. But it didn&rsquo;t take too long for that itch to write about interpreters
-to come back. I knew exactly what I was getting into with writing a book now,
-how hard the grind can be. At first, I just noodled around. I wasn&rsquo;t committed
-to doing anything. It was more just a sort of recreational intellectual
-exercise. If I <em>were</em> to do a book, what would it look like? You know,
-<em>hypothetically speaking</em>.</p>
+<h2>A new build system</h2>
 
-<p>The very first note I wrote to myself said:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>high-level goal: a *small* book that builds a complete, efficient
-interpreter. instead of a wide text about programming language*s*,
-it is a single path through the language space. aim for 60k words.
-</code></pre></div>
-<p>My first book was almost 90,000 words, and I didn&rsquo;t want to hike a trail that
-long again. I also had a meta-goal to make programming languages more
-approachable, and I figured a short text would help. I had this vision of
-something you could literally hold in your hand or have open next to your laptop
-while you followed along.</p>
+<p>After a few weeks, my desire to have this project completely done returned and I
+eased my way back into working on it. I fixed a whole pile of typos and other
+mistakes that readers <a href="https://github.com/munificent/craftinginterpreters/issues">filed bugs for</a> (thanks!).</p>
 
-<p>To make a small book, I needed a small language and a small implementation. One
-of my other side projects was <a href="http://wren.io/">a scripting language named Wren</a>. Wren is
-written in C, with a simple single-pass bytecode compiler inspired by Lua.
-Building Wren taught me how much functionality you can pack into a few thousand
-lines of clean C code.</p>
+<p>Then, for no real good reason at all, I decided to rewrite the whole build
+system for the book in Dart. The build script I wrote for <a href="http://gameprogrammingpatterns.com/">my first book</a>
+was dead simple. <a href="https://github.com/munificent/game-programming-patterns/blob/master/script/format.py">Literally a single Python script</a> that took a Markdown
+file for each book chapter and rendered it to HTML while weaving in the code
+snippets. The world&rsquo;s dumbest static site generator.</p>
 
-<p>For this hypothetical book, I figured a bytecode VM in C like that would be a
-great fit. It would also give me the chance to cover a bunch of really fun
-topics like stack-based VMs, object representation, and garbage collection. But
-Wren wasn&rsquo;t the right language. I like Wren (obviously), but it has some design
-quirks that I think make it a better language for <em>users</em> but maybe not for
-teaching. For the book, I wanted a dynamically-typed scripting language in the
-vein of languages like JavaScript, Python, and Lua.</p>
+<p>I started with that for <em>Crafting Interpreters</em> but then it grew and grew. My
+second book includes every single line of code for two complete interpreters,
+which it builds up incrementally across thirty chapters. I needed to not just
+build the HTML for the book&rsquo;s website, but also make sure the code really did
+work. I gave the build system the ability to not only generate the site for the
+book, but also to slice and dice the code. Given a chapter, or even a single
+point within a chapter, it can output a program containing all of the code for
+the interpreters up to that point. Then I can take that code, compile it, and
+run it through my automated test suite to make sure the code I&rsquo;m showing you
+does what it&rsquo;s supposed to.</p>
 
-<p>I started tinkering on a new toy language, tentatively named &ldquo;Vox&rdquo;. The goal was
-to keep things as simple as possible without taking any shortcuts around the
-hard problems in implementing a language. I wanted a rich expression and
-statement syntax to cover parsing. First-class functions and closures because
-they are powerful and challenging to implement efficiently. Classes and methods
-because that paradigm is so prevalent but omitted by many compiler books.</p>
+<p>Useful, but really straining the limits of how much code I want to maintain in a
+dynamically typed language like Python, at least, with my (low) level of Python
+expertise. Also, it was, frankly, really slow. So over a period of a couple of
+weeks, I rewrote the whole thing in Dart.</p>
 
-<p>At some point, I realized that dropping readers straight into C was too
-unfriendly of an introduction. It&rsquo;s hard to teach high-level concepts like
-parsing and name resolution while also tracking pointers and managing memory.
-OK, so we&rsquo;ll build <em>two</em> interpreters. First a simple one in a high-level
-language, focused on concepts. Then a second bytecode VM in C to focus on
-performance and low-level implementation techniques.</p>
+<p>I work at Google on the <a href="https://dart.dev/">Dart language</a> team as my day job, so picking
+Dart was not an unbiased choice. But it&rsquo;s my build system for my book, and I
+know Dart and many of its core libraries and packages like the back of my hand.
+Hell, I personally wrote the initial version of the canonical <a href="https://pub.dev/packages/markdown">markdown
+package</a>.</p>
 
-<p>Somehow, I didn&rsquo;t notice that maybe this &ldquo;handbook&rdquo; wasn&rsquo;t going to be as
-pocket-sized as I hoped.</p>
+<p>I found a pretty nice <a href="https://pub.dev/packages/mustache_template">package for mustache templates</a>, so I converted
+the book&rsquo;s old Liquid templates to that. I didn&rsquo;t find a good syntax
+highlighter. But it&rsquo;s not like I looked very hard either. It seemed like just
+the kind of fun thing to implement from scratch, so I whipped one up loosely
+based on Pygments.</p>
 
-<p>My first choice for the high-level implementation language was JavaScript. I
-implemented most of a Vox interpreter in JS, but never really liked it. I wanted
-to write the interpreter in an object-oriented style because there are
-techniques like the visitor pattern for doing language stuff in OOP that aren&rsquo;t
-covered well elsewhere. Doing OOP in JS means deciding whether to use classes or
-a prototypal style. The former is cleaner but infuriates some segment of
-readers. The latter is verbose and confusing to those not already steeped in
-prototypes.</p>
+<p>The end result is a new build system that generates <em>exactly</em> the HTML and
+syntax-highlighted code that I want. Also, it is literally ten <em>times</em> faster
+than the old Python one. As you&rsquo;ll see, it turned out to be handy that I had
+better control over the Markdown processing, but at the time I was basically
+just doing this for fun and to procrastinate the real work.</p>
 
-<p>Also, I missed static types. People reading code in a book don&rsquo;t get the luxury
-of seeing the code in a debugger where they can see what values are in various
-variables. Static type annotations in the code help.</p>
+<figure>
+  <img class="framed" src="/image/2021/07/speed.png">
+  <figcaption>I planned to implement some clever incremental rebuild logic in
+  the dev server, but it builds so fast that I just rebuild everything on every
+  refresh.</figcaption>
+</figure>
 
-<p>So I switched to Java. I don&rsquo;t love Java but it seemed like the least biased
-choice for a statically typed object-oriented language. I found you can tame a
-lot of its infamous verbosity by simply not programming in 1990s enterprise Java
-style. Maybe it&rsquo;s not idiomatic to have public fields, but it&rsquo;s a hell of a lot
-shorter.</p>
+<p>Once I had the new build system outputting nice clean HTML and I&rsquo;d deleted the
+old Python stuff, it was time to get started.</p>
 
-<p>In parallel, I started building the bytecode VM in C, porting over bits of
-Wren&rsquo;s implementation and stripping out the Wren-specific stuff. I spent the
-spring and summer of 2016 circling between these three pieces &ndash; the design of
-Vox itself, the Java interpreter, and the C bytecode VM. This was a delightful,
-satisfying period of time. The three parts played off each other in challenging
-ways. Sometimes I would change the language to make one interpreter simpler, but
-find doing so made the other interpreter more complex. Other times I&rsquo;d hit on
-some trick that made everything get smaller and cleaner.</p>
+<h2>Designing the book</h2>
 
-<h2>Getting Back on the Horse</h2>
+<p>Doing a large graphic design project like a book works a lot like web dev or
+game programming where it sort of has two levels. First you set up your
+&ldquo;framework&rdquo; or &ldquo;engine&rdquo;. On the web, this is your web framework and all of your
+CSS and HTML templates. In games, it&rsquo;s your game engine. Then you pour content
+into that structure. With the right framework, adding content is easy.</p>
 
-<p>I remember the exact moment I committed to writing the book. I was stuck on a
-tricky language design problem: constructor syntax. I knew I wanted classes,
-which meant some way to construct instances. Adding a <code>new</code> keyword felt too
-special-purpose for my minimal language. I like Smalltalk and Ruby&rsquo;s approach of
-making <code>new</code> be a method on the class object itself, but that requires
-metaclasses and a lot of other machinery.</p>
+<p>For graphic design using a program like Adobe InDesign, the way it works is you
+set up styles and masters. A master defines the margins and grid lines for a
+page. It&rsquo;s the fences that corral all the text to keep those feral letters from
+running around eating all the whitespace. Styles are like CSS: they let you take
+a semantic kind of text or object and associate specific fonts, styles and
+colors for it.</p>
 
-<p>I was struggling to find a way to add instantiation without making the language
-much bigger. Then I remembered JavaScript&rsquo;s thing where you can simply invoke a
-&ldquo;class&rdquo; as if it were a function to create new instances. That has all sorts of
-weird baggage in JavaScript because everything does in JS, but the concept and
-syntax were perfect. I already had first-class classes. And I already had
-closures which meant a function call syntax that could be applied to arbitrary
-expressions. So &ldquo;constructors&rdquo; just became what you got when you invoked a
-class.</p>
+<p>In theory, you get the masters and styles right and then typesetting is pretty
+easy and mechanical. Now, I did <em>not</em> make my life easy when it comes to book
+design. Book design is literally a two-dimensional spatial exercise and I made
+my job harder both horizontally and vertically. If you&rsquo;ve read any of it on the
+web, you know my book has:</p>
 
-<p>I felt like Vox had gelled, like it <em>was</em> a language now. And my two
-implementations were coming along well too. I was surprised by how few hacks or
-ugly corners I ran into. The codebases kind of fell together and the more I
-tweaked them, the nicer they got. It felt more like I had discovered them than
-that I had created them. It would be a shame to <em>not</em> write the book and put
-them out there into the world. They wanted me to.</p>
+<ul>
+<li><p>Prose, of course. So many words.</p></li>
+<li><p>A lot of asides that need to be right next to certain pieces of text, code
+or illustrations that they refer to. Some of these can get pretty long.</p></li>
+<li><p>Plenty of code. Also, each code snippet has a little location blurb next to
+it telling you where the code goes in the resulting program.</p></li>
+</ul>
 
-<p>I committed to writing the book, and I restarted my rule of writing every single
-day.</p>
+<h2>How wide?</h2>
 
-<p>I had a few thousand lines of pretty Java and C code, but how do I turn that
-into a book that can be read in linear order? Compact codebases tend to be
-highly intertwined with many cyclic dependencies. I didn&rsquo;t want readers to have
-to slog through ten chapters before they could even run <code>main()</code>.</p>
+<p>Horizontally, the main text column needs to be wide enough to fit the longest
+line of code. I can use shorter lines and wrap the snippets more, but that makes
+them harder to read. It also makes them vertically taller, which causes its own
+problem.</p>
 
-<p>This was the real technical challenge of writing the book &ndash; how do I take two
-implementations of the same language, and break them into incremental pieces
-that I can build up a chapter at a time?</p>
+<p>Then I need room next to that for the asides, since they often remark directly
+on specific sentences. I can make <em>those</em> narrower too, of course. But then they
+wrap and get taller. Some asides are fairly long and if they get too tall, they
+start colliding with each other or overlapping location snippets.</p>
 
-<p>I made this problem harder for myself because of the meta-goal I had. One reason
-I didn&rsquo;t get into languages until later in my career was because I was
-intimidated by the reputation compilers have as being only for hardcore computer
-science wizard types. I&rsquo;m a college dropout, so I felt I wasn&rsquo;t smart enough, or
-at least wasn&rsquo;t educated enough to hack it. Eventually I discovered that those
-barriers existed only in my mind and that anyone <em>can</em> learn this.</p>
+<p>Oh, and since I ended up writing a 200k+ word book, it&rsquo;s going to have a high
+page count. That means a thick book. Thick books need wider inner margins so the
+text doesn&rsquo;t disappear into the spine.</p>
 
-<p>My main overarching goal of the book is to pass on that feeling, to get readers
-to understand there&rsquo;s no magic in there and nothing keeping them out. To nail
-that conceit, I wanted to include <em>every single line of code</em> used by the
-interpreters in the book. No parser generators, nothing left as an exercise for
-the reader. If you type in all of the code in the book, you get two complete,
-working interpreters. No tricks.</p>
+<p>All of this points towards a pretty wide page. Most CS textbooks&mdash;at least
+the ones on my bookshelf&mdash;are 7.5 inches wide. I tried hard to come up with
+a design that fit the code, asides, and healthy margins in that width while
+still giving a text size that didn&rsquo;t require a magnifying glass. Eventually, I
+conceded defeat.</p>
 
-<p>So not only did I need to break these two interpreters into chapters, I needed
-to do it without any cheating. I wanted a hard guarantee that at the end of each
-chapter, you had a program that you could type in, compile, run, and do
-something with. I knew I wouldn&rsquo;t be able to verify this manually, so it was
-time to create some tools.</p>
+<p>Once I tried designing a set of metrics for an 8 inch wide page, everything fell
+into place. I could have enough breathing room around the text to make it
+enjoyable to read, a decent length for the code snippets, and plenty of room for
+the asides. (Using a narrower font for the asides helped too).</p>
 
-<h2>A Bespoke Build System</h2>
+<figure>
+  <img class="framed" src="/image/2021/07/metrics.png">
+  <figcaption>Here are the final horizontal metrics.</figcaption>
+</figure>
 
-<p>I <a href="https://github.com/munificent/game-programming-patterns/tree/master/book">wrote my first book in Markdown</a>. I slapped together <a href="https://github.com/munificent/game-programming-patterns/blob/master/script/format.py">a tiny Python
-script</a> that converts the Markdown to HTML and transcludes the code
-snippets which are stored in separate C++ files. When I started my second book,
-I took that script and started growing it. It evolved throughout writing the
-book, but in the end, here is how it works.</p>
+<h2>How tall?</h2>
 
-<p>All of the code for the interpreters are stored in separate source files. I have
-a <a href="https://github.com/munificent/craftinginterpreters/tree/master/java/com/craftinginterpreters">Java project</a> that contains the complete Java interpreter that you get
-by the end of that part of the book. Likewise, there&rsquo;s a <a href="https://github.com/munificent/craftinginterpreters/tree/master/c">C project</a> for the
-bytecode VM. I can edit and build those in an IDE, run tests, debug them, etc.
-They&rsquo;re real programs.</p>
+<p>That left the other dimension. If I were going with a real publisher doing a
+full offset print run, I could pick whatever page size I wanted. But since I&rsquo;m
+self publishing, that would mean paying up front for thousands of copies to be
+printed and, I don&rsquo;t know, storing all the boxes in my garage or something.</p>
 
-<p>Meanwhile, the text of the book is <a href="https://github.com/munificent/craftinginterpreters/tree/master/book">authored in Markdown</a>, one file per
-chapter, just like my first book. To include a snippet of code in the book, I
-put a tag in the Markdown like this:</p>
-<div class="highlight"><pre><code class="language-md" data-lang="md"><span></span>Which can be any of:
+<p>Print on demand worked great for my last book, and I planned to do the same
+thing for this one. That meant sticking to the limited set of page sizes that
+KDP and IngramSpark support. The only reasonable one that is 8 inches wide is
+8&quot;×10&quot;, so that&rsquo;s what I picked. The end result is a book that feels big, but
+hopefully not awkwardly huge. I&rsquo;m sorry. I promise to write a smaller book if I
+ever write another.</p>
 
-^code is-alpha
+<figure>
+  <img class="framed" src="/image/2021/07/master.png">
+  <figcaption>The metrics for a complete chapter spread. Vertically, text is
+  aligned to a classic 12pt baseline grid.</figcaption>
+</figure>
 
-Once we&#39;ve found an identifier, we scan the rest of it using:
-</code></pre></div>
-<p>Here, the <code>^code</code> line says &ldquo;look up the snippet named &lsquo;is-alpha&rsquo; and insert it
-here.&rdquo; When the build script generates the HTML for this chapter, it goes off
-and hunts through the code for that snippet. Over in the code, special comments
-delimit snippets. The one included here looks like this:</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="c1">//&gt; Scanning on Demand is-alpha</span>
-<span class="k">static</span> <span class="kt">bool</span> <span class="nf">isAlpha</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">&#39;a&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;z&#39;</span><span class="p">)</span> <span class="o">||</span>
-         <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">&#39;A&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;Z&#39;</span><span class="p">)</span> <span class="o">||</span>
-          <span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;_&#39;</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="c1">//&lt; Scanning on Demand is-alpha</span>
-</code></pre></div>
-<p>The <code>//&gt;</code> line begins the snippet and says what chapter the snippet appears in and the name of the snippet. The <code>//&lt;</code> line ends the snippet. Pretty straightforward.</p>
+<p>The whole time I was picking these margins and metrics, I was also selecting
+fonts and building styles. You can&rsquo;t do graphic design in a vacuum, so I picked
+a test chapter and just typeset it and tweaked the fonts over and over again.
+Eventually I got a set of fonts and styles I liked, some masters that seemed
+workable, and I was ready to go. The framework was done and now it was time to
+open the content hose.</p>
 
-<p>This let me build the book, but didn&rsquo;t ensure that the thing I built actually
-worked. So I wrote a separate script that instead of building the <em>book</em>, builds
-<em>programs</em>. For each chapter, it collects <em>all</em> of the snippets that appear in
-that chapter and the previous ones and writes them out to separate source files.
-In other words, it produces a separate interpreter, one for each chapter,
-containing only the code that readers have seen so far.</p>
+<h2>XML, like its 1999</h2>
 
-<p>I put together a Makefile to build those per-chapter versions of each
-interpreter to make sure they compiled. Of course, compiling successfully
-doesn&rsquo;t mean they do anything <em>useful</em>. Writing a single correct interpreter is
-hard. Writing thirty of them &ndash; there are <a href="http://craftinginterpreters.com/contents.html">thirty chapters</a> in the
-book &ndash; is much harder.</p>
+<p>Of course, problem #1 is that there <em>is</em> no content hose. I have to build one.
+InDesign doesn&rsquo;t know what the hell Markdown or my weird ass build system is.
+I sure as hell didn&rsquo;t want to, like, copy every chapter from my browser, paste
+it into InDesign and then manually apply all the styles. I have a high pain
+tolerance, but I&rsquo;m not a masochist.</p>
 
-<p>I had already harvested a little <a href="https://github.com/munificent/craftinginterpreters/blob/master/util/test.py">test runner</a> from Wren and ported most of
-Wren&rsquo;s tests over to be <a href="https://github.com/munificent/craftinginterpreters/tree/master/test">Lox tests</a>. (I changed the name of the language in
-the book since there was already a language out there named &ldquo;Vox.&rdquo;). I took that
-test runner and extended it to be able to run the tests on each chapter&rsquo;s
-version of the interpreters. Of course, the tests don&rsquo;t all pass &ndash; the
-interpreters aren&rsquo;t complete! So I added metadata to track which tests I
-expected to pass by which point in the book. With this in place, I could
-automatically verify that the code I was showing readers did exactly what I
-expected.</p>
+<p>What InDesign <em>can</em> do is import XML. Even better, you can set it up to
+automatically apply certain paragraph or character styles to certain tag names.
+InDesign&rsquo;s XML support, alas, has not matured much since the time I described it
+as <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/">being implemented by a narcoleptic intern</a>. For example, in HTML
+you can italicize a word in a header by taking an italics tag and nesting it
+inside a header tag. InDesign cannot comprehend such advanced data modeling. It
+needs a flat series of unnested tags and if you need italics in your header, you
+damn well better have a unique <code>&lt;italics-header&gt;</code> tag for it.</p>
 
-<h3>More Complex Snippets</h3>
+<p>But now I had an ace up my sleeve. Since I had microscopic control over my build
+system and its Markdown processing, I could write my own <a href="https://github.com/munificent/craftinginterpreters/blob/master/tool/bin/build_xml.dart">custom XML exporter</a>
+that generated <em>exactly</em> the tags that would make InDesign not cry and avoid as
+many InDesign XML import bugs as possible.</p>
 
-<p>The snippet markers look pretty straightforward, and in many cases they are. But
-reality tends to get messier and I didn&rsquo;t allow myself to sweep any of that mess
-under nearby rugs. Some changes don&rsquo;t just <em>add</em> code to the interpreter. I try
-to minimize it, but often you need to <em>replace</em> some existing code. A few lines
-of code may appear in chapter 5 and then later get superseded in chapter 9 by
-something more powerful.</p>
+<h2>JavaScript, in <em>my</em> InDesign?</h2>
 
-<p>Obviously, I can&rsquo;t jam both of those snippets into the same source file and
-expect it to compile. Remember, the source files that I hand author are
-themselves valid Java and C programs that I can build and run. If a function
-contained several versions of its body mixed together, odds are slim that the
-compiler will like what it sees.</p>
+<p>Even so, XML import only gets you so far. Specifically, it gets you a &ldquo;story&rdquo; in
+InDesign terms: a single continuous narrative of text that fills the main text
+box and spans multiple pages:</p>
 
-<p>So, for any piece of code that later gets replaced &ndash; in other words code that
-is not part of the very final version of each interpreter &ndash; there is a
-different snippet syntax:</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">static</span> <span class="kt">void</span> <span class="nf">concatenate</span><span class="p">()</span> <span class="p">{</span>
-<span class="cm">/* Strings concatenate &lt; Garbage Collection concatenate-peek</span>
-<span class="cm">  ObjString* b = AS_STRING(pop());</span>
-<span class="cm">  ObjString* a = AS_STRING(pop());</span>
-<span class="cm">*/</span>
-<span class="c1">//&gt; Garbage Collection concatenate-peek</span>
-  <span class="n">ObjString</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">AS_STRING</span><span class="p">(</span><span class="n">peek</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
-  <span class="n">ObjString</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">AS_STRING</span><span class="p">(</span><span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
-<span class="c1">//&lt; Garbage Collection concatenate-peek</span>
+<figure>
+  <img class="framed" src="/image/2021/07/convert-before.png">
+  <figcaption>What the initial XML import looks like. The pink text is where
+  an illustration goes and the &ldquo;@&rdquo; tells me where to anchor the aside.</figcaption>
+</figure>
 
-  <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">+</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">ALLOCATE</span><span class="p">(</span><span class="kt">char</span><span class="p">,</span> <span class="n">length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-  <span class="n">memcpy</span><span class="p">(</span><span class="n">chars</span><span class="p">,</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">chars</span><span class="p">,</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
-  <span class="n">memcpy</span><span class="p">(</span><span class="n">chars</span> <span class="o">+</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">,</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">chars</span><span class="p">,</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
-  <span class="n">chars</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>This block comment contains a snippet of code. The header indicates that this
-snippet is named &ldquo;concatenate&rdquo; and first appears in the &ldquo;Strings&rdquo; chapter. Then,
-later, it gets removed when the &ldquo;concatenate-peek&rdquo; snippet in the &ldquo;Garbage
-Collection&rdquo; chapter appears. In other words, that latter snippet replaces the
-previous two lines.</p>
+<p>The main story is where the prose and code snippets go, but the asides and the
+location markers need to be pulled out float off to the side. With my last book,
+I yanked those out manually. I literally cut each aside from the main text
+column and pasted it into a new text box. It took forever, and that book was
+less than half as long as this one with <em>way</em> fewer code snippets.</p>
 
-<p>By storing the code for this snippet inside a block comment, I ensure that the
-code as it is in the raw source file is still valid. In some places where the
-interpreter gets revised multiple times, the code can get pretty complex. Here
-is the <code>main()</code> function of the bytecode VM:</p>
-<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-<span class="c1">//&gt; A Virtual Machine main-init-vm</span>
-  <span class="n">initVM</span><span class="p">();</span>
+<p>There are <em>1,133</em> code snippets in <em>Crafting Interpreters</em>. If I had to manually
+cut and paste the location markers for each of those, I would lose my mind.
+Worse, I would make a lot of mistakes, which would just create more work for
+myself.</p>
 
-<span class="c1">//&lt; A Virtual Machine main-init-vm</span>
-<span class="cm">/* Chunks of Bytecode main-chunk &lt; Scanning on Demand args</span>
-<span class="cm">  Chunk chunk;</span>
-<span class="cm">  initChunk(&amp;chunk);</span>
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-constant &lt; Scanning on Demand args</span>
+<p>I&rsquo;m an engineer so I am morally opposed to error-prone manual effort that can be
+automated. Did you know that InDesign can be scripted using JavaScript? Well,
+you do now, which apparently places you in a tiny minority because there are,
+like, <em>no</em> docs for it out there. You can find a couple of auto-generated
+references, a few sad cries for help from graphic designers clearly out of
+their element with no responses, and that&rsquo;s it.</p>
 
-<span class="cm">  int constant = addConstant(&amp;chunk, 1.2);</span>
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-constant &lt; Chunks of Bytecode main-chunk-line</span>
-<span class="cm">  writeChunk(&amp;chunk, OP_CONSTANT);</span>
-<span class="cm">  writeChunk(&amp;chunk, constant);</span>
+<p>JavaScripting InDesign is a special kind of pain. There is no debugger. There
+are no stack traces. There aren&rsquo;t even <em>debug prints</em>. There is literally just
+<code>alert()</code>, and you can only call it <em>once</em>. And it halts your script.
+Fortunately, I actually learned JavaScript back when that&rsquo;s all <em>browsers</em> gave
+you, so I can hack it.</p>
 
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-chunk-line &lt; Scanning on Demand args</span>
-<span class="cm">  writeChunk(&amp;chunk, OP_CONSTANT, 123);</span>
-<span class="cm">  writeChunk(&amp;chunk, constant, 123);</span>
-<span class="cm">*/</span>
-<span class="cm">/* A Virtual Machine main-chunk &lt; Scanning on Demand args</span>
+<figure>
+  <img class="framed" src="/image/2021/07/debug-js.png">
+  <figcaption>Just like developing for IE6.</figcaption>
+</figure>
 
-<span class="cm">  constant = addConstant(&amp;chunk, 3.4);</span>
-<span class="cm">  writeChunk(&amp;chunk, OP_CONSTANT, 123);</span>
-<span class="cm">  writeChunk(&amp;chunk, constant, 123);</span>
+<p>I managed to cobble together a horrific script that would find all of the asides
+and location markers, pull them out of the main text flow, and leave them off to
+the side:</p>
 
-<span class="cm">  writeChunk(&amp;chunk, OP_ADD, 123);</span>
+<figure>
+  <img class="framed" src="/image/2021/07/convert-after.png">
+  <figcaption>Asides and location markers are pulled out of the main flow and
+  into their own text boxes.</figcaption>
+</figure>
 
-<span class="cm">  constant = addConstant(&amp;chunk, 5.6);</span>
-<span class="cm">  writeChunk(&amp;chunk, OP_CONSTANT, 123);</span>
-<span class="cm">  writeChunk(&amp;chunk, constant, 123);</span>
+<p>What I wasn&rsquo;t able to get the script to do was <em>position</em> the boxes correctly.
+But InDesign has a thing called &ldquo;anchors&rdquo; where you can lock the position of an
+element relative to another. A couple of carefully crafted Object Styles would
+even set the horizontal metrics correctly and align the text to the right
+baseline. All I had to do was anchor each text box and it worked perfectly!</p>
 
-<span class="cm">  writeChunk(&amp;chunk, OP_DIVIDE, 123);</span>
-<span class="cm">*/</span>
-<span class="cm">/* A Virtual Machine main-negate &lt; Scanning on Demand args</span>
-<span class="cm">  writeChunk(&amp;chunk, OP_NEGATE, 123);</span>
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-chunk &lt; Chunks of Bytecode main-chunk-line</span>
-<span class="cm">  writeChunk(&amp;chunk, OP_RETURN);</span>
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-chunk-line &lt; Scanning on Demand args</span>
+<p>Wait, did I say &ldquo;perfectly&rdquo;? I meant  it worked right about half the time and
+the other half the time InDesign would inexplicably <em>turn off the fucking
+borders of nearby code snippets</em>.</p>
 
-<span class="cm">  writeChunk(&amp;chunk, OP_RETURN, 123);</span>
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-disassemble-chunk &lt; Scanning on Demand args</span>
+<figure>
+  <img class="framed" src="/image/2021/07/anchor.gif">
+  <figcaption>What it looks like when InDesign hates you.</figcaption>
+</figure>
 
-<span class="cm">  disassembleChunk(&amp;chunk, &quot;test chunk&quot;);</span>
-<span class="cm">*/</span>
-<span class="cm">/* A Virtual Machine main-interpret &lt; Scanning on Demand args</span>
-<span class="cm">  interpret(&amp;chunk);</span>
-<span class="cm">*/</span>
-<span class="c1">//&gt; Scanning on Demand args</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">repl</span><span class="p">();</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">runFile</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Usage: clox [path]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-    <span class="n">exit</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
-  <span class="p">}</span>
+<p>I lost hours of my life to this stupid bug. Eventually, I realized that some
+completely random subset of location tags would have to be manually positioned
+because anchoring invariably broke some borders.</p>
 
-  <span class="n">freeVM</span><span class="p">();</span>
-<span class="c1">//&lt; Scanning on Demand args</span>
-<span class="cm">/* A Virtual Machine main-free-vm &lt; Scanning on Demand args</span>
-<span class="cm">  freeVM();</span>
-<span class="cm">*/</span>
-<span class="cm">/* Chunks of Bytecode main-chunk &lt; Scanning on Demand args</span>
-<span class="cm">  freeChunk(&amp;chunk);</span>
-<span class="cm">*/</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Maintaining this is not super fun. But, thankfully, I have a build and test
-system to tell me when I break something.</p>
+<h2>Editing, again</h2>
 
-<h2>Slicing Up the Interpreters</h2>
+<p>All of the above took me a good month or so and then it was time to stop
+fiddling around and get to work on the actual content. The first thing I did was
+another editing pass of the entire book, front to back. I had already done three
+drafts of each chapter as I was writing them, but I wanted to do one more now
+that it was done so that I could get a better feel for continuity. It turns out
+I repeated the same dumb jokes a lot. I fixed (most of) those.</p>
 
-<p>So I had a tool that could let me split the interpreters across the chapters.
-If it was possible to break these interpreters into chapters at all, it would
-let me do so. Now I just had to figure out where to carve the seams. This was
-the most technically challenging part of the book writing process. I wasn&rsquo;t sure
-if it was going to work at all.</p>
+<p>This took five months. There&rsquo;s nothing fun to say about this, it was just a
+chore.</p>
 
-<p>I spent several weeks sketching out potential lists of chapters, sprinkling
-snippet markers throughout the code, and seeing if the result built. I&rsquo;d get a
-compile error because a snippet in an early chapter tried to call a function in
-some later chapter and I would have to go back and reorganize things. I
-hand-drew dependency graphs between language features and tried to untangle
-them.</p>
+<h2>Copy editing</h2>
 
-<p>Here&rsquo;s an example of what this was like:</p>
+<p>Next I hired an actual professional copy editor, <a href="https://karisomerton.com/">Kari Somerton</a>, to go
+through and do the same thing. She was great. Most of the editing world uses
+Microsoft Word and &ldquo;Track Changes&rdquo; to handle the editing process. Like most
+software engineers, I live and breathe plaintext and Git. That way I can see
+diffs of the changes, and go back through history.</p>
+
+<p>I didn&rsquo;t want to abandon my workflow so I asked Kari to ramp up on Git and my
+weird completely bespoke build system. She handled it with aplomb and churned
+through the book in no time. She found hundreds and hundreds of mistakes. This
+despite me doing four drafts and readers filing hundreds of issues already.
+Professional copy editors are worth every penny.</p>
+
+<h2>Typesetting the whole thing</h2>
+
+<p>Once the words were as good as they were gonna get, it was time to get them onto
+pages. The process went like this:</p>
 
 <ol>
-<li><p>To teach functions I want show that recursion works.</p></li>
-<li><p>But to have recursive functions I need control flow. Otherwise, every
-recursive function recurses infinitely without a base case. So control flow
-has to come before functions.</p></li>
-<li><p>For control flow, I need side effects so that I can show that a certain code
-path is <em>not</em> taken. The obvious way to do side effects is to have a
-<code>print()</code> function that displays output.</p></li>
-<li><p>But I don&rsquo;t have functions yet. That&rsquo;s a cycle. Crap.</p></li>
+<li><p>Create a new InDesign file for the next chapter.</p></li>
+<li><p>Export it to XML.</p></li>
+<li><p>Import the XML into InDesign.</p></li>
+<li><p>Run my little JavaScript script to pull out the asides and location markers.</p></li>
+<li><p>Go through and anchor the side bar stuff.</p></li>
+<li><p>Fix up whitespace at the end of pages.</p></li>
 </ol>
 
-<p>Sometimes I had to change the language itself to break cycles. The above example
-is why Lox has a built in print <em>statement</em> instead of a print <em>function</em>.
-Because that way we can introduce the print statement before control flow, which
-is in turn before functions.</p>
+<p>The first five steps are a piece of cake. I&rsquo;d wake up in the morning, brew a cup
+of coffee, shamble upstairs to the iMac, and get started. I could grind through
+those steps while half awake and get a chapter done in half an hour or so. It
+was peaceful. Almost meditative.</p>
 
-<p>I had to break a couple of cycles like that but, eventually, to my surprise, I
-got it all sorted out. I had a complete list of chapters for both interpreters.
-Every line of code was sorted into a snippet that belonged to one of those
-chapters. I could build and run each chapter&rsquo;s code. Best of all, each chapter
-had a reasonably coherent concept and a roughly similar amount of code.</p>
+<p>And then step six. You see, that right there is the hard thing about typesetting
+a book. And it&rsquo;s the really hard thing about typesetting <em>this</em> book. Because it
+turns out there are a bunch of constraints on how content can be fit vertically
+in a page. Obviously, we can&rsquo;t slice an illustration in half and put the top
+half on one page and the bottom half on the next. The asides also really need to
+fit on one page too, or it gets confusing to keep track of what they refer to.</p>
 
-<p>Before, I felt like I had a language and code that wanted to get out there into
-the world. Now I felt like I had a book.</p>
+<p>Whenever possible, it&rsquo;s nice for the code snippets to not get split across pages
+too. Some of those can be over a dozen lines long. (This is another reason why
+wider horizontal metrics helped. Because if I had made the code snippets
+narrower, they would end up taller, which would make them harder to fit on the
+page.) And you don&rsquo;t want a header alone at the end of a page with no content
+after it. And it&rsquo;s good to avoid <a href="https://en.wikipedia.org/wiki/Widows_and_orphans">widows and orphans</a>&hellip;</p>
 
-<p>Or, at least, I had all of the <em>code</em> for a book.</p>
-
-<h2>A Chapter at a Time</h2>
-
-<p>I wrote my first book one chapter at a time. I drafted, edited, illustrated each
-chapter and put it online before moving to the next one. Serial publishing for
-the digital age. I really loved that process. It helped build an audience for
-the book and gave me incremental feedback which made the book better and kept me
-going. I don&rsquo;t think I could write a whole book in the dark.</p>
-
-<p>I intended to publish this book the same way, but the deeply interconnected
-nature of the chapters made that much harder. I didn&rsquo;t want to discover a
-problem with the code in chapter 28 that forced me to tweak things in an earlier
-chapter that readers had already read. I didn&rsquo;t want to paint myself into a
-corner or invalidate any previously-published material.</p>
-
-<p>The entire time I was designing the language, coding the interpreters, and
-splitting the codebases into chapters, I had not done any actual writing. Just
-lots of hacking on code through the summer of 2016. It was, honestly, a blast.
-The programming part is definitely the fun part, and it was a joy to tinker on
-the code and figure out how to break it into chapters. Sort of like making a
-jigsaw puzzle and solving it at the same time.</p>
-
-<p>After a few months, it was all there. Every single line of code for the entire
-book. A complete list of chapters. And I hadn&rsquo;t written a single word of prose.
-In theory, &ldquo;all&rdquo; that remained was writing some text to explain the code I had
-already written along with some pictures. But, for me at least, English is a
-much more taxing language to write than C or Java. I had all of the difficult
-work ahead of me, and all of the fun was done.</p>
-
-<h2>Illustrating by Hand</h2>
-
-<p>Well, not all of the fun. I did still have the illustrations to do. With my last
-book, I hand-drew little sketchy diagrams to show various bits of architecture.
-I wanted even more illustrations for this book to make the concepts less
-abstract, less opaque. Unlike a videogame, you can&rsquo;t <em>see</em> a garbage collector
-doing its thing. Visual metaphors really help.</p>
-
-<p>I liked the hand-drawn look. It furthered my meta-goal of making the material
-more approachable, more human. But I wanted to up the quality. I wanted them to
-be more intricate and contain more information. I wanted the drawings to be more
-detailed. Less like margin doodles and more like, well, <em>illustrations</em>. Maybe
-even some lowercase letters.</p>
-
-<p>The ultimate goal for me is a print book, so I stuck with black and white ink. I
-wanted a tighter, more &ldquo;spidery&rdquo; style, so I got some technical pens. People
-often ask me what programs I used for the illustrations, assuming I did them all
-digitally. Here are the main tools I used:</p>
+<p>Take all of those rules and restrictions, and mix in the completely fixed height
+of a page and you got yourself a real constraint solving problem. Or, in my
+case, 640 of them, all interwoven with each other. Because, you see, InDesign is
+happy to solve all of this for you by just pushing content to later pages. Code
+snippet too long? Move it to the next page. No room for prose under the header?
+Move it all to the next page. What that gives you is a ton of dead white space
+at the bottom of pages. It looks terrible and wastes space, like this:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/tools.jpg">
-  <figcaption>I went with Pigma Microns in 01 and 005. If I were doing it
-  again, I think I&rsquo;d do Faber-Castell Pitt pens.</figcaption>
+  <img class="framed" src="/image/2021/07/typeset.png">
+  <figcaption>I thoughtfully left room on the page for your own doodles.</figcaption>
 </figure>
 
-<p>There are two kinds of illustrations in the books: diagram-like ones that show
-meaningful information, and drawings that are for metaphors or just to be silly
-jokes. The process is different for each.</p>
+<h2>Speaking of illustrations&hellip;</h2>
 
-<p>I draw each diagram in pencil on graph paper. That lets me erase and move things
-around until I get it where I like:</p>
+<p>At one level, the illustrations were easy. I specifically chose black and white
+pen and ink because it&rsquo;s print friendly. When I first scanned the images as I
+wrote each chapter, I brought them in at glorious 1200 DPI. Here&rsquo;s a crop:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/pencil.jpg">
-  <figcaption>All of the vertical and horizontal lines in the illustrations
-  generally fall on the graph paper rules or halfway between them.</figcaption>
+  <img class="framed" src="/image/2021/07/scan.png">
 </figure>
 
-<p>Then I tape a piece of tracing paper on top and draw over it in ink:</p>
+<p>A little level adjustment in Photoshop produces:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/ink.jpg">
-  <figcaption>I make mistakes sometimes, usually when lettering like &ldquo;upvaluels&rdquo;
-  here. I fix that in Photoshop after scanning.</figcaption>
+  <img class="framed" src="/image/2021/07/illustration.png">
 </figure>
 
-<p>I hand letter everything. It takes a <em>long</em> time. I used to do graphic design,
-and I have this weird tic where any time I see something that looks handwritten,
-I look for multiple instances of the same letter to see if they are different or
-if the design just used a handwriting font. It&rsquo;s almost always a handwriting
-font and I die a little inside to see the illusion evaporate.</p>
+<p>So detailed! Exporting these to high resolution bitmaps that print well was a
+snap, and they look great. (Well, as great as my handwriting looks, I guess.)</p>
 
-<p>Well, this is <em>my</em> damned book and no reader will ever feel that disappointment.
-Every single fucking letter in every one of the illustrations was hand lettered
-and is unique.</p>
+<p>Incorporating the illustrations into the page layout was another story. Halfway
+through typesetting, a lightbulb went off and I finally realized why most books
+say, &ldquo;Refer to Figure 123 to see blah blah blah&hellip;&rdquo; That gives the typesetter
+freedom to put Figure 123 wherever the hell it fits on any nearby page.</p>
+
+<p>In my dumb book, because I am an idiot, the prose just refers directly to the
+illustration. The illustration needs to be <em>right there</em> or the text doesn&rsquo;t
+make sense. I didn&rsquo;t think about that when each chapter was an infinitely
+scrolling web page, and by the time I realized, it was too late.</p>
+
+<p>With the hundreds of illustrations and thousand-plus code snippets, I had given
+myself thirty giant interrelated bin-packing exercises. The hard part of
+typesetting was figuring out how to adjust things to minimize that dead space.
+Sometimes I&rsquo;d split a code snippet in two. Maybe add a little extra padding
+around one image to spread stuff across the page a little. Or crowd another one
+so that it <em>just</em> fits on the page. Sometimes I&rsquo;d tweak an illustration to make
+it shorter to fit on a page or taller to eat up some whitespace.</p>
+
+<p>This was the real challenge of typesetting the book and why it took me two
+months to get through all the chapters.</p>
+
+<h2>Frontmatter and backmatter</h2>
+
+<p>Did you know that there are professional indexers? People whose job it is to
+write indexes for books? They even <a href="https://press.uchicago.edu/ucp/books/book/chicago/I/bo3625262.html">write books</a> about how to write
+indexes. (One would presume that these books have truly superb indexes.)</p>
+
+<p>I did not hire one of those eminently skilled professionals. Instead, I spent
+two weeks going through every damn chapter <em>again</em> doing my best to pretend that
+I know what I&rsquo;m doing. InDesign&rsquo;s support for indexes is actually pretty nice.
+You can basically just select some text and say, &ldquo;Make an index entry for this.&rdquo;
+Then it collects all of those and generates an index for the whole book. But
+actually <em>adding</em> all of those entries is a mind-numbing chore.</p>
+
+<p>The index is the main piece of &ldquo;backmatter&rdquo;&mdash;the stuff at the end of a book
+after its main content. There is also &ldquo;frontmatter&rdquo;. You&rsquo;ll never guess where
+that goes. I put together a title page, copyright page, dedication, and
+acknowledgements. Then I let InDesign generate a table of contents for me.</p>
+
+<p>This was a magical moment. At this point, I had a complete book:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/title.jpg">
-  <figcaption>Here is the hand-lettered logotype for the book. Each &ldquo;R&rdquo; is
-  different!</figcaption>
+  <img class="framed" src="/image/2021/07/inside.jpg">
+  <figcaption>Here&rsquo;s what the inside looks like.</figcaption>
 </figure>
 
-<p>Also, if that&rsquo;s not obsessive enough, I spent time <em>changing my own handwriting</em>
-to better match the text font of the book. I taught myself to
-write double-story &ldquo;a&rdquo; and &ldquo;g&rdquo; letters and practiced by filling pages of paper
-with the same letter over and over.</p>
+<p>Or, at least, I had the <em>inside</em> of one.</p>
+
+<h2>Cover design</h2>
+
+<p>A lot of authors obsess over their cover and envision it the whole time they are
+writing. Despite what the aphorism says, people <em>do</em> judge books by their cover
+and a good one makes a big difference. At least, that&rsquo;s the case over in fiction
+land. In computer science, judging by the other books I have laying around, the
+artistic merit of the cover appears to be somewhat less critical. I guess when
+the prof says you have to buy the book to pass the class, a clip art cover is
+sufficiently compelling.</p>
+
+<p>Since I am <em>not</em> a professor who can garner sales by fiat, I spent a lot of time
+on the cover design. I take photos, so I thought it could look nice to put
+something detailed on the cover to liven it up. I went through my thousands of
+photos trying to find something that fit. And, while I have some pretty
+pictures, none of them felt like they worked as covers. They felt arbitrary.</p>
+
+<p>Eventually I realized that the visual language of the book is those pen and ink
+illustrations. So I drew a bigger more detailed version of <a href="http://craftinginterpreters.com/a-map-of-the-territory.html#the-parts-of-a-language">the mountain
+illustration I use as a metaphor for the compilation process</a>. I also
+hand-lettered a new title:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/lettering.jpg">
-  <figcaption>Look at the loop under the &ldquo;g&rdquo; in &ldquo;filling&rdquo; and the finial on the
-  &ldquo;a&rdquo; in &ldquo;apples&rdquo;.</figcaption>
+  <img class="framed" src="/image/2021/07/cover-trace.jpg">
 </figure>
 
-<p>I also wanted to make sure that the illustrations and text matched each other
-across the book. To give the text a consistent size, I printed a little height
-guide:</p>
+<p>It&rsquo;s a real typeface (Acumin Pro Extra Condensed) but I hand-traced a printout
+to give it some imperfect charm. I picked a color palette to try to give it a
+sort of a mimeographed 1950s scouting manual vibe.</p>
+
+<h2>Proofreading the proof</h2>
+
+<p>Now I really had a book. I uploaded the PDF exports to KDP and ordered a proof
+copy. A week later, a surprisingly heavy box arrived. This was the first moment
+I really understood just how <em>big</em> this book I wrote is. Up until this point, it
+was just data files. But seeing it fill up an Amazon box clarified the scale of
+the project in a way that the time I spent never quite did.</p>
+
+<p>So I had a book, but it <em>still</em> wasn&rsquo;t done. Because the typesetting process
+involved a lot of manual labor. To err is human, so now I had to
+<em>proofread</em>&mdash;to literally go through the proof and read it looking for
+mistakes. I marked them all with sticky notes:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/metrics.jpg">
-  <figcaption>The dotted line indicates the x-height. I picked a ratio for that
-  to match the fonts I use for text and code.</figcaption>
+  <img class="framed" src="/image/2021/07/edits.jpg">
+  <figcaption>I put an &ldquo;x&rdquo; on each sticky note to mark when I had applied the
+  fix to the InDesign files.</figcaption>
 </figure>
 
-<p>I slid this paper under the tracing paper and lettered on top of those lines to
-keep the metrics the same across the book.</p>
+<p>Here&rsquo;s where it got stressful. If you&rsquo;re a programmer, then source control and
+diff is deeply ingrained in your workflow. Whenever I make a change, I take for
+granted that I can then see a diff in the commit to verify that I changed only
+what I intended and nothing else.</p>
 
-<p>To keep the diagram size and line thickness consistent, each illustration has a
-pair of registration marks a fixed distance apart:</p>
+<p>I did put the InDesign files in a Git repo, but they are giant opaque binary
+files. Also, InDesign has a habit of changing them even when it doesn&rsquo;t seem
+like I&rsquo;ve actually made any real changes. There&rsquo;s nothing quite like syncing all
+the styles across the chapters, seeing every single file marked changed and
+wondering, &ldquo;Did I just accidentally move every bullet list item 3 points to the
+left?&rdquo; It felt like flying blind at exactly the stage in the process where I
+really wanted to see <em>exactly</em> what was happening.</p>
+
+<p>Did I engineer my way out of this problem? You&rsquo;re <a href="https://github.com/munificent/craftinginterpreters/blob/master/tool/bin/tile_pages.dart">damn right I did</a>. I
+wrote a Dart script that would take a PDF of the book, extract every page, and
+then generate a single huge PNG file with every page tiled across it. It looks
+like this:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/registration.jpg">
-  <figcaption>The little marks that the pencils are pointing at.</figcaption>
+  <img class="framed" src="/image/2021/07/pages.png">
 </figure>
 
-<p>I scan each illustration into Photoshop for clean up and processing. I use those
-marks when cropping to ensure that the image maintains the right size relative
-to other images.</p>
-
-<p>I recorded a video of the whole process if you want to see it in action:</p>
+<p>If you zoom in, each page is about this big:</p>
 
 <figure>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/iN1MsCXkPSA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  <figcaption>Even in timelapse, it takes a long time.</figcaption>
+  <img class="framed" src="/image/2021/07/pages-zoom.png">
+  <figcaption>If you&rsquo;re on a retina display, this is a 100% zoom.</figcaption>
 </figure>
 
-<p>Writing this all out makes me sound like a crazy person. What the hell am I
-doing with my life? Or, more importantly, what <em>could I have been doing</em> instead
-of doing all that?</p>
-
-<p>Too late now, I guess. The picture-like drawings have a different workflow since
-they don&rsquo;t have a lot of straight lines or align to a grid.</p>
+<p>Every time I changed the InDesign files and committed them, I exported a PDF
+for that commit and generated a tile image. Then I wrote a little Photoshop
+action that would take two of those and draw a big red border around any pixels
+that differed. Here is what all of the proofreading changes look like:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/drawing.jpg">
-  <figcaption>How will readers understand what a stack is without this helpful
-  illustration?</figcaption>
+  <img class="framed" src="/image/2021/07/diff.png">
 </figure>
 
-<p>I draw those on regular sketch paper using a non-photo blue pencil. Then I ink
-on top of that. I scan the paper in RGB and use the blue channel, which mostly
-makes the blue pencil marks disappear.</p>
+<p>And zoomed in:</p>
 
 <figure>
-  <img class="framed" src="/image/2020/04/blue.jpg">
-  <figcaption>The sketch paper bleeds the ink more than I like but I didn&rsquo;t
-  want to change paper partway through the book, so I stuck with it.</figcaption>
+  <img class="framed" src="/image/2021/07/diff-zoom.png">
 </figure>
 
-<p>It&rsquo;s a lot of work for each image, and this doesn&rsquo;t include all of the work
-after scanning it. And I wanted a lot of them. By the end, I had this stack of
-paper:</p>
+<p>There isn&rsquo;t enough detail in the tile image to tell exactly what changed, but
+the red tells me which pages need a visual inspection. I know I should be proud
+of, like, writing an entire textbook on programming languages. But, honestly, I
+think I&rsquo;m most proud of this dumb little script. It was <em>such</em> a relief to be
+able to programmatically verify that, yes, this PDF looks exactly like the last
+one except for the one expected change.</p>
 
-<figure>
-  <img class="framed" src="/image/2020/04/stack.jpg">
-  <figcaption>Such a small image for so much work.</figcaption>
-</figure>
+<h2>Ebooks are also books</h2>
 
-<p>I went through two full pads of tracing paper, two pads of graph paper, a
-sketch pad, and several pens. I drew 181 illustrations.</p>
+<p>Once I incorporated all the proofreading fixes, the print edition was really
+for real totally done. But people also like reading ebooks and Kindle, so I
+needed to make those too.</p>
 
-<h2>Writing is Suffering</h2>
+<p>Again, writing my own build system helped. I tweaked it to be able to export the
+antiquated XHTML that EPUB requires as well as all the weird metadata and
+manifest stuff that goes into one. A few command-line invocations later and I
+had Kindle and EPUB ebooks. I tested in a bunch of readers and tweaked the CCS
+to try to find a compromise between all of their renderers.</p>
 
-<p>I had the code, and I had a process for illustrations. The remaining work was
-just writing all the words and drawing all the pictures. So that&rsquo;s what I did. I
-started at chapter one and started writing. For each chapter, I wrote an outline
-and then a first draft. I did an editing pass over that to fix all the major
-problems. Then a second pass where I read the whole chapter out loud to fix
-cadence and other stuff.</p>
+<h2>Updating the site and launching</h2>
 
-<p>This is the same process I used for the first book. I stumbled onto something
-that worked, so I wasn&rsquo;t about to mess it up. I posted each chapter online, and
-then spent a day fixing bugs that readers noticed. Then I moved on to the next
-chapter.</p>
+<p>At this point&mdash;and now we&rsquo;re talking this past weekend as I write this
+sentence&mdash;I had a folder with all of the final files for every edition of
+the book. All that remained was to update the front page of the book&rsquo;s website
+to point to where people can get them. I took some photos and put on my web
+designer hat for a while. I tried to make it tolerably responsive.</p>
 
-<p>I wrote. And wrote. And wrote. Every single day. Every now and then I would have
-a trip or something where I couldn&rsquo;t write. As with my first book, I would bank
-days by writing multiple sessions per day beforehand and then spend those banked
-days on days that I didn&rsquo;t write. But for the most part, I wrote every day.</p>
+<p>Then I wrote this blog post. It&rsquo;s weird to put that in the past tense since I
+just wrote it. But I guess it&rsquo;s in the past now.</p>
 
-<p>In the blog post I wrote after my first book, I whined about how I had to write
-on days when I traveled for work, on holidays, when the kids had sniffles. At
-the time, it truly was one of the hardest things I&rsquo;ve ever done.</p>
+<p>Tomorrow, I&rsquo;m going to upload the files to the various sites and stores. I&rsquo;ll
+update the site to have links to all of those as they go live. Once the stores
+have processed the uploads and everything is available, I&rsquo;ll publish this post
+and update the site. I&rsquo;ll write a note for the mailing list and feel nervous
+emailing that many people. If you&rsquo;re reading this, I already did all that and
+the book is really, really done.</p>
 
-<p>This time was something else entirely. I wrote the day my grandfather died
-(peacefully, unsurprisingly) and the day my aunt died (tragically, days after
-retiring). I wrote the day I found out my Mom had cancer and my children saw me
-cry for the first time. I was flying to Louisiana to keep my Mom company when I
-turned on my phone during the layover and discovered a dear friend had had a
-stroke. I wrote that evening. I woke up the next day and found out she had died.
-I wrote that morning sitting next to my brother in the waiting room of the
-hospital while my Mom got her PET scan.</p>
+<h2>What next?</h2>
 
-<p>The morning of my friend&rsquo;s memorial service, I wrote in the hotel. Later that
-day, I openly sobbed in front of a room full of people. The next day, my wife
-found out her aunt had terminal cancer. I wrote on the flight home.</p>
+<p>Ever since I finished the last chapter, people have been asking me what I&rsquo;m
+going to do next. I have people I consider close friends now who have never
+known me when I <em>wasn&rsquo;t</em> writing this book.</p>
 
-<p>See that dog up there in my profile photo? That&rsquo;s Ginny. She&rsquo;s on the back cover
-of my first book. Her myriad health problems finally <a href="https://twitter.com/munificentbob/status/1100898048811491328">caught up with her</a>
-last spring. People sometimes ask, &ldquo;When did you know you were an adult?&rdquo; For me
-it was the day I made the call to put my dog down. The hardest part was watching
-my kids say goodbye to her. I&rsquo;m tearing up now writing about it. I ran my
-fingers through Ginny&rsquo;s silky fur as the sedatives took her away. I only got
-through 59 words that afternoon.</p>
+<p>Many ask what I&rsquo;m going to write next, or suggest a topic. I interpret this as a
+compliment: They like my writing and want more. But it also feels like asking a
+mom in labor whether she plans to have more kids. I&rsquo;ve had my legs in the
+stirrups for six years, so I&rsquo;m gonna just relax a bit after all the pushing is
+over before I even <em>think</em> about another book baby.</p>
 
-<p>I wrote the day the US somehow elected a racist, abusive, corrupt demagogue, and
-every day afterwards as I saw my country and others turn towards hate and
-authoritarianism. I wrote while climate change and income inequality worsened.
-And now here I am writing at home on the same desk where I work now, quarantined
-like most of you all, hoping to survive the worst pandemic the world has seen in
-a century.</p>
+<p>What I really plan to do is&hellip; not <em>plan</em> to do anything. This writing project
+has been an enormous exercise in self-applied delayed gratification. On top of
+that, the pandemic brought its own basket of deferred dreams. I&rsquo;ve gotten so
+skilled at denying myself and postponing, so good at tuning out what I <em>feel</em>
+like doing, that it&rsquo;s hard to even hear it any more. I don&rsquo;t remember what my
+own joy sounds like.</p>
 
-<p>This is not about how disciplined I was. Because during what have been some of
-the worst years of my life, a weird inversion happened. It&rsquo;s not that I was
-going through that shit and still writing <em>in addition to</em> it. I <em>had</em> to keep
-writing. Writing was one thing I could still control in the face of many things
-I could not. If I could make it through the book, maybe I could make it through
-the other things too. If I had skipped a day it would have meant that the cancer
-or the deaths beat me that day, that they were stronger than me. I feared what
-it would mean to me to let go.</p>
+<p>So I&rsquo;m gonna check out for a while and go hunting for my pleasure centers. Maybe
+<a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">make some more music</a>. Maybe go fishing. Probably spend more time with
+friends and family (safely). I might get back to working on <a href="https://github.com/munificent/hauberk">my
+roguelike</a>. Or maybe I won&rsquo;t do any of those. Maybe I&rsquo;ll just go out in
+the backyard and bask mindlessly in the sun like a lizard. The important part is
+I won&rsquo;t decide until I feel like it.</p>
 
-<p>I got through these four years and kept writing, but I paid a price. When I read
-the earlier chapters, they have a whimsy and light-heartedness that later
-chapters lack. We&rsquo;re all going through dark times, and I don&rsquo;t <em>feel</em> light. The
-past few years left a mark on me, and that mark shows up in the book. I miss the
-goofier person I used to be, sometimes. But I&rsquo;d like to believe that maybe the
-person I am now is a little more honest. Maybe some of those jokes were a mask.</p>
-
-<p>And, thankfully, Mom is in remission.</p>
-
-<p>Psychological self examination aside, I did keep up the writing. Which is good
-because, <em>man</em> did I underestimate this book. I was aiming for 60,000 words and
-hoped to get it done in about a year. Here I am four years later sitting on a
-quarter of a million words.</p>
-
-<p>People sometimes ask what it&rsquo;s like writing something that big. I&rsquo;ve been asking
-myself that for the past couple of weeks. And the weird thing is, <em>I don&rsquo;t
-know.</em> I&rsquo;ve had my head down for the past four years and haven&rsquo;t looked past the
-next paragraph or two the entire time. What does it feel like to write an email
-or draw a picture? Writing the book felt like that. I just happened to do it
-over and over again. I feel like a marathon runner who&rsquo;s been watching his feet
-the whole time and didn&rsquo;t even notice when he stumbled over the finish line.</p>
-
-<h2>And Now What?</h2>
-
-<p>&ldquo;Crafting Interpreters&rdquo; is complete now. I had to stop here for a minute and
-look at that sentence. I&rsquo;ve been working on this book every day for around
-1,400 days. I can&rsquo;t <em>wait</em> to take a break. So that&rsquo;s the next step. My plan
-was to finish the book right before spring break and enjoy a week on the beach
-with family.</p>
-
-<p>That beach trip went the way of so many other plans in early 2020, but I still
-intend to take a long break. I don&rsquo;t know if you noticed, but we all have a lot
-of other shit to deal with right now. I&rsquo;m going to relax.</p>
-
-<p>Every morning since 2016, I&rsquo;ve woken up with a task I had to do. Until I got my
-writing done for the day, it was on my mind, weighing me down. Writing left me
-drained. If you&rsquo;ve ever had a newborn, you know the feeling of always having to
-carry the baby around. After a while, it&rsquo;s like you forget what it&rsquo;s like to
-have <em>two</em> free arms. I&rsquo;ve been carrying this baby for four years, so I&rsquo;m
-looking forward to having both arms for a while.</p>
-
-<p>Once I&rsquo;m recharged, the real fun starts. Having the book online is important,
-but for me, &ldquo;Crafting Interpreters&rdquo; was always meant to be a <em>book</em> with pages
-and a cover. So after a long bout of editing and bug fixing, I&rsquo;m going to get
-started doing the page layout for the print edition. I love graphic design, and
-I can&rsquo;t wait to hold it in my hands.</p>
-
-<p>If you&rsquo;d like to hold it in <em>your</em> hands when it comes out, I have <a href="https://mailchi.mp/afd054e73140/robertnystrom">a mailing
-list</a> where I&rsquo;ll let you know when the book is done. In the meantime, I
-think I&rsquo;ve earned some rest.</p>
+<p>I&rsquo;m sure eventually I&rsquo;ll get the itch to work on something more sizeable again.
+(But, God-willing, I will never spend six years on a single project again in my
+life.) Until then, I hope you enjoy the book. Despite all the work, I had a lot
+of fun making it, and it was <em>always</em> a joy to hear from readers who liked it.
+It&rsquo;s the only thing that kept me going this long and enabled me to get it done.</p>
 
   <div class="social">
-    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters//" target="_blank">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months//" target="_blank">
       <i class="fa fa-lg fa-reddit-square"></i>
     </a>
 
-    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters//&amp;t=Crafting &quot;Crafting Interpreters&quot;" target="_blank">
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months//&amp;t=640 Pages in 15 Months" target="_blank">
       <i class="fa fa-lg fa-hacker-news"></i>
     </a>
 
-    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/&amp;text=%22Crafting &quot;Crafting Interpreters&quot;%22%20%40munificentbob" target="_blank">
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/&amp;text=%22640 Pages in 15 Months%22%20%40munificentbob" target="_blank">
       <i class="fa fa-lg fa-twitter-square"></i>
     </a>
 
-    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/" target="_blank">
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/" target="_blank">
       <i class="fa fa-lg fa-facebook-square"></i>
     </a>
 
-    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/" target="_blank">
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/" target="_blank">
       <i class="fa fa-lg fa-google-plus-square"></i>
     </a>
 
@@ -756,7 +641,7 @@ think I&rsquo;ve earned some rest.</p>
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/";
+        var disqus_url = "http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/";
 
         (function() {
             var dsq = document.createElement('script');
@@ -790,12 +675,12 @@ think I&rsquo;ve earned some rest.</p>
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>42</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/design">design</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/book">book</a> <small class='post-count'>4</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>43</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/blogofile">blogofile</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">75 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">76 articles</a>&hellip;</p>
 
     <p>This blog is built using <a href="http://jekyllrb.com/">jekyll</a>. The source repo for it is <a href="https://github.com/munificent/journal">here</a>.</p>
-    <p class="copyright">&copy; 2008-2014 Robert Nystrom</p>
+    <p class="copyright">&copy; 2008-2021 Robert Nystrom</p>
   </div>
 </nav>
     </div>

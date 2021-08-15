@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  {{ include "head" with title = "Where Did All the Time Go?" }}
+
+  <body>
+    <div class="column">
+<article>
+<header>
+<h1>Where Did All the Time Go?</h1>
+</header>
+
+{{ include "post_list" with posts = all_posts }}
+</article>
+{{ include "nav" }}
+
+    </div>
+  </body>
+</html>

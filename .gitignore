@@ -2,3 +2,6 @@
 *.pyc
 _cache/
 .sass-cache
+.dart_tool
+.idea
+.packages

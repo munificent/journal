@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  {{ include "head" with title = tag_title }}
+
+  <body>
+    <div class="column">
+      <article>
+<header>
+<h1>{{ tag_title }}</h1>
+</header>
+
+{{ include "post_list" with posts = tag_posts }}
+</article>
+{{ include "nav" }}
+
+    </div>
+  </body>
+</html>

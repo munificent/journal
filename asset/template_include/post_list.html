@@ -1,0 +1,12 @@
+{{ let current_year = "" }}
+{{ for post in posts }}
+  {{ if post.date.year != current_year }}
+  
+
+  <h4>{{ post.date.year }}</h4>
+  {{ set current_year = post.date.year }}
+  {{ end }}
+  
+
+  {{ include "post_box" with post = post }}
+{{ end }}

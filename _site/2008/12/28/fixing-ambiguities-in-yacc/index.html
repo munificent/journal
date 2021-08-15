@@ -82,7 +82,7 @@ operations, which are performed first? For example:</p>
 Aunt Sally</a>, so you have to tell it. I&rsquo;m using arithmetic expressions as
 examples here, but this applies to <em>all</em> facets of expressions and statements:
 Given <code>result = foo.x + 2</code> should we do the assignment (<code>=</code>), field access
-(<code>.</code>), or addition (<code>+</code>)first?</p>
+(<code>.</code>), or addition (<code>+</code>) first?</p>
 
 <h2>A Toy Language</h2>
 
@@ -154,10 +154,10 @@ recursive, but it provides <em>two</em> paths to recurse and no guidance for whi
 one to choose.</p>
 
 <p>Congratulations, you just hit the associativity problem. The issue is, given
-the text <code>1 + 2 * 3</code> yacc looks at that rule and says: &ldquo;Well &lsquo;1 + 2&rsquo; is an
-expression and &lsquo;*&rsquo; is an operator, and &lsquo;3&rsquo; is an expression, so I could parse
-that way. But wait, &lsquo;1&rsquo; is also an expression, and &lsquo;+&rsquo; is an operator, and &lsquo;2
-* 3&rsquo; is an expression, so the rule works that way too. <a href="http://lolabrigada.files.wordpress.com/2008/03/oh-noes-pillow-hat-too-heavy.jpg">Oh noes!</a>&rdquo;</p>
+the text <code>1 + 2 * 3</code> yacc looks at that rule and says: &ldquo;Well <code>1 + 2</code> is an
+expression and <code>*</code> is an operator, and <code>3</code> is an expression, so I could parse
+that way. But wait, <code>1</code> is also an expression, and <code>+</code> is an operator, and
+<code>2 * 3</code> is an expression, so the rule works that way too. <a href="http://lolabrigada.files.wordpress.com/2008/03/oh-noes-pillow-hat-too-heavy.jpg">Oh noes!</a>&rdquo;</p>
 
 <h3>Specifying Associativity</h3>
 
@@ -324,7 +324,7 @@ precedence, but are able to contain an expression of <em>any</em> precedence, th
 letting the cascade loop back on itself predictably.</p>
 
 <p>Interestingly, you&rsquo;ll note that nothing specific needs to be done in the
-action step for parentheses. It&rsquo;s effect is handled totally by the parser and
+action step for parentheses. Its effect is handled totally by the parser and
 simply affects the shape of the AST generated.</p>
 
 <h2>Conclusion</h2>

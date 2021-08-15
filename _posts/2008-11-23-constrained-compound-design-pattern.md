@@ -189,6 +189,6 @@ problem we see often and here's a good way we see people solve it."
 Patterns are *not* supposed to be a brand-new high-tech innovation (an
 excellent pattern in A Pattern Language encourages you to put a bench by your
 front door). If you read the Constrained Compound pattern above and thought,
-"Oh yeah, I've done something similar a bunch of times," then *good*. It's
+"Oh yeah, I've done something similar a bunch of times," then *good*. Its
 familiarity means it's a good solution because a lot of people have used it
 and is worth adding to the language. Now it has a name.

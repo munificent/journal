@@ -44,7 +44,7 @@ Should that be `(1 + 2) * 3`, or `1 + (2 * 3)`? yacc doesn't know your [Dear
 Aunt Sally](http://everything2.com/e2node/Please%2520Excuse%2520My%2520Dear%2520Aunt%2520Sally), so you have to tell it. I'm using arithmetic expressions as
 examples here, but this applies to _all_ facets of expressions and statements:
 Given `result = foo.x + 2` should we do the assignment (`=`), field access
-(`.`), or addition (`+`)first?
+(`.`), or addition (`+`) first?
 
 ## A Toy Language
 
@@ -126,10 +126,10 @@ recursive, but it provides *two* paths to recurse and no guidance for which
 one to choose.
 
 Congratulations, you just hit the associativity problem. The issue is, given
-the text `1 + 2 * 3` yacc looks at that rule and says: "Well '1 + 2' is an
-expression and '*' is an operator, and '3' is an expression, so I could parse
-that way. But wait, '1' is also an expression, and '+' is an operator, and '2
-* 3' is an expression, so the rule works that way too. [Oh noes!](http://lolabrigada.files.wordpress.com/2008/03/oh-noes-pillow-hat-too-heavy.jpg)"
+the text `1 + 2 * 3` yacc looks at that rule and says: "Well `1 + 2` is an
+expression and `*` is an operator, and `3` is an expression, so I could parse
+that way. But wait, `1` is also an expression, and `+` is an operator, and
+`2 * 3` is an expression, so the rule works that way too. [Oh noes!](http://lolabrigada.files.wordpress.com/2008/03/oh-noes-pillow-hat-too-heavy.jpg)"
 
 ### Specifying Associativity
 
@@ -317,7 +317,7 @@ precedence, but are able to contain an expression of *any* precedence, thus
 letting the cascade loop back on itself predictably.
 
 Interestingly, you'll note that nothing specific needs to be done in the
-action step for parentheses. It's effect is handled totally by the parser and
+action step for parentheses. Its effect is handled totally by the parser and
 simply affects the shape of the AST generated.
 
 ## Conclusion

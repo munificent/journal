@@ -268,7 +268,7 @@ separate it from the engine even while keeping the usability of having it
 *seem* to be part of `Monster`.
 
 You can apply this to almost all of the concerns of a class, provided the
-concern doesn't require it's own data. If you take this is far as you can, you
+concern doesn't require its own data. If you take this is far as you can, you
 end up with a core class whose job is to hold state and ensure that it's
 internally consistent. Then the various capabilities of the object: display,
 serialization, printing, etc. can be implemented as distinct sets of extension

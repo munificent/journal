@@ -5,3 +5,4 @@ _cache/
 .dart_tool
 .idea
 .packages
+/build

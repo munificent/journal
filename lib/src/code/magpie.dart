@@ -8,28 +8,28 @@ Language makeMagpieLanguage() {
   language.regExp(r'[0-9]+\.[0-9]*', Category.decimalNumber);
   language.regExp(r'[0-9]+?', Category.integer);
 
-  language.regExp(r'->', Category.keyword);
-  language.regExp(r'<-', Category.keyword);
-  language.verbatim('.', Category.keyword);
-
-  // TODO: Only to match old site.
-  language.regExp(r"[+*<>=']", Category.error);
-
-  language.regExp(r'[{}()[\],:;!*/&%~+=<>|]', Category.punctuation);
-
-  language.identifier();
   // TODO: 'struct' should be a keyword in old Magpie.
   language.keywords(
-      Category.keyword, 'def do else end fn for if then var while');
-  language.keywords(Category.boolean, 'false true');
+      Category.keyword,
+      'and as def do else end extend false fn for if import interface is or '
+      'return then this true var while with');
+
+  language.regExp(r'\b[A-Z][a-zA-Z0-9_]*\b\??', Category.typeName);
+  language.regExp(r'\b[a-z_][a-zA-Z0-9_]*\b\??', Category.identifier);
+
+  language.regExp(r'[{}()[\],:;.]', Category.punctuation);
+  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
+
+  language.regExp(r'[\s\n\t]', Category.whitespace);
 
   // Strings.
-  language.push(r'"', Category.string, 'string');
-  language.ruleSet('string');
-  language.pop('"', Category.string);
-  language.regExp(r'\\.', Category.stringEscape);
-  // TODO: Multi-character escapes?
-  language.regExp('.', Category.string);
+  language.regExp(r'"', Category.string).push('string');
+  language.ruleSet('string', () {
+    language.regExp('"', Category.string).pop();
+    language.regExp(r'\\.', Category.stringEscape);
+    // TODO: Multi-character escapes?
+    language.regExp('.', Category.string);
+  });
 
   return language;
 }

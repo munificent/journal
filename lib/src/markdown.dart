@@ -1,43 +1,20 @@
 import 'package:journal/src/code/magpie.dart';
 import 'package:typographic_markdown/typographic_markdown.dart';
-import 'package:chromatophore/chromatophore.dart';
 import 'package:chromatophore/markdown.dart';
 import 'package:markdown/markdown.dart';
 
+import 'code/finch.dart';
 import 'code/magpie.dart';
 
-final _languages = {'magpie': makeMagpieLanguage()};
-
-// TODO: Match the old styles. Remove this once not trying to match the old
-// site.
-const _cssClasses = {
-  Category.annotation: 'a',
-  Category.attribute: 'na',
-  Category.lineComment: 'c1',
-  Category.blockComment: 'cm',
-  Category.stringEscape: 'e',
-  Category.identifier: 'n',
-  Category.keyword: 'k',
-  Category.typeKeyword: 'kt',
-  Category.integer: 'mi',
-  Category.decimalNumber: 'mf',
-  Category.number: 'm',
-  Category.punctuation: 'p',
-  Category.operator: 'o',
-  Category.string: 's',
-  Category.character: 'sc',
-  Category.typeName: 'nc',
-  Category.functionName: 'nf',
-  Category.namespaceName: 'nn',
-  Category.preprocessor: 'cp',
-  Category.error: 'err',
-  Category.boolean: 'nb',
+final _languages = {
+  'magpie': makeMagpieLanguage(),
+  'finch': makeFinchLanguage()
 };
 
 String renderMarkdown(List<String> lines) {
   var document = Document(blockSyntaxes: [
     // TODO: Header syntax that adds anchor links.
-    HighlightedCodeBlockSyntax(languages: _languages, cssClasses: _cssClasses),
+    HighlightedCodeBlockSyntax(languages: _languages),
   ], inlineSyntaxes: [
     // Put inline Markdown code syntax before our smart quotes so that
     // quotes inside `code` spans don't get smartened.

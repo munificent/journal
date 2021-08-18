@@ -142,7 +142,7 @@ if: numWeasels > numCakes then: {
 
 The first minor change is using curlies to define blocks instead of square
 brackets. The more interesting change is that `if:then:else:` doesn't seem to
-have a receiver&mdash; an object that the method is acting on.
+have a receiver -- an object that the method is acting on.
 
 You'll remember in Smalltalk that the condition `numWeasels > numCakes` comes
 *before* the `ifTrue:ifFalse` message. That's because `ifTrue:ifFalse` is a

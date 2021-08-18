@@ -17,10 +17,13 @@ for some deeper architecture implications.
 ## The Normal Thing
 
 Before I go off the deep end, let's make sure we're all together. Here's the
-canonical use case for extension methods. Let's say you have some class
-created by an external developer (read "Microsoft"). We'll pick String because
-[everyone](http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx) [else](http://www.developer.com/net/csharp/article.php/3592216) [does](http://msdn2.microsoft.com/en-us/library/bb383977.aspx). Let's say you want a method to tell if a
-string contains only letters. Here's how you'd normally do it:
+canonical use case for extension methods. Let's say you have some class created
+by an external developer (read "Microsoft"). We'll pick String because
+[everyone](http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx)
+[else](http://www.developer.com/net/csharp/article.php/3592216)
+[does](http://msdn2.microsoft.com/en-us/library/bb383977.aspx). Let's say you
+want a method to tell if a string contains only letters. Here's how you'd
+normally do it:
 
 ```csharp
 public static class StringUtils
@@ -71,7 +74,7 @@ bool isAlpha = someString.IsAlpha();
 ```
 
 Much better. So this is about as far as I think most people get with them.
-"Extension method" = "friendlier calling convention." Now let's see if there
+"Extension method" = "friendlier calling convention". Now, let's see if there
 are any other rabbits we can pull out of this hat.
 
 ## Reuse Methods Without Inheritance
@@ -91,7 +94,7 @@ public interface IPosition
     float Y { get; }
 }
 
-public class Monster : Actor, IPosition { /* implementation... */ }
+public class Monster: Actor, IPosition { /* implementation... */ }
 public class Treasure: Item, IPosition { /* implementation... */ }
 ```
 
@@ -109,7 +112,7 @@ public class MonsterCollection : List<Monster>
 ```
 
 The problem is you've now got to derive a new collection for every class with
-a position and copy `GetAt()` in every one. Sure you could do an abstract
+a position and copy `GetAt()` in every one. Sure, you could do an abstract
 collection for a collection of things with positions but that doesn't cover
 different *kinds* of collections. What if you need lists and queues and stacks
 of monsters?

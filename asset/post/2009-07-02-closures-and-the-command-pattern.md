@@ -82,7 +82,7 @@ class Program
     {
         // ui or ai creates command
         var piece = new Piece();
-        var command =  Commands.MovePiece(piece, 3, 4);
+        var command = Commands.MovePiece(piece, 3, 4);
 
         // chess engine invokes it
         command.Invoke();
@@ -134,7 +134,7 @@ class Program
     {
         // ui or ai creates command
         var piece = new Piece();
-        var command =  Commands.MovePiece(piece, 3, 4);
+        var command = Commands.MovePiece(piece, 3, 4);
 
         // chess engine invokes it
         command();

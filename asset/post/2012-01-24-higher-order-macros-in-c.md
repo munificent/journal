@@ -18,7 +18,7 @@ In all honesty, my usual process looks a bit like:
 
 1. "Hmm, I need to code up a floobinator. v8 has one. Let me see how they do it."
 
-2. *hunt through v8 code*
+2. *Hunt through v8 code...*
 
 3. "Ah, here it is."
 

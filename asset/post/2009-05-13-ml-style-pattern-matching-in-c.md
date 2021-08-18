@@ -233,7 +233,7 @@ The last remaining step is to pull out the `caption` and `buckets` from the
 `Lolcat` and `Lolrus` types. We'll do this by overloading `Case()`:
 
 ```csharp
-public virtual Matcher<T> Case<TCase, TArg>(Action <TArg> action)
+public virtual Matcher<T> Case<TCase, TArg>(Action<TArg> action)
 {
     IMatchable<TArg> matchable = mValue as IMatchable<TArg>;
 

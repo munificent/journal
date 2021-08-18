@@ -128,7 +128,7 @@ void method(Derived* obj) { printf("Derived!"); }
 
 // Later...
 Base* obj = new Derived();
-method(obj);</pre>
+method(obj);
 ```
 
 Does this also print `"Derived!"`? Alas, no. With function arguments, the overloaded function is chosen at *compile* time. Since the compiler only knows that `obj` is of type `Base*`, it binds the call to the version of `overloaded()` that expects that. At runtime, the actual class of the object that `obj` points to is ignored.
@@ -142,9 +142,9 @@ From that perspective, single dispatch seems weird. You've got this special beha
 Multiple dispatch fixes that. In a language with multiple dispatch, the *runtime* types of *all* arguments are used to select the actual method that gets called when given a set of overloads. If C++ supported multiple dispatch, then this...
 
 ```cpp
-void method(Base*   a, Base*   b) { printf("base base"); }
-void method(Base*   a, Derived* b) { printf("base derived"); }
-void method(Derived* a, Base*   b) { printf("derived base"); }
+void method(Base* a, Base* b) { printf("base base"); }
+void method(Base* a, Derived* b) { printf("base derived"); }
+void method(Derived* a, Base* b) { printf("derived base"); }
 void method(Derived* a, Derived* b) { printf("derived derived"); }
 
 // Later...
@@ -164,8 +164,8 @@ The problem is what's called *linearization*. Given a set of overloaded methods 
 In our example here, it's pretty obvious. Derived classes take precedence over base ones, so the derived-most overload wins. There are some pathological cases that are nasty, though:
 
 ```cpp
-void method(Base*   a, Derived* b) { printf("base derived"); }
-void method(Derived* a, Base*   b) { printf("derived base"); }
+void method(Base* a, Derived* b) { printf("base derived"); }
+void method(Derived* a, Base* b) { printf("derived base"); }
 
 // Later...
 Base* a = new Derived();
@@ -241,22 +241,24 @@ Since most dynamic languages don't have any concept of annotating a method's exp
 
 For a real world example, consider the magic `$()` function in [jQuery](http://jquery.com/). It's [documented like this](http://api.jquery.com/jQuery/):
 
-    $(selector, [context])
-    selector      - A string containing a selector expression.
-    context       - A DOM Element, Document, or jQuery to use as
-                    context.
+```
+$(selector, [context])
+selector      - A string containing a selector expression.
+context       - A DOM Element, Document, or jQuery to use as
+                context.
 
-    $(element)
-    element       - A DOM element to wrap in a jQuery object.
+$(element)
+element       - A DOM element to wrap in a jQuery object.
 
-    $(elementArray)
-    elementArray  - An array containing a set of DOM elements to
-                    wrap in a jQuery object.
+$(elementArray)
+elementArray  - An array containing a set of DOM elements to
+                wrap in a jQuery object.
 
-    $(jQuery object)
-    jQuery object - An existing jQuery object to clone.
+$(jQuery object)
+jQuery object - An existing jQuery object to clone.
 
-    $()
+$()
+```
 
 Those look an awful lot like overloads, which Javascript doesn't support. How do they do this? By making [one monolithic function](https://github.com/jquery/jquery/blob/master/src/core.js#L70) with a slew of `instanceof` checks interspersed throughout it. Eek!
 

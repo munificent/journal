@@ -13,7 +13,7 @@ they work in Finch and why I added them.
 If you like textbook definitions, here's one for you:
 
 > Fibers are a lightweight cooperative multi-tasking construct that let you
-swich between multiple flows of execution.
+> switch between multiple flows of execution.
 
 If you're familiar with threads this might explain it better: Imagine a system
 where all of your threads run at the highest priority so that when one thread

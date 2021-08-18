@@ -21,13 +21,17 @@ The Lisp family simply ditches them altogether. Functions are always in prefix
 form, and operators are just another kind of valid function name. An
 expression like `1 + 2 * 3` becomes:
 
-    (+ 1 (* 2 3))
+```c
+(+ 1 (* 2 3))
+```
 
 Since most Lisps aren't OOP (ignoring CLOS for the moment), these functions
 are basically global and aren't bound to any arguments. Forth works about the
 same way, but in postfix fashion:
 
-    2 3 * 1 +
+```c
+2 3 * 1 +
+```
 
 Again, operators are just regular functions who happen to have names like
 comic book profanity. This solution is dead simple, and quite flexible. You
@@ -271,12 +275,16 @@ you.
 Now that operators aren't bound to classes, things like the `|` operator just
 need to be defined in one place:
 
-    def |(left Type, right Type -> Type) OrType combine(left, right)
+```magpie
+def |(left Type, right Type -> Type) OrType combine(left, right)
+```
 
 You know how every single time in every class that overloads `==` in C++ or
 C#, you have to remember to also overload `!=` too? Not in Magpie:
 
-    def !=(left, right -> Bool) (left == right) not
+```magpie
+def !=(left, right -> Bool) (left == right) not
+```
 
 ## Not All Sunshine and Roses
 

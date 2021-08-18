@@ -5,7 +5,7 @@ categories: code cpp game-patterns
 ---
 I've finally gotten a chance to get some new chapters online for [Game
 Programming Patterns](http://gameprogrammingpatterns.com/). They've been done for a while, but I had to get the
-rubber stamp from the Powers That Be before I could up them up. They are:
+rubber stamp from the Powers That Be before I could put them up. They are:
 
   * [Service Locator](http://gameprogrammingpatterns.com/service-locator.html)
 

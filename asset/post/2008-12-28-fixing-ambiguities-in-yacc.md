@@ -24,7 +24,9 @@ grammar rules. First, definitions:
 Associativity means that, given a run of the same operator, should it go left
 to right, or right to left? For example:
 
-    1 + 2 + 3
+```c
+1 + 2 + 3
+```
 
 One of those additions needs to be performed first. Should it be `(1 + 2) + 3`
 or `1 + (2 + 3)`? Left-associative operators pick the first, and right-
@@ -38,7 +40,9 @@ matter.)
 Precedence is the other bugaboo. The question here is, given a few different
 operations, which are performed first? For example:
 
-    1 + 2 * 3
+```c
+1 + 2 * 3
+```
 
 Should that be `(1 + 2) * 3`, or `1 + (2 * 3)`? yacc doesn't know your [Dear
 Aunt Sally](http://everything2.com/e2node/Please%2520Excuse%2520My%2520Dear%2520Aunt%2520Sally), so you have to tell it. I'm using arithmetic expressions as
@@ -62,7 +66,7 @@ Binary operators are left-associative and all have the same precedence. In
 other words, unlike in arithmetic, `+` and `*` have the same order of
 operations. Here are some examples:
 
-```cpp
+```c
 123;                // an int
 foo bar 1;          // pass 1 to bar, pass the result to foo
 6 + 2 * 3 / 4;      // binary operators (result = 6)

@@ -43,7 +43,7 @@ user wants a new variable for the current item. Also, iterating through
 multiple collections simultaneously should be fairly easy to do. This leads me
 to adding just one new keyword:
 
-```magpie
+```magpie1
 for <var> <- <generator> do
     ...
 end
@@ -53,7 +53,7 @@ In addition, multiple `for` clauses can be provided (but only one `do`) to
 iterate through multiple collections in parallel. I still need to work out the
 details, but I'm thinking that that will be syntactic sugar for:
 
-```magpie
+```magpie1
 // evaluate the generator expression once
 def _generator <- Generate <generator>
 
@@ -68,7 +68,7 @@ end
 
 Using that, the use cases I have can be solved by:
 
-```magpie
+```magpie1
 // iterating through a collection
 for item <- someList do
     Print item

@@ -7,6 +7,7 @@ import 'code/finch.dart';
 import 'code/magpie.dart';
 
 final _languages = {
+  'magpie1': makeMagpie1Language(),
   'magpie': makeMagpieLanguage(),
   'finch': makeFinchLanguage()
 };

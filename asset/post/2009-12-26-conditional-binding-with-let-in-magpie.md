@@ -73,7 +73,7 @@ The `let` keyword in Magpie lets you implement that pattern directly, without
 the gross scoping issues or output parameters. The above examples in Magpie
 would look like:
 
-```magpie
+```magpie1
 // parse
 let value <- "1234".AsInt then
     // do something with value
@@ -94,7 +94,7 @@ The way this works is pretty simple. Magpie has an `Option` type, which is the
 same as F#'s [option](http://msdn.microsoft.com/en-us/library/dd233245%28VS.100%29.aspx) or Haskell's [Maybe](http://en.wikibooks.org/wiki/Haskell/Hierarchical_libraries/Maybe). A `let` expression looks
 like:
 
-```magpie
+```magpie1
 let <variable> <- <expression> then <body>
 ```
 
@@ -113,7 +113,7 @@ impossible to access that variable incorrectly when the expression fails.
 Because `let` is essentially another kind of `if`, it also supports an `else`
 clause:
 
-```magpie
+```magpie1
 // parse
 let value <- "1234".AsInt then
     // do something with value

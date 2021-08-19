@@ -16,7 +16,7 @@ remember where I'm at.
 First off, a quick primer in Magpie syntax. Here's a function to square a
 number:
 
-```magpie
+```magpie1
 Square (n Int -> Int) n * n
 ```
 
@@ -28,7 +28,7 @@ its body.
 
 You can call it like this:
 
-```magpie
+```magpie1
 Square 3 // returns 9
 ```
 
@@ -39,13 +39,13 @@ parentheses.
 
 That's easy. Here's a function to multiply three numbers:
 
-```magpie
+```magpie1
 Mult (a Int, b Int, c Int -> Int) a * b * c
 ```
 
 You can call it like:
 
-```magpie
+```magpie1
 Mult (2, 3, 4) // returns 24
 ```
 
@@ -55,7 +55,7 @@ They do, they do. However, Magpie also supports [tuples](http://en.wikipedia.org
 make a single value by combining others together. In Magpie, tuples are
 created using the comma operator:
 
-```magpie
+```magpie1
 (1, 2)             // a tuple of two Int fields
 (2, true, "three") // a tuple of three fields of different type
 ```
@@ -72,7 +72,7 @@ calling `Mult` with a single argument, the tuple `(2, 3, 4)`.
 No, this isn't just a semantic trick. `Mult` really does take a single value.
 I'll prove it:
 
-```magpie
+```magpie1
 // create a local variable and assign a tuple to it
 def arg <- (2, 3, 4)
 
@@ -94,20 +94,20 @@ monuple?). But you can also have a tuple with _no_ values, strange as that
 sounds. There's exactly one of them (how could there be different ones?) It's
 called "Unit", and looks like `()`. So if you had a function like this:
 
-```magpie
+```magpie1
 SayHi (->) Print "hi!"
 ```
 
 You could call it like this:
 
-```magpie
+```magpie1
 SayHi () // prints "hi"
 ```
 
 That's a bit tedious, though, so in most cases you can omit the `()` and
 Magpie will infer it:
 
-```magpie
+```magpie1
 SayHi // prints "hi"
 ```
 
@@ -126,7 +126,7 @@ distinction between *expressions* (which return things) and *statements*
 (which don't). This means that things like flow control can be regular
 expressions in Magpie. For example:
 
-```magpie
+```magpie1
 Square (if 1 < 2 then 3 else 4)
 ```
 
@@ -141,7 +141,7 @@ flexible.
 And, of course, this also means you can return *multiple* values, just like
 you can in Python or Lua:
 
-```magpie
+```magpie1
 Swap (a Int, b Int -> (Int, Int)) (b, a)
 
 Swap (1, 2) // returns (2, 1)

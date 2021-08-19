@@ -27,7 +27,7 @@ In Magpie, almost everything is a function, including constructors. Since it
 doesn't have an explicit `new` keyword, you can pass around a reference to a
 constructor like you can any other function.
 
-```magpie
+```magpie1
 // define a type
 struct Point
     X Int
@@ -56,7 +56,7 @@ arguments, you use a tuple. Syntactically, it looks the same as other
 languages, but does have an interesting side-effect: you can treat the entire
 batch of arguments as a single value to be played with:
 
-```magpie
+```magpie1
 // define a function that takes three args
 Sum (a Int, b Int, c Int -> Int) a + b + c
 

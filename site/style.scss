@@ -535,6 +535,13 @@ article {
   span.r { color: hsl(300, 50%, 45%); } // Preprocessor.
   span.t { color: hsl(180, 100%, 30%); } // Type name.
 
+  span.x {
+    font-style: italic;
+    color: mix($code-bg, $code-color, 30%);
+    background-color: mix($code-bg, $code-color, 95%);
+  }
+
+  // Unrecognized syntax. Make it look bad so that I notice.
   span.u {
     background-color: hsl(5, 100%, 90%);
     color: hsl(5, 100%, 35%);

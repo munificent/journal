@@ -7,9 +7,9 @@ Language makeCSharpLanguage() {
 
   language.include('comment');
 
-  language.regExp(r'[0-9]+\.[0-9]+f?', Category.decimalNumber);
-  language.regExp(r'0x[0-9a-fA-F]+', Category.hexInteger);
-  language.regExp(r'[0-9]+?', Category.integer);
+  language.regExp(r'[0-9]+\.[0-9]+f?', Category.number);
+  language.regExp(r'0x[0-9a-fA-F]+', Category.number);
+  language.regExp(r'[0-9]+?', Category.number);
 
   // Contextual keywords.
   language.regExp(r'\byield break\b', Category.keyword);

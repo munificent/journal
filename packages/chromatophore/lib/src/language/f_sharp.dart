@@ -6,7 +6,7 @@ Language makeFSharpLanguage() {
   var language = Language();
 
   // TODO: Other number formats.
-  language.regExp(r'[0-9]+(u?y|u?s|u?l|u?n|U?L|uL|u)?', Category.integer);
+  language.regExp(r'[0-9]+(u?y|u?s|u?l|u?n|U?L|uL|u)?', Category.number);
 
   language.regExp(r'[{}[\].,;]', Category.punctuation);
   // TODO: "()" should probably be punctuation, but old lexer has them as

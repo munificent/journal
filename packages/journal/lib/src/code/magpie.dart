@@ -7,10 +7,7 @@ const ss = ' +';
 Language makeMagpie1Language() {
   var language = Language();
 
-  language.regExp(r'//.*', Category.lineComment);
-
-  language.regExp(r'[0-9]+\.[0-9]*', Category.decimalNumber);
-  language.regExp(r'[0-9]+?', Category.integer);
+  _literalRules(language);
 
   // Function types.
   language.capture(r'(\bfn\b)( +)(\()',
@@ -43,19 +40,7 @@ Language makeMagpie1Language() {
   // One post uses "<foo>" as a metasyntax, so treat it specially.
   language.regExp('<$identifier>', Category.metasyntax);
 
-  language.regExp(r'[{}()[\],:;.]', Category.punctuation);
-  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
-
-  language.regExp(r'[\s\n\t]', Category.whitespace);
-
-  // Strings.
-  language.regExp(r'"', Category.string).push('string');
-  language.ruleSet('string', () {
-    language.regExp('"', Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    // TODO: Multi-character escapes?
-    language.regExp('.', Category.string);
-  });
+  _punctuationRules(language);
 
   language.ruleSet('fn type', () {
     language.regExp(identifier, Category.typeName);
@@ -71,10 +56,7 @@ Language makeMagpie1Language() {
 Language makeMagpieLanguage() {
   var language = Language();
 
-  language.regExp(r'//.*', Category.lineComment);
-
-  language.regExp(r'[0-9]+\.[0-9]*', Category.decimalNumber);
-  language.regExp(r'[0-9]+?', Category.integer);
+  _literalRules(language);
 
   language.keywords(
       Category.keyword,
@@ -86,10 +68,16 @@ Language makeMagpieLanguage() {
   language.regExp(r'\b[A-Z][a-zA-Z0-9_]*\b\??', Category.typeName);
   language.regExp(r'\b[a-z_][a-zA-Z0-9_]*\b\??', Category.identifier);
 
-  language.regExp(r'[{}()[\],:;.]', Category.punctuation);
-  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
+  _punctuationRules(language);
 
-  language.regExp(r'[\s\n\t]', Category.whitespace);
+  return language;
+}
+
+void _literalRules(Language language) {
+  language.regExp(r'//.*', Category.lineComment);
+
+  language.regExp(r'[0-9]+\.[0-9]*', Category.number);
+  language.regExp(r'[0-9]+?', Category.number);
 
   // Strings.
   language.regExp(r'"', Category.string).push('string');
@@ -99,6 +87,11 @@ Language makeMagpieLanguage() {
     // TODO: Multi-character escapes?
     language.regExp('.', Category.string);
   });
+}
 
-  return language;
+void _punctuationRules(Language language) {
+  language.regExp(r'[{}()[\],:;.]', Category.punctuation);
+  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
+
+  language.regExp(r'[\s\n\t]', Category.whitespace);
 }

@@ -4,11 +4,20 @@ class Category {
   static const Category lineComment = Category('lineComment', comment);
   static const Category blockComment = Category('blockComment', comment);
 
+  /// An expression that creates a literal value of some type.
   static const Category literal = Category('literal');
+
+  /// A number literal, including integer, floating-point, scientific, hex, etc.
   static const Category number = Category('number', literal);
-  static const Category decimalNumber = Category('decimalNumber', number);
-  static const Category hexInteger = Category('hexInteger', number);
-  static const Category integer = Category('integer', number);
+
+  /// A string literal.
+  static const Category string = Category('string', literal);
+
+  /// A character literal.
+  static const Category character = Category('character', string);
+
+  /// An escape sequence inside a string or character literal.
+  static const Category stringEscape = Category('stringEscape', string);
 
   static const Category identifier = Category('identifier');
   static const Category keyword = Category('keyword', identifier);
@@ -16,10 +25,6 @@ class Category {
   static const Category field = Category('field', identifier);
   static const Category constant = Category('constant', identifier);
   static const Category boolean = Category('boolean', Category.identifier);
-
-  static const Category string = Category('string');
-  static const Category character = Category('character', string);
-  static const Category stringEscape = Category('stringEscape', string);
 
   static const Category preprocessor = Category('preprocessor');
   // Metadata annotations and attributes.

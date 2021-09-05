@@ -14,14 +14,13 @@ Language makeRubyLanguage() {
   const octal = '[0-7]';
   const binary = '[01]';
 
-  language.regExp('$digits(\\.$digits)?[eE]-?$digits', Category.decimalNumber);
-  language.regExp('$digits\\.$digits', Category.decimalNumber);
-  language.regExp('0[xX]$hex+(_$hex+)*', Category.hexInteger);
-  // TODO: Hack. Uses hexInteger for all explicit-base numbers.
-  language.regExp('0[oO]?$octal+(_$octal+)*', Category.hexInteger);
-  language.regExp('0[bB]$binary+(_$binary+)*', Category.hexInteger);
-  language.regExp('0[dD]$digits', Category.integer);
-  language.regExp(digits, Category.integer);
+  language.regExp('$digits(\\.$digits)?[eE]-?$digits', Category.number);
+  language.regExp('$digits\\.$digits', Category.number);
+  language.regExp('0[xX]$hex+(_$hex+)*', Category.number);
+  language.regExp('0[oO]?$octal+(_$octal+)*', Category.number);
+  language.regExp('0[bB]$binary+(_$binary+)*', Category.number);
+  language.regExp('0[dD]$digits', Category.number);
+  language.regExp(digits, Category.number);
 
   language.keywords(
       Category.preprocessor, '__ENCODING__ __FILE__ __LINE__ BEGIN END');

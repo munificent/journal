@@ -5,9 +5,9 @@ import 'patterns.dart';
 Language makeCLanguage() {
   var language = Language();
 
-  language.regExp(r'[0-9]+\.[0-9]+f?', Category.decimalNumber);
-  language.regExp(r'0x[0-9a-fA-F]+', Category.hexInteger);
-  language.regExp(r'[0-9]+[Lu]?', Category.integer);
+  language.regExp(r'[0-9]+\.[0-9]+f?', Category.number);
+  language.regExp(r'0x[0-9a-fA-F]+', Category.number);
+  language.regExp(r'[0-9]+[Lu]?', Category.number);
 
   language.regExp(r'//.*', Category.lineComment);
 

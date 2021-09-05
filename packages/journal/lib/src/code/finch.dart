@@ -5,8 +5,8 @@ Language makeFinchLanguage() {
 
   language.regExp("'.*", Category.lineComment);
 
-  language.regExp(r'[0-9]+\.[0-9]*', Category.decimalNumber);
-  language.regExp(r'[0-9]+?', Category.integer);
+  language.regExp(r'[0-9]+\.[0-9]*', Category.number);
+  language.regExp(r'[0-9]+', Category.number);
 
   language.keywords(Category.keyword, 'return self undefined');
 

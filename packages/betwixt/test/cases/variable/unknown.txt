@@ -1,0 +1,9 @@
+{{ oops }}
+--- runtime errors
+line 1, column 4 of test: Map does not have key "oops".
+  ╷
+1 │ {{ oops }}
+  │    ^^^^
+  ╵
+--- data
+{}

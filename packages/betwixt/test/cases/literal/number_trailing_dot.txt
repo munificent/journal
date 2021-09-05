@@ -1,0 +1,7 @@
+trailing decimal {{ 23. }}
+--- compile errors
+line 1, column 25 of test: Expect property name after ".".
+  ╷
+1 │ trailing decimal {{ 23. }}
+  │                         ^^
+  ╵

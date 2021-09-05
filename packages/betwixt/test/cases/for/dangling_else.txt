@@ -1,0 +1,17 @@
+{{ for a in numbers }}
+  {{ for b in empty }}
+    a b
+  {{ else }}
+    b else
+  {{ end }}
+{{ end }}
+after
+--- output
+    b else
+    b else
+after
+--- data
+{
+  "numbers": [1, 2],
+  "empty": []
+}

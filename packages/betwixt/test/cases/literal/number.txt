@@ -1,0 +1,15 @@
+{{ 123 }}
+{{ -789 }}
+{{ 0 }}
+{{ -0 }}
+{{ 123.456 }}
+leading zeroes {{ 0000234 }}
+trailing zeroes {{ 1.2340000 }}
+--- output
+123
+-789
+0
+0
+123.456
+leading zeroes 234
+trailing zeroes 1.234

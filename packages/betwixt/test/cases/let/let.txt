@@ -1,0 +1,12 @@
+in{{ let x = 1 }}li{{ x }}ne
+
+block
+{{ let y = global }}
+{{ y }}
+--- output
+inli1ne
+
+block
+value
+--- data
+{"global": "value"}

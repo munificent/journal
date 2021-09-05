@@ -1,0 +1,11 @@
+empty ({{ "" }})
+whitespace ({{ "   " }})
+text ({{ "some text" }})
+tag stuff ({{ " string {{ with }} tag }} bits " }})
+TODO: Escape sequences. Multi-line string.
+--- output
+empty ()
+whitespace (   )
+text (some text)
+tag stuff ( string {{ with }} tag }} bits )
+TODO: Escape sequences. Multi-line string.

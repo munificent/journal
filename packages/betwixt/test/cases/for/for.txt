@@ -1,0 +1,19 @@
+inline
+  {{ for i in numbers }}{{ i }}{{ end }}
+
+block
+{{ for i in numbers }}
+{{ i }}
+{{ end }}
+after
+--- output
+inline
+  123
+
+block
+1
+2
+3
+after
+--- data
+{"numbers": [1, 2, 3]}

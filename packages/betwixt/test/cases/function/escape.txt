@@ -1,0 +1,15 @@
+{{ escape("lt < gt >") }}
+{{ escape(quote) }}
+{{ escape("apos '") }}
+{{ escape("slash /") }}
+{{ escape("amp &") }}
+double {{ escape(escape("amp &")) }}
+--- output
+lt &lt; gt &gt;
+quote &quot;
+apos &#39;
+slash &#47;
+amp &amp;
+double amp &amp;amp;
+--- data
+{"quote": "quote \""}

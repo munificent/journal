@@ -1,0 +1,32 @@
+inline
+  {{ for a in first }}{{ for b in second }} {{ a }}-{{ b }}{{ end }}{{ end }}
+
+block
+{{ for a in first }}
+  {{ for b in second }}
+    {{ for c in third }}
+      {{ a }} {{ b }} {{ c }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+after
+--- output
+inline
+   1-3 1-4 2-3 2-4
+
+block
+      1 3 5
+      1 3 6
+      1 4 5
+      1 4 6
+      2 3 5
+      2 3 6
+      2 4 5
+      2 4 6
+after
+--- data
+{
+  "first": [1, 2],
+  "second": [3, 4],
+  "third": [5, 6]
+}

@@ -1,0 +1,22 @@
+{{ for x in list }}
+  {{ let x = 1 }}
+{{ between y and z }}
+  {{ let y = 2 }}
+  {{ let z = 3 }}
+{{ end }}
+--- compile errors
+line 2, column 10 of test: There is already a variable named "x" declared in this scope.
+  ╷
+2 │   {{ let x = 1 }}
+  │          ^
+  ╵
+line 4, column 10 of test: There is already a variable named "y" declared in this scope.
+  ╷
+4 │   {{ let y = 2 }}
+  │          ^
+  ╵
+line 5, column 10 of test: There is already a variable named "z" declared in this scope.
+  ╷
+5 │   {{ let z = 3 }}
+  │          ^
+  ╵

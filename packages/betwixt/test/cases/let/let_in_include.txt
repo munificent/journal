@@ -1,0 +1,9 @@
+{{ include "other" }}
+--- output
+value
+new
+--- include other
+{{ let b = "value" }}
+{{ b }}
+{{ set b = "new" }}
+{{ b }}

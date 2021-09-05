@@ -1,0 +1,51 @@
+{{ if true }}
+  {{ let x = "if" }}
+  in if {{ x }}
+{{ end }}
+after if {{ x }}
+
+{{ if false }}
+{{ else }}
+  {{ let y = "else" }}
+  in else x {{ x }}
+  in else y {{ y }}
+{{ end }}
+after else {{ x }}
+
+{{ for y in list }}
+  {{ let x = "for" }}
+  in for {{ x }}
+{{ between a and b }}
+  {{ let z = "between" }}
+  in between a {{ a }}
+  in between b {{ b }}
+  in between y {{ y }}
+  in between z {{ z }}
+{{ else }}
+  {{ let x = "for else" }}
+  in for else {{ x }}
+{{ end }}
+after for {{ x }}
+--- output
+  in if if
+after if global x
+
+  in else x global x
+  in else y else
+after else global x
+
+  in for for
+  in between a 1
+  in between b 2
+  in between y global y
+  in between z between
+  in for for
+after for global x
+--- data
+{
+  "a": "global a",
+  "b": "global b",
+  "x": "global x",
+  "y": "global y",
+  "list": [1, 2]
+}

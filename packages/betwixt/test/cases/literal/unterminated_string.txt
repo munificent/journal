@@ -1,0 +1,12 @@
+{{ "some string
+--- compile errors
+line 1, column 4 of test: Unterminated string.
+  ╷
+1 │ {{ "some string
+  │    ^^^^^^^^^^^^
+  ╵
+line 1, column 4 of test: Expect "}}".
+  ╷
+1 │ {{ "some string
+  │    ^^^^^^^^^^^^
+  ╵

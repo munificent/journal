@@ -1,0 +1,35 @@
+then
+{{ for i in one }}
+  {{ outer }}
+{{ end }}
+
+else
+{{ for i in empty }}
+  no
+{{ else }}
+  {{ outer }}
+{{ end }}
+
+between
+{{ for i in two }}
+{{ between }}
+  {{ outer }}
+{{ end }}
+after
+--- output
+then
+  value
+
+else
+  value
+
+between
+  value
+after
+--- data
+{
+  "one": [1],
+  "two": [1, 2],
+  "empty": [],
+  "outer": "value"
+}

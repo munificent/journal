@@ -1,0 +1,25 @@
+inline
+( {{ for i in numbers }}{{ i }}{{ between }}|{{ end }} )
+  {{ for i in numbers }}{{ i }}{{ between }}|{{ end }}
+
+block
+{{ for i in numbers }}
+  {{ i }}
+{{ between }}
+  |
+{{ end }}
+after
+--- output
+inline
+( 1|2|3 )
+  1|2|3
+
+block
+  1
+  |
+  2
+  |
+  3
+after
+--- data
+{"numbers": [1, 2, 3]}

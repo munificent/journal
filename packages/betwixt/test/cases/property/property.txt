@@ -1,0 +1,10 @@
+{{ bar.baz }}
+{{ foo.bar.baz }}
+--- output
+first baz
+second baz
+--- data
+{
+  "bar": {"baz": "first baz"},
+  "foo": {"bar": {"baz": "second baz" }}
+}

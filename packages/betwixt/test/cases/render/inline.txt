@@ -1,0 +1,16 @@
+text {{ code }} more {{ stuff }} last
+
+  more{{ code }}than{{ stuff }}once
+
+adjacent{{ code }}{{ stuff }}tags
+--- output
+text coode more things last
+
+  morecoodethanthingsonce
+
+adjacentcoodethingstags
+--- data
+{
+  "code": "coode",
+  "stuff": "things"
+}

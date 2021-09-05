@@ -1,0 +1,7 @@
+{{ for x in blah }} stuff {{ else }} more {{ between }} other {{ end }}
+--- compile errors
+line 1, column 46 of test: Between clause must come before else clause.
+  ╷
+1 │ {{ for x in blah }} stuff {{ else }} more {{ between }} other {{ end }}
+  │                                              ^^^^^^^
+  ╵

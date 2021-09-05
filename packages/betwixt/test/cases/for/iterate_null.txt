@@ -1,0 +1,7 @@
+{{ for i in null }}{{ i }}{{ end }}
+--- runtime errors
+line 1, column 13 of test: Object of type Null is not iterable.
+  ╷
+1 │ {{ for i in null }}{{ i }}{{ end }}
+  │             ^^^^
+  ╵

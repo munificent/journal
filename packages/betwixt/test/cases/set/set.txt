@@ -1,0 +1,31 @@
+global
+{{ let a = 1 }}
+{{ set a = 2 }}
+{{ a }}
+
+local
+{{ if true }}
+  {{ let a = 3 }}
+  {{ set a = 4 }}
+  {{ a }}
+{{ end }}
+
+outer
+{{ if true }}
+  {{ let a = 5 }}
+  {{ if true }}
+    {{ set a = 6 }}
+  {{ end }}
+  {{ a }}
+{{ end }}
+after
+--- output
+global
+2
+
+local
+  4
+
+outer
+  6
+after

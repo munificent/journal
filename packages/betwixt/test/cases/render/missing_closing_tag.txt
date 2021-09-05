@@ -1,0 +1,9 @@
+text {{ code
+--- compile errors
+line 1, column 9 of test: Expect "}}".
+  ╷
+1 │ text {{ code
+  │         ^^^^
+  ╵
+--- data
+{"code": "coode"}

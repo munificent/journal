@@ -79,7 +79,7 @@ Language makeMagpieLanguage() {
   language.keywords(
       Category.keyword,
       'and as class def do else end extend false fn for if import interface is '
-      'let loop or return struct then this true var while with');
+      'it let loop or return struct then this true var while with');
   // Hack: "loop" is not a real keyword in Magpie, but one post uses Magpie as
   // pseudo-code.
 

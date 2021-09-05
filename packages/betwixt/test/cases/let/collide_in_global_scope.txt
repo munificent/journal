@@ -1,0 +1,8 @@
+{{ let x = 1 }}
+{{ let x = 2 }}
+--- compile errors
+line 2, column 8 of test: There is already a variable named "x" declared in this scope.
+  ╷
+2 │ {{ let x = 2 }}
+  │        ^
+  ╵

@@ -1,0 +1,7 @@
+{{ threeArgs(1, 2, 3,) }}
+--- compile errors
+line 1, column 22 of test: Unexpected token.
+  ╷
+1 │ {{ threeArgs(1, 2, 3,) }}
+  │                      ^
+  ╵

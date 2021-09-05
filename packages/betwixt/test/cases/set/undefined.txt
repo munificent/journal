@@ -1,0 +1,8 @@
+global
+{{ set unknown = 1 }}
+--- compile errors
+line 2, column 8 of test: Cannot set unknown variable "unknown".
+  ╷
+2 │ {{ set unknown = 1 }}
+  │        ^^^^^^^
+  ╵

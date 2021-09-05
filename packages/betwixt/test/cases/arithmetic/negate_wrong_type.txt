@@ -1,0 +1,7 @@
+{{ -"wat" }}
+--- runtime errors
+line 1, column 4 of test: Cannot negate a value of type String.
+  ╷
+1 │ {{ -"wat" }}
+  │    ^
+  ╵

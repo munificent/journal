@@ -1,0 +1,17 @@
+inline {{ a }} and {{ b }}.
+
+block
+   {{ a }}
+ {{ b }}
+after
+TODO: Do we want to strip whitespace from block-line render tags too?
+--- output
+inline aye and bee.
+
+block
+   aye
+ bee
+after
+TODO: Do we want to strip whitespace from block-line render tags too?
+--- data
+{"a": "aye", "b": "bee"}

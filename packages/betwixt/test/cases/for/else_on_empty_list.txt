@@ -1,0 +1,5 @@
+{{ for i in numbers }}no{{ else }}ok{{ end }}
+--- output
+ok
+--- data
+{"numbers": []}

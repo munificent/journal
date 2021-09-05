@@ -1,0 +1,9 @@
+0: {{ noArgs() }}
+1: {{ oneArg(1) }}
+nested: {{ oneArg(oneArg(1)) }}
+3: {{ threeArgs(1, 2, 3) }}
+--- output
+0: no args
+1: one arg(1)
+nested: one arg(one arg(1))
+3: three args(1, 2, 3)

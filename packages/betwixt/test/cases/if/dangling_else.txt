@@ -1,0 +1,18 @@
+{{ if yes }}
+  {{ if no }}
+    bad
+  {{ else }}
+    good
+  {{ end }}
+{{ else }}
+  bad
+{{ end }}
+after
+--- output
+    good
+after
+--- data
+{
+  "yes": true,
+  "no": false
+}

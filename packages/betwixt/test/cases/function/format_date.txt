@@ -1,0 +1,16 @@
+{{ let date = testDate() }}
+{{ format_date(date, "d") }}
+{{ format_date(date, "dd") }}
+{{ format_date(date, "E") }}
+{{ format_date(date, "EEEE") }}
+{{ format_date(date, "MM") }}
+{{ format_date(date, "MMM") }}
+{{ format_date(date, "MMMM") }}
+--- output
+5
+05
+Mon
+Monday
+04
+Apr
+April

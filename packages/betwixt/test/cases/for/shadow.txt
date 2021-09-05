@@ -1,0 +1,26 @@
+for
+{{ for i in one }}
+  {{ i }}
+{{ end }}
+
+between
+{{ for i in two }}
+{{ between a and b }}
+  <{{ a }}|{{ b }}>
+{{ end }}
+after
+--- output
+for
+  1
+
+between
+  <1|2>
+after
+--- data
+{
+  "one": [1],
+  "two": [1, 2],
+  "i": "no",
+  "a": "no",
+  "b": "no"
+}

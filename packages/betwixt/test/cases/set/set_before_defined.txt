@@ -1,0 +1,20 @@
+global
+{{ set a = 1 }}
+{{ let a = 2 }}
+
+block
+{{ if true }}
+  {{ set a = 1 }}
+  {{ let a = 2 }}
+{{ end }}
+--- compile errors
+line 2, column 8 of test: Cannot set variable before it is defined.
+  ╷
+2 │ {{ set a = 1 }}
+  │        ^
+  ╵
+line 7, column 10 of test: Cannot set variable before it is defined.
+  ╷
+7 │   {{ set a = 1 }}
+  │          ^
+  ╵

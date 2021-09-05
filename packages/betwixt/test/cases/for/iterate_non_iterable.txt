@@ -1,0 +1,7 @@
+{{ for i in 234 }}{{ i }}{{ end }}
+--- runtime errors
+line 1, column 13 of test: Object of type int is not iterable.
+  ╷
+1 │ {{ for i in 234 }}{{ i }}{{ end }}
+  │             ^^^
+  ╵

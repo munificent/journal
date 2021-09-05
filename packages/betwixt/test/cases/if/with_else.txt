@@ -1,0 +1,34 @@
+inline
+  {{ if yes }}ok{{ else }}bad{{ end }}
+    {{ if no }}bad{{ else }}ok{{ end }}
+
+block yes
+{{ if yes }}
+  ok
+{{ else }}
+  bad
+{{ end }}
+
+block no
+{{ if no }}
+  bad
+{{ else }}
+  ok
+{{ end }}
+after
+--- output
+inline
+  ok
+    ok
+
+block yes
+  ok
+
+block no
+  ok
+after
+--- data
+{
+  "yes": true,
+  "no": false
+}

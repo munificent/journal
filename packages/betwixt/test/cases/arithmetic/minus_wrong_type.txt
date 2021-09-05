@@ -1,0 +1,13 @@
+{{ "string" - 1 }}
+{{ 2 - null }}
+--- runtime errors
+line 1, column 4 of test: Cannot subtract from a value of type String.
+  ╷
+1 │ {{ "string" - 1 }}
+  │    ^^^^^^^^
+  ╵
+line 2, column 8 of test: Cannot subtract a value of type Null.
+  ╷
+2 │ {{ 2 - null }}
+  │        ^^^^
+  ╵

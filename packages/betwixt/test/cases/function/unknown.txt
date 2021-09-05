@@ -1,0 +1,7 @@
+{{ unknown() }}
+--- compile errors
+line 1, column 4 of test: Unknown function "unknown".
+  ╷
+1 │ {{ unknown() }}
+  │    ^^^^^^^
+  ╵

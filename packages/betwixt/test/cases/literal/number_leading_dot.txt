@@ -1,0 +1,7 @@
+leading decimal {{ .23 }}
+--- compile errors
+line 1, column 20 of test: Unexpected token.
+  ╷
+1 │ leading decimal {{ .23 }}
+  │                    ^
+  ╵

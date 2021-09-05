@@ -1,0 +1,28 @@
+{{ if true }}
+  {{ x }}
+  {{ let x = 1 }}
+{{ else }}
+  {{ x }}
+  {{ let x = 1 }}
+{{ end }}
+
+{{ for y in list }}
+  {{ x }}
+  {{ let x = 1 }}
+{{ end }}
+--- compile errors
+line 2, column 6 of test: Cannot use variable before it is defined.
+  ╷
+2 │   {{ x }}
+  │      ^
+  ╵
+line 5, column 6 of test: Cannot use variable before it is defined.
+  ╷
+5 │   {{ x }}
+  │      ^
+  ╵
+line 10, column 6 of test: Cannot use variable before it is defined.
+   ╷
+10 │   {{ x }}
+   │      ^
+   ╵

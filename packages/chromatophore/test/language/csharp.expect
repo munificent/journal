@@ -1,0 +1,76 @@
+‹lc⋮// === Type names ===›
+
+‹lc⋮// Leading keyword.›
+‹k⋮class› ‹t⋮Foo› ‹p⋮{}›
+‹k⋮struct› ‹t⋮Foo› ‹p⋮{}›
+‹k⋮enum› ‹t⋮Foo› ‹p⋮{}›
+‹k⋮new› ‹t⋮Foo›‹p⋮();›
+‹k⋮new› ‹t⋮Dictionary›‹p⋮<›‹t⋮List›‹p⋮<›‹t⋮int›‹p⋮>,› ‹t⋮Monster›‹p⋮>();›
+‹i⋮foo› ‹k⋮as› ‹t⋮Foo›‹p⋮;›
+‹i⋮foo› ‹k⋮is› ‹t⋮Foo›‹p⋮;›
+
+‹lc⋮// Built in types.›
+‹t⋮int› ‹i⋮x›‹p⋮;›
+‹t⋮string› ‹i⋮s›‹p⋮;›
+
+‹lc⋮// Type names in type annotations.›
+‹t⋮Foo› ‹i⋮f›‹p⋮;›
+‹t⋮Foo› ‹i⋮Function›‹p⋮(›‹t⋮Foo› ‹i⋮foo›‹p⋮,› ‹t⋮Bar› ‹i⋮bar›‹p⋮)› ‹p⋮{}›
+‹t⋮Array›‹p⋮[][]› ‹i⋮f›‹p⋮;›
+
+‹lc⋮// In where clauses.›
+‹t⋮T› ‹i⋮GetAt›‹p⋮<›‹t⋮T›‹p⋮>()› ‹k⋮where› ‹t⋮T› ‹p⋮:› ‹t⋮IPosition›‹p⋮,› ‹t⋮Generic›‹p⋮<›‹t⋮T›‹p⋮,› ‹t⋮int›‹p⋮>› ‹p⋮{}›
+
+‹lc⋮// Generic types.›
+‹t⋮Dictionary›‹p⋮<›‹t⋮List›‹p⋮<›‹t⋮Foo›‹p⋮>,› ‹t⋮Bar›‹p⋮[]>› ‹i⋮dict›‹p⋮;›
+
+‹lc⋮// Supertypes.›
+‹k⋮public› ‹k⋮class› ‹t⋮Monster›‹p⋮:› ‹bc⋮/* c */› ‹t⋮Actor›‹p⋮,› ‹t⋮IPosition›‹p⋮<›‹t⋮int›‹p⋮>› ‹p⋮{}›
+
+‹lc⋮// Nullable variables.›
+‹t⋮int?› ‹i⋮i›‹p⋮;›
+‹t⋮Monster?› ‹i⋮mon›‹p⋮;›
+
+‹lc⋮// Casts.›
+‹p⋮(›‹t⋮Foo›‹p⋮)›‹i⋮foo›‹p⋮;›
+‹p⋮(›‹t⋮Dict›‹p⋮<›‹t⋮Foo›‹p⋮,› ‹t⋮Bar›‹p⋮>)›‹i⋮dict›‹p⋮;›
+
+‹lc⋮// Not generic method calls.›
+‹i⋮Array›‹p⋮.›‹i⋮Sort›‹p⋮<›‹t⋮int›‹p⋮,› ‹t⋮Data›‹p⋮>(›‹i⋮indirect›‹p⋮,› ‹i⋮data›‹p⋮);›
+
+‹lc⋮// === Preprocessor ===›
+
+‹r⋮#define SOME_CONSTANT›
+
+‹r⋮#undef SOME_CONSTANT›
+
+‹k⋮class› ‹t⋮Foo› ‹p⋮{›
+  ‹r⋮#region Some region›
+  ‹k⋮void› ‹i⋮Method›‹p⋮()› ‹p⋮{}›
+  ‹r⋮#endregion›
+‹p⋮}›
+
+‹r⋮#if ›‹bc⋮/* comment */›‹r⋮ DEBUG != !RELEASE && PROFILE›
+
+‹i⋮Some›‹p⋮(›‹i⋮code›‹p⋮);›
+
+‹r⋮#elif›
+
+‹i⋮more›‹p⋮.›‹i⋮Code›‹p⋮();›
+
+‹r⋮#else ›‹lc⋮// Comment.›
+
+‹r⋮#endif›
+
+‹lc⋮// === Attributes.›
+
+‹p⋮[›‹a⋮TestFixture›‹p⋮]›
+‹p⋮[›‹a⋮Another›‹p⋮(›‹i⋮SetLastError›‹p⋮=›‹k⋮false›‹p⋮,› ‹i⋮ExactSpelling›‹p⋮=›‹k⋮false›‹p⋮)]›
+‹p⋮[›‹a⋮Conditional›‹p⋮(›‹s⋮"DEBUG"›‹p⋮)]›
+‹k⋮public› ‹k⋮class› ‹t⋮NotNullFixture›
+‹p⋮{›
+    ‹p⋮[›‹a⋮System.Runtime.InteropServices.DllImport›‹p⋮(›‹s⋮"user32.dll"›‹p⋮)]›
+    ‹k⋮public› ‹k⋮void› ‹i⋮Foo›‹p⋮([›‹a⋮In›‹p⋮][›‹a⋮Out›‹p⋮]› ‹k⋮ref› ‹t⋮double› ‹i⋮x›‹p⋮,› ‹p⋮[›‹a⋮Out›‹p⋮]› ‹k⋮ref› ‹t⋮int› ‹i⋮y›‹p⋮)›
+    ‹p⋮{›
+    ‹p⋮}›
+‹p⋮}›

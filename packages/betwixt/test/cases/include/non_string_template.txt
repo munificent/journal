@@ -1,0 +1,7 @@
+{{ include foo }}
+--- compile errors
+line 1, column 12 of test: Expect template name string.
+  ╷
+1 │ {{ include foo }}
+  │            ^^^
+  ╵

@@ -1,0 +1,9 @@
+{{ for i in numbers }}
+{{ between a and a }}
+{{ end }}
+--- compile errors
+line 2, column 18 of test: There is already a variable named "a" declared in this scope.
+  ╷
+2 │ {{ between a and a }}
+  │                  ^
+  ╵

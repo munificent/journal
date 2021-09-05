@@ -1,0 +1,19 @@
+global before {{ x }}
+{{ if true }}
+  {{ let x = "outer" }}
+  outer before {{ x }}
+  {{ if true }}
+    {{ let x = "inner" }}
+    inner {{ x }}
+  {{ end }}
+  outer after {{ x }}
+{{ end }}
+global after {{ x }}
+--- output
+global before global
+  outer before outer
+    inner inner
+  outer after outer
+global after global
+--- data
+{"x": "global"}

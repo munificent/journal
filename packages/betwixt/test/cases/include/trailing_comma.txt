@@ -1,0 +1,9 @@
+{{ include "other" with a = 1, }}
+--- compile errors
+line 1, column 32 of test: Expect variable name.
+  ╷
+1 │ {{ include "other" with a = 1, }}
+  │                                ^^
+  ╵
+--- include other
+blah

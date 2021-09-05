@@ -1,0 +1,3 @@
+waiting for {{ asynchronous() }}
+--- output
+waiting for later

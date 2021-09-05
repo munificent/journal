@@ -1,0 +1,7 @@
+{{ foo.bar. }}
+--- compile errors
+line 1, column 13 of test: Expect property name after ".".
+  ╷
+1 │ {{ foo.bar. }}
+  │             ^^
+  ╵

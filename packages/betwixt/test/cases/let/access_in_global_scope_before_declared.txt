@@ -1,0 +1,8 @@
+{{ x }}
+{{ let x = 1 }}
+--- compile errors
+line 1, column 4 of test: Cannot use variable before it is defined.
+  ╷
+1 │ {{ x }}
+  │    ^
+  ╵

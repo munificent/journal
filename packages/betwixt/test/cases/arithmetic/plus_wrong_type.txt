@@ -1,0 +1,13 @@
+{{ true + 1 }}
+{{ 2 + null }}
+--- runtime errors
+line 1, column 4 of test: Operands to "+" must be numbers or strings, not bool.
+  ╷
+1 │ {{ true + 1 }}
+  │    ^^^^
+  ╵
+line 2, column 8 of test: Operands to "+" must be numbers or strings, not Null.
+  ╷
+2 │ {{ 2 + null }}
+  │        ^^^^
+  ╵

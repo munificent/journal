@@ -1,0 +1,28 @@
+first {{ include "first" }} done
+
+second
+  {{ include "second" with a = 1 }}
+done
+
+third {{ include "third" with a = 1, b = 2, c = 3 }} done
+TODO: Test what expressions are allowed in with clause.
+--- output
+first first() done
+
+second
+second(1)
+multiple
+lines
+done
+
+third third(1, 2, 3) done
+TODO: Test what expressions are allowed in with clause.
+--- include first
+first()
+--- include second
+second({{ a }})
+multiple
+lines
+
+--- include third
+third({{ a }}, {{ b }}, {{ c }})

@@ -533,6 +533,7 @@ article {
   span.n { color: hsl(330, 70%, 55%); } // Number.
   span.p { color: mix($code-bg, $code-color, 30%); } // Punctuation.
   span.r { color: hsl(300, 50%, 45%); } // Preprocessor.
+  span.f { color: hsl(140, 70%, 40%); } // Field.
   span.t { color: hsl(180, 100%, 30%); } // Type name.
 
   span.x {

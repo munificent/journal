@@ -23,8 +23,9 @@ class Category {
   static const Category keyword = Category('keyword', identifier);
   static const Category typeName = Category('typeName', identifier);
   static const Category field = Category('field', identifier);
+
+  /// User-defined named constant like a static final field in Java.
   static const Category constant = Category('constant', identifier);
-  static const Category boolean = Category('boolean', Category.identifier);
 
   static const Category preprocessor = Category('preprocessor');
   // Metadata annotations and attributes.

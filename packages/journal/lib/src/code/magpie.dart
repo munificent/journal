@@ -10,12 +10,23 @@ Language makeMagpie1Language() {
   _literalRules(language);
 
   // Function types.
-  language.capture(r'(\bfn\b)( +)(\()',
-      [Category.keyword, Category.whitespace, Category.punctuation]).push('fn type');
-  language.capture('(\\bfn\\b)( +)($identifier)( +)(\\()',
-      [Category.keyword, Category.whitespace, Category.typeName, Category.whitespace, Category.punctuation]).push('fn type');
-  language.capture(r'(->)( +)(\()',
-      [Category.operator, Category.whitespace, Category.punctuation]).push('fn type');
+  language.capture(r'(\bfn\b)( +)(\()', [
+    Category.keyword,
+    Category.whitespace,
+    Category.punctuation
+  ]).push('fn type');
+  language.capture('(\\bfn\\b)( +)($identifier)( +)(\\()', [
+    Category.keyword,
+    Category.whitespace,
+    Category.typeName,
+    Category.whitespace,
+    Category.punctuation
+  ]).push('fn type');
+  language.capture(r'(->)( +)(\()', [
+    Category.operator,
+    Category.whitespace,
+    Category.punctuation
+  ]).push('fn type');
   language.capture('(->)( +)($identifier)',
       [Category.operator, Category.whitespace, Category.typeName]);
 
@@ -34,8 +45,8 @@ Language makeMagpie1Language() {
   language.regExp(identifier, Category.identifier);
 
   // Uses "'" for type arguments.
-  language.capture("(')($capsIdentifier)",
-      [Category.punctuation, Category.typeName]);
+  language.capture(
+      "(')($capsIdentifier)", [Category.punctuation, Category.typeName]);
 
   // One post uses "<foo>" as a metasyntax, so treat it specially.
   language.regExp('<$identifier>', Category.metasyntax);

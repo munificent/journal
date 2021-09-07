@@ -9,7 +9,7 @@ Language makeCLanguage() {
   language.regExp(r'0x[0-9a-fA-F]+', Category.number);
   language.regExp(r'[0-9]+[Lu]?', Category.number);
 
-  language.regExp(r'//.*', Category.lineComment);
+  language.include('whitespace');
 
   // ALL_CAPS preprocessor macro use.
   language.regExp(allCaps, Category.preprocessor);
@@ -35,14 +35,29 @@ Language makeCLanguage() {
 
   language.regExp(r'"', Category.string).push('string');
 
-  language.regExp('#', Category.preprocessor).push('macro');
+  language.regExp('#', Category.preprocessor).push('preprocessor');
 
   language.regExp(r'[{}()[\].,;!*/&%~+=<>|-]', Category.punctuation);
 
-  // Preprocessor with comment.
-  // language.capture(r'(#.*?)(//.*)', [Category.preprocessor, Category.comment]);
+  language.ruleSet('block comment', () {
+    language.regExp(r'/\*.*?\*/', Category.blockComment);
+  });
 
-  language.regExp(r'[\s\n\t]', Category.whitespace);
+  language.ruleSet('comment', () {
+    language.regExp(r'//.*', Category.lineComment);
+    language.include('block comment');
+  });
+
+  language.ruleSet('preprocessor', () {
+    language.regExp(r'//.*', Category.lineComment).pop();
+    language.include('block comment');
+    language.regExp('.', Category.preprocessor);
+    language.verbatim('\n', Category.text).pop();
+  });
+
+  language.ruleSet('space', () {
+    language.regExp(r'[\s\n\t]', Category.whitespace);
+  });
 
   language.ruleSet('string', () {
     language.regExp('"', Category.string).pop();
@@ -50,10 +65,9 @@ Language makeCLanguage() {
     language.regExp('.', Category.string);
   });
 
-  language.ruleSet('macro', () {
-    language.regExp(r'\\\n', Category.preprocessor);
-    language.regExp(r'\n', Category.preprocessor).pop();
-    language.regExp('.', Category.preprocessor);
+  language.ruleSet('whitespace', () {
+    language.include('comment');
+    language.include('space');
   });
 
   return language;

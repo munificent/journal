@@ -8,7 +8,9 @@ import 'package:chromatophore/chromatophore.dart';
 
 const _languageExtensions = {
   'c': 'c',
+  'cpp': 'cpp',
   'csharp': 'cs',
+  'java': 'java',
   'python': 'py',
   'ruby': 'rb'
 };
@@ -52,7 +54,6 @@ class _TestFormatter implements Formatter {
     Category.field: 'f',
     Category.preprocessor: 'r',
     Category.constant: 'v',
-    Category.boolean: 'kb',
     Category.string: 's',
     Category.character: 'sc',
     Category.stringEscape: 'se',

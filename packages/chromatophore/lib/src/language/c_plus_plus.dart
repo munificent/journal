@@ -3,14 +3,13 @@ import '../language.dart';
 import 'patterns.dart';
 
 Language makeCPlusPlusLanguage() {
-  // TODO: Right now, this is just a copy/paste of C. Flesh out.
   var language = Language();
-
-  language.regExp(r'//.*', Category.lineComment);
 
   language.regExp(r'[0-9]+\.[0-9]+f?', Category.number);
   language.regExp(r'0x[0-9a-fA-F]+', Category.number);
   language.regExp(r'[0-9]+[Lu]?', Category.number);
+
+  language.include('whitespace');
 
   // ALL_CAPS preprocessor macro use.
   language.regExp(allCaps, Category.preprocessor);
@@ -18,6 +17,7 @@ Language makeCPlusPlusLanguage() {
   // Capitalized type name.
   language.regExp(capsIdentifier, Category.typeName);
 
+  // TODO: Make false and true a different category?
   language.keywords(
       Category.keyword,
       'alignas alignof and and_eq asm atomic_cancel atomic_commit '
@@ -34,6 +34,7 @@ Language makeCPlusPlusLanguage() {
       Category.typeName,
       'char char8_t char16_t char32_t double float int long short signed '
       'unsigned void wchar_t');
+
   language.regExp(identifier, Category.identifier);
 
   // TODO: Multi-character escapes?
@@ -41,29 +42,40 @@ Language makeCPlusPlusLanguage() {
 
   language.regExp(r'"', Category.string).push('string');
 
-  language.regExp('#', Category.preprocessor).push('macro');
+  language.regExp('#', Category.preprocessor).push('preprocessor');
 
-  language.regExp(r'[{}()[\].,;:]', Category.punctuation);
-  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
+  language.regExp(r'[{}()[\].,;!*/&%~+=<>|-]', Category.punctuation);
 
-  language.regExp(r'[\s\n\t]', Category.whitespace);
+  language.ruleSet('block comment', () {
+    language.regExp(r'/\*.*?\*/', Category.blockComment);
+  });
 
-  // Strings.
+  language.ruleSet('comment', () {
+    language.regExp(r'//.*', Category.lineComment);
+    language.include('block comment');
+  });
+
+  language.ruleSet('preprocessor', () {
+    language.regExp(r'//.*', Category.lineComment).pop();
+    language.include('block comment');
+    language.regExp('.', Category.preprocessor);
+    language.verbatim('\n', Category.text).pop();
+  });
+
+  language.ruleSet('space', () {
+    language.regExp(r'[\s\n\t]', Category.whitespace);
+  });
+
   language.ruleSet('string', () {
     language.regExp('"', Category.string).pop();
     language.regExp(r'\\.', Category.stringEscape);
     language.regExp('.', Category.string);
   });
 
-  // Macros.
-  language.ruleSet('macro', () {
-    language.regExp(r'\\\n', Category.preprocessor);
-    language.regExp(r'\n', Category.preprocessor).pop();
-    language.regExp('.', Category.preprocessor);
+  language.ruleSet('whitespace', () {
+    language.include('comment');
+    language.include('space');
   });
-
-  // Preprocessor with comment.
-  // language.capture(r'(#.*?)(//.*)', [Category.preprocessor, Category.comment]);
 
   return language;
 }

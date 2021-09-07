@@ -5,8 +5,6 @@ import 'patterns.dart';
 Language makeJavaLanguage() {
   var language = Language();
 
-  language.regExp(r'[{}()[\].,;!*/&%~+=<>|-]', Category.punctuation);
-
   // Import.
   language.capture('$b(import)($ss)(\w+(?:\.\w+)*)(;)',
       [Category.keyword, Category.text, Category.identifier, Category.text]);
@@ -44,6 +42,8 @@ Language makeJavaLanguage() {
   language.regExp(identifier, Category.identifier);
 
   language.regExp(r'[\s\n\t]', Category.whitespace);
+
+  language.regExp(r'[{}()[\].,;!*/&%~+=<>|-]', Category.punctuation);
 
   // TODO: Multi-character escapes?
   language.regExp(r"'\\?.'", Category.character);

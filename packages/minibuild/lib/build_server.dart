@@ -158,8 +158,7 @@ class BuildServer {
 
   Future<shelf.Response> _handleRequest(shelf.Request request) async {
     var assetPath = p.url.normalize(p.url.fromUri(request.url));
-    if (request.url.path.endsWith('/') ||
-        p.url.extension(assetPath) == '') {
+    if (request.url.path.endsWith('/') || p.url.extension(assetPath) == '') {
       assetPath = p.url.normalize(p.url.join(assetPath, 'index.html'));
     }
 

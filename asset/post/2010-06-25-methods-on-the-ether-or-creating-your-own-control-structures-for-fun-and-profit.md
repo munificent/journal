@@ -41,11 +41,11 @@ would look in Smalltalk:
 
 ```smalltalk
 numWeasels > numCakes ifTrue: [
-    "Not enough cakes!" print
+    'Not enough cakes!' print
 ] ifFalse: [
     i := 0.
     [ i < numWeasels ] whileTrue: [
-        "A weasel eats a cake!" print.
+        'A weasel eats a cake!' print.
         i := i + 1
     ]
 ]
@@ -89,14 +89,14 @@ a block: a chunk of unevaluated code encapsulated as an object. If you do
 this:
 
 ```smalltalk
-[ "hi" print ]
+[ 'hi' print ]
 ```
 
 It doesn't print "hi". Instead, it creates an object representing that chunk
 of code. If you then *call* the block by sending it a `value` message:
 
 ```smalltalk
-[ "hi" print ] value
+[ 'hi' print ] value
 ```
 
 *Then* it will print the string. Of course, you don't have to call a block

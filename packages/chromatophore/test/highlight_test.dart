@@ -12,7 +12,8 @@ const _languageExtensions = {
   'csharp': 'cs',
   'java': 'java',
   'python': 'py',
-  'ruby': 'rb'
+  'ruby': 'rb',
+  'smalltalk': 'st',
 };
 
 void main() {

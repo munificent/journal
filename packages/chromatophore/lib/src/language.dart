@@ -6,6 +6,7 @@ import 'language/f_sharp.dart';
 import 'language/java.dart';
 import 'language/python.dart';
 import 'language/ruby.dart';
+import 'language/smalltalk.dart';
 import 'rule.dart';
 
 /// Defines the syntactic grammar for a language.
@@ -17,6 +18,7 @@ class Language {
   static final java = makeJavaLanguage();
   static final python = makePythonLanguage();
   static final ruby = makeRubyLanguage();
+  static final smalltalk = makeSmalltalkLanguage();
 
   static final _all = {
     'c': c,
@@ -26,6 +28,7 @@ class Language {
     'java': java,
     'python': python,
     'ruby': ruby,
+    'smalltalk': smalltalk,
   };
 
   static Language? find(String name) => _all[name.toLowerCase()];

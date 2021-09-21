@@ -1,7 +1,12 @@
-‹k⋮static› ‹k⋮final› ‹v⋮SOME_CONSTANT› ‹p⋮=› ‹n⋮123›‹p⋮;›
+‹k⋮static› ‹k⋮final› ‹i⋮SOME_CONSTANT› ‹o⋮=› ‹n⋮123›‹p⋮;›
 
 ‹a⋮@metadata›
 ‹t⋮Expression› ‹i⋮parseExpression›‹p⋮()› ‹p⋮{›
-  ‹k⋮if› ‹p⋮(›‹i⋮match›‹p⋮(›‹t⋮TokenType›‹p⋮.›‹v⋮NAME›‹p⋮))›       ‹lc⋮// return NameExpression...›
-  ‹k⋮else› ‹k⋮if› ‹p⋮(›‹i⋮match›‹p⋮(›‹t⋮TokenType›‹p⋮.›‹v⋮PLUS›‹p⋮))›  ‹lc⋮// return prefix + operator...›
+  ‹k⋮if› ‹p⋮(›‹i⋮match›‹p⋮(›‹t⋮TokenType›‹p⋮.›‹i⋮NAME›‹p⋮))›       ‹lc⋮// return NameExpression...›
+  ‹k⋮else› ‹k⋮if› ‹p⋮(›‹i⋮match›‹p⋮(›‹t⋮TokenType›‹p⋮.›‹i⋮PLUS›‹p⋮))›  ‹lc⋮// return prefix + operator...›
 ‹p⋮}›
+
+‹lc⋮// Strings.›
+‹s⋮""› ‹lc⋮// Empty.›
+‹s⋮"abd false"›
+‹s⋮"›‹e⋮\t›‹s⋮ ›‹e⋮\b›‹s⋮ ›‹e⋮\n›‹s⋮ ›‹e⋮\r›‹s⋮ ›‹e⋮\"›‹s⋮ escapes"›

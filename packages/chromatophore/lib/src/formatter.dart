@@ -29,8 +29,11 @@ class HtmlFormatter implements Formatter {
     Category.field: 'f',
     Category.typeName: 't',
     Category.preprocessor: 'r',
+    Category.tag: 'g',
     Category.unrecognized: 'u',
     Category.metasyntax: 'x',
+    Category.blue: 'blue',
+    Category.red: 'red',
   };
 
   /// Maps categories to CSS class names.

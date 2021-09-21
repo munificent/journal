@@ -17,15 +17,15 @@ that it can work with: Text, Drawings, and Spreadsheets. And we've got a few
 operations we need to be able to do with a document: draw it to the screen,
 load it, and save it to disc. They form a grid, like so:
 
-```text
+```asciiart
             Text       Drawing   Spreadsheet
-        +-----------+-----------+-----------+
-draw()  |           |           |           |
-        +-----------+-----------+-----------+
-load()  |           |           |           |
-        +-----------+-----------+-----------+
-save()  |           |           |           |
-        +-----------+-----------+-----------+
+        ┌───────────┬───────────┬───────────┐
+draw()  │           │           │           │
+        ├───────────┼───────────┼───────────┤
+load()  │           │           │           │
+        ├───────────┼───────────┼───────────┤
+save()  │           │           │           │
+        └───────────┴───────────┴───────────┘
 ```
 
 Each cell in that grid is a chunk of code we've got to write. We need to draw

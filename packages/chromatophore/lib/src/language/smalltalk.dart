@@ -1,5 +1,6 @@
 import '../category.dart';
 import '../language.dart';
+import 'shared.dart';
 
 Language makeSmalltalkLanguage() {
   var language = Language();
@@ -19,13 +20,7 @@ Language makeSmalltalkLanguage() {
 
   language.regExp(r'[\s\n\t]', Category.whitespace);
 
-  language.regExp("'", Category.string).push('string');
-
-  language.ruleSet('string', () {
-    language.regExp("'", Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    language.regExp('.', Category.string);
-  });
+  singleQuotedString(language);
 
   return language;
 }

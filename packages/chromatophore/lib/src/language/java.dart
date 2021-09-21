@@ -1,6 +1,6 @@
 import '../category.dart';
 import '../language.dart';
-import 'patterns.dart';
+import 'shared.dart';
 
 Language makeJavaLanguage() {
   var language = Language();
@@ -19,7 +19,7 @@ Language makeJavaLanguage() {
   language.regExp(r'0x[0-9a-fA-F]+', Category.number);
   language.regExp(r'[0-9]+[Lu]?', Category.number);
 
-  language.regExp(r'//.*', Category.lineComment);
+  cStyleComments(language);
 
   // Annotation.
   language.regExp('@$identifier', Category.annotation);
@@ -34,7 +34,9 @@ Language makeJavaLanguage() {
   language.keywords(
       Category.typeName, 'boolean byte char double float int long short void');
 
-  language.regExp(allCaps, Category.constant);
+  // Treat final constants as normal identifiers. Match this first so that all
+  // caps names aren't treated as type names.
+  language.regExp(allCaps, Category.identifier);
 
   // Capitalized type name.
   language.regExp(capsIdentifier, Category.typeName);
@@ -43,18 +45,13 @@ Language makeJavaLanguage() {
 
   language.regExp(r'[\s\n\t]', Category.whitespace);
 
-  language.regExp(r'[{}()[\].,;!*/&%~+=<>|-]', Category.punctuation);
+  language.regExp(r'[{}()[\].,;]', Category.punctuation);
+  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
 
   // TODO: Multi-character escapes?
   language.regExp(r"'\\?.'", Category.character);
 
-  language.regExp(r'"', Category.string).push('string');
-
-  language.ruleSet('string', () {
-    language.regExp('"', Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    language.regExp('.', Category.string);
-  });
+  doubleQuotedString(language);
 
   return language;
 }

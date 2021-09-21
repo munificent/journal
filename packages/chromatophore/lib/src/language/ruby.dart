@@ -1,6 +1,6 @@
 import '../category.dart';
 import '../language.dart';
-import 'patterns.dart';
+import 'shared.dart';
 
 Language makeRubyLanguage() {
   var language = Language();
@@ -34,34 +34,21 @@ Language makeRubyLanguage() {
 
   language.regExp(r'@[a-zA-Z_][a-zA-Z0-9_]*\b', Category.field);
 
-  language.regExp(allCaps, Category.constant);
-
   // Capitalized type or constant name.
   language.regExp(capsIdentifier, Category.typeName);
 
   language.regExp(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b\??', Category.identifier);
 
-  language.regExp(r'[{}()[\].,;:!*/&%~+=<>|-]', Category.punctuation);
+  language.regExp(r'[{}()[\].,;:]', Category.punctuation);
+  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
 
   language.regExp(r'#.*', Category.lineComment);
 
   language.regExp(r'[\s\n\t]', Category.whitespace);
 
   // TODO: Multi-line strings.
-  language.regExp('"', Category.string).push('double string');
-  language.regExp("'", Category.string).push('single string');
-
-  language.ruleSet('double string', () {
-    language.regExp('"', Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    language.regExp('.', Category.string);
-  });
-
-  language.ruleSet('single string', () {
-    language.regExp("'", Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    language.regExp('.', Category.string);
-  });
+  doubleQuotedString(language);
+  singleQuotedString(language);
 
   return language;
 }

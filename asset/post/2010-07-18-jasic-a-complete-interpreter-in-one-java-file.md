@@ -16,7 +16,7 @@ more about interpreters, now you've got a little primer.
 
 Here's a little code to give you a flavor of the language:
 
-```finch
+```jasic
 ' initialize the loop counter
 count = 10
 

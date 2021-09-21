@@ -24,9 +24,6 @@ class Category {
   static const Category typeName = Category('typeName', identifier);
   static const Category field = Category('field', identifier);
 
-  /// User-defined named constant like a static final field in Java.
-  static const Category constant = Category('constant', identifier);
-
   static const Category preprocessor = Category('preprocessor');
   // Metadata annotations and attributes.
   static const Category annotation = Category('annotation');
@@ -37,9 +34,16 @@ class Category {
   // TODO: Should this be in core chromatophore?
   static const Category metasyntax = Category('metasyntax');
 
+  /// Tag in a markup language like XML.
+  static const Category tag = Category('tag', text);
+
   static const Category text = Category('text');
   static const Category whitespace = Category('whitespace');
   static const Category unrecognized = Category('unrecognized', text);
+
+  // TODO: Hack. For "What Color is Your Function?" post.
+  static const Category blue = Category('blue');
+  static const Category red = Category('red');
 
   final String name;
   final Category? parent;

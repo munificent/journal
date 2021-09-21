@@ -4,12 +4,14 @@ import 'package:chromatophore/markdown.dart';
 import 'package:markdown/markdown.dart';
 
 import 'code/finch.dart';
+import 'code/jasic.dart';
 import 'code/magpie.dart';
 
 final _languages = {
   'magpie1': makeMagpie1Language(),
   'magpie': makeMagpieLanguage(),
-  'finch': makeFinchLanguage()
+  'finch': makeFinchLanguage(),
+  'jasic': makeJasicLanguage()
 };
 
 String renderMarkdown(List<String> lines) {

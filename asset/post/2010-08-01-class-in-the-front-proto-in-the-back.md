@@ -27,8 +27,8 @@ methods an object has. The pseudocode for invoking a method is:
 
 ```magpie
 invoke(obj, methodName, arg)
-    class = obj.getClass
-    method = class.findMethod(methodName)
+    classObj = obj.getClass
+    method = classObj.findMethod(methodName)
     method.invoke(obj, arg)
 end
 ```

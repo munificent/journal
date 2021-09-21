@@ -1,12 +1,20 @@
+import 'package:chromatophore/src/language/fortran.dart';
+
 import 'category.dart';
 import 'language/c.dart';
 import 'language/c_plus_plus.dart';
 import 'language/c_sharp.dart';
+import 'language/dart.dart';
 import 'language/f_sharp.dart';
+import 'language/go.dart';
 import 'language/java.dart';
+import 'language/javascript.dart';
+import 'language/lisp.dart';
+import 'language/ocaml.dart';
 import 'language/python.dart';
 import 'language/ruby.dart';
 import 'language/smalltalk.dart';
+import 'language/xml.dart';
 import 'rule.dart';
 
 /// Defines the syntactic grammar for a language.
@@ -14,21 +22,35 @@ class Language {
   static final c = makeCLanguage();
   static final cPlusPlus = makeCPlusPlusLanguage();
   static final cSharp = makeCSharpLanguage();
+  static final dart = makeDartLanguage();
+  static final fortran = makeFortranLanguage();
   static final fSharp = makeFSharpLanguage();
+  static final go = makeGoLanguage();
   static final java = makeJavaLanguage();
+  static final javaScript = makeJavaScriptLanguage();
+  static final lisp = makeLispLanguage();
+  static final ocaml = makeOCamlLanguage();
   static final python = makePythonLanguage();
   static final ruby = makeRubyLanguage();
   static final smalltalk = makeSmalltalkLanguage();
+  static final xml = makeXmlLanguage();
 
   static final _all = {
     'c': c,
     'cpp': cPlusPlus,
     'csharp': cSharp,
+    'dart': dart,
+    'fortran': fortran,
     'fsharp': fSharp,
+    'go': go,
     'java': java,
+    'javascript': javaScript,
+    'lisp': lisp,
+    'ocaml': ocaml,
     'python': python,
     'ruby': ruby,
     'smalltalk': smalltalk,
+    'xml': xml,
   };
 
   static Language? find(String name) => _all[name.toLowerCase()];

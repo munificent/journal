@@ -38,7 +38,7 @@ I'm picking JS *not* because that's what this post is about. It's just that
 it's the language you, statistical representation of the average reader, are
 most likely to be able grok. Voilà:
 
-```js
+```javascript
 function thisIsAFunction() {
   return "It's awesome";
 }
@@ -47,7 +47,7 @@ function thisIsAFunction() {
 Because our strawman is a *modern* (shitty) language, we also have first-class
 functions. So you can make something like like:
 
-```js
+```javascript
 // Return a list containing all of the elements in collection
 // that match predicate.
 function filter(collection, predicate) {
@@ -66,7 +66,7 @@ start using them damn near everywhere.
 
 Maybe in your testing framework:
 
-```js
+```javascript
 describe("An apple", function() {
   it("ain't no orange", function() {
     expect("Apple").not.toBe("Orange");
@@ -76,7 +76,7 @@ describe("An apple", function() {
 
 Or when you need to parse some data:
 
-```js
+```javascript
 tokens.match(Token.LEFT_BRACKET, function(token) {
   // Parse a list literal...
   tokens.consume(Token.RIGHT_BRACKET);
@@ -95,15 +95,15 @@ feature:
 **1. Every function has a color.**
 
 Each function&mdash;anonymous callback or regular named one&mdash;is either red
-or blue. Since my blog's code highlighter can't handle actual color, we'll say
-the syntax is like:
+or blue. To play nice with my blog's code highlighter can't handle actual color,
+we'll say the syntax is like:
 
-```js
-blue•function doSomethingAzure() {
+```javascript
+blue_function doSomethingAzure() {
   // This is a blue function...
 }
 
-red•function doSomethingCarnelian() {
+red_function doSomethingCarnelian() {
   // This is a red function...
 }
 ```
@@ -116,13 +116,13 @@ rules you have to follow too:
 
 Imagine a "blue call" syntax and a "red call" syntax. Something like:
 
-```js
-doSomethingAzure(...)•blue;
-doSomethingCarnelian()•red;
+```javascript
+doSomethingAzure()blue;
+doSomethingCarnelian()red;
 ```
 
 When calling a function, you need to use the call that corresponds to its color.
-If you get it wrong&mdash;call a red function with `•blue` after the parentheses
+If you get it wrong&mdash;call a red function with `blue` after the parentheses
 or vice versa&mdash;it does something bad. Dredge up some long-forgotten
 nightmare from your childhood like a clown with snakes for arms hiding under
 your bed. That jumps out of your monitor and sucks out your vitreous humour.
@@ -133,17 +133,17 @@ Annoying rule, right? Oh, and one more:
 
 You *can* call a blue function from with a red one. This is kosher:
 
-```js
-red•function doSomethingCarnelian() {
-  doSomethingAzure()•blue;
+```javascript
+red_function doSomethingCarnelian() {
+  doSomethingAzure()blue;
 }
 ```
 
 But you can't go the other way. If you try to do this:
 
-```js
-blue•function doSomethingAzure() {
-  doSomethingCarnelian()•red;
+```javascript
+blue_function doSomethingAzure() {
+  doSomethingCarnelian()red;
 }
 ```
 
@@ -387,7 +387,7 @@ JS, the browser's event loop&mdash;copes with this in some way.
 Node with its ever-marching-to-the-right callbacks stuffs all of those
 callframes in closures. When you do:
 
-```js
+```javascript
 function makeSundae(callback) {
   scoopIceCream(function (iceCream) {
     warmUpCaramel(function (caramel) {

@@ -1,0 +1,15 @@
+<!-- Comment. -->
+
+<!-- Multiple
+    line
+    comment. -->
+
+<tag>Text inside tag.</tag>
+
+<   spaces.in-tag_1   >  More
+    text
+    here. </  spaces.in-tag_1   >
+
+<  self-closing.tag   />
+
+<!-- TODO: Attributes. Doctype. -->

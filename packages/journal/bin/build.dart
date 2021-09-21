@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:minibuild/build_server.dart';
 
+import 'package:journal/src/builder/code_page_builder.dart';
 import 'package:journal/src/builder/post_builder.dart';
 import 'package:journal/src/builder/post_page_builder.dart';
 import 'package:journal/src/builder/post_thread_builder.dart';
@@ -14,6 +15,8 @@ import 'package:journal/src/builder/template_builder.dart';
 import 'package:journal/src/builder/template_page_builder.dart';
 
 Future<void> main(List<String> arguments) async {
+  var isServing = arguments.contains('--serve');
+
   var server = BuildServer(sourceDirectories: [
     'asset',
     'site'
@@ -27,9 +30,11 @@ Future<void> main(List<String> arguments) async {
     TemplateBuilder(),
     TemplatePageBuilder(),
     PostPageBuilder(),
-    TagPageBuilder()
+    TagPageBuilder(),
+    // For local testing, generate a page with all of the code snippets.
+    if (isServing) CodePageBuilder()
   ]);
   await server.initialize();
 
-  if (arguments.contains('--serve')) await server.serve();
+  if (isServing) await server.serve();
 }

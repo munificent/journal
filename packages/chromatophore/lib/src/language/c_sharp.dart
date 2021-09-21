@@ -1,6 +1,7 @@
+import '../../chromatophore.dart';
 import '../category.dart';
 import '../language.dart';
-import 'patterns.dart';
+import 'shared.dart';
 
 Language makeCSharpLanguage() {
   var language = Language();
@@ -23,17 +24,17 @@ Language makeCSharpLanguage() {
   language.capture('(\\.)($capsIdentifier)(<)', [
     Category.punctuation,
     Category.identifier,
-    Category.punctuation
+    Category.operator
   ]).push('generic');
   language.capture('($capsIdentifier)(<)',
-      [Category.typeName, Category.punctuation]).push('generic');
+      [Category.typeName, Category.operator]).push('generic');
 
   // Keywords that must have a type following.
   language.capture('$b(as|is|new)($ss)($identifier)(<)', [
     Category.keyword,
     Category.whitespace,
     Category.typeName,
-    Category.punctuation
+    Category.operator
   ]).push('generic');
   language.capture('$b(as|is|new)($ss)($identifier)',
       [Category.keyword, Category.whitespace, Category.typeName]);
@@ -51,7 +52,7 @@ Language makeCSharpLanguage() {
     Category.typeName,
     Category.whitespace,
     Category.identifier,
-    Category.punctuation
+    Category.operator
   ]).push('generic');
   language.capture('$b($capsIdentifier\\??)($ss)($identifier)',
       [Category.typeName, Category.whitespace, Category.identifier]);
@@ -102,7 +103,8 @@ Language makeCSharpLanguage() {
   //      ^^^
   // Ideally, it should find all of them in the list.
 
-  language.regExp(r'[{}()[\].,:;!?*/&%~+=<>|-]', Category.punctuation);
+  language.regExp(r'[{}()[\].,:;]', Category.punctuation);
+  language.regExp(r'[!?*/&%~+=<>|-]', Category.operator);
 
   // Preprocessor directives: #region, #endregion, etc.
   language.regExp('#', Category.preprocessor).push('preprocessor');
@@ -110,34 +112,31 @@ Language makeCSharpLanguage() {
   // TODO: Multi-character escapes?
   language.regExp(r"'\\?.'", Category.character);
 
-  // Strings.
-  language.regExp('"', Category.string).push('string');
+  doubleQuotedString(language);
 
   language.include('space');
 
   language.ruleSet('class', () {
-    language.verbatim('<', Category.punctuation).push('generic');
+    language.verbatim('<', Category.operator).push('generic');
     language.verbatim(':', Category.punctuation).pop().push('supertypes');
     language.verbatim('{', Category.punctuation).pop();
     language.include('whitespace');
+
+    // TODO: Hack to support proposed syntax in
+    // 2008/04/10/a-c-feature-request-extension-classes.
+    language.verbatim('this', Category.keyword);
+    language.regExp('\\b$capsIdentifier\\b', Category.typeName);
   });
 
-  language.ruleSet('block comment', () {
-    language.regExp(r'/\*.*?\*/', Category.blockComment);
-  });
-
-  language.ruleSet('comment', () {
-    language.regExp(r'//.*', Category.lineComment);
-    language.include('block comment');
-  });
+  cStyleComments(language);
 
   // Generic type.
   language.ruleSet('generic', () {
     // Nested generic.
     language.capture('($identifier)(<)',
-        [Category.typeName, Category.punctuation]).push('generic');
+        [Category.typeName, Category.operator]).push('generic');
 
-    language.regExp('>', Category.punctuation).pop();
+    language.regExp('>', Category.operator).pop();
     language.regExp(identifier, Category.typeName);
     language.regExp(r'[,\[\]]', Category.punctuation);
     language.include('whitespace');
@@ -154,24 +153,17 @@ Language makeCSharpLanguage() {
     language.regExp(r'[\s\n\t]', Category.whitespace);
   });
 
-  language.ruleSet('string', () {
-    language.regExp('"', Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    // TODO: Multi-character escapes?
-    language.regExp('.', Category.string);
-  });
-
   language.ruleSet('supertypes', () {
     language.regExp(identifier, Category.typeName);
     language.verbatim(',', Category.punctuation);
-    language.verbatim('<', Category.punctuation).push('generic');
+    language.verbatim('<', Category.operator).push('generic');
     language.verbatim('{', Category.punctuation).pop();
     language.include('whitespace');
   });
 
   language.ruleSet('where', () {
     language.regExp(identifier, Category.typeName);
-    language.verbatim('<', Category.punctuation).push('generic');
+    language.verbatim('<', Category.operator).push('generic');
     language.verbatim(',', Category.punctuation);
     language.verbatim(':', Category.punctuation);
     language.verbatim('{', Category.punctuation).pop();

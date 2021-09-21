@@ -317,7 +317,7 @@ something like matching discriminated unions working in C#:
 Pattern.Match(image).
     Case<Lolcat, string> (c  => Print("Lolcat says '" + c + "'")).
     Case<Lolrus, int>    (b  => Print("I has " + b + " buckets")).
-    Case<ORlyOwl>           (() => Print("O RLY?"));
+    Case<ORlyOwl>        (() => Print("O RLY?"));
 ```
 
 ## But Wait, That's Not All!
@@ -343,7 +343,7 @@ reached:
 ```csharp
 Pattern.Match(image).
     Case<Lolrus, int> (b  => Print("I has " + buckets + " buckets")).
-    Default                 (() => Print("Default"));
+    Default           (() => Print("Default"));
 ```
 
 ### Equality Matching

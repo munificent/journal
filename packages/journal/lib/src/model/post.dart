@@ -26,7 +26,7 @@ class Post implements TemplateData {
   final List<String> contents;
 
   /// The rendered HTML from the Markdown, initialized lazily.
-  String? _html;
+  late final String html = renderMarkdown(contents);
 
   Post(this.date, this.title, this.titleUrl, this.tags, this.contents);
 
@@ -34,7 +34,7 @@ class Post implements TemplateData {
   FutureOr<Object?> lookup(String property) {
     switch (property) {
       case 'content':
-        return _html ??= renderMarkdown(contents);
+        return html;
       case 'date':
         return date;
       case 'tags':

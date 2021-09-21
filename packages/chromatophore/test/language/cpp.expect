@@ -1,3 +1,3 @@
-‹n⋮6› ‹p⋮+› ‹n⋮2› ‹p⋮*› ‹n⋮3› ‹p⋮/› ‹n⋮4›‹p⋮;› ‹lc⋮// Line comment.›
+‹n⋮6› ‹o⋮+› ‹n⋮2› ‹o⋮*› ‹n⋮3› ‹o⋮/› ‹n⋮4›‹p⋮;› ‹lc⋮// Line comment.›
 
 ‹r⋮#if ›‹bc⋮/* comment */›‹r⋮ DEBUG != !RELEASE && PROFILE›

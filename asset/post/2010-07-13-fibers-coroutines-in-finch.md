@@ -144,7 +144,7 @@ step and then returns, so a monster that just patrols back and forth, waiting
 a bit at each end will have something like:
 
 ```cpp
-Patroller::Update() {
+Patroller::update() {
     switch (state_) {
         case WALK_LEFT:
             x_ -= WALK_SPEED;

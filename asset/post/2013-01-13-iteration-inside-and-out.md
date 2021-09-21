@@ -395,12 +395,12 @@ The lesson here is that stack frames are an amazingly terse way of storing state
 
 This is the key we need to see why each iteration style sucks for some things. It's a question of who gets to control the callstack. Earlier, I said that there are two chunks of code involved in iteration: the code generating the values, and the code doing stuff with them. In an external iterator, your callstack looks like this:
 
-```text
-+------------+
-| moveNext() |
-+------------+
-| loop body  |
-+------------+
+```asciiart
+┌────────────┐
+│ moveNext() │
+├────────────┤
+│ loop body  │
+└────────────┘
   ...
 
   main()
@@ -412,12 +412,12 @@ That's why the tree example was so verbose. Since all of that state would be tra
 
 With an internal iterator, it's like this:
 
-```text
-+------------------------+
-| each                   |
-+------------------------+
-| method containing loop |
-+------------------------+
+```asciiart
+┌────────────────────────┐
+│ each                   │
+├────────────────────────┤
+│ method containing loop │
+└────────────────────────┘
   ...
 
   main()
@@ -425,16 +425,16 @@ With an internal iterator, it's like this:
 
 Now the iterator is on top. It can build up whatever stack frames it wants, and then, whenever its convenient, invoke the block:
 
-```text
-+------------------------+
-| block                  |
-+------------------------+
+```asciiart
+┌────────────────────────┐
+│ block                  │
+└────────────────────────┘
   stuff...
-+------------------------+
-| each                   |
-+------------------------+
-| method containing loop |
-+------------------------+
+┌────────────────────────┐
+│ each                   │
+├────────────────────────┤
+│ method containing loop │
+└────────────────────────┘
   ...
 
   main()

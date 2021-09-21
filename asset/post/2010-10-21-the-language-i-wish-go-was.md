@@ -387,7 +387,7 @@ about exceptions:
 My favorite aspect of exceptions is that they can, just by the shape of the
 code, prevent you from doing something incorrect. Consider this:
 
-```go
+```java
 try {
     File file = openFile(filename);
     file.read();

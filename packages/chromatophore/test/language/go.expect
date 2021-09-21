@@ -1,0 +1,5 @@
+‹k⋮func› ‹i⋮ReadFile›‹p⋮(›‹i⋮filename› ‹t⋮string›‹p⋮,› ‹i⋮param› ‹i⋮SomeType›‹p⋮,› ‹i⋮block› ‹k⋮func›‹p⋮(›‹i⋮f› ‹o⋮*›‹t⋮File›‹p⋮))› ‹p⋮{›
+    ‹i⋮file› ‹p⋮:›‹o⋮=› ‹i⋮os›‹p⋮.›‹i⋮Open›‹p⋮(›‹i⋮filename›‹p⋮)›
+    ‹i⋮block›‹p⋮(›‹i⋮file›‹p⋮)› ‹lc⋮// Comment.›
+    ‹i⋮file›‹p⋮.›‹i⋮Close›‹p⋮()›
+‹p⋮}›

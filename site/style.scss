@@ -337,6 +337,10 @@ article {
       padding: 0;
       font: 13px/18px $mono;
     }
+
+    code.language-asciiart {
+      font: 14px/14px $mono;
+    }
   }
 
   tt {
@@ -528,14 +532,23 @@ article {
 // Syntax highlighting:
 
 .highlight {
-  span.a { color: hsl(250, 70%, 70%); } // Attribute/annotation.
-  span.k { color: hsl(200, 100%, 40%); } // Keyword.
-  span.n { color: hsl(330, 70%, 55%); } // Number.
   span.p { color: mix($code-bg, $code-color, 30%); } // Punctuation.
-  span.r { color: hsl(300, 50%, 45%); } // Preprocessor.
-  span.f { color: hsl(140, 70%, 40%); } // Field.
+  span.n { color: hsl( 10,  70%, 55%); } // Number.
+  span.s { color: hsl( 30, 100%, 40%); } // String.
+  span.e { color: hsl( 40,  80%, 50%); } // String escape.
+  span.f { color: hsl(100,  50%, 40%); } // Field.
   span.t { color: hsl(180, 100%, 30%); } // Type name.
+  span.g { color: hsl(180, 100%, 30%); } // Markup tag.
+  span.o { color: hsl(200,  40%, 40%); } // Operator.
+  span.k { color: hsl(200, 100%, 40%); } // Keyword.
+  span.a { color: hsl(270,  70%, 65%); } // Attribute/annotation.
+  span.r { color: hsl(300,  50%, 45%); } // Preprocessor.
+  span.c { color: mix($code-bg, $code-color, 50%); } // Comment.
 
+  span.blue { color: hsl(220, 100%, 55%); } // "Blue" functions.
+  span.red { color: hsl(5, 100%, 45%); } // "Red" functions.
+
+  // Metasyntax.
   span.x {
     font-style: italic;
     color: mix($code-bg, $code-color, 30%);
@@ -547,21 +560,6 @@ article {
     background-color: hsl(5, 100%, 90%);
     color: hsl(5, 100%, 35%);
   }
-
-  // TODO: Remove these when I've gone through and made sure they're all unused.
-  span.c,
-  span.c1,
-  span.cm  { color: mix($code-bg, $code-color, 50%); } // comment
-  span.kd  { color: hsl(190, 100%, 35%); } // keyword declaration
-  span.kt  { color: hsl(180, 100%, 30%); } // keyword type
-  span.o   { color: hsl(200, 40%, 40%); } // operator
-  span.nb  { color: hsl(170, 100%, 30%); } // built-in name
-  span.nc  { color: hsl(180, 100%, 30%); } // class name
-  span.s,
-  span.s1,
-  span.s2,
-  span.sc  { color: hsl(35, 100%, 40%); } // string
-  span.si  { color: hsl(27, 100%, 40%); } // string interpolation
 }
 
 @media only screen and (max-width: 1008px) {

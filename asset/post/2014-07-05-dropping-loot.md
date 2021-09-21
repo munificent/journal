@@ -164,7 +164,7 @@ Here, the `"equipment:6"` means a goblin may drop *any* kind of equipment. This 
 At the same time, defining the items is pretty simple. You basically just need to categorize and assign a level for each item. It looks like this:
 
 ```dart
-group(r"\", "equipment/weapon/spear");
+group(r"\"", "equipment/weapon/spear");
 weapon("Pointed Stick", 5, brown, "stab[s]", 7);
 weapon("Spear", 25, gray, "stab[s]", 12);
 weapon("Angon", 35, lightGray, "stab[s]", 16);

@@ -161,7 +161,7 @@ Maybe more than a little odd. In production mode, Dart behaves exactly as if it 
 var /* int */ i = 'not int';
 var /* bool */ b = 'not a bool either';
 var /* num */ wtf = i + b;
-print(wtf); // not intnot a bool either
+print(wtf); // not int, not a bool either
 ```
 
 Unsurprisingly, those comments won't do anything at runtime. That's how Dart runs in production mode.

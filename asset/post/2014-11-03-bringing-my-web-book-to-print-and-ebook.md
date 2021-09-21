@@ -61,7 +61,7 @@ If you've never done an eBook before (you lucky devil, you), they come in two pr
 
 An EPUB file is basically a zip file containing a web site. Seriously. Take your static site and run this on it:
 
-```bash
+```sh
 cd my_awesome_site
 zip -X0 my_awesome_site.epub mimetype
 zip -Xur9D my_awesome_site.epub *

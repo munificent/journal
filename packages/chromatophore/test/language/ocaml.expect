@@ -1,0 +1,16 @@
+‹k⋮type› ‹i⋮document›
+  ‹o⋮=› ‹t⋮Text›
+  ‹o⋮|› ‹t⋮Drawing›
+  ‹o⋮|› ‹t⋮Spreadsheet›
+
+‹k⋮fun› ‹i⋮draw› ‹p⋮(›‹t⋮Text›‹p⋮)›        ‹o⋮=› ‹bc⋮(* draw text doc... *)›
+  ‹o⋮|› ‹i⋮draw› ‹p⋮(›‹t⋮Drawing›‹p⋮)›     ‹o⋮=› ‹bc⋮(* draw drawing doc... *)›
+  ‹o⋮|› ‹i⋮draw› ‹p⋮(›‹t⋮Spreadsheet›‹p⋮)› ‹o⋮=› ‹bc⋮(* draw spreadsheet... *)›
+
+‹k⋮fun› ‹i⋮load› ‹p⋮(›‹t⋮Text›‹p⋮)›        ‹o⋮=› ‹bc⋮(* load text doc... *)›
+  ‹o⋮|› ‹i⋮load› ‹p⋮(›‹t⋮Drawing›‹p⋮)›     ‹o⋮=› ‹bc⋮(* load drawing doc... *)›
+  ‹o⋮|› ‹i⋮load› ‹p⋮(›‹t⋮Spreadsheet›‹p⋮)› ‹o⋮=› ‹bc⋮(* load spreadsheet... *)›
+
+‹k⋮fun› ‹i⋮save› ‹p⋮(›‹t⋮Text›‹p⋮)›        ‹o⋮=› ‹bc⋮(* save text doc... *)›
+  ‹o⋮|› ‹i⋮save› ‹p⋮(›‹t⋮Drawing›‹p⋮)›     ‹o⋮=› ‹bc⋮(* save drawing doc... *)›
+  ‹o⋮|› ‹i⋮save› ‹p⋮(›‹t⋮Spreadsheet›‹p⋮)› ‹o⋮=› ‹bc⋮(* save spreadsheet... *)›

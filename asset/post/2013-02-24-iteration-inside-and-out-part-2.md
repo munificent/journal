@@ -115,13 +115,13 @@ You may wonder how it does that. That's kind of the funny bit. In the case of C#
 
 In the last post, I crafted some glorious ASCII art showing where all of the state is being stored. The main problem was that the state for the code generating values and the state for the code consuming them both live on the stack. Using an iterator, though, gives you this:
 
-```text
+```asciiart
   stack                       heap
-+---------------------+
-| iterator.MoveNext() |
-+---------------------+     +-------------------+
-| loop body           | --> | DesugaredIterator |
-+---------------------+     +-------------------+
+┌─────────────────────┐
+│ iterator.MoveNext() │
+├─────────────────────┤     ┌───────────────────┐
+│ loop body           │ ──> │ DesugaredIterator │
+└─────────────────────┘     └───────────────────┘
   ...
 
   main()

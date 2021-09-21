@@ -1,7 +1,7 @@
 import 'package:chromatophore/chromatophore.dart';
 
 const identifier = r'\b[a-zA-Z_][a-zA-Z0-9_]*\b';
-const capsIdentifier = r'\b[A-Z_][a-zA-Z0-9_]*\b';
+const capsIdentifier = r'\b[A-Z][a-zA-Z0-9_]*\b';
 const ss = ' +';
 
 Language makeMagpie1Language() {
@@ -69,15 +69,26 @@ Language makeMagpieLanguage() {
 
   _literalRules(language);
 
+  // TODO: Hack. The `?` is an allowed identifier character, but we will end up
+  // recognizing a keyword followed by `?` as a keyword and not a single
+  // identifier.
+  language.regExp(r'\btrue\?', Category.identifier);
+
   language.keywords(
       Category.keyword,
-      'and as class def do else end extend false fn for if import interface is '
-      'it let loop or return struct then this true var while with');
-  // Hack: "loop" is not a real keyword in Magpie, but one post uses Magpie as
-  // pseudo-code.
+      'and as async case catch class def defclass do else end extend false fn '
+      'for if import interface in is it let loop match nothing null or return '
+      'shared struct then this true try val var while with');
 
-  language.regExp(r'\b[A-Z][a-zA-Z0-9_]*\b\??', Category.typeName);
-  language.regExp(r'\b[a-z_][a-zA-Z0-9_]*\b\??', Category.identifier);
+  // Hack: These are not real keywords in Magpie, but a couple of posts use
+  // Magpie as pseudo-code.
+  language.keywords(Category.keyword, 'loop null');
+
+  // Unquote.
+  language.regExp(r'`[a-z_][a-zA-Z0-9_]*\b\??', Category.preprocessor);
+
+  language.regExp(r'[A-Z][a-zA-Z0-9_\$]*\??', Category.typeName);
+  language.regExp(r'[a-z_\$][a-zA-Z0-9_\$]*\??', Category.identifier);
 
   _punctuationRules(language);
 

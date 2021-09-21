@@ -1,8 +1,8 @@
 ‹k⋮class› ‹t⋮Hello›‹p⋮:›
     ‹k⋮def› ‹i⋮say›‹p⋮(›‹i⋮self›‹p⋮,› ‹i⋮greeting›‹p⋮):›
-        ‹i⋮print› ‹i⋮greeting› ‹lc⋮# Comment.›
+        ‹k⋮print› ‹i⋮greeting› ‹lc⋮# Comment.›
 
-‹i⋮hello› ‹p⋮=› ‹t⋮Hello›‹p⋮()›
+‹i⋮hello› ‹o⋮=› ‹t⋮Hello›‹p⋮()›
 ‹i⋮hello›‹p⋮.›‹i⋮say›‹p⋮(›‹s⋮"Hello!"›‹p⋮)›
 
 ‹lc⋮# Strings.›

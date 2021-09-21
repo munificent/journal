@@ -1,6 +1,6 @@
 import '../category.dart';
 import '../language.dart';
-import 'patterns.dart';
+import 'shared.dart';
 
 Language makeCPlusPlusLanguage() {
   var language = Language();
@@ -40,36 +40,16 @@ Language makeCPlusPlusLanguage() {
   // TODO: Multi-character escapes?
   language.regExp(r"'\\?.'", Category.character);
 
-  language.regExp(r'"', Category.string).push('string');
+  doubleQuotedString(language);
 
-  language.regExp('#', Category.preprocessor).push('preprocessor');
+  cPreprocessor(language);
+  cStyleComments(language);
 
-  language.regExp(r'[{}()[\].,;!*/&%~+=<>|-]', Category.punctuation);
-
-  language.ruleSet('block comment', () {
-    language.regExp(r'/\*.*?\*/', Category.blockComment);
-  });
-
-  language.ruleSet('comment', () {
-    language.regExp(r'//.*', Category.lineComment);
-    language.include('block comment');
-  });
-
-  language.ruleSet('preprocessor', () {
-    language.regExp(r'//.*', Category.lineComment).pop();
-    language.include('block comment');
-    language.regExp('.', Category.preprocessor);
-    language.verbatim('\n', Category.text).pop();
-  });
+  language.regExp(r'[{}()[\].,;:]', Category.punctuation);
+  language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
 
   language.ruleSet('space', () {
     language.regExp(r'[\s\n\t]', Category.whitespace);
-  });
-
-  language.ruleSet('string', () {
-    language.regExp('"', Category.string).pop();
-    language.regExp(r'\\.', Category.stringEscape);
-    language.regExp('.', Category.string);
   });
 
   language.ruleSet('whitespace', () {

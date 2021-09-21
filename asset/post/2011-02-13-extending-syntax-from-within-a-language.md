@@ -203,11 +203,11 @@ Quotations let you write that out just like it would appear in code:
 { 1 + 2 }
 ```
 
-If you surround an expression in curlies, you'll get an object representing
-the expression back, instead of evaluating it. Inside a quotation, you can
-unquote using a backquote character (`````), which is like string interpolation
-but at the code level, not textual. That way you can build chunks of code
-declaratively and fill in the blanks with dynamically-generated stuff.
+If you surround an expression in curlies, you'll get an object representing the
+expression back, instead of evaluating it. Inside a quotation, you can unquote
+using a backquote character (`` ` ``), which is like string interpolation but at
+the code level, not textual. That way you can build chunks of code declaratively
+and fill in the blanks with dynamically-generated stuff.
 
 So the parser class here returns that last quotation, which contains a `match`
 expression (Magpie has full destructuring pattern matching, and that *is* one

@@ -245,7 +245,7 @@ class Interface
 
     getMemberType(name String -> Type | Nothing)
         let member = members first(
-            fn (m Member -> Bool) m name == name) then
+                fn (m Member -> Bool) m name == name) then
             member memberType()
         end
     end

@@ -77,7 +77,7 @@ true and (optionally) a block to execute if the condition is false. If you
 were to declare a "function" for if/then in C, it would look like:
 
 ```c
-void IfThen(bool condition, code ifTrue, code ifFalse);
+void ifThen(bool condition, Code ifTrue, Code ifFalse);
 ```
 
 The problem, of course, is that `code` isn't a type in C: there's no easy way

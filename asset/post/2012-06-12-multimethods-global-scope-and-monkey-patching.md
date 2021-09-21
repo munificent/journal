@@ -197,16 +197,13 @@ Ouch. Our intent in `sandwich.mag` is that defining `toString` would work like [
 
 My [fix][] for this was to change what it means to import a multimethod. In our little example, the import graph is like:
 
-```text
+```asciiart
 core
-  ^
-  |\
-  | \
-  | sandwich
-  |  ^
-  | /
-  |/
- main
+ ^^
+ │└───┐
+ │ sandwich
+ │┌───┘
+main
 ```
 
 `main.mag` imports `sandwich.mag` and they both also (implicitly) import `core`. Core itself contains a `toString` method with specializations for the atomic types like numbers and strings.
@@ -254,11 +251,10 @@ The `import Pal` line works fine. It brings `Pal` and `name` into `main.mag`. Th
 
 We didn't have a name collision in the first example. Even though `toString` got imported into `main.mag` both from `core` and `sandwich.mag`, they were the exact same object, so we could just safely ignore it. Here, though, that isn't the case. The import graph is like:
 
-```text
+```asciiart
 pal  pet
  ^    ^
-  \  /
-   \/
+ └─┐┌─┘
   main
 ```
 

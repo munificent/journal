@@ -1,0 +1,15 @@
+‹bc⋮<!-- Comment. -->›
+
+‹bc⋮<!-- Multiple
+    line
+    comment. -->›
+
+‹g⋮<tag>›Text inside tag.‹g⋮</tag>›
+
+‹g⋮<   spaces.in-tag_1›   ‹g⋮>›  More
+    text
+    here. ‹g⋮</  spaces.in-tag_1   >›
+
+‹g⋮<  self-closing.tag›   ‹g⋮/>›
+
+‹bc⋮<!-- TODO: Attributes. Doctype. -->›

@@ -217,7 +217,7 @@ planner.getAddressBook().getPhoneNumbers().add("867-5309");
 
 Would look something like this in CLOS:
 
-```cl
+```lisp
 (add (get-phone-numbers (get-address-book planner)) "867-5309")
 ```
 
@@ -241,7 +241,7 @@ Since most dynamic languages don't have any concept of annotating a method's exp
 
 For a real world example, consider the magic `$()` function in [jQuery](http://jquery.com/). It's [documented like this](http://api.jquery.com/jQuery/):
 
-```
+```text
 $(selector, [context])
 selector      - A string containing a selector expression.
 context       - A DOM Element, Document, or jQuery to use as

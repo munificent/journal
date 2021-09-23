@@ -1,14 +1,23 @@
 ---
-layout: post
 title: "Checking Flags in C# Enums"
 categories: c-sharp code
 ---
-I like C# [enums](http://msdn2.microsoft.com/en-us/library/sbbt4032(VS.80).aspx) and I also like using them as [bitfields](http://msdn2.microsoft.com/en-us/library/system.flagsattribute(VS.80).aspx), even
-though apparently [not everyone does](http://cleveralias.blogs.com/thought_spearmints/2004/01/more_c_enum_wac.html). I realize they aren't perfectly
-typesafe, but then I don't think that's the problem [Abrams](http://blogs.msdn.com/brada/) and co. were
+
+<div class="update">
+<p><em>Update 2021/09/22:</em> The Enum class has a built-in <a href="https://docs.microsoft.com/en-us/dotnet/api/system.enum.hasflag?view=net-5.0"><code>HasFlag()</code></a> method now.</p>
+</div>
+
+I like C# [enums] and I also like using them as [bitfields][], even though
+apparently [not everyone does][dislike]. I realize they aren't perfectly
+typesafe, but then I don't think that's the problem [Abrams][] and company were
 trying to solve anyway.
 
-Here's one:
+[enums]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/enum
+[bitfields]: https://docs.microsoft.com/en-us/dotnet/api/system.flagsattribute?view=net-5.0
+[dislike]: http://cleveralias.blogs.com/thought_spearmints/2004/01/more_c_enum_wac.html
+[abrams]: http://blogs.msdn.com/brada/
+
+Here's an example one:
 
 ```csharp
 [Flags]
@@ -25,7 +34,7 @@ public enum Fruits
 Nice, clean syntax. The way they solved C++'s name collision issues with enum
 values is genius: `Fruits.Apple`. Clearly these guys are using the old noggin.
 
-## The Annoying Bit (Argh, a Pun)
+## The annoying bit (argh, a pun)
 
 The one thing that *does* annoy me about flag enums is the syntax to see if a
 given flag (or set of flags) is set:
@@ -39,7 +48,7 @@ here. Needing to specify the explicit `==` for type safety and having to use
 the parenthesis because the operator precedence puts `==` before `&` first?
 Gross.
 
-## For Every Nail There is a Hammer
+## For every nail there is a hammer
 
 Behold the solution:
 
@@ -88,11 +97,13 @@ public static class FruitsExtensions
 
 Useful, no?
 
-## Why Solve 1 When You Can Solve n?
+## Why solve one when you can solve *n*?
 
-So, if you're like me and [this guy](http://devlicious.com/blogs/christopher_bennage/archive/2007/09/13/my-new-little-friend-enum-lt-t-gt.aspx), right now you're thinking, "This
-just fixes one enum. Can I solve it for all enums?" Ideally, you'd do
-something like:
+So, if you're like me and [this guy][bennage], right now you're thinking, "This
+just fixes one enum. Can I solve it for all enums?" Ideally, you'd do something
+like:
+
+[bennage]: https://web.archive.org/web/20120423104722/http://devlicious.com/blogs/christopher_bennage/archive/2007/09/13/my-new-little-friend-enum-lt-t-gt.aspx
 
 ```csharp
 public static class EnumExtensions
@@ -177,4 +188,4 @@ public static class EnumExtensions
 }
 ```
 
-&hellip;but, yeah, not exactly fun using reflection for this.
+...but, yeah, it's not exactly fun using reflection for this.

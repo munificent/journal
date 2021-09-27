@@ -392,7 +392,7 @@ article {
       font-size: 13px/22px;
     }
 
-    a {
+    a, a code {
       color: $update-link;
 
       &:hover {

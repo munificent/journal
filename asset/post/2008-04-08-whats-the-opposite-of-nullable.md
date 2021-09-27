@@ -1,12 +1,16 @@
 ---
 layout: post
-title: "What's the Opposite of \"nullable\"?"
+title: "What's the Opposite of \"Nullable\"?"
 categories: c-sharp code
 ---
-I hate [duplicate code](http://en.wikipedia.org/wiki/DRY). [Hate it](http://c2.com/cgi/wiki?DontRepeatYourself) [hate it](http://www.codinghorror.com/blog/archives/000805.html) [hate it](http://www.thefrontside.net/blog/repeat_yourself). At the
-same time, I *do* like having my code check its arguments.
+I hate [duplicate code][dry]. [Hate it][dry 2] [hate it][dry 3] [hate it][dry
+4]. At the same time, I *do* like having my code check its arguments. After a
+while, I noticed that half of the functions I wrote looked like this:
 
-After a while, I noticed that half of the functions I wrote looked like this
+[dry]: http://en.wikipedia.org/wiki/DRY
+[dry 2]: http://c2.com/cgi/wiki?DontRepeatYourself
+[dry 3]: http://www.codinghorror.com/blog/archives/000805.html
+[dry 4]: http://www.thefrontside.net/blog/repeat_yourself
 
 ```csharp
 void SomeMethod(Foo foo)
@@ -25,8 +29,12 @@ Worse is that to a *caller* of the function, there's no way to tell that
 `SomeMethod()` doesn't allow a `null` value for `foo` without looking at the
 method body (which may not be available to an API user).
 
-The [`Nullable<T>`](http://msdn2.microsoft.com/en-us/library/b3h38hb0.aspx) type in the [BCL](http://msdn2.microsoft.com/en-us/netframework/aa569603.aspx) (which is automatically aliased
-to it's [more familiar `?`](http://blogs.msdn.com/ericgu/archive/2004/05/27/143221.aspx), as in "`int?`") had me wondering. Can I make the opposite? A "not nullable?"
+The [`Nullable<T>`][nullable] type in the [BCL][] (which is automatically
+aliased to it's more familiar `?`, as in `int?`) had me wondering. Can I make
+the opposite? A "not nullable?"
+
+[nullable]: https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1?view=net-5.0
+[bcl]: https://docs.microsoft.com/en-us/dotnet/standard/framework-libraries
 
 ## NotNull&lt;T&gt;
 
@@ -72,7 +80,7 @@ SomeMethod(new NotNull(myFoo));
 A conversion operator will fix that:
 
 ```csharp
-// in NotNull<T>
+// In NotNull<T>:
 public static implicit operator NotNull<T>(T maybeNull)
 {
     return new NotNull<T>(maybeNull);
@@ -85,8 +93,8 @@ Now the call sites are unchanged:
 SomeMethod(mFoo);
 ```
 
-and when you make the call, it will automatically call the conversion, which
-will in turn bail if `myFoo` is `null`. We can make things a little easier by
+When you make the call, the compiler automatically inserts a conversion, which
+in turn bails if `myFoo` is `null`. We can make things a little easier by
 providing a conversion the other way too:
 
 ```csharp
@@ -101,11 +109,11 @@ Now you can do this:
 ```csharp
 void SomeMethod(NotNull<Foo> foo)
 {
-    // will automatically convert on assign :)
+    // Automatically converts on assign. :)
     Foo someFoo = foo;
 
-    // but not on member access :(
-    // can't do foo.SomeFooProperty, have to do:
+    // But not on member access. :(
+    // Can't do foo.SomeFooProperty, have to do:
     foo.Value.SomeFooProperty;
 }
 ```
@@ -123,7 +131,10 @@ least one caveat to be aware of. This won't work with interface types. That's
 because value types can implement interfaces too, and you can't compare a
 value type to `null`. If you can figure out a way around this, holler.
 
-**Edit:** as Brad points out below, this does work with interfaces… sort of. The limitation is that implicit conversion operators don't work with them. The actual wrapping and `null` checks are fine. It's just that to use it with an interface, you have to do:
+**Edit:** as Brad points out below, this does work with interfaces... sort of.
+The limitation is that implicit conversion operators don't work with them. The
+actual wrapping and `null` checks are fine. It's just that to use it with an
+interface, you have to do:
 
 ```csharp
 SomeMethod(new NotNull(myInterfaceFoo));
@@ -213,7 +224,7 @@ public class NotNull<T>
 }
 ```
 
-and a unit test:
+Here's a unit test:
 
 ```csharp
 [TestFixture]

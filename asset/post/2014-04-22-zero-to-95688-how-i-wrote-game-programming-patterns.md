@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Zero to 95,688: How I wrote Game Programming Patterns"
 categories: book game-dev game-patterns
 ---

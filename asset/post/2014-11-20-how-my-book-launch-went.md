@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "How My Book Launch Went"
 categories: book game-dev design game-patterns
 ---

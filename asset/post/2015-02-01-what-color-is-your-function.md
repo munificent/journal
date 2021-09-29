@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "What Color is Your Function?"
 categories: code language dart lua go javascript
 ---

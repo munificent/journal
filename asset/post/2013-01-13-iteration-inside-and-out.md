@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Iteration Inside and Out"
 categories: code language magpie ruby dart
 ---

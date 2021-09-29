@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "The Hardest Program I've Ever Written"
 categories: dart code
 ---

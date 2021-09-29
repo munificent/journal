@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "ML-style Pattern Matching in C#"
 categories: c-sharp code f-sharp language
 ---
+
 There's nothing like travelling abroad to make you see your home country with
 new eyes. While your first fascination with everything new and different in
 the foreign land may enventually be replaced by homesickness, you always want

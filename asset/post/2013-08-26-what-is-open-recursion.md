@@ -1,8 +1,8 @@
 ---
-layout: post
 title: What is "Open Recursion"?
 categories: code language dart
 ---
+
 Someone on StackOverflow stumbled onto the strange term "open recursion" and [asked what it meant](http://stackoverflow.com/questions/17803621/why-is-it-called-open-or-closed-recursion). Since most of the other answers to this online are pretty opaque, I started writing an answer. But then I accidentally wrote a blog post.
 
 I honestly couldn't remember what it meant either, so I cracked open my copy of [Types and Programming Languages](http://www.cis.upenn.edu/~bcpierce/tapl/) where, I believe, Pierce first introduces the term. After skimming a bit, I think I've got it. For those who don't have the book or don't want to wade through PL nerd terminology, I'll try to translate it to something a little friendlier.

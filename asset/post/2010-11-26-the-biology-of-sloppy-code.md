@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "The Biology of Sloppy Code"
 categories: code
 ---
+
 I'm watching the [Future of Programming Languages](http://www.infoq.com/presentations/Future-of-Programming-Languages) panel and a point came
 up that really resonated with me. To the question, "what is the next big trend
 in programming", Guy Steele said, "Maybe it's sloppy programming."

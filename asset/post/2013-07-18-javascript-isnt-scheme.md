@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "JavaScript Isn't Scheme"
 categories: code language js scheme
 ---

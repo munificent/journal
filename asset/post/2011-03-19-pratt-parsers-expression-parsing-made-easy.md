@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Pratt Parsers: Expression Parsing Made Easy"
 categories: code java js language magpie parsing
 ---

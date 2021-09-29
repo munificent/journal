@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Future-proofing, Uniform Access, and Masquerades"
 categories: c-sharp code java language magpie
 ---
+
 Take a look at this Java code:
 
 ```java

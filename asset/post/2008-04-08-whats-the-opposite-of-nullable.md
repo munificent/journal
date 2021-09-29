@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "What's the Opposite of \"Nullable\"?"
 categories: c-sharp code
 ---
+
 I hate [duplicate code][dry]. [Hate it][dry 2] [hate it][dry 3] [hate it][dry
 4]. At the same time, I *do* like having my code check its arguments. After a
 while, I noticed that half of the functions I wrote looked like this:
@@ -143,7 +143,7 @@ SomeMethod(new NotNull(myInterfaceFoo));
 which is kind of lame. But aside from that, you can use interfaces with this.
 Thanks, B-Rad!
 
-## The Whole Shebang
+## The whole shebang
 
 Oh, and here's a prettier version with comments and stuff. Don't say I never
 gave you nothing:

@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Rethinking User-defined Operators"
 categories: code cpp go java language magpie parsing
 ---
+
 I just made a radical change with how Magpie handles infix operators-- stuff
 like `+` and `==`. If that kind of programming language minutiae is up your
 alley, read on for how it works now and the reasoning behind it. I don't think

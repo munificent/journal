@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Rooms and Mazes: A Procedural Dungeon Generator"
 categories: code game-dev roguelike dart
 ---

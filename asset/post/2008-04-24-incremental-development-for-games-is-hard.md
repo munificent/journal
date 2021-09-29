@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Incremental Development for Games (Is Hard)"
 categories: code game-dev
 ---
+
 For those who don't know, the game industry (or at least my chunk of it) is
 generally about 10 years behind the rest of the software world. We're still
 leery of crazy ivory tower concepts like "memory management", "testing", and

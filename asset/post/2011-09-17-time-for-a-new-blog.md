@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Time for a New Blog"
 categories: blog blogofile
 ---

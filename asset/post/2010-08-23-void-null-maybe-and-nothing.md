@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "void, null, Maybe and nothing"
 categories: code java language magpie
 ---
+
 I'm hard at work on a proof-of-concept for the new [Magpie](http://bitbucket.org/munificent/magpie). While I've
 got some more work to do before I can start getting into the really
 interesting parts of the language, I have one piece working now that I think

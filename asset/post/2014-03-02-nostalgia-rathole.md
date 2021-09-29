@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Nostalgia Rathole"
 categories: music ai personal
 ---

@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Loops in Magpie"
 categories: c-sharp code language magpie
 ---
+
 I'm working on the loop syntax in Magpie right now, and I think I more or less
 have the plan figured out. Looping is a bit tricky in a language: there's a
 ton of different ways to do it from C's basic `for (i = 0; i < 100; i++)` to

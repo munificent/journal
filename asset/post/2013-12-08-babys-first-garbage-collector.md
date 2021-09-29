@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Baby's First Garbage Collector"
 categories: code c language
 ---

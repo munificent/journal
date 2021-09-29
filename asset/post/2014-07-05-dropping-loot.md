@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Dropping Loot"
 categories: code game-dev roguelike dart
 ---

@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Ruby blocks, Python's with, and Magpie's Test Suite"
 categories: code language magpie python ruby
 ---
+
 Part of moving a language from "tiny hobby project" to "thing that I hope
 people will use" is a solid test suite. [Magpie](http://magpie.stuffwithstuff.com/) has a test suite now, but
 it's kind of ugly and is driven mostly from Java. What I'd like is something

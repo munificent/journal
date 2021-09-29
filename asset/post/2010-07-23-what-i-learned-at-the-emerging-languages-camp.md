@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "What I Learned at the Emerging Languages Camp"
 categories: code language parsing
 ---
+
 I just got back from the unbelievably awesome [Emerging Languages Camp](http://emerginglangs.com/) at
 [OSCON](http://www.oscon.com/). I wish I could come up with a good way to get across how cool of
 an experience it was. All I can really say was that for the first time in a

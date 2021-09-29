@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Conditional Binding with \"let\" in Magpie"
 categories: code language magpie
 ---
+
 Magpie, as an imperative language, has the usual flow control structures you
 expect to see: `while`, `if`, and `for` (although they're a little different
 from their C counterparts). However, Magpie has one other flow control

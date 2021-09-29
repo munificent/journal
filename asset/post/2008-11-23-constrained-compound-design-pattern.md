@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "\"Constrained Compound\" Design Pattern"
 categories: c-sharp code design
 ---
+
 I've seen a lot of people argue that inheritance is an anti-feature in a
 language and that it's never necessary. That rubbed me the wrong way because I
 use it pretty frequently in a recurring pattern, and I think it works well. I

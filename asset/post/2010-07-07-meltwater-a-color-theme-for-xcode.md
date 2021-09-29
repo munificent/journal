@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Meltwater: A Color Theme for XCode"
 categories: code design
 ---
+
 Because I'm a visual kind of person, one of the first things I do on a new
 machine is get the syntax highlighting in my IDE(s) to something I like. At
 the moment, I have a couple of different Macs that I work on, so I needed an

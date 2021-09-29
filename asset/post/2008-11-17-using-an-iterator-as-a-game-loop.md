@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Using an Iterator as a Game Loop"
 categories: c-sharp code game-dev roguelike
 ---
+
 If you've ever worked on a game before (and if you code, you probably have, at
 least on your own), you've seen the [venerable game loop](http://dewitters.koonsolo.com/gameloop.html). It's the core
 loop in the executable that iterates as long as the game is running. In GUI

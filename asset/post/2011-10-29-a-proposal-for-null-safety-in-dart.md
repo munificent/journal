@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "A Proposal for Null-safety in Dart"
 categories: code dart language
 ---

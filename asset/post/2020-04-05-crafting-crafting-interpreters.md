@@ -1,5 +1,4 @@
 ---
-layout: post
 title: Crafting "Crafting Interpreters"
 categories: book design language personal
 ---

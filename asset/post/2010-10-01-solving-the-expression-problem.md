@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Solving the Expression Problem"
 categories: code java language magpie
 ---
+
 I started working on Magpie out of frustration with a lot of the languages I
 used. One of the key itches I wanted to scratch is something called the
 [expression problem](http://lambda-the-ultimate.org/node/2232). The original formulation of it isn't very helpful to

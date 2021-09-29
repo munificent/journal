@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Multimethods, Multiple Inheritance, Multiawesome!"
 categories: code cpp java js language magpie
 ---
+
 The luxury of having [a programming language with zero users](http://magpie.stuffwithstuff.com) is that I can make [radical changes](https://github.com/munificent/magpie/commit/e509e13fd74ba252faf00288196769412cf7811c) to it with impunity. Over the past month, I've done just that. I've been thinking about both multimethods and multiple inheritance for a long time, but I couldn't figure out how to make them work. They both finally clicked together: I found a way to use each to solve my problems with the other.
 
 With those stumbling blocks behind me, I was free to rebuild the language into a form I've really wanted it to have since I started. Where Magpie used to be a more typical [single-dispatch](http://c2.com/cgi/wiki?SingleDispatch) single-inheritance OOP language, it's now much closer to [CLOS](http://en.wikipedia.org/wiki/Common_Lisp_Object_System).

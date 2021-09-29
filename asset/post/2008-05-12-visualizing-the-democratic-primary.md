@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Visualizing the Democratic Primary"
 categories: politics visualization
 ---
+
 Like lots and lots of people, I've been following this year's election very
 closely. I'm not into sports, so this is about the closest to it I get. And,
 like an avid sports fan, I'm transfixed by the stats: the numbers that tell

@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "Magpie Wants You!"
 categories: code language magpie oscon
 ---
+
 <div class="update">
 <p><em>Update 2021/09/12:</em> Magpie is very old and long-dead at this point. I learned a lot from it, but I&rsquo;m no longer maintaining it.
 </p>

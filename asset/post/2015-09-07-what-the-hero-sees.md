@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "What the Hero Sees: Field-of-View for Roguelikes"
 categories: code game roguelike
 ---

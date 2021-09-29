@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Long Names Are Long"
 categories: code dart
 ---

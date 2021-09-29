@@ -1,8 +1,8 @@
 ---
-layout: post
 title: "The Language I Wish Go Was"
 categories: code go language
 ---
+
 By all rights, I should love [Go](http://golang.org/). I like low-level languages. I'm
 comfortable in C and have written memory managers for fun. I hate the
 boilerplate of Java and the compile times of C++. I like closures and garbage

@@ -11,7 +11,7 @@ performance as being **ten times worse than C++'s**. Holy shit balls, batman!
 
 Running his C# code, here are the results I got:
 
-## Original C# Code
+## Original C# code
 
 <div class="table">
 <table>

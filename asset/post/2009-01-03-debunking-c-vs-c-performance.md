@@ -3,9 +3,11 @@ title: "Debunking C# vs C++ Performance"
 categories: c-sharp code cpp optimization
 ---
 
-If you were on [reddit](http://www.reddit.com/r/programming/) today, you probably saw [this article](http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/),
-damning C#'s performance as being **ten times worse than C++'s**. Holy shit
-balls, batman!
+If you were on [reddit][] today, you probably saw [this article][], damning C#'s
+performance as being **ten times worse than C++'s**. Holy shit balls, batman!
+
+[reddit]: http://www.reddit.com/r/programming/
+[this article]: http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/
 
 Running his C# code, here are the results I got:
 
@@ -95,8 +97,8 @@ Running his C# code, here are the results I got:
 </table>
 </div>
 
-Pretty slow! So I took a look at the code. The first thing that would catch
-the eye of any C# programmer is this:
+Pretty slow! So I took a look at the code. The first thing that would catch the
+eye of any C# programmer is this:
 
 ```csharp
 unsafe struct Data
@@ -106,13 +108,13 @@ unsafe struct Data
 }
 ```
 
-*That's* the data structure he's sorting. An unsafe struct with a fixed array?
-I had to look up `fixed` to even know what that *means*. Now, I understand
-that he's trying to make an apples/apples comparison and keep the data
-structure as close to the C++ one as possible, but I think that's missing the
-point. If you're going to compare two languages, using their *built-in typical
-sort functions*, shouldn't you use their typical *data structures* too? Here's
-what how a regular C# developer would define `Data`:
+*That's* the data structure he's sorting. An unsafe struct with a fixed array? I
+had to look up `fixed` to even know what that *means*. Now, I understand that
+he's trying to make an apples/apples comparison and keep the data structure as
+close to the C++ one as possible, but I think that's missing the point. If
+you're going to compare two languages, using their *built-in typical sort
+functions*, shouldn't you use their typical *data structures* too? Here's how a
+regular C# developer would define `Data`:
 
 ```csharp
 class Data
@@ -127,7 +129,7 @@ class Data
 No unmanaged code, no structs (which are rarely used in C#). Just a regular
 class with an array. Here's the results:
 
-## Modified to Typical C# Code
+## Modified to typical C# code
 
 <div class="table">
 <table>
@@ -256,7 +258,7 @@ since I didn't run the C++ code, but since my change to the C# made it run
 2.885 times faster than his C# code, it stands to reason that the **C# and C++
 performance are neck and neck, if not a bit faster in C#**.
 
-## Apples to Oranges to Avocados
+## Apples to oranges to avocados
 
 If you're rooting for the C++ side, you're probably thinking, "No fair! The C#
 one didn't have to move the whole array around in memory!" Well, yeah, it
@@ -267,7 +269,7 @@ is simply how the language is used. To me, the fairest comparison is one that
 preserves both the procedures (which he did by using the built-in sorts) *and*
 the data structures (which he did not do) used by each language.
 
-## The Code
+## The code
 
 Aside from the `Data` change above, I cleaned up some of the copy and paste in
 his code. Here's what I used:
@@ -309,10 +311,12 @@ namespace CachePressureCS
     class Timer
     {
         [DllImport("Kernel32.dll")]
-        private static extern bool QueryPerformanceCounter(out long counter);
+        private static extern bool QueryPerformanceCounter(
+            out long counter);
 
         [DllImport("Kernel32.dll")]
-        private static extern bool QueryPerformanceFrequency(out long frequency);
+        private static extern bool QueryPerformanceFrequency(
+            out long frequency);
 
         public Timer()
         {
@@ -326,7 +330,10 @@ namespace CachePressureCS
 
         public double Time
         {
-            get { return 1000.0 * (double)(mEnd - mStart) / (double)mFrequency; }
+            get {
+                return 1000.0 * (double)(mEnd - mStart) /
+                    (double)mFrequency;
+            }
         }
 
         long mFrequency;
@@ -369,22 +376,26 @@ namespace CachePressureCS
 
         static double SortTest(int size)
         {
-            return Test(size, data => Array.Sort(data, new DataComparer()));
+            return Test(size, data =>
+                Array.Sort(data, new DataComparer()));
         }
 
         static double SortTestT(int size)
         {
-            return Test(size, data => Array.Sort<Data>(data, new DataComparerT()));
+            return Test(size, data =>
+                Array.Sort<Data>(data, new DataComparerT()));
         }
 
         static double SortTestTC(int size)
         {
-            return Test(size, data => Array.Sort<Data>(data, CompareData));
+            return Test(size, data =>
+                Array.Sort<Data>(data, CompareData));
         }
 
         static double SortTestC(int size)
         {
-            return Test(size, data => Array.Sort(data, CompareData));
+            return Test(size, data =>
+                Array.Sort(data, CompareData));
         }
 
         static double SortTestIndirect(int size)
@@ -422,8 +433,10 @@ namespace CachePressureCS
 
         static void Main(string[] args)
         {
-            Console.WriteLine("    size      SortTest     SortTestT    SortTestTC  SortIndirect");
-            Console.WriteLine("-------- ------------- ------------- ------------- -------------");
+            Console.WriteLine("    size      SortTest     SortTestT" +
+                "    SortTestTC  SortIndirect");
+            Console.WriteLine("-------- ------------- " +
+                "------------- ------------- -------------");
 
             for (int i = 0; i < 10; i++)
             {

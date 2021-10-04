@@ -10,10 +10,7 @@ final List<InlineSyntax> allSyntaxes = [
   QuoteSyntax(),
 ];
 
-/// Converts `...` with an optional space afterwards to an ellipsis (&hellip;).
-/// Eating a trailing whitespace is deliberate because in ASCII, an ellipsis
-/// typically has a subsequent space `like... this` but that's not how it's
-/// usually rendered when typeset more carefully.
+/// Converts `...` to an ellipsis (&hellip;).
 ///
 /// A Unicode ellipsis character is not the ideal output if the goal is to
 /// visually match *The Chicago Manual of Style*. CMOS recommends full spaces
@@ -21,7 +18,7 @@ final List<InlineSyntax> allSyntaxes = [
 /// most Unicode fonts. A future release of this package may remedy this
 /// grievous oversight.
 class EllipseSyntax extends InlineSyntax {
-  EllipseSyntax() : super(r"\.\.\. ?", startCharacter: $dot);
+  EllipseSyntax() : super(r"\.\.\.", startCharacter: $dot);
 
   @override
   bool onMatch(InlineParser parser, Match match) {

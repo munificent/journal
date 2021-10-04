@@ -30,10 +30,7 @@ The extensions are:
 *   **SmartQuoteSyntax**: Converts plain '"' double quote characters to left
     (&ldquo;) and right (&rdquo;) characters as appropriate.
 
-*   **EllipseSyntax**: Converts `...` with an optional space afterwards to an
-    ellipsis (&hellip;). Eating a trailing whitespace is deliberate because in
-    ASCII, an ellipsis typically has a subsequent space `like... this` but
-    that's not how it's usually rendered when typeset more carefully.
+*   **EllipseSyntax**: Converts `...` to an ellipsis (&hellip;).
 
     A Unicode ellipsis character is not the ideal output if the goal is to
     visually match *The Chicago Manual of Style*. CMOS recommends full spaces

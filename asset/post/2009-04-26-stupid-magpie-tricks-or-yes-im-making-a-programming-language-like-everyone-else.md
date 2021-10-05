@@ -14,7 +14,7 @@ really useful.
 [repo]: https://github.com/munificent/magpie-csharp
 
 <div class="update">
-<p><em>Update 2011/08/16:</em> Magpie lives in <a href="https://github.com/munificent/magpie-csharp">github</a> now.</p>
+<p><em>Update 2011/08/16:</em> Magpie lives in <a href="https://github.com/munificent/magpie-csharp">GitHub</a> now.</p>
 </div>
 
 I hate "general announcement" blog posts, especially on my blog because it's not

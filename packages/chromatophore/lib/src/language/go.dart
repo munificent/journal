@@ -24,10 +24,8 @@ Language makeGoLanguage() {
   // TODO: Recognize user-defined type names in declarations.
 
   // Heuristic: Assume a `*` followed by an identifier is a pointer type.
-  language.capture('(\\*)($identifier)', [
-    Category.operator,
-    Category.typeName
-  ]);
+  language
+      .capture('(\\*)($identifier)', [Category.operator, Category.typeName]);
 
   // Heuristic: Assume a `*` followed by a dotted identifier is a pointer type.
   language.capture('(\\*)($identifier)(\\.)($identifier)', [

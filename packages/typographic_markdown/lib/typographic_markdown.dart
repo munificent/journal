@@ -10,6 +10,14 @@ final List<InlineSyntax> allSyntaxes = [
   QuoteSyntax(),
 ];
 
+final _document = Document(
+    inlineSyntaxes: allSyntaxes, extensionSet: ExtensionSet.gitHubFlavored);
+
+String parseInline(String input) {
+  var ast = _document.parseInline(input);
+  return HtmlRenderer().render(ast);
+}
+
 /// Converts `...` to an ellipsis (&hellip;).
 ///
 /// A Unicode ellipsis character is not the ideal output if the goal is to

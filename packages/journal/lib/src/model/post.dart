@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:betwixt/betwixt.dart';
+import 'package:typographic_markdown/typographic_markdown.dart';
 
 import '../markdown.dart';
 
@@ -9,6 +10,8 @@ class Post implements TemplateData {
   final DateTime date;
 
   final String title;
+
+  late final String titleHtml = parseInline(title);
 
   /// The `<year>/<month>/<date>/<title>.html` URL for the post.
   String get url {
@@ -40,7 +43,7 @@ class Post implements TemplateData {
       case 'tags':
         return tags;
       case 'title':
-        return title;
+        return titleHtml;
       case 'titleUrl':
         return titleUrl;
       case 'url':

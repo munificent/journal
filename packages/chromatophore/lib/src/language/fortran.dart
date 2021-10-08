@@ -11,9 +11,7 @@ Language makeFortranLanguage() {
   language.regExp(r'[{}()[\].,;]', Category.punctuation);
   language.regExp(r'[!*/&%~+=<>|-]', Category.operator);
 
-  language.keywords(
-      Category.keyword,
-      'do end for print');
+  language.keywords(Category.keyword, 'do end for print');
 
   language.regExp(identifier, Category.identifier);
 

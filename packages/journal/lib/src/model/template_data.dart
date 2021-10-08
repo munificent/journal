@@ -10,7 +10,10 @@ import 'tag_set.dart';
 late final _buildDate = DateTime.now();
 
 Object? templateData(BuildContext context, String property,
-    {Key? postKey, Post? post, Tag? tag, String? tagTitle,
+    {Key? postKey,
+    Post? post,
+    Tag? tag,
+    String? tagTitle,
     Map<String, Object?>? data}) {
   switch (property) {
     case 'build_date':

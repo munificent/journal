@@ -53,11 +53,11 @@ class CodePageBuilder extends GroupBuilder<Post> {
     var codeHtml = renderMarkdown(lines);
 
     var postTemplate =
-    context.input<Template>(Key('betwixt/asset/template/all_code.html'));
+        context.input<Template>(Key('betwixt/asset/template/all_code.html'));
 
     // TODO: Pass in error reporter that plumbs through build system.
     var html = await postTemplate.render((String property) =>
-        templateData(context, property, data: {'code': codeHtml }));
+        templateData(context, property, data: {'code': codeHtml}));
 
     context.output(key, html);
   }

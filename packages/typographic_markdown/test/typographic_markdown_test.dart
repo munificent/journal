@@ -8,7 +8,7 @@ void main() {
     testMarkdown('a..b', 'a..b');
     testMarkdown('a...b', 'a&hellip;b');
     testMarkdown('a....b', 'a&hellip;.b');
-    testMarkdown('a... b', 'a&hellip;b');
+    testMarkdown('a... b', 'a&hellip; b');
     testMarkdown('...', '&hellip;');
     testMarkdown('a\n...', 'a\n&hellip;');
     testMarkdown('a...\n', 'a&hellip;');

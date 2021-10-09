@@ -109,7 +109,7 @@ Good: list.Clear();
       obj.AddReference();
 ```
 
-### Name functions that return a boolean (i.e. predicates) like questions.
+### Name functions that return a Boolean (i.e. predicates) like questions.
 
 ```text
 Bad:  list.Empty();

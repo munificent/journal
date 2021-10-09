@@ -74,7 +74,7 @@ overrides method that for the `True` global object to instead invoke the
 "then" block.
 
 (I should note here that this is exactly how Smalltalk works. All condition
-logic is done with message sends to boolean objects. So, uh, I really should
+logic is done with message sends to Boolean objects. So, uh, I really should
 have known this the whole time.) Because I'm not crazy about how Smalltalk
 syntax looks for this, we'll go ahead and wrap it in [a method on Ether](http://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/)
 to make it look a little more normal:

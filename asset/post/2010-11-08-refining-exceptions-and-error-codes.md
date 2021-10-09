@@ -176,7 +176,7 @@ say "use exceptions for the rare ones and return codes for the common ones".
 Instead, we'll need to support both.
 
 Here's my plan. For our example, we'll consider a simple one: parsing. Let's
-say we have a function to parse strings to booleans:
+say we have a function to parse strings to Booleans:
 
 ```magpie
 def parseBool(text String -> Bool)
@@ -208,7 +208,7 @@ def parseBool(text String -> Bool | Nothing)
 end
 ```
 
-Now it will return a boolean value if the parse succeeds, or the special
+Now it will return a Boolean value if the parse succeeds, or the special
 `nothing` value if it fails. Note that this is *not* like just returning
 `null`: the return type of `parseBool` is different now. That means you can't
 do this anymore:
@@ -218,8 +218,8 @@ var b = parseBool("true")
 var notB = b not
 ```
 
-The `not` method is a method on booleans, and `b` isnt' a boolean, it's a
-`Bool | Nothing`. To treat it like a boolean, you first have to check its
+The `not` method is a method on Booleans, and `b` isnt' a Boolean, it's a
+`Bool | Nothing`. To treat it like a Boolean, you first have to check its
 type. The canonical way to do that in Magpie is using `let`:
 
 ```magpie

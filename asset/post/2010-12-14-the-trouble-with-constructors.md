@@ -225,7 +225,7 @@ class Point {
 
 It's bad form, but it's safe. The reason why is because Java has *default
 initialization*. Before you ever assign to a field in Java, it still has a
-well-defined value. Numbers are 0, booleans are false, and reference types are
+well-defined value. Numbers are 0, Booleans are false, and reference types are
 `null`.
 
 Whoops! That last one is a [doozy](http://lambda-the-ultimate.org/node/3186). I *hate* having to check for `null` at

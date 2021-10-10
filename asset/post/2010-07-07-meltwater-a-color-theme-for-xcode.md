@@ -4,11 +4,13 @@ categories: code design
 ---
 
 Because I'm a visual kind of person, one of the first things I do on a new
-machine is get the syntax highlighting in my IDE(s) to something I like. At
-the moment, I have a couple of different Macs that I work on, so I needed an
-easy way to share my [XCode](http://en.wikipedia.org/wiki/Xcode) color theme between them. I figured I may as
-well put it up on [bitbucket](http://www.bitbucket.org). And if I'm going to do that, I figured I
-may as well share it with the world.
+machine is get the syntax highlighting in my IDE(s) to something I like. At the
+moment, I have a couple of different Macs that I work on, so I needed an easy
+way to share my [XCode][] color theme between them. I figured I may as well put
+it up on GitHub. And if I'm going to do that, I figured I may as well share it
+with the world.
+
+[xcode]: http://en.wikipedia.org/wiki/Xcode
 
 The theme is called "Meltwater", and it looks like this:
 
@@ -17,8 +19,10 @@ The theme is called "Meltwater", and it looks like this:
 (I'm also using Raph Levien's beautiful [Inconsolata](http://www.levien.com/type/myfonts/inconsolata.html) font if you're
 wondering.)
 
-You can download the theme from [here](http://bitbucket.org/munificent/support/src/tip/xcode/themes/), or click [here](http://bitbucket.org/munificent/support/raw/fcef2059a901/xcode/themes/Meltwater.xccolortheme) for a direct
-download link. Save it into your XCode preferences directory here:
+You can find the theme [here][]. Save it into your XCode preferences directory
+here:
+
+[here]: https://github.com/munificent/support/tree/master/xcode/themes
 
 ```text
 ~/Library/Application Support/XCode/Color Themes

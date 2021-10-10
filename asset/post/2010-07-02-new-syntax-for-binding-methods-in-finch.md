@@ -3,35 +3,38 @@ title: "New Syntax for Binding Methods in Finch"
 categories: code
 ---
 
-I just checked in a small change to Finch that I think makes the language read
-better. There is now [syntactic sugar](http://en.wikipedia.org/wiki/Syntactic_sugar) for binding a method to an object.
+I just checked in a small change to [Finch][] that I think makes the language read
+better. There is now [syntactic sugar][] for binding a method to an object.
 
-When Finch starts up, it runs a "[main](http://bitbucket.org/munificent/finch/src/tip/base/main.fin)" Finch script that builds a bunch of the standard objects and environment. It used to have a lot of code that looked like this:
+[finch]: http://finch.stuffwithstuff.com/
+[syntactic sugar]: http://en.wikipedia.org/wiki/Syntactic_sugar
+
+When Finch starts up, it runs a "[core][]" Finch script that builds a bunch of the standard objects and environment. It used to have a lot of code that looked like this:
+
+[core]: https://github.com/munificent/finch/blob/master/lib/core.fin
 
 ```finch
 True addMethod: "not" body: { False }
 
-' define a for-style loop
-Ether addMethod: "from:to:step:do:" {
-    |start end step block|
+' Define a for-style loop.
+Ether addMethod: "from:to:step:do:" { |start end step block|
 
-    i <- start
+  i <- start
 
-    while: { i <= end } do: {
-        block call: i
-        i <-- i + step
-    }
+  while: { i <= end } do: {
+    block call: i
+    i <-- i + step
+  }
 }
 
-' concatenate two arrays
-Array prototype addMethod: "++" body: {
-    |right|
-    result <- []
+' Concatenate two arrays.
+Array prototype addMethod: "++" body: { |right|
+  result <- []
 
-    self each: {|e| result add: e }
-    right each: {|e| result add: e }
+  self each: {|e| result add: e }
+  right each: {|e| result add: e }
 
-    result
+  result
 }
 ```
 
@@ -41,24 +44,24 @@ explicit calls to `addMethod:body:` and replaces them with this:
 ```finch
 True :: not { False }
 
-' define a for-style loop
+' Define a for-style loop.
 Ether :: from: start to: end step: step do: block {
-    i <- start
+  i <- start
 
-    while: { i <= end } do: {
-        block call: i
-        i <-- i + step
-    }
+  while: { i <= end } do: {
+    block call: i
+    i <-- i + step
+  }
 }
 
-' concatenate two arrays
+' Concatenate two arrays.
 Array prototype :: ++ right {
-    result <- []
+  result <- []
 
-    self each: {|e| result add: e }
-    right each: {|e| result add: e }
+  self each: {|e| result add: e }
+  right each: {|e| result add: e }
 
-    result
+  result
 }
 ```
 

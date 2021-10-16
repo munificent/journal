@@ -319,6 +319,10 @@ article {
     }
   }
 
+  strong code {
+    font-weight: bold;
+  }
+
   code {
     @include box($code-bg);
     padding: 1px 3px;

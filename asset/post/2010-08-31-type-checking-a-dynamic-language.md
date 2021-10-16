@@ -82,7 +82,7 @@ type-checking anyway, it makes sense to give the user this freedom, even though
 in practice most classes are created at the top-level in a fairly static
 fashion.
 
-## The Magpie Answer
+## The Magpie answer
 
 So now we're back to Magpie. Magpie is primarily a dynamic language, so it
 follows in Python's footsteps. There is no special definition/statement

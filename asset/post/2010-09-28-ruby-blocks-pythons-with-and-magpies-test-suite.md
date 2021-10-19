@@ -1,5 +1,5 @@
 ---
-title: "Ruby Blocks, Python's `with`, and Magpie's Test Suite"
+title: "Ruby Blocks, Python's "with", and Magpie's Test Suite"
 categories: code language magpie python ruby
 ---
 

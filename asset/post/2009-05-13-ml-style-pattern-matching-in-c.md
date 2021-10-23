@@ -1,5 +1,5 @@
 ---
-title: "ML-style Pattern Matching in C#"
+title: "ML-Style Pattern Matching in C#"
 categories: c-sharp code f-sharp language
 ---
 

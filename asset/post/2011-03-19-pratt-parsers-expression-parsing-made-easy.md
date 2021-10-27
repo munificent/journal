@@ -4,88 +4,105 @@ categories: code java js language magpie parsing
 ---
 
 Every now and then, I stumble onto some algorithm or idea that's so clever and
-such a perfect solution to a problem that I feel like I got smarter or gained
-[a new superpower](http://xkcd.com/208/) just by learning it. [Heaps](http://en.wikipedia.org/wiki/Heap_%28data_structure%29) (just about the only
-thing I got out of my truncated CS education) were one thing like this. I
-recently stumbled onto another: [Pratt](http://en.wikipedia.org/wiki/Vaughan_Pratt) parsers.
+such a perfect solution to a problem that I feel like I got smarter or gained [a
+new superpower][xkcd] just by learning it. [Heaps][] were one, just about the
+only thing I got out of my truncated CS education. I recently stumbled onto
+another: [Pratt][] or "top-down operator precedence" parsers.
 
-When you're writing a parser, [recursive descent](http://en.wikipedia.org/wiki/Recursive_descent) is as easy as spreading
-peanut butter. It excels when you can figure out what to do next based on the
-next chunk of code you're parsing. That's usually true at the top level of a
-language where things like classes are and also for statements since most
-start with something that uniquely identifies them (`if`, `for`, `while`,
-etc.).
+[xkcd]: http://xkcd.com/208/
+[heaps]: http://en.wikipedia.org/wiki/Heap_%28data_structure%29
+[pratt]: http://en.wikipedia.org/wiki/Vaughan_Pratt
 
-But it gets tricky when you get to expressions. When it comes to infix
+When you're writing a parser, [recursive descent][] is as easy as spreading
+peanut butter. It excels when you can figure out what to parse based on the next
+bit of code you're looking at. That's usually true at the declaration and
+statement levels of a language's grammar since most syntax there starts with
+keywords -- `class`, `if`, `for`, `while`, etc.
+
+[recursive descent]: http://en.wikipedia.org/wiki/Recursive_descent
+
+Parsing gets trickier when you get to expressions. When it comes to infix
 operators like `+`, postfix ones like `++`, and even mixfix expressions like
-`?:`, it can be hard to tell what kind of expression you're parsing until
-you're halfway through it. You *can* do this with recursive descent, but it's
-a chore. You have to write separate functions for each level of precedence
-(JavaScript has 17 of them, for example), manually handle associativity, and
-smear your grammar across a bunch of parsing code until it's hard to see.
+`?:`, it can be hard to tell what kind of expression you're parsing until you're
+halfway through it. You *can* do this with recursive descent, but it's a chore.
+You have to write separate functions for each level of precedence (JavaScript
+has 17 of them, for example), manually handle associativity, and smear your
+grammar across a bunch of parsing code until it's hard to see.
 
-## PB & J, The Secret Weapon
+## Peanut butter and jelly, the secret weapon
 
-Pratt parsing fixes just that. If recursive descent is peanut butter, Pratt
-parsing is jelly. When you mix the two together, you get a simple, terse,
-readable parser that can handle any grammar you throw at it.
+Pratt parsing solves that. If recursive descent is peanut butter, Pratt parsing
+is the jelly. When you mix the two together, you get a simple, terse, readable
+parser that can handle any grammar you throw at it.
 
 Pratt's technique for handling operator precedence and infix expressions is so
-simple and effective it's a mystery why almost no one knows about it. After
-the seventies, top down operator precedence parsers seem to have fallen off
-the Earth. Douglas Crockford's [JSLint](http://www.jslint.com/) uses one to [parse
-JavaScript](http://javascript.crockford.com/tdop/tdop.html), but his treatment is one of the [very few](http://effbot.org/zone/simple-top-down-parsing.htm) remotely
-modern articles about it.
+simple and effective it's a mystery why almost no one knows about it. After the
+seventies, top down operator precedence parsers seem to have fallen off the
+Earth. Douglas Crockford's [JSLint][] uses one to [parse JavaScript][js], but
+his treatment is one of the [very few][crockford] remotely modern articles about
+it.
+
+[jslint]: http://www.jslint.com/
+[js]: http://crockford.com/javascript/tdop/tdop.html
+[crockford]: http://effbot.org/zone/simple-top-down-parsing.htm
 
 Part of the problem, I think, is that Pratt's terminology is opaque, and
 Crockford's article is itself rather murky. Pratt uses terms like "null
-denominator" and Crockford mixes in extra stuff like tracking lexical scope
-that obscures the core idea.
+denominator" and Crockford mixes in extra stuff like tracking lexical scope that
+obscures the core idea.
 
-This is where I come in. I won't do anything revolutionary. I'll just try to
-get the core concepts behind top down operator precedence parsers and present
-them as clearly as I can. I'll switch out some terms to (I hope) clarify
-things. Hopefully I won't offend anyone's purist sensibilities. I'll be coding
-in Java, the vulgar Latin of programming languages. I figure if you can write
-it in Java, you can write it in anything.
+This is where I come in. I won't do anything revolutionary. I'll just try to get
+the core concepts behind top down operator precedence parsers and present them
+as clearly as I can. I'll switch out some terms to (I hope) clarify things.
+Hopefully I won't offend anyone's purist sensibilities. I'll be coding in Java,
+the vulgar Latin of programming languages. I figure if you can write it in Java,
+you can write it in anything.
 
-## What We'll Be Making
+## What we'll be making
 
 I'm a learn-by-doing person, which means I'm also a teach-by-doing one. So to
 show how Pratt parsers work, we'll build a parser for a [tiny little toy
-language called *Bantam*](https://github.com/munificent/bantam). It just has expressions since that's where
-Pratt parsing is really helpful, but that should be enough to convince of its
-usefulness.
+language called *Bantam*][bantam]. The language only has expressions since
+that's where Pratt parsing is really helpful, but that should be enough to
+convince you of its usefulness.
 
-Even though it's simple, it has a full gamut of operators: prefix (`+`, `-`,
-`~`, `!`), postfix (`!`), infix (`+`, `-`, `*`, `/`, `^`), and even a mixfix
-conditional operator (`?:`). It has multiple precedence levels and both right
-and left associative operators. It also has assignment, function calls and
+[bantam]: https://github.com/munificent/bantam
+
+Even though Bantam is simple, it has a full gamut of operators: prefix (`+`,
+`-`, `~`, `!`), postfix (`!`), infix (`+`, `-`, `*`, `/`, `^`), and even a
+mixfix conditional operator (`?:`). It has multiple precedence levels and both
+right and left associative operators. It also has assignment, function calls and
 parentheses for grouping. If we can parse this, we can parse anything.
 
-## What We'll Start With
+## What we'll start with
 
 All we care about is parsing, so we'll ignore the tokenizing phase. I slapped
-together [a crude lexer](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Lexer.java) that works and we'll just pretend that tokens are
-raining down from heaven or something.
+together [a crude lexer][lexer] that works and we'll just pretend that tokens
+are raining down from heaven or something.
 
-A token is just a chunk of meaningful code with a type and a string associated
-with it. Given `a + b(c)`, the tokens would be:
+[lexer]: https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Lexer.java
+
+A token is the smallest chunk of meaningful code. It has a type and a string
+associated with it. Given `from + offset(time)`, the tokens would be:
 
 ```text
-NAME "a"
+NAME "from"
 PLUS "+"
-NAME "b"
+NAME "offset"
 LEFT_PAREN "("
-NAME "c"
+NAME "time"
 RIGHT_PAREN ")"
 ```
 
-Likewise, we won't be *interpreting* or *compiling* this code. We just want to
-parse it to a nice data structure. For our purposes, that means our parser
-should chew up a bunch of [`Token`](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Token.java) objects and spit out an instance of
-some class that implements [`Expression`](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/Expression.java). To give you an idea, here's a
-simplified version of the class for a [conditional expression](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/ConditionalExpression.java):
+For this exercise, we won't be *interpreting* or *compiling* this code. We just
+want to parse it to a nice data structure. For our purposes, that means our
+parser should chew up a bunch of [Token][token] objects and spit out an instance
+of some class that implements [Expression][expression]. To give you an idea,
+here's a simplified version of the class for a [conditional expression][cond]:
+
+[token]: https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Token.java
+[expression]: https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/Expression.java
+[cond]: https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/ConditionalExpression.java
 
 ```java
 class ConditionalExpression implements Expression {
@@ -105,44 +122,49 @@ class ConditionalExpression implements Expression {
 ```
 
 (You gotta love Java's "please sign it in quadruplicate" level of bureaucracy
-here. Like I said, if you can do this in Java, you can do it in *any*
+here. Like I said, if you can tolerate this in Java, it can work in *any*
 language.)
 
-We'll be building this starting from a simple [`Parser`](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Parser.java) class. This owns
-the token stream, handles lookahead and provides the basic methods you'll need
-to write a top-down recursive descent parser with a single token of lookahead
-(i.e. it's LL(1)). This is enough to get us going. If we need more later, it's
-easy to extend it.
+We'll start from a simple [Parser][parser] class. The parser owns the token
+stream, handles lookahead and provides the basic methods you need to write a
+top-down recursive descent parser with a single token of lookahead (it's
+[LL(1)]). This is enough to get us going. If we need more later, it's easy to
+extend it.
+
+[parser]: https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Parser.java
+[ll(1)]: https://en.wikipedia.org/wiki/LL_parser
 
 OK, let's build ourselves a parser!
 
-## First Things First
+## First things first
 
-Even though a "full" Pratt parser is pretty tiny, I found it to be a bit hard
-to decipher. Sort of like [quicksort](http://en.wikipedia.org/wiki/Quicksort),
-the implementation is a deceptively-simple handful of deeply intertwined code.
-To untangle it, we'll build it up one tiny step at a time.
+Even though a "full" Pratt parser is pretty tiny, I found it to be hard to
+decipher. Sort of like [quicksort][], the implementation is a deceptively simple
+handful of deeply intertwined code. To untangle it, we'll build it up one tiny
+step at a time.
 
-The simplest expressions to parse are prefix operators and single-token ones.
-For those, the current token tells us all that we need to do. Bantam has one
-single-token expression, named variables, and four prefix operators: `+`, `-`,
-`~`, and `!`. The simplest possible code to parse that would be:
+[quicksort]: http://en.wikipedia.org/wiki/Quicksort
+
+The simplest expressions to parse are prefix operators and single-token
+expressions. For those, the current token tells us everything we need to do.
+Bantam has one single-token expression: named variables. It has four prefix
+operators: `+`, `-`, `~`, and `!`. The simplest possible code to parse those is:
 
 ```java
 Expression parseExpression() {
-  if (match(TokenType.NAME))       // return NameExpression...
-  else if (match(TokenType.PLUS))  // return prefix + operator...
-  else if (match(TokenType.MINUS)) // return prefix - operator...
-  else if (match(TokenType.TILDE)) // return prefix ~ operator...
-  else if (match(TokenType.BANG))  // return prefix ! operator...
+  if (match(TokenType.NAME))       // Return NameExpression...
+  else if (match(TokenType.PLUS))  // Return prefix + operator...
+  else if (match(TokenType.MINUS)) // Return prefix - operator...
+  else if (match(TokenType.TILDE)) // Return prefix ~ operator...
+  else if (match(TokenType.BANG))  // Return prefix ! operator...
   else throw new ParseException();
 }
 ```
 
-But that's a bit monolithic. As you can see, we're switching off of a
-`TokenType` to branch to different parsing behavior. Let's encode that
-directly by making a `Map` from `TokenTypes` to chunks of parsing code. We'll
-call these chunks "parselets", and they will implement this:
+But that's a bit monolithic. As you can see, we're switching off of a TokenType
+to branch to different parsing behavior. Let's encode that directly by making a
+Map from TokenTypes to chunks of parsing code. We'll call these chunks
+"parselets", and they will implement this:
 
 ```java
 interface PrefixParselet {
@@ -150,7 +172,7 @@ interface PrefixParselet {
 }
 ```
 
-An implementation of this to parse variable names is just:
+An parselet implementation to parse variable names is simply:
 
 ```java
 class NameParselet implements PrefixParselet {
@@ -160,8 +182,8 @@ class NameParselet implements PrefixParselet {
 }
 ```
 
-We can use a single class for all of the prefix operators since they only
-differ in the actual operator token itself:
+We can use a single class for all of the prefix operators since they only differ
+in the actual operator token itself:
 
 ```java
 class PrefixOperatorParselet implements PrefixParselet {
@@ -173,17 +195,13 @@ class PrefixOperatorParselet implements PrefixParselet {
 ```
 
 You'll note that it calls back into `parseExpression()` to parse the operand
-that appears after the operator (i.e. to parse the `a` in `-a`). This
+that appears after the operator (for example, to parse the `a` in `-a`). This
 recursion takes care of nested operators like `-+~!a`.
 
-Back in `Parser`, the chained `if` statements are replaced with a cleaner map:
+Back in Parser, the chained `if` statements are replaced with a map:
 
 ```java
 class Parser {
-  public void register(TokenType token, PrefixParselet parselet) {
-    mPrefixParselets.put(token, parselet);
-  }
-
   public Expression parseExpression() {
     Token token = consume();
     PrefixParselet prefix = mPrefixParselets.get(token.getType());
@@ -201,11 +219,15 @@ class Parser {
 }
 ```
 
-To define the grammar we have so far (variables and the four prefix
-operators), we'll make this helper method:
+To define the grammar we have so far -- variables and the four prefix
+operators -- we'll add these helper methods:
 
 ```java
-void prefix(TokenType token) {
+public void register(TokenType token, PrefixParselet parselet) {
+  mPrefixParselets.put(token, parselet);
+}
+
+public void prefix(TokenType token) {
   register(token, new PrefixOperatorParselet());
 }
 ```
@@ -224,30 +246,30 @@ This is already an improvement over a recursive descent parser because our
 grammar is now more declarative instead of being spread out over a few
 imperative functions, and we can see the actual grammar all in one place. Even
 better, we can extend the grammar just by registering new parselets. We don't
-have to change the `Parser` class itself.
+have to change the Parser class itself.
 
 If we *only* had prefix expressions, we'd be done now. Alas, we don't.
 
-## Stuck In the Middle
+## Stuck in the middle
 
 What we have so far only works if the *first* token tells us what kind of
 expression we're parsing, but that isn't always the case. With an expression
 like `a + b`, we don't know we have an add expression until after we parse the
-`a` and get to `+`. We'll have to extend the parser to support that.
+`a` and get to `+`. We have to extend the parser to support that.
 
 Fortunately, we're in a good place to do so. Our current `parseExpression()`
-method will parse a complete prefix expression including any nested prefix
-expressions and then stop. So, if we throw this at it:
+method parses a complete prefix expression including any nested prefix
+expressions and then stops. So, if we throw this at it:
 
 ```java
 -a + b
 ```
 
-It will parse `-a` and leave us sitting on `+`. That's exactly the token we
-need to tell what infix expression we're parsing. The only difference between
-an infix expression and a prefix one here is that there's another expression
-*before* the infix operator that it needs to have as an argument. Let's define
-a parselet that supports that:
+It will parse `-a` and leave us sitting on `+`. That's exactly the token we need
+to tell what infix expression we need to parse. Compared to prefix parsing, the
+only change for infix parsing is that there's another expression *before* the
+infix operator that the infix parser receives as an argument. Let's define a
+parselet that supports that:
 
 ```java
 interface InfixParselet {
@@ -255,18 +277,18 @@ interface InfixParselet {
 }
 ```
 
-The only difference is that `left` argument, which is just the expression we
-parsed before we got to the infix token. We'll wire this up to our parser by
-having another table of infix parselets.
+The only difference is that `left` argument, which is the expression we parsed
+before we got to the infix token. We wire this up to our parser by having
+another table of infix parselets.
 
-Having separate tables for prefix and infix expressions is important because
-we'll often have both a prefix and infix parselet for a single `TokenType`. For
-example, the prefix parselet for `(` handles grouping in an expression like `a
-* (b + c)`. Meanwhile, the *infix* parselet handles function calls like
+Having separate tables for prefix and infix expressions is important because we
+sometimes have both a prefix and infix parselet for the same TokenType. For
+example, the prefix parselet for `(` handles grouping in an expression like `a *
+(b + c)`. Meanwhile, the *infix* parselet for `(` handles function calls like
 `a(b)`.
 
-Now, after we parse the prefix expression, we hand it off to any infix one
-that subsumes it:
+Now, after we parse the leading prefix expression, we look for an infix parser
+that matches the next token and wraps the prefix expression as an operand:
 
 ```java
 class Parser {
@@ -300,8 +322,8 @@ class Parser {
 }
 ```
 
-Pretty straightforward. We can implement an infix parselet for binary
-arithmetic operators like `+` using something like:
+Pretty straightforward. We can implement an infix parselet for binary arithmetic
+operators like `+` like so:
 
 ```java
 class BinaryOperatorParselet implements InfixParselet {
@@ -313,13 +335,13 @@ class BinaryOperatorParselet implements InfixParselet {
 }
 ```
 
-This also works for postfix operators. I'm calling them "infix" parselets, but
-they're really "anything but prefix". If there's some expression that comes
-before the token, it will be handled by an infix parselet, and that includes
-postfix expressions and mixfix ones like `?:`.
+Infix parselets also works for postfix operators. I'm calling them "infix", but
+they're really "anything but prefix". If there's some leading subexpression that
+comes before the token, the token will be handled by an infix parselet. That
+includes postfix expressions and mixfix ones like `?:`.
 
-Postfix is as easy as a single-token prefix parselet: it just takes the `left`
-expression and wraps it in another expression:
+Postfix expressions are as simple as single-token prefix parselets: they just
+take the `left` operand and wraps it in another expression:
 
 ```java
 class PostfixOperatorParselet implements InfixParselet {
@@ -330,7 +352,7 @@ class PostfixOperatorParselet implements InfixParselet {
 }
 ```
 
-Mixfix is easy too. It's pretty much a familiar recursive descent parser:
+Mixfix is easy too. It's similar to recursive descent:
 
 ```java
 class ConditionalParselet implements InfixParselet {
@@ -345,25 +367,26 @@ class ConditionalParselet implements InfixParselet {
 }
 ```
 
-Now we can parse prefix expressions, postfix, infix, and even mixfix. With a
-pretty small amount of code, we can parse expressions like `a + (b ? c! :
--d)`. We're done, right? Well… almost.
+Now we can parse prefix, postfix, infix, and even mixfix expressions. With a
+pretty small amount of code, we can parse complex nested expressions like `a +
+(b ? c! : -d)`. We're done, right? Well... almost.
 
-## Excuse You, Aunt Sally
+## Excuse you, aunt Sally
 
-Our parser *can* parse all of this stuff, but it doesn't parse it with the
-right precedence or associativity. If you throw `a - b - c` at it, it will
-parse it like `a - (b - c)`, which isn't right. (Well, actually it is
-*right*&mdash;associative that is. We need it to be *left*.)
+Our parser *can* parse all of this stuff, but it doesn't parse it with the right
+precedence or associativity. If you throw `a - b - c` at the parser, it will
+parse the nested expressions like `a - (b - c)`, which isn't right. (Well,
+actually it is *right* -- associative that is. We need it to be *left*.)
 
-And this *last* step is where Pratt parsers go from pretty nice to totally
-radical. We'll make two simple changes. We'll extend `parseExpression()` to
-take a *precedence*&mdash;a number that tells which expressions can be parsed by
-that call. If it encounters an expression whose precedence is lower than we
-allow, it just stops parsing and returns what it has so far.
+And this *last* step where we fix that is where Pratt parsers go from pretty
+nice to totally radical. We'll make two simple changes. We extend
+`parseExpression()` to take a *precedence* -- a number that tells which
+expressions can be parsed by that call. If `parseExpression()` encounters an
+expression whose precedence is lower than we allow, it stops parsing and returns
+what it has so far.
 
 To make that check we need to know the precedence of any given infix
-expression. We'll do that by letting the parselet specify it:
+expression. We'll let the parselet specify it:
 
 ```java
 public interface InfixParselet {
@@ -372,7 +395,7 @@ public interface InfixParselet {
 }
 ```
 
-Using that, our core expression parser becomes:
+Using that, our core expression parser looks like this:
 
 ```java
 public Expression parseExpression(int precedence) {
@@ -396,7 +419,7 @@ public Expression parseExpression(int precedence) {
 ```
 
 That relies on a tiny helper function to get the precedence of the current
-token or default if there's no infix parselet for it:
+token or a default value if there's no infix parselet for the token:
 
 ```java
 private int getPrecedence() {
@@ -408,7 +431,8 @@ private int getPrecedence() {
 }
 ```
 
-And that's it. To use this, we'll set up a little precedence table:
+And that's it. To wire precedence into Bantam's grammar, we set up a little
+precedence table:
 
 ```java
 public class Precedence {
@@ -423,25 +447,32 @@ public class Precedence {
 }
 ```
 
-To make our operators correctly handle precedence, they'll pass an appropriate
-value back into `parseExpression()` when they call it recursively. For
-example, the [`BinaryOperatorParselet`](https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/parselets/BinaryOperatorParselet.java) instance that handles the `+`
-operator will pass in `Precedence.SUM` when it parses its right-hand operand.
+To make our operators parse their operands with the correct precedence, they
+pass an appropriate value back into `parseExpression()` when they call it
+recursively. For example, the [BinaryOperatorParselet][] instance that handles
+the `+` operator passes in `Precedence.SUM` when it parses its right-hand
+operand.
+
+[binaryoperatorparselet]: https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/parselets/BinaryOperatorParselet.java
 
 Associativity is easy too. If an infix parselet calls `parseExpression()` with
-the *same* precedence that it returns for its own `getPrecedence()` call,
-you'll get left associativity. To be right-associative, it just needs to pass
-in *one less* than that instead.
+the *same* precedence that it returns for its own `getPrecedence()` call, you
+get left associativity. To be right-associative, it just needs to pass in *one
+less* than that instead.
 
-## Go Forth and Multiply
+## Go forth and multiply
 
-I've rewritten the [parser for Magpie](https://github.com/munificent/magpie/blob/master/src/com/stuffwithstuff/magpie/parser/MagpieParser.java) using this and it worked like a
-charm. I'm also working on a JavaScript parser based on this and again it's
-been a great fit.
+I've rewritten the [parser for Magpie][magpie parser] using this and it worked
+like a charm. I'm also working on a JavaScript parser using this technique and
+again it's been a great fit.
 
-I find parsing like this to be simple, terse, extensible (Magpie, for example,
-uses this to [let you extend its own syntax](http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language/) at runtime), and easy to
-read. I'm at the point where I can't imagine writing a parser any other way. I
-never thought I'd say this, but parsers are easy now.
+[magpie parser]: https://github.com/munificent/magpie/blob/master/src/com/stuffwithstuff/magpie/parser/MagpieParser.java
 
-To see for yourself, just take a look at [the complete program](http://github.com/munificent/bantam).
+I Pratt parsers to be simple, terse, extensible (Magpie, for example, uses this
+to [let you extend its own syntax][extend] at runtime), and easy to read. I'm at
+the point where I can't imagine writing a parser any other way. I never thought
+I'd say this, but parsers feel easy now.
+
+[extend]: /2011/02/13/extending-syntax-from-within-a-language/
+
+To see for yourself, just take a look at [the complete program][bantam].

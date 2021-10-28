@@ -10,7 +10,7 @@ side: *all infix operators are now defined and implemented in Magpie*. As far as
 the core language is concerned, it doesn't even *have* operators.
 
 [big goal]: https://magpie-lang.org/the-heart-of-magpie.html
-[magpie]: https://magpie-lang.org/index.html
+[magpie]: https://magpie-lang.org/
 
 Not only can you now define your own infix operators, including specifying
 precedence and associativity, but other large chunks of Magpie syntax are now

@@ -260,7 +260,7 @@ extend interface Document
 end
 ```
 
-If we try to run the program now, we get type-check errors every place we pass a
+If we try to run the program now, we get type check errors every place we pass a
 concrete document class to something that expects the interface: the classes no
 longer implement `Document` since they lack the required `print()` method. To
 patch that up, we implement those:
@@ -280,7 +280,7 @@ We can do this wherever we like, in any file. This lets us keep all of the code
 for printing lumped together and isolated from the rest of the code just like a
 dynamic language.
 
-The magical part is that this is *statically* type-checked too. The program
+The magical part is that this is *statically* type checked too. The program
 won't run until we've made sure that every document type now has all four
 methods.
 

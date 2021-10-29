@@ -1,5 +1,5 @@
 ---
-title: "A Proposal for Null-safety in Dart"
+title: "A Proposal for Null-Safety in Dart"
 categories: code dart language
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Time for a New Blog"
-categories: blog blogofile
+categories: blog
 ---
 
 I finally got tired enough of dealing with WordPress's admin interface and writing posts in HTML to do something about it, and I've redone this here blog. Now it's all [blogofile][]. I can edit in [markdown][] and preview locally. All of my content is backed up just by pushing it to [github][].

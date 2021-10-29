@@ -323,7 +323,7 @@ without ever realizing the `name String, age Int` is something special.
 
 Using patterns for function types also plays really nicely with Magpie's [static
 typing][]. By adding support for evaluating the *type* of a pattern, we can use
-that to type-check a pattern anywhere it appears. For example:
+that to type check a pattern anywhere it appears. For example:
 
 [static typing]: /2010/08/31/type-checking-a-dynamic-language/
 

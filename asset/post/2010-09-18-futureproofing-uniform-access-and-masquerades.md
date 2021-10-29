@@ -197,8 +197,8 @@ to town!
 ## How Magpie approaches this (or how it *will* once it's implemented)
 
 I look at the dynamic solution as throwing out the baby with the bathwater. I
-really like type-checking. It sucks to have to discard it completely just to
-avoid having to do some boring future-proofing. Can we keep the type-checking
+really like type checking. It sucks to have to discard it completely just to
+avoid having to do some boring future-proofing. Can we keep the type checking
 and still solve the above two problems? I think so.
 
 ### Constructors and factories

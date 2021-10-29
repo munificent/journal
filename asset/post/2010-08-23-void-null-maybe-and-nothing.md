@@ -1,5 +1,5 @@
 ---
-title: "void, null, Maybe and nothing"
+title: "\"void\", \"null\", \"Maybe\" and \"nothing\""
 categories: code java language magpie
 ---
 
@@ -129,7 +129,7 @@ end
 ```
 
 We'd let `nothing` silently masquerade as a file. But `nothing` isn't a file,
-it's a `Nothing`. So the above program won't type-check. What we need is a way
+it's a `Nothing`. So the above program won't type check. What we need is a way
 to say that `openFile()` can return a String *or nothing*.
 
 ## Or some other solution

@@ -25,7 +25,7 @@ prototypes, type objects, etc. In dynamically typed languages you'll hear
 "values have type" while others say those languages have no types.
 
 Magpie makes this distinction *very* blurry, but for our purposes what I care
-about is the static definition of a type: it's the stuff that the type-checker
+about is the static definition of a type: it's the stuff that the type checker
 works with. For example, say you create a variable:
 
 ```magpie
@@ -156,7 +156,7 @@ The parser converts that into an [AST][], a little tree like:
 (1) (2)
 ```
 
-The type-checker walks that tree from the bottom to top. Something like this:
+The type checker walks that tree from the bottom to top. Something like this:
 
 1.  Get the type of `1` (`Int`).
 

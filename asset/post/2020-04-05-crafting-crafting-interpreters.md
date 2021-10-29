@@ -1,5 +1,5 @@
 ---
-title: Crafting "Crafting Interpreters"
+title: "Crafting \"Crafting Interpreters\""
 categories: book design language personal
 ---
 

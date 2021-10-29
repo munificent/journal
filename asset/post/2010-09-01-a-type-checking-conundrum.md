@@ -1,5 +1,5 @@
 ---
-title: "A Type-checking Conundrum!"
+title: "A Type Checking Conundrum!"
 categories: code language magpie
 ---
 
@@ -43,7 +43,7 @@ say(123)
 
 This one actually runs without errors too (and prints "123″ since `print`
 converts its argument to a string anyway). That's because the call to `say(123)`
-is at the top level, which is run before type-checking. If we change it to this:
+is at the top level, which is run before type checking. If we change it to this:
 
 ```magpie
 var say(what String ->)
@@ -71,7 +71,7 @@ var returnString(-> String)
 end
 ```
 
-This type-checks fine too. At the point that we're returning `a`, the type
+This type checks fine too. At the point that we're returning `a`, the type
 checker knows its a `String` as expected. But this highlights an important
 feature: variables can change their type. That makes sense given that Magpie is
 at its core a dynamic language. It also plays nicely with some other features

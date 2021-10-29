@@ -1,11 +1,11 @@
 ---
-title: "Type-checking a Dynamic Language"
+title: "Type Checking a Dynamic Language"
 categories: code java language magpie python
 ---
 
 If you're going down the strange path of building a language that's half-
 dynamic and half-static, one obvious question you have to answer is, "When the
-hell do I do the type-checking?" The general answer is, of course, "after the
+hell do I do the type checking?" The general answer is, of course, "after the
 types are defined, but before the program runs." This post talks about what I
 think that means for Magpie.
 
@@ -46,7 +46,7 @@ delineating them in the code helps the user understand when their code will run.
 Type-checking is straightforward too. The compiler parses each source file, and
 "executes" the definitions by building an internal symbol table that has the
 name and definition of each class and method. Once that entire symbol table is
-built, it then type-checks the method bodies (the statements) against what's
+built, it then type checks the method bodies (the statements) against what's
 declared in that symbol table.
 
 After that process has successfully completed, bytecode is generated and the
@@ -78,7 +78,7 @@ would not have been defined *yet*.
 
 In a dynamic language, classes and types are just another thing you can create
 by executing statements, at any point in the life of a program. Since there's no
-type-checking anyway, it makes sense to give the user this freedom, even though
+type checking anyway, it makes sense to give the user this freedom, even though
 in practice most classes are created at the top-level in a fairly static
 fashion.
 
@@ -87,7 +87,7 @@ fashion.
 So now we're back to Magpie. Magpie is primarily a dynamic language, so it
 follows in Python's footsteps. There is no special definition/statement
 dichotomy, and classes are created, extended, and modified imperatively at
-runtime. This is a valid Magpie program and runs without any type-checking:
+runtime. This is a valid Magpie program and runs without any type checking:
 
 ```magpie
 class Hello
@@ -99,7 +99,7 @@ var hello = Hello new
 hello say("Hello!")
 ```
 
-If we *did* want to type-check it, only a simple change is needed (in addition
+If we *did* want to type check it, only a simple change is needed (in addition
 to actually adding some type annotations, of course): create a `main()`
 function:
 
@@ -115,11 +115,11 @@ var main()
 end
 ```
 
-This program will now type-check that the argument you pass to `hello()` matches
+This program will now type check that the argument you pass to `hello()` matches
 the declared type, `String`. It will do this *before* `main()` is called. So the
 general strategy is, if you want to write a dynamic program, put everything at
-the top-level. If you want type-checking, put all of your definitions at the
-top-level, and the move the code you want to run after type-checking into
+the top-level. If you want type checking, put all of your definitions at the
+top-level, and the move the code you want to run after type checking into
 `main()`.
 
 ## The evaluation model
@@ -127,7 +127,7 @@ top-level, and the move the code you want to run after type-checking into
 More precisely, Magpie's evaluation model is:
 
 1.  **Evaluate the scripts dynamically.** The script and any scripts it imports
-    are executed top-down without any type-checking. Magpie is basically a
+    are executed top-down without any type checking. Magpie is basically a
     dynamic language here. (One way to look at Magpie is as a static language
     with a *really* powerful preprocessor.)
 
@@ -138,9 +138,9 @@ More precisely, Magpie's evaluation model is:
 
 2.  **Type-check.** Once the interpreter has finished evaluating the scripts, it
     looks in the global scope to see if you've defined a function called
-    `main()`. Doing so is the trigger that says, "I want to type-check."
+    `main()`. Doing so is the trigger that says, "I want to type check."
 
-    If it finds `main()`, the interpreter then type-checks everything that's
+    If it finds `main()`, the interpreter then type checks everything that's
     defined in global scope: classes, their methods, and functions. (In other
     words, Magpie uses the global scope as the compiler's symbol table.) If
     there are errors, it prints them out here and stops. Otherwise...
@@ -154,8 +154,8 @@ More precisely, Magpie's evaluation model is:
 
 Astute readers at this point have noticed a problem. If we can imperatively
 modify classes at any point, and we can execute any imperative code after
-type-checking, then what's to prevent us from modifying a class after it's been
-type-checked into something that will no longer work? For example:
+type checking, then what's to prevent us from modifying a class after it's been
+type checked into something that will no longer work? For example:
 
 ```magpie
 class Foo
@@ -173,7 +173,7 @@ var main(->)
 end
 ```
 
-When `main()` is type-checked, `Foo` has a method called `bar` so it looks
+When `main()` is type checked, `Foo` has a method called `bar` so it looks
 fine. But by the time we get to executing it, we've actually yanked that
 method out and the call will fail. Uh-oh!
 
@@ -187,19 +187,19 @@ three options I'm considering:
 1.  **Don't worry about it.** This is the current solution. Acknowledge that
     users can break things, but trust that they won't. This is pretty much how
     every dynamic language works, and yet programmers manage to survive.
-    Magpie's philosophy is "better type-checking than a dynamic language", not
-    "perfect bullet-proof type-checking", so this fits.
+    Magpie's philosophy is "better type checking than a dynamic language", not
+    "perfect bulletproof type checking", so this fits.
 
-2.  **Don't allow classes to be modified in ways that can break type-checking.**
+2.  **Don't allow classes to be modified in ways that can break type checking.**
     This is a safer solution that takes a little power from programmers. Magpie
     could allow you to add methods to a class, but not *remove* them once added.
     That would ensure that you can't imperatively break a class's type guarantee
     after it's been checked.
 
-3.  **Freeze classes after type-checking.** This is the strictest solution. Once
-    a class has been type-checked, mark it as frozen. After that, any attempts
+3.  **Freeze classes after type checking.** This is the strictest solution. Once
+    a class has been type checked, mark it as frozen. After that, any attempts
     to modify it at runtime would fail. You could create new unfrozen classes
-    after type-checking, but everything that's gone through the checker gets
+    after type checking, but everything that's gone through the checker gets
     locked down.
 
 I'm leaning towards the first option because it's simplest and most flexible,
@@ -209,5 +209,5 @@ but I'm open to thoughts one way or the other.
 
 So that's what I came up with. The code that's structured like a dynamic
 language runs dynamically. The code that's called from `main()` runs after
-type-checking like a static language. The implementation is still very rough,
+type checking like a static language. The implementation is still very rough,
 but it seems to actually kind of work, strangely enough.

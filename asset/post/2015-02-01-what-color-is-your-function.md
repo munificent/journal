@@ -15,13 +15,13 @@ tools designed for the manicured hands of expert craftspersons such as
 ourselves.)
 
 Of course, as the *author* of said screed, I run a risk. The language I mock
-could be one you like! Without realizing it, I could have let the rabble into
-my blog, pitchforks and torches at the ready, and my fool-hardy pamphlet could
-draw their ire!
+could be one you like! Without realizing it, I could have let the rabble into my
+blog, pitchforks and torches at the ready, and my fool-hardy pamphlet could draw
+their ire!
 
 To protect myself from the heat of those flames, and to avoid offending your
-possibly delicate sensibilities, instead, I'll rant about a language I just
-made up. A strawman whose sole purpose is to be set aflame.
+possibly delicate sensibilities, instead, I'll rant about a language I just made
+up. A strawman whose sole purpose is to be set aflame.
 
 I know, this seems pointless right? Trust me, by the end, we'll see whose face
 (or faces!) have been painted on his straw noggin.
@@ -29,13 +29,13 @@ I know, this seems pointless right? Trust me, by the end, we'll see whose face
 ## A new language
 
 Learning an entire new (crappy) language just for a blog post is a tall order,
-so let's say it's mostly similar to one you and I already know. We'll say it
-has syntax sorta like JS. Curly braces and semicolons. `if`, `while`, etc. The
+so let's say it's mostly similar to one you and I already know. We'll say it has
+syntax sorta like JS. Curly braces and semicolons. `if`, `while`, etc. The
 *lingua franca* of the programming grotto.
 
-I'm picking JS *not* because that's what this post is about. It's just that
-it's the language you, statistical representation of the average reader, are
-most likely to be able grok. Voilà:
+I'm picking JS *not* because that's what this post is about. It's just that it's
+the language you, statistical representation of the average reader, are most
+likely to be able grok. Voilà:
 
 ```javascript
 function thisIsAFunction() {
@@ -44,7 +44,7 @@ function thisIsAFunction() {
 ```
 
 Because our strawman is a *modern* (shitty) language, we also have first-class
-functions. So you can make something like like:
+functions. So you can make something like this:
 
 ```javascript
 // Return a list containing all of the elements in collection
@@ -60,8 +60,8 @@ function filter(collection, predicate) {
 
 This is one of those *higher-order* functions, and, like the name implies, they
 are classy as all get out and super useful. You're probably used to them for
-mucking around with collections, but once you internalize the concept, you
-start using them damn near everywhere.
+mucking around with collections, but once you internalize the concept, you start
+using them damn near everywhere.
 
 Maybe in your testing framework:
 
@@ -93,9 +93,8 @@ feature:
 
 **1. Every function has a color.**
 
-Each function&mdash;anonymous callback or regular named one&mdash;is either red
-or blue. To play nice with my blog's code highlighter can't handle actual color,
-we'll say the syntax is like:
+Each function -- anonymous callback or regular named one -- is either red or
+blue. Instead of a single `function` keyword, there are two:
 
 ```javascript
 blue_function doSomethingAzure() {
@@ -130,7 +129,7 @@ Annoying rule, right? Oh, and one more:
 
 **3. You can only call a red function from within another red function.**
 
-You *can* call a blue function from with a red one. This is kosher:
+You *can* call a blue function from within a red one. This is kosher:
 
 ```javascript
 red_function doSomethingCarnelian() {
@@ -162,18 +161,17 @@ a red function. Maybe it's really verbose, or maybe you can't do it inside
 certain kinds of statements. Maybe you can only call them on line numbers that
 are prime.
 
-What matters is that, if you decide to make a function red, everyone using your
-API will want to spit in your coffee and/or deposit some even less savory
-fluids in it.
+What matters is that if you decide to make a function red, everyone using your
+API will want to spit in your coffee and/or deposit some even less savory fluids
+in it.
 
 The obvious solution then is to *never* use red functions. Just make everything
 blue and you're back to the sane world where all functions have the same color,
 which is equivalent to them all having no color, which is equivalent to our
 language not being entirely stupid.
 
-Alas, the sadistic language designers&mdash;and we all know all programming
-language designers are sadists, don't we?&mdash;jabbed one final thorn in our
-side:
+Alas, the sadistic language designers -- and we all know all programming
+language designers are sadists, don't we? -- jabbed one final thorn in our side:
 
 **5. Some core library functions are red.**
 
@@ -189,9 +187,9 @@ and write normal blue collar first-order functions like God intended, we'd
 spare ourselves all the heartache.
 
 If we only call blue functions, make our function blue. Otherwise, make it red.
-As long as we never make functions that accept functions, we don't have to
-worry about trying to be "polymorphic over function color" (polychromatic?) or
-any nonsense like that.
+As long as we never make functions that accept functions, we don't have to worry
+about trying to be "polymorphic over function color" ("polychromatic"?) or any
+nonsense like that.
 
 But, alas, higher order functions are just one example. This problem is
 pervasive any time we want to break our program down into separate functions
@@ -226,27 +224,31 @@ If you're programming in JavaScript on Node.js, everytime you define a function
 that "returns" a value by invoking a callback, you just made a red function.
 Look back at that list of rules and see how my metaphor stacks up:
 
-1. Synchronous functions return values, async ones do not and instead invoke
-   callbacks.
+1.  Synchronous functions return values, async ones do not and instead invoke
+    callbacks.
 
-2. Synchronous functions give their result as a return value, async functions
-   give it by invoking a callback you pass to it.
+2.  Synchronous functions give their result as a return value, async functions
+    give it by invoking a callback you pass to it.
 
-3. You can't call an async function from a synchronous one because you won't be
-   able to determine the result until the async one completes later.
+3.  You can't call an async function from a synchronous one because you won't be
+    able to determine the result until the async one completes later.
 
-4. Async functions don't compose in expressions because of the callbacks, have
-   different error-handling, and can't be used with `try/catch` or inside a lot
-   of other control flow statements.
+4.  Async functions don't compose in expressions because of the callbacks, have
+    different error-handling, and can't be used with `try/catch` or inside a lot
+    of other control flow statements.
 
-5. Node's whole shtick is that the core libs are all asynchronous. (Though they
-   did dial that back and start adding `___Sync()` versions of a lot of
-   things.)
+5.  Node's whole shtick is that the core libs are all asynchronous. (Though they
+    did dial that back and start adding `___Sync()` versions of a lot of
+    things.)
 
 When people talk about "callback hell" they're talking about how annoying it is
-to have red functions in their language. When they create [4089 libraries for
+to have red functions in their language. When they create [4,089 libraries for
 doing asynchronous programming][async], they're trying to cope at the library
 level with a problem that the language foisted onto them.
+
+<div class="update">
+<p><em>Update 2021/12/03:</em> 1,5118 async libraries as of today.</p>
+</div>
 
 [async]: https://www.npmjs.com/search?q=async
 
@@ -259,19 +261,19 @@ rapper name "futures".
 
 [promises]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-These are sort of a jacked up wrapper around a callback and an error handler.
-If you think of passing a callback and errorback to a function as a *concept*,
-a promise is basically a *reification* of that idea. It's a first-class object
+These are sort of a jacked up wrapper around a callback and an error handler. If
+you think of passing a callback and errorback to a function as a *concept*, a
+promise is basically a *reification* of that idea. It's a first-class object
 that represents an asynchronous operation.
 
 I just jammed a bunch of fancy PL language in that paragraph so it probably
-sounds like a sweet deal, but it's basically snake oil. Promises *do* make
-async code a little easier to write. They compose a bit better, so rule #4
-isn't *quite* so onerous.
+sounds like a sweet deal, but it's basically snake oil. Promises *do* make async
+code a little easier to write. They compose a bit better, so rule #4 isn't
+*quite* so onerous.
 
 But, honestly, it's like the difference between being punched in the gut versus
-punched in the privates. Less painful, yes, but I don't think anyone should
-really get thrilled about the value proposition.
+being punched in the privates. Technically less painful, yes, but I don't think
+anyone should really get thrilled about the value proposition.
 
 You still can't use them with exception handling or other control flow
 statements. You still can't call a function that returns a future from
@@ -373,15 +375,15 @@ underlying asynchronous API. You *cannot* wait for it to complete because it
 won't. You have to return all the way back to your language's event loop and
 give the OS some time to spin before it will be done.
 
-Once it is, you need to resume what you were doing. The usual way a language
-"remembers where it is" is the *callstack*. That tracks all of the functions
-that are currently being invoked and where the instruction pointer is in each
-one.
+Once operation completes, you need to resume what you were doing. The usual way
+a language "remembers where it is" is the *callstack*. That tracks all of the
+functions that are currently being invoked and where the instruction pointer is
+in each one.
 
-But to do async IO, you have to unwind discard the entire C callstack. Kind of
-a Catch-22. You can do super fast IO, you just can't do anything with the
-result! Every language that has async IO in its bowels&mdash;or in the case of
-JS, the browser's event loop&mdash;copes with this in some way.
+But to do async IO, you have to unwind and discard the entire C callstack. Kind
+of a Catch-22. You can do super fast IO, you just can't do anything with the
+result! Every language that has async IO in its core -- or in the case of JS,
+the browser's event loop -- copes with this in some way.
 
 Node with its ever-marching-to-the-right callbacks stuffs all of those
 callframes in closures. When you do:
@@ -404,13 +406,13 @@ trashed, it's cool. That data is still floating around the heap.
 The problem is you have to *manually* reify every damn one of these steps.
 There's actually a name for this transformation: [*continuation-passing
 style*][cps]. It was invented by language hackers in the 70s as an intermediate
-representation to use in the guts of their compilers. It's a really bizarro way
-to represent code that happens to make some compiler optimizations easier to
+representation to use in the internals of their compilers. It's a really bizarro
+way to represent code that happens to make some compiler optimizations easier to
 do.
 
 No one ever for a second thought that a programmer would *write actual code
 like that*. And then Node came along and all of the sudden here we are
-pretending to be compiler back-ends. Where did we go wrong?
+pretending to be compiler backends. Where did we go wrong?
 
 [cps]: http://en.wikipedia.org/wiki/Continuation-passing_style
 
@@ -424,8 +426,8 @@ function itself.
 Async-await *does* help. If you peel back your compiler's skull and see what
 it's doing when it hits an `await` call you'd see it actually doing the
 CPS-transform. That's *why* you need to use `await` in C#: it's a clue to the
-compiler to say, "break the function in half here". Everything after the
-`await` gets hoisted into a new function that it synthesizes on your behalf.
+compiler to say, "break the function in half here". Everything after the `await`
+gets hoisted into a new function that the compiler synthesizes on your behalf.
 
 This is why async-await didn't need any *runtime* support in the .NET
 framework. The compiler compiles it away to a series of chained closures that

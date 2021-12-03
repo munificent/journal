@@ -11,8 +11,9 @@ canvas {
 }
 </style>
 
-This is a record for me. I've been procrastinating this post for eight years. I
-moved four times, got married, had two kids, and ported my roguelike to [a
+This post explains the algorithm I use for field of view in my game. I've been
+meaning to write about it for a *long* time. While I procrastinated, I moved
+four times, got married, had two kids, and ported my roguelike to [a
 language][dart] that didn't exist when I first wrote the code this post is
 about. You can thank Simon Andersson for prodding me to finally write it down.
 
@@ -56,7 +57,7 @@ You use that to tell if things like arrows and fireballs reach their target or
 bounce harmlessly off the dungeon wall.
 
 This is invariably done using [Bresenham's line algorithm][bresenham]. It's one
-of the true classics of graphics programming&mdash;an elegant, simple algorithm
+of the true classics of graphics programming -- an elegant, simple algorithm
 from 1962 that's still useful today. (This kind of living connection to CS's
 past is one of the things I love about hacking on a roguelike. How often do you
 have a good reason to recode a procedure originally devised for a 1950s-era drum
@@ -66,13 +67,13 @@ plotter?)
 
 As you'd imagine for an algorithm designed to run on a machine that took punch
 cards, it's very efficient... for tracing a line between *two points*. But field
-of view is different: we need to scan the entire dungeon&mdash;or at least the
-part that fits on the player's screen&mdash;and calculate the visibility of
-*every* tile.
+of view is different. We need to scan the entire dungeon -- or at least the part
+that fits on the player's screen -- and calculate the visibility of *every*
+tile.
 
 You actually *can* run Bresenham a few thousand times whenever the hero moves on
-a modern machine, but doing that feels, well, like cheating somehow. Can we come
-up with something more efficient?
+a modern machine, but doing that feels like cheating to me. Can we come up with
+something more efficient?
 
 The answer is, of course, "yes". (It would be a short post if it wasn't.) And,
 in fact, a lot of others have already done so. But, one lazy sunny Saturday
@@ -84,7 +85,7 @@ made more sense to me.
 If you have the mind of a programmer, the first thing you do when presented with
 a problem is to break it into multiple (hopefully) smaller problems. Our goal is
 to calculate the entire field of view surrounding the hero, but we can slice
-that 360&deg; problem into 45&deg; pie pieces. One looks like this:
+that 360&deg; problem into 45&deg; pie pieces. One wedge looks like this:
 
 <figure>
   <canvas id="octant">Sorry, you need canvas support for this demo.</canvas>
@@ -121,14 +122,14 @@ enumerate them all, we get:
 ```dart
 Vec transformOctant(int row, int col, int octant) {
   switch (octant) {
-    case 0: return new Vec( col, -row);
-    case 1: return new Vec( row, -col);
-    case 2: return new Vec( row,  col);
-    case 3: return new Vec( col,  row);
-    case 4: return new Vec(-col,  row);
-    case 5: return new Vec(-row,  col);
-    case 6: return new Vec(-row, -col);
-    case 7: return new Vec(-col, -row);
+    case 0: return Vec( col, -row);
+    case 1: return Vec( row, -col);
+    case 2: return Vec( row,  col);
+    case 3: return Vec( col,  row);
+    case 4: return Vec(-col,  row);
+    case 5: return Vec(-row,  col);
+    case 6: return Vec(-row, -col);
+    case 7: return Vec(-col, -row);
   }
 }
 ```
@@ -148,9 +149,9 @@ eight times, once for each octant.
 
 ## A Line of Shadows
 
-Another way to approach a problem is to negate it, and that's what this
+Another way to simplify a problem is solve its negation, and that's what this
 algorithm does. Instead of calculating which tiles are visible, it figures out
-which are hidden, which put it in a family of algorithms that do "shadow
+which are hidden, which puts it in a family of algorithms that do "shadow
 casting". Before I explain it, try it out yourself:
 
 <figure>
@@ -164,8 +165,8 @@ octant, we incrementally update a data structure called the *shadow line*. It's
 the white line you see next to the slider. It tracks which parts of the row are
 in the shade of opaque tiles on previous rows and which aren't.
 
-The line is a series of segments, each representing one obscured region of the
-line. We can define this like so:
+The shadow line is a series of segments, each representing one obscured region
+of the line. We can define it like so:
 
 ```dart
 class ShadowLine {
@@ -189,10 +190,10 @@ stretch out as they get farther away. We don't want to have to recalculate the
 segment positions each time we advance a row and the rays spread out.
 
 Instead, we store their *slopes*. Regardless of what row we're on, they always
-range from 0 (the short edge of the octant) to 1 (the diagonal edge). They are
-distance-independent. This is what the black line in the demo above shows. As
-you click to add and remove wall, you can see new shadows appear, but they don't
-move or grow as you sweep the row up and down.
+range from 0 (the short vertical edge of the octant) to 1 (the diagonal edge).
+Slopes are distance-independent. This is what the black line in the demo above
+shows. As you click to add and remove walls, you can see new shadows appear, but
+the black lines don't move or grow as you sweep the row up and down.
 
 ## Projecting a tile
 
@@ -215,7 +216,7 @@ The math is a kind of fussy, but it's:
 Shadow projectTile(int row, int col) {
   var topLeft = col / (row + 2);
   var bottomRight = (col + 1) / (row + 1);
-  return new Shadow(topLeft, bottomRight);
+  return Shadow(topLeft, bottomRight);
 }
 ```
 
@@ -228,10 +229,9 @@ You can think of the result of this function as the shadow that the tile casts
 tile. In other words, it describes which angles need to be unblocked for this
 tile to be visible.
 
-When we scan a row, we call `projectTile()` on every tile&mdash;transparent or
-opaque&mdash; and compare it to the existing shadow line. If the tile's
-projection is covered by the shadow line, we know it can't be seen. If it isn't,
-it can.
+When we scan a row, we call `projectTile()` on every tile -- transparent or
+opaque -- and compare it to the existing shadow line. If the tile's projection
+is covered by the shadow line, we know it can't be seen. If it isn't, it can.
 
 An interesting edge case is tiles whose projection is *partially* covered by the
 shadow line. Different games take different approaches here. Mine is considered
@@ -303,22 +303,57 @@ result is that the shadow line will have a single `Shadow` object for each
 This does mean adding a new shadow to the line is more complex. There are a
 handful of cases:
 
-1. **The shadow is contained within an existing one.** That means the new shadow
-   doesn't cover any new territory, so we can discard it.
+1.  **The shadow is contained within an existing one.** That means the new
+    shadow doesn't cover any new territory, so we can discard it.
 
-2. **The shadow doesn't overlap any other ones.** In this case, we insert it in
-   sorted order between the segments that come before and after it.
+    ```
+    old:    ..[======]..
+    new:    ....[===]...
+            ------------
+    result: ..[======]..
+    ```
 
-3. **The shadow overlaps another shadow on its starting edge.** We take the
-   previous shadow and grow it to encompass the new shadow's endpoint and
-   discard the new one.
+2.  **The shadow doesn't overlap any other ones.** In this case, we insert it in
+    sorted order between the segments that come before and after it.
 
-4. **The shadow overlaps another shadow on its ending edge.** Do the same thing,
-   but in reverse: grow the following shadow to cover the new one.
+    ```
+    old:    [=].....[==]
+    new:    ....[=].....
+            ------------
+    result: [=].[=].[==]
+    ```
 
-5. **The shadow overlaps shadows on *both* ends.** This is the fun one. We take
-   the previous shadow and extend it to cover the *next* shadow's endpoint. Then
-   we discard both the new shadow and that next one.
+3.  **The shadow overlaps another shadow on its starting edge.** We take the
+    previous shadow and grow it to encompass the new shadow's endpoint and
+    discard the new one.
+
+    ```
+    old:    [===]....[=]
+    new:    ...[===]....
+            ------------
+    result: [======].[=]
+    ```
+
+4.  **The shadow overlaps another shadow on its ending edge.** Do the same
+    thing, but in reverse: grow the following shadow to cover the new one.
+
+    ```
+    old:    [=]....[===]
+    new:    ....[===]...
+            ------------
+    result: [=].[======]
+    ```
+
+5.  **The shadow overlaps shadows on *both* ends.** This is the fun one. We take
+    the previous shadow and extend it to cover the *next* shadow's endpoint.
+    Then we discard both the new shadow and that next one.
+
+    ```
+    old:    ..[=]..[==].
+    new:    ...[====]...
+            ------------
+    result: ..[=======].
+    ```
 
 The first case doesn't change the list of shadows at all. In the second case,
 the list of shadows gets longer. In the next two, adding a new shadow doesn't
@@ -393,9 +428,9 @@ Earlier, when we detect if this tile is visible, that also tells us if it's
 shadow is contained. If it is, we don't bother calling `add()`.
 
 There's another simple optimization we can do. If we get to the point where the
-shadow line is a single segment from 0 to 1&mdash;in other words, the whole line
-is in shadow&mdash;then we can skip all of the projection calculation, updating,
-etc. Every tile will be hidden after that. Here's how we detect that:
+shadow line is a single segment from 0 to 1 -- in other words, the whole line is
+in shadow -- then we can skip all of the projection calculation, updating, etc.
+Every tile will be hidden after that. Here's how we detect that:
 
 ```dart
 class ShadowLine {
@@ -408,6 +443,10 @@ class ShadowLine {
   ...
 }
 ```
+
+In practice, this case happens often. Dungeons tend to be small rooms and twisty
+passages, so at some distance from the hero you typically reach a point where
+all tiles are occluded.
 
 ## Putting it all together
 
@@ -433,7 +472,7 @@ void refreshVisibility(Vec hero) {
 }
 
 void refreshOctant(Vec hero, int octant) {
-  var line = new ShadowLine();
+  var line = ShadowLine();
   var fullShadow = false;
 
   for (var row = 1;; row++) {
@@ -469,21 +508,21 @@ void refreshOctant(Vec hero, int octant) {
 
 And there we have it. It runs very fast in wide open areas since there will be
 few shadow segments and the list is short. Likewise, it runs fast in closed
-areas since the shadow list will also be short&mdash;it will contain a small
-number of long segments. It performs the worst in "spotty" areas with lots of
-small trees or pillars, but even there, the performance is pretty solid.
+areas since the shadow list will also be short -- it will contain a small number
+of long segments. It performs the worst in "spotty" areas with lots of small
+trees or pillars, but even there, the performance is pretty solid.
 
 I'd love to say I implemented a bunch of other algorithms and this one came out
-the winner, but honestly I was too lazy to that. I will say that this has never
-showed up as a hot spot when I've profiled the game. That's good enough for me,
-and I hope this will be helpful for you too.
+the winner, but honestly I was too lazy to do that. I will say that this has
+never shown up as a performance bottleneck when I've profiled the game. That's
+good enough for me, and I hope this will be helpful for you too.
 
 If you want to see all of the code for these demos, it's [here][demo]. Or, in
 the context of [my game][hauberk] [here][game].
 
 [demo]: https://github.com/munificent/fov
 [hauberk]: https://github.com/munificent/hauberk
-[game]: https://github.com/munificent/hauberk/blob/master/lib/src/engine/fov.dart
+[game]: https://github.com/munificent/hauberk/blob/afb52670ab0650aff97cb112d752a6b49f8593a4/lib/src/engine/stage/fov.dart
 
 <script type="application/dart" src="/code/2015-09-07-what-the-hero-sees/main.dart"></script>
 <script src="/code/2015-09-07-what-the-hero-sees/packages/browser/dart.js"></script>

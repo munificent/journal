@@ -543,17 +543,17 @@ I started the book, so I felt like I had a better handle on what they wanted
 than most editors would. Having an inbox with hundreds of emails from people is
 pretty helpful when you're trying to figure out what they want.
 
-All of the manual labor side of things&mdash;editing and design&mdash;are some
-of my favorite parts. Before I was a programmer, I was a graphic designer, and
-I've dreamed of typesetting and laying out a book. Bug reports from readers
-helped do some of the work of copyediting. (Special shout-out to mystery
-superhero [colms][] who basically line-edited the entire book free of charge.)
-Finding a freelance proofreader didn't seem too hard.
+All of the manual labor side of things -- editing and design --are some of my
+favorite parts. Before I was a programmer, I was a graphic designer, and I've
+dreamed of typesetting and laying out a book. Bug reports from readers helped do
+some of the work of copyediting. (Special shout-out to mystery superhero
+[colms][] who basically line-edited the entire book free of charge.) Finding a
+freelance proofreader didn't seem too hard.
 
 [colms]: https://github.com/colms
 
 Of course, distribution is a mostly solved problem now. Especially with
-technical books, people buy them from Amazon or get ebooks. I can do those just
+technical books, people buy them from Amazon or get e-books. I can do those just
 as well as any New York publisher. You don't need deals or shelf space any more
 (though it certainly doesn't hurt).
 

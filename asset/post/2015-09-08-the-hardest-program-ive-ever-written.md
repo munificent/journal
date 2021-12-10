@@ -53,15 +53,15 @@ formatter][dartfmt].
 
 ## Introducing dartfmt
 
-I work on the [Dart][] programming language. Part of my job is helping make more
-Dart code readable, idiomatic, and consistent, which is why I ended up writing
+I work on the [Dart][] programming language. Part of my job is helping make Dart
+code more readable, idiomatic, and consistent, which is why I ended up writing
 our [style guide][]. That was a good first step, but any style guide written in
 English is either so brief that it's ambiguous, or so long that no one reads it.
 
 [dart]: https://www.dartlang.org/
 [style guide]: https://www.dartlang.org/articles/style-guide/
 
-Go's ["gofmt"][gofmt] tool showed a better solution: automatically format
+Go's [gofmt][gofmt] tool showed a better solution: automatically format
 everything. Code is easier to read and contribute to because it's already in the
 style you're used to. Even if the output of the formatter isn't great, it ends
 those interminable soul-crushing arguments on code reviews about formatting.
@@ -101,7 +101,7 @@ hard][].
 Check out this guy:
 
 ```dart
-experimentalBootstrap = document.querySelectorAll('link').any((link) =>
+experimental = document.querySelectorAll('link').any((link) =>
     link.attributes['rel'] == 'import' &&
         link.attributes['href'] == POLYMER_EXPERIMENTAL_HTML);
 ```
@@ -116,16 +116,20 @@ Is it better to split before the `.any()`? Why or why not?
 
 <p><strong>What is up with the skulls?</strong></p>
 
-<p>I had two goals with this article: to explain how dartfmt works, and to show a realistic picture of how a real programmer solves a difficult problem with all of the messiness that entails. Alas, the first is more than long enough to try your patience, so I shunted all of the dead ends and failed attempts to footnotes. Click the skulls to laugh at my misfortune.</p>
+<p>I had two goals with this article: to explain how dartfmt works, and to show
+a realistic picture of how a real programmer solves a difficult problem with all
+of the messiness that entails. Alas, the first is more than long enough to try
+your patience, so I shunted all of the dead ends and failed attempts to
+footnotes. Click the skulls to laugh at my misfortune.</p>
 
 </div>
 
 In Dart, we made things harder on ourselves. We have anonymous functions, lots
-of [higher-order functions][iterable], and&mdash;until we added [`async` and
-`await`][async]&mdash;used [futures][] for concurrency. That means lots of
+of [higher-order functions][iterable], and -- until we added [`async` and
+`await`][async] -- used [futures][] for concurrency. That means lots of
 callbacks and lots of long method chains. Some Dart users really dig a
-functional style and appear to be playing a game where whoever crams the most
-work before a single semicolon wins.
+functional style and appear to be playing a game where whoever writes the most
+code with the fewest semicolons wins.
 
 [iterable]: https://api.dartlang.org/133511/dart-core/Iterable-class.html
 [async]: https://www.dartlang.org/articles/await-async/
@@ -135,9 +139,10 @@ Here's real code from an amateur player:
 
 ```dart
 _bindAssignablePropsOn.forEach((String eventName) => node
-    .addEventListener(eventName, (_) => zone.run(() => bindAssignableProps
-        .forEach((propAndExp) => propAndExp[1].assign(
-            scope.context, jsNode[propAndExp[0]])))));
+    .addEventListener(eventName, (_) => zone.run(
+        () => bindAssignableProps.forEach(
+            (propAndExp) => propAndExp[1].assign(
+                scope.context, jsNode[propAndExp[0]])))));
 ```
 
 Yeah, that's four nested functions. 1,048,576 ways to split that one. Here's one
@@ -160,7 +165,8 @@ return doughnutFryer
           butterbutterer.start()
         ])
             .catchError(_handleBakingFailures)
-            .timeout(scriptLoadingTimeout, onTimeout: _handleBakingFailures)
+            .timeout(scriptLoadingTimeout,
+                onTimeout: _handleBakingFailures)
             .catchError(cannotGetConveyorBeltRunning))
     .catchError(cannotGetConveyorBeltRunning)
     .then((_) {
@@ -213,7 +219,7 @@ characters that we know will not contain any line breaks. Given this code:
 format /* comment */ this;
 ```
 
-We break it into these chunks: `format` `/* comment */` `this;`.
+We break it into these chunks: `format`, `/* comment */`, and `this;`.
 
 Chunks are similar to a [token][] in a conventional compiler, but they tend to
 be, well, *chunkier*. Often, the text for several tokens ends up in the same
@@ -253,9 +259,8 @@ expressions.
 The end of a chunk marks the point where a split may occur in the final output,
 and the chunk has some data describing it <a id="8" href="#8-note"
 class="skull">8</a>. It keeps track of whether a blank line should be added
-between the chunks (like
-between two class definitions), how much the next line should be indented, and
-the expression nesting depth at that point in the code.
+between the chunks (like between two class definitions), how much the next line
+should be indented, and the expression nesting depth at that point in the code.
 
 The most important bit of data about the split is the *rule* that controls it <a
 id="9" href="#9-note" class="skull">9</a>.
@@ -274,14 +279,14 @@ based on the state that the rule is in, which it calls its *value*. You can
 think of a rule like a dial and the value is what you've turned it to. Given a
 value, the rule will tell you which of its chunks get split.
 
-The simplest rule is a ["hard split" rule][hard]. It says that its chunk
-*always* splits, so it only has one value: `0`. This is useful for things like
-line comments where you always need to split after it, even in the middle of an
+The simplest rule is a [hard split rule][hard]. It says that its chunk *always*
+splits, so it only has one value: `0`. This is useful for things like line
+comments where you always need to split after it, even in the middle of an
 expression <a id="10" href="#10-note" class="skull">10</a>.
 
 [hard]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart#L85
 
-Then there is a ["simple" split rule][simple]. It allows two values: `0` means
+Then there is a [simple split rule][simple]. It allows two values: `0` means
 none of its chunks split and `1` means they all do. Since most splits are
 independent of the others, this gets used for most of the splits in the program.
 
@@ -310,11 +315,11 @@ function(first, second, third)
 function(
     first, second, third)
 
-// 2: Split before only the last argument.
+// 2: Split only before the last argument.
 function(first, second,
     third)
 
-// 3: Split before only the middle argument.
+// 3: Split only before the middle argument.
 function(first,
     second, third)
 
@@ -326,7 +331,7 @@ function(
 ```
 
 Having a single rule for this instead of individual rules for each argument lets
-us prohibit things like:
+us prohibit undesired outputs like:
 
 ```dart
 function(
@@ -337,9 +342,9 @@ function(
 ### Constraints
 
 Grouping a range of splits under a single rule helps us prevent split
-configurations we want to avoid like this, but it's not enough. There are more
-complex constraints we want to enforce like: "if a split occurs inside a list
-element, the list should split too". That avoids output like this:
+configurations we want to avoid like the previous example, but it's not enough.
+There are more complex constraints we want to enforce like: "if a split occurs
+inside a list element, the list should split too". That avoids output like this:
 
 ```dart
 [first, second +
@@ -349,17 +354,15 @@ element, the list should split too". That avoids output like this:
 Here, the list and the `+` expression have their own rules, but those rules need
 to interact. If the `+` takes value `1`, the list rule needs to as well. To
 support this, rules can *constrain* each other. Any rule can limit the values
-another rule is allowed to take based on its own value. Typically, this is used
-to make a rule inside a nested expression force the rules surrounding itself to
-split when it does <a id="11" href="#11-note" class="skull">11</a>.
+another rule is allowed to take based on its own value. Typically, constraints
+are used to make a subexpression rule force the surrounding rules to split
+when the subexpression splits <a id="11" href="#11-note" class="skull">11</a>.
 
 Finally, each rule has a *cost*. This is a numeric penalty that applies when any
 of that rule's chunks are split. This helps us determine which sets of splits
-are better or worse than others <a id="12" href="#12-note"
-class="skull">12</a>.
-
+are better or worse than others <a id="12" href="#12-note" class="skull">12</a>.
 Rule costs are only part of how overall fitness is calculated. Most of the cost
-calculation comes from *spans*.
+calculation comes from spans.
 
 ### Spans
 
@@ -378,7 +381,7 @@ function(first(a, b), second(c, d))
 
 There will be spans around `a, b` and `c, d` to try to keep those argument lists
 from splitting, but also another span around `first(a, b), second(c, d)` to keep
-the outer argument list from splitting.
+the outer argument list from splitting:
 
 If a split occurs between `a,` and `b`, the `a, b` span splits, but so does the
 `first(a, b), second(c, d)` one. However, if a split occurs after `first(a, b),`
@@ -393,7 +396,7 @@ straightforward. The formatter uses the wonderful [analyzer][] package to parse
 your code to an [AST][]. This gives us a tree structure that represents every
 single byte of your program. Unlike many ASTs, it even includes comments.
 
-[analyzer]: https://pub.dartlang.org/packages/analyzer
+[analyzer]: https://pub.dev/packages/analyzer
 
 Once we have that, the formatter does a [top-down traversal of the
 tree][visitor]. As it walks, it [writes out chunks, rules, and spans][writer]
@@ -432,11 +435,9 @@ chunks and a bunch of spans wrapped around pieces of it.
 ## Formatting chunks
 
 We've got ourselves a big tree of chunks owned by a slew of rules. Earlier, I
-said a rule is like a knob. Now we get to dial them in.
-
-Doing this naïvely is infeasible. Even a small source file contains hundreds of
-individual rules and the set of possible solutions is exponential in the number
-of rules.
+said rule values are like knobs. Now we get to dial those knobs in. Doing this
+naïvely is infeasible. Even a small source file contains hundreds of individual
+rules and the set of possible solutions is exponential in the number of rules.
 
 The first thing we do is [divide the chunk list][divide] into regions we *know*
 can't interfere with each other. These are roughly "lines" of code. So with:
@@ -455,7 +456,7 @@ we hit a hard split that isn't nested inside an expression.
 Each of these shorter chunk lists is fed to the [line splitter][]. Its job is to
 pick the best set of values for all the rules used by the chunks in the line. In
 most cases, this is trivial: if the whole line fits on the page, every rule gets
-set to zero&mdash;no splits&mdash;and we're done.
+set to zero -- no splits -- and we're done.
 
 [line splitter]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart
 
@@ -472,10 +473,10 @@ how do we do it?
 
 ## How line splitting works
 
-I'm a college dropout so my knowledge of algorithms was fairly, um, rudimentary.
-So before I interviewed at Google, I spent two days in a hotel room cramming as
-many of them&mdash;mostly graph traversal&mdash;in my head as I could. At the
-time, I thought graphs would never come up in the interviews...
+Since I dropped out of college, my knowledge of algorithms was fairly, um,
+rudimentary. So before I interviewed at Google, I spent two days in a hotel room
+cramming as many of them -- mostly graph traversal -- in my head as I could. At
+the time, I thought graphs would never come up in the interviews...
 
 Then I had multiple interview questions that reduced down to doing the right
 kind of traversal over a graph. At the time, I thought this stuff would never be
@@ -487,28 +488,29 @@ wrote a [package manager][pub] where dependencies are a transitive closure and
 version constraint solving is graph based. My [hobby roguelike][hauberk] uses
 graphs for pathfinding. Graphs out the wazoo. I can do BFS in my sleep now.
 
-[pub]: https://pub.dartlang.org/
+[pub]: https://pub.dev/
 [hauberk]: https://github.com/munificent/hauberk
 
 Naturally, after several other failed approaches, I found that line splitting
 can be handled like a graph search problem <a id="13" href="#13-note"
-class="skull">13</a>. Each node in the graph represents a
-[*solution*][solution]&mdash;a set of values for each rule. Solutions can be
-*partial*: some rules may be left with their values unbound.
+class="skull">13</a>. Each node in the graph represents a [solution][] -- a set
+of values for each rule. Solutions can be *partial*: some rules may be left with
+their values unbound.
 
 [solution]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart
 
 From a given partial solution (including the initial "no rules bound" one),
-there are edge to new partial solutions. Each binds one additional rule to a
-value. By starting from an empty solution and walking this graph, we eventually
-reach complete solutions where all of the rules have been bound to values.
+there are edges to new partial solutions. Each edges binds one additional rule
+to a value. By starting from an empty solution and walking this graph, we
+eventually reach complete solutions where all of the rules have been bound to
+values.
 
 Graph search is great if you know where your destination is and you're trying to
 find the best path. But we don't actually know that. We don't know what the best
 complete solution *is*. (If we did, we've be done already!)
 
 Given this, no textbook graph search algorithm is sufficient. We need to apply
-some domain knowledge&mdash;we need to take advantage of rules and conditions
+some domain knowledge -- we need to take advantage of rules and conditions
 implicit in the *specific* problem we're solving.
 
 After a dozen dead ends, I found three (sort of four) that are enough to get it
@@ -521,13 +523,13 @@ We are trying to minimize two soft constraints at the same time:
 1. We want to minimize the number of characters that overflow the line length
    limit. We can't make this a hard constraint that there is *no* overflow
    because it's possible for a long identifier or string literal to overflow in
-   *every* solution. In that case, we still need to find the one that's closest
-   to fitting.
+   *every* solution. In that case, we still need to find the result that's
+   closest to fitting.
 
-2. We want to find the lowest cost&mdash;the fewest split rules and broken
+2. We want to find the lowest cost -- the fewest split rules and broken
    spans.
 
-The first constraint dominates the second: we'll prefer a solution with any cost
+The first constraint dominates the second -- we prefer a solution with any cost
 if it fits one more character in. In practice, there is almost always a solution
 that does fit, so it usually comes down to picking the lowest cost solution <a
 id="14" href="#14-note" class="skull">14</a>.
@@ -538,10 +540,10 @@ increases the cost*.
 
 If we treat any unbound rule as being implicitly unsplit <a id="15"
 href="#15-note" class="skull">15</a>, that means the starting solution with
-everything unbound always has the lowest cost (zero). We can then explore
+every rule unbound always has the lowest cost (zero). We can then explore
 outward from there in order of increasing cost by adding one rule at a time.
 
-This is a basic [best-first search][bfs]: we keep a [running queue][] of all of
+This is a basic [best-first search][bfs]. We keep a [running queue][] of all of
 the partial solutions we've haven't explored yet, sorted from lowest cost to
 highest. Each iteration, we pop a solution off.
 
@@ -551,8 +553,8 @@ highest. Each iteration, we pop a solution off.
 If the solution completely fits in the page width, then we know we've won the
 overflow constraint. Since we're exploring in order of increasing cost, we also
 know it's the lowest cost. So, ta-da!, [we found the winner and can stop
-exploring][bail]. Otherwise, if it has any unbound rules, we enqueue new
-solutions, each of which binds one of those to a value.
+exploring][bail]. Otherwise, if the current best solution has any unbound rules,
+we enqueue new solutions, each of which binds one of those to a value.
 
 [bail]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart#L171
 
@@ -617,7 +619,7 @@ new Compiler(
 ```
 
 Each of those named arguments can be split in a few different ways. And, since
-those are less nested&mdash;which means fewer split spans&mdash;than that nasty
+those are less nested -- which means fewer split spans -- than that nasty
 `liveAnalysis:` line, *it will try every combination of all of them* before it
 finally gets down to the business of splitting that `check()` call.
 
@@ -643,11 +645,11 @@ cases. Given two partial solutions, if one has a lower cost than the other and:
 
 * None of their bound rules place constraints on an unbound rule.
 
-If all of those are true, then the one with a lower cost will always lead to
-solutions that also have a lower cost. Its entire branch wins. We can [discard
-the other solution][overlap] and everything that it leads to. Once I got *this*
-working, the formatter could line split damn near anything in record time <a
-id="17" href="#17-note" class="skull">17</a>.
+Then the solution with a lower cost will always lead to solutions that also have
+lower costs. Its entire branch wins. We can [discard the other
+solution][overlap] and everything that it leads to. Once I got *this* working,
+the formatter could line split damn near anything in record time <a id="17"
+href="#17-note" class="skull">17</a>.
 
 [overlap]: https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state_queue.dart#L124
 
@@ -774,10 +776,10 @@ text, line split information, and whitespace information if it didn't split.
 That simplified a lot.
 
 <a id="7-note" href="#7" class="skull-note">7</a> When I added support for
-better indentation of nested functions, that broke the code that split source
-into separately splittable regions. For a while, a single top-level statement
-would be split as a single unit, even if it contained nested functions with
-hundreds of lines of code. It was&hellip; not fast.
+better indentation of nested functions, I broke the code that handled dividing
+the source code into separate line-splittable regions. For a while, a single
+top-level statement would be split as a single unit, even if it contained nested
+functions with hundreds of lines of code. It was... not fast.
 
 <a id="8-note" href="#8" class="skull-note">8</a> Ideally, the split information
 in a chunk would describe the split *before* the chunk's text. This would avoid

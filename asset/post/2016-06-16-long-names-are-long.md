@@ -4,18 +4,19 @@ categories: code dart
 ---
 
 One smart thing Google does is rigorous code reviews. Every change, before you
-can land it, gets reviewed in at least two way. First, someone on the team does
+can land it, gets reviewed in at least two ways. First, someone on the team does
 a normal review to make sure the code does what it's supposed to.
 
 But, then, there's a second layer of review called *readability*. It makes sure
 the code is, well, readable: Is it easy to understand and maintain? Does it
 follow the style and idioms of the language? Is it well-documented?
 
-[Dart][] usage inside Google is cranking up, so I've been doing a long ton of
-these kind of code reviews. As a language designer, it's fascinating. I get a
-first-hand view into how people use Dart, which is really useful for evolving
-it. I have a clearer picture of which mistakes are common and which features are
-heavily used. I feel like an ethnographer journaling the lives of natives.
+[Dart][] usage inside Google is cranking up, so I've been doing a ton of these
+kind of code reviews. As a language designer, it's fascinating. I get a
+firsthand view into how people use Dart, which is really useful for evolving the
+language. I have a clearer picture of which mistakes are common and which
+features are heavily used. I feel like an ethnographer journaling the lives of
+natives.
 
 [dart]: https://www.dartlang.org/
 
@@ -175,21 +176,33 @@ class AnnualHolidaySale {
 }
 ```
 
-In practice, this means that the more deeply nested a name is, the more surrounding context it has. That in turn means it usually has a shorter name. The effect is that identifiers with shorter scopes have shorter names.
+In practice, this means that the more deeply nested a name is, the more
+surrounding context it has. That in turn means it usually has a shorter name.
+The effect is that identifiers with shorter scopes have shorter names.
 
 ### 4. Omit words that don't mean much of anything
 
-I used to see this a lot in the game industry. Some people succumb to the temptation to inflate their identifiers by adding Serious Business sounding words. I guess it makes their code feel more important and, by extension, makes *them* feel more important.
+I used to see this a lot in the game industry. Some people succumb to the
+temptation to inflate their identifiers by adding Serious Business sounding
+words. I guess it makes their code feel more important and, by extension, makes
+*them* feel more important.
 
-In many cases, the words carry no meaningful information. They're just fluff or jargon. Usual suspects include: `data`, `state`, `amount`, `value`, `manager`, `engine`, `object`, `entity`, and `instance`.
+In many cases, the words carry no meaningful information. They're just fluff or
+jargon. Usual suspects include: `data`, `state`, `amount`, `value`, `manager`,
+`engine`, `object`, `entity`, and `instance`.
 
-A good name paints a picture in the mind of the reader. Calling something a "manager" doesn't convey any image to the reader about what the thing does. Does it do performance evaluations? Give raises?
+A good name paints a picture in the mind of the reader. Calling something a
+"manager" doesn't convey any image to the reader about what the thing does. Does
+it do performance evaluations? Lean over your cubicle and ask for TPS reports?
 
-Ask yourself "Would this identifier mean the same thing if I removed the word?" If so, the word doesn't carry its weight: vote if off the island.
+Ask yourself "Would this identifier mean the same thing if I removed the word?"
+If so, the word doesn't carry its weight. Vote if off the island.
 
 ## Applying the Guidelines... to Waffles
 
-To give you a feel for how these rules work in practice, here's an example that breaks all of these rules. This contrived example is heart-breakingly close to real code I've seen in reviews:
+To give you a feel for how these rules work in practice, here's an example that
+breaks all of these rules. This contrived example is tragically close to real
+code I've seen in reviews:
 
 ```dart
 class DeliciousBelgianWaffleObject {
@@ -198,7 +211,8 @@ class DeliciousBelgianWaffleObject {
 }
 ```
 
-We know from the type that it takes a list of strawberries (#1), so let's cut that out:
+We know from the type that it takes a list of strawberries (#1), so let's cut
+that out:
 
 ```dart
 class DeliciousBelgianWaffleObject {
@@ -207,7 +221,8 @@ class DeliciousBelgianWaffleObject {
 }
 ```
 
-Unless our program has foul-tasting Belgian waffles, or waffles of other nationalities, we can drop those adjectives (#2):
+Unless our program has foul-tasting Belgian waffles, or waffles of other
+nationalities, we can drop those adjectives (#2):
 
 ```dart
 class WaffleObject {
@@ -215,7 +230,8 @@ class WaffleObject {
 }
 ```
 
-The method is inside a ```WaffleObject```, so we know what it's going to garnish (#3):
+The method is inside a ```WaffleObject```, so we know what it's going to garnish
+(#3):
 
 ```dart
 class WaffleObject {
@@ -223,7 +239,8 @@ class WaffleObject {
 }
 ```
 
-Obviously it's an object. Everything is an object. That's kind of what "object-oriented" means (#4):
+Obviously it's an object. Everything is an object. That's kind of what
+"object-oriented" means (#4):
 
 ```dart
 class Waffle {
@@ -233,6 +250,9 @@ class Waffle {
 
 There, much better.
 
-I think these are pretty simple guidelines. You may think it's pointless to worry about this stuff, but I believe that [naming things][] is one of the most fundamental tasks we do when programming. Names are the structure we impose on the formless sea of bits that is computing.
+I think these are pretty simple guidelines. You may think it's pointless to
+worry about this stuff, but I believe that [naming things][] is one of the most
+fundamental tasks we do when programming. Names are the structure we impose on
+the formless sea of bits that is computing.
 
 [naming things]: /2009/06/05/naming-things-in-code/

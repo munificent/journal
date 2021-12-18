@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Rooms and Mazes: A Procedural Dungeon Generator
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2014/12/21/rooms-and-mazes/" rel="bookmark"
+     title="Permanent Link to Rooms and Mazes: A Procedural Dungeon Generator">
+    Rooms and Mazes: A Procedural Dungeon Generator
+  </a>
+</h1>
+
+  <a class="older" href="/2014/11/20/how-my-book-launch-went/"
+     title="Older Post &ldquo;How My Book Launch Went&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2015/02/01/what-color-is-your-function/"
+     title="Newer Post &ldquo;What Color is Your Function?&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">December 21, 2014</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/game-dev">game-dev</a> <a href="/category/roguelike">roguelike</a></span>
+</h4>
+
+<style>
+canvas {
+  background: #222;
+  display: inline-block;
+  max-width: 100%;
+}
+</style>
+
+<p>Several months ago I promised a follow-up to my previous blog post about
+<a href="/2014/07/15/a-turn-based-game-loop/">turn-based game loops</a> in <a href="https://github.com/munificent/hauberk">my roguelike</a>. Then I got
+completely sidetracked by <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/">self-publishing</a> <a href="/2014/11/20/how-my-book-launch-went/">my book</a>, <a href="http://gameprogrammingpatterns.com/"><em>Game
+Programming Patterns</em></a>, and forgot all about it. I totally left you
+hanging.</p>
+
+<p>Well, I finally got some time to think about my roguelike again and today, I&rsquo;m
+here to&hellip; keep you hanging. Alas, you are at the mercy of my wandering
+attention span! Instead of game loops, today we&rsquo;re going to talk about possibly
+the most fun and challenging part of making a roguelike: generating dungeons!</p>
+
+<p>Go ahead and click the little box below to see what we end up with:</p>
+
+<figure>
+<canvas id="enchilada" width="570" height="390">Sorry, you need canvas
+support for this demo.</canvas>
+<figcaption>Click it again to restart it.</figcaption>
+</figure>
+
+<p>Pretty neat, huh? If you want to skip the prose, the code is <a href="https://github.com/munificent/hauberk/blob/db360d9efa714efb6d937c31953ef849c7394a39/lib/src/content/dungeon.dart">here</a>.</p>
+
+<p>One of my earliest memories of computing is a maze generator running on my
+family&rsquo;s Apple IIe. It filled the screen with a grid of green squares, then
+incrementally cut holes in the walls. Eventually, every square of the grid was
+connected and the screen was filled with a complete, perfect maze.</p>
+
+<p>My little home computer could create something that had deep structure&mdash;every
+square of the maze could be reached from any other&mdash;and yet it seemed to be
+chaotic&mdash;it carved at random and every maze was different. This was enough to
+blow my ten-year-old mind. It still kind of does today.</p>
+
+<h2>What&rsquo;s in a dungeon?</h2>
+
+<p>Procedural generation&mdash;having the game build stuff randomly instead of using
+hand-authored content&mdash;is amazing when it works well. You get a ton of
+replayability because the game is different every time. As the person
+implementing the game, you also get the critical feature of not knowing what
+you&rsquo;re going to get even though you wrote the code. The game can surprise <em>you</em>
+too.</p>
+
+<p>People get into procedural generation because it seems easier. Hand-authoring
+content is obviously a lot of work. If you want your game to have a hundred
+levels, you have to make a hundred things. But make one little random level
+generator and you can have a hundred levels, a thousand, or a million, for free!</p>
+
+<p>Alas, it doesn&rsquo;t <em>quite</em> work out that way. You see, <em>defining the procedure</em> is
+a hell of a lot harder than just sitting down and banging out some content. You
+have to take some very nebulous, artistic chunk of your brain, figure out
+precisely what it&rsquo;s doing, and translate that to code. You&rsquo;re coding a
+simulation of yourself.</p>
+
+<p>It must balance a number of technical and aesthetic constraints. For mine, I focused on:</p>
+
+<ul>
+<li><p>It needs to be <strong>fairly efficient.</strong> The generator only runs when the player
+enters a new level, so it doesn&rsquo;t have to be <em>super</em> fast, but I still don&rsquo;t
+want a several second pause giving the player time to question whether they
+should be playing a game or doing something more productive with their life.</p></li>
+<li><p>The dungeon needs to be <strong>connected.</strong> Like the mazes on my old green-screen
+Apple, that means from any point in the dungeon, there is a way&mdash;possibly
+circuitous&mdash;to any other point.</p>
+
+<p>This is vital because if player has to complete a quest like &ldquo;find the magic
+chalice&rdquo; or &ldquo;kill the cockatrice&rdquo;, it&rsquo;s pretty cruel if the dungeon drops
+that in some walled-off room the player can&rsquo;t get to. It also avoids wasting
+time generating and populating areas the player can never see.</p></li>
+<li><p>Further, I want dungeons to <strong>not be perfect.</strong> &ldquo;Perfect&rdquo; in the context of
+mazes and graphs (which are synonymous) means there is <em>only one</em> path
+between any two points. If you flatten out all of the windy passages, you&rsquo;ll
+discover your twisty maze is really just a tree all crumpled up. Passageways
+branch but never merge. <em>Im</em>-perfect mazes have loops and cycles&mdash;multiple
+paths from A to B.</p>
+
+<p>This is a gameplay constraint, not a technical one. You could make a
+roguelike with perfect dungeons, and many simple roguelikes do that because
+generators for those are easier to design and implement.</p>
+
+<p>But I find them less fun to play. When you hit a dead end (which is often),
+you have to do a lot of backtracking to get to a new area to explore. You
+can&rsquo;t circle around to avoid certain enemies, or sneak out a back passage.
+Neither can the bad guys, for that matter.</p>
+
+<p>Fundamentally, games are about making decisions from a set of alternatives.
+At a literal level, perfect dungeons only give you one path to choose from.</p></li>
+<li><p>I want <strong>open rooms.</strong> I could make dungeons just be nothing but mazes of
+narrow passages, but then you could never get surrounded by a horde of
+monsters. It would feel claustrophic and kill a bunch of interesting combat
+tactics.</p>
+
+<p>Wide open areas are critical for area effect spells, and big dramatic
+battles. They also provide space for interesting decorations and themed
+areas. Vaults, pits, traps, treasure rooms, etc. Rooms are the high points
+of the hero&rsquo;s journey.</p></li>
+<li><p>I want <strong>passageways.</strong> At the same time, I don&rsquo;t want the dungeon to <em>just</em>
+be rooms. There are some games that create levels this way where doors
+directly join room to room. It works OK, but I find it a bit monotonous. I
+like the player feeling confined part of the time, and having narrow
+corridors that the player can draw monsters into is a key tactic in the
+game.</p></li>
+<li><p>All of this needs to be <strong>tunable.</strong> Many roguelikes have one huge
+multi-floor dungeon where depths vary in difficulty but not much else. My
+game is different. It has a number of different <em>areas</em>. Each has its own
+look and feel. Some may be small and cramped, others spacious and orderly.</p>
+
+<p>I solve this partially by having multiple distinct dungeon generation
+algorithms. Outdoor areas use an entirely different process. (I should
+probably write about that too sometime. Look, another unfulfilled promise!)
+But coding a new dungeon generator from scratch for <em>every</em> area is a huge
+time sink. Instead, I want the generator to have a bunch of knobs and levers
+I can tweak so I can make a number of areas that share the same code but
+have their own feel.</p></li>
+</ul>
+
+<h2>A room with a view</h2>
+
+<p>I&rsquo;ve been working on this game pretty much forever (it&rsquo;s gone through four
+different implementation languages!) and I&rsquo;ve tried a number of different
+dungeon generators. My main source of inspiration is a game called <a href="http://rephial.org/">Angband</a>.
+The only thing I&rsquo;ve sunk more of my life into than working on my game is playing
+that one.</p>
+
+<p>Angband is fantastically old. When it forked off of Moria, Nancy Kerrigan had
+just taken a round of melee damage from a club-wielding troll. On machines of
+that time, it was much harder to make a fast dungeon generator, and Angband&rsquo;s is
+pretty simple:</p>
+
+<ol>
+<li><p>Sprinkle a bunch of randomly located, non-overlapping rooms.</p></li>
+<li><p>Draw random corridors to connect them.</p></li>
+</ol>
+
+<p>To ensure rooms don&rsquo;t overlap, I just discard a room if it collides with any
+previously placed one. To avoid a possible infinite loop, instead of trying
+until a certain number of rooms are successfully <em>placed</em>, I do a fixed number
+of <em>attempts</em> to place rooms. Failure becomes more common as the dungeon gets
+fuller&mdash;after all, you can only fit so many rooms in a given area&mdash;but
+tuning this gives you some control over room density, like so:</p>
+
+<figure>
+<canvas id="rooms" width="570" height="390">Sorry, you need canvas support for this demo.</canvas>
+<label for="attempts">Attempts:</label>
+<input type="range" id="attempts" min="10" value="200" max="1000">
+<output for="attempts" id="attempts-output">200</output>
+</figure>
+
+<h2>A dark and twisty passageway</h2>
+
+<p>Most of the dungeon generators I&rsquo;ve written start with this. The hard part, by
+far, is making good passageways to connect them. That&rsquo;s really what this post is
+about&mdash;a neat way to solve that problem.</p>
+
+<p>Angband&rsquo;s solution is brute force but surprisingly effective. It picks a pair of
+rooms&mdash;completely ignoring how far apart they are&mdash;and starts a passageway
+that wanders randomly from one (hopefully) to the other. It&rsquo;s got a few clever
+checks to keep things from overlapping too much but passageways can and do cut
+through other rooms, cross other passages or dead end.</p>
+
+<p>I tried implementing that a number of times but (likely failures on my part)
+never got to something I really liked. The corridors I ended up with always
+looked too straight, or overlapped other stuff in unattractive ways.</p>
+
+<p>Then, a few months ago, I stumbled onto a <a href="http://www.reddit.com/r/roguelikedev/comments/2brhl8/screenshot_saturday_08/cj87umz">description of a dungeon
+generator</a> by <a href="http://www.reddit.com/user/FastAsUcan">/u/FastAsUcan</a> on the <a href="http://www.reddit.com/r/roguelikedev/">/r/roguelikedev</a> subreddit. His
+generator, <a href="http://www.odedwelgreen.com/karcero/">Karcero</a>, is based on <a href="http://weblog.jamisbuck.org/">Jamis Buck&rsquo;s</a> dungeon generator. If
+you&rsquo;ve ever done any procedural dungeon generation, you know&mdash;or should
+know&mdash;who Buck is. He&rsquo;s got a ton of great articles on random mazes.</p>
+
+<p>Years ago, I remember seeing an actual <a href="http://www.myth-weavers.com/generate_dungeon.php">dungeon generator</a> he wrote for
+use with pen-and-paper Dungeons &amp; Dragons. Unlike most of his maze stuff, this
+had actual rooms, and the results looked great.</p>
+
+<p>But, at the time, I didn&rsquo;t know how it <em>worked</em>. How do you go from mazes to
+open winding corridors and rooms? I tucked this open question away in the corner
+of my mind and immediately forgot about it.</p>
+
+<p>The post by FastAsUcan provides the answer. It works like so:</p>
+
+<ol>
+<li><p>Make a perfect maze. There are a number of different algorithms for this,
+but they&rsquo;re all fairly straightforward.</p></li>
+<li><p>Make the maze <em>sparse</em>. Find dead end passages and fill them back in with
+solid rock.</p></li>
+<li><p>Pick some of the remaining dead ends and cut holes in them to adjacent
+walls. This makes the maze imperfect. (Remember, this is a good thing!)</p></li>
+<li><p>Create rooms and find good locations to place them. &ldquo;Good&rdquo; here means not
+overlapping the maze but <em>near</em> it so you can add a door and connect it.</p></li>
+</ol>
+
+<p>The magic step, and the piece I was missing, is <em>sparseness</em>. A normal maze
+fills every single square of the world, leaving no areas where you can fit a
+room. The trick that Jamis and FastAsUcan do here is to carve the whole maze and
+then <em>uncarve</em> the dead ends.</p>
+
+<p>Doing that is actually pretty easy. A dead end is just a tile that has walls on
+three sides. When you find one of those, you fill that tile back in. That may in
+turn make the tile it connects to a dead end. Keep doing this until you run out
+of dead ends and you&rsquo;ll end up with lots of solid area where rooms can be
+placed.</p>
+
+<p>Of course, if you do that starting with a perfect maze and run to completion,
+you&rsquo;ll erase the whole maze! A perfect maze has no loops so <em>everything</em> is a
+dead end if you follow passages long enough. Jamis&rsquo; solution is to not erase
+<em>all</em> of the dead ends, just some. It stops after a while. Something like this:</p>
+
+<figure>
+<canvas id="dead-ends" width="570" height="390">Sorry, you need canvas
+support for this demo.</canvas>
+<label for="dead-end-open">Corridors to leave:</label>
+<input type="range" id="dead-end-open" min="1" value="1000" max="3000">
+<output for="dead-end-open" id="dead-end-open-output">1000</output>
+</figure>
+
+<p>Once you do that, you can start placing rooms. The process Jamis uses for this
+is interesting. He picks a room size and then tries to place it on every single
+location in the dungeon. Any location that overlaps a room or passageway is
+discarded. The remaining positions are &ldquo;ranked&rdquo; where rooms that are near
+passageways are better. It then picks the best position and places the room
+there, and puts some doors between the room and the passage.</p>
+
+<p>Rinse, lather, repeat and you&rsquo;ve got yourself a dungeon.</p>
+
+<h2>Rooms <em>then</em> mazes</h2>
+
+<p>I went ahead and coded this up exactly as described. It went OK, but I found
+that the process of placing rooms was pretty slow. It works well for dungeons of
+the small size you do for a tabletop role-playing game, but not so much at the
+scale of a computer roguelike.</p>
+
+<p>So, I did some tinkering and came up with a slight variation. My contribution is
+pretty minor, but I thought it would be worth writing down. (Honestly, I just
+think it&rsquo;s fun to watch animated dungeon generators, and the prose is pure
+fluff.)</p>
+
+<p>Where Buck and Karcero start with the maze and then add the rooms, mine does
+things in the opposite order. First, it places a bunch of random rooms. Then, it
+iterates over every tile in the dungeon. When it finds a solid tile where an
+open area <em>could</em> be, it starts running a maze generator at that point.</p>
+
+<p>Maze generators work by incrementally carving passages while avoiding cutting
+into an already open area. That&rsquo;s how you ensure the maze only has one solution.
+If you let it carve into existing passages, you&rsquo;d get loops.</p>
+
+<p>This is conveniently exactly what you need to let the maze grow and fill the odd
+shaped areas that surround the rooms. In other words, a maze generator is a
+randomized <a href="http://en.wikipedia.org/wiki/Flood_fill">flood fill</a> algorithm. Run this on every solid region between the
+rooms and we&rsquo;re left with the entire dungeon packed full of disconnected rooms
+and mazes.</p>
+
+<figure>
+  <canvas id="maze-fill" width="570" height="390">
+      Sorry, you need canvas support for this demo.
+  </canvas>
+  <figcaption>
+    Each color here represents a different region of connected tiles.
+  </figcaption>
+</figure>
+
+<h2>Looking for a connection</h2>
+
+<p>All that remains is to stitch those back together into a single continuous
+dungeon. Fortunately, that&rsquo;s pretty easy to do. The room generator chooses odd
+sizes and positions for rooms so they are aligned with the mazes. Those in turn
+fill in all of the unused area, so we&rsquo;re assured that each unconnected region is
+only a single tile away from its neighbors.</p>
+
+<p>After filling in the rooms and mazes, we find all of those possible
+<em>connectors</em>. These are tiles that are:</p>
+
+<ol>
+<li><p>Solid rock.</p></li>
+<li><p>Adjacent to two regions of different colors.</p></li>
+</ol>
+
+<p>Here they are highlighted:</p>
+
+<figure>
+<canvas id="connectors" width="570" height="390">
+Sorry, you need canvas support for this demo.
+</canvas>
+</figure>
+
+<p>We use these to tie the regions together. Normally we think of the entire
+dungeon as a graph with each tile a vertex, but we&rsquo;re going to go up a level of
+abstraction. Now, we treat each <em>region</em> of tiles as a single vertex and each
+connector as an edge between them.</p>
+
+<p>If we use <em>all</em> of the connectors, our dungeon would be way too densely
+connected. Instead, we carve through just the connectors we need to get each
+region connected to the whole <em>once</em>. In fancy terms, we&rsquo;re finding a <a href="http://en.wikipedia.org/wiki/Spanning_tree"><em>spanning
+tree</em></a>.</p>
+
+<p>The process is pretty straightforward:</p>
+
+<ol>
+<li><p><strong>Pick a random room to be the main region.</strong></p></li>
+<li><p><strong>Pick a random connector that touches the main region and open it up.</strong> In
+the demo, it does that by placing a door, but you can do an open passageway,
+locked door, or magical wardrobe. Be creative.</p>
+
+<p>Note that this process is agnostic about rooms and mazes. It just deals in
+&ldquo;regions&rdquo;. That means it can connect rooms directly to other rooms sometimes. You can avoid that if you want, but I find the resulting dungeons more fun to play.</p></li>
+<li><p><strong>The connected region is now part of the main one. Unify it.</strong> In the demo,
+I use a little flood fill algorithm to color in the newly merged region
+because it looks pretty. In a real implementation, you don&rsquo;t need to mess
+with tiles. Just make a little data structure that tracks &ldquo;region X is now
+merged&rdquo;.</p></li>
+<li><p><strong>Remove any extraneous connectors.</strong> There are likely other existing
+connectors that connect the two regions that just merged. Since they no
+longer connect two separate regions and we want a spanning tree, discard
+them.</p></li>
+<li><p><strong>If there are still connectors left, go to #2.</strong> Any remaining connectors
+imply that there is still at least one disconnected region. Keep looping
+until all of the unconnected regions are merged into the main one.</p></li>
+</ol>
+
+<p>Earlier, I said that I don&rsquo;t want a perfect dungeon because they make for crappy
+gameplay. But, since this creates a spanning tree, that&rsquo;s exactly what we&rsquo;ve
+got. We only allow a single connector between any two regions so our dungeon
+<em>is</em> a tree and there&rsquo;s only a single path between any two points.</p>
+
+<p>Fixing that is pretty simple. In step 3, when we cull the unneeded connectors,
+we give them a <em>slight</em> chance of being opened up. Something like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">if</span> <span class="p">(</span><span class="i">rng</span><span class="p">.</span><span class="i">oneIn</span><span class="p">(</span><span class="n">50</span><span class="p">))</span> <span class="i">_carve</span><span class="p">(</span><span class="i">pos</span><span class="p">,</span> <span class="i">CELL_DOOR</span><span class="p">);</span>
+</code></pre></div>
+<p>This occasionally carves an extra opening between regions. That gives us the
+imperfect loops we want to make the dungeon more fun to play in. Note that this
+is also easily tunable. If we make the chance more likely, we get more densely
+connected dungeons.</p>
+
+<h2>Uncarving</h2>
+
+<p>If we stop here, we&rsquo;ll get dungeons that are packed chock full of maze
+corridors, most of which are dead ends. That has a certain sadistic appeal, but
+isn&rsquo;t exactly what I&rsquo;m going for. The last remaining step is the &ldquo;sparseness&rdquo;
+pass described earlier.</p>
+
+<p>Now that we&rsquo;ve got all of our rooms connected to each other, we can remove all
+of the dead ends in the maze. When we do that, the mazes are reduced to just the
+winding set of passageways needed to connect the rooms to each other. Every
+corridor is guaranteed to go somewhere interesting.</p>
+
+<h2>What we ended up with</h2>
+
+<p>In summary:</p>
+
+<ol>
+<li><p>Place a bunch of random non-overlapping rooms.</p></li>
+<li><p>Fill in the remaining solid regions with mazes.</p></li>
+<li><p>Connect each of the mazes and rooms to their neighbors, with a chance to add some extra connections.</p></li>
+<li><p>Remove all of the dead ends.</p></li>
+</ol>
+
+<p>I&rsquo;m pretty happy with it so far. It&rsquo;s not perfect, though. It tends to produce
+annoyingly windy passages between rooms. You can tune that by tweaking your maze
+generation algorithm, but making the passageways less windy tends to make them
+wander to the edge of the dungeon, which has its own strange look.</p>
+
+<p>The fact that rooms and mazes are aligned to odd boundaries makes things simpler
+and helps fill it in nicely, but it does give the dungeon a bit of an
+artificially aligned look. But, overall, it&rsquo;s an improvement over what I had
+before, and the dungeons it makes seem to be pretty fun to play.</p>
+
+<p>If you want to see for yourself, you can play the game <a href="http://munificent.github.io/hauberk/">right in your
+browser</a>. The code for these demos is <a href="https://github.com/munificent/rooms-and-mazes">here</a>, but it&rsquo;s pretty
+gnarly. Making them animated adds a lot of complexity. Instead, <a href="https://github.com/munificent/hauberk/blob/db360d9efa714efb6d937c31953ef849c7394a39/lib/src/content/dungeon.dart">here</a> is
+the much cleaner implementation my game uses.</p>
+
+<p>As a bonus for making it this far, here&rsquo;s a super dense giant dungeon. I find it hypnotic:</p>
+
+<figure>
+<canvas id="giant" width="570" height="390">
+Sorry, you need canvas support for this demo.
+</canvas>
+</figure><script type="application/dart" src="/code/2014-12-21-rooms-and-mazes/main.dart"></script><script src="/code/2014-12-21-rooms-and-mazes/packages/browser/dart.js"></script>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes//&amp;t=Rooms and Mazes: A Procedural Dungeon Generator" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/&amp;text=%22Rooms and Mazes: A Procedural Dungeon Generator%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

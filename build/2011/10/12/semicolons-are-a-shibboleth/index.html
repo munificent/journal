@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Semicolons are a Shibboleth
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2011/10/12/semicolons-are-a-shibboleth/" rel="bookmark"
+     title="Permanent Link to Semicolons are a Shibboleth">
+    Semicolons are a Shibboleth
+  </a>
+</h1>
+
+  <a class="older" href="/2011/09/17/time-for-a-new-blog/"
+     title="Older Post &ldquo;Time for a New Blog&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2011/10/21/wrapping-my-head-around-optional-typing/"
+     title="Newer Post &ldquo;Wrapping My Head Around Optional Typing&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">October 12, 2011</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a></span>
+</h4>
+
+<p>For better or worse, anything that Google does attracts a ton of attention. New
+programming languages also bring out the inner critic in most people. Type
+systems are prone to enraging the <a href="http://lambda-the-ultimate.org/node/4377">LtU</a> set, especially <a href="https://web.archive.org/web/20120113015751/http://www.dartlang.org/articles/optional-types/">unsound
+ones</a>. And doing anything that <a href="http://www.2ality.com/2011/09/google-dart.html">approaches JavaScript</a> is bound to
+infuriate a set of people that are passionately devoted to JS and The Way of the
+Prototype.</p>
+
+<p>So, really, <a href="https://dart.dev/">Dart</a> was a perfect storm. It&rsquo;s been strangely fun watching the
+complaints, critiques, feature requests and condemnation roll in. One particular
+issue has incited way more attention than I expected given its significance in
+the grand scheme of things: semicolons.</p>
+
+<p>Dart requires semicolons as statement terminators just like C, C++, Java, and C#
+do. (And JavaScript unless you&rsquo;re <strike>brave</strike> insane enough to use
+<abbr title="Automatic Semicolon Insertion">ASI</abbr>.) Making them optional is
+currently <a href="https://github.com/dart-lang/sdk/issues/34">the second-most starred bug</a> on the tracker. It&rsquo;s one
+of the most frequently discussed points on <a href="http://www.reddit.com/r/programming/comments/l6uwv/dart_programming_language/">this insanely long reddit
+thread</a>.</p>
+
+<p>Whatever your opinion of them, you have to admit they&rsquo;re a relatively innocuous
+language feature. Making them optional has very little impact on your code, and
+there isn&rsquo;t anything you can express without them that you couldn&rsquo;t with (and
+vice versa). What&rsquo;s the big deal?</p>
+
+<p>Here&rsquo;s my theory: <strong>semicolons are a shibboleth to tell which language camp the
+designers come from.</strong> If you don&rsquo;t know the term, &ldquo;<a href="http://en.wikipedia.org/wiki/Shibboleth">shibboleth</a>&rdquo; comes from
+this passage in the Old Testament:</p>
+
+<blockquote>
+<p>Gilead then cut Ephraim off from the fords of the Jordan, and whenever
+Ephraimite fugitives said, &lsquo;Let me cross,&rsquo; the men of Gilead would ask, &lsquo;Are
+you an Ephraimite?&rsquo; If he said, &lsquo;No,&rsquo; they then said, &lsquo;Very well, say
+&ldquo;Shibboleth&rdquo; (שבלת).&rsquo; If anyone said, &ldquo;Sibboleth&rdquo; (סבלת), because he could not
+pronounce it, then they would seize him and kill him by the fords of the
+Jordan. Forty-two thousand Ephraimites fell on this occasion.</p>
+</blockquote><p class="cite">Judges 12:5-6, NJB</p>
+
+<h2>The two camps</h2>
+
+<p>I hate generalizations, and I particularly hate dichotomies, so I apologize for
+doing both right here. There is a huge amount of untruth to what I&rsquo;m about to
+say, but I hope enough truth for this to be worth your time. Here&rsquo;s two opposing
+philosophies for programming languages:</p>
+
+<ol>
+<li><p>A language is a tool to tame the complexity of the problems we&rsquo;re solving.
+It should protect me from my fallibility&mdash;and more importantly the
+fallibility of the other jack-asses on my team. The more it can help me
+control things and prevent problems, the better. <em>Good fences make good
+neighbors.</em></p></li>
+<li><p>A language is a tool for expressing my ideas. It should amplify my
+creativity&mdash;and that of the smart people writing the cool libraries I use.
+The fewer restrictions it gives me, the better. <em>We&rsquo;re all consenting adults
+here.</em></p></li>
+</ol>
+
+<p>I think you can divide languages pretty effectively into those two camps. The
+former has the &ldquo;serious business&rdquo; languages: Fortran, C++, Java, C#. The latter
+gets you the hipster languages: JavaScript, Ruby, Python, Lisp.</p>
+
+<p>Which camp is Dart in? Usually the presence of a static type system alone is
+enough to toss it into the first camp, but Dart&rsquo;s type system is so&hellip;
+<em>optional</em>, that it sort of hovers in the <a href="http://en.wikipedia.org/wiki/Uncanny_valley">uncanny valley</a> between static and
+dynamic.</p>
+
+<p>If you&rsquo;re trying to figure out whether you should give a damn about Dart, you&rsquo;ll
+want to know if its philosophy lines up with yours. You can look at the language
+today, but it&rsquo;s hard to know how much that tells you since the it&rsquo;s clearly not
+done yet.</p>
+
+<h2>Semicolons</h2>
+
+<p>So you ask the shibboleth question: &ldquo;mandatory semicolons?&rdquo;</p>
+
+<p>By itself, semicolons mean little to the language, but almost all of the second
+camp languages make them optional or eschew them completely. They say
+punctuation is ugly, makes the code less beautiful, and is needless boilerplate
+since they are almost always at the ends of lines anyway. Requiring them makes
+the programmer do mindless gruntwork.</p>
+
+<p>But a &ldquo;serious business&rdquo; programmer likes them: they are simple and unambiguous
+to parse. You don&rsquo;t have to worry about some other guy&rsquo;s weird coding style
+making it impossible for you to understand their code. We&rsquo;ve been using
+semicolons for years, why stop now? They&rsquo;re safe and familiar.</p>
+
+<p>Asking which way Dart is going to go with semicolons is, I think, a way of
+asking which group of programmers the language wants to cater to. Either choice
+carries an implied signal about how other choices in the language will likely be
+made: will it favor individual expressiveness over group consistency? Freedom
+over safety?</p>
+
+<h2>So how does Dart pronounce it?</h2>
+
+<p>So the question is, what will Dart do?</p>
+
+<p>I honestly have no idea. I&rsquo;m not one of the designers, and I think they may be
+split on the issue. I have my own personal preference, but that carries about as
+much weight as yours. Even if they were to make semicolons optional, I don&rsquo;t
+think that necessarily says much about your or my other pet features being
+included.</p>
+
+<p>I think Dart really is trying to inhabit the ground between these two camps, so
+each attempt to pull in one direction or the other will be handled individually.</p>
+
+<p>But, like everyone else, I hope they decide to go with <em>my</em> preference, which is
+of course the right one.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2011/10/12/semicolons-are-a-shibboleth//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2011/10/12/semicolons-are-a-shibboleth//&amp;t=Semicolons are a Shibboleth" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2011/10/12/semicolons-are-a-shibboleth/&amp;text=%22Semicolons are a Shibboleth%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2011/10/12/semicolons-are-a-shibboleth/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2011/10/12/semicolons-are-a-shibboleth/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2011/10/12/semicolons-are-a-shibboleth/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

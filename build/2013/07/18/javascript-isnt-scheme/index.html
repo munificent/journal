@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      JavaScript Isn&rsquo;t Scheme
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2013/07/18/javascript-isnt-scheme/" rel="bookmark"
+     title="Permanent Link to JavaScript Isn&rsquo;t Scheme">
+    JavaScript Isn&rsquo;t Scheme
+  </a>
+</h1>
+
+  <a class="older" href="/2013/04/23/playing-with-generics-in-typescript-0.9.0/"
+     title="Older Post &ldquo;Playing with Generics in TypeScript 0.9.0&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2013/08/26/what-is-open-recursion/"
+     title="Newer Post &ldquo;What is &ldquo;Open Recursion&rdquo;?&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">July 18, 2013</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/js">js</a> <a href="/category/language">language</a> <a href="/category/scheme">scheme</a></span>
+</h4>
+
+<p>It seems like I can&rsquo;t spend five minutes on reddit these days without someone
+playing the <a href="http://www.reddit.com/r/programming/comments/1g7gw7/the_angular_team_is_porting_angularjs_to_dart/cahzqav">JS-is-Scheme is card</a>. I see everything from the innocuous,
+&ldquo;JavaScript has a lot in common with Scheme&rdquo;, all the way up to, &ldquo;JavaScript is
+basically Scheme.&rdquo; This is basically crazy. Or, at least it has a lot in common
+with crazy.</p>
+
+<p>Before I convince you that it&rsquo;s crazy, let&rsquo;s step back a bit and ask why would
+JS adherents make a statement like this to begin with? You don&rsquo;t hear people
+saying, &ldquo;Yeah, FORTRAN is basically Icon&rdquo; or &ldquo;Sather has a really solid SNOBOL
+core,&rdquo; do you? Why this arbitrary pairing? After meticulous scientific research,
+I&rsquo;ve discovered two historical reasons and one weird psychological one.</p>
+
+<h2>A creation myth</h2>
+
+<p>Way back in the misty primordial days of the web when &ldquo;under construction&rdquo;
+banners were everywhere and wild <code>&lt;font&gt;</code> tags roamed free, there was a mighty
+programmer named Brendan Eich. There is still a mighty programmer named Brendan
+Eich, but there was one then too.</p>
+
+<p>He appeared, in a curling cloud of smoke, at the office of Netscape with a moral
+imperative to bring Scheme to the browser. Alas, the suits shut that shit down
+for reals, like they do most higher purposes. What he ended up slapping together
+in ten fevered days instead was JavaScript, a language designed to look like
+Java and act like anything but.</p>
+
+<p>Given that it didn&rsquo;t have Java&rsquo;s semantics, what semantics <em>did</em> it have? Later
+historiographers started trying to fill in that blank. Since Scheme was Eich&rsquo;s
+original <abbr title="best friend 4eva <3 <3 <3 ">BFF</abbr>, they surmised
+that&rsquo;s where it gots its semantics from. The hypothesis was that Eich garbed his
+creation in a sheepskin of semicolons and curly braces to appease his corporate
+overlords, but that sexy wolf was inside the whole time.</p>
+
+<p>This is, of course, totally wrong. The animal under that sheepskin is <a href="http://selflanguage.org/">Self</a>,
+not Scheme. (And it&rsquo;s a cut-rate knock-off at that, with only single parent
+delegation.) But who on Earth remembers Self, right? So this is myth numero uno:
+Eich intended to make Scheme at first, so JavaScript must still have deep Scheme
+roots hiding in there.</p>
+
+<h2>A Savior to Spread the Gospel</h2>
+
+<p>That myth wasn&rsquo;t created until much later, though. Before then, a funny thing
+happened. One day, Netscape woke up from a truly epic bender to discover it had
+jammed a scripting language onto the web and millions of people were using it.
+Literally none of them liked it. Not one.</p>
+
+<p>It was just this weird thing you had to deal with get that awesome rollover over
+animation to sort-of work on your 640x480 &ldquo;works best in Netscape 3.0&rdquo; Geocities
+page. That drop-down menu ain&rsquo;t gonna animate itself, you know.</p>
+
+<p>Around that time, this weird guy came along named Douglas Crockford. Unlike most
+of the teenage amateur-hour web designers at the time (your humble author
+included), he was an honest-to-God computer whiz. While the rest of us meatheads
+were using Dreamweaver and notepad, he was probably using emacs, or ed or, who
+knows, troff. He&rsquo;d worked in video, and games, and videogames. To further cement
+his nerd pedigree, he was a bonafide language geek.</p>
+
+<p>Somehow, probably involving alcohol, hard drugs, and a series of lost bets, he
+went from that auspicious start to end up coding JS. Unlike almost everyone else
+using JS at the time, he had seen better languages: Scheme, Smalltalk (I think),
+even E. (The language, not the drug, though I wouldn&rsquo;t put either past him.)</p>
+
+<p>Usually, touching Scheme or Smalltalk inflicts an incurable disease whose
+primary symptom is involuntary sneering and derisive snorting in the presence of
+any other language. Somehow, Crockford managed to fight off his infection, tear
+into JavaScript, and gaze deep into the abyss at its center. What <a href="http://www.crockford.com/javascript/javascript.html">he claims he
+saw</a> was a functional language. Scheme to be precise.</p>
+
+<p>He came back from his spirit walk, enscribed his gospels and began proselytizing
+from the <a href="http://www.amazon.com/dp/0596517742">Good Book</a>. He told anyone and everyone, often more than once that:</p>
+
+<blockquote>
+<p>JavaScript&rsquo;s C-like syntax, including curly braces and the clunky for
+statement, makes it appear to be an ordinary procedural language. This is
+misleading because JavaScript has more in common with functional languages
+like Lisp or Scheme than with C or Java.</p>
+</blockquote>
+
+<p>Crockford has a way about him. Part of this is because his background is
+legimately impressive. He has and continues to do many great things. He is a
+figurative and literal graybeard, while also staying on the cutting edge. And he
+has a delivery that is equal parts insight and cranky-but-lovable curmudgeon. In
+other words, he&rsquo;s your Dad, and you damn well listen to your Dad when he&rsquo;s
+talking to you.</p>
+
+<h2>The huddled masses</h2>
+
+<p>Soon, a new generation of programmers found themselves in a strange position.
+Many of them had stumbled onto programming as kids right when the web was new.
+Their first language was the one they already happened to have on their
+computer: JavaScript. It started as a toy in their youth, yet they found
+themselves using it professionally years later, despite the fact that no one
+seemed to take the language seriously.</p>
+
+<p>Put yourself in their shoes (if you aren&rsquo;t already). Imagine being a
+construction worker surrounded by big burly dudes, arm hair fluttering in the
+winds of their swinging hammers. And you&rsquo;re there pushing in nails using this
+ragged spit-stained blankey you&rsquo;ve had since you were a kid. It&rsquo;s embarrassing,
+despite the fact that your blanket does actually get those nails in. Somehow.</p>
+
+<p>You feel insecure, a bit of a weakling. You&rsquo;re a Belieber at a Meshuggah show
+and what you could really use is some street cred.</p>
+
+<p>In some weird organic process, the pantheon of programming languages have
+ordered themselves in terms of prestige. It&rsquo;s as random but undeniable as music
+and fashion. Radiohead is on one end, and Nickelback is on the other. No one
+knows precisely how they got there, but there they are.</p>
+
+<p>On the Radiohead end, you&rsquo;ve got Common Lisp, Scheme, Smalltalk, and a few
+others. Scheme is even more Lisp than Lisp, so it&rsquo;s like that weird avant garde
+band no one&rsquo;s heard of that Radiohead always claims inspired their latest album.
+If Lisp is Radiohead, Scheme is Kraftwerk.</p>
+
+<p>For all of the people who found themselves using JavaScript but feeling that hot
+flush of shame, Crockford gave them an answer. JS wasn&rsquo;t some sell-out radio
+rock band. It was edgy, obscure. It was Scheme.</p>
+
+<p>Not just that, but it was <em>secretly</em> Scheme. So if you were into JS, not only
+were you using one of the coolest languages, you were one of the select
+enlightened few who knew how cool it was. You may be listening to Coldplay, but
+only because Brian Eno produced it.</p>
+
+<p>This &ldquo;JS = Scheme&rdquo; meme was hugely legimitizing to a horde of programmers
+feeling unsure of themselves in the face of grizzly C programmers who allocated
+their own damn memory, probably right after building their own computer out of
+rocks and twigs.</p>
+
+<h2>But is it true?</h2>
+
+<p>I may be a bit hyperbolic. Just a tad. But I think that&rsquo;s roughly how we got
+here. Lots of programmers believe JavaScript is &ldquo;basically&rdquo; Scheme because it
+gives them something they want to believe: that the language they choose to use
+has some cachet and they don&rsquo;t have to feel bad about it anymore. And, honestly,
+almost no one knows enough Scheme to tell if it&rsquo;s true or not anyway.</p>
+
+<p>Well I, armed with an encyclopedic knowledge of programming languages and a
+not-as-dog-eared-as-I&rsquo;d-like-to-admit copy of <a href="http://mitpress.mit.edu/sicp/">SICP</a>, <em>do</em>. We&rsquo;re gonna put
+this myth to bed right now. Here&rsquo;s the defining characterists of Scheme, the
+stuff whose <em>gestalt</em> makes Scheme special:</p>
+
+<ol>
+<li><p>Minimalism.</p></li>
+<li><p><a href="http://c2.com/cgi/wiki?LexicalScoping">Lexical</a> <a href="http://docs.racket-lang.org/reference/let.html">block</a> scope.</p></li>
+<li><p><a href="http://stackoverflow.com/questions/310974/what-is-tail-call-optimization">Tail call elimination</a>.</p></li>
+<li><p><a href="http://lambda-the-ultimate.org/node/86">Continuations</a>.</p></li>
+<li><p><a href="http://c2.com/cgi/wiki?TypingQuadrant">Dynamic typing</a>.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/S-expression">S-expression syntax</a>, and <a href="http://calculist.org/blog/2012/04/17/homoiconicity-isnt-the-point/">homoiconicity</a>.</p></li>
+<li><p><a href="http://en.wikipedia.org/wiki/Closure_(computer_science)">First-class functions and closures</a>.</p></li>
+<li><p><a href="http://c2.com/cgi/wiki?SchemeMacroExamples">Macros</a>.</p></li>
+<li><p>Distaste for mutation.</p></li>
+</ol>
+
+<p>I know we could fight about a few things on this list, but I think that&rsquo;s pretty
+tight. Now, for JavaScript to be &ldquo;basically&rdquo; Scheme, I&rsquo;d expect a pretty close
+correspondence there. Of that list, here&rsquo;s what JS has:</p>
+
+<ol>
+<li><p>Minimalism.</p></li>
+<li><p>Dynamic typing.</p></li>
+<li><p>First-class functions and closures.</p></li>
+</ol>
+
+<p>Don&rsquo;t tell me it&rsquo;s got lexical scope, because JavaScript&rsquo;s scoping is an
+abomination in the face of God. Guy Steele isn&rsquo;t even dead and JS scope makes
+him pre-emptively roll in his not-yet-occupied grave. Likewise, claiming JS is
+homoiconic because you can eval strings of code is nonsense. If that&rsquo;s the only
+criteria for homoiconicity, then C is too, since you can treat an array of bytes
+as code and jump to it.</p>
+
+<p>But, to be fair, it does have <em>some</em> stuff in common. So maybe it&rsquo;s a fair
+comparison? I guess the real way to tell would be to compare Scheme to some
+other languages. The big feature that everyone harps on is closures. Maybe just
+having closures means you&rsquo;re basically Scheme.</p>
+
+<p>If that&rsquo;s true, then C#, Lua, D, Erlang, Haskell, PHP, Scala, Go, Objective-C,
+Python, Ruby, and Smalltalk are basically Scheme. In other words, if JavaScript
+is Scheme by that criteria, then every language is Scheme, which of course means
+none of them are.</p>
+
+<p>This is why the &ldquo;JS = Scheme&rdquo; meme drives me crazy: it makes us dumber. It&rsquo;s a
+<a href="http://en.wikipedia.org/wiki/Thought-terminating_clich%C3%A9">thought-terminating cliché</a>. It carries negative informational content
+and makes people actually know less about languages than they did before.</p>
+
+<p>If you think JavaScript is one of the most Scheme-like languages out there, then
+you&rsquo;re missing out on the fact that Forth is <em>really</em> minimal, Dart has great
+scoping, Lua does tail call elimination, Haskell and Ruby have continuations, C#
+has dynamic typing, Io is homoiconic, Go has closures, Scala has macros, and
+Clojure seriously dislikes mutation.</p>
+
+<p>At the same time, we&rsquo;re ignoring the things about JavaScript that make it <em>not</em>
+Scheme. It&rsquo;s got a much richer syntax including a <em>great</em> notation for data. I&rsquo;m
+not a huge fan of prototypes (anymore), but it&rsquo;s an interesting dispatch model
+that Scheme doesn&rsquo;t have.</p>
+
+<p>Equating JavaScript to Scheme does Scheme a disservice, but it does JavaScript
+one too. If you&rsquo;re going to be a JavaScript fanboy (fangirl? fanperson?), fine,
+but be a <em>JavaScript</em> fanboy, not a <em>Scheme-by-proxy</em> one. Telling people it&rsquo;s
+&ldquo;basically Scheme&rdquo; is still just a way of saying you&rsquo;re ashamed of it.</p>
+
+<p>If you&rsquo;re ashamed of JavaScript, don&rsquo;t use it. (There are <a href="https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS">plenty of
+options</a> these days.) And if you <em>do</em> like it, like it for what it is, not
+the tiny subset of what it is that it has in common with some other random
+language.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme//&amp;t=JavaScript Isn&amp;rsquo;t Scheme" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme/&amp;text=%22JavaScript Isn&amp;rsquo;t Scheme%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

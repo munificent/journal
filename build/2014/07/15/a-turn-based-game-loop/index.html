@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      A Turn-Based Game Loop
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2014/07/15/a-turn-based-game-loop/" rel="bookmark"
+     title="Permanent Link to A Turn-Based Game Loop">
+    A Turn-Based Game Loop
+  </a>
+</h1>
+
+  <a class="older" href="/2014/07/05/dropping-loot/"
+     title="Older Post &ldquo;Dropping Loot&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/"
+     title="Newer Post &ldquo;Zero to 353 Pages: Bringing My Web Book to Print and E-book&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">July 15, 2014</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/game-dev">game-dev</a> <a href="/category/roguelike">roguelike</a></span>
+</h4>
+
+<style>
+canvas {
+  padding: 6px;
+  background: #222;
+  margin: 10px auto;
+  max-width: 90%;
+  display: block;
+}
+</style>
+
+<p>Now that <a href="http://munificent.github.io/hauberk/">my roguelike</a> written in <a href="http://dartlang.org">Dart</a> is <a href="https://github.com/munificent/hauberk">open source</a>, I wanted to talk about a piece of it that I put a lot of time into. Well,
+I actually poured way too much of my life into lots of parts of this game. Maybe
+I&rsquo;ll write about those too, but for now let&rsquo;s start where most games start: with
+the <em>game loop</em>.</p>
+
+<figure>
+  <img class="framed" src="/image/2014/08/snapshot.jpg">
+  <figcaption>Here's the game I'm talking about. You can play it
+  <a href="http://munificent.github.io/hauberk/">here</a>. Don't get freaked
+  out by all of the text below! There's interactive demos just a few paragraphs
+  down!</figcaption>
+</figure>
+
+<p>I&rsquo;m <a href="http://gameprogrammingpatterns.com/">a bit obsessed</a> with software architecture in games. Since this
+roguelike is my hobby project, I&rsquo;ve fully indulged myself. You know that guy who
+always wanted to be a railroad engineer but ended up an accountant or something,
+and then spends years in his basement endlessly tinkering on a model railroad?
+I&rsquo;m like that guy, but for software architecture. And roguelikes.</p>
+
+<p>That may be the nerdiest thing I&rsquo;ve ever written, which is really saying
+something.</p>
+
+<p>I&rsquo;ve refactored and rewritten the game loop more times than I can count (there&rsquo;s
+probably some &ldquo;iteration&rdquo; metajoke hiding in this sentence), and I won&rsquo;t drag
+you through the whole history of it. Instead, we&rsquo;ll go through its current form,
+building it up a piece at a time.</p>
+
+<p>I have a couple of high-level goals:</p>
+
+<ul>
+<li><p><strong>The game engine should be <em>strictly</em> separated from the user interface.</strong>
+I&rsquo;ve gone back and forth between a pixel art UI and a more old school
+ACSII-based one, and it&rsquo;s important for me that the engine supports both.
+(The current Dart version is all ASCII-based right now, ironically rendered
+using the canvas API.) That means the engine can&rsquo;t be coupled to any details
+of how the game is displayed to the user. Like a business app, I want a real
+model/view separation.</p></li>
+<li><p><strong>Monsters and player-controlled characters should be treated uniformly.</strong>
+Most of the engine just deals with &ldquo;<a href="https://github.com/munificent/hauberk/blob/23bbc1feb2636a846b87eb0a95a2bbf3fbdc2184/lib/src/engine/actor.dart#L46">actors</a>&rdquo;, the superclass of both
+<a href="https://github.com/munificent/hauberk/blob/23bbc1feb2636a846b87eb0a95a2bbf3fbdc2184/lib/src/engine/monster.dart#L21"><code>Monster</code></a> and the player-controlled, gender-nonspecific
+<a href="https://github.com/munificent/hauberk/blob/23bbc1feb2636a846b87eb0a95a2bbf3fbdc2184/lib/src/engine/hero/hero.dart"><code>Hero</code></a>. I want to minimize special treatment that the player&rsquo;s
+avatar receives and treating it like just another entity in the game does
+that implicitly.</p></li>
+</ul>
+
+<h2>Slicing up the game loop</h2>
+
+<p>Hauberk, like most roguelikes, is a <em>turn-based</em> game. Each actor in the game
+makes a move one at a time. When it&rsquo;s the player&rsquo;s turn, all of the monsters
+halt, awkwardly motionless like the world&rsquo;s strangest game of freeze tag, until
+after the player does their thing.</p>
+
+<p>At the core of the game engine is the <a href="http://gameprogrammingpatterns.com/game-loop.html">game loop</a>. Its job is to iterate over
+the actors in the level and tell each to take its turn. In a simple game, it
+would look something like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">gameLoop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="i">stillPlaying</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">actor</span> <span class="k">in</span> <span class="i">actors</span><span class="p">)</span> <span class="p">{</span>
+      <span class="i">actor</span><span class="p">.</span><span class="i">update</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>However, since the engine is decoupled from the user interface, it is driven
+externally. The engine has a main <a href="https://github.com/munificent/hauberk/blob/fe0bdf614d5d00a5235b7a82d9d38c928928d34c/lib/src/engine/game.dart"><code>Game</code></a> class. The UI owns an instance
+of that and tells it to process. The engine only processes one &ldquo;step&rdquo; of
+gameplay before returning control back to the UI.</p>
+
+<p>(I&rsquo;m being intentionally vague about &ldquo;step&rdquo; here. If I get a chance, I&rsquo;ll write
+a follow-up post about how the engine&rsquo;s game loop and the browser event loop
+interact. It&rsquo;s pretty tricky.)</p>
+
+<p>What this means is that <code>Game</code> needs to track the last actor who took a turn so
+it can pick up where it left off. Something like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Game</span> <span class="p">{</span>
+  <span class="k">final</span> <span class="i">actors</span> <span class="o">=</span> <span class="o">&lt;</span><span class="t">Actor</span><span class="o">&gt;</span><span class="p">[];</span>
+  <span class="t">int</span> <span class="i">_currentActor</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+
+  <span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+    <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">update</span><span class="p">();</span>
+    <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Astute readers like yourself are probably thinking this sounds like a good case
+for a <a href="http://en.wikipedia.org/wiki/Generator_(computer_programming)">generator</a>. Indeed, in the previous C# incarnation of my game, <a href="/2008/11/17/using-an-iterator-as-a-game-loop/">I did
+exactly that</a>. When Dart gets generators, I&rsquo;ll probably use them. In
+the meantime, it&rsquo;s just a bit more verbose.</p>
+
+<h2>Actions for actors</h2>
+
+<p>We&rsquo;ve got a little resumable game loop now. When each actor&rsquo;s turn comes up, its
+<code>update()</code> is called and the actor does whatever it does. A monster might pick a
+direction to walk. Next, the consequences of that have to be handled. The
+monster may walk into another actor, which triggers combat. The monster also
+needs to handle walking into a wall or a door.</p>
+
+<p>All told, even for a simple bit of behavior like &ldquo;take a step&rdquo;, there&rsquo;s a decent
+amount of logic, but you&rsquo;ll note that all of that applies equally well to
+monsters and heroes. Brave warriors can stumble into walls too, and the
+consequences are the same. It would be good to share code for this.</p>
+
+<p>The obvious answer is to push the walking code up into the shared <code>Actor</code> base
+class. But if we do that for everything&mdash;walking, melee combat, ranged
+attacks, inventory management, magic, etc.&mdash;we end up with an <code>Actor</code> class
+that contains damn near the whole game. Super gross.</p>
+
+<p>Instead, we&rsquo;ll make a classic game architecture decision. We&rsquo;ll separate
+<em>deciding</em> what behavior to perform from <em>executing</em> the behavior. In other
+words, we&rsquo;ll use the <a href="http://gameprogrammingpatterns.com/command.html">Command pattern</a>. In Hauberk, these are called
+<em>actions</em>.</p>
+
+<p>The game loop asks each actor to give it an action, then it tells the action to
+execute <em>itself</em>, like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
+  <span class="i">action</span><span class="p">.</span><span class="i">perform</span><span class="p">();</span>
+  <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>There are different action classes for each atomic thing an actor in the world
+can do. There is a <a href="https://github.com/munificent/hauberk/blob/53719994a29ba7b750bb78643f8b92d1f5516685/lib/src/engine/action_base.dart#L109"><code>WalkAction</code></a>, <a href="https://github.com/munificent/hauberk/blob/53719994a29ba7b750bb78643f8b92d1f5516685/lib/src/engine/action_base.dart#L154"><code>OpenDoorAction</code></a>,
+<a href="https://github.com/munificent/hauberk/blob/53719994a29ba7b750bb78643f8b92d1f5516685/lib/src/engine/action_base.dart#L192"><code>EatAction</code></a>, etc.</p>
+
+<p>This architecture pulls all of that behavior out of the base <code>Actor</code> class. Even
+better, it separates all of the actions from <em>each other</em>. If you&rsquo;re adding or
+changing a thing that actors can do, you can just poke at one isolated little
+action class. It feels nice and decoupled and it&rsquo;s easy to add new actions to
+the game. (As of today, there are nineteen different actions, and I expect to
+add a bunch more.)</p>
+
+<p>It also, of course, helps us treat monsters and heroes uniformly. Since the
+<code>Action</code> classes all work on instances of <code>Actor</code>, they can all be used by
+monsters and heroes alike. (There are some exceptions since heroes have some
+capabilities monsters don&rsquo;t have. Right now, monsters don&rsquo;t have inventory so
+all of the inventory management actions don&rsquo;t apply to them.)</p>
+
+<h2>Acting at speed</h2>
+
+<p>We&rsquo;ve got a basic loop working now, but our game is a bit <em>too</em> turn-based.
+Every monster and the hero all proceed in lockstep. You move one step, they all
+move one step, kind of like the ancient <a href="http://en.wikipedia.org/wiki/Robots_(BSD_game)">Robots</a> game. You can never outrun or
+be outrun. See for yourself:</p>
+
+<figure>
+<canvas id="same-speed" tabindex="1">Sorry, you need canvas support for this
+demo.</canvas>
+<figcaption>Use arrow keys or <code>iopkl;,./</code> to move. Press
+<code>t</code> to teleport.</figcaption>
+</figure>
+
+<p>To fix that, we want actors to move at different <em>speeds</em>.</p>
+
+<p>Of course, this is &ldquo;speed&rdquo; in the turn-based sense, not literally moving quicker
+in realtime. What it means is that a &ldquo;faster&rdquo; actor gets to take turns more
+<em>frequently</em> than other actors. If you&rsquo;re twice as fast as a green slime, then
+you&rsquo;ll get two turns for every one it receives.</p>
+
+<p>This mechanic is <em>de rigueur</em> in roguelikes, and the literature is <a href="http://www.roguebasin.com/index.php?title=An_elegant_time-management_system_for_roguelikes">rife</a> <a href="http://www.roguebasin.com/index.php?title=A_priority_queue_based_turn_scheduling_system">with</a> <a href="http://doryen.eptalys.net/forum/index.php?topic=1596.0">ways</a> <a href="http://ironypolicy.wordpress.com/2014/02/05/possession-2-speed-systems-in-roguelikes/">to</a> implement it. The system I&rsquo;m
+using is almost exactly <a href="http://www.faqs.org/faqs/games/roguelike/angband-faq/">what Angband uses</a>, because it&rsquo;s
+awesome.</p>
+
+<p>It works like this: Every actor has an <em>energy</em> level. When the game loop
+reaches an actor, it grants the actor a bit of energy. When the actor&rsquo;s energy
+reaches a certain threshold, it has enough to take a turn and perform an action.
+Otherwise, the game loop just moves on to the next actor. It may take several
+cranks through the game loop before an actor accumulates enough juice to
+actually take a turn. (And, in fact, for all but the fastest actors, it does.)</p>
+
+<p>When the actor performs an action, that burns energy, and they&rsquo;re back in the
+&ldquo;waiting to get enough energy to go&rdquo; state. Right now, all actions consume the
+same amount of energy, which means every action takes the same amount of &ldquo;time&rdquo;
+to perform. I <em>could</em> vary this so that, for example, archers could shoot arrows
+more frequently than they swing a sword.</p>
+
+<p>The way <em>speed</em> comes into play is simple: <em>faster actors get more energy each
+turn.</em> That means they cross the threshold in fewer revolutions of the game
+loop, so they get to move more often. It&rsquo;s as simple as that.</p>
+
+<p>The neat thing about it is that by accumulating energy over several turns, you
+can have actors that move at arbitrary fractions of each other&rsquo;s speed. You
+could have an actor that gets five moves for every seven moves another actor
+gets if you wanted. (Of course, what you&rsquo;d see during game play is that every
+now and then the second actor would get a double turn. It&rsquo;s just that the &ldquo;every
+now and then&rdquo; averages out to 7/5 over time.)</p>
+
+<p>Enough verbiage, let&rsquo;s see it in action:</p>
+
+<figure>
+<canvas id="speed-bars" tabindex="2">Sorry, you need canvas support for this
+demo.</canvas>
+<figcaption>Same controls before but the game loop is slowed down so you can
+watch it parcel out energy.</figcaption>
+</figure>
+
+<p>The <code>&gt;</code> points to the actor whose turn it is. It&rsquo;s usually stuck waiting on you.
+After you make a move, you can watch the game loop race around, doling out bits
+of energy. When an actor&rsquo;s bar reaches the right edge, it takes a move and the
+bar resets.</p>
+
+<p>The cool thing about this system is that applies to all <em>actors</em>. Some game
+engines update the hero separately from monsters in the main game loop, but that
+makes speed much trickier to handle. By treating the hero as just another actor,
+the hero can be both slower and faster than other monsters automatically.</p>
+
+<h2>The one special thing about heroes</h2>
+
+<p>Treating the hero as just another actor is mostly swell, but there <em>is</em> one
+thing about heroes that makes them unique&mdash;they&rsquo;re controlled by the player.
+The game loop I showed runs fine as long as actors generate their own actions.
+That&rsquo;s true in the case of AI-driven monsters, but the hero can&rsquo;t see through
+your glassy computer screen and discern your intentions through cyber-telepathy.
+It needs user input.</p>
+
+<p>We already have two constraints that make this harder:</p>
+
+<ol>
+<li><p>Because we want to separate the engine from the user interface, the engine&rsquo;s
+game loop can&rsquo;t directly call into input handling code.</p></li>
+<li><p>Because the game runs in a browser, it can&rsquo;t <em>block</em> waiting for user input.
+The browser don&rsquo;t play &lsquo;dat. You have to return to the event loop and let
+the browser tell <em>you</em> when an event comes in.</p></li>
+</ol>
+
+<p>When the game loop asks a hero for its action, the hero can&rsquo;t just stop the game
+and wait for the player to push a button. Instead, we let the user interface
+<em>inject</em> input into the game. The input handling code can create an action for
+the hero <em>ex-nihilo</em> and jam it in the engine&rsquo;s piehole, like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">handleInput</span><span class="p">(</span><span class="t">Keyboard</span> <span class="i">keyboard</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="i">keyboard</span><span class="p">.</span><span class="i">lastPressed</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">G</span><span class="p">:</span>
+      <span class="i">game</span><span class="p">.</span><span class="i">hero</span><span class="p">.</span><span class="i">setNextAction</span><span class="p">(</span><span class="k">new</span> <span class="t">PickUpAction</span><span class="p">())</span>
+      <span class="k">break</span><span class="p">;</span>
+
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">I</span><span class="p">:</span>         <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">NW</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">O</span><span class="p">:</span>         <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">N</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">P</span><span class="p">:</span>         <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">NE</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">K</span><span class="p">:</span>         <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">W</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">L</span><span class="p">:</span>         <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">NONE</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">SEMICOLON</span><span class="p">:</span> <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">E</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">COMMA</span><span class="p">:</span>     <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">SW</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">PERIOD</span><span class="p">:</span>    <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">S</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">SLASH</span><span class="p">:</span>     <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span><span class="p">.</span><span class="t">SE</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span> <span class="i">dir</span><span class="p">)</span> <span class="p">{</span>
+  <span class="i">game</span><span class="p">.</span><span class="i">hero</span><span class="p">.</span><span class="i">setNextAction</span><span class="p">(</span><span class="k">new</span> <span class="t">WalkAction</span><span class="p">(</span><span class="i">dir</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That call to <code>setNextAction()</code> stuffs the given action into a field in the hero.
+When the game loop asks the hero what it wants to do, it barfs the action back
+up:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Hero</span> <span class="k">extends</span> <span class="t">Actor</span> <span class="p">{</span>
+  <span class="t">Action</span> <span class="i">_nextAction</span><span class="p">;</span>
+
+  <span class="k">void</span> <span class="i">setNextAction</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">_nextAction</span> <span class="o">=</span> <span class="i">action</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="t">Action</span> <span class="i">getAction</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">_nextAction</span><span class="p">;</span>
+    <span class="c">// Only perform it once.</span>
+    <span class="i">_nextAction</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="i">action</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c">// Other heroic stuff...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>(In the actual game, there&rsquo;s actually a level of indirection here to handle
+<a href="https://github.com/munificent/hauberk/blob/11c5ca5d258dfdae20118c7a4dcc82e50ceb67de/lib/src/engine/hero/hero.dart#L301">multi-step behaviors like running</a>, but we&rsquo;ll ignore that here.)</p>
+
+<p>This keeps the engine from reaching out to the user interface and lets the UI
+pass input to the engine at its leisure. The only problem is what happens when
+the game engine is told to process the hero&rsquo;s turn and the UI hasn&rsquo;t given it an
+input yet.</p>
+
+<p>To handle that, the loop just checks for the actor failing to cough up an
+action. When that happens, it bails and returns control back to the user
+interface:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
+
+  <span class="c">// Don&#39;t advance past the actor if it didn&#39;t take a turn.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="i">action</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+  <span class="i">action</span><span class="p">.</span><span class="i">perform</span><span class="p">();</span>
+  <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If the interface tells the game engine to process but hasn&rsquo;t given instructions
+to the hero, the engine does nothing and bounces control back to the UI. Note
+how <code>setNextAction()</code> can be called at any point in time. This works seamlessly
+with the speed system without the UI having to be aware of it. It just throws
+hero actions at the engine and tells it to process. The engine takes care to
+ensure the simulation only ratchets forward at the right time.</p>
+
+<p>In fact, now that I think about it, if you had multiple player-controlled heroes
+driven by different inputs, it would automatically handle that too. They could
+even be coming over a network and the engine won&rsquo;t care. Groovy.</p>
+
+<p>The way this interacts with the browser&rsquo;s own event loop is actually a good bit
+more complex than this when you take into account visual effects, but I think
+I&rsquo;ll have to save that for another post. For now, let&rsquo;s keep our attention on
+the pristine confines of the engine.</p>
+
+<h2>Fat fingers</h2>
+
+<p>We&rsquo;re pretty far along with our game loop now. We&rsquo;ve got it doing the stuff it
+<em>needs</em> to do, so we can start looking at making the game more pleasantly
+usable. Usability means <em>fallibility</em>. People make mistakes, and usability is
+about accommodating that.</p>
+
+<p>For example, let&rsquo;s say the player tries to make the hero walk into a wall. Right
+now, that creates a walk action. When the action is processed, it prevents the
+hero from walking through the wall, but it still <em>burns that turn</em>. If the hero
+is trying to run away from a foul beastie, that slip up could cost the hero
+their life. Some games are OK with that, but I don&rsquo;t want to be that punishing.
+Roguelikes are unforgiving enough as it is.</p>
+
+<p>The demos so far work this way now. Go back and try running into a wall. See how
+your mortal enemies approach in the midst of your ineptitude? That&rsquo;s what we
+want to fix. When the player tries to perform an action that isn&rsquo;t possible, we
+want to make sure we don&rsquo;t waste a turn on it.</p>
+
+<p>One way to handle that would be to validate the turn in the user interface. In
+the input handling, we check the tile that the hero wants to walk into and make
+sure it&rsquo;s a floor tile. If it isn&rsquo;t, the user interface shows an error and
+doesn&rsquo;t send an action to the game. From the engine&rsquo;s perspective, it only
+receives sanitized, correct user actions.</p>
+
+<p>But doing that validation is actually pretty complex. Maybe the hero has an
+insubstantiation spell and <em>can</em> walk through walls right now. Maybe the tile
+isn&rsquo;t floor but is something the hero can tunnel through, but only if they have
+a shovel in their inventory.</p>
+
+<p>What I&rsquo;m describing are <em>game mechanics</em>, and game mechanics belong in the
+engine. In particular, most of them belong in actions. We&rsquo;ll put the solution to
+this problem in there too. When an action is processed, we&rsquo;ll let it return a
+value indicating success. If it fails, the game loop considers it to have never
+happened. It&rsquo;s as simple as:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="i">action</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+  <span class="k">var</span> <span class="i">success</span> <span class="o">=</span> <span class="i">action</span><span class="p">.</span><span class="i">perform</span><span class="p">();</span>
+
+  <span class="c">// Don&#39;t advance if the action failed.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="i">success</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+  <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This makes the engine more robust: you can throw arbitrary actions at it and it
+will handle them gracefully. It also keeps all of the code for a single
+mechanic, including validation, in one place: in the relevant action. Yay for
+encapsulation!</p>
+
+<p>Now, try braining yourself against the dungeon&rsquo;s stone boundary:</p>
+
+<figure>
+<canvas id="safe-fail" tabindex="3">Sorry, you need canvas support for this demo.</canvas>
+</figure>
+
+<h2>Do what I mean, not what I said</h2>
+
+<p>Success/failure handles cases where the action the player picked is totally
+bogus, but sometimes the game can infer out what they were <em>trying</em> to do. For
+example, if you try to make the hero walk into a closed door instead of using
+the dedicated &ldquo;open door&rdquo; command, odds are pretty good you want to open the
+damned door. Likewise, if you try to walk into a monster, that&rsquo;s a good time to
+consider swinging a sword.</p>
+
+<p>I know this sounds obvious, but you&rsquo;d be surprised how many roguelikes don&rsquo;t do
+this. Improving usability is one of my main goals for my game, so I care about
+this stuff. I&rsquo;ve got a pretty simple solution too.</p>
+
+<p>When an action is validating itself, it can fail outright like we saw, but it
+can also respond with an <em>alternate action</em>. It lets the action say, &ldquo;no, you
+really mean this&rdquo;.</p>
+
+<p>Since the <code>perform()</code> method on <code>Action</code> can return success, failure, or another action, we&rsquo;ll make a little class to wrap that up:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ActionResult</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="i">success</span> <span class="o">=</span> <span class="t">ActionResult</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="i">failure</span> <span class="o">=</span> <span class="t">ActionResult</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+
+  <span class="c">/// An alternate [Action] that should be performed instead of</span>
+  <span class="c">/// the one that failed.</span>
+  <span class="k">final</span> <span class="t">Action</span> <span class="i">alternative</span><span class="p">;</span>
+
+  <span class="c">/// `true` if the [Action] was successful and energy should</span>
+  <span class="c">/// be consumed.</span>
+  <span class="k">final</span> <span class="t">bool</span> <span class="i">succeeded</span><span class="p">;</span>
+
+  <span class="k">const</span> <span class="t">ActionResult</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">succeeded</span><span class="p">)</span>
+  <span class="p">:</span> <span class="i">alternative</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+
+  <span class="k">const</span> <span class="t">ActionResult</span><span class="p">.</span><span class="i">alternate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">alternative</span><span class="p">)</span>
+  <span class="p">:</span> <span class="i">succeeded</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>When an action is executing, it returns <code>ActionResult.success</code> to say everything
+went fine, <code>ActionResult.failure</code> to say nothing happened, or it can return an
+<code>ActionResult</code> with <code>.alternate</code> pointing to a new action to perform instead.</p>
+
+<p>The game loop processes that:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="i">action</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">action</span><span class="p">.</span><span class="i">perform</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="i">result</span><span class="p">.</span><span class="i">succeeded</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="i">result</span><span class="p">.</span><span class="i">alternate</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="i">action</span> <span class="o">=</span> <span class="i">result</span><span class="p">.</span><span class="i">alternate</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>We do this in a loop because an alternate may itself return an alternate, so we
+keep trying until we bottom out on an action that succeeds or fails. This turns
+out to be a handy feature for a number of things in the full game:</p>
+
+<ul>
+<li><p>When you use an item, the &ldquo;use item&rdquo; action looks up the specific thing the
+item does (shoot a fireball, teleport, etc.) and returns that as an
+alternate. When you &ldquo;use&rdquo; an equippable item, it returns the &ldquo;equip&rdquo; action
+as an alternate.</p></li>
+<li><p>If an actor &ldquo;walks&rdquo; but in no direction, it becomes a &ldquo;rest&rdquo; action which
+regains a bit of health.</p></li>
+<li><p>If an actor walks into a door, it returns the &ldquo;open door&rdquo; action as an
+alternate.</p></li>
+<li><p>If an actor tries to walk into another, it returns the &ldquo;attack&rdquo; melee action
+as an alternate.</p></li>
+</ul>
+
+<p>The last three are particularly handy because they&rsquo;re equally applicable to
+monsters. The monster AI code doesn&rsquo;t have to check for doors or opponents.
+Instead it just tries to make the monster walk where it wants to go and the
+action system handles opening doors to get there and attacking the hero when it
+reaches them. When the monster can&rsquo;t figure out where to go, it rests
+automatically.</p>
+
+<p>Believe me, anything you can do to simplify your AI code is a good idea. Enough
+jibber-jabber, let&rsquo;s see it in action:</p>
+
+<figure>
+<canvas id="alternate" tabindex="4">Sorry, you need canvas support for this
+demo.</canvas>
+</figure>
+
+<p>Notice the little room has a door now. If you try to walk into it, the game loop
+will go through the walk&rsquo;s alternate action to do the open. You can close it by
+pressing &ldquo;C&rdquo; when standing next to it.</p>
+
+<p>The wizard is smart enough to open doors too (sorry, troll and slug, no Mensa
+membership for you) and no changes to the pathfinding AI were needed to enable
+it. He just tries to walk <em>through</em> the door and miraculously succeeds.</p>
+
+<h2>The end&hellip; <em>or is it?</em></h2>
+
+<p>Crap, I&rsquo;ve already burned three thousand words of your attention and there&rsquo;s
+still cool stuff to talk about! I&rsquo;m gonna have to split this into a two parter.</p>
+
+<p>What we have now is a pretty solid (in my opinion, naturally) game loop.
+Defining behavior in actions lets us treat the player-controlled hero and
+monsters uniformly. We&rsquo;ve got a flexible speed system, and it&rsquo;s all nicely
+separated from the user interface.</p>
+
+<p>If you&rsquo;re building a relatively simple turn-based game, this is probably enough.</p>
+
+<p>But, while ASCII-art-based roguelikes aren&rsquo;t known for their visual spectacle, I
+want something that with a bit more pizazz than what I described here can dish
+up. I want the player to see an arrow arc across the room before plunking into
+the meaty face of a troll. I want fireballs to flare outwards in a ring of
+death. And when that flame touches incendiary items laying on the ground, those
+should in turn trigger a cascading conflagration.</p>
+
+<p>The game loop I have in the full game can do that. When I can find the time to
+carve out a few more standalone demos and hack up some prose, I&rsquo;ll show you how.
+In the meantime, the code for the game is <a href="https://github.com/munificent/hauberk">here</a>, and the code for
+the demos in this post are <a href="https://github.com/munificent/a-turn-based-game-loop">here</a>.</p>
+
+<p>If you want to try out the game, you can <a href="http://munificent.github.io/hauberk/">play it here</a>.</p><script type="application/dart" src="/code/2014-07-15-a-turn-based-game-loop/main.dart"></script><script src="/code/2014-07-15-a-turn-based-game-loop/packages/browser/dart.js"></script>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop//&amp;t=A Turn-Based Game Loop" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop/&amp;text=%22A Turn-Based Game Loop%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

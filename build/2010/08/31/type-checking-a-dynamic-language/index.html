@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Type Checking a Dynamic Language
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/08/31/type-checking-a-dynamic-language/" rel="bookmark"
+     title="Permanent Link to Type Checking a Dynamic Language">
+    Type Checking a Dynamic Language
+  </a>
+</h1>
+
+  <a class="older" href="/2010/08/23/void-null-maybe-and-nothing/"
+     title="Older Post &ldquo;&ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo;&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/09/01/a-type-checking-conundrum/"
+     title="Newer Post &ldquo;A Type Checking Conundrum!&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">August 31, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/python">python</a></span>
+</h4>
+
+<p>If you&rsquo;re going down the strange path of building a language that&rsquo;s half-
+dynamic and half-static, one obvious question you have to answer is, &ldquo;When the
+hell do I do the type checking?&rdquo; The general answer is, of course, &ldquo;after the
+types are defined, but before the program runs.&rdquo; This post talks about what I
+think that means for Magpie.</p>
+
+<p>To frame the question, lets look at a couple of other languages to see how they
+work. First, Java, a typical static OOP language:</p>
+
+<h2>The two languages of Java</h2>
+
+<p>If you look at a Java source file, there are almost two distinct languages mixed
+together. Consider this simple program:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">class</span> <span class="t">Hello</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">static</span> <span class="t">void</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="t">Hello</span> <span class="i">hello</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Hello</span><span class="p">();</span>
+    <span class="i">hello</span><span class="p">.</span><span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="t">void</span> <span class="i">say</span><span class="p">(</span><span class="t">String</span> <span class="i">greeting</span><span class="p">)</span> <span class="p">{</span>
+    <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="i">greeting</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>At the top level is the language of <em>definitions</em>. This language owns keywords
+like <code>public</code>, <code>class</code>, and <code>implements</code>. It&rsquo;s used for creating types, methods,
+and fields. It defines the <em>static</em> structure and types of a program.</p>
+
+<p>Nestled within that inside method bodies is the language of <em>statements</em>. This
+is what we normally think of as &ldquo;code&rdquo;&mdash;the imperative statements that a
+program executes at runtime.</p>
+
+<p>In a static language, these two languages are clearly and intentionally
+separated. This is important because the language of definitions is executed at
+compile time, and the language of statements is executed at runtime. Clearly
+delineating them in the code helps the user understand when their code will run.</p>
+
+<p>Type-checking is straightforward too. The compiler parses each source file, and
+&ldquo;executes&rdquo; the definitions by building an internal symbol table that has the
+name and definition of each class and method. Once that entire symbol table is
+built, it then type checks the method bodies (the statements) against what&rsquo;s
+declared in that symbol table.</p>
+
+<p>After that process has successfully completed, bytecode is generated and the
+program runs.</p>
+
+<h2>Everything is imperative</h2>
+
+<p>In contrast, a dynamic language like Python only has a single language: the
+language of statements. Consider this little script:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="t">Hello</span><span class="p">:</span>
+    <span class="k">def</span> <span class="i">say</span><span class="p">(</span><span class="i">self</span><span class="p">,</span> <span class="i">greeting</span><span class="p">):</span>
+        <span class="k">print</span> <span class="i">greeting</span>
+
+<span class="i">hello</span> <span class="o">=</span> <span class="t">Hello</span><span class="p">()</span>
+<span class="i">hello</span><span class="p">.</span><span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>It does pretty much the same thing as the Java program, but there&rsquo;s an important
+distinction. Instead of having a special <code>main()</code> method that gets invoked, we
+just put code at the top-level. Unlike Java, you can put regular statements at
+the top level of a script&mdash;it has no definition/statement distinction.</p>
+
+<p>In fact, even the <code>class</code> bit that <em>looks</em> like a definition, is just a
+statement. It gets executed at runtime to create a class. If we moved the <code>hello = Hello()</code> line to the top of the script, it wouldn&rsquo;t work. The <code>Hello</code> class
+would not have been defined <em>yet</em>.</p>
+
+<p>In a dynamic language, classes and types are just another thing you can create
+by executing statements, at any point in the life of a program. Since there&rsquo;s no
+type checking anyway, it makes sense to give the user this freedom, even though
+in practice most classes are created at the top-level in a fairly static
+fashion.</p>
+
+<h2>The Magpie answer</h2>
+
+<p>So now we&rsquo;re back to Magpie. Magpie is primarily a dynamic language, so it
+follows in Python&rsquo;s footsteps. There is no special definition/statement
+dichotomy, and classes are created, extended, and modified imperatively at
+runtime. This is a valid Magpie program and runs without any type checking:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">Hello</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="t">Hello</span> <span class="i">say</span><span class="p">(</span><span class="i">greeting</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">greeting</span><span class="p">)</span>
+
+<span class="k">var</span> <span class="i">hello</span> <span class="o">=</span> <span class="t">Hello</span> <span class="i">new</span>
+<span class="i">hello</span> <span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>If we <em>did</em> want to type check it, only a simple change is needed (in addition
+to actually adding some type annotations, of course): create a <code>main()</code>
+function:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">Hello</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="t">Hello</span> <span class="i">say</span><span class="p">(</span><span class="i">greeting</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">greeting</span><span class="p">)</span>
+
+<span class="k">var</span> <span class="i">main</span><span class="p">()</span>
+  <span class="k">var</span> <span class="i">hello</span> <span class="o">=</span> <span class="t">Hello</span> <span class="i">new</span>
+  <span class="i">hello</span> <span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This program will now type check that the argument you pass to <code>hello()</code> matches
+the declared type, <code>String</code>. It will do this <em>before</em> <code>main()</code> is called. So the
+general strategy is, if you want to write a dynamic program, put everything at
+the top-level. If you want type checking, put all of your definitions at the
+top-level, and the move the code you want to run after type checking into
+<code>main()</code>.</p>
+
+<h2>The evaluation model</h2>
+
+<p>More precisely, Magpie&rsquo;s evaluation model is:</p>
+
+<ol>
+<li><p><strong>Evaluate the scripts dynamically.</strong> The script and any scripts it imports
+are executed top-down without any type checking. Magpie is basically a
+dynamic language here. (One way to look at Magpie is as a static language
+with a <em>really</em> powerful preprocessor.)</p>
+
+<p>The assumption is that most of this code will be defining classes, methods,
+and functions and binding them to global variables, but you can do anything
+you want here, including writing entire programs if you don&rsquo;t care to type-
+check.</p></li>
+<li><p><strong>Type-check.</strong> Once the interpreter has finished evaluating the scripts, it
+looks in the global scope to see if you&rsquo;ve defined a function called
+<code>main()</code>. Doing so is the trigger that says, &ldquo;I want to type check.&rdquo;</p>
+
+<p>If it finds <code>main()</code>, the interpreter then type checks everything that&rsquo;s
+defined in global scope: classes, their methods, and functions. (In other
+words, Magpie uses the global scope as the compiler&rsquo;s symbol table.) If
+there are errors, it prints them out here and stops. Otherwise&hellip;</p></li>
+<li><p><strong>Run <code>main()</code>.</strong> Assuming there weren&rsquo;t any type errors, now the
+interpreter calls <code>main()</code> which can then instantiate classes, call
+functions, or do whatever, safe in the knowledge that we won&rsquo;t get here
+unless all of the type checks passed.</p></li>
+</ol>
+
+<h2>What happens if you cheat?</h2>
+
+<p>Astute readers at this point have noticed a problem. If we can imperatively
+modify classes at any point, and we can execute any imperative code after
+type checking, then what&rsquo;s to prevent us from modifying a class after it&rsquo;s been
+type checked into something that will no longer work? For example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">Foo</span>
+<span class="k">end</span>
+
+<span class="t">Foo</span> <span class="i">bar</span><span class="p">()</span> <span class="i">print</span> <span class="s">&quot;called bar&quot;</span>
+
+<span class="k">var</span> <span class="i">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+  <span class="c">// Break Foo!</span>
+  <span class="t">Foo</span> <span class="i">removeMethod</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">)</span>
+
+  <span class="c">// Now try to call it!</span>
+  <span class="k">var</span> <span class="i">foo</span> <span class="o">=</span> <span class="t">Foo</span> <span class="i">new</span>
+  <span class="i">foo</span> <span class="i">bar</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>When <code>main()</code> is type checked, <code>Foo</code> has a method called <code>bar</code> so it looks
+fine. But by the time we get to executing it, we&rsquo;ve actually yanked that
+method out and the call will fail. Uh-oh!</p>
+
+<p>Thankfully, this isn&rsquo;t the end of the world. Because Magpie is dynamic, this
+won&rsquo;t trash memory or go off into the weeds like a static language. You&rsquo;ll
+just get a &ldquo;method not found&rdquo; error at runtime.</p>
+
+<p>But the bigger question is, how should we address this situation? I&rsquo;ve got
+three options I&rsquo;m considering:</p>
+
+<ol>
+<li><p><strong>Don&rsquo;t worry about it.</strong> This is the current solution. Acknowledge that
+users can break things, but trust that they won&rsquo;t. This is pretty much how
+every dynamic language works, and yet programmers manage to survive.
+Magpie&rsquo;s philosophy is &ldquo;better type checking than a dynamic language&rdquo;, not
+&ldquo;perfect bulletproof type checking&rdquo;, so this fits.</p></li>
+<li><p><strong>Don&rsquo;t allow classes to be modified in ways that can break type checking.</strong>
+This is a safer solution that takes a little power from programmers. Magpie
+could allow you to add methods to a class, but not <em>remove</em> them once added.
+That would ensure that you can&rsquo;t imperatively break a class&rsquo;s type guarantee
+after it&rsquo;s been checked.</p></li>
+<li><p><strong>Freeze classes after type checking.</strong> This is the strictest solution. Once
+a class has been type checked, mark it as frozen. After that, any attempts
+to modify it at runtime would fail. You could create new unfrozen classes
+after type checking, but everything that&rsquo;s gone through the checker gets
+locked down.</p></li>
+</ol>
+
+<p>I&rsquo;m leaning towards the first option because it&rsquo;s simplest and most flexible,
+but I&rsquo;m open to thoughts one way or the other.</p>
+
+<h2>Thoughts?</h2>
+
+<p>So that&rsquo;s what I came up with. The code that&rsquo;s structured like a dynamic
+language runs dynamically. The code that&rsquo;s called from <code>main()</code> runs after
+type checking like a static language. The implementation is still very rough,
+but it seems to actually kind of work, strangely enough.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language//&amp;t=Type Checking a Dynamic Language" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/&amp;text=%22Type Checking a Dynamic Language%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

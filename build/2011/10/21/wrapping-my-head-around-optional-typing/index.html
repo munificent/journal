@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Wrapping My Head Around Optional Typing
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2011/10/21/wrapping-my-head-around-optional-typing/" rel="bookmark"
+     title="Permanent Link to Wrapping My Head Around Optional Typing">
+    Wrapping My Head Around Optional Typing
+  </a>
+</h1>
+
+  <a class="older" href="/2011/10/12/semicolons-are-a-shibboleth/"
+     title="Older Post &ldquo;Semicolons are a Shibboleth&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2011/10/29/a-proposal-for-null-safety-in-dart/"
+     title="Newer Post &ldquo;A Proposal for Null-Safety in Dart&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">October 21, 2011</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/language">language</a></span>
+</h4>
+
+<div class="update">
+<p><em>Update 2018/02/22:</em> With the release of <a href="https://medium.com/dartlang/announcing-dart-2-80ba01f43b6">Dart 2.0</a>, Dart <a href="https://dart.dev/dart-2">removed optional types</a> in favor of a full static type system with inference.</p>
+</div>
+
+<p>One of the really cool parts about being involved with <a href="http://dart.dev">Dart</a> is that I get a
+lot of first-hand experience with an optionally-typed language. I&rsquo;ve been
+<a href="/2010/08/31/type-checking-a-dynamic-language/">fascinated</a> <a href="/2010/09/01/a-type-checking-conundrum/">by</a> <a href="/2010/10/29/bootstrapping-a-type-system/">optional typing</a> for a while, but there are few
+opportunities to actually try it out on non-trivial code. With Dart, I get to
+use an optionally typed language whose lineage goes right back to <a href="http://www.strongtalk.org/">one of the
+original wellsprings</a>.</p>
+
+<p>What I found was that it was surprisingly hard to wrap my head around. I
+initially considered it just sort of halfway between dynamic and static typing,
+like a 50/50 blend. It turns out, I think, that is more different than that. If
+there is a line between dynamic languages and static ones, optionally typed ones
+aren&rsquo;t on that line. They float off in their own axis <a href="http://en.wikipedia.org/wiki/Complex_plane">like imaginary
+numbers</a>. In fact, I think they go off in <em>multiple</em> axes.</p>
+
+<p>Before I go into how I <em>think</em> about them, I should probably lay down the basic
+semantics. Here&rsquo;s the super science breakdown on how optional types work in
+Dart. If you want a more, uh, professional treatment, you can also check out
+<a href="https://web.archive.org/web/20120113015751/http://www.dartlang.org/articles/optional-types/">Gilad&rsquo;s less rambling version</a>.</p>
+
+<h2>Type annotations are optional</h2>
+
+<p>At it&rsquo;s heart, Dart is a dynamically typed language, so you can code without any
+annotations:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">sum</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
+  <span class="k">return</span> <span class="i">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Here, you&rsquo;ve said that <code>a</code>, <code>b</code>, and <code>result</code> can be any type at all and that&rsquo;s
+OK. But you can also choose to provide a type annotation in all of the usual
+places&mdash;variable declarations, function parameters, or fields, and return
+types. So this is valid too:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="t">num</span> <span class="i">sum</span><span class="p">(</span><span class="t">num</span> <span class="i">a</span><span class="p">,</span> <span class="t">num</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
+  <span class="k">return</span> <span class="i">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now we&rsquo;ve stated our intent that <code>a</code> and <code>b</code> hold numbers. We&rsquo;ve also said that
+<code>sum()</code> should return a number. Note that we didn&rsquo;t annotate <code>result</code>. It can
+still be anything. Dart lets you mix and match untyped and typed code, so here
+the result of a <code>a + b</code> is assigned to an untyped variable. Likewise, we get the
+untyped <code>result</code> and use it as the return value for a function with a typed
+return.</p>
+
+<p>This mixing and matching is important because it means you can gradually fold
+types into your code. You can leave them all off while you&rsquo;re prototyping and
+then start filling them in as you&rsquo;ve nailed down the design.</p>
+
+<h3>Tools can use them</h3>
+
+<p>OK, so you&rsquo;ve sprinkled some types through your code. Why bother? What do they
+do? The most basic &ldquo;feature&rdquo; that, surprisingly, does add value, is that they
+help document your code. Other people reading it can see what types you expect
+variables to be.</p>
+
+<p>The next step up on the scale of usefulness is that, since they&rsquo;re in the code,
+tools like IDEs, compilers, and linters are free to do whatever analysis they
+want using them. Dart does two favors for anyone writing an editor for it:</p>
+
+<ol>
+<li><p><strong>Types have a built-in declarative syntax.</strong> Unlike JavaScript, Python and
+other dynamic languages, Dart doesn&rsquo;t use an <em>imperative</em> syntax for
+defining types. The grammar for classes and interfaces is essentially
+static. That means an editor can figure out all of the methods a type
+supports just by parsing a source file. There&rsquo;s no runtime modifcation or
+monkey-patching that it needs to worry about.</p></li>
+<li><p><strong>Variables can have a known type.</strong> If you choose to annotate them (or the
+editor can infer them), then it knows the type of a variable. If it knows
+the type, then thanks to the previous point, it knows what you can do with
+it. Ta-da: auto-complete and refactoring are now possible for a dynamic
+language. It can also do static type checking like you get in most
+statically-typed languages.</p></li>
+</ol>
+
+<h3>They can be checked at runtime</h3>
+
+<p>But tooling is gilding the lily. When you&rsquo;re talking about types, you expect,
+you know, a <em>type checker</em>. You have that too (at least in the VM&mdash;what types
+mean when compiled to JS is another interesting story). When you run in checked
+mode, every type annotation gets checked at runtime. It&rsquo;s as if every line of
+code like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
+</code></pre></div>
+<p>Turns into (more or less, simplifying things a bit) this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">_temp</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="i">_temp</span> <span class="k">is</span><span class="o">!</span> <span class="t">int</span><span class="p">)</span> <span class="k">throw</span> <span class="s">&#39;Type error! Run for your life!&#39;</span><span class="p">;</span>
+<span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">_temp</span><span class="p">;</span>
+</code></pre></div>
+<p>You can think of every type annotation as an <em>expectation</em>: this thing <em>should</em>
+be a number here. In checked mode, the VM will constantly validate your
+expectations and stop if something doesn&rsquo;t hold.</p>
+
+<p>It&rsquo;s important to note that these checks are done <em>dynamically</em>, at runtime.
+There isn&rsquo;t a separate static type checking pass. For example, if you have code
+like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">if</span> <span class="p">(</span><span class="n">2</span> <span class="o">==</span> <span class="n">3</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c">// Should never get here.</span>
+  <span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>You won&rsquo;t see a type error here because execution never actually gets inside the
+<code>if</code> block. You may be rightly wondering why in the hell you&rsquo;d want to wait
+until runtime to find a type error instead of doing it statically. Dart&rsquo;s take
+is that you can do both.</p>
+
+<p>Note that we said earlier that tools <em>can</em> do static type checking if they want.
+What Dart does is <em>also</em> give you the option to perform those checks at runtime.
+This is actually how most static languages work too. Very few languages are
+fully statically sound. Most enforce at least some soundness through runtime
+checks. Consider this Java code:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="t">String</span><span class="p">[]</span> <span class="i">array</span> <span class="o">=</span> <span class="k">new</span> <span class="t">String</span><span class="p">[</span><span class="n">5</span><span class="p">];</span>
+<span class="t">Object</span><span class="p">[]</span> <span class="i">untyped</span> <span class="o">=</span> <span class="i">array</span><span class="p">;</span>
+<span class="i">untyped</span><span class="p">[</span><span class="n">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span> <span class="c">// Not a string.</span>
+</code></pre></div>
+<p>Here we&rsquo;re creating an array of strings. Then we assign it to a variable whose
+type is an array of objects (i.e. anything). Then we try to stuff something that
+isn&rsquo;t a string (but <em>is</em> an object) in it.</p>
+
+<div class="update">
+<p><em>Update 2011/10/23:</em> I was wrongly using an int array here. Changed it to <code>string[]</code>. I didn't realize only arrays of reference types are covariant in Java.
+</p>
+</div>
+
+<p>The static type checker won&rsquo;t catch this because <a href="http://c2.com/cgi/wiki?JavaArraysBreakTypeSafety">arrays are covariant in
+Java</a>. That means that to ensure the last line doesn&rsquo;t crash
+your VM, it will do a <em>runtime</em> check every time you set an element in an array
+to make sure it&rsquo;s the right type.</p>
+
+<p>There&rsquo;s another common case where you skirt around the static checker and rely
+on dynamic type tests: casts.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="t">void</span> <span class="i">callback</span><span class="p">(</span><span class="t">Object</span> <span class="i">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c">// It&#39;s my callback, so I know the data is an int.</span>
+  <span class="t">int</span> <span class="i">value</span> <span class="o">=</span> <span class="p">(</span><span class="t">Integer</span><span class="p">)</span> <span class="i">data</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>There are times when you know more than the type system does and you just
+forcibly assert your knowledge. Doing so shouldn&rsquo;t let you just take down the VM
+(unlike in C++ where an improper type cast <em>can</em> set your house on fire), so
+every cast does a runtime check too.</p>
+
+<p>Since Dart lets you mix untyped and typed code, it just embraces this model of
+validating at runtime more fully. Doing so has a couple of other advantages:</p>
+
+<ol>
+<li><p><strong>You don&rsquo;t have to rely on your type system for security.</strong> Java tries to
+rely on the type system and bytecode verification to ensure that code can&rsquo;t
+maliciously break the security guarantees of the VM. From what I&rsquo;ve heard,
+doing so turned out to be unbelievably complicated.</p>
+
+<p>Dart, on the other hand, can rely on a much simpler runtime model
+(isolates) to ensure security boundaries.</p></li>
+<li><p><strong>The type system can be less pessimistic.</strong> Static type systems, by their
+fundamental nature, are pessimistic. Since they don&rsquo;t know what <em>actual</em>
+code paths will execute at runtime and which <em>actual</em> types a variable will
+have, they err on the side of caution. They report errors for any code that
+<em>may</em> run, or any variables that <em>may</em> have the wrong type.</p>
+
+<p>This is good for ensuring real errors don&rsquo;t get missed, but it&rsquo;s a drag when
+it reports false positives. Consider:</p>
+<pre><code>bool contains(List&lt;Object&gt; collection, Object needle) {
+  for (final item in collection) {
+    if (item == needle) return true;
+  }
+  return false;
+}
+
+var numbers = &lt;int&gt;[1, 2, 3, 4];
+print(numbers.contains(2));
+</code></pre>
+
+<p>There&rsquo;s a type error here according to most static type systems. We&rsquo;re
+passing a <code>List&lt;int&gt;</code> to a function that takes a <code>List&lt;Object&gt;</code>, which
+relies on <a href="http://en.wikipedia.org/wiki/Covariance_and_contravariance_%28computer_science%29">covariance</a>, but that isn&rsquo;t statically safe. This <code>contains</code>
+function <em>could</em> call <code>collection.add("not an int")</code> and that would be an
+error.</p>
+
+<p>However, it <em>doesn&rsquo;t actually do that</em>. It&rsquo;s using the collection in a way
+that&rsquo;s perfectly safe with covariance. By loosening the type system, and
+relying on dynamic checks to catch <em>actual</em> errors at runtime, we can
+reduce the number of false positives that the type system chokes on.</p></li>
+</ol>
+
+<h3>They can be ignored at runtime</h3>
+
+<p>This is where things get weird. (Actually, if you&rsquo;re a type system person,
+they&rsquo;re already weird because covariant generics are wrong wrong wrong.) I&rsquo;ve
+been talking about checked mode, but there&rsquo;s another mode: production mode. In
+that mode, the type annotations <em>completely ignored</em>. In other words, Dart lets
+you run this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
+<span class="t">bool</span> <span class="i">b</span> <span class="o">=</span> <span class="s">&#39;not a bool either&#39;</span><span class="p">;</span>
+<span class="t">num</span> <span class="i">wtf</span> <span class="o">=</span> <span class="i">i</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
+<span class="i">print</span><span class="p">(</span><span class="i">wtf</span><span class="p">);</span> <span class="c">// &quot;not intnot a bool either&quot;.</span>
+</code></pre></div>
+<p>This probably seems a little odd.</p><img alt="Your type errors will blot out the sun! Then we will code in the shade." src="/image/2011/10/daaart.jpeg" class="framed"/>
+
+<p>Maybe more than a little odd. In production mode, Dart behaves exactly as if it were a dynamically-typed language. Imagine if you decided to write your JavaScript like this (not that anyone would be <a href="https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler">crazy enough to do that</a>):</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="c">/* int */</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
+<span class="k">var</span> <span class="c">/* bool */</span> <span class="i">b</span> <span class="o">=</span> <span class="s">&#39;not a bool either&#39;</span><span class="p">;</span>
+<span class="k">var</span> <span class="c">/* num */</span> <span class="i">wtf</span> <span class="o">=</span> <span class="i">i</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
+<span class="i">print</span><span class="p">(</span><span class="i">wtf</span><span class="p">);</span> <span class="c">// &quot;not intnot a bool either&quot;.</span>
+</code></pre></div>
+<p>Unsurprisingly, those comments won&rsquo;t do anything at runtime. That&rsquo;s how Dart runs in production mode.</p>
+
+<h2>How should you think of this?</h2>
+
+<p>OK, so what do we have? We have a nice little syntax for jamming type
+annotations into your program. If you use them, then tools can take advantage of
+that to help you work with your code. Also, in checked mode, the VM will
+validate them for you. But in production, they are ignored.</p>
+
+<p>That&hellip; doesn&rsquo;t really sound much like a &ldquo;type system&rdquo; compared to other
+languages. In fact, if you try to think of it as a type system, it&rsquo;s pretty
+disappointing. It&rsquo;s more like some type&hellip; stuff. Instead of thinking of it in
+terms of type systems, I tried to find something else I was familiar with from
+other languages that I could map it to. It finally clicked when someone at work
+referred to them as <em>type assertions</em>.</p>
+
+<p><strong>Now I get it.</strong></p>
+
+<p>If you&rsquo;ve done C or C++ programming, you&rsquo;ve probably used <a href="http://en.wikipedia.org/wiki/Assertion_%28computing%29"><code>assert()</code></a>
+or some flavor of it. If not, it looks like this:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="t">float</span> <span class="i">divide</span><span class="p">(</span><span class="t">float</span> <span class="i">num</span><span class="p">,</span> <span class="t">float</span> <span class="i">denom</span><span class="p">)</span> <span class="p">{</span>
+  <span class="i">assert</span><span class="p">(</span><span class="i">denom</span> <span class="o">!=</span> <span class="n">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="i">num</span> <span class="o">/</span> <span class="i">denom</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That <code>assert()</code> call evaluates its argument. If the result is false, then
+<code>assert()</code> aborts the program and starts ringing the alarm bells. Actually,
+that&rsquo;s not entirely true. <em>If you run the program in debug mode</em> and the
+assertion fails, then it halts.</p>
+
+<p>Most projects have at least two build configurations. &ldquo;Debug&rdquo; is what developers
+use day in and day out. It has extra diagnostic stuff like symbol table
+information for debugging, and also includes all of the assertions. But there is
+also usually a &ldquo;release&rdquo; mode. This is the build you ship to customers and run
+in production. In that mode, the assertions are compiled out. They are erased
+completely. Sound familiar?</p>
+
+<p>Now why on Earth would you want to disable your asserts in release mode? Isn&rsquo;t
+that like wearing your life jacket to boating class and then taking it off when
+you go out on the water?</p>
+
+<p>It turns out that removing your asserts at runtime actually has a few advantages:</p>
+
+<ol>
+<li><p><strong>It&rsquo;s faster.</strong> All of those assert conditions have to be executed and
+checked at runtime. That can add a lot of runtime overhead. When I used to
+be a game developer, debug builds of games typically ran much slower than
+release. (Playing a videogame running at four frames a second is a strange
+skill to cultivate.)</p></li>
+<li><p><strong>The app should try its hardest to continue.</strong> Once your program is in the
+customer&rsquo;s hands, you <em>really</em> don&rsquo;t want it to crash. It&rsquo;s possible that
+some of those assertions are bogus and the app will still actually work if
+you run past a failed one. Sure, in rehearsal you stop on the first wrong
+note, but once the audience sits down and the curtains go up, <em>the show must
+go on.</em></p></li>
+<li><p><strong>The user can&rsquo;t handle a failed assertion anyway.</strong> If you <em>were</em> to let
+the asserts remain in release mode, what do you do when one fails? In
+debug mode, a failed assertion will do all sorts of helpful stuff like
+show a stack trace with line numbers, maybe do a heap dump. All that is
+really helpful&hellip; if you&rsquo;re a programmer on the project.</p>
+
+<p>If you&rsquo;re just Joan User, that&rsquo;s utterly useless (and may be a security
+hazard!) The best the app could hope to do is show a sad face error message
+and restart. There&rsquo;s nothing an end user can productively do with the
+knowledge that a bug in the code itself has manifested.</p></li>
+</ol>
+
+<p>So what Dart does is apply that reasoning to the type assertions themselves. You
+really can think of type annotations in Dart as being syntactic sugar for this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">_temp</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
+<span class="k">assert</span><span class="p">(</span><span class="i">_temp</span> <span class="k">is</span> <span class="t">int</span><span class="p">);</span>
+<span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">_temp</span><span class="p">;</span>
+</code></pre></div>
+<p>As a developer, you run in checked mode and Dart gives you much of the benefit
+of a typed language. All those asserts help you enforce API requirements just
+like they do in C++ or other languages. In fact, you could adopt this style in
+JavaScript if you really wanted to.</p>
+
+<p>By baking a certain flavor of assert (asserting on type) into the <em>syntax</em> of
+the language itself, Dart makes it easy for tools to parse those type
+annotations too and provide more contextual information about your code.</p>
+
+<h2>Is it a type system?</h2>
+
+<p>The term &ldquo;type system&rdquo; carries a lot of implied assumptions and meaning with it.
+If you take what you know about type systems and look at Dart through that lens,
+you will be disappointed, infuriated, and/or confused.</p>
+
+<p>This doesn&rsquo;t mean Dart&rsquo;s approach to types is a <em>bad feature</em>, just that it&rsquo;s
+not what you think it is. Meatloaf is a pretty terrible dessert, but it&rsquo;s a fine
+entrée. If you don&rsquo;t think about type systems and just ask yourself &ldquo;is the set
+of features that Dart provides helpful in writing code?&rdquo;, I think the answer is
+&ldquo;yes&rdquo;. It&rsquo;s just not helpful in exactly the same way that type systems in other
+languages help.</p>
+
+<p>I don&rsquo;t really think of Dart as having a <em>type system.</em> I think of it as having
+<em>type requirements</em>. I can use types to define what the APIs of my library
+expect (preconditions) and promise to deliver (postconditions). At runtime,
+those assertions will be validated so I can figure out which side is failing to
+live up to its obligation.</p>
+
+<p>I find that&rsquo;s a pretty handy tool to have, and it&rsquo;s really nice to get that
+without having to give up the simplicity and flexibility of a dynamically typed
+language.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2011/10/21/wrapping-my-head-around-optional-typing//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2011/10/21/wrapping-my-head-around-optional-typing//&amp;t=Wrapping My Head Around Optional Typing" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2011/10/21/wrapping-my-head-around-optional-typing/&amp;text=%22Wrapping My Head Around Optional Typing%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2011/10/21/wrapping-my-head-around-optional-typing/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2011/10/21/wrapping-my-head-around-optional-typing/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2011/10/21/wrapping-my-head-around-optional-typing/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Using an Iterator as a Game Loop
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2008/11/17/using-an-iterator-as-a-game-loop/" rel="bookmark"
+     title="Permanent Link to Using an Iterator as a Game Loop">
+    Using an Iterator as a Game Loop
+  </a>
+</h1>
+
+  <a class="older" href="/2008/05/12/visualizing-the-democratic-primary/"
+     title="Older Post &ldquo;Visualizing the Democratic Primary&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2008/11/23/constrained-compound-design-pattern/"
+     title="Newer Post &ldquo;&ldquo;Constrained Compound&rdquo; Design Pattern&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">November 17, 2008</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/game-dev">game-dev</a> <a href="/category/roguelike">roguelike</a></span>
+</h4>
+
+<p>If you&rsquo;ve ever worked on a game before (and if you code, you probably have, at
+least on your own), you&rsquo;ve seen the venerable <a href="https://dewitters.com/dewitters-gameloop/comment-page-1/">game loop</a>. It&rsquo;s the core loop
+in the executable that iterates as long as the game is running. In GUI apps, an
+<a href="http://en.wikipedia.org/wiki/Event_loop">event loop</a> accomplishes the same goal of keeping the executable running
+indefinitely. A simple game loop looks like this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">GameLoop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="i">mPlaying</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="i">HandleUserInput</span><span class="p">();</span>
+        <span class="i">UpdateGameState</span><span class="p">();</span>
+        <span class="i">Render</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Pretty straightforward, and it&rsquo;s reassuring to think that even the most advanced
+blockbuster game on the market has some code quite similar to this in it
+somewhere.</p>
+
+<h2>Separating out the UI</h2>
+
+<p>However, my game project is a <a href="http://rephial.org/">turn-based roguelike</a>. This means
+<code>HandleUserInput()</code> blocks indefinitely until the user has chosen a move. Also,
+I&rsquo;m a design purist, so I want to not have engine code (which is where the game
+loop lives) directly call into UI-land code (<code>HandleUserInput()</code>). Right now the
+game is ASCII, but if I ever add graphics I don&rsquo;t want to change the engine.</p>
+
+<p>So what I did was move the loop back into UI-land (i.e. the normal event loop
+GUIs have). <code>GameLoop()</code> in the engine now updates one step of the game and
+returns.</p>
+
+<p>Likewise, instead of explicitly calling <code>Render()</code>, I let the engine raise
+events when things happen&mdash;monsters move, items are used, etc. The UI can hook
+into those and render the parts it needs to. So <em>&hellip;hand-waving&hellip;</em> don&rsquo;t worry
+about rendering.</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">ProcessGame</span><span class="p">(</span><span class="t">UserInput</span> <span class="i">input</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="i">HandleUserInput</span><span class="p">(</span><span class="i">input</span><span class="p">);</span>
+    <span class="i">UpdateGameState</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Still pretty dumb. Let&rsquo;s delve into updating the game state.</p>
+
+<h2>Monsters!</h2>
+
+<p>The game has a dungeon with a bunch of monsters and the player-controlled hero.
+Something like:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">UpdateGameState</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="i">Hero</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+
+    <span class="k">foreach</span> <span class="p">(</span><span class="t">Monster</span> <span class="i">monster</span> <span class="k">in</span> <span class="i">Monsters</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="i">monster</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This works for games like checkers where everyone takes exactly one turn. Here&rsquo;s
+where it gets a bit more complex. In my game, each entity moves at its own speed
+so some may get more than one turn before others go. In addition, the hero is
+basically the same thing as a monster except the player controls him instead of
+AI doing it. Like this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">UpdateGameState</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c">// Entities has the hero in it too.</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="t">Entity</span> <span class="i">entity</span> <span class="k">in</span> <span class="i">Entities</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="i">entity</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The tricky bit is because of speed, the UI may need to call <code>ProcessGame()</code>
+multiple times before the hero actually needs user input. If the hero is slower
+than monsters, some monsters will take multiple steps before the hero takes one.
+This means there is no longer a 1-1 correspondence between <code>ProcessGame()</code> calls
+and <code>HandleUserInput()</code>. In fact, the UI has to ask the engine if it&rsquo;s time to
+provide user input. So <code>ProcessGame()</code> really become &ldquo;process the game in a loop
+until we need user input to continue&rdquo;:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">ProcessGame</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="t">Entity</span> <span class="i">entity</span> <span class="o">=</span> <span class="i">Entities</span><span class="p">[</span><span class="i">mCurrentEntity</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="i">entity</span><span class="p">.</span><span class="i">NeedsUserInput</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="i">entity</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+            <span class="i">mCurrentEntity</span> <span class="o">=</span> <span class="p">(</span><span class="i">mCurrentEntity</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">Entities</span><span class="p">.</span><span class="i">Count</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Fairly simple. We loop through the entities, wrapping around and keep going
+until we reach the hero who needs a move. But you&rsquo;ll notice we had to create a
+field, <code>mCurrentEntity</code>, where we were just using a local <code>foreach</code> loop before.
+That lets us pick up where we left off the last time we called the function.</p>
+
+<h2>It gets worse</h2>
+
+<p>That isn&rsquo;t so bad, but I also added processing for items (if you lay a burning
+torch on the ground, it needs to process so it can eventually burn out):</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">ProcessGame</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="i">mInEntities</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="t">Entity</span> <span class="i">entity</span> <span class="o">=</span> <span class="i">Entities</span><span class="p">[</span><span class="i">mCurrentEntity</span><span class="p">];</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="i">entity</span><span class="p">.</span><span class="i">NeedsUserInput</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="i">entity</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+
+                <span class="i">mCurrentEntity</span><span class="o">++</span><span class="p">;</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="i">mCurrentEntity</span> <span class="o">&gt;=</span> <span class="i">Entities</span><span class="p">.</span><span class="i">Count</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="i">mCurrentEntity</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+                    <span class="i">mInEntities</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="t">Item</span> <span class="i">item</span> <span class="o">=</span> <span class="i">Items</span><span class="p">[</span><span class="i">mCurrentItem</span><span class="p">];</span>
+            <span class="i">item</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+
+            <span class="i">mCurrentItem</span><span class="o">++</span><span class="p">;</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="i">mCurrentItem</span> <span class="o">&gt;=</span> <span class="i">Items</span><span class="p">.</span><span class="i">Count</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="i">mCurrentItem</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+                <span class="i">mInEntities</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><em>Yeesh.</em> Now we&rsquo;ve got another field to track the current item, and another one
+just to track which of the two loops we&rsquo;re in. It&rsquo;s getting hairy and this still
+isn&rsquo;t as complex as my actual game&rsquo;s process function, which includes single
+moves which are multiple steps and some other shenanigans.</p>
+
+<p>But, there&rsquo;s hope. Remember when I said, &ldquo;lets up pick up where we left off the
+last time we called it&rdquo;. Those member variables exist basically to get us to
+jump back to the last place we were in the function. Sound familiar?</p>
+
+<h2>Enter iterators</h2>
+
+<p>Here&rsquo;s an iterator:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">IEnumerable</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span> <span class="i">Fibonacci</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+    <span class="t">int</span> <span class="i">b</span> <span class="o">=</span> <span class="n">1</span><span class="p">;</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">yield return</span> <span class="i">a</span><span class="p">;</span>
+
+        <span class="t">int</span> <span class="i">swap</span> <span class="o">=</span> <span class="i">a</span><span class="p">;</span>
+        <span class="i">a</span> <span class="o">=</span> <span class="i">b</span><span class="p">;</span>
+        <span class="i">b</span> <span class="o">=</span> <span class="i">swap</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>yield return</code> lets us pick up where we left off, and we didn&rsquo;t have to create
+any members to keep track of <code>a</code> and <code>b</code> because the <code>IEnumerable&lt;int&gt;</code> created
+automatically by the compiler encapsulates that. A perfect fit! Let&rsquo;s turn the
+game processing into the same thing:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">IEnumerable</span><span class="o">&lt;</span><span class="t">bool</span><span class="o">&gt;</span> <span class="i">ProcessGame</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="t">Entity</span> <span class="i">entity</span> <span class="k">in</span> <span class="i">Entities</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="i">entity</span><span class="p">.</span><span class="i">NeedsUserInput</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">yield return</span> <span class="k">true</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="i">entity</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="t">Item</span> <span class="i">item</span> <span class="k">in</span> <span class="i">Items</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="i">item</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Much simpler, and we let the language take care of encapsulating the state
+needed to return for us. Less code for us to monkey with.</p>
+
+<h2>The final bit</h2>
+
+<p>The only annoying bit left now is that the UI actually needs to call
+<code>ProcessGame()</code> <em>once</em> and then iterate through the returned iterator
+afterwards. To make things nicer, we can let the game handle that so that
+<code>ProcessGame()</code> works exactly like it used to:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">ProcessGame</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="i">mIterator</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="i">mIterator</span> <span class="o">=</span> <span class="i">CreateProcessIterator</span><span class="p">().</span><span class="i">GetEnumerator</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="i">mIterator</span><span class="p">.</span><span class="i">MoveNext</span><span class="p">();</span>
+    <span class="t">bool</span> <span class="i">dummy</span> <span class="o">=</span> <span class="i">mIterator</span><span class="p">.</span><span class="i">Current</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="t">IEnumerable</span><span class="o">&lt;</span><span class="t">bool</span><span class="o">&gt;</span> <span class="i">CreateProcessIterator</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="t">Entity</span> <span class="i">entity</span> <span class="k">in</span> <span class="i">Entities</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="i">entity</span><span class="p">.</span><span class="i">NeedsUserInput</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">yield return</span> <span class="k">true</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="i">entity</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="t">Item</span> <span class="i">item</span> <span class="k">in</span> <span class="i">Items</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="i">item</span><span class="p">.</span><span class="i">Move</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>You&rsquo;ll note that in the above example, we&rsquo;re using <code>IEnumerable&lt;bool&gt;</code>. The
+<code>bool</code> there is pretty much arbitrary because the values of the <code>IEnumerable</code>
+are irrelevant here. It&rsquo;s the <a href="http://en.wikipedia.org/wiki/Side_effect_(computer_science)">side effect</a> of enumerating (i.e. updating the
+game state) that matters. In the game, <code>Process()</code> actually does return
+something so that the UI knows whether the game needs user input, or just to
+pause for tick while showing an animation.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop//&amp;t=Using an Iterator as a Game Loop" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop/&amp;text=%22Using an Iterator as a Game Loop%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

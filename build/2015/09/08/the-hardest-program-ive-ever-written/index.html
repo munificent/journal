@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      The Hardest Program I&rsquo;ve Ever Written
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2015/09/08/the-hardest-program-ive-ever-written/" rel="bookmark"
+     title="Permanent Link to The Hardest Program I&rsquo;ve Ever Written">
+    The Hardest Program I&rsquo;ve Ever Written
+  </a>
+</h1>
+
+  <a class="older" href="/2015/09/07/what-the-hero-sees/"
+     title="Older Post &ldquo;What the Hero Sees: Field-of-View for Roguelikes&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2016/06/16/long-names-are-long/"
+     title="Newer Post &ldquo;Long Names Are Long&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">September 08, 2015</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a></span>
+</h4>
+
+<style>
+.skull, .skull-note {
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+
+  background: hsl(35, 100%, 96%);
+  color: hsl(35, 40%, 50%);
+
+  padding: 1px;
+}
+
+.skull::before, .skull-note::before {
+  content: "\01f480";
+  margin-right: -2px;
+}
+
+a.skull {
+  position: relative;
+  top: -0.4em;
+  font-size: 80%;
+}
+
+a.skull:hover, a.skull-note:hover {
+  color: hsl(35, 100%, 30%);
+}
+</style>
+
+<p>The hardest program I&rsquo;ve ever written, once you strip out the whitespace, is
+3,835 lines long. That handful of code took me almost a year to write. Granted,
+that doesn&rsquo;t take into account the code that didn&rsquo;t make it. The <a href="https://github.com/dart-lang/dart_style/commits/master">commit
+history</a> shows that I deleted 20,704 lines of code over that time. Every
+surviving line has about three fallen comrades.</p>
+
+<p>If it took that much thrashing to get it right, you&rsquo;d expect it to do something
+pretty deep right? Maybe a low-level hardware interface or some wicked graphics
+demo with tons of math and pumping early-90s-style techno? A likely-to-turn-evil
+machine learning AI Skynet thing?</p>
+
+<p>Nope. It reads in a string and writes out a string. The only difference between
+the input and output strings is that it modifies some of the whitespace
+characters. I&rsquo;m talking, of course, about <a href="https://github.com/dart-lang/dart_style">an automated code
+formatter</a>.</p>
+
+<h2>Introducing dartfmt</h2>
+
+<p>I work on the <a href="https://www.dartlang.org/">Dart</a> programming language. Part of my job is helping make Dart
+code more readable, idiomatic, and consistent, which is why I ended up writing
+our <a href="https://www.dartlang.org/articles/style-guide/">style guide</a>. That was a good first step, but any style guide written in
+English is either so brief that it&rsquo;s ambiguous, or so long that no one reads it.</p>
+
+<p>Go&rsquo;s <a href="https://golang.org/cmd/gofmt/">gofmt</a> tool showed a better solution: automatically format
+everything. Code is easier to read and contribute to because it&rsquo;s already in the
+style you&rsquo;re used to. Even if the output of the formatter isn&rsquo;t great, it ends
+those interminable soul-crushing arguments on code reviews about formatting.</p>
+
+<p>Of course, I still have to sell users on running the formatter in the first
+place. For <em>that</em>, having great output really does matter. Also, I&rsquo;m pretty
+picky with the formatting in my own code, and I didn&rsquo;t want to tell users to use
+a tool that I didn&rsquo;t use myself.</p>
+
+<p>Getting that kind of quality means applying pretty sophisticated formatting
+rules. That in turn makes <em>performance</em> difficult. I knew balancing quality and
+speed would be hard, but I didn&rsquo;t realize just how deep the rabbit hole went.</p>
+
+<p>I have finally emerged back into the sun, and I&rsquo;m pleased with what I brought
+back. I like the output, and the performance is solid. On my laptop, it can blow
+through over two million lines of code in about 45 seconds, using a single core.</p>
+
+<h2>Why is formatting hard?</h2>
+
+<p>At this point, you&rsquo;re probably thinking, &ldquo;Wait. What&rsquo;s so hard about
+formatting?&rdquo; After you&rsquo;ve parsed, can&rsquo;t you just walk the <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</a> and
+<a href="https://en.wikipedia.org/wiki/Prettyprint">pretty-print</a> it with some whitespace?</p>
+
+<p>If every statement fit within the column limit of the page, yup. It&rsquo;s a piece of
+cake. (I think that&rsquo;s what gofmt does.) But our formatter also keeps your code
+within the line length limit. That means adding line breaks (or &ldquo;splits&rdquo; as the
+formatter calls them), and determining the best place to add those is <a href="https://en.wikipedia.org/wiki/Line_wrap_and_word_wrap#Knuth.27s_algorithm">famously
+hard</a>.</p>
+
+<p>Check out this guy:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">experimental</span> <span class="o">=</span> <span class="i">document</span><span class="p">.</span><span class="i">querySelectorAll</span><span class="p">(</span><span class="s">&#39;link&#39;</span><span class="p">).</span><span class="i">any</span><span class="p">((</span><span class="i">link</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="i">link</span><span class="p">.</span><span class="i">attributes</span><span class="p">[</span><span class="s">&#39;rel&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;import&#39;</span> <span class="o">&amp;&amp;</span>
+        <span class="i">link</span><span class="p">.</span><span class="i">attributes</span><span class="p">[</span><span class="s">&#39;href&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="i">POLYMER_EXPERIMENTAL_HTML</span><span class="p">);</span>
+</code></pre></div>
+<p>There are thirteen places where a line break is possible here according to our
+style rules. That&rsquo;s 8,192 different combinations if we brute force them all <a
+id="1" href="#1-note" class="skull">1</a>. The search space we have to cover is
+<em>exponentially</em> large, and even ranking different solutions is a subtle problem.
+Is it better to split before the <code>.any()</code>? Why or why not?</p>
+
+<div class="update">
+<p><strong>What is up with the skulls?</strong></p>
+
+<p>I had two goals with this article: to explain how dartfmt works, and to show
+a realistic picture of how a real programmer solves a difficult problem with all
+of the messiness that entails. Alas, the first is more than long enough to try
+your patience, so I shunted all of the dead ends and failed attempts to
+footnotes. Click the skulls to laugh at my misfortune.</p></div>
+
+<p>In Dart, we made things harder on ourselves. We have anonymous functions, lots
+of <a href="https://api.dartlang.org/133511/dart-core/Iterable-class.html">higher-order functions</a>, and&mdash;until we added <a href="https://www.dartlang.org/articles/await-async/"><code>async</code> and
+<code>await</code></a>&mdash;used <a href="https://api.dartlang.org/1.12.1/dart-async/Future-class.html">futures</a> for concurrency. That means lots of
+callbacks and lots of long method chains. Some Dart users really dig a
+functional style and appear to be playing a game where whoever writes the most
+code with the fewest semicolons wins.</p>
+
+<p>Here&rsquo;s real code from an amateur player:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">_bindAssignablePropsOn</span><span class="p">.</span><span class="i">forEach</span><span class="p">((</span><span class="t">String</span> <span class="i">eventName</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">node</span>
+    <span class="p">.</span><span class="i">addEventListener</span><span class="p">(</span><span class="i">eventName</span><span class="p">,</span> <span class="p">(</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">zone</span><span class="p">.</span><span class="i">run</span><span class="p">(</span>
+        <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">bindAssignableProps</span><span class="p">.</span><span class="i">forEach</span><span class="p">(</span>
+            <span class="p">(</span><span class="i">propAndExp</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">propAndExp</span><span class="p">[</span><span class="n">1</span><span class="p">].</span><span class="i">assign</span><span class="p">(</span>
+                <span class="i">scope</span><span class="p">.</span><span class="i">context</span><span class="p">,</span> <span class="i">jsNode</span><span class="p">[</span><span class="i">propAndExp</span><span class="p">[</span><span class="n">0</span><span class="p">]])))));</span>
+</code></pre></div>
+<p>Yeah, that&rsquo;s four nested functions. 1,048,576 ways to split that one. Here&rsquo;s one
+of the best that I&rsquo;ve found. This is what a pro player brings to the game:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">return</span> <span class="i">doughnutFryer</span>
+    <span class="p">.</span><span class="i">start</span><span class="p">()</span>
+    <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">_frostingGlazer</span><span class="p">.</span><span class="i">start</span><span class="p">())</span>
+    <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="t">Future</span><span class="p">.</span><span class="i">wait</span><span class="p">([</span>
+          <span class="i">_conveyorBelts</span><span class="p">.</span><span class="i">start</span><span class="p">(),</span>
+          <span class="i">sprinkleSprinkler</span><span class="p">.</span><span class="i">start</span><span class="p">(),</span>
+          <span class="i">sauceDripper</span><span class="p">.</span><span class="i">start</span><span class="p">()</span>
+        <span class="p">]))</span>
+    <span class="p">.</span><span class="i">catchError</span><span class="p">(</span><span class="i">cannotGetConveyorBeltRunning</span><span class="p">)</span>
+    <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">tellEveryoneDonutsAreJustAboutDone</span><span class="p">())</span>
+    <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="t">Future</span><span class="p">.</span><span class="i">wait</span><span class="p">([</span>
+          <span class="i">croissantFactory</span><span class="p">.</span><span class="i">start</span><span class="p">(),</span>
+          <span class="i">_giantBakingOvens</span><span class="p">.</span><span class="i">start</span><span class="p">(),</span>
+          <span class="i">butterbutterer</span><span class="p">.</span><span class="i">start</span><span class="p">()</span>
+        <span class="p">])</span>
+            <span class="p">.</span><span class="i">catchError</span><span class="p">(</span><span class="i">_handleBakingFailures</span><span class="p">)</span>
+            <span class="p">.</span><span class="i">timeout</span><span class="p">(</span><span class="i">scriptLoadingTimeout</span><span class="p">,</span>
+                <span class="i">onTimeout</span><span class="p">:</span> <span class="i">_handleBakingFailures</span><span class="p">)</span>
+            <span class="p">.</span><span class="i">catchError</span><span class="p">(</span><span class="i">cannotGetConveyorBeltRunning</span><span class="p">))</span>
+    <span class="p">.</span><span class="i">catchError</span><span class="p">(</span><span class="i">cannotGetConveyorBeltRunning</span><span class="p">)</span>
+    <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="p">{</span>
+  <span class="i">_logger</span><span class="p">.</span><span class="i">info</span><span class="p">(</span><span class="s">&quot;Let&#39;s eat!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>(The funny names are because this was sanitized from internal code.) That&rsquo;s a
+<em>single</em> statement, all 565 characters of it. There are about 549 <em>billion</em> ways
+we could line break it.</p>
+
+<p>Ultimately, this is what the formatter does. It applies some fairly
+sophisticated ranking rules to find the best set of line breaks from an
+exponential solution space. Note that &ldquo;best&rdquo; is a property of the <em>entire
+statement</em> being formatted. A line break changes the indentation of the
+remainder of the statement, which in turn affects which other line breaks are
+needed. Sorry, Knuth. No <a href="https://en.wikipedia.org/wiki/Dynamic_programming">dynamic programming</a> this time <a id="2"
+href="#2-note" class="skull">2</a>.</p>
+
+<p>I think the formatter does a good job, but <em>how</em> it does it is a mystery to
+users. People get spooked when robots surprise them, so I thought I would trace
+the inner workings of its metal mind. And maybe try to justify to myself why it
+took me a year to write a program whose behavior in many ways is
+indistinguishable from <code>cat</code>.</p>
+
+<h2>How the formatter sees your code</h2>
+
+<p>As you&rsquo;d expect from a program that works on source code, the formatter is
+structured much like a compiler. It has a <a href="https://en.wikipedia.org/wiki/Compiler#Structure_of_a_compiler">front end</a> that parses your code
+and converts that to an <a href="https://en.wikipedia.org/wiki/Intermediate_language#Intermediate_representation">intermediate representation</a> <a id="3"
+href="#3-note" class="skull">3</a>. It does some optimization and clean up on
+that <a id="4" href="#4-note" class="skull">4</a>, and then the IR goes to a
+back end <a id="5" href="#5-note" class="skull">5</a> that produces the final
+output. The main objects here are <strong>chunks</strong>, <strong>rules</strong>, and <strong>spans</strong>.</p>
+
+<h3>Chunks</h3>
+
+<p>A <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk.dart">chunk</a> is an atomic unit of formatting. It&rsquo;s a contiguous region of
+characters that we know will not contain any line breaks. Given this code:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">format</span> <span class="c">/* comment */</span> <span class="k">this</span><span class="p">;</span>
+</code></pre></div>
+<p>We break it into these chunks: <code>format</code>, <code>/* comment */</code>, and <code>this;</code>.</p>
+
+<p>Chunks are similar to a <a href="https://en.wikipedia.org/wiki/Lexical_analysis#Token">token</a> in a conventional compiler, but they tend to
+be, well, <em>chunkier</em>. Often, the text for several tokens ends up in the same
+chunk, like <code>this</code> and <code>;</code> here. If a line break can never occur between two
+tokens, they end up in the same chunk <a id="6" href="#6-note"
+class="skull">6</a>.</p>
+
+<p>Chunks are mostly linear. For example, given an expression like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">some</span><span class="p">(</span><span class="i">nested</span><span class="p">,</span> <span class="i">function</span><span class="p">(</span><span class="i">ca</span> <span class="o">+</span> <span class="i">ll</span><span class="p">))</span>
+</code></pre></div>
+<p>We chunk it to the flat list: <code>some(</code> <code>nested,</code> <code>function(</code> <code>ca +</code> <code>ll))</code>.</p>
+
+<p>We could treat an entire source file like a single flat sequence of chunks, but
+it would take forever and a day to line break the whole thing <a id="7"
+href="#7-note" class="skull">7</a>. With things like long chains of asynchronous
+code, a single &ldquo;statement&rdquo; may be hundreds of lines of code containing several
+nested functions or collections that each contain their own piles of code.</p>
+
+<p>We can&rsquo;t treat those nested functions or collection literals entirely
+independently because the surrounding expression affects how they are indented.
+That in turn affects how long their lines are. Indent a function body two more
+spaces and now its statements have two fewer spaces before they hit the end of
+the line.</p>
+
+<p>Instead, we treat nested block bodies as a separate little list of chunks to be
+formatted mostly on their own but subordinate to where they appear. The chunk
+that begins one of these literals, like the <code>{</code> preceding a function or map,
+contains a list of child <em>block chunks</em> for the contained block. In other words,
+chunks do form a tree, but one that only reflects block nesting, not
+expressions.</p>
+
+<p>The end of a chunk marks the point where a split may occur in the final output,
+and the chunk has some data describing it <a id="8" href="#8-note"
+class="skull">8</a>. It keeps track of whether a blank line should be added
+between the chunks (like between two class definitions), how much the next line
+should be indented, and the expression nesting depth at that point in the code.</p>
+
+<p>The most important bit of data about the split is the <em>rule</em> that controls it <a
+id="9" href="#9-note" class="skull">9</a>.</p>
+
+<h3>Rules</h3>
+
+<p>Each potential split in the program is owned by a <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart">rule</a>. A single rule may
+own the splits of several chunks. For example, a series of binary operators of
+the same kind like <code>a + b + c + d</code> uses a single rule for the splits after each
+<code>+</code> operator.</p>
+
+<p>A rule controls which of its splits break and which don&rsquo;t. It determines this
+based on the state that the rule is in, which it calls its <em>value</em>. You can
+think of a rule like a dial and the value is what you&rsquo;ve turned it to. Given a
+value, the rule will tell you which of its chunks get split.</p>
+
+<p>The simplest rule is a <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart#L85">hard split rule</a>. It says that its chunk <em>always</em>
+splits, so it only has one value: <code>0</code>. This is useful for things like line
+comments where you always need to split after it, even in the middle of an
+expression <a id="10" href="#10-note" class="skull">10</a>.</p>
+
+<p>Then there is a <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart#L104">simple split rule</a>. It allows two values: <code>0</code> means
+none of its chunks split and <code>1</code> means they all do. Since most splits are
+independent of the others, this gets used for most of the splits in the program.</p>
+
+<p>Beyond that, there are <a href="https://github.com/dart-lang/dart_style/tree/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule">a handful of special-case rules</a>. These are used
+in places where we want to more precisely control the configuration of a set of
+splits. For example, the positional argument list in a function list is
+controlled by <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/argument.dart">a single rule</a>. A function call like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span>
+</code></pre></div>
+<p>Will have splits after <code>function(</code>, <code>first,</code>, <code>second,</code>, and <code>third)</code>. They are
+all owned by a single rule that only allows the following configurations:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// 0: Don&#39;t split at all.</span>
+<span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span>
+
+<span class="c">// 1: Split before the first.</span>
+<span class="i">function</span><span class="p">(</span>
+    <span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span>
+
+<span class="c">// 2: Split only before the last argument.</span>
+<span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span>
+    <span class="i">third</span><span class="p">)</span>
+
+<span class="c">// 3: Split only before the middle argument.</span>
+<span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span>
+    <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span>
+
+<span class="c">// 4: Split before all of them.</span>
+<span class="i">function</span><span class="p">(</span>
+    <span class="i">first</span><span class="p">,</span>
+    <span class="i">second</span><span class="p">,</span>
+    <span class="i">third</span><span class="p">)</span>
+</code></pre></div>
+<p>Having a single rule for this instead of individual rules for each argument lets
+us prohibit undesired outputs like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span>
+    <span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span>
+    <span class="i">third</span><span class="p">)</span>
+</code></pre></div>
+<h3>Constraints</h3>
+
+<p>Grouping a range of splits under a single rule helps us prevent split
+configurations we want to avoid like the previous example, but it&rsquo;s not enough.
+There are more complex constraints we want to enforce like: &ldquo;if a split occurs
+inside a list element, the list should split too&rdquo;. That avoids output like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="p">[</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span> <span class="o">+</span>
+    <span class="i">third</span><span class="p">,</span> <span class="i">fourth</span><span class="p">]</span>
+</code></pre></div>
+<p>Here, the list and the <code>+</code> expression have their own rules, but those rules need
+to interact. If the <code>+</code> takes value <code>1</code>, the list rule needs to as well. To
+support this, rules can <em>constrain</em> each other. Any rule can limit the values
+another rule is allowed to take based on its own value. Typically, constraints
+are used to make a subexpression rule force the surrounding rules to split
+when the subexpression splits <a id="11" href="#11-note" class="skull">11</a>.</p>
+
+<p>Finally, each rule has a <em>cost</em>. This is a numeric penalty that applies when any
+of that rule&rsquo;s chunks are split. This helps us determine which sets of splits
+are better or worse than others <a id="12" href="#12-note" class="skull">12</a>.
+Rule costs are only part of how overall fitness is calculated. Most of the cost
+calculation comes from spans.</p>
+
+<h3>Spans</h3>
+
+<p>A <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk.dart#L331">span</a> marks a series of contiguous chunks that we want to avoid splitting.
+I picture it like a rubber band stretching around them. If a split happens in
+any of those chunks, the span is broken. When that happens, the solution is
+penalized based on the cost of the span.</p>
+
+<p>Spans can nest arbitrarily deeply. In an expression like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">),</span> <span class="i">second</span><span class="p">(</span><span class="i">c</span><span class="p">,</span> <span class="i">d</span><span class="p">))</span>
+</code></pre></div>
+<p>There will be spans around <code>a, b</code> and <code>c, d</code> to try to keep those argument lists
+from splitting, but also another span around <code>first(a, b), second(c, d)</code> to keep
+the outer argument list from splitting:</p>
+
+<p>If a split occurs between <code>a,</code> and <code>b</code>, the <code>a, b</code> span splits, but so does the
+<code>first(a, b), second(c, d)</code> one. However, if a split occurs after <code>first(a, b),</code>
+then the <code>a, b</code> span is still fine. In this way, spans teach the formatter to
+prefer splitting at a higher level of nesting when possible since it breaks
+fewer nested spans.</p>
+
+<h2>Parsing source to chunks</h2>
+
+<p>Converting your raw source code to this representation is fairly
+straightforward. The formatter uses the wonderful <a href="https://pub.dev/packages/analyzer">analyzer</a> package to parse
+your code to an <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</a>. This gives us a tree structure that represents every
+single byte of your program. Unlike many ASTs, it even includes comments.</p>
+
+<p>Once we have that, the formatter does a <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/source_visitor.dart">top-down traversal of the
+tree</a>. As it walks, it <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart">writes out chunks, rules, and spans</a>
+for the various grammar productions. This is where the formatting &ldquo;style&rdquo; is
+determined.</p>
+
+<p>There&rsquo;s no rocket science here, but there are a <em>lot</em> of <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L184">hairy</a>
+<a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L210">corner</a> <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L283">cases</a>. Comments can appear in weird places. We have
+to handle weird things like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span><span class="i">argument</span><span class="p">,</span> <span class="c">// comment</span>
+    <span class="i">argument</span><span class="p">)</span>
+</code></pre></div>
+<p>Here, we normally would have a split after the first argument owned by an
+argument list rule. But the line comment adheres to the <code>,</code> and has a hard split
+after it, so we need to make sure the argument list rule handles that.</p>
+
+<p>Whitespace is only implicitly tracked by the AST so we have to <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/source_visitor.dart#L1979">reconstitute
+it</a> in the few places where your original whitespace affects the output.
+Having a detailed test suite really helps here.</p>
+
+<p>Once we&rsquo;ve visited the entire tree, the AST has been converted to a tree of
+chunks and a bunch of spans wrapped around pieces of it.</p>
+
+<h2>Formatting chunks</h2>
+
+<p>We&rsquo;ve got ourselves a big tree of chunks owned by a slew of rules. Earlier, I
+said rule values are like knobs. Now we get to dial those knobs in. Doing this
+naïvely is infeasible. Even a small source file contains hundreds of individual
+rules and the set of possible solutions is exponential in the number of rules.</p>
+
+<p>The first thing we do is <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L736">divide the chunk list</a> into regions we <em>know</em>
+can&rsquo;t interfere with each other. These are roughly &ldquo;lines&rdquo; of code. So with:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">first</span><span class="p">(</span><span class="i">line</span><span class="p">);</span>
+<span class="i">second</span><span class="p">(</span><span class="i">line</span><span class="p">);</span>
+</code></pre></div>
+<p>We know that how we split the first statement has no effect on the second one.
+So we run through the list of chunks and break them into shorter lists whenever
+we hit a hard split that isn&rsquo;t nested inside an expression.</p>
+
+<p>Each of these shorter chunk lists is fed to the <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart">line splitter</a>. Its job is to
+pick the best set of values for all the rules used by the chunks in the line. In
+most cases, this is trivial: if the whole line fits on the page, every rule gets
+set to zero&mdash;no splits&mdash;and we&rsquo;re done.</p>
+
+<p>When a line doesn&rsquo;t fit, the splitter has to figure out which combination of
+rule values produces the best result. That is:</p>
+
+<ol>
+<li><p>The one with the fewest characters that go over the column limit.</p></li>
+<li><p>The one with the lowest cost, based on which rules and spans were split.</p></li>
+</ol>
+
+<p>Calculating the cost for a set of rule values is pretty easy, but there are
+still way too many permutations to brute force it. If we can&rsquo;t brute force it,
+how do we do it?</p>
+
+<h2>How line splitting works</h2>
+
+<p>Since I dropped out of college, my knowledge of algorithms was fairly, um,
+rudimentary. So before I interviewed at Google, I spent two days in a hotel room
+cramming as many of them&mdash;mostly graph traversal&mdash;in my head as I could. At
+the time, I thought graphs would never come up in the interviews&hellip;</p>
+
+<p>Then I had multiple interview questions that reduced down to doing the right
+kind of traversal over a graph. At the time, I thought this stuff would never be
+relevant to my actual job&hellip;</p>
+
+<p>Then I spent the past few years at Google discovering that damn near every
+program I have to write can be reduced down to some kind of graph search. I
+wrote a <a href="https://pub.dev/">package manager</a> where dependencies are a transitive closure and
+version constraint solving is graph based. My <a href="https://github.com/munificent/hauberk">hobby roguelike</a> uses
+graphs for pathfinding. Graphs out the wazoo. I can do BFS in my sleep now.</p>
+
+<p>Naturally, after several other failed approaches, I found that line splitting
+can be handled like a graph search problem <a id="13" href="#13-note"
+class="skull">13</a>. Each node in the graph represents a <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart">solution</a>&mdash;a set
+of values for each rule. Solutions can be <em>partial</em>: some rules may be left with
+their values unbound.</p>
+
+<p>From a given partial solution (including the initial &ldquo;no rules bound&rdquo; one),
+there are edges to new partial solutions. Each edges binds one additional rule
+to a value. By starting from an empty solution and walking this graph, we
+eventually reach complete solutions where all of the rules have been bound to
+values.</p>
+
+<p>Graph search is great if you know where your destination is and you&rsquo;re trying to
+find the best path. But we don&rsquo;t actually know that. We don&rsquo;t know what the best
+complete solution <em>is</em>. (If we did, we&rsquo;ve be done already!)</p>
+
+<p>Given this, no textbook graph search algorithm is sufficient. We need to apply
+some domain knowledge&mdash;we need to take advantage of rules and conditions
+implicit in the <em>specific</em> problem we&rsquo;re solving.</p>
+
+<p>After a dozen dead ends, I found three (sort of four) that are enough to get it
+finding the right solution quickly:</p>
+
+<h3>Bailing early</h3>
+
+<p>We are trying to minimize two soft constraints at the same time:</p>
+
+<ol>
+<li><p>We want to minimize the number of characters that overflow the line length
+limit. We can&rsquo;t make this a hard constraint that there is <em>no</em> overflow
+because it&rsquo;s possible for a long identifier or string literal to overflow in
+<em>every</em> solution. In that case, we still need to find the result that&rsquo;s
+closest to fitting.</p></li>
+<li><p>We want to find the lowest cost&mdash;the fewest split rules and broken
+spans.</p></li>
+</ol>
+
+<p>The first constraint dominates the second&mdash;we prefer a solution with any cost
+if it fits one more character in. In practice, there is almost always a solution
+that does fit, so it usually comes down to picking the lowest cost solution <a
+id="14" href="#14-note" class="skull">14</a>.</p>
+
+<p>We don&rsquo;t know <em>a priori</em> what the cost of the winning solution will be, but we
+do know one useful piece of information: <em>forcing a rule to split always
+increases the cost</em>.</p>
+
+<p>If we treat any unbound rule as being implicitly unsplit <a id="15"
+href="#15-note" class="skull">15</a>, that means the starting solution with
+every rule unbound always has the lowest cost (zero). We can then explore
+outward from there in order of increasing cost by adding one rule at a time.</p>
+
+<p>This is a basic <a href="https://en.wikipedia.org/wiki/Best-first_search">best-first search</a>. We keep a <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state_queue.dart">running queue</a> of all of
+the partial solutions we&rsquo;ve haven&rsquo;t explored yet, sorted from lowest cost to
+highest. Each iteration, we pop a solution off.</p>
+
+<p>If the solution completely fits in the page width, then we know we&rsquo;ve won the
+overflow constraint. Since we&rsquo;re exploring in order of increasing cost, we also
+know it&rsquo;s the lowest cost. So, ta-da!, <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart#L171">we found the winner and can stop
+exploring</a>. Otherwise, if the current best solution has any unbound rules,
+we enqueue new solutions, each of which binds one of those to a value.</p>
+
+<p>We basically explore the entire solution space in order of increasing cost. As
+soon as we find a solution that fits in the page, we stop.</p>
+
+<h3>Avoiding dead ends</h3>
+
+<p>The above sounds pretty promising, but it turns out that there can be an
+imperial ton of &ldquo;low-cost but overflowing&rdquo; solutions. When you&rsquo;re trying to
+format a really long line, there are plenty of ways it can <em>not</em> fit, and this
+algorithm will try basically all of them. After all, they&rsquo;re low cost since they
+don&rsquo;t have many splits.</p>
+
+<p>We need to avoid wasting time tweaking rules that aren&rsquo;t part of the problem.
+For example, say we&rsquo;re looking at a partial solution like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Blog-friendly 40-char line limit:    |</span>
+<span class="i">function</span><span class="p">(</span>
+    <span class="i">firstCall</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">,</span> <span class="i">c</span><span class="p">,</span> <span class="i">d</span><span class="p">,</span> <span class="i">e</span><span class="p">,</span> <span class="i">f</span><span class="p">,</span> <span class="i">g</span><span class="p">,</span> <span class="i">h</span><span class="p">),</span>
+    <span class="i">secondCall</span><span class="p">(</span><span class="s">&quot;very long argument string here&quot;</span><span class="p">));</span>
+</code></pre></div>
+<p>There are a bunch of ways we can split the arguments to <code>firstCall()</code>, but <em>we
+don&rsquo;t need to</em>. Its line already fits. The only line we need to worry about is
+the <code>secondCall()</code> one.</p>
+
+<p>So, when we are expanding a partial solution, we only bind <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart#L28">rules that have
+chunks <em>on overflowing lines</em></a>. If all of a rule&rsquo;s chunks are on lines
+that already fit, we don&rsquo;t mess with it. In fact, we don&rsquo;t even worry about
+rules on any overflowing line but the first. Since tweaking the first line will
+affect the others, there&rsquo;s no reason to worry about them yet <a id="16"
+href="#16-note" class="skull">16</a>.</p>
+
+<p>This <em>dramatically</em> cuts down &ldquo;branchiness&rdquo; of the graph. Even though a partial
+solution may have dozens of unbound rules, usually only a couple are on long
+lines and only those get explored.</p>
+
+<h3>Pruning redundant branches</h3>
+
+<p>This gets us pretty far, but the splitter can still go off the deep end in some
+cases. The problem is that within large statements, you still run into cases
+where how you format part of the statement is <em>mostly</em> independent of later
+parts.</p>
+
+<p>Take something like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Blog-friendly 40-char line limit:    |</span>
+<span class="k">new</span> <span class="t">Compiler</span><span class="p">(</span>
+    <span class="i">assertions</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;checked-mode&#39;</span><span class="p">),</span>
+    <span class="i">annotations</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;annotations&#39;</span><span class="p">),</span>
+    <span class="i">primitives</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;primitives&#39;</span><span class="p">),</span>
+    <span class="i">minify</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;minify&#39;</span><span class="p">),</span>
+    <span class="i">preserve</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;preserve&#39;</span><span class="p">),</span>
+    <span class="i">liveAnalysis</span><span class="p">:</span> <span class="i">check</span><span class="p">(</span><span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;live&#39;</span><span class="p">),</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;analysis&#39;</span><span class="p">)),</span>
+    <span class="i">multi</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;multi&#39;</span><span class="p">),</span>
+    <span class="i">sourceMap</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;source-map&#39;</span><span class="p">));</span>
+</code></pre></div>
+<p>Each of those named arguments can be split in a few different ways. And, since
+those are less nested&mdash;which means fewer split spans&mdash;than that nasty
+<code>liveAnalysis:</code> line, <em>it will try every combination of all of them</em> before it
+finally gets down to the business of splitting that <code>check()</code> call.</p>
+
+<p>The best way to split the <code>liveAnalysis:</code> line is the best way to split it
+regardless of how we split <code>assertions:</code> or <code>annotations:</code>. In other words,
+there are big branches of the solution space that initially differ in irrelevant
+ways, but eventually reconvene to roughly the same solution. We traverse every
+single one of them.</p>
+
+<p>What we need is a way to prune entire branches of the solution space. Given two
+partial solutions A and B, if we could say not just &ldquo;A is better than B&rdquo; but
+&ldquo;every solution we can get to from A will be better than every solution we can
+get to from B&rdquo; then we can discard B <em>and the entire branch of solutions
+stemming from it</em>.</p>
+
+<p>It took some work, but I finally figured out that you <em>can</em> do this in many
+cases. Given two partial solutions, if one has a lower cost than the other and:</p>
+
+<ul>
+<li><p>They have the same set of unbound rules (but their bound rules have different
+values, obviously).</p></li>
+<li><p>None of their bound rules are on the same line as an unbound rule.</p></li>
+<li><p>None of their bound rules place constraints on an unbound rule.</p></li>
+</ul>
+
+<p>Then the solution with a lower cost will always lead to solutions that also have
+lower costs. Its entire branch wins. We can <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state_queue.dart#L124">discard the other
+solution</a> and everything that it leads to. Once I got <em>this</em> working,
+the formatter could line split damn near anything in record time <a id="17"
+href="#17-note" class="skull">17</a>.</p>
+
+<h3>An escape hatch</h3>
+
+<p>Alas, that &ldquo;damn near&rdquo; is significant. There are still a <em>few</em> cases where the
+formatter takes a long time. I&rsquo;ve only ever seen this on machine generated code.
+Stuff like:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ResolutionCopier</span> <span class="p">{</span>
+  <span class="a">@override</span>
+  <span class="t">bool</span> <span class="i">visitClassDeclaration</span><span class="p">(</span><span class="t">ClassDeclaration</span> <span class="i">node</span><span class="p">)</span> <span class="p">{</span>
+    <span class="t">ClassDeclaration</span> <span class="i">toNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="i">_toNode</span> <span class="k">as</span> <span class="t">ClassDeclaration</span><span class="p">;</span>
+    <span class="k">return</span> <span class="i">javaBooleanAnd</span><span class="p">(</span>
+        <span class="i">javaBooleanAnd</span><span class="p">(</span>
+            <span class="i">javaBooleanAnd</span><span class="p">(</span>
+                <span class="i">javaBooleanAnd</span><span class="p">(</span><span class="i">javaBooleanAnd</span><span class="p">(</span><span class="i">javaBooleanAnd</span><span class="p">(</span>
+                        <span class="i">javaBooleanAnd</span><span class="p">(</span><span class="i">javaBooleanAnd</span><span class="p">(</span>
+                            <span class="i">javaBooleanAnd</span><span class="p">(</span><span class="i">javaBooleanAnd</span><span class="p">(</span><span class="i">javaBooleanAnd</span><span class="p">(</span>
+                                    <span class="i">_isEqualNodes</span><span class="p">(</span><span class="i">node</span><span class="p">.</span><span class="i">documentationComment</span><span class="p">,</span>
+                                        <span class="i">toNode</span><span class="p">.</span><span class="i">documentationComment</span><span class="p">),</span>
+                                    <span class="i">_isEqualNodeLists</span><span class="p">(</span>
+                                        <span class="i">node</span><span class="p">.</span><span class="i">metadata</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">metadata</span><span class="p">)),</span>
+                                <span class="i">_isEqualTokens</span><span class="p">(</span><span class="i">node</span><span class="p">.</span><span class="i">abstractKeyword</span><span class="p">,</span>
+                                    <span class="i">toNode</span><span class="p">.</span><span class="i">abstractKeyword</span><span class="p">)),</span> <span class="i">_isEqualTokens</span><span class="p">(</span>
+                                <span class="i">node</span><span class="p">.</span><span class="i">classKeyword</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">classKeyword</span><span class="p">)),</span>
+                            <span class="i">_isEqualNodes</span><span class="p">(</span>
+                                <span class="i">node</span><span class="p">.</span><span class="i">name</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">name</span><span class="p">)),</span> <span class="i">_isEqualNodes</span><span class="p">(</span>
+                            <span class="i">node</span><span class="p">.</span><span class="i">typeParameters</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">typeParameters</span><span class="p">)),</span>
+                        <span class="i">_isEqualNodes</span><span class="p">(</span>
+                            <span class="i">node</span><span class="p">.</span><span class="i">extendsClause</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">extendsClause</span><span class="p">)),</span>
+                    <span class="i">_isEqualNodes</span><span class="p">(</span>
+                        <span class="i">node</span><span class="p">.</span><span class="i">withClause</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">withClause</span><span class="p">)),</span> <span class="i">_isEqualNodes</span><span class="p">(</span>
+                    <span class="i">node</span><span class="p">.</span><span class="i">implementsClause</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">implementsClause</span><span class="p">)),</span>
+                <span class="i">_isEqualTokens</span><span class="p">(</span><span class="i">node</span><span class="p">.</span><span class="i">leftBracket</span><span class="p">,</span> <span class="i">toNode</span><span class="p">.</span><span class="i">leftBracket</span><span class="p">)),</span>
+            <span class="i">_isEqualNodeLists</span><span class="p">(</span>
+                <span class="i">node</span><span class="p">.</span><span class="i">members</span><span class="p">,</span>
+                <span class="i">toNode</span><span class="p">.</span><span class="i">members</span><span class="p">)),</span>
+        <span class="i">_isEqualTokens</span><span class="p">(</span>
+            <span class="i">node</span><span class="p">.</span><span class="i">rightBracket</span><span class="p">,</span>
+            <span class="i">toNode</span><span class="p">.</span><span class="i">rightBracket</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Yeah, welcome to my waking nightmare. Unsurprisingly, code like this bogs down
+the formatter. I want dartfmt to be usable in things like presubmit scripts
+where it will have a ton of weird code thrown at it and it <em>must</em> complete in a
+reliable amount of time.</p>
+
+<p>So there is one final escape hatch. If the line splitter tries, like, 5,000
+solutions and still hasn&rsquo;t found a winner yet, it just picks the best it found
+so far and <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart#L181">bails</a>.</p>
+
+<p>In practice, I only see it hit this case on generated code. Thank God.</p>
+
+<h2>Finally, output</h2>
+
+<p>Once the line splitter has picked values for all of the rules, the rest is easy.
+The formatter <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart">walks the tree of chunks</a>, printing their text. When a
+rule forces a chunk to split, it outputs a newline (or two), updates the
+indentation appropriately and keeps trucking.</p>
+
+<p>The end result is a string of (I hope!) beautifully formatted Dart code. So much
+work just to add or remove a few spaces!</p>
+
+<h3>Footnotes</h3>
+
+<p><a id="1-note" href="#1" class="skull-note">1</a> Yes, I really did brute force
+all of the combinations at first. It let me focus on getting the output correct
+before I worried about performance. Speed was fine for most statements. The
+other few wouldn&rsquo;t finish until after the heat death of the universe.</p>
+
+<p><a id="2-note" href="#2" class="skull-note">2</a> For most of the time, the
+formatter <em>did</em> use dynamic programming and memoization. I felt like a wizard
+when I first figured out how to do it. It worked fairly well, but was a
+nightmare to debug.</p>
+
+<p>It was <em>highly</em> recursive, and ensuring that the keys to the memoization table
+were precise enough to not cause bugs but not <em>so</em> precise that the cache
+lookups always fail was a very delicate balancing act. Over time, the amount of
+data needed to uniquely identify the state of a subproblem grew, including
+things like the entire expression nesting stack at a point in the line, and the
+memoization table performed worse and worse.</p>
+
+<p><a id="3-note" href="#3" class="skull-note">3</a> The IR evolved constantly.
+Spans and rules were later additions. Even the way chunks tracked indentation
+changed frequently. Indentation used to be stored in levels, where each level
+was two spaces. Then directly in spaces. Expression nesting went through a
+number of representations.</p>
+
+<p>In all of this, the IR&rsquo;s job is to balance being easy for the front-end to
+<em>produce</em> while being efficient for the back end to <em>consume</em>. The back end
+really drives this. The IR is structured to be the right data structure for the
+algorithm the back end wants to use.</p>
+
+<p><a id="4-note" href="#4" class="skull-note">4</a> Comments were the one of the
+biggest challenges. The formatter initially assumed there would be no newlines
+in some places. Who would expect a newline, say, between the keywords in
+<code>abstract class</code>? Alas, there&rsquo;s nothing preventing a user from doing:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">abstract</span> <span class="c">// Oh, crap. A line comment.</span>
+<span class="k">class</span> <span class="t">Foo</span> <span class="p">{}</span>
+</code></pre></div>
+<p>So I had to do a ton of work to make it resilient in the face of comments and
+newlines appearing in all sorts of weird places. There&rsquo;s no single clean
+solution for this, just lots of edge cases and special handling.</p>
+
+<p><a id="5-note" href="#5" class="skull-note">5</a> The back end is where all of
+the performance challenges come from, and it went through two almost complete
+rewrites before it ended up where it is today.</p>
+
+<p><a id="6-note" href="#6" class="skull-note">6</a> I started from a simpler
+formatter written by a teammate that treated text, whitespace, and splits all as
+separate chunks. I unified those so that each chunk included non-whitespace
+text, line split information, and whitespace information if it didn&rsquo;t split.
+That simplified a lot.</p>
+
+<p><a id="7-note" href="#7" class="skull-note">7</a> When I added support for
+better indentation of nested functions, I broke the code that handled dividing
+the source code into separate line-splittable regions. For a while, a single
+top-level statement would be split as a single unit, even if it contained nested
+functions with hundreds of lines of code. It was&hellip; not fast.</p>
+
+<p><a id="8-note" href="#8" class="skull-note">8</a> Ideally, the split information
+in a chunk would describe the split <em>before</em> the chunk&rsquo;s text. This would avoid
+the pointless split information on the last chunk, and also solve annoying
+special-case handling of the indentation before the very first chunk.</p>
+
+<p>I&rsquo;ve tried to correct this mistake a number of times, but it causes a
+near-infinite number of off-by-one bugs and I just haven&rsquo;t had the time to push
+it all the way through and fix everything.</p>
+
+<p><a id="9-note" href="#9" class="skull-note">9</a> Rules are a relatively recent
+addition. Originally each chunk&rsquo;s split was handled independently. You could
+specify some relations between them like &ldquo;if this chunk splits then this other
+one has to as well&rdquo;, but you could not express things like &ldquo;only one of these
+three chunks may split&rdquo;</p>
+
+<p>Eventually, I realized the latter is what I really needed to get argument lists
+formatting well, so I conceived of rules as a separate concept and rewrote the
+front and line splitter to work using those.</p>
+
+<p><a id="10-note" href="#10" class="skull-note">10</a> At first, I thought hard
+splits weren&rsquo;t needed. Any place a mandatory newline appears (like between two
+statements) is a place where you could just break the list of chunks in two and
+line split each half independently. From the line splitter&rsquo;s perspective, there
+would be no hard splits.</p>
+
+<p>Which would work&hellip; except for line comments:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">some</span><span class="p">(</span><span class="i">expression</span><span class="p">,</span>
+   <span class="c">// with a line comment</span>
+   <span class="i">rightInTheMiddleOfIt</span><span class="p">);</span>
+</code></pre></div>
+<p>This has to be split as a single unit to get the expression nesting and
+indentation correct, but it also contains a mandatory newline after the line
+comment.</p>
+
+<p><a id="11-note" href="#11" class="skull-note">11</a> There used to be a separate
+class for a &ldquo;multisplit&rdquo; to directly handle forcing outer expressions to split
+when inner ones did. Once rules came along, they also needed to express
+constraints between them, and eventually those constraints were expressive
+enough to be able to handle the multisplit behavior directly and multisplits
+were removed.</p>
+
+<p><a id="12-note" href="#12" class="skull-note">12</a> I spent a <em>lot</em> of time
+tuning costs for different grammar productions to control how tightly bound
+different expressions were. The goal was to allow splits at the places where the
+reader thought code was &ldquo;loosest&rdquo;, so stuff like higher precedence expressions
+would have higher costs.</p>
+
+<p>Tuning these costs was a nightmare. It was like a hanging mobile where tweaking
+one cost would unbalance all of the others. On more than one occasion, I found
+myself considering making them floating point instead of integers, a sure sign
+of madness.</p>
+
+<p>It turns out spans are what you really want in order to express looseness.
+Nested infix operators then fall out naturally because you have more spans
+around the deeper nested operands. The parse tree gives it to you for free.</p>
+
+<p>These days, almost every chunk and span has a cost of 1, and it&rsquo;s the <em>quantity</em>
+of nested spans and contained chunks that determine where it splits.</p>
+
+<p><a id="13-note" href="#13" class="skull-note">13</a> I had known that
+<a href="http://clang.llvm.org/docs/ClangFormat.html">clang-format</a> worked this way for a long time, but I could never wrap my head
+around how to apply it to dartfmt&rsquo;s richer chunk/rule/span system.</p>
+
+<p>I took a lot of walks along the bike trail next to work trying to think through
+a way to get graph search working when the two numbers being optimized (overflow
+characters and cost) are in direct opposition, and we don&rsquo;t even know what the
+goal state looks like. It took a long time before it clicked. Even then, it
+didn&rsquo;t work at all until I figured out the right heuristics to use to optimize
+it.</p>
+
+<p><a id="14-note" href="#14" class="skull-note">14</a> For a long time, overflow
+and cost were treated as a single fitness function. Every overflow character
+just added a very high value to the cost to make the splitter strongly want to
+avoid them.</p>
+
+<p>Splitting overflow out as a separate metric turned out to be key to getting the
+graph search to work because it let us order the solutions by cost independently
+of overflow characters.</p>
+
+<p><a id="15-note" href="#15" class="skull-note">15</a> I went back and forth on
+how an unbound rule should implicitly behave. Treating it as implicitly split
+gives you solutions with fewer overflow characters sooner. Treating it as
+unsplit gives you lower costs.</p>
+
+<p><a id="16-note" href="#16" class="skull-note">16</a> Oh, God. I tried a million
+different ways to reduce the branchiness before I hit on only looking at rules
+in the first long line. I&rsquo;m still amazed that it works.</p>
+
+<p>I could also talk about how controlling branchiness lets us avoid reaching the
+same state from multiple different paths. After all, it&rsquo;s a <em>graph</em>, but
+everything I&rsquo;ve described talks about it like it&rsquo;s a tree. By carefully
+controlling how we extend partial solutions, we ensure we only take a single
+path to any given complete solution.</p>
+
+<p>Before I got that working, I had to keep a &ldquo;visited&rdquo; set to make sure we didn&rsquo;t
+explore the same regions twice, but just maintaining that set was a big
+performance sink.</p>
+
+<p><a id="17-note" href="#17" class="skull-note">17</a> Discarding overlapping
+branches is the last macro-optimization I did and its behavior is very subtle.
+Correctly detecting when two partial solutions overlap took a <em>lot</em> of
+iteration. Every time I thought I had it, one random weird test would fail where
+it accidentally collapsed two branches that <em>would</em> eventually diverge.</p>
+
+<p>That bullet list was paid for in blood, sweat, and tears. I honestly don&rsquo;t think
+I could have figured them out at all until late in the project when I had a
+<a href="https://github.com/dart-lang/dart_style/tree/3b3277668b2ff0cb7be954c3217c73264454bd7c/test">comprehensive test suite</a>.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written//&amp;t=The Hardest Program I&amp;rsquo;ve Ever Written" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/&amp;text=%22The Hardest Program I&amp;rsquo;ve Ever Written%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

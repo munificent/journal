@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/" rel="bookmark"
+     title="Permanent Link to Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)">
+    Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)
+  </a>
+</h1>
+
+  <a class="older" href="/2009/01/03/debunking-c-vs-c-performance/"
+     title="Older Post &ldquo;Debunking C# vs C++ Performance&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2009/05/05/one-and-only-one/"
+     title="Newer Post &ldquo;One and Only One&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">April 26, 2009</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>This blog has been collecting dust for several months now. Not because I haven&rsquo;t
+been doing anything, quite the opposite. I&rsquo;ve been spending all my free time
+hacking on a little programming language project: Magpie.</p>
+
+<p>Yesterday, I finally <a href="https://github.com/munificent/magpie-csharp">put it online where people can get to it</a>. Feel free
+to have a look, although it&rsquo;s got a good ways to go before I&rsquo;d describe it as
+really useful.</p>
+
+<div class="update">
+<p><em>Update 2011/08/16:</em> Magpie lives in <a href="https://github.com/munificent/magpie-csharp">GitHub</a> now.</p>
+</div>
+
+<p>I hate &ldquo;general announcement&rdquo; blog posts, especially on my blog because it&rsquo;s not
+like people read this just to find out what <em>I&rsquo;m</em> doing, so to try to make this
+at least a little bit interesting, here&rsquo;s some stupid Magpie tricks: things that
+are doable or easy in Magpie that can be a pain in other languages.</p>
+
+<h2>Constructor function references</h2>
+
+<p>In Magpie, almost everything is a function, including constructors. Since it
+doesn&rsquo;t have an explicit <code>new</code> keyword, you can pass around a reference to a
+constructor like you can any other function.</p>
+<div class="highlight"><pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Define a type.</span>
+<span class="k">struct</span> <span class="t">Point</span>
+    <span class="i">X</span> <span class="t">Int</span>
+    <span class="i">Y</span> <span class="t">Int</span>
+<span class="k">end</span>
+
+<span class="i">Main</span> <span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+    <span class="c">// Pass the constructor to a function.</span>
+    <span class="i">TakeRef</span> <span class="k">fn</span> <span class="t">Point</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="i">TakeRef</span> <span class="p">(</span><span class="i">func</span> <span class="k">fn</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span> <span class="p">-&gt;</span> <span class="t">Point</span><span class="p">))</span>
+    <span class="c">// Call the reference.</span>
+    <span class="k">def</span> <span class="i">point</span> <span class="o">&lt;-</span> <span class="i">func</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+
+    <span class="i">Print</span> <span class="p">(</span><span class="i">point</span><span class="p">.</span><span class="i">X</span><span class="p">.</span><span class="i">String</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="i">point</span><span class="p">.</span><span class="i">Y</span><span class="p">.</span><span class="i">String</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Try <em>that</em> C# and C++!</p>
+
+<h2>Tupled arguments</h2>
+
+<p>Functions in Magpie always take a single argument. To pass in multiple
+arguments, you use a tuple. Syntactically, it looks the same as other languages,
+but does have an interesting side-effect: you can treat the entire batch of
+arguments as a single value to be played with:</p>
+<div class="highlight"><pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Define a function that takes three arguments.</span>
+<span class="i">Sum</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span><span class="p">,</span> <span class="i">c</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span> <span class="o">+</span> <span class="i">c</span>
+
+<span class="i">Main</span> <span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+    <span class="c">// Calling it looks pretty normal...</span>
+    <span class="k">def</span> <span class="i">a</span> <span class="o">&lt;-</span> <span class="i">Sum</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span>
+
+    <span class="c">// But you can also do this:</span>
+    <span class="k">def</span> <span class="i">tuple</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span>
+    <span class="k">def</span> <span class="i">b</span> <span class="o">&lt;-</span> <span class="i">Sum</span> <span class="i">tuple</span>
+    <span class="i">Print</span> <span class="i">b</span><span class="p">.</span><span class="i">String</span>
+
+    <span class="c">// Or this:</span>
+    <span class="k">def</span> <span class="i">tuple2</span> <span class="o">&lt;-</span> <span class="i">GetArgs</span>
+    <span class="k">def</span> <span class="i">c</span> <span class="o">&lt;-</span> <span class="i">Sum</span> <span class="i">tuple2</span>
+    <span class="i">Print</span> <span class="i">c</span><span class="p">.</span><span class="i">String</span>
+<span class="k">end</span>
+
+<span class="c">// This function returns a tuple.</span>
+<span class="i">GetArgs</span> <span class="p">(</span><span class="o">-&gt;</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">))</span> <span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">,</span> <span class="n">6</span><span class="p">)</span>
+</code></pre></div>
+<h2>Is that it?</h2>
+
+<p>I know, I know. Not exactly mind-blowing. There&rsquo;s still lots of work for me to
+do on the language, but it&rsquo;s getting there. At the very least, there&rsquo;s a pretty
+readable hand-coded lexer and LL parser in there.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else//&amp;t=Stupid Magpie Tricks (Or: Yes, I&amp;rsquo;m Making a Programming Language Like Everyone Else)" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/&amp;text=%22Stupid Magpie Tricks (Or: Yes, I&amp;rsquo;m Making a Programming Language Like Everyone Else)%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

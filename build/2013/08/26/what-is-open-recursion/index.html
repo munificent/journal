@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      What is &ldquo;Open Recursion&rdquo;?
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2013/08/26/what-is-open-recursion/" rel="bookmark"
+     title="Permanent Link to What is &ldquo;Open Recursion&rdquo;?">
+    What is &ldquo;Open Recursion&rdquo;?
+  </a>
+</h1>
+
+  <a class="older" href="/2013/07/18/javascript-isnt-scheme/"
+     title="Older Post &ldquo;JavaScript Isn&rsquo;t Scheme&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2013/12/08/babys-first-garbage-collector/"
+     title="Newer Post &ldquo;Baby&rsquo;s First Garbage Collector&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">August 26, 2013</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/language">language</a></span>
+</h4>
+
+<p>Someone on StackOverflow stumbled onto the strange term &ldquo;open recursion&rdquo; and
+<a href="http://stackoverflow.com/questions/17803621/why-is-it-called-open-or-closed-recursion">asked what it meant</a>. Since most of the other answers to this online are
+pretty opaque, I started writing an answer. But then I accidentally wrote a blog
+post.</p>
+
+<p>I honestly couldn&rsquo;t remember what it meant either, so I cracked open my copy of
+<a href="http://www.cis.upenn.edu/~bcpierce/tapl/">Types and Programming Languages</a> where, I believe, Pierce first
+introduces the term. After skimming a bit, I think I&rsquo;ve got it. For those who
+don&rsquo;t have the book or don&rsquo;t want to wade through PL nerd terminology, I&rsquo;ll try
+to translate it to something a little friendlier.</p>
+
+<p>First, a bit of context. Pierce is explaining the semantics and types of
+object-oriented languages starting from a non-OOP core based on the lambda
+calculus and records. He starts the book with the simplest possible
+proto-language and then keeps adding extensions to it to build up to the kind of
+languages we see today. He coined &ldquo;open recursion&rdquo; to refer to the kind of
+extensions you need in order to build an object-oriented language from a simpler
+language that just has functions (i.e. &ldquo;lambdas&rdquo;, &ldquo;closures&rdquo;, or &ldquo;anonymous
+delegates&rdquo;) and records (more or less &ldquo;object literals&rdquo; in JS or &ldquo;maps&rdquo; in other
+languages).</p>
+
+<p>Since not too many people know the lambda calculus, for this scene I will use a
+subset of <a href="https://dart.dev">Dart</a> as its stand-in. We&rsquo;ll allow function declarations and maps,
+but no actual classes or methods.</p>
+
+<p>Now the question is, if you were to only have maps of functions, what would you
+be missing compared to &ldquo;real&rdquo; objects? Pierce&rsquo;s answer is &ldquo;open recursion&rdquo;.
+We&rsquo;ll break that down into the two words, last one first:</p>
+
+<h2>&ldquo;Recursion&rdquo;</h2>
+
+<p>Say you want to make an &ldquo;object&rdquo; that represents a counter. It exposes three
+operations:  <code>increment()</code>, <code>get()</code>, and <code>set()</code>. You could make such an object
+in our Dart subset like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
+  <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+
+  <span class="c">// Declare functions for the &quot;methods&quot;. They are closures,</span>
+  <span class="c">// so they can access `count`.</span>
+  <span class="i">increment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="i">count</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">get</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="i">count</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">set</span><span class="p">(</span><span class="i">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">count</span> <span class="o">=</span> <span class="i">value</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c">// Make an &quot;object&quot; as a map of functions.</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s">&#39;get&#39;</span><span class="p">:</span> <span class="k">get</span><span class="p">,</span>
+    <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="k">set</span><span class="p">,</span>
+    <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="i">increment</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Great. This works fine. But let&rsquo;s say we wanted to implement <code>increment()</code> in
+terms of <code>get()</code> and <code>set()</code>. One common feature of methods is that they can
+call each other. Let&rsquo;s try:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
+  <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+
+  <span class="c">// Declare functions for the &quot;methods&quot;. They are closures,</span>
+  <span class="c">// so they can access count.</span>
+  <span class="i">increment</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">set</span><span class="p">(</span><span class="k">get</span><span class="p">()</span> <span class="o">+</span> <span class="n">1</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="k">get</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="i">count</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">set</span><span class="p">(</span><span class="i">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">count</span> <span class="o">=</span> <span class="i">value</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c">// Make an &quot;object&quot; as a map of functions.</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s">&#39;get&#39;</span><span class="p">:</span> <span class="k">get</span><span class="p">,</span>
+    <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="k">set</span><span class="p">,</span>
+    <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="i">increment</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Oops! This doesn&rsquo;t work. The problem is that <code>increment()</code> is calling <code>get()</code>
+and <code>set()</code> here, but those functions haven&rsquo;t been declared yet. <a href="http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html">Unlike
+JavaScript</a>, Dart doesn&rsquo;t silently hoist function declarations up. So
+at the point that we&rsquo;re defining <code>increment()</code>, <code>get()</code> and <code>set()</code> aren&rsquo;t
+declared.</p>
+
+<p>We could move <code>increment()</code> after <code>get()</code> and <code>set()</code> to fix this issue. But
+then <em>those</em> two methods wouldn&rsquo;t be able to see <code>increment()</code>. No matter what,
+there&rsquo;s no way to have all of those functions in scope inside each of the other
+ones.</p>
+
+<p>The problem is that the definitions of the functions come <em>one after the other</em>.
+What you really need is to define them all in one lump where they can all see
+each other simultaneously.</p>
+
+<p>In functional languages, the name for that &ldquo;lump&rdquo; is a &ldquo;mutually recursive
+definition&rdquo;. It lets you declare a bunch of variable names and refer to those
+names within the definitions of each of those variables. In Scheme and ML, this
+is the difference between <a href="http://docs.racket-lang.org/reference/let.html"><code>let</code> and <code>letrec</code></a> (the <code>rec</code> in the name
+stands for &ldquo;recursive&rdquo;). In C, you use <a href="http://en.wikipedia.org/wiki/Forward_declaration">forward declarations</a> to do this.</p>
+
+<p>So by &ldquo;recursion&rdquo; here, what he means is <strong>method definitions are mutually
+recursive so that they can see each other&rsquo;s <em>names</em>.</strong> It <em>doesn&rsquo;t</em> mean that
+they actually have to call each other at runtime and <em>be</em> recursive. Just that
+their names are in scope so that they <em>could</em> do that.</p>
+
+<h2>&ldquo;Open&rdquo;</h2>
+
+<p>We can fake mutually recursive definitions in our mini-Dart by using function
+expressions and reassigning variables like this:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
+  <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+
+  <span class="c">// Declare the variables up front.</span>
+  <span class="k">var</span> <span class="i">increment</span><span class="p">,</span> <span class="k">get</span><span class="p">,</span> <span class="k">set</span><span class="p">.</span>
+
+  <span class="c">// Now that the names are all in scope,</span>
+  <span class="c">// create the function bodies.</span>
+  <span class="i">increment</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">set</span><span class="p">(</span><span class="k">get</span><span class="p">()</span> <span class="o">+</span> <span class="n">1</span><span class="p">));</span>
+  <span class="p">};</span>
+
+  <span class="k">get</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="i">count</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">set</span> <span class="o">=</span> <span class="p">(</span><span class="i">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">count</span> <span class="o">=</span> <span class="i">value</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="c">// Make an &quot;object&quot; as a map of functions.</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s">&#39;get&#39;</span><span class="p">:</span> <span class="k">get</span><span class="p">,</span>
+    <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="k">set</span><span class="p">,</span>
+    <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="i">increment</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Note the <code>=</code> between the method names and <code>()</code> now. That means we&rsquo;re assigning
+anonymous functions to the already-declared variables. This gives us recursive
+structures. Do we have objects yet? What&rsquo;s missing?</p>
+
+<p>Another key feature of object-oriented languages is inheritance (or &ldquo;delegation&rdquo;
+in prototype-based languages). That means creating a new object whose behavior
+is a modification of an existing object&rsquo;s behavior. Think overriding methods in
+derived classes.</p>
+
+<p>Let&rsquo;s try to do that. We&rsquo;ll try to make a counter that logs itself. To avoid
+re-implementation, we&rsquo;ll piggyback the existing counter code:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">makeLoggingCounter</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">counter</span> <span class="o">=</span> <span class="i">makeCounter</span><span class="p">();</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s">&#39;get&#39;</span><span class="p">:</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="i">print</span><span class="p">(</span><span class="s">&#39;get!&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="i">counter</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]();</span>
+    <span class="p">},</span>
+    <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="p">(</span><span class="i">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="i">print</span><span class="p">(</span><span class="s">&#39;set!&#39;</span><span class="p">);</span>
+      <span class="i">counter</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">](</span><span class="i">value</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="i">print</span><span class="p">(</span><span class="s">&#39;increment!&#39;</span><span class="p">);</span>
+      <span class="i">counter</span><span class="p">[</span><span class="s">&#39;increment&#39;</span><span class="p">]();</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>How did we do? When we call <code>get()</code> and <code>set()</code> on our logging counter, it does
+correctly print &ldquo;get!&rdquo; and &ldquo;set!&rdquo; and then updates the counter appropriately.
+The problem comes when we call <code>increment()</code>. That <em>does</em> print &ldquo;increment!&rdquo;.
+But, remember, <code>increment()</code> is implemented in terms of <code>get()</code> and <code>set()</code>.</p>
+
+<p>Since we intended to <em>override</em> those methods in our logging object, calling
+<code>increment()</code> <em>should</em> print &ldquo;get!&rdquo; and &ldquo;set!&rdquo; too. It doesn&rsquo;t. That&rsquo;s because
+the non-logging object&rsquo;s implementation of <code>increment()</code> is <em>statically</em> bound
+to the <em>base</em> definitions of those methods. We haven&rsquo;t <em>overridden</em> them in our
+derived logging counter, we&rsquo;ve just <em>shadowed</em> them.</p>
+
+<p>In C++ parlance, <code>get()</code> and <code>set()</code> are <a href="http://en.wikipedia.org/wiki/Virtual_function">non-virtual</a>. Our mini-Dart language
+isn&rsquo;t expressive enough to handle virtual methods. The problem is that inside
+<code>makeCounter()</code>, we don&rsquo;t see the instance of the logging counter at all. To fix
+this, we have to pass that object in explicitly:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">(</span><span class="i">receiver</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
+  <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+
+  <span class="c">// Declare the variables up front.</span>
+  <span class="k">var</span> <span class="i">increment</span><span class="p">,</span> <span class="k">get</span><span class="p">,</span> <span class="k">set</span><span class="p">;</span>
+
+  <span class="c">// Now that the names are all in scope,</span>
+  <span class="c">// create the function bodies.</span>
+  <span class="i">increment</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">](</span><span class="i">receiver</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]()</span> <span class="o">+</span> <span class="n">1</span><span class="p">));</span>
+  <span class="p">};</span>
+
+  <span class="k">get</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="i">count</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">set</span> <span class="o">=</span> <span class="p">(</span><span class="i">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">count</span> <span class="o">=</span> <span class="i">value</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="c">// Add the methods to the receiver.</span>
+  <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">get</span><span class="p">;</span>
+  <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">set</span><span class="p">;</span>
+  <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;increment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="i">increment</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Note how now <code>increment()</code>&rsquo;s definition looks up <code>get()</code> and <code>set()</code> on that
+passed in <code>receiver()</code> object. To create the logging counter, now we do:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">makeLoggingCounter</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c">// Create a blank object.</span>
+  <span class="i">counter</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="c">// Turn it into a counter.</span>
+  <span class="i">makeCounter</span><span class="p">(</span><span class="i">counter</span><span class="p">);</span>
+
+  <span class="c">// Keep track of the original methods.</span>
+  <span class="k">var</span> <span class="i">superGet</span> <span class="o">=</span> <span class="i">counter</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">];</span>
+  <span class="k">var</span> <span class="i">superSet</span> <span class="o">=</span> <span class="i">counter</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">];</span>
+  <span class="k">var</span> <span class="i">superIncrement</span> <span class="o">=</span> <span class="i">counter</span><span class="p">[</span><span class="s">&#39;increment&#39;</span><span class="p">];</span>
+
+  <span class="c">// Override the methods.</span>
+  <span class="i">counter</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&#39;get!&#39;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="i">superGet</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="i">counter</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="i">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&#39;set!&#39;</span><span class="p">);</span>
+    <span class="i">superSet</span><span class="p">(</span><span class="i">value</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="i">counter</span><span class="p">[</span><span class="s">&#39;increment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&#39;increment!&#39;</span><span class="p">);</span>
+    <span class="i">superIncrement</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="i">counter</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Ta-da!</p>
+
+<p>To make this work, we had to pass the <code>receiver</code> into <code>makeCounter()</code> so that
+its methods could see the &ldquo;derived&rdquo; object. This lets it see and call overridden
+methods. Those methods are now effectively &ldquo;virtual&rdquo;.</p>
+
+<p>Before we did this, the methods in <code>makeCounter()</code> <em>closed</em> over each other. In
+other words, they were all closures and called each other by closing over each
+other&rsquo;s variables. By passing in the receiver explicitly, we&rsquo;ve cracked open
+that closure and let the derived object get in so the base methods can see it.
+Hence: &ldquo;open&rdquo;.</p>
+
+<h2>Recap</h2>
+
+<p>So, if you compare a real object-oriented language to a simpler language with
+just structures and functions, the differences are:</p>
+
+<ol>
+<li><p>All of the methods can see and call each other. The order they are defined
+doesn&rsquo;t matter since their definitions are &ldquo;simultaneous&rdquo; or <em>mutually
+recursive</em>.</p></li>
+<li><p>The base methods have access to the derived receiver object (i.e. <code>this</code> or
+<code>self</code> in other languages) so they don&rsquo;t close over just each other. They
+are <em>open</em> to overridden methods.</p></li>
+</ol>
+
+<p>Thus: <em>open recursion</em>.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion//&amp;t=What is &amp;ldquo;Open Recursion&amp;rdquo;?" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/&amp;text=%22What is &amp;ldquo;Open Recursion&amp;rdquo;?%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

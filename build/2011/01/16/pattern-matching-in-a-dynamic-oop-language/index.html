@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Pattern Matching in a Dynamic OOP Language
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/" rel="bookmark"
+     title="Permanent Link to Pattern Matching in a Dynamic OOP Language">
+    Pattern Matching in a Dynamic OOP Language
+  </a>
+</h1>
+
+  <a class="older" href="/2010/12/31/rethinking-user-defined-operators/"
+     title="Older Post &ldquo;Rethinking User-Defined Operators&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2011/02/13/extending-syntax-from-within-a-language/"
+     title="Newer Post &ldquo;Extending Syntax from Within a Language&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">January 16, 2011</a>
+    <span class="tags"><a href="/category/c">c</a> <a href="/category/code">code</a> <a href="/category/js">js</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>Another long weekend and another fun milestone for <a href="https://magpie-lang.org/">Magpie</a>. I&rsquo;ve finally
+managed to pull off something that I&rsquo;ve wanted to support for a long time: <em>real
+destructuring pattern matching</em>. Even more awesome, it uses patterns not just in
+the basic <code>match</code> expression, but also for exception-handling catch clauses,
+variable declarations, and function type declarations.</p>
+
+<p>This is great because it means we can use the same concept to support a lot of
+the language&rsquo;s semantics. There are fewer things for a user to learn, and if I
+make that one concept more powerful, the effect is magnified across more of the
+language. But I&rsquo;m getting ahead of myself here.</p>
+
+<h2>Pattern what?</h2>
+
+<p>If you&rsquo;ve never ventured into the realm of static functional languages, it&rsquo;s
+entirely likely you&rsquo;ve never heard of <a href="http://en.wikipedia.org/wiki/Pattern_matching">pattern matching</a>, or if you have, it
+was describing something else. I wrote <a href="/2009/05/13/ml-style-pattern-matching-in-c/">a really long introduction to it</a>
+a while back, but I&rsquo;ll do the super science breakdown here.</p>
+
+<p>What I think you&rsquo;ll find is that you <em>do</em> know what it is, you just don&rsquo;t know
+you know it. Here&rsquo;s some examples:</p>
+
+<h3>Switches</h3>
+
+<p>Consider the humble <code>switch</code> statement in <a href="http://en.wikipedia.org/wiki/C_(programming_language)">Ye Olde Imperative Language</a>:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">switch</span> <span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">1</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+  <span class="k">case</span> <span class="n">2</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+  <span class="k">case</span> <span class="n">3</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;third&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+  <span class="k">default</span><span class="p">:</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;uh...&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Pretty straightforward. The key bits are, we have a <em>value</em> being tested (here
+just <code>i</code>), a series of <em>clauses</em>, and a <em>default clause</em>. Each clause has a
+<em>body</em> and a thing being compared against, which I&rsquo;ll call the <em>pattern</em>.</p>
+
+<p>The semantics are equally straightforward. First, we evaluate the value
+expression, then we walk down the clauses. For each one, we see if the pattern
+<em>matches</em> the value. If so, we execute the body and end (we&rsquo;ll ignore
+fallthrough here). &ldquo;Match&rdquo; is a pretty fuzzy term. In the context of a <code>switch</code>
+statement in C, all it means is equivalence. Two values match if they&rsquo;re the
+same value.</p>
+
+<h3>Catches</h3>
+
+<p>Now let&rsquo;s switch gears and take a look a <code>catch</code> blocks in everyone&rsquo;s favorite
+<a href="http://en.wikipedia.org/wiki/Java_(programming_language)">Big Enterprise Language</a>:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">try</span> <span class="p">{</span>
+  <span class="c">// Do something crazy...</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="t">ParseException</span> <span class="i">ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="s">&quot;Parse error!&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="t">IOException</span> <span class="i">ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="s">&quot;IO error!&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="t">Exception</span> <span class="i">ex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>When an exception gets thrown in the try block, we start working through the
+<code>catch</code> blocks. The key bits here are: we have a <em>value</em> being tested (the
+thrown exception) and a series of <em>clauses</em> (the <code>catch</code> blocks). Each clause
+has a <em>body</em> and an exception type being compared against, which we&rsquo;ll again
+call the <em>pattern</em>.</p>
+
+<p>Sound familiar? Aside from syntax, the only real difference between exception
+handling and <code>switch</code> statements is that <code>catch</code> clauses match on the
+exception&rsquo;s <em>type</em> instead of its value. All of the other machinery is the
+same.</p>
+
+<h3>Destructuring</h3>
+
+<p>Last example, and a different one from the previous two. Let&rsquo;s take a look at
+the <a href="http://en.wikipedia.org/wiki/Javascript">Hot New Language</a>. The latest Mozilla-specific version that no one
+actually uses (not that I&rsquo;m bitter or anything) introduced a new feature called
+<em>destructuring assignment</em>. It looks like this:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">point</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">];</span>
+<span class="k">var</span> <span class="p">[</span><span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">]</span> <span class="o">=</span> <span class="i">point</span><span class="p">;</span> <span class="c">// Destructure point.</span>
+<span class="i">alert</span><span class="p">(</span><span class="i">x</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="i">y</span><span class="p">);</span>
+</code></pre></div>
+<p>You can probably infer what&rsquo;s going on here. The second line declares two new
+variables, <code>a</code> and <code>b</code> and initializes them by pulling elements out of the array
+that <code>point</code> was initialized with.</p>
+
+<p>There&rsquo;s no flow control going on, but this does have some features in common
+with the previous two examples. First, we have a value: <code>point</code>. And we have a
+pattern that it&rsquo;s being matched against: <code>[x, y]</code>. In this case, we don&rsquo;t use
+the pattern to <em>test</em> the value, we use it to <em>pull data out of it</em>.</p>
+
+<p>Actually, that destructuring part isn&rsquo;t so different from <em>one</em> of our examples
+after all. The exception-handling code does something very similar. When it
+finds a matching <code>catch</code> block, it does bind the caught exception to a new
+variable&mdash;the one declared in the <code>catch</code> block&rsquo;s type signature.</p>
+
+<h2>Patterns in Magpie</h2>
+
+<p>There are some other details, but what you&rsquo;ve just seen covers 90% of the
+awesomeness that is pattern-matching in the ML family of languages. The only
+problem is that in the languages we&rsquo;ve looked at, those features are all split
+across unrelated constructs. A <code>switch</code> can&rsquo;t match on types, nor can it
+destructure an array. A <code>catch</code> block can&rsquo;t choose to only catch an exception if
+it has a certain <em>value</em> (like maybe a specific error message).</p>
+
+<p>All the pieces are there, but they&rsquo;re scattered across the language. Let&rsquo;s bring
+them together. We&rsquo;ll do this by making patterns a first-class feature of the
+language. A pattern needs to support a couple of operations:</p>
+
+<ol>
+<li><p>Test to see if the pattern matches the value.</p></li>
+<li><p>Bind new variables by pulling data out of the value.</p></li>
+</ol>
+
+<p>Just like how expressions in the language work, we&rsquo;ll define a couple of core
+types of patterns, and then let users compose them to their heart&rsquo;s content. In
+Magpie, those are:</p>
+
+<h3>Value patterns</h3>
+
+<p>The simplest pattern is just an expression that evaluates to a value. These are
+like the literals after the <code>case</code> in a <code>switch</code> statement, but Magpie lets you
+use pretty much any expression. These are valid value patterns:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">123</span>
+<span class="k">true</span>
+<span class="s">&quot;a string&quot;</span>
+<span class="n">3</span> <span class="o">+</span> <span class="n">5</span>
+</code></pre></div>
+<p>Testing against a value is simple: it&rsquo;s an equality check. A <code>2</code> pattern matches
+if the value is also <code>2</code>. Magpie does this by just calling the <code>==</code> operator, so
+it&rsquo;s even possible to use your own types here.</p>
+
+<p>Value patterns don&rsquo;t bind any new variables, so that bit&rsquo;s easy too.</p>
+
+<h3>Tuple patterns</h3>
+
+<p>This is one of two patterns that has subpatterns. With this, you can start
+composing bigger patterns that do more stuff. A tuple pattern is just like a
+<a href="/2009/05/05/one-and-only-one/">tuple expression</a>: it&rsquo;s a series of patterns separated by commas. For
+example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="n">3</span><span class="p">,</span> <span class="s">&quot;four&quot;</span><span class="p">,</span> <span class="k">false</span>
+</code></pre></div>
+<p>Here we have a tuple of three value patterns. A tuple pattern matches if all of
+its fields match the value&rsquo;s fields. In other words, the interpreter walks
+through the field <em>patterns</em> while walking through the fields of the tuple
+<em>value</em> in parallel. It&rsquo;s this symmetry which makes patterns so intuitive to
+use.</p>
+
+<p>A tuple pattern by itself doesn&rsquo;t bind any variables, but it does recursively
+give the patterns of its fields the chance to do so.</p>
+
+<h3>Record patterns</h3>
+
+<p>The twin brother to tuple patterns, a record pattern does the same thing, but
+for a named record (or any other type with named members). Here&rsquo;s one:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">x</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="i">y</span><span class="p">:</span> <span class="n">2</span>
+</code></pre></div>
+<p>That pattern matches any object with an <code>x</code> field whose value is <code>1</code>, and a <code>y</code>
+field whose value is <code>2</code>.</p>
+
+<h3>Variable patterns</h3>
+
+<p>Finally, the most important pattern, and the one where Magpie makes the greatest
+departure from ML. A variable pattern has a <em>name</em> and an optional <em>type
+annotation</em>. The name can be <code>_</code> if you don&rsquo;t care to bind a variable. Here are
+some examples:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">_</span>              <span class="c">// No name or type.</span>
+<span class="i">a</span>              <span class="c">// Name but no type.</span>
+<span class="i">position</span> <span class="t">Point</span> <span class="c">// Name and type.</span>
+<span class="i">_</span> <span class="t">Int</span> <span class="o">|</span> <span class="t">String</span> <span class="c">// No name but type.</span>
+</code></pre></div>
+<p>A variable pattern matches if the <em>type</em> of the value matches the variable
+pattern&rsquo;s type. If the pattern doesn&rsquo;t have a type, the match always succeeds.</p>
+
+<p>Variable patterns also perform the magic of creating new variables. When a
+variable pattern matches, it creates a new variable with the given name whose
+value is the matched value. When you combine that with tuple and record
+patterns, you get destructuring automagically. If we take this value:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>And match it against this pattern:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span>
+</code></pre></div>
+<p>The match will succeed, and <code>n</code> will be <code>"Dan"</code>, <code>a</code> will be <code>"Sam"</code>, and <code>b</code>
+will be <code>"Ed"</code>.</p>
+
+<h2>Now what?</h2>
+
+<p>Now we&rsquo;ve got these pattern things, where can we use them? It turns out, lots
+of places. We&rsquo;ll start with the most obvious one: <code>match</code> expressions&mdash;
+Magpie&rsquo;s souped-up version of <code>switch</code>. Our first example looks like this in
+Magpie:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="i">i</span>
+    <span class="k">case</span> <span class="n">1</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">2</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">3</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;third&quot;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="i">_</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;uh...&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The semantics are what you expect. It tests each pattern (the bit between <code>case</code>
+and <code>then</code>) in turn. When a pattern matches, it binds any pattern variables in a
+new scope, and executes the expression after <code>then</code> in it. A richer example
+showing all of the fun stuff looks like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
+  <span class="k">case</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dave&quot;</span> <span class="k">then</span> <span class="s">&quot;don&#39;t care about Dave&#39;s friends&quot;</span>
+  <span class="k">case</span> <span class="i">name</span><span class="p">:</span> <span class="i">a</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="k">nothing</span> <span class="k">then</span> <span class="i">a</span> <span class="o">~</span> <span class="s">&quot; has no friends&quot;</span>
+  <span class="k">case</span> <span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="k">then</span>
+      <span class="i">n</span> <span class="o">~</span> <span class="s">&quot; is pals with &quot;</span> <span class="o">~</span> <span class="i">a</span> <span class="o">~</span> <span class="s">&quot; and &quot;</span> <span class="o">~</span> <span class="i">b</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Pretty handy, but we&rsquo;re just getting started.</p>
+
+<h3>Catches</h3>
+
+<p>Since we can also match on type, that gives us all we need to use patterns for
+selecting an appropriate catch clause when an error is thrown. The exception
+example up there becomes:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">do</span>
+  <span class="c">// Do something crazy...</span>
+<span class="k">catch</span> <span class="i">ex</span> <span class="t">ParseException</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Parse error!&quot;</span><span class="p">)</span>
+<span class="k">catch</span> <span class="i">ex</span> <span class="t">IOException</span>    <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;IO error!&quot;</span><span class="p">)</span>
+<span class="k">catch</span> <span class="i">_</span>                 <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3>Variables</h3>
+
+<p>Since patterns give us a way to bind variables, do we really need to have a
+separate special case <code>var</code> expression that just creates a single named
+variable? Nope. We can just make it take a single pattern. If the pattern is a
+variable pattern with no type, it degenerates to a regular variable
+declaration like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&quot;the queen of France&quot;</span>
+</code></pre></div>
+<p>But you can also use tuple and record patterns to destructure:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="o">=</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
+<span class="i">print</span><span class="p">(</span><span class="i">n</span><span class="p">)</span> <span class="c">// &quot;Dan&quot;</span>
+<span class="i">print</span><span class="p">(</span><span class="i">a</span><span class="p">)</span> <span class="c">// &quot;Sam&quot;</span>
+<span class="i">print</span><span class="p">(</span><span class="i">b</span><span class="p">)</span> <span class="c">// &quot;Ed&quot;</span>
+</code></pre></div>
+<p>So now we&rsquo;ve got destructuring for free. Swell!</p>
+
+<h3>Function parameters</h3>
+
+<p>There&rsquo;s one last trick up our sleeve. If you look at the exception example
+there, it looks an awful lot like a function type declaration. That&rsquo;s not a
+coincidence either. We can now just use a pattern to define a function&rsquo;s
+parameter type, like so:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">foo</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="i">n</span> <span class="t">String</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span> <span class="t">String</span><span class="p">,</span> <span class="i">b</span> <span class="t">String</span><span class="p">))</span>
+  <span class="i">print</span><span class="p">(</span><span class="i">n</span><span class="p">)</span> <span class="c">// &quot;Dan&quot;</span>
+  <span class="i">print</span><span class="p">(</span><span class="i">a</span><span class="p">)</span> <span class="c">// &quot;Sam&quot;</span>
+  <span class="i">print</span><span class="p">(</span><span class="i">b</span><span class="p">)</span> <span class="c">// &quot;Ed&quot;</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The syntax of variable patterns was designed specifically around this. My goal
+was to make the patterns used for function parameters look familiar to someone
+new to the language while hiding greater flexibility under the surface. I
+think most programmers can figure out what this means:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">sayAge</span><span class="p">(</span><span class="i">name</span> <span class="t">String</span><span class="p">,</span> <span class="i">age</span> <span class="t">Int</span><span class="p">)</span>
+    <span class="i">print</span><span class="p">(</span><span class="i">name</span> <span class="o">~</span> <span class="s">&quot; is &quot;</span> <span class="o">~</span> <span class="i">age</span> <span class="o">~</span> <span class="s">&quot; years old&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>without ever realizing the <code>name String, age Int</code> is something special.</p>
+
+<p>Using patterns for function types also plays really nicely with Magpie&rsquo;s <a href="/2010/08/31/type-checking-a-dynamic-language/">static
+typing</a>. By adding support for evaluating the <em>type</em> of a pattern, we can use
+that to type check a pattern anywhere it appears. For example:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="s">&quot;not an int&quot;</span>
+  <span class="k">case</span> <span class="n">1</span> <span class="k">then</span> <span class="s">&quot;match a string with an int?&quot;</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The interpreter can statically tell that this is an error because the pattern
+type doesn&rsquo;t match the value. And using that exact same code, we can also tell
+that this is an error:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">expectInt</span><span class="p">(</span><span class="i">i</span> <span class="t">Int</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">i</span><span class="p">)</span>
+<span class="i">expectInt</span><span class="p">(</span><span class="s">&quot;not an int&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The end result of all of this is that the total amount of code in the
+interpreter has gone <em>down</em>, there are fewer distinct concepts to learn in the
+language, and at the same time I&rsquo;ve added new functionality that wasn&rsquo;t there
+before. Or, in the words of the immortal John &ldquo;Hannibal&rdquo; Smith, &ldquo;I love it when
+a plan comes together.&rdquo;</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language//&amp;t=Pattern Matching in a Dynamic OOP Language" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/&amp;text=%22Pattern Matching in a Dynamic OOP Language%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

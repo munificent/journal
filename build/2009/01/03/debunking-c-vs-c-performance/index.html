@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Debunking C# vs C++ Performance
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2009/01/03/debunking-c-vs-c-performance/" rel="bookmark"
+     title="Permanent Link to Debunking C# vs C++ Performance">
+    Debunking C# vs C++ Performance
+  </a>
+</h1>
+
+  <a class="older" href="/2008/12/28/fixing-ambiguities-in-yacc/"
+     title="Older Post &ldquo;Fixing Ambiguities in Grammars&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/"
+     title="Newer Post &ldquo;Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">January 03, 2009</a>
+    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/cpp">cpp</a> <a href="/category/optimization">optimization</a></span>
+</h4>
+
+<p>If you were on <a href="http://www.reddit.com/r/programming/">reddit</a> today, you probably saw <a href="http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/">this article</a>, damning C#&rsquo;s
+performance as being <strong>ten times worse than C++&rsquo;s</strong>. Holy shit balls, batman!</p>
+
+<p>Running his C# code, here are the results I got:</p>
+
+<h2>Original C# code</h2><div class="table">
+<table>
+<thead>
+<tr>
+<td class="right">Array Size</td>
+<td class="right">SortTest</td>
+<td class="right">SortTestT</td>
+<td class="right">SortTestTC</td>
+<td class="right">SortIndirect</td>
+</tr>
+</thead>
+<tr>
+<td class="right">1024</td>
+<td class="right">10.7162</td>
+<td class="right">2.3441</td>
+<td class="right">3.8781</td>
+<td class="right">1.1366</td>
+</tr>
+<tr>
+<td class="right">2048</td>
+<td class="right">22.9509</td>
+<td class="right">4.3889</td>
+<td class="right">8.4408</td>
+<td class="right">1.8714</td>
+</tr>
+<tr>
+<td class="right">4096</td>
+<td class="right">49.3709</td>
+<td class="right">8.4452</td>
+<td class="right">17.3883</td>
+<td class="right">3.7319</td>
+</tr>
+<tr>
+<td class="right">8192</td>
+<td class="right">103.5701</td>
+<td class="right">18.5369</td>
+<td class="right">38.1285</td>
+<td class="right">8.0310</td>
+</tr>
+<tr>
+<td class="right">16384</td>
+<td class="right">220.9323</td>
+<td class="right">39.6958</td>
+<td class="right">80.9258</td>
+<td class="right">18.5821</td>
+</tr>
+<tr>
+<td class="right">32768</td>
+<td class="right">469.5507</td>
+<td class="right">84.5129</td>
+<td class="right">172.2964</td>
+<td class="right">41.2126</td>
+</tr>
+<tr>
+<td class="right">65536</td>
+<td class="right">1016.2149</td>
+<td class="right">188.6718</td>
+<td class="right">380.3507</td>
+<td class="right">93.2924</td>
+</tr>
+<tr>
+<td class="right">131072</td>
+<td class="right">2156.4188</td>
+<td class="right">399.7299</td>
+<td class="right">791.6437</td>
+<td class="right">210.9526</td>
+</tr>
+<tr>
+<td class="right">262144</td>
+<td class="right">4616.3540</td>
+<td class="right">847.9829</td>
+<td class="right">1692.9814</td>
+<td class="right">467.6020</td>
+</tr>
+<tr>
+<td class="right">524288</td>
+<td class="right">9732.4311</td>
+<td class="right">1793.9729</td>
+<td class="right">3545.2089</td>
+<td class="right">1038.2164</td>
+</tr>
+</table>
+</div>
+
+<p>Pretty slow! So I took a look at the code. The first thing that would catch the
+eye of any C# programmer is this:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">unsafe</span> <span class="k">struct</span> <span class="t">Data</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">fixed</span> <span class="t">char</span> <span class="i">data</span><span class="p">[</span><span class="n">128</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><em>That&rsquo;s</em> the data structure he&rsquo;s sorting. An unsafe struct with a fixed array? I
+had to look up <code>fixed</code> to even know what that <em>means</em>. Now, I understand that
+he&rsquo;s trying to make an apples/apples comparison and keep the data structure as
+close to the C++ one as possible, but I think that&rsquo;s missing the point. If
+you&rsquo;re going to compare two languages, using their <em>built-in typical sort
+functions</em>, shouldn&rsquo;t you use their typical <em>data structures</em> too? Here&rsquo;s how a
+regular C# developer would define <code>Data</code>:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="t">Data</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
+    <span class="k">public</span> <span class="t">char</span><span class="p">[]</span> <span class="i">data</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="i">Data</span><span class="p">()</span> <span class="p">{</span> <span class="i">data</span> <span class="o">=</span> <span class="k">new</span> <span class="t">char</span><span class="p">[</span><span class="n">128</span><span class="p">];</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>No unmanaged code, no structs (which are rarely used in C#). Just a regular
+class with an array. Here&rsquo;s the results:</p>
+
+<h2>Modified to typical C# code</h2><div class="table">
+<table>
+<thead>
+<tr>
+<td class="right">Array Size</td>
+<td class="right">SortTest</td>
+<td class="right">SortTestT</td>
+<td class="right">SortTestTC</td>
+<td class="right">SortIndirect</td>
+</tr>
+</thead>
+<tr>
+<td class="right">1024</td>
+<td class="right">0.3605</td>
+<td class="right">0.3626</td>
+<td class="right">0.4150</td>
+<td class="right">0.5918</td>
+</tr>
+<tr>
+<td class="right">2048</td>
+<td class="right">0.7651</td>
+<td class="right">0.7446</td>
+<td class="right">0.8749</td>
+<td class="right">0.5021</td>
+</tr>
+<tr>
+<td class="right">4096</td>
+<td class="right">1.6434</td>
+<td class="right">1.6094</td>
+<td class="right">1.9468</td>
+<td class="right">1.2030</td>
+</tr>
+<tr>
+<td class="right">8192</td>
+<td class="right">3.6497</td>
+<td class="right">3.5216</td>
+<td class="right">4.1014</td>
+<td class="right">2.3926</td>
+</tr>
+<tr>
+<td class="right">16384</td>
+<td class="right">7.9555</td>
+<td class="right">8.0842</td>
+<td class="right">9.3324</td>
+<td class="right">5.4752</td>
+</tr>
+<tr>
+<td class="right">32768</td>
+<td class="right">21.1833</td>
+<td class="right">19.1183</td>
+<td class="right">23.1170</td>
+<td class="right">15.1998</td>
+</tr>
+<tr>
+<td class="right">65536</td>
+<td class="right">54.6938</td>
+<td class="right">53.4892</td>
+<td class="right">72.3932</td>
+<td class="right">34.6554</td>
+</tr>
+<tr>
+<td class="right">131072</td>
+<td class="right">122.5008</td>
+<td class="right">114.1937</td>
+<td class="right">141.3504</td>
+<td class="right">75.9064</td>
+</tr>
+<tr>
+<td class="right">262144</td>
+<td class="right">279.8014</td>
+<td class="right">262.5908</td>
+<td class="right">343.4204</td>
+<td class="right">160.8344</td>
+</tr>
+<tr>
+<td class="right">524288</td>
+<td class="right">598.5605</td>
+<td class="right">577.7487</td>
+<td class="right">759.4405</td>
+<td class="right">359.7824</td>
+</tr>
+</table>
+</div>
+
+<p>Let&rsquo;s compare the last lines of each:</p><div class="table">
+<table>
+<thead>
+<tr>
+<td>Data Type</td>
+<td class="right">SortTest</td>
+<td class="right">SortTestT</td>
+<td class="right">SortTestTC</td>
+<td class="right">SortIndirect</td>
+</tr>
+</thead>
+<tr>
+<td>struct/fixed</td>
+<td class="right">9732.4311</td>
+<td class="right">1793.9729</td>
+<td class="right">3545.2089</td>
+<td class="right">1038.2164</td>
+</tr>
+<tr>
+<td>class</td>
+<td class="right">598.5605</td>
+<td class="right">577.7487</td>
+<td class="right">759.4405</td>
+<td class="right">359.7824</td>
+</tr>
+<tr>
+<td>how much faster</td>
+<td class="right"><b>16.259x</b></td>
+<td class="right"><b>3.105x</b></td>
+<td class="right"><b>4.668x</b></td>
+<td class="right"><b>2.885x</b></td>
+</tr>
+</table>
+</div>
+
+<p>Um, <em>slightly</em> different? In his original post, he states that the indirect
+sorting is twice as fast in C++ than in C#. I can&rsquo;t do a direct comparison
+since I didn&rsquo;t run the C++ code, but since my change to the C# made it run
+2.885 times faster than his C# code, it stands to reason that the <strong>C# and C++
+performance are neck and neck, if not a bit faster in C#</strong>.</p>
+
+<h2>Apples to oranges to avocados</h2>
+
+<p>If you&rsquo;re rooting for the C++ side, you&rsquo;re probably thinking, &ldquo;No fair! The C#
+one didn&rsquo;t have to move the whole array around in memory!&rdquo; Well, yeah, it
+didn&rsquo;t: <em>because that&rsquo;s how C# programmers use the language</em>. Since it&rsquo;s safe
+to rely on the garbage collector to handle deallocations, C# programmers don&rsquo;t
+spend effort avoiding using &ldquo;dangerous&rdquo; pointers (i.e. reference types). This
+is simply how the language is used. To me, the fairest comparison is one that
+preserves both the procedures (which he did by using the built-in sorts) <em>and</em>
+the data structures (which he did not do) used by each language.</p>
+
+<h2>The code</h2>
+
+<p>Aside from the <code>Data</code> change above, I cleaned up some of the copy and paste in
+his code. Here&rsquo;s what I used:</p>
+<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">using</span> <span class="i">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Collections</span><span class="p">.</span><span class="i">Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Text</span><span class="p">;</span>
+<span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Runtime</span><span class="p">.</span><span class="i">InteropServices</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="i">CachePressureCS</span>
+<span class="p">{</span>
+    <span class="c">// normal c# type</span>
+    <span class="k">class</span> <span class="t">Data</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
+        <span class="k">public</span> <span class="t">char</span><span class="p">[]</span> <span class="i">data</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="i">Data</span><span class="p">()</span> <span class="p">{</span> <span class="i">data</span> <span class="o">=</span> <span class="k">new</span> <span class="t">char</span><span class="p">[</span><span class="n">128</span><span class="p">];</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="t">DataComparer</span> <span class="p">:</span> <span class="t">IComparer</span>
+    <span class="p">{</span>
+        <span class="t">int</span> <span class="i">IComparer</span><span class="p">.</span><span class="i">Compare</span><span class="p">(</span><span class="t">Object</span> <span class="i">x</span><span class="p">,</span> <span class="t">Object</span> <span class="i">y</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="p">((</span><span class="t">Data</span><span class="p">)</span><span class="i">x</span><span class="p">).</span><span class="i">key</span> <span class="o">-</span> <span class="p">((</span><span class="t">Data</span><span class="p">)</span><span class="i">y</span><span class="p">).</span><span class="i">key</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="t">DataComparerT</span> <span class="p">:</span> <span class="t">IComparer</span><span class="o">&lt;</span><span class="t">Data</span><span class="o">&gt;</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="t">int</span> <span class="i">Compare</span><span class="p">(</span><span class="t">Data</span> <span class="i">x</span><span class="p">,</span> <span class="t">Data</span> <span class="i">y</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="i">x</span><span class="p">.</span><span class="i">key</span> <span class="o">-</span> <span class="i">y</span><span class="p">.</span><span class="i">key</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="t">Timer</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="a">DllImport</span><span class="p">(</span><span class="s">&quot;Kernel32.dll&quot;</span><span class="p">)]</span>
+        <span class="k">private</span> <span class="k">static</span> <span class="k">extern</span> <span class="t">bool</span> <span class="i">QueryPerformanceCounter</span><span class="p">(</span>
+            <span class="k">out</span> <span class="t">long</span> <span class="i">counter</span><span class="p">);</span>
+
+        <span class="p">[</span><span class="a">DllImport</span><span class="p">(</span><span class="s">&quot;Kernel32.dll&quot;</span><span class="p">)]</span>
+        <span class="k">private</span> <span class="k">static</span> <span class="k">extern</span> <span class="t">bool</span> <span class="i">QueryPerformanceFrequency</span><span class="p">(</span>
+            <span class="k">out</span> <span class="t">long</span> <span class="i">frequency</span><span class="p">);</span>
+
+        <span class="k">public</span> <span class="i">Timer</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="i">mStart</span> <span class="o">=</span> <span class="i">mEnd</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+            <span class="i">QueryPerformanceFrequency</span><span class="p">(</span><span class="k">out</span> <span class="i">mFrequency</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="i">Start</span><span class="p">()</span> <span class="p">{</span> <span class="i">QueryPerformanceCounter</span><span class="p">(</span><span class="k">out</span> <span class="i">mStart</span><span class="p">);</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="i">End</span><span class="p">()</span> <span class="p">{</span> <span class="i">QueryPerformanceCounter</span><span class="p">(</span><span class="k">out</span> <span class="i">mEnd</span><span class="p">);</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="t">double</span> <span class="i">Time</span>
+        <span class="p">{</span>
+            <span class="k">get</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">1000.0</span> <span class="o">*</span> <span class="p">(</span><span class="t">double</span><span class="p">)(</span><span class="i">mEnd</span> <span class="o">-</span> <span class="i">mStart</span><span class="p">)</span> <span class="o">/</span>
+                    <span class="p">(</span><span class="t">double</span><span class="p">)</span><span class="i">mFrequency</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="t">long</span> <span class="i">mFrequency</span><span class="p">;</span>
+        <span class="t">long</span> <span class="i">mStart</span><span class="p">;</span>
+        <span class="t">long</span> <span class="i">mEnd</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="t">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="t">int</span> <span class="i">CompareData</span><span class="p">(</span><span class="t">Data</span> <span class="i">x</span><span class="p">,</span> <span class="t">Data</span> <span class="i">y</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="i">x</span><span class="p">.</span><span class="i">key</span> <span class="o">-</span> <span class="i">y</span><span class="p">.</span><span class="i">key</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">Data</span><span class="p">[]</span> <span class="i">MakeData</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="t">Random</span> <span class="i">rng</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Random</span><span class="p">(</span><span class="n">0</span><span class="p">);</span>
+            <span class="t">Data</span><span class="p">[]</span> <span class="i">data</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Data</span><span class="p">[</span><span class="i">size</span><span class="p">];</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">i</span> <span class="o">&lt;</span> <span class="i">data</span><span class="p">.</span><span class="i">Length</span><span class="p">;</span> <span class="i">i</span><span class="o">++</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="i">data</span><span class="p">[</span><span class="i">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Data</span><span class="p">();</span>
+                <span class="i">data</span><span class="p">[</span><span class="i">i</span><span class="p">].</span><span class="i">key</span> <span class="o">=</span> <span class="i">rng</span><span class="p">.</span><span class="i">Next</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="i">data</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">double</span> <span class="i">Test</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">,</span> <span class="t">Action</span><span class="o">&lt;</span><span class="t">Data</span><span class="p">[]</span><span class="o">&gt;</span> <span class="i">sort</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="t">Timer</span> <span class="i">time</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Timer</span><span class="p">();</span>
+            <span class="t">Data</span><span class="p">[]</span> <span class="i">data</span> <span class="o">=</span> <span class="i">MakeData</span><span class="p">(</span><span class="i">size</span><span class="p">);</span>
+
+            <span class="i">time</span><span class="p">.</span><span class="i">Start</span><span class="p">();</span>
+            <span class="i">sort</span><span class="p">(</span><span class="i">data</span><span class="p">);</span>
+            <span class="i">time</span><span class="p">.</span><span class="i">End</span><span class="p">();</span>
+
+            <span class="k">return</span> <span class="i">time</span><span class="p">.</span><span class="i">Time</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">double</span> <span class="i">SortTest</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="i">Test</span><span class="p">(</span><span class="i">size</span><span class="p">,</span> <span class="i">data</span> <span class="o">=&gt;</span>
+                <span class="i">Array</span><span class="p">.</span><span class="i">Sort</span><span class="p">(</span><span class="i">data</span><span class="p">,</span> <span class="k">new</span> <span class="t">DataComparer</span><span class="p">()));</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">double</span> <span class="i">SortTestT</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="i">Test</span><span class="p">(</span><span class="i">size</span><span class="p">,</span> <span class="i">data</span> <span class="o">=&gt;</span>
+                <span class="i">Array</span><span class="p">.</span><span class="i">Sort</span><span class="o">&lt;</span><span class="t">Data</span><span class="o">&gt;</span><span class="p">(</span><span class="i">data</span><span class="p">,</span> <span class="k">new</span> <span class="t">DataComparerT</span><span class="p">()));</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">double</span> <span class="i">SortTestTC</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="i">Test</span><span class="p">(</span><span class="i">size</span><span class="p">,</span> <span class="i">data</span> <span class="o">=&gt;</span>
+                <span class="i">Array</span><span class="p">.</span><span class="i">Sort</span><span class="o">&lt;</span><span class="t">Data</span><span class="o">&gt;</span><span class="p">(</span><span class="i">data</span><span class="p">,</span> <span class="i">CompareData</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">double</span> <span class="i">SortTestC</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="i">Test</span><span class="p">(</span><span class="i">size</span><span class="p">,</span> <span class="i">data</span> <span class="o">=&gt;</span>
+                <span class="i">Array</span><span class="p">.</span><span class="i">Sort</span><span class="p">(</span><span class="i">data</span><span class="p">,</span> <span class="i">CompareData</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="t">double</span> <span class="i">SortTestIndirect</span><span class="p">(</span><span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="t">Random</span> <span class="i">rng</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Random</span><span class="p">(</span><span class="n">0</span><span class="p">);</span>
+            <span class="t">Timer</span> <span class="i">time</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Timer</span><span class="p">();</span>
+            <span class="t">Data</span><span class="p">[]</span> <span class="i">data</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Data</span><span class="p">[</span><span class="i">size</span><span class="p">];</span>
+            <span class="t">int</span><span class="p">[]</span> <span class="i">indirect</span> <span class="o">=</span> <span class="k">new</span> <span class="t">int</span><span class="p">[</span><span class="i">size</span><span class="p">];</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">i</span> <span class="o">&lt;</span> <span class="i">data</span><span class="p">.</span><span class="i">Length</span><span class="p">;</span> <span class="i">i</span><span class="o">++</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="i">data</span><span class="p">[</span><span class="i">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Data</span><span class="p">();</span>
+                <span class="i">data</span><span class="p">[</span><span class="i">i</span><span class="p">].</span><span class="i">key</span> <span class="o">=</span> <span class="i">rng</span><span class="p">.</span><span class="i">Next</span><span class="p">();</span>
+                <span class="i">indirect</span><span class="p">[</span><span class="i">i</span><span class="p">]</span> <span class="o">=</span> <span class="i">data</span><span class="p">[</span><span class="i">i</span><span class="p">].</span><span class="i">key</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="i">time</span><span class="p">.</span><span class="i">Start</span><span class="p">();</span>
+            <span class="i">Array</span><span class="p">.</span><span class="i">Sort</span><span class="o">&lt;</span><span class="t">int</span><span class="p">,</span> <span class="t">Data</span><span class="o">&gt;</span><span class="p">(</span><span class="i">indirect</span><span class="p">,</span> <span class="i">data</span><span class="p">);</span>
+            <span class="i">time</span><span class="p">.</span><span class="i">End</span><span class="p">();</span>
+
+            <span class="k">return</span> <span class="i">time</span><span class="p">.</span><span class="i">Time</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">static</span> <span class="k">void</span> <span class="i">Time</span><span class="p">(</span><span class="t">Func</span><span class="o">&lt;</span><span class="t">int</span><span class="p">,</span> <span class="t">double</span><span class="o">&gt;</span> <span class="i">fn</span><span class="p">,</span> <span class="t">int</span> <span class="i">size</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="t">double</span> <span class="i">time</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="t">int</span> <span class="i">j</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">j</span> <span class="o">&lt;</span> <span class="n">10</span><span class="p">;</span> <span class="i">j</span><span class="o">++</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="i">time</span> <span class="o">+=</span> <span class="i">fn</span><span class="p">(</span><span class="i">size</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="i">time</span> <span class="o">/=</span> <span class="n">10.0</span><span class="p">;</span>
+
+            <span class="i">Console</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;{0,14:F4}&quot;</span><span class="p">,</span> <span class="i">time</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">static</span> <span class="k">void</span> <span class="i">Main</span><span class="p">(</span><span class="t">string</span><span class="p">[]</span> <span class="i">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">(</span><span class="s">&quot;    size      SortTest     SortTestT&quot;</span> <span class="o">+</span>
+                <span class="s">&quot;    SortTestTC  SortIndirect&quot;</span><span class="p">);</span>
+            <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">(</span><span class="s">&quot;-------- ------------- &quot;</span> <span class="o">+</span>
+                <span class="s">&quot;------------- ------------- -------------&quot;</span><span class="p">);</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="p">;</span> <span class="i">i</span><span class="o">++</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="t">int</span> <span class="i">size</span> <span class="o">=</span> <span class="n">1024</span> <span class="o">&lt;&lt;</span> <span class="i">i</span><span class="p">;</span>
+
+                <span class="i">Console</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;{0,8}&quot;</span><span class="p">,</span> <span class="i">size</span><span class="p">);</span>
+                <span class="i">Time</span><span class="p">(</span><span class="i">SortTest</span><span class="p">,</span> <span class="i">size</span><span class="p">);</span>
+                <span class="i">Time</span><span class="p">(</span><span class="i">SortTestT</span><span class="p">,</span> <span class="i">size</span><span class="p">);</span>
+                <span class="i">Time</span><span class="p">(</span><span class="i">SortTestTC</span><span class="p">,</span> <span class="i">size</span><span class="p">);</span>
+                <span class="i">Time</span><span class="p">(</span><span class="i">SortTestIndirect</span><span class="p">,</span> <span class="i">size</span><span class="p">);</span>
+
+                <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="i">Console</span><span class="p">.</span><span class="i">ReadKey</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance//&amp;t=Debunking C# vs C++ Performance" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance/&amp;text=%22Debunking C# vs C++ Performance%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2009/01/03/debunking-c-vs-c-performance/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

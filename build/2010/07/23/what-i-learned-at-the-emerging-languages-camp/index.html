@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      What I Learned at the Emerging Languages Camp
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/07/23/what-i-learned-at-the-emerging-languages-camp/" rel="bookmark"
+     title="Permanent Link to What I Learned at the Emerging Languages Camp">
+    What I Learned at the Emerging Languages Camp
+  </a>
+</h1>
+
+  <a class="older" href="/2010/07/18/jasic-a-complete-interpreter-in-one-java-file/"
+     title="Older Post &ldquo;Jasic: A Complete Interpreter in One Java File&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/07/24/killing-primitive-loops-and-conditionals/"
+     title="Newer Post &ldquo;Killing Primitive Loops and Conditionals&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">July 23, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/parsing">parsing</a></span>
+</h4>
+
+<p>I just got back from the unbelievably awesome Emerging Languages Camp at
+<a href="http://www.oscon.com/">OSCON</a>. I wish I could come up with a good way to get across how cool of an
+experience it was. All I can say was that for the first time in a long time, I
+felt like I was really around my people. A programming language nerd is a really
+specific kind of nerd and I don&rsquo;t really know many who share my obsession. For
+the last two days, I was in a room packed with people who did.</p>
+
+<p>It&rsquo;s hard to summarize two intense days of full-on nerdery, but I thought I
+would talk a bit about something good I got from some of the talks. This doesn&rsquo;t
+mean I agreed with them all (frankly, I found the Go talk myopic), or that
+anyone I omitted here <em>wasn&rsquo;t</em> interesting. I&rsquo;m exhausted this morning, so I
+only have so much steam.</p>
+
+<h2>Rob Pike (Go)</h2>
+
+<p>The theme that comes up frequently when I read about <a href="http://golang.org/">Go</a> or hear Rob talk
+about it is this sense of pragmatic feature economy. Any time someone asks, &ldquo;why
+doesn&rsquo;t Go have Foo&rdquo;, his answer tends to be &ldquo;We found in practice that we don&rsquo;t
+miss it.&rdquo;</p>
+
+<p>Language designers can be <a href="http://magpie-lang.org">magpies</a>, wanting to cram in all of our favorite
+features just because they&rsquo;re shiny or to have a longer bullet list than the
+competition. If those features don&rsquo;t help real people solve real problems,
+you&rsquo;re wasting your time and making things more complex for them. While I don&rsquo;t
+always agree with the specific choices that the Go designers make, I do agree
+with the &ldquo;let&rsquo;s see if we can get by without them&rdquo; approach that leads to them.</p>
+
+<h2>Phil Mercurio (Thyrd)</h2>
+
+<p>Phil&rsquo;s talk was one of a few on visual programming. Most of my experience with
+visual languages is that they&rsquo;re either toys or incomprehensible timecube-esque
+crankware.</p>
+
+<p>Phil got up and humbly walked through <a href="http://thyrd.org/">his visual language</a>. When he
+asked for questions at the end, there was a long pause before any hands went up.
+From talking to people afterward, I think the consensus was that we were all
+thinking, &ldquo;Holy crap, he actually did it.&rdquo;</p>
+
+<p>He managed to find a small kernel for a visual language (nested grids and
+triads) and build something out of it that really works. It&rsquo;s <em>really</em> hard to
+pull something like this off, and I think it&rsquo;s cool that&rsquo;s he had the insight
+and tenacity to keep cranking away at it.</p>
+
+<h2>Alan Eliasen (Frink)</h2>
+
+<p>Alan stressed that <a href="http://futureboy.homeip.net/frinkdocs/">Frink</a> is a general-purpose language with user-defined
+functions and stuff but its <em>raison d&rsquo;etre</em> is doing arithmetic with units,
+which it does so unbelievably comprehensively that it boggles the mind. From his
+talk, I can only assume that Alan&rsquo;s house is packed floor-to-ceiling with
+yellowing almanacs and dusty IEEE standards reports. Calling his knowledge of
+measure &ldquo;encyclopedic&rdquo; is giving encyclopedias too much credit.</p>
+
+<p>What I found interesting about Frink is that by limiting its focus to a single
+domain, Alan has ended up with a language that&rsquo;s <em>more</em> powerful and useful.
+When asked what their language is good for, many designers would say
+&ldquo;everything&rdquo; which really means &ldquo;nothing&rdquo;. Frink embodies the principle of doing
+one thing and doing it well.</p>
+
+<h2>Gilad Bracha (Newspeak)</h2>
+
+<p>The camp was an even mix of academics and hackers. A lot of academic talk is
+over my head so the mortarboard team is underrepresented in this post. Gilad&rsquo;s
+talk was in that category: a lot of it was too high-level for my primitive
+monkey brain to grasp.</p>
+
+<p>One thing really stuck with me though. <a href="http://bracha.org/Site/Newspeak.html">Newspeak</a> doesn&rsquo;t have namespaces,
+modules, or a lot of other OOP features. What it does have is classes, and
+classes nest. That simple core is flexible enough to do duty as a module system,
+an abstraction system, a namespace system etc. I love the idea of getting one
+simple concept and letting it fully unfold to cover a bunch of different problem
+solutions.</p>
+
+<h2>Jeremy Ashkenas (Coffeescript)</h2>
+
+<p>I totally didn&rsquo;t pay attention to Jeremy&rsquo;s talk because I was busy slapping
+together slides for mine. This sucks because I think <a href="https://coffeescript.org/">Coffeescript</a> is
+fantastic. I love its obsession with aesthetics and clarity. Both the language
+and its documentation are a testament to the philosophy that beautiful is
+usable. I wish more language designers would pay heed to that.</p>
+
+<h2>Steve Folta (Trylon)</h2>
+
+<p>Steve&rsquo;s talk embodied two ideals that I think are often overlooked. The first
+thing he said when he got up was, &ldquo;Trylon doesn&rsquo;t do anything new.&rdquo; That puts
+<a href="http://github.com/stevefolta/trylon">Trylon</a> in the same space as Python, Ruby, and almost every popular language
+today. If you want to publish papers and advance the art, breaking new ground is
+key. If you want a language for people to use, there&rsquo;s real value in staying
+away from the borderlands.</p>
+
+<p>The other thing he said that struck me was, &ldquo;When I get home I program in Trylon
+because it&rsquo;s the language that feels the most fun to me.&rdquo; A well-worn truism in
+writing is &ldquo;write for yourself&rdquo;. Trying to make a language that&rsquo;s all things to
+all people is futile and exhausting. I love that Steve just made the language
+that <em>he</em> wanted.</p>
+
+<h2>Amos Wenger (ooc)</h2>
+
+<p>Any domain has two levels of knowledge: the core ideas for the domain, and the
+<em>cultural</em> wisdom <em>around</em> those ideas. The first tells you how to do stuff. The
+latter often tells you which stuff not to do. Any well-versed programming
+language person can tell you about both recursive-descent parsers and generated
+parsers. They&rsquo;ll also tell that generated parsers are the &ldquo;right&rdquo; way to do
+that.</p>
+
+<p>Most of the time that advice will save you from wasted effort, but sometimes I
+think it keeps people from going down paths that may actually be fruitful.
+Sometimes the thing that everyone knows is true isn&rsquo;t. (For example, every
+language I know of with a lot of real-world users actually does use a hand-
+written parser.)</p>
+
+<p>Amos is a young French iconoclast. If he&rsquo;d been born in a different time, I
+expect he&rsquo;d be a brick-tossing anarchist. One advantage that attitude gives him
+is that he and the others working on <a href="http://ooc-lang.org/">ooc</a> pour features into the language
+while the rest of us are still sitting around fretting about minutia. I think a
+lot of us could use some of that &ldquo;let&rsquo;s just fucking do it&rdquo; spirit.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp//&amp;t=What I Learned at the Emerging Languages Camp" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp/&amp;text=%22What I Learned at the Emerging Languages Camp%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

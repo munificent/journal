@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Refining Exceptions and Error Codes
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2010/11/08/refining-exceptions-and-error-codes/" rel="bookmark"
+     title="Permanent Link to Refining Exceptions and Error Codes">
+    Refining Exceptions and Error Codes
+  </a>
+</h1>
+
+  <a class="older" href="/2010/10/29/bootstrapping-a-type-system/"
+     title="Older Post &ldquo;Bootstrapping a Type System&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2010/11/26/the-biology-of-sloppy-code/"
+     title="Newer Post &ldquo;The Biology of Sloppy Code&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">November 08, 2010</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
+</h4>
+
+<p>I&rsquo;ve been thinking a lot about error-handling in <a href="https://magpie-lang.org/">Magpie</a>, and I wanted to
+foist a couple of ideas out there to get some feedback.</p>
+
+<h2>Kinds of errors</h2>
+
+<p>When I&rsquo;m designing something, I tend to start from a few representative
+examples, and then I see how my idea for a solution handles those cases.
+Error-handling encompasses a pretty wide range of cases, everything from &ldquo;you
+typed the name wrong&rdquo; to &ldquo;the machine is on fire&rdquo;. That space is pretty big, but
+I think the following touch the most important corners of it. Let me know if I
+missed something:</p>
+
+<h3>Programmatic errors: the programmer screwed up</h3>
+
+<p>When I look at code I wrote, most of the error-handling code in it is for
+handling errors in <em>other</em> code. In other words, it&rsquo;s code contract stuff:
+validation code that asserts what arguments should look like and what state
+objects should be in when you try to do stuff with them.</p>
+
+<p>When possible, it&rsquo;s good to squash those bugs <em>statically</em> so you don&rsquo;t need
+code to handle them at all. Magpie does that with <code>null</code> reference bugs, but
+there are others that are trickier&mdash;things like out of bounds array access, or
+attempting to cast a variable to the wrong type.</p>
+
+<p>In C and C++, these errors are usually handled using <code>assert()</code> or similar
+mechanisms. Java and C# each have a set of standard exception types that are
+thrown: <code>InvalidOperationException</code>, <code>IllegalArgumentException</code>, etc.</p>
+
+<p>Checks for these errors are very common, so they should be lightweight in both
+in code and in CPU cycles. At the same time, we don&rsquo;t generally <em>handle</em> these
+errors, in the sense of recovering at runtime. Instead, we just want to <em>notice</em>
+the error and scream and shout to the programmer to handle it by fixing the code
+that causes the error in the first place. Giving diagnostic information like a
+stack trace is good.</p>
+
+<h3>Runtime errors: the real world isn&rsquo;t perfect</h3>
+
+<p>I lump into this fuzzy category errors that can occur at runtime and either
+can&rsquo;t be programmatically prevented, or where detecting the error beforehand is
+as expensive as performing the operation itself and seeing if it failed. Some
+examples:</p>
+
+<ol>
+<li><p>Working with files or the network.</p></li>
+<li><p>Parsing, formatting, or manipulating data.</p></li>
+</ol>
+
+<p>These are the kinds of things we typically think of when we think of &ldquo;errors&rdquo;.
+We want to notice when they&rsquo;ve happened, and we will very likely need to write
+code to try to recover from them gracefully at runtime.</p>
+
+<p>What this category <em>doesn&rsquo;t</em> imply is any sort of <em>frequency</em>. Whether or not a
+given error is common is entirely dependent on the application. A blog engine
+probably considers text parsing a common source of errors. A game app that just
+loads a single config file with a known format can safely assume that won&rsquo;t
+happen.</p>
+
+<p>In other words, the code <em>producing</em> the error doesn&rsquo;t determine its severity.
+It&rsquo;s the code <em>handling</em> the error that has enough context to know how common
+and how critical the failure is. This means we want to have some flexibility
+regarding how errors in this category are handled. If we force a certain
+strategy by assuming that some errors are common and some are rare, then we&rsquo;ll
+shaft users that aren&rsquo;t like us.</p>
+
+<h3>Catastrophic errors (all hell breaks loose)</h3>
+
+<p>The last category is errors that are so deep that we probably <em>can&rsquo;t</em> handle
+them. These are errors are distinguished by the fact that they interfere with
+our ability to execute further code&mdash;things like stack overflows or running
+out of memory.</p>
+
+<h2>Handling errors</h2>
+
+<p>There are a <a href="http://lambda-the-ultimate.org/node/3896#comment-58374">bunch of different strategies</a> languages have tried
+over the years to cope with the inevitable fallibility of mankind. The two I&rsquo;m
+most interested for Magpie are return codes (using <a href="/2010/08/23/void-null-maybe-and-nothing/">unions</a>) and exceptions.
+Those seem to be the workhorses for languages in wide use. (I&rsquo;m interested in
+other ideas, but for this post, I just want to look at those two.)</p>
+
+<p>Now, the question is how can we use those two features to deal with the different
+categories of errors I listed up there?</p>
+
+<h3>Handling programmatic errors</h3>
+
+<p>These are probably the easiest to solve (from the language design perspective)
+because there&rsquo;s little to do: we don&rsquo;t plan to handle them in most cases, just
+notice them. I&rsquo;m comfortable with the Java and C# model of &ldquo;throw an exception
+that isn&rsquo;t expected to be caught&rdquo;. Aborting with a stack dump is equally
+effective, and does the same thing in practice.</p>
+
+<p>For example, a method for accessing an item in a collection could look like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="t">Collection</span> <span class="i">getItemAt</span><span class="p">(</span><span class="i">index</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Item</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">index</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="k">or</span> <span class="i">index</span> <span class="o">&gt;</span> <span class="i">count</span> <span class="k">then</span> <span class="t">OutOfBoundsError</span> <span class="i">throw</span><span class="p">()</span>
+
+  <span class="c">// Do stuff with index...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>That is a bit tedious, though. I&rsquo;d likely refactor that into a separate
+function, like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="t">Int</span> <span class="i">checkBounds</span><span class="p">(</span><span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="k">this</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="k">or</span> <span class="k">this</span> <span class="o">&gt;</span> <span class="i">count</span> <span class="k">then</span> <span class="t">OutOfBoundsError</span> <span class="i">throw</span><span class="p">()</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="t">Collection</span> <span class="i">getItemAt</span><span class="p">(</span><span class="i">index</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Item</span><span class="p">)</span>
+  <span class="i">index</span> <span class="i">checkBounds</span><span class="p">(</span><span class="i">count</span><span class="p">)</span>
+
+  <span class="c">// Do stuff with index...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Not exactly rocket science, but I think it gets the job done. Let&rsquo;s skip runtime
+errors and move on to the other easy one:</p>
+
+<h3>Handling catastrophic errors</h3>
+
+<p>Catastrophic errors are exceptional in the sense that we&rsquo;ll rarely be handling
+them, so exceptions are a good fit here too. In fact, most of these exceptions
+wouldn&rsquo;t even be thrown from Magpie code&mdash;they&rsquo;d bubble up from the bowels of
+the interpreter itself.</p>
+
+<p>On the off chance that you <em>do</em> want to catch one, you can use a regular catch
+block:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">try</span>
+  <span class="c">// Allocate a huge array...</span>
+<span class="k">catch</span> <span class="p">(</span><span class="i">err</span> <span class="t">OutOfMemoryError</span><span class="p">)</span>
+  <span class="c">// Handle the error...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Familiar territory. If you&rsquo;ve used exceptions a lot, you&rsquo;ve noticed one annoying
+thing with them is that they&rsquo;re syntactically cumbersome. You have to create
+this <code>try</code> block and push everything over a level of indentation. To try to
+simplify that, I&rsquo;m batting around an idea that might be clever, or might just be
+really dumb: treat <em>every</em> block as a <code>try</code> block.</p>
+
+<p>The basic idea is that any block can have <code>catch</code> clauses at the end of it, and
+having them implicitly makes it a <code>try</code> block. That should take code like this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">copy</span><span class="p">(</span><span class="i">source</span> <span class="t">String</span><span class="p">,</span> <span class="i">dest</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+  <span class="k">try</span>
+    <span class="c">// Copy files...</span>
+  <span class="k">catch</span> <span class="p">(</span><span class="i">e</span> <span class="t">IOError</span><span class="p">)</span>
+    <span class="c">// Handle error...</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>And simplify it to:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">copy</span><span class="p">(</span><span class="i">source</span> <span class="t">String</span><span class="p">,</span> <span class="i">dest</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+  <span class="c">// Copy files...</span>
+<span class="k">catch</span> <span class="p">(</span><span class="i">e</span> <span class="t">IOError</span><span class="p">)</span>
+  <span class="c">// Handle error...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>I&rsquo;ll have to try it out to see if it causes any problems in the grammar, but my
+hope is it will work OK. I&rsquo;m curious to see if just making exceptions a little
+more terse like this will make them more palatable to people who dislike them.
+If you happen to have an opinion, I&rsquo;d like to hear it.</p>
+
+<h3>Handling runtime errors</h3>
+
+<p>Finally, the biggest class of errors. The trick with these is that there&rsquo;s no
+easy way to bucket them into &ldquo;common&rdquo; and &ldquo;rare&rdquo;. If we could, we could just say
+&ldquo;use exceptions for the rare ones and return codes for the common ones&rdquo;.
+Instead, we need to support both.</p>
+
+<p>Here&rsquo;s my plan. For our example, we&rsquo;ll consider a simple one: parsing. Let&rsquo;s say
+we have a function to parse strings to Booleans:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">parseBool</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span>
+  <span class="k">match</span> <span class="i">text</span>
+  <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="k">true</span>
+  <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="k">false</span>
+  <span class="k">else</span> <span class="c">// ??? What do we do here?</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This can be called like so:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Of course, the question is what happens if parsing fails? Since failure may be
+common, we want it to be easy to handle the error case. Unions are a good fit
+for that. We&rsquo;ll change the function to this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">parseBool</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Bool</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
+    <span class="k">match</span> <span class="i">text</span>
+    <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="k">true</span>
+    <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="k">false</span>
+    <span class="k">else</span> <span class="k">nothing</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now it will return a Boolean value if the parse succeeds, or the special
+<a href="http://localhost:8000/2010/08/23/void-null-maybe-and-nothing/"><code>nothing</code></a> value if it fails. Note that this is <em>not</em> like just
+returning <code>null</code>&mdash;the return type of <code>parseBool</code> is different now. That means
+you can&rsquo;t do this anymore:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span>
+</code></pre></div>
+<p>The <code>not</code> method is a method on Booleans, and <code>b</code> isn&rsquo;t a Boolean, it&rsquo;s a <code>Bool | Nothing</code>. To treat it like a Boolean, you first have to check its type. The
+canonical way to do that in Magpie is using <code>let</code>:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">let</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+  <span class="c">// In here, b is a Bool.</span>
+  <span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span> <span class="c">// This is fine</span>
+<span class="k">else</span>
+  <span class="c">// Parse failed...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This is great for cases where parsing is likely to fail. It makes sure you
+always handle the common failure case by giving you a type check error before
+the program is run if you don&rsquo;t check for success first.</p>
+
+<p>But what if parsing rarely fails in your program? Do you really want to have to
+do a cumbersome <code>let</code> block everywhere you call <code>parseBool</code> just because that
+fails all the time in some other program? In your case, failing to parse <em>is</em>
+exceptional, so it should throw an exception. That way, you can ignore the cases
+that aren&rsquo;t relevant to your problem. I think we can handle that too.</p>
+
+<p>We&rsquo;ll just add a simple method to <code>Object</code> that tests to see if its of an
+expected type. If not, it throws, otherwise it returns itself, but statically
+typed to the expected type. Like so:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="t">Object</span> <span class="i">expecting</span><span class="p">[</span><span class="t">T</span><span class="p">]</span>
+  <span class="k">let</span> <span class="i">cast</span> <span class="o">=</span> <span class="k">this</span> <span class="k">as</span><span class="p">[</span><span class="t">T</span><span class="p">]</span> <span class="k">then</span>
+    <span class="i">cast</span>
+  <span class="k">else</span> <span class="t">UnexpectedTypeError</span> <span class="i">throw</span><span class="p">(</span>
+      <span class="s">&quot;Expected type &quot;</span> <span class="o">+</span> <span class="t">T</span> <span class="o">+</span> <span class="s">&quot; but was &quot;</span> <span class="o">+</span> <span class="k">this</span> <span class="i">type</span><span class="p">,</span> <span class="k">this</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now, if we have a function that returns a union containing an error, we can
+translate that to an exception instead like this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c">// Doesn&#39;t expect a parse error.</span>
+<span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span> <span class="i">expecting</span><span class="p">[</span><span class="t">Bool</span><span class="p">]</span>
+<span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span> <span class="c">// OK, since b is a Bool.</span>
+</code></pre></div>
+<p>Using this, almost all functions that can have runtime errors are implemented by
+returning a union of success and an error code, like:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span> <span class="o">|</span> <span class="t">IOError</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">pathExists</span><span class="p">(</span><span class="i">path</span><span class="p">)</span> <span class="k">then</span>
+    <span class="c">// Return contents of file...</span>
+  <span class="k">else</span> <span class="t">IOError</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Could not find &quot;</span> <span class="o">+</span> <span class="i">path</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Then code that uses it can handle the error in place if that makes sense:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">printFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+    <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span><span class="p">)</span>
+    <span class="k">let</span> <span class="i">contents</span> <span class="o">=</span> <span class="i">result</span> <span class="k">as</span><span class="p">[</span><span class="t">String</span><span class="p">]</span> <span class="k">then</span>
+        <span class="i">print</span><span class="p">(</span><span class="i">contents</span><span class="p">)</span>
+    <span class="k">else</span> <span class="k">let</span> <span class="i">error</span> <span class="o">=</span> <span class="i">result</span> <span class="k">as</span><span class="p">[</span><span class="t">IOError</span><span class="p">]</span> <span class="k">then</span>
+        <span class="i">print</span><span class="p">(</span><span class="s">&quot;Error!&quot;</span><span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>(Yes, <code>else let</code> is a bit tedious. Better pattern-matching syntax for unions is
+still in the works.) Meanwhile, code that doesn&rsquo;t care to handle the error right
+there can pass the buck:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">printFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+    <span class="k">var</span> <span class="i">contents</span> <span class="o">=</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span><span class="p">)</span> <span class="i">expecting</span><span class="p">[</span><span class="t">String</span><span class="p">]</span>
+    <span class="i">print</span><span class="p">(</span><span class="i">contents</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Of course, none of this is any real innovation. My goal here is just to round
+off some of the sharp corners of exceptions and return codes and see if I can
+make the process of dealing with errors a bit more flexible and readable.
+Thoughts?</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2010/11/08/refining-exceptions-and-error-codes//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2010/11/08/refining-exceptions-and-error-codes//&amp;t=Refining Exceptions and Error Codes" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2010/11/08/refining-exceptions-and-error-codes/&amp;text=%22Refining Exceptions and Error Codes%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2010/11/08/refining-exceptions-and-error-codes/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2010/11/08/refining-exceptions-and-error-codes/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2010/11/08/refining-exceptions-and-error-codes/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

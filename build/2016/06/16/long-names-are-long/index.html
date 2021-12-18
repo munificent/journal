@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Long Names Are Long
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2016/06/16/long-names-are-long/" rel="bookmark"
+     title="Permanent Link to Long Names Are Long">
+    Long Names Are Long
+  </a>
+</h1>
+
+  <a class="older" href="/2015/09/08/the-hardest-program-ive-ever-written/"
+     title="Older Post &ldquo;The Hardest Program I&rsquo;ve Ever Written&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2018/05/19/40-songs/"
+     title="Newer Post &ldquo;40 Songs&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">June 16, 2016</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a></span>
+</h4>
+
+<p>One smart thing Google does is rigorous code reviews. Every change, before you
+can land it, gets reviewed in at least two ways. First, someone on the team does
+a normal review to make sure the code does what it&rsquo;s supposed to.</p>
+
+<p>But, then, there&rsquo;s a second layer of review called <em>readability</em>. It makes sure
+the code is, well, readable: Is it easy to understand and maintain? Does it
+follow the style and idioms of the language? Is it well-documented?</p>
+
+<p><a href="https://www.dartlang.org/">Dart</a> usage inside Google is cranking up, so I&rsquo;ve been doing a ton of these
+kind of code reviews. As a language designer, it&rsquo;s fascinating. I get a
+firsthand view into how people use Dart, which is really useful for evolving the
+language. I have a clearer picture of which mistakes are common and which
+features are heavily used. I feel like an ethnographer journaling the lives of
+natives.</p>
+
+<p>But, anyway, that&rsquo;s not what this is about. Heck, it&rsquo;s not even about Dart. What
+I want to talk about is something I see in a lot of code that drives me up the
+wall: <strong>identifiers that are too damn long.</strong></p>
+
+<p>Yes, names can be too short. Back when C only required external identifiers to
+be unique up to the first six characters; auto-complete hadn&rsquo;t been invented;
+and every keypress had to be made uphill, in the snow, both ways; it was a
+problem. I&rsquo;m glad we now live in a futuristic utopia where keyboard farts like
+<code>p</code>, <code>idxcrpm</code>, and <code>x3</code> are rare.</p>
+
+<p>But the pendulum has swung too far in the other direction. We shouldn&rsquo;t be
+Hemingway, but we don&rsquo;t need to be Tennessee Williams either. Very <em>long</em> names
+also hurt the clarity of the code where they are used. Giant identifiers dwarf
+the operations you&rsquo;re performing on them, are hard to visually scan, and force
+extra line breaks which interrupt the flow of the code.</p>
+
+<p>Long class names discourage users from declaring variables of that type, leading
+to massive, gnarly nested expressions instead of hoisting things out to locals.
+Long method names obscure their equally important argument lists. Long variables
+are annoying to use repeatedly, leading to sprawling method chains or cascades.</p>
+
+<p>I&rsquo;ve seen identifiers over 60 characters long. You could fit a haiku or a koan
+in there (and likely enlighten the reader more than the actual chosen name did).
+Fear not, I am here to help.</p>
+
+<h2>Choosing a Good Name</h2>
+
+<p>A name has two goals:</p>
+
+<ul>
+<li><p>It needs to be <em>clear</em>: you need to know what the name refers to.</p></li>
+<li><p>It needs to be <em>precise</em>: you need to know what it does <em>not</em> refer to.</p></li>
+</ul>
+
+<p>After a name has accomplished those goals, any additional characters are dead
+weight. Here&rsquo;s some guidelines I use when I names things in my code:</p>
+
+<h3>1. Omit words that are obvious given a variable&rsquo;s or parameter&rsquo;s type</h3>
+
+<p>If your language has a static type system, users usually know the type of a
+variable. Methods tend to be short, so even when looking at local variable whose
+type was inferred, or in a code review or some place where static analysis isn&rsquo;t
+available, it rarely takes more than scanning a few lines to tell what type a
+variable has.</p>
+
+<p>Given that, it&rsquo;s redundant to put the type in the variable&rsquo;s name. We have
+rightfully abandoned <a href="https://en.wikipedia.org/wiki/Hungarian_notation">Hungarian notation</a>. <em>Let it go.</em></p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<span class="t">String</span> <span class="i">nameString</span><span class="p">;</span>
+<span class="t">DockableModelessWindow</span> <span class="i">dockableModelessWindow</span><span class="p">;</span>
+
+<span class="c">// Better:</span>
+<span class="t">String</span> <span class="i">name</span><span class="p">;</span>
+<span class="t">DockableModelessWindow</span> <span class="i">window</span><span class="p">;</span>
+</code></pre></div>
+<p>In particular, for collections, it&rsquo;s almost always better to just use a plural
+noun describing the <em>contents</em> instead of a singular noun describing the
+<em>collection</em>. If the reader cares more about what&rsquo;s <em>in</em> the collection, the
+name should reflect that.</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<span class="t">List</span><span class="o">&lt;</span><span class="t">DateTime</span><span class="o">&gt;</span> <span class="i">holidayDateList</span><span class="p">;</span>
+<span class="t">Map</span><span class="o">&lt;</span><span class="t">Employee</span><span class="p">,</span> <span class="t">Role</span><span class="o">&gt;</span> <span class="i">employeeRoleHashMap</span><span class="p">;</span>
+
+<span class="c">// Better:</span>
+<span class="t">List</span><span class="o">&lt;</span><span class="t">DateTime</span><span class="o">&gt;</span> <span class="i">holidays</span><span class="p">;</span>
+<span class="t">Map</span><span class="o">&lt;</span><span class="t">Employee</span><span class="p">,</span> <span class="t">Role</span><span class="o">&gt;</span> <span class="i">employeeRoles</span><span class="p">;</span>
+</code></pre></div>
+<p>This also applies to method names. The method name doesn&rsquo;t need to describe its
+parameters or their types&mdash;the parameter list does that for you.</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<span class="i">mergeTableCells</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">TableCell</span><span class="o">&gt;</span> <span class="i">cells</span><span class="p">)</span>
+<span class="i">sortEventsUsingComparator</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">events</span><span class="p">,</span>
+    <span class="t">Comparator</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">comparator</span><span class="p">)</span>
+
+<span class="c">// Better:</span>
+<span class="i">merge</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">TableCell</span><span class="o">&gt;</span> <span class="i">cells</span><span class="p">)</span>
+<span class="i">sort</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">events</span><span class="p">,</span> <span class="t">Comparator</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">comparator</span><span class="p">)</span>
+</code></pre></div>
+<p>This tends to make callsites read better:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="i">mergeTableCells</span><span class="p">(</span><span class="i">tableCells</span><span class="p">);</span>
+<span class="i">sortEventsUsingComparator</span><span class="p">(</span><span class="i">events</span><span class="p">,</span> <span class="i">comparator</span><span class="p">);</span>
+</code></pre></div>
+<p>Is it just me, or is there an echo echo in here here?</p>
+
+<h3>2. Omit words that don&rsquo;t disambiguate the name</h3>
+
+<p>Some people tend to cram everything they know about something into its name.
+Remember, the name is an <em>identifier</em>: it points you to <em>where</em> it&rsquo;s defined.
+It&rsquo;s not an exhaustive catalog of everything the reader could want to know about
+the object. The definition does that. The name just gets them there.</p>
+
+<p>When I see an identifier like <code>recentlyUpdatedAnnualSalesBid</code>, I ask:</p>
+
+<ul>
+<li><p>Are there updated annual sales bids that aren&rsquo;t recent?</p></li>
+<li><p>Are there recent annual sales bids that were not updated?</p></li>
+<li><p>Are there recently updated sales bids that aren&rsquo;t annual?</p></li>
+<li><p>Are there recently updated annual bids not related to sales?</p></li>
+<li><p>Are there recently updated annual sales things that are not bids?</p></li>
+</ul>
+
+<p>A &ldquo;no&rdquo; for any of these usually points to an extraneous word.</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<span class="i">finalBattleMostDangerousBossMonster</span><span class="p">;</span>
+<span class="i">weaklingFirstEncounterMonster</span><span class="p">;</span>
+
+<span class="c">// Better:</span>
+<span class="i">boss</span><span class="p">;</span>
+<span class="i">firstMonster</span><span class="p">;</span>
+</code></pre></div>
+<p>Of course, you can go too far. Shortening that first example to <code>bid</code> might be a
+little <em>too</em> vague. But, when in doubt, leave it out. You can always add
+qualifiers later if the name proves to cause a collision or be imprecise but
+it&rsquo;s unlikely you&rsquo;ll come back later to trim the fat.</p>
+
+<h3>3. Omit words that are known from the surrounding context</h3>
+
+<p>I can use &ldquo;I&rdquo; in this paragraph because you can see this post is by Bob Nystrom.
+My dumb face is right up there. I don&rsquo;t need to keep saying “Bob Nystrom”
+everywhere here (despite Bob Nystrom&rsquo;s temptation to aggrandize Bob Nystrom by
+doing so). Code works the same way. A method or field occurs in the context of a
+class. A variable occurs in the context of a method. Take that context for
+granted and don&rsquo;t repeat it.</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<span class="k">class</span> <span class="t">AnnualHolidaySale</span> <span class="p">{</span>
+  <span class="t">int</span> <span class="i">_annualSaleRebate</span><span class="p">;</span>
+  <span class="k">void</span> <span class="i">promoteHolidaySale</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">// Better:</span>
+<span class="k">class</span> <span class="t">AnnualHolidaySale</span> <span class="p">{</span>
+  <span class="t">int</span> <span class="i">_rebate</span><span class="p">;</span>
+  <span class="k">void</span> <span class="i">promote</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>In practice, this means that the more deeply nested a name is, the more
+surrounding context it has. That in turn means it usually has a shorter name.
+The effect is that identifiers with shorter scopes have shorter names.</p>
+
+<h3>4. Omit words that don&rsquo;t mean much of anything</h3>
+
+<p>I used to see this a lot in the game industry. Some people succumb to the
+temptation to inflate their identifiers by adding Serious Business sounding
+words. I guess it makes their code feel more important and, by extension, makes
+<em>them</em> feel more important.</p>
+
+<p>In many cases, the words carry no meaningful information. They&rsquo;re just fluff or
+jargon. Usual suspects include: <code>data</code>, <code>state</code>, <code>amount</code>, <code>value</code>, <code>manager</code>,
+<code>engine</code>, <code>object</code>, <code>entity</code>, and <code>instance</code>.</p>
+
+<p>A good name paints a picture in the mind of the reader. Calling something a
+&ldquo;manager&rdquo; doesn&rsquo;t convey any image to the reader about what the thing does. Does
+it do performance evaluations? Lean over your cubicle and ask for TPS reports?</p>
+
+<p>Ask yourself &ldquo;Would this identifier mean the same thing if I removed the word?&rdquo;
+If so, the word doesn&rsquo;t carry its weight. Vote if off the island.</p>
+
+<h2>Applying the Guidelines&hellip; to Waffles</h2>
+
+<p>To give you a feel for how these rules work in practice, here&rsquo;s an example that
+breaks all of these rules. This contrived example is tragically close to real
+code I&rsquo;ve seen in reviews:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">DeliciousBelgianWaffleObject</span> <span class="p">{</span>
+  <span class="k">void</span> <span class="i">garnishDeliciousBelgianWaffleWithStrawberryList</span><span class="p">(</span>
+      <span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberryList</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>We know from the type that it takes a list of strawberries (#1), so let&rsquo;s cut
+that out:</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">DeliciousBelgianWaffleObject</span> <span class="p">{</span>
+    <span class="k">void</span> <span class="i">garnishDeliciousBelgianWaffle</span><span class="p">(</span>
+        <span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Unless our program has foul-tasting Belgian waffles, or waffles of other
+nationalities, we can drop those adjectives (#2):</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">WaffleObject</span> <span class="p">{</span>
+  <span class="k">void</span> <span class="i">garnishWaffle</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The method is inside a <code>WaffleObject</code>, so we know what it&rsquo;s going to garnish
+(#3):</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">WaffleObject</span> <span class="p">{</span>
+  <span class="k">void</span> <span class="i">garnish</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Obviously it&rsquo;s an object. Everything is an object. That&rsquo;s kind of what
+&ldquo;object-oriented&rdquo; means (#4):</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Waffle</span> <span class="p">{</span>
+  <span class="k">void</span> <span class="i">garnish</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>There, much better.</p>
+
+<p>I think these are pretty simple guidelines. You may think it&rsquo;s pointless to
+worry about this stuff, but I believe that <a href="/2009/06/05/naming-things-in-code/">naming things</a> is one of the most
+fundamental tasks we do when programming. Names are the structure we impose on
+the formless sea of bits that is computing.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long//&amp;t=Long Names Are Long" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long/&amp;text=%22Long Names Are Long%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

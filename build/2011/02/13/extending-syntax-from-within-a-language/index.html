@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Extending Syntax from Within a Language
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2011/02/13/extending-syntax-from-within-a-language/" rel="bookmark"
+     title="Permanent Link to Extending Syntax from Within a Language">
+    Extending Syntax from Within a Language
+  </a>
+</h1>
+
+  <a class="older" href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/"
+     title="Older Post &ldquo;Pattern Matching in a Dynamic OOP Language&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2011/02/21/multiple-inheritance-in-javascript/"
+     title="Newer Post &ldquo;Multiple Inheritance in JavaScript&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">February 13, 2011</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/parsing">parsing</a></span>
+</h4>
+
+<p>A <a href="https://magpie-lang.org/the-heart-of-magpie.html">big goal</a> with my little language <a href="https://magpie-lang.org/">Magpie</a> is to do as much as possible
+at the library level and keep the core language small. I&rsquo;ve been toiling for the
+past few weeks and I finally moved a <em>huge</em> chunk of Magpie over to the library
+side: <em>all infix operators are now defined and implemented in Magpie</em>. As far as
+the core language is concerned, it doesn&rsquo;t even <em>have</em> operators.</p>
+
+<p>Not only can you now define your own infix operators, including specifying
+precedence and associativity, but other large chunks of Magpie syntax are now
+defined at the library level. Take this chunk of (meaningless) code:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">doStuff</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">a</span> <span class="k">and</span> <span class="i">b</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;Both &quot;</span> <span class="o">~</span> <span class="i">a</span> <span class="o">~</span> <span class="s">&quot; and &quot;</span> <span class="o">~</span> <span class="i">b</span> <span class="o">~</span> <span class="s">&quot; are truthy&quot;</span><span class="p">)</span>
+  <span class="k">else</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;Their sum is &quot;</span> <span class="o">~</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The operators you see there, <code>+</code> and <code>~</code> (for string concatenation) are both
+<a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/operators.mag">implemented in Magpie</a>. So is the <code>and</code> keyword. (It&rsquo;s <a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/syntax/AndParser.mag">particularly
+interesting</a> because it doesn&rsquo;t become just a regular function call since
+it needs to short-circuit.) In fact, <a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/syntax/IfParser.mag">not even <code>if</code></a> is baked into the
+language. Or <code>def</code> <a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/syntax/DefParser.mag">for that matter</a>. In fact, about the only bit up there
+that is part of the core syntax is <code>print()</code>.</p>
+
+<p>If this is the kind of thing you&rsquo;re interested in, I&rsquo;ll try to walk you through
+how this is possible, and how it works.</p>
+
+<h2>Pratt parsers FTW!</h2>
+
+<p>The real magic bit that makes this work is <a href="http://crockford.com/javascript/tdop/tdop.html">Pratt parsers</a>. Magpie&rsquo;s
+core parser, which is written in Java, is an object-oriented version of a
+top-down operator precedence parser. That sounds intimidating, but it&rsquo;s actually
+the simplest parser technique I&rsquo;ve ever seen. I kind of wish everyone knew about
+them, but I&rsquo;m kind of glad no one does because it makes me feel like I have a
+secret weapon.</p>
+
+<div class="update">
+<p><em>Update 2021/10/23:</em> I have
+<a href="http://craftinginterpreters.com/compiling-expressions.html">
+a chapter</a> in my book <em><a href="http://craftinginterpreters.com/">
+Crafting Interpreters</a></em> about Pratt parsers too.</p>
+</div>
+
+<p>Here&rsquo;s the Java code that parses expressions in Magpie (which means it parses
+pretty much everything since Magpie doesn&rsquo;t have statements):</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="t">Expr</span> <span class="i">parseExpression</span><span class="p">(</span><span class="t">int</span> <span class="i">stickiness</span><span class="p">)</span> <span class="p">{</span>
+  <span class="t">Token</span> <span class="i">token</span> <span class="o">=</span> <span class="i">consume</span><span class="p">();</span>
+  <span class="t">PrefixParser</span> <span class="i">prefix</span> <span class="o">=</span> <span class="i">mGrammar</span><span class="p">.</span><span class="i">getPrefixParser</span><span class="p">(</span><span class="i">token</span><span class="p">);</span>
+  <span class="t">Expect</span><span class="p">.</span><span class="i">notNull</span><span class="p">(</span><span class="i">prefix</span><span class="p">);</span>
+  <span class="t">Expr</span> <span class="i">left</span> <span class="o">=</span> <span class="i">prefix</span><span class="p">.</span><span class="i">parse</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">token</span><span class="p">);</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="i">stickiness</span> <span class="o">&lt;</span> <span class="i">mGrammar</span><span class="p">.</span><span class="i">getStickiness</span><span class="p">(</span><span class="i">current</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="i">token</span> <span class="o">=</span> <span class="i">consume</span><span class="p">();</span>
+
+    <span class="t">InfixParser</span> <span class="i">infix</span> <span class="o">=</span> <span class="i">mGrammar</span><span class="p">.</span><span class="i">getInfixParser</span><span class="p">(</span><span class="i">token</span><span class="p">);</span>
+    <span class="i">left</span> <span class="o">=</span> <span class="i">infix</span><span class="p">.</span><span class="i">parse</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">left</span><span class="p">,</span> <span class="i">token</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="i">left</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That&rsquo;s it, for reals. Precedence, associativity, infix operators, they all get
+handled by that little chunk of code. You may be thinking that <code>mGrammars</code>
+variable hides all the dirty work. That&rsquo;s actually pretty simple too. It&rsquo;s
+basically a container for two dictionaries. One maps tokens to prefix parsers,
+and one maps them to infix parsers. So, you give it a <code>+</code> token representing the
+plus operator, and it returns a parser object that knows how to parse an
+addition expression. Prefix and infix parsers are just objects that implement
+one of these dead simple interfaces:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">interface</span> <span class="t">PrefixParser</span> <span class="p">{</span>
+  <span class="t">Expr</span> <span class="i">parse</span><span class="p">(</span><span class="t">MagpieParser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">interface</span> <span class="t">InfixParser</span> <span class="p">{</span>
+  <span class="t">Expr</span> <span class="i">parse</span><span class="p">(</span><span class="t">MagpieParser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expr</span> <span class="i">left</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
+  <span class="t">int</span> <span class="i">getStickiness</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>I won&rsquo;t go into detail about how these work (I&rsquo;m trying to throw together <a href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/">a
+more complete post about just Pratt parsers</a> later), but the important
+bit is that the grammar being parsed is decoupled from the core parsing code.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Recursive_descent">Recursive descent</a> parsers have a fixed set of functions representing each
+grammar production. If you&rsquo;re using <a href="http://dinosaur.compilertools.net/">yacc</a> or <a href="http://www.gnu.org/software/bison/">bison</a>, you&rsquo;ll have an
+entirely separate offline process that generates code for your grammar and bakes
+it in. But with this, our grammar is just a collection of objects. If we toss a
+new instance of <code>PrefixParser</code> or <code>InfixParser</code> into the grammar dictionary,
+we&rsquo;ve just extended the syntax of the language.</p>
+
+<h2>Exposing this to Magpie</h2>
+
+<p>This gets us partway there. Now we&rsquo;ve got a simple architecture that lets us
+decouple the grammar into separate objects. This is a worthwhile exercise in
+itself because it makes the parsing code written in Java less monolithic, but
+you still have to hack Java code and rebuild the interpreter to extend the
+syntax. Lame.</p>
+
+<p>To fix that, we&rsquo;ll build a shim. What we need is a Java object that implements
+<code>PrefixParser</code> or <code>InfixParser</code> but which actually runs Magpie code to do the
+parsing. I&rsquo;ll pick infix here just &lsquo;cause. It looks like this:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">private</span> <span class="k">static</span> <span class="k">class</span> <span class="t">MagpieInfixParser</span> <span class="k">extends</span> <span class="t">InfixParser</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="t">MagpieInfixParser</span><span class="p">(</span><span class="t">Interpreter</span> <span class="i">interpreter</span><span class="p">,</span> <span class="t">Obj</span> <span class="i">parser</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">mInterpreter</span> <span class="o">=</span> <span class="i">interpreter</span><span class="p">;</span>
+    <span class="i">mParser</span> <span class="o">=</span> <span class="i">parser</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="t">Expr</span> <span class="i">parse</span><span class="p">(</span><span class="t">MagpieParser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expr</span> <span class="i">left</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// Wrap the Java parser in a Magpie one.</span>
+    <span class="t">Obj</span> <span class="i">parserObj</span> <span class="o">=</span> <span class="i">mInterpreter</span><span class="p">.</span><span class="i">instantiate</span><span class="p">(</span>
+        <span class="i">mInterpreter</span><span class="p">.</span><span class="i">getMagpieParserClass</span><span class="p">(),</span> <span class="i">parser</span><span class="p">);</span>
+    <span class="t">Obj</span> <span class="i">exprObj</span> <span class="o">=</span> <span class="t">JavaToMagpie</span><span class="p">.</span><span class="i">convert</span><span class="p">(</span><span class="i">mInterpreter</span><span class="p">,</span> <span class="i">left</span><span class="p">);</span>
+    <span class="t">Obj</span> <span class="i">tokenObj</span> <span class="o">=</span> <span class="t">JavaToMagpie</span><span class="p">.</span><span class="i">convert</span><span class="p">(</span><span class="i">mInterpreter</span><span class="p">,</span> <span class="i">token</span><span class="p">);</span>
+    <span class="t">Obj</span> <span class="i">arg</span> <span class="o">=</span> <span class="i">mInterpreter</span><span class="p">.</span><span class="i">createTuple</span><span class="p">(</span>
+        <span class="i">parserObj</span><span class="p">,</span> <span class="i">exprObj</span><span class="p">,</span> <span class="i">tokenObj</span><span class="p">);</span>
+
+    <span class="c">// Let the Magpie code do the parsing.</span>
+    <span class="t">Obj</span> <span class="i">expr</span> <span class="o">=</span> <span class="i">mInterpreter</span><span class="p">.</span><span class="i">invokeMethod</span><span class="p">(</span><span class="i">mParser</span><span class="p">,</span> <span class="s">&quot;parse&quot;</span><span class="p">,</span> <span class="i">arg</span><span class="p">);</span>
+
+    <span class="c">// Marshall it back to Java format.</span>
+    <span class="k">return</span> <span class="t">MagpieToJava</span><span class="p">.</span><span class="i">convertExpr</span><span class="p">(</span><span class="i">mInterpreter</span><span class="p">,</span> <span class="i">expr</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">public</span> <span class="t">int</span> <span class="i">getStickiness</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="i">mInterpreter</span><span class="p">.</span><span class="i">getMember</span><span class="p">(</span><span class="t">Position</span><span class="p">.</span><span class="i">none</span><span class="p">(),</span>
+        <span class="i">mParser</span><span class="p">,</span> <span class="s">&quot;stickiness&quot;</span><span class="p">).</span><span class="i">asInt</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">private</span> <span class="t">Interpreter</span> <span class="i">mInterpreter</span><span class="p">;</span>
+  <span class="k">private</span> <span class="t">Obj</span> <span class="i">mParser</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>There are a couple of important bits here. The <code>Obj</code> class is the core class in
+the interpreter that represents a Magpie object. If <code>Object</code> is any object in
+Java land, <code>Obj</code> is any object in Magpie land.</p>
+
+<p><code>Interpreter</code> is exactly what it sounds like: the class that represents a live
+Magpie interpreter. It keeps track of variables and provides helper functions
+for executing code.</p>
+
+<p>There are two static classes, <code>MagpieToJava</code> and <code>JavaToMagpie</code>. Their job is to
+marshall objects between the two languages. They convert from Magpie <code>Obj</code>
+instances to instances of appropriate &ldquo;real&rdquo; Java classes and back.</p>
+
+<p>Given that, the shim&rsquo;s job is dead simple. When you call <code>parse</code> on the
+<code>MagpieInfixParser</code> object, it just translates the arguments to Magpie and
+invokes a <code>parse</code> method on its Magpie-side sister object. It gets the result
+back (an expression) and marshalls that back to Java and returns it.</p>
+
+<h2>The other side of the glass</h2>
+
+<p>Over in Magpie, it looks like this:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">AndParser</span>
+  <span class="k">def</span> <span class="i">parse</span><span class="p">(</span><span class="i">parser</span> <span class="t">MagpieParser</span><span class="p">,</span> <span class="i">left</span> <span class="t">Expression</span><span class="p">,</span>
+        <span class="i">token</span> <span class="t">Token</span> <span class="o">-&gt;</span> <span class="t">Expression</span><span class="p">)</span>
+    <span class="c">// Ignore a newline after &quot;and&quot;.</span>
+    <span class="i">parser</span> <span class="i">matchToken</span><span class="p">(</span><span class="t">TokenType</span> <span class="i">line</span><span class="p">)</span>
+    <span class="k">var</span> <span class="i">right</span> <span class="o">=</span> <span class="i">parser</span> <span class="i">parseExpression</span><span class="p">(</span><span class="i">stickiness</span><span class="p">)</span>
+    <span class="p">{</span> <span class="k">do</span>
+      <span class="k">var</span> <span class="i">temp__</span> <span class="o">=</span> <span class="r">`left</span>
+      <span class="k">match</span> <span class="i">temp__</span> <span class="i">true?</span>
+        <span class="k">case</span> <span class="k">true</span> <span class="k">then</span> <span class="r">`right</span>
+        <span class="k">else</span> <span class="i">temp__</span>
+      <span class="k">end</span>
+    <span class="k">end</span> <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="i">get</span> <span class="i">stickiness</span> <span class="t">Int</span> <span class="o">=</span> <span class="n">30</span>
+<span class="k">end</span>
+
+<span class="t">MagpieParser</span> <span class="i">registerInfixParser</span><span class="p">(</span><span class="s">&quot;and&quot;</span><span class="p">,</span> <span class="t">AndParser</span> <span class="i">new</span><span class="p">())</span>
+</code></pre></div>
+<p>The Magpie side of the parser is just a class with a <code>parse</code> method. The first
+two lines parse the rest of the expression. (The left-hand side of the operator
+will have already been parsed and gets passed in as <code>left</code>.) Then the last bit
+in curly braces shows another neat feature of Magpie: <a href="https://github.com/munificent/magpie/blob/645781c484667caa876f24f5033a493e3d172dfb/doc/site/markdown/objects/quotations.md">quotations</a>.</p>
+
+<p>Like the Lisp languages, Magpie lets you treat code as data, and has classes to
+let you build objects that represent bits of code. Doing that manually is kind
+of lame though:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="t">CallExpression</span> <span class="i">new</span><span class="p">(</span><span class="t">MessageExpression</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;+&quot;</span><span class="p">),</span>
+    <span class="t">TupleExpression</span> <span class="i">new</span><span class="p">(</span><span class="t">List</span> <span class="i">of</span><span class="p">(</span>
+        <span class="t">IntExpression</span> <span class="i">new</span><span class="p">(</span><span class="n">1</span><span class="p">),</span> <span class="t">IntExpression</span> <span class="i">new</span><span class="p">(</span><span class="n">2</span><span class="p">))))</span>
+</code></pre></div>
+<p>Quotations let you write that out just like it would appear in code:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="p">{</span> <span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="p">}</span>
+</code></pre></div>
+<p>If you surround an expression in curlies, you get an object representing the
+expression back, instead of evaluating it. Inside a quotation, you can unquote
+using a backquote character (<code>`</code>), which is like string interpolation but at
+the code level, not textual. That way you can build chunks of code declaratively
+and fill in the blanks with dynamically-generated stuff.</p>
+
+<p>So the parser class here returns that last quotation, which contains a <code>match</code>
+expression. (Magpie has full <a href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/">destructuring pattern matching</a>, and that
+<em>is</em> one of the core primitive parts of the language.)</p>
+
+<p>Finally, the call to <code>registerInfixParser</code> just takes that object and passes it
+over to Java. That&rsquo;s where we wrap it in the shim class and toss it into the
+grammar dictionary. Once this parser is all hooked up, when an <code>and</code> is
+encountered, the parser desugars it to a little pattern match that does the
+right thing. In other words, if you type:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">happy</span> <span class="k">and</span> <span class="i">know</span><span class="p">(</span><span class="k">it</span><span class="p">)</span>
+</code></pre></div>
+<p>The parser expands it to:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">do</span>
+    <span class="k">var</span> <span class="i">temp__</span> <span class="o">=</span> <span class="i">happy</span>
+    <span class="k">match</span> <span class="i">temp__</span> <span class="i">true?</span>
+        <span class="k">case</span> <span class="k">true</span> <span class="k">then</span> <span class="i">know</span><span class="p">(</span><span class="k">it</span><span class="p">)</span>
+        <span class="k">else</span> <span class="i">temp__</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>That looks a little weird, but if you think about it, it does the right thing.
+If <code>happy</code> is truthy, it returns <code>know(it)</code>. Otherwise, it short-circuits and
+returns just <code>happy</code>.</p>
+
+<h2>But that&rsquo;s too hard!</h2>
+
+<p>Now we can extend the syntax from Magpie, which is cool. But I gotta admit,
+that <code>AndParser</code> class is a bit hairy, even with quotations in there. Let&rsquo;s
+say I want to make a <code>~*</code> operator that repeats a string a given number of
+times. Do I have to write a whole class just to do that?</p>
+
+<p>The answer is &ldquo;no&rdquo;, of course. If you just want an infix operator that
+desugars to a function call, look no further than:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
+  <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+  <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="i">to</span><span class="p">(</span><span class="i">count</span><span class="p">)</span> <span class="k">do</span> <span class="i">result</span> <span class="o">=</span> <span class="i">result</span> <span class="o">~</span> <span class="i">left</span>
+  <span class="i">result</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Here <code>60</code> defines the precedence level so it knows how to parse our new
+operator if you&rsquo;re crazy enough to mix it in with others without parentheses.
+Now when the parser encounters:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span>
+</code></pre></div>
+<p>It transform that to a call to:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="o">~*</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span>
+</code></pre></div>
+<p>You may be wondering where <code>definfix</code> comes from. Why, it&rsquo;s a custom parser
+<a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/syntax/OperatorParser.mag#L36-L53">written in Magpie</a>, of course! Turtles all the way down!</p>
+
+<h2>OH NOES!</h2>
+
+<p>I got all of this working and then ran into a real snag. Let&rsquo;s say we have some
+module that defines a new operator:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c">// In repeat.mag:</span>
+<span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
+  <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+  <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="i">to</span><span class="p">(</span><span class="i">count</span><span class="p">)</span> <span class="k">do</span> <span class="i">result</span> <span class="o">=</span> <span class="i">result</span> <span class="o">~</span> <span class="i">left</span>
+  <span class="i">result</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Then we want to import it and use it in another one:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c">// In summon-ghost.mag:</span>
+<span class="k">import</span><span class="p">(</span><span class="s">&quot;repeat.mag&quot;</span><span class="p">)</span>
+
+<span class="i">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span><span class="p">)</span>
+</code></pre></div>
+<p>Do you see the problem? Let&rsquo;s walk through how most interpreters (including
+Magpie) handle this:</p>
+
+<ol>
+<li><p>The user runs <code>magpie summon-ghost.mag</code>.</p></li>
+<li><p>The interpreter starts up.</p></li>
+<li><p>It reads <code>summon-ghost.mag</code> and parses it.</p></li>
+<li><p>It starts interpreting it…</p></li>
+<li><p>It evaluates the <code>import</code> and parses and runs <code>repeat.mag</code>.</p></li>
+<li><p>It evaluates the <code>print("Beetlejuice " ~* 3)</code> line.</p></li>
+</ol>
+
+<p>Crap. It parses <em>all</em> of <code>summon-ghost.mag</code> before it has had a chance to
+evaluate the <code>import</code> and actually define the operator we need to parse. So the
+parser is going to hit <code>~*</code> and not know what to do with it.</p>
+
+<p>But, a clever solution appears! It turns out that when Magpie is parsing the top
+level of a file, it returns a list of expressions. In other words, a Magpie
+program isn&rsquo;t a single giant block expression, it&rsquo;s a flat list of distinct
+ones. (Each expression in that list may be arbitrarily big and nested, of
+course, but at the top level, it&rsquo;s a list.)</p>
+
+<p>This gives us an opening to fix this little problem. It can parse and evaluate
+each expression in a file <em>incrementally</em>. Getting this working was actually
+<a href="https://github.com/munificent/magpie/commit/bffe49291e9709b5bfc960420fcc6f5a4b1614bd">a tiny code change</a> and means you can now extend the syntax <em>and then use
+that extension immediately in the same file</em>. This is perfectly valid:</p>
+<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
+  <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+  <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="i">to</span><span class="p">(</span><span class="i">count</span><span class="p">)</span> <span class="k">do</span> <span class="i">result</span> <span class="o">=</span> <span class="i">result</span> <span class="o">~</span> <span class="i">left</span>
+  <span class="i">result</span>
+<span class="k">end</span>
+
+<span class="i">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span><span class="p">)</span>
+</code></pre></div>
+<p>The only limitation is that you have to do this at the top-level. Given that
+most languages don&rsquo;t let you do <em>any</em> of this, that doesn&rsquo;t seem like too much
+to give up. In return, we can make the language dramatically more powerful at
+building internal DSLs, and the core language itself becomes <em>simpler</em>.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language//&amp;t=Extending Syntax from Within a Language" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language/&amp;text=%22Extending Syntax from Within a Language%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2011/02/13/extending-syntax-from-within-a-language/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

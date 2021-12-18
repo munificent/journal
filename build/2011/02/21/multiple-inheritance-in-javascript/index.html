@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- Tell mobile browsers we're optimized for them and they don't need to
+         crop the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <title>
+      Multiple Inheritance in JavaScript
+      
+        &ndash; journal.stuffwithstuff.com
+      
+    </title>
+  </head>
+  <body>
+    <div class="column">
+      
+<article>
+<header>
+<h1>
+  <a href="/2011/02/21/multiple-inheritance-in-javascript/" rel="bookmark"
+     title="Permanent Link to Multiple Inheritance in JavaScript">
+    Multiple Inheritance in JavaScript
+  </a>
+</h1>
+
+  <a class="older" href="/2011/02/13/extending-syntax-from-within-a-language/"
+     title="Older Post &ldquo;Extending Syntax from Within a Language&rdquo;">&#8617;</a>
+
+
+  <a class="newer" href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
+     title="Newer Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">&#8618;</a>
+
+</header>
+<h4><a href="/archive">February 21, 2011</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/javascript">javascript</a> <a href="/category/language">language</a></span>
+</h4>
+
+<p>You know how when you stare at a hot stove you feel this weird compulsion to put
+your hand on it? The longer you stare, the stronger the pull, even though you
+know you&rsquo;ll just burn the crap out of yourself. I got a similar compulsion a
+couple of days ago: <em>I think I can implement multiple inheritance in
+JavaScript.</em></p>
+
+<p>I put my hand on the metaphorical burner. It turns out that you <em>can</em>, in Firefox 4 Beta, at least. Never one to shy away from a good hack, I figured I&rsquo;d break it down so you can see how it works. (The whole enchilada is <a href="https://github.com/munificent/multipleinheritance.js">here</a>.) As a nice bonus, you&rsquo;ll get exposed to a potentially really cool feature coming down the pipe in JavaScript, and maybe even change the way you think about multiple inheritance.</p>
+
+<h2>What&rsquo;s the problem?</h2>
+
+<p>Before I go into how I made this work, let me explain why I was even thinking
+about this. As is often the case, frustration was the mother of this invention.
+My problem was something like this:</p>
+
+<p>Let&rsquo;s say you have a <a href="https://developers.google.com/closure/library">widget library</a>, a hierarchy of widget classes that you
+can inherit from to build your own controls. Like all good 21st century class
+libraries, it strictly uses single inheritance, because multiple inheritance is
+the devil. Here&rsquo;s a piece of that hierarchy (in full ASCII art glory):</p>
+<div class="highlight"><pre><code class="language-asciiart" data-lang="asciiart">       ┌────────┐
+       │ Widget │
+       └────┬───┘
+            │
+     ┌──────┴──────┐
+┌────┴─────┐ ┌─────┴─────┐
+│ Hideable │ │ Container │
+└──────────┘ └───────────┘
+</code></pre></div>
+<p>Widget is the root class that all widgets eventually inherit from. It has the
+core bits than any widget will need, maybe a name, etc. Hideable adds <code>show()</code>
+and <code>hide()</code> methods for widgets that should be able to toggle their visibility.
+Container is for parent widgets that can contain other child widgets. It defines
+<code>addChild()</code>, <code>listChildren()</code>, etc.</p>
+
+<p>Now I come along to build my little widget. Mine is called DropDownMenu. As you
+can guess, it has a collection of child widgets (the menu items). And it needs
+to be shown and hidden (since it&rsquo;s a drop-down). You can see the problem. I
+can&rsquo;t inherit from both Hideable and Container.</p>
+
+<p>One fix is to reorganize the base classes like this:</p>
+<div class="highlight"><pre><code class="language-asciiart" data-lang="asciiart"> ┌────────┐
+ │ Widget │
+ └────┬───┘
+┌─────┴─────┐
+│ Container │
+└─────┬─────┘
+┌─────┴────┐
+│ Hideable │
+└──────────┘
+</code></pre></div>
+<p>Now I just inherit from Hideable and I&rsquo;m good. But then tomorrow I need to make
+a new Widget: Tooltip. It can be hidden and shown, but it doesn&rsquo;t need any
+children. It will have to inherit from Hideable, but that implicitly rolls in
+all this Container stuff it doesn&rsquo;t want, wasting memory.</p>
+
+<p>Worse, it makes it more complicated to understand. Someone coming along later
+may look at my Tooltip class and think it needs stuff from Container and spend
+time trying to figure out what and why. Changes to Container have the potential
+to break Tooltip, even though it&rsquo;s getting no benefit from it. Lame!</p>
+
+<p>The fix for this is to rearrange things again. If some things need Hideable but
+not Container, it should be above it in the hierarchy, like so:</p>
+<div class="highlight"><pre><code class="language-asciiart" data-lang="asciiart"> ┌────────┐
+ │ Widget │
+ └────┬───┘
+┌─────┴────┐
+│ Hideable │
+└─────┬────┘
+┌─────┴─────┐
+│ Container │
+└───────────┘
+</code></pre></div>
+<p>Fine and dandy. The day after tomorrow comes and now I&rsquo;m making a new widget
+again: ListBox. It doesn&rsquo;t hide, but it does have children. I&rsquo;m right back where
+I started. There is no solution for this:</p>
+
+<p><strong>Given single inheritance, there is <em>no</em> possible class hierarchy that lets you
+combine an arbitrary combination of classes.</strong></p>
+
+<p>I spent a lot of time trying to figure out the &ldquo;right&rdquo; class for me to inherit
+from for my widget and not knowing why I was so frustrated before the above
+finally clicked in my head. It isn&rsquo;t me that&rsquo;s wrong. It isn&rsquo;t the class
+hierarchy of the library I&rsquo;m using. It&rsquo;s the assumption that single inheritance
+is adequate.</p>
+
+<h2>Prior art</h2>
+
+<p>Before I run off to my text editor, what about other JS class systems? I&rsquo;m no
+expert on JavaScript libraries, but the ones I&rsquo;ve seen that fake classes and
+inheritance do so by manipulating the prototype chain, and almost all of them
+stay within the limitation that imposes: single inheritance. That&rsquo;s an excellent
+choice in terms of simplicity and performance, but not what I&rsquo;m going for.</p>
+
+<p>Tom Van Cutsem&rsquo;s <a href="https://traitsjs.github.io/traits.js-website/">Traits.js</a> is a notable counter-example. It allows multiple
+traits to be composed. I believe it does so by flattening out the traits at
+composition time. If you compose two traits A and B together to form a new one,
+C, then add a new member to A afterwards, C won&rsquo;t have it. That&rsquo;s better, but
+still not what I wanted.</p>
+
+<p>I wanted to do full late-bound multiple inheritance. One of the swell things
+about JavaScript is that you can extend existing prototypes. I wanted that to
+work even with multiple inheritance. If I add a method to an existing base
+class, every class that inherits from it should get it, even if they were
+defined <em>before</em> I added my new method.</p>
+
+<h2>The prototypal prototype language</h2>
+
+<p>Given my goals, it still isn&rsquo;t clear what <em>kind</em> of multiple inheritance system
+I want. Should it work <a href="http://www.parashift.com/c++-faq-lite/basics-of-inheritance.html">like C++</a>? Like <a href="http://ruby-doc.com/docs/ProgrammingRuby/html/tut_modules.html">mixins in Ruby</a>? <a href="https://docs.scala-lang.org/tour/traits.html">Traits in
+Scala</a>? Of course, if you think about it, there&rsquo;s really only one
+answer&hellip;</p>
+
+<p>The Grandaddy of prototype-based languages, the one that directly inspired Eich
+to create JavaScript, and (I think) the language that first coined the term
+&ldquo;trait&rdquo; is <a href="http://en.wikipedia.org/wiki/Self_(programming_language)">Self</a>. Self has a way of handling multiple inheritance that&mdash;like many things in the language&mdash;is both surprisingly simple and surprisingly
+powerful.</p>
+
+<p>It works like this: Every object has a collection of properties, just like
+JavaScript. If the name of a property ends in an asterisk (<code>*</code>), it&rsquo;s considered
+a &ldquo;parent property&rdquo;. When we look up a property on an object, the process is
+just:</p>
+
+<ol>
+<li><p>If the object has the property itself, return it.</p></li>
+<li><p>Otherwise, try looking it up on the parent properties. Go through them in
+alphabetical order, and stop as soon as we find the property.</p></li>
+</ol>
+
+<p>When we check a parent for a property, it may in turn look at <em>its</em> parents, so
+property lookup is a depth-first search through the parent property graph.</p>
+
+<p>This is almost trivially simple, but a ton of awesome stuff falls out of it like magic:</p>
+
+<h3>Single inheritance</h3>
+
+<p>Single inheritance is easy of course: just make an object that only has one
+parent property. JavaScript is basically a degenerate case of Self dispatch
+where the rule for naming a parent property is &ldquo;must be <code>__proto__</code>&rdquo;.</p>
+
+<h3>Multiple inheritance</h3>
+
+<p>And, of course, multiple inheritance is easy. Just have more than one parent
+property. Since objects are completely open bags of properties, you can tack on
+as many as you want.</p>
+
+<h3>Dynamic inheritance</h3>
+
+<p>Here&rsquo;s where it starts to get interesting. When we&rsquo;re walking the parents
+looking for a property, we look at the <em>value</em> stored in that parent property.
+Like any other property, you can assign a new value to it. That means, <em>at
+runtime</em>, you can change an object&rsquo;s parents. In effect, a live object can
+spontaneously change its class.</p>
+
+<p>You know that whole <a href="http://en.wikipedia.org/wiki/State_pattern">State design pattern</a> that takes a pile of code to implement in Java? With this, it&rsquo;s just: <code>object.someParent = newState</code>.</p>
+
+<h3>Controlled resolution order</h3>
+
+<p>One of the challenges with multiple inheritance is figuring out what actual
+method gets called when there&rsquo;s a name collision. If MyClass inherits from two
+other classes that both have <code>foo()</code>, which one do I get when I call
+<code>myObject.foo()</code>?</p>
+
+<p>In Self, you can control that easily&mdash;just name the parent properties so that
+the one you want to take priority comes first alphabetically.</p>
+
+<h3>Simple constructors</h3>
+
+<p>Another annoying facet of multiple inheritance is object construction. Each of
+your base classes may have its own constructor which needs to get called when
+the derived class is constructed. Languages often have complex special support
+just for this: constructor initialization lists in C++, <code>super()</code> in Java,
+<code>base()</code> in C#, definite assignment static analysis to make sure you initialize
+your members, etc.</p>
+
+<p>When your &ldquo;base classes&rdquo; are just properties on the object, construction becomes
+simply assigning some properties.</p>
+
+<h2>Back to our example</h2>
+
+<p>So, assuming we can magically make this work, how would it look in JavaScript?</p>
+
+<p>Here&rsquo;s my goal. I want to be able to define a couple of widget &ldquo;base classes&rdquo;
+like this vanilla JavaScript:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="t">Widget</span><span class="p">(</span><span class="i">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="i">name</span> <span class="o">=</span> <span class="i">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="t">Widget</span><span class="p">.</span><span class="i">prototype</span><span class="p">.</span><span class="i">getName</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="i">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="t">Hideable</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="t">Hideable</span><span class="p">.</span><span class="i">prototype</span><span class="p">.</span><span class="i">hide</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="i">log</span><span class="p">(</span><span class="s">&#39;hide &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="i">getName</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="t">Hideable</span><span class="p">.</span><span class="i">prototype</span><span class="p">.</span><span class="i">show</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="i">log</span><span class="p">(</span><span class="s">&#39;show &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="i">getName</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="t">Container</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="i">children</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="t">Container</span><span class="p">.</span><span class="i">prototype</span><span class="p">.</span><span class="i">addChild</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="i">widget</span><span class="p">)</span> <span class="p">{</span>
+  <span class="i">log</span><span class="p">(</span><span class="s">&#39;addChild &#39;</span> <span class="o">+</span> <span class="i">widget</span><span class="p">.</span><span class="i">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s">&#39; to &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="i">getName</span><span class="p">());</span>
+  <span class="k">this</span><span class="p">.</span><span class="i">children</span><span class="p">.</span><span class="i">push</span><span class="p">(</span><span class="i">widget</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="t">Container</span><span class="p">.</span><span class="i">prototype</span><span class="p">.</span><span class="i">listChildren</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="i">log</span><span class="p">(</span><span class="s">&#39;children for &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="i">getName</span><span class="p">());</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">i</span> <span class="o">&amp;</span><span class="i">lt</span><span class="p">;</span> <span class="k">this</span><span class="p">.</span><span class="i">children</span><span class="p">.</span><span class="i">length</span><span class="p">;</span> <span class="i">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="i">log</span><span class="p">(</span><span class="s">&#39;- &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="i">children</span><span class="p">[</span><span class="i">i</span><span class="p">].</span><span class="i">getName</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>When I create my widget class, I want to inherit from all of those by creating
+parent properties that contain one of each. Since I can&rsquo;t use <code>*</code> in a property
+name in JavaScript, I&rsquo;ll use <code>_p</code>. So my widget&rsquo;s constructor should just be:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="t">MyWidget</span> <span class="o">=</span> <span class="i">magic</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="i">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="i">widget_p</span>    <span class="o">=</span> <span class="k">new</span> <span class="t">Widget</span><span class="p">(</span><span class="i">name</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="i">hider_p</span>     <span class="o">=</span> <span class="k">new</span> <span class="t">Hideable</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="i">container_p</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Container</span><span class="p">();</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>Aside from that little <code>magic</code> bit there, this looks like any other JavaScript constructor, but when I <em>use</em> this object, it should support all the methods those parent objects provide. In other words, this should work:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">widget</span> <span class="o">=</span> <span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Abe&#39;</span><span class="p">);</span>
+
+<span class="c">// From Widget:</span>
+<span class="i">log</span><span class="p">(</span><span class="i">widget</span><span class="p">.</span><span class="i">getName</span><span class="p">());</span>
+
+<span class="c">// From Hideable:</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">hide</span><span class="p">();</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">show</span><span class="p">();</span>
+
+<span class="c">// From Container:</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Ben&#39;</span><span class="p">));</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Cid&#39;</span><span class="p">));</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Dan&#39;</span><span class="p">));</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">listChildren</span><span class="p">();</span>
+</code></pre></div>
+<p>Unpossible you say? Read on:</p>
+
+<h2>Behold the power of proxies</h2>
+
+<p>One of the planned features for <a href="https://en.wikipedia.org/wiki/ECMAScript#ES2015">Harmony</a>, the codename of the next version of
+ECMAScript is support for <a href="https://tvcutsem.github.io/proxies_tutorial">proxies</a>. A proxy, as its name implies, is an
+object that stands in for another. If you have a proxy object <code>jamesBrown</code> and
+you do something with it like <code>jamesBrown.getOnUp()</code> the runtime will delegate
+that call to a hidden proxy object.</p>
+
+<p>On its own, that could be little more than a level of indirection, but what&rsquo;s
+important is <em>how</em> it delegates. It does so <em>imperatively</em>. If you look up a
+property on a proxy, JavaScript doesn&rsquo;t just automatically look up a property
+with the same name on the handler object. Instead, it calls a single magic <code>get</code>
+method on that handler with the name of the property being requested.</p>
+
+<p>With that indirection, we have full <em>programmatic</em> control over dispatch. We can
+implement <em>any</em> kind of inheritance scheme we dream up. All we need to do is
+replace a regular object with a proxy that has a handler that implements our
+inheritance scheme.</p>
+
+<p>For Self-style parent properties, a very primitive hacked-together handler is
+simply:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="i">createSelfHandler</span><span class="p">(</span><span class="i">obj</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="i">get</span><span class="p">:</span> <span class="k">function</span><span class="p">(</span><span class="i">receiver</span><span class="p">,</span> <span class="i">name</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c">// Look in the main object.</span>
+      <span class="k">var</span> <span class="i">value</span> <span class="o">=</span> <span class="i">obj</span><span class="p">[</span><span class="i">name</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="i">value</span> <span class="o">!==</span> <span class="i">undefined</span><span class="p">)</span> <span class="k">return</span> <span class="i">value</span><span class="p">;</span>
+
+      <span class="c">// Look in the parents.</span>
+      <span class="c">// BUG: Should look in field alphabetical order.</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">field</span> <span class="k">in</span> <span class="i">obj</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="i">field</span><span class="p">.</span><span class="i">endsWith</span><span class="p">(</span><span class="s">&#39;_p&#39;</span><span class="p">))</span> <span class="p">{</span>
+          <span class="i">value</span> <span class="o">=</span> <span class="i">obj</span><span class="p">[</span><span class="i">field</span><span class="p">][</span><span class="i">name</span><span class="p">];</span>
+          <span class="k">if</span> <span class="p">(</span><span class="i">value</span> <span class="o">!==</span> <span class="i">undefined</span><span class="p">)</span> <span class="k">return</span> <span class="i">value</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="c">// Not found.</span>
+      <span class="k">return</span> <span class="i">undefined</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Whenever we create an instance of our MyWidget class, we actually want to get an
+instance of that proxy instead. We do that by proxying the constructor too:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="i">magic</span><span class="p">(</span><span class="i">ctor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="i">callTrap</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="i">args</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">var</span> <span class="i">constructTrap</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="i">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="t">Proxy</span><span class="p">.</span><span class="i">create</span><span class="p">(</span><span class="i">createSelfHandler</span><span class="p">(</span>
+        <span class="k">new</span> <span class="i">ctor</span><span class="p">(</span><span class="i">args</span><span class="p">)),</span> <span class="t">Object</span><span class="p">.</span><span class="i">prototype</span><span class="p">);</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="t">Proxy</span><span class="p">.</span><span class="i">createFunction</span><span class="p">(</span><span class="i">ctor</span><span class="p">,</span> <span class="i">callTrap</span><span class="p">,</span> <span class="i">constructTrap</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Ta-da! Now when we do <code>new MyWidget()</code> we get back a proxy object. When we then
+look up any properties on it, the proxy shunts over to our dispatch function
+that knows how to handle the parent property shenanigans. Self-style multiple
+prototypes in the comfort of your very own browser.</p>
+
+<h2>Is this a good idea?</h2>
+
+<p>The short answer is &ldquo;no&rdquo;, of course. This little hack should never ever enter
+the world of real code. I just wanted to see if I could get it to work. Proxies
+are so incredibly powerful that this is just scratching the surface of what you
+can do with them. (Did I hear you say &ldquo;Active Record in JavaScript&rdquo;? Or was that
+&ldquo;remote object&rdquo;?). But this is truly an inglorious hack and I hate to think of
+what the performance would be with an app built around this.</p>
+
+<p>The more important question, though, is, &ldquo;Is multiple inheritance a good idea?&rdquo;
+While I was a &ldquo;single inheritance + interfaces&rdquo; Kool-Aid drinker for many years,
+I&rsquo;m starting to feel like the answer is &ldquo;yes&rdquo;.</p>
+
+<p>One of the most powerful tools in the programmer&rsquo;s toolbox is <em>composition</em>&mdash;making new things by combining existing parts together. Being able to compose
+out of <em>multiple</em> parts gives us the ability to create <code>2^n</code> different
+combinations from just <code>n</code> unique parts. We shouldn&rsquo;t give that power up without
+good reason.</p>
+
+<h2>But multiple inheritance killed my dog!</h2>
+
+<p>Paraphrasing a <a href="http://regex.info/blog/2006-09-15/247">classic quote</a>:</p>
+
+<blockquote>
+<p>Some people, when confronted with a problem, think &ldquo;I know, I&rsquo;ll use multiple
+inheritance.&rdquo; Now they have multiple problems.</p>
+</blockquote>
+
+<p>It&rsquo;s true, there are real problems with multiple inheritance, but my hunch is
+they&rsquo;ve been blown out of proportion. The number of grizzled C++ programmers
+who&rsquo;ve been personally scarred by multiple inheritance is dwindling over time,
+and tales of it now are like stories of the boogeyman told around campfires,
+getting increasingly horrific with each retelling.</p>
+
+<p>When you get down to it, the two major problems I know of are:</p>
+
+<ul>
+<li><p>Getting duplicate state by having multiple paths to the same base class.</p></li>
+<li><p>Getting ambiguous or confusing dispatch when multiple classes override the
+same method.</p></li>
+</ul>
+
+<p>There are two simple solutions: <em>minimize state</em> and <em>minimize collisions</em>.</p>
+
+<p>Minimizing state&mdash;as we&rsquo;re finally learning from the functional tribe&mdash;is a
+good idea in general. The less state you have, the easier your code is to
+understand. So, if you&rsquo;re creating a class that&rsquo;s intended to be inherited a
+lot, try to keep the number of fields it defines to a minimum. Ideally, it will
+just be a bag of methods with no state at all.</p>
+
+<p>Minimizing collisions can be done by trying to keep your hierarchy as flat as
+possible. Allowing multiple inheritance actually <em>helps</em> here since you don&rsquo;t
+need deep chains of single inheritance just so your leaf classes can inherit a
+bunch of stuff. They can directly inherit those pieces all in one flat list.</p>
+
+<p>Good class design&mdash;cohesion and coherence&mdash;helps too. If your classes each
+do one small thing and only one thing, odds should be good that they won&rsquo;t have
+any methods that collide. Having name collisions should be a code smell: Why is
+the same named concept smeared across a bunch of classes?</p>
+
+<h2>So just use composition</h2>
+
+<p>What I&rsquo;m describinh sounds a lot more like composition than inheritance. The way
+MyWidget is constructed, we literally <em>are</em> composing it: the base classes are
+properties on it directly. So why not just use that? Why shouldn&rsquo;t the above
+example simply be:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">widget</span> <span class="o">=</span> <span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Abe&#39;</span><span class="p">);</span>
+
+<span class="c">// From Widget:</span>
+<span class="i">log</span><span class="p">(</span><span class="i">widget</span><span class="p">.</span><span class="i">getWidget</span><span class="p">().</span><span class="i">getName</span><span class="p">());</span>
+
+<span class="c">// From Hideable:</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">getHideable</span><span class="p">().</span><span class="i">hide</span><span class="p">();</span>
+
+<span class="c">// From Container:</span>
+<span class="i">widget</span><span class="p">.</span><span class="i">getContainer</span><span class="p">().</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Ben&#39;</span><span class="p">));</span>
+</code></pre></div>
+<p>Aside from the fact that it&rsquo;s ugly, there&rsquo;s one thing I don&rsquo;t like about that.
+The fact that MyWidget gets <code>hide()</code> from Hideable should be an implementation
+detail. From the caller&rsquo;s perspective, <code>hide()</code> is something a MyWidget can do,
+it doesn&rsquo;t and shouldn&rsquo;t care <em>how</em> or where that code is defined.</p>
+
+<h2>Where to next</h2>
+
+<p>What all of this boils down to is how I&rsquo;d like to be able to code. I want to be
+able to build my classes by composing them out of a flat set of reusable traits.
+I don&rsquo;t want framework designers to spend weeks agonizing over brittle
+hierarchies that still leave some users in the cold. Instead, I want them to be
+able to say, &ldquo;Here&rsquo;s our 31 different toppings, mix in any ones you like&rdquo;.</p>
+
+<p>At the same time, I&rsquo;d like those traits/mixins/whatever to themselves be open to
+extension. Let&rsquo;s say there&rsquo;s an &ldquo;enumerable&rdquo; trait that any traversable
+collection class inherits. I want to be able to add methods like <code>map()</code> and
+<code>fold()</code> directly to that class so that I can use those methods on every
+<em>enumerable</em> class in my codebase without having to shunt over to <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html">ugly useless
+helper classes</a> like <code>Collections.max(someEnumerable)</code>.</p>
+
+<p>Less boilerplate, less copy and paste, flatter hierarchies, better
+composability. That&rsquo;s what I&rsquo;m going for.</p>
+
+  <div class="social">
+    <a href="//www.reddit.com/submit?url=http://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript//" target="_blank">
+      <i class="fa fa-lg fa-reddit-square"></i>
+    </a>
+
+    <a href="//news.ycombinator.com/submitlink?u=http://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript//&amp;t=Multiple Inheritance in JavaScript" target="_blank">
+      <i class="fa fa-lg fa-hacker-news"></i>
+    </a>
+
+    <a href="http://twitter.com/share?url=http://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript/&amp;text=%22Multiple Inheritance in JavaScript%22%20%40munificentbob" target="_blank">
+      <i class="fa fa-lg fa-twitter-square"></i>
+    </a>
+
+    <a href="http://www.facebook.com/share.php?u=http://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript/" target="_blank">
+      <i class="fa fa-lg fa-facebook-square"></i>
+    </a>
+
+    <a href="https://plus.google.com/share?url=http://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript/" target="_blank">
+      <i class="fa fa-lg fa-google-plus-square"></i>
+    </a>
+
+    <a href="/rss.xml">
+      <i class="fa fa-lg fa-rss-square"></i>
+    </a>
+  </div>
+
+  
+  <div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'journal-stuffwithstuff';
+        var disqus_url = "http://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript/";
+
+        (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</article>
+
+
+      <nav>
+  <div class="nav-first">
+    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
+
+    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="http://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="http://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
+    <p>You can email me at <code>robert</code> at this site or follow me on twitter at <a href="https://twitter.com/intent/user?screen_name=munificentbob"><code>@munificentbob</code></a>.</p>
+
+    <h2>Elsewhere</h2>
+    <ul>
+      <li>Code at <a href="http://github.com/munificent">GitHub</a></li>
+      <li>Tweets at <a href="http://twitter.com/munificentbob">Twitter</a></li>
+      <li>Music at <a href="https://www.youtube.com/channel/UCSMJ0iRwAhIFYSpntOEtn2g">YouTube</a></li>
+      <li>Photos at <a href="https://500px.com/munificent">500px</a></li>
+      <li>Photos at <a href="http://www.flickr.com/photos/bobisbob/">Flickr</a></li>
+    </ul>
+  </div>
+  <div class="nav-second">
+    <h2>Categories</h2>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>67</small></li><li><a href="/category/language">language</a> <small class='post-count'>44</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+
+    <p class="archive">All <a href="/archive">77 articles</a>&hellip;</p>
+
+    <p>This blog is built using a bespoke static site generator. The source repo
+    is <a href="https://github.com/munificent/journal">here</a>.</p>
+    <p class="copyright">&copy; 2008-2021 Bob Nystrom</p>
+  </div>
+</nav>
+    </div>
+  </body>
+</html>

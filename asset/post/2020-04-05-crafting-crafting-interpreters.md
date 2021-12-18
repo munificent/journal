@@ -3,10 +3,9 @@ title: "Crafting \"Crafting Interpreters\""
 categories: book design language personal
 ---
 
-It took three years and 200,000 words more than I expected, but my second
-book, [Crafting Interpreters][], is complete. I finished the third draft of
-the last chapter today, marking the last of around 1,400 days of continuous
-writing.
+It took three years and 200,000 words more than I expected, but my second book,
+*[Crafting Interpreters][]*, is complete. I finished the third draft of the last
+chapter today, marking the last of around 1,400 days of continuous writing.
 
 This book was *much* harder than my [first book][gpp], along every axis. It's
 larger, more technically complex, much more deeply intertwined, and it had the
@@ -24,7 +23,7 @@ there is one fact I superstitiously omitted.
 [gpp]: http://gameprogrammingpatterns.com/
 [post 1]: /2014/04/22/zero-to-95688-how-i-wrote-game-programming-patterns/
 
-Halfway through writing Game Programming Patterns, I discovered a new passion:
+Halfway through writing *Game Programming Patterns*, I discovered a new passion:
 programming languages. It had been a long time since a topic ignited my brain to
 the same degree, and I was *on fire*. I spent basically every free hour (and
 many not-so-free hours -- sorry, family) designing and hacking on programming
@@ -42,32 +41,32 @@ to teach it to other people. Hermione Granger, arm waving feverishly to get the
 teacher's attention, is my spirit animal. It was inevitable that I would write
 something about interpreters. But I couldn't just drop one half-finished book to
 start another. I have gigs of unfinished projects laying around, but -- maybe
-because the completed chapters were already online -- I couldn't bear to
-abandon Game Programming Patterns.
+because the completed chapters were already online -- I couldn't bear to abandon
+*Game Programming Patterns*.
 
 So I made a promise to myself. If I finished that book, then I would let myself
 write a second book on interpreters. In part because of that promise, I *did*
-manage to complete the chapters, and then [the print and eBook editions][print].
-What I thought was merely a hobby and personal goal turned out to be a
-[life-changing experience][launch]. My little self-published vanity project has
-[hundreds of five-star reviews][star], and has been translated to Korean,
-Japanese, Chinese, German, and Polish. The book did so much better than I
-expected that I'm still not sure how to process it, beyond feeling immense
+manage to complete the chapters, and then [the print and e-book
+editions][print]. What I thought was merely a hobby and personal goal turned out
+to be a [life-changing experience][launch]. My little self-published vanity
+project has [hundreds of five-star reviews][star], and has been translated to
+Korean, Japanese, Chinese, German, and Polish. The book did so much better than
+I expected that I'm still not sure how to process it, beyond feeling immense
 gratitude to everyone who read it, bought a copy, or cheered me on.
 
 [launch]: /2014/11/20/how-my-book-launch-went/
 [star]: https://www.amazon.com/dp/0990582906
 [print]: /2014/11/03/bringing-my-web-book-to-print-and-ebook/
 
-## The Seed of a Book
+## The Seed of a book
 
-Once I finished the print edition of "Game Programming Patterns", I took some
+Once I finished the print edition of *Game Programming Patterns*, I took some
 time off. But it didn't take too long for that itch to write about interpreters
 to come back. I knew exactly what I was getting into with writing a book now,
 how hard the grind can be. At first, I just noodled around. I wasn't committed
-to doing anything. It was more just a sort of recreational intellectual
-exercise. If I *were* to do a book, what would it look like? You know,
-*hypothetically speaking*.
+to doing anything. It was more a sort of recreational intellectual exercise. If
+I *were* to do a book, what would it look like? You know, *hypothetically
+speaking*.
 
 The very first note I wrote to myself said:
 
@@ -77,7 +76,7 @@ interpreter. instead of a wide text about programming language*s*,
 it is a single path through the language space. aim for 60k words.
 ```
 
-My first book was almost 90,000 words, and I didn't want to hike a trail that
+My first book was about 90,000 words, and I didn't want to hike a trail that
 long again. I also had a meta-goal to make programming languages more
 approachable, and I figured a short text would help. I had this vision of
 something you could literally hold in your hand or have open next to your laptop
@@ -91,13 +90,15 @@ lines of clean C code.
 
 [wren]: http://wren.io/
 
-For this hypothetical book, I figured a bytecode VM in C like that would be a
-great fit. It would also give me the chance to cover a bunch of really fun
-topics like stack-based VMs, object representation, and garbage collection. But
-Wren wasn't the right language. I like Wren (obviously), but it has some design
-quirks that I think make it a better language for *users* but maybe not for
-teaching. For the book, I wanted a dynamically-typed scripting language in the
-vein of languages like JavaScript, Python, and Lua.
+For this hypothetical book, I figured [a bytecode VM in C][bytecode] like that
+would be a great fit. It would also give me the chance to cover a bunch of
+really fun topics like stack-based VMs, object representation, and garbage
+collection. But Wren wasn't the right language. I like Wren (obviously), but it
+has some design quirks that I think make it a better language for *users* but
+maybe not for teaching. For the book, I wanted a dynamically-typed scripting
+language in the vein of languages like JavaScript, Python, and Lua.
+
+[bytecode]: http://craftinginterpreters.com/a-bytecode-virtual-machine.html
 
 I started tinkering on a new toy language, tentatively named "Vox". The goal was
 to keep things as simple as possible without taking any shortcuts around the
@@ -109,9 +110,11 @@ because that paradigm is so prevalent but omitted by many compiler books.
 At some point, I realized that dropping readers straight into C was too
 unfriendly of an introduction. It's hard to teach high-level concepts like
 parsing and name resolution while also tracking pointers and managing memory.
-OK, so we'll build *two* interpreters. First a simple one in a high-level
-language, focused on concepts. Then a second bytecode VM in C to focus on
+OK, so we'll build *two* interpreters. First, [a simple one in a high-level
+language][tree] to focus on concepts. Then a second bytecode VM in C to focus on
 performance and low-level implementation techniques.
+
+[tree]: http://craftinginterpreters.com/a-tree-walk-interpreter.html
 
 Somehow, I didn't notice that maybe this "handbook" wasn't going to be as
 pocket-sized as I hoped.
@@ -119,11 +122,13 @@ pocket-sized as I hoped.
 My first choice for the high-level implementation language was JavaScript. I
 implemented most of a Vox interpreter in JS, but never really liked it. I wanted
 to write the interpreter in an object-oriented style because there are
-techniques like the visitor pattern for doing language stuff in OOP that aren't
-covered well elsewhere. Doing OOP in JS means deciding whether to use classes or
-a prototypal style. The former is cleaner but infuriates some segment of
-readers. The latter is verbose and confusing to those not already steeped in
+techniques like the [Visitor pattern][] for doing language stuff in OOP that
+aren't covered well elsewhere. Doing OOP in JS means deciding whether to use
+classes or a prototypal style. The former is cleaner but infuriates some segment
+of readers. The latter is verbose and confusing to those not already steeped in
 prototypes.
+
+[visitor pattern]: http://craftinginterpreters.com/representing-code.html#the-visitor-pattern
 
 Also, I missed static types. People reading code in a book don't get the luxury
 of seeing the code in a debugger where they can see what values are in various
@@ -144,7 +149,7 @@ ways. Sometimes I would change the language to make one interpreter simpler, but
 find doing so made the other interpreter more complex. Other times I'd hit on
 some trick that made everything get smaller and cleaner.
 
-## Getting Back on the Horse
+## Getting back on the horse
 
 I remember the exact moment I committed to writing the book. I was stuck on a
 tricky language design problem: constructor syntax. I knew I wanted classes,
@@ -186,7 +191,7 @@ I didn't get into languages until later in my career was because I was
 intimidated by the reputation compilers have as being only for hardcore computer
 science wizard types. I'm a college dropout, so I felt I wasn't smart enough, or
 at least wasn't educated enough to hack it. Eventually I discovered that those
-barriers existed only in my mind and that anyone *can* learn this.
+barriers existed only in my mind and that anyone *can* learn it.
 
 My main overarching goal of the book is to pass on that feeling, to get readers
 to understand there's no magic in there and nothing keeping them out. To nail
@@ -201,7 +206,7 @@ chapter, you had a program that you could type in, compile, run, and do
 something with. I knew I wouldn't be able to verify this manually, so it was
 time to create some tools.
 
-## A Bespoke Build System
+## A bespoke build system
 
 I [wrote my first book in Markdown][gpp md]. I slapped together [a tiny Python
 script][gpp script] that converts the Markdown to HTML and transcludes the code
@@ -250,7 +255,9 @@ static bool isAlpha(char c) {
 //< Scanning on Demand is-alpha
 ```
 
-The `//>` line begins the snippet and says what chapter the snippet appears in and the name of the snippet. The `//<` line ends the snippet. Pretty straightforward.
+The `//>` line begins the snippet and says what chapter the snippet appears in
+and the name of the snippet. The `//<` line ends the snippet. Pretty
+straightforward.
 
 This let me build the book, but didn't ensure that the thing I built actually
 worked. So I wrote a separate script that instead of building the *book*, builds
@@ -274,13 +281,13 @@ test runner and extended it to be able to run the tests on each chapter's
 version of the interpreters. Of course, the tests don't all pass -- the
 interpreters aren't complete! So I added metadata to track which tests I
 expected to pass by which point in the book. With this in place, I could
-automatically verify that the code I was showing readers did exactly what I
+automatically verify that the code that I was showing readers did exactly what I
 expected.
 
 [test runner]: https://github.com/munificent/craftinginterpreters/blob/master/util/test.py
 [lox tests]: https://github.com/munificent/craftinginterpreters/tree/master/test
 
-### More Complex Snippets
+### More complex snippets
 
 The snippet markers look pretty straightforward, and in many cases they are. But
 reality tends to get messier and I didn't allow myself to sweep any of that mess
@@ -408,7 +415,7 @@ int main(int argc, const char* argv[]) {
 Maintaining this is not super fun. But, thankfully, I have a build and test
 system to tell me when I break something.
 
-## Slicing Up the Interpreters
+## Slicing up the interpreters
 
 So I had a tool that could let me split the interpreters across the chapters.
 If it was possible to break these interpreters into chapters at all, it would
@@ -423,7 +430,7 @@ some later chapter and I would have to go back and reorganize things. I
 hand-drew dependency graphs between language features and tried to untangle
 them.
 
-Here's an example of what this was like:
+Here's an example of how this process unfolded:
 
 1.  To teach functions I want show that recursion works.
 
@@ -449,11 +456,10 @@ chapters. I could build and run each chapter's code. Best of all, each chapter
 had a reasonably coherent concept and a roughly similar amount of code.
 
 Before, I felt like I had a language and code that wanted to get out there into
-the world. Now I felt like I had a book.
+the world. Now I felt like I had a book. Or, at least, I had all of the *code*
+for a book.
 
-Or, at least, I had all of the *code* for a book.
-
-## A Chapter at a Time
+## A Chapter at a time
 
 I wrote my first book one chapter at a time. I drafted, edited, illustrated each
 chapter and put it online before moving to the next one. Serial publishing for
@@ -467,12 +473,13 @@ problem with the code in chapter 28 that forced me to tweak things in an earlier
 chapter that readers had already read. I didn't want to paint myself into a
 corner or invalidate any previously-published material.
 
-The entire time I was designing the language, coding the interpreters, and
-splitting the codebases into chapters, I had not done any actual writing. Just
-lots of hacking on code through the summer of 2016. It was, honestly, a blast.
-The programming part is definitely the fun part, and it was a joy to tinker on
-the code and figure out how to break it into chapters. Sort of like making a
-jigsaw puzzle and solving it at the same time.
+So the entire time I was designing the language, coding the interpreters, and
+splitting the codebases into chapters, I had not done any actual writing. I
+didn't want to put down any prose until I knew the code was solid. So I spent
+the summer of 2016 just hacking on code. It was, honestly, a blast. The
+programming part is definitely the fun part, and it was a joy to tinker on the
+code and figure out how to break it into chapters. Sort of like making a jigsaw
+puzzle and solving it at the same time.
 
 After a few months, it was all there. Every single line of code for the entire
 book. A complete list of chapters. And I hadn't written a single word of prose.
@@ -481,7 +488,7 @@ already written along with some pictures. But, for me at least, English is a
 much more taxing language to write than C or Java. I had all of the difficult
 work ahead of me, and all of the fun was done.
 
-## Illustrating by Hand
+## Illustrating by hand
 
 Well, not all of the fun. I did still have the illustrations to do. With my last
 book, I hand-drew little sketchy diagrams to show various bits of architecture.
@@ -621,7 +628,7 @@ paper:
 I went through two full pads of tracing paper, two pads of graph paper, a
 sketch pad, and several pens. I drew 181 illustrations.
 
-## Writing is Suffering
+## Writing is suffering
 
 I had the code, and I had a process for illustrations. The remaining work was
 just writing all the words and drawing all the pictures. So that's what I did. I
@@ -705,13 +712,13 @@ or draw a picture? Writing the book felt like that. I just happened to do it
 over and over again. I feel like a marathon runner who's been watching his feet
 the whole time and didn't even notice when he stumbled over the finish line.
 
-## And Now What?
+## Now what?
 
-"Crafting Interpreters" is complete now. I had to stop here for a minute and
-look at that sentence. I've been working on this book every day for around
-1,400 days. I can't *wait* to take a break. So that's the next step. My plan
-was to finish the book right before spring break and enjoy a week on the beach
-with family.
+*Crafting Interpreters* is complete now. I had to stop here for a minute and
+look at that sentence. I've been working on this book every day for around 1,400
+days. I can't *wait* to take a break. So that's the next step. My plan was to
+finish the book right before spring break and enjoy a week on the beach with
+family.
 
 That beach trip went the way of so many other plans in early 2020, but I still
 intend to take a long break. I don't know if you noticed, but we all have a lot
@@ -725,7 +732,7 @@ have *two* free arms. I've been carrying this baby for four years, so I'm
 looking forward to having both arms for a while.
 
 Once I'm recharged, the real fun starts. Having the book online is important,
-but for me, "Crafting Interpreters" was always meant to be a *book* with pages
+but for me, *Crafting Interpreters* was always meant to be a *book* with pages
 and a cover. So after a long bout of editing and bug fixing, I'm going to get
 started doing the page layout for the print edition. I love graphic design, and
 I can't wait to hold it in my hands.

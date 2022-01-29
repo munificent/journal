@@ -322,6 +322,10 @@ class Renderer
           case 'weekday':
             value = data.weekday;
             break;
+          case 'utc':
+            // TODO: Test.
+            value = data.toUtc();
+            break;
           case 'iso8601':
             // TODO: Test.
             value = data.toIso8601String();

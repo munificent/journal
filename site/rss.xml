@@ -6,15 +6,15 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>{{ format_date(build_date, "EEE, dd MMM yyyy HH:mm:ss") }}</pubDate>
-    <lastBuildDate>{{ format_date(build_date, "EEE, dd MMM yyyy HH:mm:ss") }}</lastBuildDate>
+    <pubDate>{{ format_date(build_date.utc, "EEE, dd MMM yyyy HH:mm:ss") }} GMT</pubDate>
+    <lastBuildDate>{{ format_date(build_date.utc, "EEE, dd MMM yyyy HH:mm:ss") }} GMT</lastBuildDate>
 
 
 {{ for post in take(all_posts, 10) }}
     <item>
-      <title>{{ post.title }}</title>
+      <title>{{ html_entities_to_xml(post.title) }}</title>
       <link>http://journal.stuffwithstuff.com/{{ post.url }}/</link>
-      <pubDate>{{ format_date(post.date, "EEE, dd MMM yyyy HH:mm:ss") }}</pubDate>
+      <pubDate>{{ format_date(post.date.utc, "EEE, dd MMM yyyy HH:mm:ss") }} GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/{{ post.url }}</guid>
       <description>{{ escape_xml(post.content) }}

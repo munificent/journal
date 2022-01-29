@@ -4,7 +4,7 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>{{ build_date.iso8601 }}</updated>
+  <updated>{{ build_date.utc.iso8601 }}</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
@@ -16,9 +16,9 @@
   <entry>
     <id>http://journal.stuffwithstuff.com/{{ post.url }}</id>
     <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/{{ post.url }}/"/>
-    <title>{{ post.title }}</title>
-    <published>{{ post.date.iso8601 }}</published>
-    <updated>{{ post.date.iso8601 }}</updated>
+    <title>{{ html_entities_to_xml(post.title) }}</title>
+    <published>{{ post.date.utc.iso8601 }}</published>
+    <updated>{{ post.date.utc.iso8601 }}</updated>
     <author>
       <name>Robert Nystrom</name>
       <uri>http://journal.stuffwithstuff.com/</uri>

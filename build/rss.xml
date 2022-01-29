@@ -6,14 +6,14 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Sat, 18 Dec 2021 11:13:45</pubDate>
-    <lastBuildDate>Sat, 18 Dec 2021 11:13:45</lastBuildDate>
+    <pubDate>Sat, 29 Jan 2022 17:59:59 GMT</pubDate>
+    <lastBuildDate>Sat, 29 Jan 2022 17:59:59 GMT</lastBuildDate>
 
 
     <item>
       <title>640 Pages in 15 Months</title>
       <link>http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/</link>
-      <pubDate>Thu, 29 Jul 2021 00:00:00</pubDate>
+      <pubDate>Thu, 29 Jul 2021 07:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months</guid>
       <description>&lt;p&gt;My book &lt;a href=&quot;http://craftinginterpreters.com/&quot;&gt;&lt;em&gt;Crafting Interpreters&lt;/em&gt;&lt;/a&gt; on programming languages is done. OK, OK.
@@ -589,9 +589,9 @@ It&amp;rsquo;s the only thing that kept me going this long and enabled me to get
     </item>
 
     <item>
-      <title>Crafting &ldquo;Crafting Interpreters&rdquo;</title>
+      <title>Crafting &#8220;Crafting Interpreters&#8221;</title>
       <link>http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/</link>
-      <pubDate>Sun, 05 Apr 2020 00:00:00</pubDate>
+      <pubDate>Sun, 05 Apr 2020 07:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters</guid>
       <description>&lt;p&gt;It took three years and 200,000 words more than I expected, but my second book,
@@ -1286,7 +1286,7 @@ think I&amp;rsquo;ve earned some rest.&lt;/p&gt;
     <item>
       <title>40 Songs</title>
       <link>http://journal.stuffwithstuff.com/2018/05/19/40-songs/</link>
-      <pubDate>Sat, 19 May 2018 00:00:00</pubDate>
+      <pubDate>Sat, 19 May 2018 07:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2018/05/19/40-songs</guid>
       <description>&lt;p&gt;I turned 40 today. Well, actually, as I&amp;rsquo;m writing this, I&amp;rsquo;m not yet 40. And,
@@ -1784,7 +1784,7 @@ forgotten.&lt;/p&gt;
     <item>
       <title>Long Names Are Long</title>
       <link>http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long/</link>
-      <pubDate>Thu, 16 Jun 2016 00:00:00</pubDate>
+      <pubDate>Thu, 16 Jun 2016 07:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long</guid>
       <description>&lt;p&gt;One smart thing Google does is rigorous code reviews. Every change, before you
@@ -2004,9 +2004,9 @@ the formless sea of bits that is computing.&lt;/p&gt;
     </item>
 
     <item>
-      <title>The Hardest Program I&rsquo;ve Ever Written</title>
+      <title>The Hardest Program I&#8217;ve Ever Written</title>
       <link>http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/</link>
-      <pubDate>Tue, 08 Sep 2015 00:00:00</pubDate>
+      <pubDate>Tue, 08 Sep 2015 07:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written</guid>
       <description>&lt;style&gt;
@@ -2779,7 +2779,7 @@ I could have figured them out at all until late in the project when I had a
     <item>
       <title>What the Hero Sees: Field-of-View for Roguelikes</title>
       <link>http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/</link>
-      <pubDate>Mon, 07 Sep 2015 00:00:00</pubDate>
+      <pubDate>Mon, 07 Sep 2015 07:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees</guid>
       <description>&lt;style&gt;
@@ -3248,7 +3248,7 @@ the context of &lt;a href=&quot;https://github.com/munificent/hauberk&quot;&gt;m
     <item>
       <title>What Color is Your Function?</title>
       <link>http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/</link>
-      <pubDate>Sun, 01 Feb 2015 00:00:00</pubDate>
+      <pubDate>Sun, 01 Feb 2015 08:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function</guid>
       <description>&lt;p&gt;I don&amp;rsquo;t know about you, but nothing gets me going in the morning quite like a
@@ -3689,7 +3689,7 @@ functions and blue ones.&lt;/p&gt;
     <item>
       <title>Rooms and Mazes: A Procedural Dungeon Generator</title>
       <link>http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/</link>
-      <pubDate>Sun, 21 Dec 2014 00:00:00</pubDate>
+      <pubDate>Sun, 21 Dec 2014 08:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes</guid>
       <description>&lt;style&gt;
@@ -4080,7 +4080,7 @@ Sorry, you need canvas support for this demo.
     <item>
       <title>How My Book Launch Went</title>
       <link>http://journal.stuffwithstuff.com/2014/11/20/how-my-book-launch-went/</link>
-      <pubDate>Thu, 20 Nov 2014 00:00:00</pubDate>
+      <pubDate>Thu, 20 Nov 2014 08:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2014/11/20/how-my-book-launch-went</guid>
       <description>&lt;p&gt;Greetings, superfans! When we &lt;a href=&quot;/2014/11/03/bringing-my-web-book-to-print-and-ebook/&quot;&gt;last tuned in&lt;/a&gt;, I was just about to
@@ -4413,7 +4413,7 @@ hands on a copy.&lt;/p&gt;
     <item>
       <title>Zero to 353 Pages: Bringing My Web Book to Print and E-book</title>
       <link>http://journal.stuffwithstuff.com/2014/11/03/bringing-my-web-book-to-print-and-ebook/</link>
-      <pubDate>Mon, 03 Nov 2014 00:00:00</pubDate>
+      <pubDate>Mon, 03 Nov 2014 08:00:00 GMT</pubDate>
       <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
       <guid>http://journal.stuffwithstuff.com/2014/11/03/bringing-my-web-book-to-print-and-ebook</guid>
       <description>&lt;figure&gt;

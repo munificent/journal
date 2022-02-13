@@ -362,6 +362,25 @@ article {
     }
   }
 
+  hr {
+      border: none;
+      border-top: 1px solid #eee;
+      color: $gray;
+      overflow: visible;
+      text-align: center;
+      padding: 0;
+      margin: 26px 0 8px 0;
+
+    &:after {
+        background: #fff;
+        font-size: 20px;
+        content: '§';
+        padding: 0 4px;
+        position: relative;
+        top: -11px;
+    }
+  }
+
   .cite {
     font: italic 13px/24px $sans;
     color: $cite-color;

@@ -46,8 +46,8 @@ cute half-Pomeranian half-Yorkie puppy even though:
 5.  You are, in fact, quite expensive.
 
 Do I even need to write the numbered list here? It's obviously a terrible idea.
-Family members that we're vacationing with look at us like we were idiots when
-we say we are considering it.
+Family members that we're vacationing with look at us like we are idiots when we
+say we're considering it.
 
 I think very very hard about my beloved first dog, Snickers, named because she
 was chocolate brown with swirls of white and caramel. She was a Sheltie, the
@@ -116,8 +116,8 @@ finally pee. I tell you what a good girl you are and give you a treat.
 
 ---
 
-Because you are adorable tiny puppy and I am a nerd with a DSLR, I take copious
-photos of you and upload them to Flickr. One day, I get an email from
+Because you are an adorable tiny puppy and I am a nerd with a DSLR, I take
+copious photos of you and upload them to Flickr. One day, I get an email from
 cuteoverload.com asking if they can share some of them. The next day, you are
 Internet famous. Millions of people look at your butthole.
 
@@ -159,10 +159,10 @@ much I love your stupid face.
 
 ---
 
-Five weeks earlier than expected, Megan and I become parents. We set up a
-bedroom as a nursery yet so we hastily buy a bassinet. The first night the baby
-is home from the NICU, we realize there isn't enough room at the foot of the bed
-for both the bassinet and the crate.
+Five weeks earlier than expected, Megan and I become parents. We haven't had
+time to set up a nursery yet so we hastily buy a bassinet. The first night the
+baby is home from the NICU, we realize there isn't enough room at the foot of
+the bed for both the bassinet and the crate.
 
 We let you sleep on the bed. You are immensely proud of earning pride of place
 on the bed while the new pink hairless dog is relegated to the funny crate.
@@ -207,10 +207,10 @@ your sweet time before finding an acceptable spot to pee.
 
 ---
 
-We are on PetFinder looking for a second dog. You are just, so... weird. Not
-food motivated. Impossible to train. High strung. Frankly, not very smart. You
-bark all the time, at everything. We tell ourselves that a second dog will give
-you company when we're out. They will teach you how to dog like a normal dog.
+We are on PetFinder looking for a second dog. You are just so... weird. Not food
+motivated. Impossible to train. High strung. Frankly, not very smart. You bark
+all the time, at everything. We tell ourselves that a second dog will give you
+company when we're out. They will teach you how to dog like a normal dog.
 
 We find a part-Chihuahua part rat terrier that is, in defiance of everything I
 understand about genetics, practically your twin. We bring you to meet him at a
@@ -259,7 +259,7 @@ love my dog. You are still a celebrity.
 
 I am in bed staring at the dark ceiling, doing math in my head. Tonight, you are
 the same age in dog years that I am in real years. From this moment on, you are
-older than me. I picture you racing ahead of my into the future. I try not to
+older than me. I picture you racing ahead of me into the future. I try not to
 think of where that path leads or when you'll get there.
 
 You are sleeping stretched out, pressed against my thigh, trying to get every

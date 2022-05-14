@@ -476,3 +476,8 @@ I'd say this, but parsers feel easy now.
 [extend]: /2011/02/13/extending-syntax-from-within-a-language/
 
 To see for yourself, just take a look at [the complete program][bantam].
+
+<div class="update">
+<p><em>Update 2022/05/14:</em> John Cardinal has
+  <a href="https://github.com/jfcardinal/BantamCs">ported the code to C#</a>.</p>
+</div>

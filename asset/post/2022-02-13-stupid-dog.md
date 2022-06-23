@@ -164,8 +164,8 @@ time to set up a nursery yet so we hastily buy a bassinet. The first night the
 baby is home from the NICU, we realize there isn't enough room at the foot of
 the bed for both the bassinet and the crate.
 
-We let you sleep on the bed. You are immensely proud of earning pride of place
-on the bed while the new pink hairless dog is relegated to the funny crate.
+We let you sleep on the bed. You are immensely proud of earning a place on the
+bed while the new pink hairless dog is relegated to the funny crate.
 
 ---
 

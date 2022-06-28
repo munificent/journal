@@ -27,7 +27,7 @@ The extensions are:
    
         “He said ’1 is the loneliest number.’”
 
-*   **SmartQuoteSyntax**: Converts plain '"' double quote characters to left
+*   **QuoteSyntax**: Converts plain '"' double quote characters to left
     (&ldquo;) and right (&rdquo;) characters as appropriate.
 
 *   **EllipseSyntax**: Converts `...` to an ellipsis (&hellip;).
@@ -42,4 +42,4 @@ The extensions are:
     whitespace on either side to an em dash (&mdash;). This is different from
     SmartyPants, which uses a triple-dash for em dashes and double-dash for en
     dashes. I find en dashes are so rare that I would rather use ` -- ` for em
-    dashes and write the HTML entity for en dashes.
+    dashes and write the HTML entity for en dashes explicitly.

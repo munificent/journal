@@ -1,4 +1,5 @@
 import 'package:journal/src/code/magpie.dart';
+import 'package:journal/src/code/vgs.dart';
 import 'package:typographic_markdown/typographic_markdown.dart';
 import 'package:chromatophore/markdown.dart';
 import 'package:markdown/markdown.dart';
@@ -11,7 +12,8 @@ final _languages = {
   'magpie1': makeMagpie1Language(),
   'magpie': makeMagpieLanguage(),
   'finch': makeFinchLanguage(),
-  'jasic': makeJasicLanguage()
+  'jasic': makeJasicLanguage(),
+  'vgs': makeVgsLanguage(),
 };
 
 String renderMarkdown(List<String> lines) {

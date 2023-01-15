@@ -4,13 +4,344 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>2022-06-23T14:19:04.972250Z</updated>
+  <updated>2023-01-15T20:11:27.863091Z</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
     <email>robert@stuffwithstuff.com</email>
   </author>
 
+
+  <entry>
+    <id>http://journal.stuffwithstuff.com/2023/01/03/type-checking-if-expressions</id>
+    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2023/01/03/type-checking-if-expressions/"/>
+    <title>Type Checking If Expressions</title>
+    <published>2023-01-03T08:00:00.000Z</published>
+    <updated>2023-01-03T08:00:00.000Z</updated>
+    <author>
+      <name>Robert Nystrom</name>
+      <uri>http://journal.stuffwithstuff.com/</uri>
+    </author>
+    <content type="html">&lt;p&gt;I have this hobby project I&amp;rsquo;ve been hacking on for several years. It&amp;rsquo;s a fantasy
+console, very much inspired by the delightful &lt;a href=&quot;https://www.lexaloffle.com/pico-8.php&quot;&gt;PICO-8&lt;/a&gt;. Like PICO-8, my
+console has its own built-in scripting language. Because I&amp;rsquo;m me, I of course
+took the opportunity to design an entirely new language.&lt;/p&gt;
+
+&lt;p&gt;My goal for the project is a fun way to build small-ish 2D games. I want its
+scripting language to be expressive enough to be joyful, but small enough that
+you can learn the whole language and never need to consult a reference manual
+after that. My dream is a goofy little pixellated IDE where you can get lost in
+your own flow state and just make shit without having to periodically hit
+StackOverflow and then get distracted by the wonders/horrors of the Internet.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t know if I&amp;rsquo;ll ever pull this off or the language will ever see the light of day, but it&amp;rsquo;s a fun therapeutic thing for me to noodle on.&lt;/p&gt;
+
+&lt;h2&gt;A dynamically typed scripting language&lt;/h2&gt;
+
+&lt;p&gt;To make a language that fits in your head (or at least my head, whose working
+space seems to get smaller every year), I needed to jettison as many feature as
+I could. My experience across a range of hobby and &lt;a href=&quot;https://dart.dev/&quot;&gt;not-so-hobby&lt;/a&gt;
+languages is that static types add roughly an order of magnitude of complexity,
+so types were one of the first things to go. Like most scripting languages, I
+made mine dynamically typed.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s an example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onTick&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;buttonHeld&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;buttonHeld&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0.5&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0.5&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;3.0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0.8&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;v&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;200&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;buttonPressed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+      &lt;span class=&quot;i&quot;&gt;playSequence&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;i&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;10.0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Another simplification I made is to eliminate the distinction between statements
+and expressions. As in Ruby, Kotlin, and most functional languages, everything
+is an expression. The previous chained &lt;code&gt;if&lt;/code&gt; could be written in a more
+explicitly expression-y style like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;0.5&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;0.5&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Unifying statements and expressions means the language doesn&amp;rsquo;t need a separate
+&lt;code&gt;if&lt;/code&gt; statement and conditional expression. Also, I don&amp;rsquo;t know, I just like
+expression-oriented languages.&lt;/p&gt;
+
+&lt;h2&gt;An imperative language&lt;/h2&gt;
+
+&lt;p&gt;Even though the language is expression-oriented, it&amp;rsquo;s not explicitly
+&lt;em&gt;functional&lt;/em&gt;. Functional languages are close to my heart, but this is a game
+scripting language. A game world is basically a big ball of incrementally
+updated mutable state. For the kind of programs and user experience I have in
+mind, I think an imperative, procedural style is easy to learn, and fun to
+program in. I want users thinking about their game, not, like, monads and
+persistent data structures.&lt;/p&gt;
+
+&lt;p&gt;So while everything is an expression in my language, it doesn&amp;rsquo;t at all shy away
+from side effects and imperative control flow. Variables are assignable. Fields
+are settable. There are loops and breaks and early returns. All of those are as
+natural and idiomatic as they are in C++, JavaScript, C#, or any of the other
+languages that the majority of the world&amp;rsquo;s code is written in.&lt;/p&gt;
+
+&lt;h2&gt;Handmade Seattle&lt;/h2&gt;
+
+&lt;p&gt;Last fall, I attended the wonderful &lt;a href=&quot;https://handmade-seattle.com/&quot;&gt;Handmade Seattle&lt;/a&gt; conference. I had a
+particularly inspiring conversation with &lt;a href=&quot;https://wiki.xxiivv.com/site/home.html&quot;&gt;Devine Lu Linvega&lt;/a&gt; about their
+tiny &lt;a href=&quot;https://wiki.xxiivv.com/site/uxn.html&quot;&gt;uxn&lt;/a&gt; VM. They had this idea to build the smallest possible system and
+programming language for their own use. Then they rebuilt their own personal
+tools&amp;mdash;text editor, music stuff, etc.&amp;mdash;using that.&lt;/p&gt;
+
+&lt;p&gt;Now, UXN is &lt;em&gt;really&lt;/em&gt; minimal. I get a certain satisfaction from programming in
+assembly, but it&amp;rsquo;s not the language I would want to use for my own joy. But it
+did make me rethink the scripting language for my fantasy console. I picked
+dynamic types because that made the language smaller and I figured it would be a
+good fit for my (entirely hypothetical at this point) users.&lt;/p&gt;
+
+&lt;p&gt;But is it what &lt;em&gt;I&amp;rsquo;d&lt;/em&gt; want to use to make little 2D videogames? The game I&amp;rsquo;ve
+spent the most time hacking on is my also-perennially-incomplete roguelike
+&lt;a href=&quot;https://github.com/munificent/hauberk&quot;&gt;Hauberk&lt;/a&gt;. I&amp;rsquo;ve rewritten it several times, but every incarnation has been in
+a statically typed language: C++, C#, Java, and now Dart.&lt;/p&gt;
+
+&lt;p&gt;My most pleasurable time spent working on Hauberk is when I&amp;rsquo;m refactoring and
+the type system guides me to what&amp;rsquo;s left to clean up. I just really like working
+with types. (It&amp;rsquo;s OK if you don&amp;rsquo;t. As our Burger Sovereign says, have it your
+way.)&lt;/p&gt;
+
+&lt;p&gt;After talking to Devine, I realized that if I was making this fantasy console
+&lt;em&gt;for me personally&lt;/em&gt;, its language would be typed. So over the past few weeks,
+I&amp;rsquo;ve been sketching out a statically typed variant of my console&amp;rsquo;s scripting
+language. I don&amp;rsquo;t know if it will really come together, but I thought maybe it
+would be fun to write about the exploration.&lt;/p&gt;
+
+&lt;h2&gt;Type checking &lt;code&gt;if&lt;/code&gt; expressions&lt;/h2&gt;
+
+&lt;p&gt;I slapped together a new prototype interpreter for my language. (The main
+implementation is a bytecode VM in C++, which is pretty fast but not exactly
+easy to hack on.) Then I dutifully started adding a type checking pass to it.
+One of the first challenges I hit is how to type check &lt;code&gt;if&lt;/code&gt; expressions.&lt;/p&gt;
+
+&lt;p&gt;As the title up there implies, that&amp;rsquo;s what this post is really about. Because it
+turns out that having &lt;code&gt;if&lt;/code&gt; be an expression while also fully embracing an
+imperative style gets a little weird when it comes to type checking.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll walk through a bunch of examples and build up to the type checking rules I
+have settled on (so far, at least). We&amp;rsquo;ll start simple:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;not in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We need a type for the &lt;code&gt;if&lt;/code&gt; expression so that we can infer a type for the
+variable &lt;code&gt;love&lt;/code&gt;. In this case, the type is obviously String since both the then
+and else branches evaluate to strings.&lt;/p&gt;
+
+&lt;p&gt;So the basic rule we&amp;rsquo;ll start with is: &lt;strong&gt;An &lt;code&gt;if&lt;/code&gt; expression&amp;rsquo;s type is the type
+of the branches.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2&gt;Different branch types&lt;/h2&gt;
+
+&lt;p&gt;But what if they don&amp;rsquo;t have the same type? What about:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;love&lt;/code&gt; could end up being initialized to either a &lt;code&gt;String&lt;/code&gt; or an &lt;code&gt;Int&lt;/code&gt;.
+Now what type do we choose? &lt;a href=&quot;https://crystal-lang.org/reference/1.7/syntax_and_semantics/if.html&quot;&gt;Crystal&amp;rsquo;s answer&lt;/a&gt; is &lt;code&gt;String | Int&lt;/code&gt;. Union
+types are cool but definitely too complex for the language I&amp;rsquo;m trying to make.&lt;/p&gt;
+
+&lt;p&gt;In Kotlin, which is also typed and expression-oriented, the answer is,
+apparently, &lt;code&gt;{Comparable&amp;lt;CapturedType(*)&amp;gt; &amp;amp; java.io.Serializable}&lt;/code&gt;. Which I have
+to say does not seem &lt;em&gt;super&lt;/em&gt; helpful.&lt;/p&gt;
+
+&lt;p&gt;I assume that the compiler goes looking for a shared supertype of the two branch
+types, String and Int. Since String and Int both happen to implement Comparable
+(and I guess some serialization interface), you get that as the common
+supertype.&lt;/p&gt;
+
+&lt;p&gt;In object-oriented languages with subtyping and where the type hierarchy forms a
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Lattice_(order)&quot;&gt;lattice&lt;/a&gt;, this common supertype is the least upper bound, and it&amp;rsquo;s a natural
+answer to the problem. It shows up in other languages when type-checking
+conditional &lt;code&gt;?:&lt;/code&gt; expressions and a few other places.&lt;/p&gt;
+
+&lt;p&gt;It works, but, as we can see in the Kotlin example here, it doesn&amp;rsquo;t always
+produce intuitive or useful results. More to the point, one of the &lt;em&gt;other&lt;/em&gt;
+features I jettisoned from my scripting language is subtyping, so LUB is off
+the table.&lt;/p&gt;
+
+&lt;p&gt;Without subtyping, every type is disjoint: a value of one type is never a value
+of any other type too. That means that if the two branches of an &lt;code&gt;if&lt;/code&gt; have
+different types, then there is no possible type I can infer that contains all of
+their values. The only other response is to make it a type error.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s the next rule: &lt;strong&gt;If the branches have different types, it&amp;rsquo;s a compile
+error.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2&gt;Imperative ifs and unused values&lt;/h2&gt;
+
+&lt;p&gt;That rule does work: It&amp;rsquo;s basically SML&amp;rsquo;s rule for &lt;code&gt;if&lt;/code&gt; expressions. But I want
+my scripting language to feel familiar to users programming in an imperative
+style. Consider:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;daysNotInLove&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;daysNotInLove&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, the two branches have different types. The then branch has type String
+because in my language, &lt;code&gt;print()&lt;/code&gt; returns its argument. (That makes it handy for
+stuffing some debug printing in the middle of an expression.) The else branch
+has type Int because an assignment expression yields the assigned value.&lt;/p&gt;
+
+&lt;p&gt;According to the previous rule, this is a type error because we don&amp;rsquo;t know what
+type of value the &lt;code&gt;if&lt;/code&gt; expression evaluates to.&lt;/p&gt;
+
+&lt;p&gt;But it doesn&amp;rsquo;t &lt;em&gt;matter&lt;/em&gt; since the &lt;code&gt;if&lt;/code&gt;&amp;rsquo;s value isn&amp;rsquo;t being used anyway. There&amp;rsquo;s
+no need for the compiler to yell at you, and code like this turns out to be very
+common in practice.&lt;/p&gt;
+
+&lt;p&gt;To address this, the type checker takes some of the surrounding context into
+account. When an &lt;code&gt;if&lt;/code&gt; expression appears in a location where its value won&amp;rsquo;t be
+used, then it&amp;rsquo;s no longer an error for the branches to have different types. How
+complex is tracking that context? Not too bad, actually. There are a handful of
+cases:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;In a block or function body where you have a sequence of expressions, the
+result is the value of the last expression. The values of all of the
+preceding expressions are discarded. So in an expression sequence, all but
+the last expression are in a &amp;ldquo;value not used&amp;rdquo; context.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Like other expression-oriented languages, functions in my language
+implicitly return the value that the function body expression evaluates to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;three&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;About to return three...&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;three&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Prints &amp;quot;About to return three...&amp;quot; then &amp;quot;3&amp;quot;.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But if a function has no return type (the same as &lt;code&gt;void&lt;/code&gt; or unit in other
+languages), it doesn&amp;rsquo;t return a value. In that case, even the last
+expression in the body is a &amp;ldquo;value not used&amp;rdquo; context.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Loop expressions don&amp;rsquo;t produce values, so their body is always a &amp;ldquo;value not
+used&amp;rdquo; context. (I&amp;rsquo;m toying with the idea of allowing &lt;code&gt;break&lt;/code&gt; expressions to
+yield a value from the loop, but they don&amp;rsquo;t right now.)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Whenever an &lt;code&gt;if&lt;/code&gt; or &lt;code&gt;match&lt;/code&gt; expression is in a &amp;ldquo;value not used&amp;rdquo; context,
+then we push that context into the branches too. Likewise with the
+right-hand side of &lt;code&gt;and&lt;/code&gt; and &lt;code&gt;or&lt;/code&gt; logic operators since those are control
+flow expressions to.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. After I came up with this rule, I did some poking around and it seems
+like Kotlin does something similar. It frames it by saying that when you use an
+&lt;code&gt;if&lt;/code&gt; &amp;ldquo;as an expression&amp;rdquo; then the two branches must have the same type. That&amp;rsquo;s
+roughly the distinction I&amp;rsquo;m making here too: when an &lt;code&gt;if&lt;/code&gt; appears in a
+statement-like position where its value is discarded, then the branches can
+disagree.&lt;/p&gt;
+
+&lt;h2&gt;Missing else&lt;/h2&gt;
+
+&lt;p&gt;This rule allows us to support an even more important flavor of &lt;code&gt;if&lt;/code&gt; expressions
+that are common in imperative code: those without &lt;code&gt;else&lt;/code&gt; clauses. In SML and
+some other functional languages, every &lt;code&gt;if&lt;/code&gt; expression &lt;em&gt;must&lt;/em&gt; have an &lt;code&gt;else&lt;/code&gt;
+clause because the presumption is that you will be using the value produced by
+the expression and you need a value even when the condition is false.&lt;/p&gt;
+
+&lt;p&gt;But in imperative code, it&amp;rsquo;s obviously common to have &lt;code&gt;if&lt;/code&gt;s whose main purpose
+is a side effect and where an &lt;code&gt;else&lt;/code&gt; clause isn&amp;rsquo;t needed. In fact, when I
+analyzed a huge corpus of real-world Dart, I found that only about 20% of &lt;code&gt;if&lt;/code&gt;
+statements had &lt;code&gt;else&lt;/code&gt; branches.&lt;/p&gt;
+
+&lt;p&gt;Now that we understand when an &lt;code&gt;if&lt;/code&gt; expression is in a context where it&amp;rsquo;s value
+isn&amp;rsquo;t used, we can allow omitting &lt;code&gt;else&lt;/code&gt; branches those. The next rule is: &lt;strong&gt;An
+&lt;code&gt;if&lt;/code&gt; expression can can omit the else branch when in a context where its value
+isn&amp;rsquo;t used.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2&gt;Exiting branches&lt;/h2&gt;
+
+&lt;p&gt;We&amp;rsquo;re almost there. It&amp;rsquo;s starting to feel like we really are type-checking an
+imperative language, not ML in BASIC&amp;rsquo;s clothing. I coded this up and
+successfully wrote some little example programs. It was starting to feel like a
+real typed language!&lt;/p&gt;
+
+&lt;p&gt;I could stop here, but there&amp;rsquo;s one last bit of type checking logic for &lt;code&gt;if&lt;/code&gt;
+expressions. I haven&amp;rsquo;t decided if it&amp;rsquo;s worth keeping. Consider:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When &lt;code&gt;isFriday&lt;/code&gt; is true, then this initializes &lt;code&gt;love&lt;/code&gt; with the string &amp;ldquo;in love&amp;rdquo;.
+When &lt;code&gt;isFriday&lt;/code&gt; is false, then the &lt;code&gt;return&lt;/code&gt; exits from the function entirely so
+&lt;code&gt;love&lt;/code&gt; never gets initialized at all. So even though these branches don&amp;rsquo;t
+evaluate to the same type, &lt;code&gt;love&lt;/code&gt; is always initialized with a String. This code
+should be fine.&lt;/p&gt;
+
+&lt;p&gt;Or, at least, it should be &lt;em&gt;sound&lt;/em&gt; according to the type system. Whether this is
+&lt;em&gt;good style&lt;/em&gt; is definitely open for debate. I could probably not allow code like
+this. But my default stance is to be as permissive as possible without breaking
+soundness, and this is a corner where I can be.&lt;/p&gt;
+
+&lt;p&gt;The trick is that expressions like &lt;code&gt;break&lt;/code&gt;, &lt;code&gt;return&lt;/code&gt;, and &lt;code&gt;throw&lt;/code&gt; are special. While they are expressions &lt;em&gt;grammatically&lt;/em&gt;, they don&amp;rsquo;t actually evaluate to values. If you do:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That &lt;code&gt;x&lt;/code&gt; never gets initialized. A &lt;code&gt;return&lt;/code&gt; expression always jumps out of the
+surrounding code instead of producing a value. Languages that have expressions
+which can do control flow model this by giving these expressions a special type
+variously called &lt;a href=&quot;https://en.wikipedia.org/wiki/Bottom_type&quot;&gt;&amp;ldquo;bottom&amp;rdquo;, &lt;code&gt;⊥&lt;/code&gt; (&amp;ldquo;up tack&amp;rdquo;), &lt;code&gt;Never&lt;/code&gt;, &lt;code&gt;noreturn&lt;/code&gt;, etc&lt;/a&gt;.
+This type means &amp;ldquo;You&amp;rsquo;re never gonna get a value from me.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;When checking the two branches of an &lt;code&gt;if&lt;/code&gt; expression, if one branch has that
+special type (the compiler calls it &amp;ldquo;unreachable&amp;rdquo; right now), then we just use
+the type of the other branch for the &lt;code&gt;if&lt;/code&gt; expression&amp;rsquo;s type. That allows the
+above example to work. In the sample code I&amp;rsquo;ve written so far, it rarely comes
+into play. It&amp;rsquo;s usually more idiomatic to hoist that control flow out of the
+&lt;code&gt;if&lt;/code&gt; entirely. But we can type check it easily, so the language lets you do it.&lt;/p&gt;
+
+&lt;h2&gt;The rules altogether&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s where I&amp;rsquo;m at right now. It took me a few iterations to get to a point
+where all the &lt;code&gt;if&lt;/code&gt; expressions I expected to be able to write in my example
+programs actually type checked correctly but it seems pretty stable now. The
+rules are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;When an &lt;code&gt;if&lt;/code&gt; expression is in a context where its value is not used, then
+there is no restriction on what types the branches can have and we&amp;rsquo;re done.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Otherwise, there must be an &lt;code&gt;else&lt;/code&gt; branch and:&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If both branches have type &amp;ldquo;unreachable&amp;rdquo; then the &lt;code&gt;if&lt;/code&gt; expression&amp;rsquo;s type is
+also &amp;ldquo;unreachable&amp;rdquo;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If one branch has type &amp;ldquo;unreachable&amp;rdquo; then the &lt;code&gt;if&lt;/code&gt; expression&amp;rsquo;s type is the
+type of the other branch.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Otherwise, the two branches must have the same type and the type of the &lt;code&gt;if&lt;/code&gt;
+is that type.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+  </entry>
 
   <entry>
     <id>http://journal.stuffwithstuff.com/2022/02/13/stupid-dog</id>
@@ -4532,342 +4863,6 @@ the much cleaner implementation my game uses.&lt;/p&gt;
 Sorry, you need canvas support for this demo.
 &lt;/canvas&gt;
 &lt;/figure&gt;&lt;script type=&quot;application/dart&quot; src=&quot;/code/2014-12-21-rooms-and-mazes/main.dart&quot;&gt;&lt;/script&gt;&lt;script src=&quot;/code/2014-12-21-rooms-and-mazes/packages/browser/dart.js&quot;&gt;&lt;/script&gt;</content>
-  </entry>
-
-  <entry>
-    <id>http://journal.stuffwithstuff.com/2014/11/20/how-my-book-launch-went</id>
-    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2014/11/20/how-my-book-launch-went/"/>
-    <title>How My Book Launch Went</title>
-    <published>2014-11-20T08:00:00.000Z</published>
-    <updated>2014-11-20T08:00:00.000Z</updated>
-    <author>
-      <name>Robert Nystrom</name>
-      <uri>http://journal.stuffwithstuff.com/</uri>
-    </author>
-    <content type="html">&lt;p&gt;Greetings, superfans! When we &lt;a href=&quot;/2014/11/03/bringing-my-web-book-to-print-and-ebook/&quot;&gt;last tuned in&lt;/a&gt;, I was just about to
-&amp;ldquo;launch&amp;rdquo; &lt;a href=&quot;http://gameprogrammingpatterns.com/&quot;&gt;my self-published book&lt;/a&gt;. I put that in quotes because it&amp;rsquo;s an
-awfully serious-sounding word for what was really just doing some clicking on my
-laptop. If my last post was the climax of my book writing adventure, consider
-this the denouement. You&amp;rsquo;ve been with me this long, it&amp;rsquo;s the least I can do.&lt;/p&gt;
-
-&lt;p&gt;I do hold back one detail, though: while I talk about sales here, I won&amp;rsquo;t be
-putting cash numbers on it. If you try hard enough, you can calculate them
-yourself, but I feel weird sharing financial details. Strangely, it&amp;rsquo;s not
-because I&amp;rsquo;m shy about &lt;em&gt;strangers&lt;/em&gt; knowing it as much as I am friends and family.
-So much room for awkwardness there.&lt;/p&gt;
-
-&lt;h2&gt;I am a marketer and I do marketer-y things&lt;/h2&gt;
-
-&lt;p&gt;As I mentioned before, I decided to self-publish about halfway through writing
-the manuscript. That meant I had to wear all of the hats that a publisher has
-dedicated noggins for: editor, designer, proofreader, and&amp;hellip; marketer. This last
-one is the least fun for me, but I know it&amp;rsquo;s important.&lt;/p&gt;
-
-&lt;p&gt;I read a bit online and what a lot of people said was that email lists are gold.
-&lt;em&gt;I&lt;/em&gt; like that they are pull-based instead of push-based. Instead of jamming
-myself and my book down strangers&amp;rsquo; throats, they sign up of their own volition.
-I only get in touch with the people who actually want to hear from me.&lt;/p&gt;
-
-&lt;p&gt;So I created a &lt;a href=&quot;http://mailchimp.com/&quot;&gt;MailChimp&lt;/a&gt; account&amp;mdash;chosen over other mailing list providers
-mainly because of their cute logo&amp;mdash;and slapped a little &amp;ldquo;sign up!&amp;rdquo; form on
-every page of the site. Whenever I put a new chapter online, I got a traffic
-bump and some fraction of those people were kind or foolhardy enough to grant me
-their email address.&lt;/p&gt;
-
-&lt;p&gt;I did this pretty early in the writing process so that I could give it time to
-grow before the book was complete. By putting the whole book online and
-releasing it chapterly (like a Dickens serial for the Internet age) I had
-amassed a surprisingly large list by the time I was ready to &lt;strike&gt;try to
-squeeze money out of them&lt;/strike&gt; tell them my book was complete. Around 8,000
-people, which still seems like a crazy large number to me.&lt;/p&gt;
-
-&lt;p&gt;I also, despite &lt;a href=&quot;https://twitter.com/munificentbob&quot;&gt;the content of my tweets&lt;/a&gt;, managed to acquire a fair
-number of twitter friends. (I don&amp;rsquo;t like thinking of them &amp;ldquo;followers&amp;rdquo;.
-Celebutants and TEDx thought/cult leaders have &amp;ldquo;followers&amp;rdquo;. I just have Internet
-pals.)&lt;/p&gt;
-
-&lt;h2&gt;A new front page&lt;/h2&gt;
-
-&lt;p&gt;Now that the book is a &lt;em&gt;product&lt;/em&gt; as much as it is a &lt;em&gt;web site&lt;/em&gt;, I redid the
-front page to highlight both of those. It still, of course, links to the web
-version. And, &lt;em&gt;of course&lt;/em&gt;, the entire contents of the book are still readable on
-the web. But I also added links to the various sites where you could get the
-print version, Kindle, and EPUB.&lt;/p&gt;
-
-&lt;p&gt;I wanted to emphasize the &amp;ldquo;bookyness&amp;rdquo; of it, the physicality, so I got out my
-camera and my macro lens and took a bunch of honest-to-God photos of it:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/cover-shoot.jpg&quot;&gt;
-&lt;figcaption&gt;Wait... if the camera is in the photo, how did I take
-&lt;em&gt;this&lt;/em&gt; shot?&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;There&amp;rsquo;s something weird and meta about taking a picture of myself taking photos
-of a book whose cover I designed using a photo I took of an illustration I drew.
-I should take a picture of myself writing this blog post just to go full
-Inception.&lt;/p&gt;
-
-&lt;p&gt;Next, I spent way too long coming up with a design and text for the front page.
-Seriously, it took me as long to make what is effectively a glorified list of
-hyperlinks as it did to write, illustrate, and edit a full chapter of the book.
-I think it&amp;rsquo;s worth it, though. The front page is the reader&amp;rsquo;s first impression
-of the book. If I make you feel that page is beautiful and high quality, it&amp;rsquo;s a
-short hop to having faith that the inside of the book is too.&lt;/p&gt;
-
-&lt;p&gt;I ended up with this:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;a href=&quot;http://gameprogrammingpatterns.com&quot; target=&quot;_blank&quot;&gt;&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/new-site.jpg&quot;&gt;&lt;/a&gt;
-&lt;figcaption&gt;Click to zoom!&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;h2&gt;This part of the blog post is about writing a blog post&lt;/h2&gt;
-
-&lt;p&gt;I feel a little squirmy writing this. Like I said, I&amp;rsquo;m uncomfortable with
-self-promotion. I hoped, wanted, to get a decent amount of&amp;hellip; attention?
-traffic? validation of my worth as a human? when I announced the for-sale
-versions of the book. Readers had been asking for them for a while, so I knew
-there would be some excitement just by saying, &amp;ldquo;Here they are.&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;But that didn&amp;rsquo;t feel really newsworthy to me. There wasn&amp;rsquo;t much to discuss, just
-&amp;ldquo;here they are. moneys plz.&amp;rdquo; People like a story, and I like telling them,
-especially when the protagonist is yours truly. I&amp;rsquo;ve been really lucky to have a
-lot of encouragement on this project from readers, and I thought one way to say
-thanks would be to give a window into what the production process was like. It&amp;rsquo;s
-a side of book-making that I don&amp;rsquo;t see very much online.&lt;/p&gt;
-
-&lt;p&gt;Also, it let me blather about fonts for six thousand words. Seriously, the &lt;a href=&quot;/2014/11/03/bringing-my-web-book-to-print-and-ebook/&quot;&gt;blog
-post&lt;/a&gt; I wrote about turning the manuscript into a physical book is longer than
-almost every chapter in the book. Clearly, I need an editor.&lt;/p&gt;
-
-&lt;p&gt;This also took a lot of time&amp;mdash;about a week&amp;mdash;but I really enjoyed writing it
-all down. I did my best to make it an entertaining read. While I hoped it would
-drive traffic to the book, I did honestly want it to be a worthwhile read in and
-of itself. I believe that, when played well, life is a non-zero-sum game.&lt;/p&gt;
-
-&lt;h2&gt;I &amp;lt;3 filling out web forms&lt;/h2&gt;
-
-&lt;p&gt;I was ready to upload the new site, and the new blog post. All that was left was
-to actually make the book available. This involved uploading various files&amp;mdash;inside PDF for the print version, cover, EPUB file, MOBI file&amp;mdash;to various
-sites whose forms cover the full gamut of usability. Clicking the final &amp;ldquo;OK&amp;rdquo; on
-CreateSpace, Kindle Direct Publishing, and Smashwords was both nerve-wracking
-and anti-climactic.&lt;/p&gt;
-
-&lt;p&gt;Then the waiting game. Most of these sites do various amounts of automated and
-manual validation that take time to process. I noticed a typo that forced me to
-re-upload to CreateSpace. Kindle found a couple of spelling errors (surprising
-given how many rounds of editing I&amp;rsquo;d done by now). Smashwords asked me to have
-an explicit cover page.&lt;/p&gt;
-
-&lt;p&gt;Once those were all happy, the listings appeared. If you knew to look for them,
-you could have bought the book.&lt;/p&gt;
-
-&lt;p&gt;CreateSpace and Smashwords also distribute to other sales channels (things like
-Lightning Source and book stores for the former; iBooks, Nook, Kobo, etc. for
-the latter). I wanted to wait for those sales channels to populate before I
-pulled the switch but&amp;hellip; well, I got impatient.&lt;/p&gt;
-
-&lt;p&gt;As soon as I saw &lt;a href=&quot;http://www.amazon.com/gp/product/0990582906&quot;&gt;the Amazon page for my book&lt;/a&gt;, I just couldn&amp;rsquo;t wait any
-more. I pushed the new version of the site and the blog post. I wrote an email
-and blasted the mailing list. I tweeted. I mentioned it on G+.&lt;/p&gt;
-
-&lt;p&gt;What I &lt;em&gt;didn&amp;rsquo;t&lt;/em&gt; do this time was post it to Reddit. It felt a little too
-self-serving for how Reddit rolls. I did post a link to the blog &lt;a href=&quot;https://news.ycombinator.com/item?id=8555285&quot;&gt;on Hacker
-News&lt;/a&gt; since that crowd is more accepting of self-promotion.&lt;/p&gt;
-
-&lt;p&gt;I had tabs open for the Smashwords sales dashboard, CreateSpace royalties,
-Kindle Direct Publishing sales report, Twitter, and Hacker News. I refreshed
-those suckers like my life depended on it.&lt;/p&gt;
-
-&lt;h2&gt;Command, we are ready for launch&lt;/h2&gt;
-
-&lt;p&gt;This moment, as dumb as it sounds, was actually pretty stressful. A surprisingly
-large number of self-published books just sink to the depths leaving nary a
-ripple on the surface. You hear horror stories of writers whose novels sell
-&lt;em&gt;zero&lt;/em&gt; copies. Nonfiction is a lot easier, but I still had no idea if people
-really liked the book enough to drop real cash on it.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Refresh refresh refresh refresh.&lt;/em&gt; A nervous sweat trickled down my neck.&lt;/p&gt;
-
-&lt;p&gt;A few minutes later, Smashwords reported two sales. Holy shit! Someone bought
-the book! I was a professional writer!&lt;/p&gt;
-
-&lt;p&gt;Then people started retweeting me. Someone posted a blurb about it &lt;a href=&quot;http://www.reddit.com/r/gamedev/comments/2l9hr0/game_programming_patterns_is_now_in_print/&quot;&gt;on the gamedev subreddit&lt;/a&gt; and someone else did &lt;a href=&quot;http://www.reddit.com/r/programming/comments/2l8v11/today_is_the_day_game_programming_patterns_now_in/&quot;&gt;on the programming subreddit&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;People started saying super nice things! About me! It was awesome! Also, I was
-drinking in celebration at the same time so that multiplied all the good
-feelings.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/cat.gif&quot;&gt;
-&lt;figcaption&gt;How I felt.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;I feverishly replied to as many comments, tweets, and emails as I could. (All
-the while still refreshing the other tabs.) Eventually, I maxed out my serotonin
-levels and had to crash. Like some candy raver in an E puddle in the back of the
-chill-out room, I passed out, totally spent.&lt;/p&gt;
-
-&lt;h2&gt;The next day&lt;/h2&gt;
-
-&lt;p&gt;I woke up the next morning feeling like a kid on Christmas. A kid who wasn&amp;rsquo;t
-&lt;em&gt;entirely&lt;/em&gt; certain he&amp;rsquo;d been good enough for Santa to bring him presents.
-Morning coffee in hand, I opened up my laptop and checked all the dashboards.&lt;/p&gt;
-
-&lt;p&gt;While I slept, I&amp;rsquo;d sold enough copies to pay off all of the expenses of the
-book. That isn&amp;rsquo;t actually &lt;em&gt;that&lt;/em&gt; much: all I&amp;rsquo;d paid for was ISBN numbers, a
-couple of fonts, freelance copy-editing, and a business license. But, still, I
-was in the black now.&lt;/p&gt;
-
-&lt;p&gt;I replied to as many people as I could and then headed into the office to
-&lt;strike&gt;get some work done&lt;/strike&gt; spend the rest of the day refreshing my
-browser. Aggregate sales stats started showing up in the various dashboards:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/kindle-hockey.png&quot;&gt;
-&lt;figcaption&gt;Kindle sales on the first day.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;figure&gt;
-  &lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/smash-hockey.png&quot;&gt;
-  &lt;figcaption&gt;Smashwords (EPUB) sales on the first day.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;CreateSpace doesn&amp;rsquo;t draw a pretty picture for you, but the raw numbers were
-doing the same thing. I told my coworkers and they got all excited for me.&lt;/p&gt;
-
-&lt;p&gt;The rest of the day was basically a blur of responding to people and telling my
-wife and team how high the numbers were going. At some point, when I refreshed
-the Amazon page, I noticed a little banner had appeared next to my book:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/banner.png&quot;&gt;
-&lt;figcaption&gt;No way.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;It turns out Amazon tracks book sales &lt;em&gt;very quickly.&lt;/em&gt; For the brief period of
-time where I had saturated social media, enough sales were coming in to actually
-make it the best-selling game programming book for a little while.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/best-game.png&quot;&gt;
-&lt;figcaption&gt;Sorry &quot;Learning Python&quot;.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Wait, did I say &amp;ldquo;game programming&amp;rdquo;? I meant #1 out of &lt;em&gt;all programming books&lt;/em&gt;:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/best-programming.png&quot;&gt;
-&lt;figcaption&gt;I did a victory lap at this point.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;At it&amp;rsquo;s peak, my book was the #7 best-selling book in the entire computer
-category:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/best-computer.png&quot;&gt;
-&lt;figcaption&gt;Up there with Minecraft!&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Around this time, I started referring to myself in the third person as
-&amp;ldquo;best-selling author Robert Nystrom&amp;rdquo;. Of course, most of the other books in
-those lists had been there for weeks or months, but I had my moment in the sun
-and I was committed to making the most of it.&lt;/p&gt;
-
-&lt;h2&gt;Return to normalcy&lt;/h2&gt;
-
-&lt;p&gt;The peak, naturally, only lasted about a day. I was most curious to see what the
-right side of the graph would look like. Would it fall to zero? A slow trickle?
-A steady passive income?&lt;/p&gt;
-
-&lt;p&gt;When I sent out the email for the book, one thing I asked was for people to
-write honest, detailed reviews. I figured a book page with a good set of reviews
-would give it the air of legimitacy for future customers who stumbled onto the
-book on their own. That in turn would help the book have a longer sales tail.&lt;/p&gt;
-
-&lt;p&gt;Because people are awesome and I love every one of them, people did indeed do
-this. It took a while, but reviews started trickling in.&lt;/p&gt;
-
-&lt;p&gt;Other pleasant surprises started happening too. The book finally made its way
-through the other channels. I put it up on &lt;a href=&quot;https://play.google.com/store/books/details/Robert_Nystrom_Game_Programming_Patterns?id=9fIwBQAAQBAJ&quot;&gt;Google Play&lt;/a&gt;, and Smashwords got
-it onto &lt;a href=&quot;http://itunes.apple.com/us/book/isbn9780990582915&quot;&gt;iBooks&lt;/a&gt;, &lt;a href=&quot;http://www.barnesandnoble.com/w/game-programming-patterns-robert-nystrom/1102794265?ean=2940046391428&quot;&gt;Nook&lt;/a&gt;, and some other places. I finally figured out a
-place to &lt;a href=&quot;https://payhip.com/b/iZRI&quot;&gt;sell the PDF&lt;/a&gt;. (If you go to &lt;a href=&quot;http://gameprogrammingpatterns.com/&quot;&gt;the book&amp;rsquo;s site&lt;/a&gt; now, these are
-all listed there.)&lt;/p&gt;
-
-&lt;p&gt;In a mistake that I don&amp;rsquo;t understand but can&amp;rsquo;t bear to correct, Apple even
-decided to spice up my name a bit:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/umlaut.png&quot;&gt;
-&lt;figcaption&gt;Robert Nyström, now 15% more metal.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Then, a few days later, the most magical part of this whole thing started
-happening (though, honestly, the umlaut is a close second). That&amp;rsquo;s about how
-long it took for print copies to get shipped to people.&lt;/p&gt;
-
-&lt;p&gt;Soon, friends and family&amp;mdash;some who I haven&amp;rsquo;t seen in years&amp;mdash;started sending
-me pictures of their copies of the book. Kind strangers in countries I couldn&amp;rsquo;t
-find on a map tweeted pictures of themselves opening the shipping box with
-excitement to see my dumb face staring out at them.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s hard to articulate how profoundly gratifying that is. Through almost the
-entire six years I&amp;rsquo;ve been working on this book, it&amp;rsquo;s been a purely digital
-thing. While I spend an astonishing amount of my life on the Internet, it still
-never quite feels &amp;ldquo;real&amp;rdquo; to me.&lt;/p&gt;
-
-&lt;p&gt;Is rearranging some polarization on an SSD really &lt;em&gt;making&lt;/em&gt; something? Is a few
-words glowing on an LCD actually communicating with a &lt;em&gt;person&lt;/em&gt;, or just some
-pixelated avatar?&lt;/p&gt;
-
-&lt;p&gt;But seeing photos of real live people holding an actual &lt;em&gt;physical thing&lt;/em&gt; filled
-with words and illustrations I put together, and seeing them &lt;em&gt;happy&lt;/em&gt; to have it
-in their hands finally made it click for me that I made something real that
-actually affected people.&lt;/p&gt;
-
-&lt;h2&gt;How we&amp;rsquo;re looking now&lt;/h2&gt;
-
-&lt;p&gt;Things have mostly settled down since then, though I do still have lots of email
-to catch up on (sorry!). Now that the book is in pretty much every sales
-channel, e-book walled garden, and international site for Amazon, I&amp;rsquo;m &lt;em&gt;finally&lt;/em&gt;
-getting to the point where I can think of the book as &lt;em&gt;done&lt;/em&gt; and put it into the
-background of my life.&lt;/p&gt;
-
-&lt;p&gt;So far, buyers have been trickling in at a decent rate. Here&amp;rsquo;s what my Kindle
-sales look like as of writing this post:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;img class=&quot;framed&quot; src=&quot;/image/2014/11/kindle-now.png&quot;&gt;
-&lt;figcaption&gt;EPUB is similar, and I think print is too.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;The book has been out about two weeks, and I&amp;rsquo;ve sold:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;796 print copies.&lt;/strong&gt; 555 in the US, 145 in Great Britain, 95 in Europe, and
-1 directly from createspace.com.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;274 Kindle copies.&lt;/strong&gt; I&amp;rsquo;ll spare you the per country break-down, but it is
-really cool to see that I&amp;rsquo;ve sold it in India, Japan, Brazil, and other
-places.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;70 copies from smashwords.&lt;/strong&gt; This is people who wany to buy the EPUB file
-directly.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;7 copies from iBooks.&lt;/strong&gt; The book only appeared a few days ago, so I expect
-this to catch up with the other channels over time.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;That&amp;rsquo;s a grand total of &lt;strong&gt;1,147 copies sold in the first two weeks.&lt;/strong&gt; I won&amp;rsquo;t be
-retiring off of this, but I&amp;rsquo;m really really happy with that number, and
-unbelievably grateful to everyone who bought a copy.&lt;/p&gt;
-
-&lt;p&gt;While I&amp;rsquo;m planning to take a good long break from serious projects first, this
-level of success has certainly gotten me pumped about writing another book. If I
-do, I&amp;rsquo;m 100% confident now in my approach of putting the entire book online for
-free. I&amp;rsquo;m certain I wouldn&amp;rsquo;t have sold anywhere near this many copies if the
-book&amp;rsquo;s website hadn&amp;rsquo;t built an audience who were ready and eager to get their
-hands on a copy.&lt;/p&gt;
-
-&lt;p&gt;It turns out giving something away is a great way to get something back.&lt;/p&gt;</content>
   </entry>
     
 

@@ -6833,6 +6833,44 @@ Once we&#39;ve found an identifier, we scan the rest of it using:
   <span class="k">var</span> <span class="i">maxRange</span> <span class="t">Int</span>
 <span class="k">end</span>
 </code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">RangedWeapon</span> <span class="k">and</span>
+        <span class="p">(</span><span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span><span class="p">)</span> <span class="k">or</span>
+      <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="k">end</span>
+
+  <span class="c"># ...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="c"># Error! Can&#39;t access .minRange here.</span>
+     <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="k">end</span>
+
+  <span class="c"># ...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">RangedWeapon</span> <span class="k">and</span> <span class="i">checkRange</span><span class="p">(</span><span class="i">weapon</span><span class="p">,</span> <span class="i">distance</span><span class="p">)</span> <span class="k">or</span>
+      <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="k">end</span>
+
+  <span class="c"># ...</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="i">checkRange</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span> <span class="t">Bool</span>
+  <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span>
+<span class="k">end</span>
+</code></pre></div>
 </article>
       <nav>
   <div class="nav-first">

@@ -456,3 +456,100 @@ I haven't decided if I'm totally sold on this feature yet. But in the
 (admittedly small) amount of example code I've written using it so far, it seems
 to feel pretty nice. For a small game scripting language, I think it may strike
 a decent balance between static safety and simplicity.
+
+## Update: What about flow typing?
+
+When I first posted this, the most common reply was why not do some sort of flow
+typing? In code like:
+
+```vgs
+def attack(weapon Weapon, monster Monster, distance Int)
+  if weapon is RangedWeapon and
+        (distance < weapon.minRange or distance > weapon.maxRange) or
+      distance > 1 then
+    print("You are out of range.")
+    return
+  end
+
+  # ...
+end
+```
+
+The compiler could do control flow analysis to determine that the `.minRange`
+and `.maxRange` calls are guarded by an `is RangedWeapon` and thus allow them.
+But if you *don't* guard the code with that kind of check, you'd get an error:
+
+```vgs
+def attack(weapon Weapon, monster Monster, distance Int)
+  if distance < weapon.minRange or # Error! Can't access .minRange here.
+     distance > weapon.maxRange then
+    print("You are out of range.")
+    return
+  end
+
+  # ...
+end
+```
+
+This is definitely a thing you can do! TypeScript, Kotlin, Flow, Dart, and
+others all support it. The general technique is called "control flow analysis"
+and the specific feature is called "flow typing", "smart casts", or "type
+promotion" depending on which language.
+
+Is it a good fit for my language? I do like that it makes imperative code "just
+work" while being safe. But that "just" is doing a lot of heavy lifting. We do
+this analysis in Dart and it is *fantastically* complex. Proving that a certain
+piece of code can only be reached by going through some other piece of code
+first gets hard quickly in the presence of loops and closures. It seems like
+every release of Dart, we ship more extensions to flow analysis because users
+keep expecting it to be smarter and smarter.
+
+Also, it isn't sound in many cases that users expect to work. Once the variable
+that you're type testing can escape the current function, the compiler generally
+can't prove that it won't be mutated between when you test its type and when you
+use it as the more precise type later.
+
+Overall, my feeling is that it works out pretty well for Dart, but it's a large
+sort of messy feature that feels a little too magical. A goal with my hobby
+language is that you should be able to have the whole language loaded into your
+head and rarely be surprised by what it does. Flow analysis in Dart still fairly
+often surprises me and I *literally work on the language full-time*.
+
+There's also the question of what you promote the tested variable *to*. In my
+language as it currently stands, there is no subtyping. `MeleeWeapon` isn't a
+subtype of `Weapon`, it's a case constructor. The `weapon is MeleeWeapon` syntax
+looks like a type test, but it's really more like an enum case check.
+
+So after that test, what type would `weapon` have? It would still have to be
+`Weapon`. I guess I could make this work by not promoting the *type* but by
+having the type checker track an extra "known case" property for each static
+type and then use that. That might work. But even with that, I worry that it
+would quickly become annoying. Let's say you refactor the above code to:
+
+```vgs
+def attack(weapon Weapon, monster Monster, distance Int)
+  if weapon is RangedWeapon and checkRange(weapon, distance) or
+      distance > 1 then
+    print("You are out of range.")
+    return
+  end
+
+  # ...
+end
+
+def checkRange(weapon Weapon, distance Int) Bool
+  distance < weapon.minRange or distance > weapon.maxRange
+end
+```
+
+That no longer works. Inside `checkRange()` the compiles has lost track that
+`weapon` is always a `RangedWeapon`. You could come up with a way to annotate
+that, but now we're back to subtyping and all the complexity it involves.
+
+So, overall, yes, subtyping and flow analysis is a thing that could work here,
+but I'm trying to avoid it because I feel like it's a bigger lump of complexity
+than I want to take on.
+
+I'd be more inclined to do sum types and destructuring, even though it feels a
+little weird in an imperative language, then do this kind of complex control
+flow analysis.

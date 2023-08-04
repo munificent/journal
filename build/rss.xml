@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Fri, 04 Aug 2023 16:30:01 GMT</pubDate>
-    <lastBuildDate>Fri, 04 Aug 2023 16:30:01 GMT</lastBuildDate>
+    <pubDate>Fri, 04 Aug 2023 21:41:05 GMT</pubDate>
+    <lastBuildDate>Fri, 04 Aug 2023 21:41:05 GMT</lastBuildDate>
 
 
     <item>
@@ -417,6 +417,94 @@ single construct. I&amp;rsquo;ve found this to be really handy in practice.&lt;/
 (admittedly small) amount of example code I&amp;rsquo;ve written using it so far, it seems
 to feel pretty nice. For a small game scripting language, I think it may strike
 a decent balance between static safety and simplicity.&lt;/p&gt;
+
+&lt;h2&gt;Update: What about flow typing?&lt;/h2&gt;
+
+&lt;p&gt;When I first posted this, the most common reply was why not do some sort of flow
+typing? In code like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+      &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;c&quot;&gt;# ...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The compiler could do control flow analysis to determine that the &lt;code&gt;.minRange&lt;/code&gt;
+and &lt;code&gt;.maxRange&lt;/code&gt; calls are guarded by an &lt;code&gt;is RangedWeapon&lt;/code&gt; and thus allow them.
+But if you &lt;em&gt;don&amp;rsquo;t&lt;/em&gt; guard the code with that kind of check, you&amp;rsquo;d get an error:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Error! Can&amp;#39;t access .minRange here.&lt;/span&gt;
+     &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;c&quot;&gt;# ...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is definitely a thing you can do! TypeScript, Kotlin, Flow, Dart, and
+others all support it. The general technique is called &amp;ldquo;control flow analysis&amp;rdquo;
+and the specific feature is called &amp;ldquo;flow typing&amp;rdquo;, &amp;ldquo;smart casts&amp;rdquo;, or &amp;ldquo;type
+promotion&amp;rdquo; depending on which language.&lt;/p&gt;
+
+&lt;p&gt;Is it a good fit for my language? I do like that it makes imperative code &amp;ldquo;just
+work&amp;rdquo; while being safe. But that &amp;ldquo;just&amp;rdquo; is doing a lot of heavy lifting. We do
+this analysis in Dart and it is &lt;em&gt;fantastically&lt;/em&gt; complex. Proving that a certain
+piece of code can only be reached by going through some other piece of code
+first gets hard quickly in the presence of loops and closures. It seems like
+every release of Dart, we ship more extensions to flow analysis because users
+keep expecting it to be smarter and smarter.&lt;/p&gt;
+
+&lt;p&gt;Also, it isn&amp;rsquo;t sound in many cases that users expect to work. Once the variable
+that you&amp;rsquo;re type testing can escape the current function, the compiler generally
+can&amp;rsquo;t prove that it won&amp;rsquo;t be mutated between when you test its type and when you
+use it as the more precise type later.&lt;/p&gt;
+
+&lt;p&gt;Overall, my feeling is that it works out pretty well for Dart, but it&amp;rsquo;s a large
+sort of messy feature that feels a little too magical. A goal with my hobby
+language is that you should be able to have the whole language loaded into your
+head and rarely be surprised by what it does. Flow analysis in Dart still fairly
+often surprises me and I &lt;em&gt;literally work on the language full-time&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s also the question of what you promote the tested variable &lt;em&gt;to&lt;/em&gt;. In my
+language as it currently stands, there is no subtyping. &lt;code&gt;MeleeWeapon&lt;/code&gt; isn&amp;rsquo;t a
+subtype of &lt;code&gt;Weapon&lt;/code&gt;, it&amp;rsquo;s a case constructor. The &lt;code&gt;weapon is MeleeWeapon&lt;/code&gt; syntax
+looks like a type test, but it&amp;rsquo;s really more like an enum case check.&lt;/p&gt;
+
+&lt;p&gt;So after that test, what type would &lt;code&gt;weapon&lt;/code&gt; have? It would still have to be
+&lt;code&gt;Weapon&lt;/code&gt;. I guess I could make this work by not promoting the &lt;em&gt;type&lt;/em&gt; but by
+having the type checker track an extra &amp;ldquo;known case&amp;rdquo; property for each static
+type and then use that. That might work. But even with that, I worry that it
+would quickly become annoying. Let&amp;rsquo;s say you refactor the above code to:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;checkRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+      &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;c&quot;&gt;# ...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;checkRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Bool&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That no longer works. Inside &lt;code&gt;checkRange()&lt;/code&gt; the compiles has lost track that
+&lt;code&gt;weapon&lt;/code&gt; is always a &lt;code&gt;RangedWeapon&lt;/code&gt;. You could come up with a way to annotate
+that, but now we&amp;rsquo;re back to subtyping and all the complexity it involves.&lt;/p&gt;
+
+&lt;p&gt;So, overall, yes, subtyping and flow analysis is a thing that could work here,
+but I&amp;rsquo;m trying to avoid it because I feel like it&amp;rsquo;s a bigger lump of complexity
+than I want to take on.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;d be more inclined to do sum types and destructuring, even though it feels a
+little weird in an imperative language, then do this kind of complex control
+flow analysis.&lt;/p&gt;
 </description>
     </item>
 

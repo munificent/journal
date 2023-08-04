@@ -247,7 +247,7 @@ doing asynchronous programming][async], they're trying to cope at the library
 level with a problem that the language foisted onto them.
 
 <div class="update">
-<p><em>Update 2021/12/03:</em> 1,5118 async libraries as of today.</p>
+<p><em>Update 2021/12/03:</em> 15,118 async libraries as of today.</p>
 </div>
 
 [async]: https://www.npmjs.com/search?q=async

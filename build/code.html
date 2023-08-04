@@ -6674,6 +6674,165 @@ Once we&#39;ve found an identifier, we scan the rest of it using:
 <p>vgs</p>
 <div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">x</span> <span class="o">=</span> <span class="k">return</span>
 </code></pre></div>
+<h2>2023/08/04/representing-heterogeneous-data</h2>
+
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs">    <span class="k">rec</span> <span class="t">Address</span>
+      <span class="k">var</span> <span class="i">number</span> <span class="t">Int</span>
+      <span class="k">var</span> <span class="i">street</span> <span class="t">String</span>
+      <span class="k">var</span> <span class="i">apartmentNumber</span> <span class="t">Int</span>
+      <span class="k">var</span> <span class="i">city</span> <span class="t">String</span>
+      <span class="k">var</span> <span class="i">zipCode</span> <span class="t">Int</span>
+      <span class="k">var</span> <span class="i">state</span> <span class="t">String</span>
+    <span class="k">end</span>
+</code></pre></div>
+<p>dart</p>
+<div class="highlight"><pre><code class="language-dart" data-lang="dart">    <span class="k">interface</span> <span class="k">class</span> <span class="t">Weapon</span> <span class="p">{}</span>
+
+    <span class="k">class</span> <span class="t">MeleeWeapon</span> <span class="k">implements</span> <span class="t">Weapon</span> <span class="p">{</span>
+      <span class="t">int</span> <span class="i">damage</span><span class="p">;</span>
+
+      <span class="t">MeleeWeapon</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">damage</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="t">RangedWeapon</span> <span class="k">implements</span> <span class="t">Weapon</span> <span class="p">{</span>
+      <span class="t">int</span> <span class="i">minRange</span><span class="p">;</span>
+      <span class="t">int</span> <span class="i">maxRange</span><span class="p">;</span>
+
+      <span class="t">RangedWeapon</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">minRange</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="i">maxRange</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">MeleeWeapon</span>
+  <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">MeleeWeapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="k">end</span>
+
+  <span class="k">var</span> <span class="i">damage</span> <span class="o">=</span> <span class="i">rollDice</span><span class="p">(</span><span class="i">weapon</span><span class="p">.</span><span class="i">damage</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">&lt;=</span> <span class="i">damage</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You kill the monster!&quot;</span><span class="p">)</span>
+    <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="n">0</span>
+  <span class="k">else</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You wound the monster.&quot;</span><span class="p">)</span>
+    <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">-</span> <span class="i">damage</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Weapon</span>
+<span class="k">case</span> <span class="t">MeleeWeapon</span>
+  <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
+<span class="k">case</span> <span class="t">RangedWeapon</span>
+  <span class="k">var</span> <span class="i">minRange</span> <span class="t">Int</span>
+  <span class="k">var</span> <span class="i">maxRange</span> <span class="t">Int</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+  <span class="k">var</span> <span class="i">isInRange</span> <span class="o">=</span> <span class="k">match</span> <span class="i">weapon</span>
+  <span class="k">case</span> <span class="t">MeleeWeapon</span><span class="p">(</span><span class="i">damage</span><span class="p">)</span> <span class="k">then</span> <span class="i">distance</span> <span class="o">==</span> <span class="n">1</span>
+  <span class="k">case</span> <span class="t">RangedWeapon</span><span class="p">(</span><span class="i">min</span><span class="p">,</span> <span class="i">max</span><span class="p">)</span> <span class="k">then</span> <span class="i">distance</span> <span class="o">&gt;=</span> <span class="i">min</span> <span class="k">and</span> <span class="i">distance</span> <span class="o">&lt;=</span> <span class="i">max</span>
+  <span class="k">end</span>
+
+  <span class="k">if</span> <span class="o">!</span><span class="i">isInRange</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="k">end</span>
+
+  <span class="k">var</span> <span class="i">damage</span> <span class="o">=</span> <span class="k">match</span> <span class="i">weapon</span>
+  <span class="k">case</span> <span class="t">MeleeWeapon</span><span class="p">(</span><span class="i">damage</span><span class="p">)</span> <span class="k">then</span> <span class="i">rollDice</span><span class="p">(</span><span class="i">damage</span><span class="p">)</span>
+  <span class="k">case</span> <span class="t">RangedWeapon</span><span class="p">(</span><span class="i">min</span><span class="p">,</span> <span class="i">max</span><span class="p">)</span> <span class="k">then</span> <span class="i">max</span> <span class="o">-</span> <span class="i">min</span>
+  <span class="k">end</span>
+
+  <span class="k">if</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">&lt;=</span> <span class="i">damage</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You kill the monster!&quot;</span><span class="p">)</span>
+    <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="n">0</span>
+  <span class="k">else</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You wound the monster.&quot;</span><span class="p">)</span>
+    <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">-</span> <span class="i">damage</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>c</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
+  <span class="r">WEAPON_MELEE</span><span class="p">,</span>
+  <span class="r">WEAPON_RANGED</span>
+<span class="p">}</span> <span class="t">WeaponType</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="t">WeaponType</span> <span class="i">type</span><span class="p">;</span>
+  <span class="k">union</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="p">{</span>
+      <span class="t">int</span> <span class="i">damage</span><span class="p">;</span>
+    <span class="p">}</span> <span class="i">melee</span><span class="p">;</span>
+    
+    <span class="k">struct</span> <span class="p">{</span>
+      <span class="t">int</span> <span class="i">minRange</span><span class="p">;</span>
+      <span class="t">int</span> <span class="i">maxRange</span><span class="p">;</span>
+    <span class="p">}</span> <span class="i">ranged</span><span class="p">;</span>
+  <span class="p">}</span> <span class="i">as</span><span class="p">;</span>
+<span class="p">}</span> <span class="t">Weapon</span><span class="p">;</span>
+</code></pre></div>
+<p>c</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="t">Weapon</span> <span class="i">weapon</span><span class="p">;</span>
+<span class="i">weapon</span><span class="p">.</span><span class="i">type</span> <span class="o">=</span> <span class="r">WEAPON_MELEE</span><span class="p">;</span>
+<span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">melee</span><span class="p">.</span><span class="i">damage</span> <span class="o">=</span> <span class="n">6</span><span class="p">;</span>
+</code></pre></div>
+<p>c</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="t">Weapon</span> <span class="i">weapon</span><span class="p">;</span>
+<span class="i">weapon</span><span class="p">.</span><span class="i">type</span> <span class="o">=</span> <span class="r">WEAPON_MELEE</span><span class="p">;</span>
+<span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">melee</span><span class="p">.</span><span class="i">damage</span> <span class="o">=</span> <span class="n">6</span><span class="p">;</span>
+
+<span class="i">printf</span><span class="p">(</span><span class="s">&quot;Min range %d</span><span class="e">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">ranged</span><span class="p">.</span><span class="i">minRange</span><span class="p">);</span> <span class="c">// Oops.</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Weapon</span>
+<span class="k">case</span> <span class="t">MeleeWeapon</span>
+  <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
+<span class="k">case</span> <span class="t">RangedWeapon</span>
+  <span class="k">var</span> <span class="i">minRange</span> <span class="t">Int</span>
+  <span class="k">var</span> <span class="i">maxRange</span> <span class="t">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+  <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">MeleeWeapon</span> <span class="k">and</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">or</span>
+      <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span>
+      <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="k">end</span>
+
+  <span class="k">var</span> <span class="i">damage</span> <span class="o">=</span> <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">MeleeWeapon</span> <span class="k">then</span>
+    <span class="i">rollDice</span><span class="p">(</span><span class="i">weapon</span><span class="p">.</span><span class="i">damage</span><span class="p">)</span>
+  <span class="k">else</span>
+    <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span> <span class="o">-</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span>
+  <span class="k">end</span>
+
+  <span class="k">if</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">&lt;=</span> <span class="i">damage</span> <span class="k">then</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You kill the monster!&quot;</span><span class="p">)</span>
+    <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="n">0</span>
+  <span class="k">else</span>
+    <span class="i">print</span><span class="p">(</span><span class="s">&quot;You wound the monster.&quot;</span><span class="p">)</span>
+    <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">-</span> <span class="i">damage</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>vgs</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Weapon</span>
+  <span class="k">var</span> <span class="i">name</span> <span class="t">String</span>
+  <span class="k">var</span> <span class="i">bonus</span> <span class="t">Int</span>
+<span class="k">case</span> <span class="t">MeleeWeapon</span>
+  <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
+<span class="k">case</span> <span class="t">RangedWeapon</span>
+  <span class="k">var</span> <span class="i">minRange</span> <span class="t">Int</span>
+  <span class="k">var</span> <span class="i">maxRange</span> <span class="t">Int</span>
+<span class="k">end</span>
+</code></pre></div>
 </article>
       <nav>
   <div class="nav-first">
@@ -6693,9 +6852,9 @@ Once we&#39;ve found an identifier, we scan the rest of it using:
   </div>
   <div class="nav-second">
     <h2>Categories</h2>
-    <ul><li><a href="/category/code">code</a> <small class='post-count'>68</small></li><li><a href="/category/language">language</a> <small class='post-count'>45</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
+    <ul><li><a href="/category/code">code</a> <small class='post-count'>69</small></li><li><a href="/category/language">language</a> <small class='post-count'>46</small></li><li><a href="/category/magpie">magpie</a> <small class='post-count'>24</small></li><li><a href="/category/c-sharp">c-sharp</a> <small class='post-count'>13</small></li><li><a href="/category/dart">dart</a> <small class='post-count'>13</small></li><li><a href="/category/game-dev">game-dev</a> <small class='post-count'>12</small></li><li><a href="/category/java">java</a> <small class='post-count'>10</small></li><li><a href="/category/cpp">cpp</a> <small class='post-count'>8</small></li><li><a href="/category/design">design</a> <small class='post-count'>7</small></li><li><a href="/category/game-patterns">game-patterns</a> <small class='post-count'>6</small></li><li><a href="/category/parsing">parsing</a> <small class='post-count'>6</small></li><li><a href="/category/roguelike">roguelike</a> <small class='post-count'>6</small></li><li><a href="/category/book">book</a> <small class='post-count'>5</small></li><li><a href="/category/go">go</a> <small class='post-count'>5</small></li><li><a href="/category/personal">personal</a> <small class='post-count'>5</small></li><li><a href="/category/js">js</a> <small class='post-count'>4</small></li><li><a href="/category/c">c</a> <small class='post-count'>3</small></li><li><a href="/category/finch">finch</a> <small class='post-count'>3</small></li><li><a href="/category/python">python</a> <small class='post-count'>3</small></li><li><a href="/category/ruby">ruby</a> <small class='post-count'>3</small></li><li><a href="/category/blog">blog</a> <small class='post-count'>2</small></li><li><a href="/category/f-sharp">f-sharp</a> <small class='post-count'>2</small></li><li><a href="/category/javascript">javascript</a> <small class='post-count'>2</small></li><li><a href="/category/lua">lua</a> <small class='post-count'>2</small></li><li><a href="/category/music">music</a> <small class='post-count'>2</small></li><li><a href="/category/ai">ai</a> <small class='post-count'>1</small></li><li><a href="/category/beta">beta</a> <small class='post-count'>1</small></li><li><a href="/category/game">game</a> <small class='post-count'>1</small></li><li><a href="/category/jasic">jasic</a> <small class='post-count'>1</small></li><li><a href="/category/oop">oop</a> <small class='post-count'>1</small></li><li><a href="/category/optimization">optimization</a> <small class='post-count'>1</small></li><li><a href="/category/oscon">oscon</a> <small class='post-count'>1</small></li><li><a href="/category/politics">politics</a> <small class='post-count'>1</small></li><li><a href="/category/scheme">scheme</a> <small class='post-count'>1</small></li><li><a href="/category/typescript">typescript</a> <small class='post-count'>1</small></li><li><a href="/category/visualization">visualization</a> <small class='post-count'>1</small></li></ul>
 
-    <p class="archive">All <a href="/archive">79 articles</a>&hellip;</p>
+    <p class="archive">All <a href="/archive">80 articles</a>&hellip;</p>
 
     <p>This blog is built using a bespoke static site generator. The source repo
     is <a href="https://github.com/munificent/journal">here</a>.</p>

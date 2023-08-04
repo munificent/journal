@@ -4,13 +4,426 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>2023-01-15T20:11:27.863091Z</updated>
+  <updated>2023-08-04T16:30:01.084648Z</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
     <email>robert@stuffwithstuff.com</email>
   </author>
 
+
+  <entry>
+    <id>http://journal.stuffwithstuff.com/2023/08/04/representing-heterogeneous-data</id>
+    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2023/08/04/representing-heterogeneous-data/"/>
+    <title>Representing Heterogeneous Data</title>
+    <published>2023-08-04T07:00:00.000Z</published>
+    <updated>2023-08-04T07:00:00.000Z</updated>
+    <author>
+      <name>Robert Nystrom</name>
+      <uri>http://journal.stuffwithstuff.com/</uri>
+    </author>
+    <content type="html">&lt;p&gt;As I mentioned in the &lt;a href=&quot;/2023/01/03/type-checking-if-expressions/&quot;&gt;last post&lt;/a&gt;, I&amp;rsquo;m working on taking my little videogame
+scripting language and turning it into a statically typed one. As much as
+possible, I&amp;rsquo;m trying to make the language simple and familiar. But sometimes
+those goals are in opposition and the most familiar solution to a problem is
+kind of a mess.&lt;/p&gt;
+
+&lt;p&gt;So, I&amp;rsquo;m also exploring novel approaches and delving deeper into programming
+language history to scavenge forgotten ideas.&lt;/p&gt;
+
+&lt;h2&gt;The heterogeneous data problem&lt;/h2&gt;
+
+&lt;p&gt;One problem every language has to solve is giving users a way to represent
+&lt;em&gt;heterogeneous data&lt;/em&gt;. By that, I mean:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Data that might or might not be present.&lt;/strong&gt; Imagine you have a record for
+storing a street address:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Address&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;street&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;apartmentNumber&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;city&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;zipCode&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But some addresses don&amp;rsquo;t have apartment numbers. How do you store the
+apartment number when an address has one but also support its absence?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Data that might be in one of several different forms.&lt;/strong&gt; You&amp;rsquo;re making a
+game where a hero can wield weapons. Melee weapons like swords have a single
+number for how much damage they do. Ranged weapons like crossbows have a
+pair of numbers for the minimum and maximum range they can reach. How do
+different kinds of weapons have different fields?&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These are two sides of the exact same coin. You can treat optional data as data
+that can be in one of two forms: present with an associated value or absent with
+no value attached. Functional languages with an &lt;a href=&quot;https://en.wikipedia.org/wiki/Option_type&quot;&gt;option or maybe type&lt;/a&gt; do
+exactly that: The language directly supports data that can have one of multiple
+forms, and they model absent data using that.&lt;/p&gt;
+
+&lt;p&gt;Conversely, you could model data being in one of several different forms by
+having separate fields for all possible forms it could be in. At any point in
+time, only one of the fields has a value and the others are all absent. If
+you&amp;rsquo;ve ever found yourself building a struct or class and writing a comment that
+says &amp;ldquo;If this field is blah then this other field will be null.&amp;rdquo; then you&amp;rsquo;ve
+taken this path (and probably felt a little gross doing it).&lt;/p&gt;
+
+&lt;h2&gt;What other languages do&lt;/h2&gt;
+
+&lt;p&gt;I don&amp;rsquo;t know if broad language tours are your thing, but so much of my job
+working on &lt;a href=&quot;https://dart.dev&quot;&gt;Dart&lt;/a&gt; involves researching how other languages solve a problem that
+I can&amp;rsquo;t help myself anymore.&lt;/p&gt;
+
+&lt;p&gt;There are a handful of solutions to the problem. I&amp;rsquo;ll just throw out the ones I
+know:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Null.&lt;/strong&gt; The &lt;a href=&quot;https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/&quot;&gt;most famously maligned&lt;/a&gt; approach is to allow any
+reference variable to potentially refer to &amp;ldquo;null&amp;rdquo;, &amp;ldquo;nil&amp;rdquo;, or nothing. This
+means every reference type can directly also represent an absent value. Of
+course, the problem is that many data fields &lt;em&gt;aren&amp;rsquo;t&lt;/em&gt; heterogeneous and
+&lt;em&gt;should&lt;/em&gt; always be present. If you make every single reference nullable,
+you&amp;rsquo;ve lost the ability to distinguish ones that can be absent from ones
+that really shouldn&amp;rsquo;t be.&lt;/p&gt;
+
+&lt;p&gt;This is why many newer statically typed languages either don&amp;rsquo;t support
+null at all (Rust and most other statically typed functional languages) or
+support &lt;a href=&quot;https://en.wikipedia.org/wiki/Nullable_type&quot;&gt;non-nullable types&lt;/a&gt; (Dart, Kotlin, and TypeScript).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Variant types.&lt;/strong&gt; A &amp;ldquo;variant&amp;rdquo; type is a type that can hold a value of one
+of multiple different types. You can think of nullable references as a
+limited variant type that can hold either a value of one specific type or
+the special &lt;code&gt;null&lt;/code&gt; value but that&amp;rsquo;s it. Some languages have looser variants
+that let you store values of any type in the same variable.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Untagged unions.&lt;/strong&gt; C lets you define a data structure whose fields all
+share overlapping memory. If you have a few different pieces of data that
+are &lt;em&gt;disjoint&lt;/em&gt;&amp;mdash;you should only ever have one of them and not the others&amp;mdash;then this avoids the memory overhead of storing them all separately.&lt;/p&gt;
+
+&lt;p&gt;However, in C, the language itself doesn&amp;rsquo;t keep track of &lt;em&gt;which&lt;/em&gt; piece of
+data you have in the union. It will freely let you write one field and then
+read out another and it will happily just reinterpret the bits in memory as
+that other type. Efficient, yes. Safe? No.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Sum types.&lt;/strong&gt; Functional languages going all the way back to &lt;a href=&quot;https://en.wikipedia.org/wiki/ML_(programming_language)&quot;&gt;ML&lt;/a&gt; have a
+feature also sometimes confusingly called &amp;ldquo;unions&amp;rdquo; that is fairly different.
+Again, you have an object that can store one of a few different kinds of
+data. But the language also stores a &lt;em&gt;tag&lt;/em&gt; in there so that it knows at
+runtime which piece of data you have. (This is why they&amp;rsquo;re also called
+&amp;ldquo;tagged unions&amp;rdquo; or &amp;ldquo;discriminated unions&amp;rdquo;.)&lt;/p&gt;
+
+&lt;p&gt;The language uses &lt;a href=&quot;https://dart.dev/language/patterns#algebraic-data-types&quot;&gt;pattern matching&lt;/a&gt; to cleverly prevent you from
+accessing the data as the wrong type.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Subtyping.&lt;/strong&gt; The object-oriented dual to sum types is subtyping: either
+inheritance or interface implementation. In an object-oriented language, we
+could model our weapon example like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Code that wants to work with weapons generally uses the &lt;code&gt;Weapon&lt;/code&gt; supertype.
+The two subtypes for melee and ranged weapons each store the fields they
+need. If you want to go all the way to an object-oriented style, these
+fields would be private and then you&amp;rsquo;d have abstract methods in &lt;code&gt;Weapon&lt;/code&gt;
+that are overridden in the subclasses to use them.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s a complex, heavyweight approach, but a powerful and flexible one.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There may be a couple of other weirder language features you can use to model
+varied data, but I think these are the big ones. Languages tend to pick and
+choose from this list:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Dynamically typed languages&lt;/strong&gt; essentially treat &lt;em&gt;all&lt;/em&gt; variables as variant
+types. And all the ones I know also go ahead and allow null too. If you&amp;rsquo;re
+not going to have any static checking anyway, you may as well be maximally
+permissive, I guess.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Statically typed functional languages&lt;/strong&gt; lean really hard on sum types.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Object-oriented languages&lt;/strong&gt; obviously primarily use subtyping, though most
+also have nullable reference types.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;C&lt;/strong&gt; makes pointer types nullable and supports untagged unions. It doesn&amp;rsquo;t
+have (checked) variants or subtyping, but it can approximate both by
+allowing pointers to be cast to different types. &lt;strong&gt;C++&lt;/strong&gt; takes everything C
+has and also explicitly supports subtyping.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Newer, bigger multi-paradigm languages like C# and Swift tend to take just about
+all of the approaches.&lt;/p&gt;
+
+&lt;h2&gt;Whither for my little language?&lt;/h2&gt;
+
+&lt;p&gt;OK, so what&amp;rsquo;s the right approach for my aspirationally simple and elegant
+statically typed game scripting language?&lt;/p&gt;
+
+&lt;p&gt;I quite like object-oriented programming in general, but subtyping adds a &lt;em&gt;lot&lt;/em&gt;
+of complexity to a static type system, so my current plan is to not have
+subtyping in the language at all. That rules out that approach.&lt;/p&gt;
+
+&lt;p&gt;My goal is for the language to be fairly high level and expressive. It&amp;rsquo;s
+supposed to be a language that makes making games &lt;em&gt;fun&lt;/em&gt;, not necessarily a
+high-performance machine for engineering giant AAA games. I want you to have a
+good time tinkering on pixelly 2D games, not write the next Unreal Engine in it.
+To that end, the language is garbage-collected. That means memory safety, which
+rules out untagged unions.&lt;/p&gt;
+
+&lt;p&gt;Back when this language was dynamically typed, it had &lt;code&gt;nil&lt;/code&gt;, so that&amp;rsquo;s an
+obvious approach. But I&amp;rsquo;ve spent, like, &lt;a href=&quot;/2011/10/29/a-proposal-for-null-safety-in-dart/&quot;&gt;way too much of my time&lt;/a&gt;
+&lt;a href=&quot;https://medium.com/dartlang/announcing-dart-3-53f065a10635&quot;&gt;rooting out nullable references from Dart&lt;/a&gt; and the last thing I want
+to do with my hobby project is to go back to square one.&lt;/p&gt;
+
+&lt;p&gt;That basically just leaves sum types and variant types. Given that my language
+is statically typed and not object-oriented, sum types are the obvious approach.
+Everyone who uses sum types loves them, myself included. Algebraic datatypes are
+just &lt;em&gt;cool.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;And, in fact, I went ahead and implemented a protype of sum types and pattern
+matching and destructuring in my language. It worked. It was&amp;hellip; just OK. To
+explain why requires a little context&lt;/p&gt;
+
+&lt;h2&gt;An imperative, procedural language&lt;/h2&gt;
+
+&lt;p&gt;My language is unabashedly imperative. I &lt;em&gt;like&lt;/em&gt; imperative programming,
+especially for scripting little games. Games are giant balls of mutable state.
+I&amp;rsquo;ve watched my kids and many others learn to program, and imperatively
+modifying stuff seems to be a natural way to think about defining a process.&lt;/p&gt;
+
+&lt;p&gt;When you read a recipe for cake, you don&amp;rsquo;t see steps like: &amp;ldquo;Produce a new bowl
+of batter which is the previous bowl of batter and 2 cups of sugar.&amp;rdquo; It just
+says &amp;ldquo;Add 2 cups of sugar to the bowl.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Now, I know all of the problems with mutation of state and imperative code when
+programming in the large. I get it. But this is supposed to be a fun little
+language for fun little games and, to me, imperative programming fits that to a
+tee.&lt;/p&gt;
+
+&lt;p&gt;The basic vibe I have for the language is similar to Pascal, C, or BASIC: In
+other words, a classic procedural language. Structures and functions. It looks
+like this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;rollDice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You kill the monster!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You wound the monster.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What&amp;rsquo;s cool about simple procedural code is that even though I have no idea what
+language you know and you &lt;em&gt;certainly&lt;/em&gt; have never programmed in &lt;em&gt;this&lt;/em&gt; one, I&amp;rsquo;m
+still pretty confident that you understand this code.&lt;/p&gt;
+
+&lt;h2&gt;With sum types&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see how it looks with something like sum types:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isInRange&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;min&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;max&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isInRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;rollDice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;min&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You kill the monster!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You wound the monster.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The sort of weird &lt;code&gt;rec&lt;/code&gt; syntax is defining a sum type, &lt;code&gt;Weapon&lt;/code&gt;, with type
+constructors &lt;code&gt;MeleeWeapon&lt;/code&gt; and &lt;code&gt;RangedWeapon&lt;/code&gt;. I&amp;rsquo;m still noodling on the syntax.&lt;/p&gt;
+
+&lt;p&gt;Now, the code here works. And it&amp;rsquo;s safe. The compiler and the structure of the
+pattern matching code itself prevent you from accessing the wrong fields from a
+weapon of a different kind. That&amp;rsquo;s cool.&lt;/p&gt;
+
+&lt;p&gt;But it&amp;rsquo;s so much &lt;em&gt;weirder&lt;/em&gt; than the previous code. In a procedural language, the
+idiomatic way to access fields on records is simply &lt;code&gt;record.field&lt;/code&gt;. That syntax
+is in almost every programming language all the way back to Algol. But once you
+hop over to sum types, you lose that syntax entirely and have to instead sort of
+&amp;ldquo;invert&amp;rdquo; the code and use pattern matching and destructuring.&lt;/p&gt;
+
+&lt;p&gt;I do love pattern matching and destructuring&amp;mdash;I just spent the past year of my
+life &lt;a href=&quot;https://github.com/dart-lang/language/blob/main/accepted/3.0/patterns/feature-specification.md&quot;&gt;adding it to Dart&lt;/a&gt;. But for &lt;em&gt;this&lt;/em&gt; language, I&amp;rsquo;m pushing really
+hard on simplicity. If possible, I don&amp;rsquo;t want &lt;em&gt;two&lt;/em&gt; different ways to access
+state on a value, depending on whether the field is case-specific or not.&lt;/p&gt;
+
+&lt;p&gt;More to the point, there&amp;rsquo;s no graceful way to handle &lt;em&gt;mutable&lt;/em&gt; sum type fields
+using pattern matching. SML eschews mutability in general and then works around
+it by allowing you to define explicit mutable ref types. But that&amp;rsquo;s definitely
+not how my language rolls.&lt;/p&gt;
+
+&lt;h2&gt;Variant records&lt;/h2&gt;
+
+&lt;p&gt;There is &lt;em&gt;one&lt;/em&gt; other approach to heterogeneous data that I found that I didn&amp;rsquo;t
+put in the list up there because, as far as I can tell, it&amp;rsquo;s basically a dead
+end in the evolutionary history of programming languages.&lt;/p&gt;
+
+&lt;p&gt;Some versions of Pascal have a thing called &amp;ldquo;variant records&amp;rdquo;. A record in
+Pascal is your basic &amp;ldquo;collection of fields&amp;rdquo; struct type. A &lt;em&gt;variant&lt;/em&gt; record says
+that &lt;em&gt;some&lt;/em&gt; of those fields are only accessible when the record is one of a few
+different enumerated states.&lt;/p&gt;
+
+&lt;p&gt;In C, it&amp;rsquo;s common to wrap an untagged union in a struct along with a tag enum
+indicating which branch of the union is active:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;r&quot;&gt;WEAPON_MELEE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;r&quot;&gt;WEAPON_RANGED&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;WeaponType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;t&quot;&gt;WeaponType&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;union&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;melee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;ranged&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using it looks something like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;r&quot;&gt;WEAPON_MELEE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;melee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A variant record in Pascal (as I understand it from the half dozen ancient
+slideshows I&amp;rsquo;ve been able to find about it) essentially models that pattern
+directly.&lt;/p&gt;
+
+&lt;p&gt;The cool thing about this feature is that the variant-specific fields are
+accessed using the same familiar field access syntax used everywhere else. That
+also means variant-specific fields can be mutable.&lt;/p&gt;
+
+&lt;p&gt;Of course, the &lt;em&gt;not&lt;/em&gt; cool thing about using that same field syntax is that
+there&amp;rsquo;s nothing preventing you from accessing the &lt;em&gt;wrong&lt;/em&gt; variant field:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;r&quot;&gt;WEAPON_MELEE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;melee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;i&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Min range %d&lt;/span&gt;&lt;span class=&quot;e&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;ranged&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// Oops.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There is a type tag, but the language doesn&amp;rsquo;t know and doesn&amp;rsquo;t check it. This is
+definitely true in C and I think true in Pascal. (It&amp;rsquo;s always hard to talk about
+Pascal definitively because there&amp;rsquo;s no &amp;ldquo;Pascal&amp;rdquo;, just a huge family of
+loosely-related Pascal-ish languages.)&lt;/p&gt;
+
+&lt;p&gt;In a memory safe language like mine, I definitely don&amp;rsquo;t want users to be able
+to reinterpret memory. But that&amp;rsquo;s a solvable problem.&lt;/p&gt;
+
+&lt;h2&gt;Record cases&lt;/h2&gt;
+
+&lt;p&gt;Which, finally, brings us to the feature I designed for my language. It&amp;rsquo;s very
+close to variant records in Pascal. The type declaration looks just like the
+sum type example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The difference is that you don&amp;rsquo;t need to rely on pattern matching to access the
+variant fields. They&amp;rsquo;re just fields:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+      &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
+      &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;rollDice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You kill the monster!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You wound the monster.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Of course, you lose the compile-time safety that pattern matching gives you
+where you can&amp;rsquo;t access fields of the wrong type. But we don&amp;rsquo;t need to go all the
+way to C&amp;rsquo;s level of unsafety. Instead, when you access a case-specific field on
+a record, if the record&amp;rsquo;s type tag is set to a different case, the access throws
+a &lt;em&gt;runtime&lt;/em&gt; error. This preserves memory safety.&lt;/p&gt;
+
+&lt;p&gt;This is a real trade-off. The feature I have here provides strictly less static
+safety than using sum types. There is a slight performance cost to checking the
+type tag when accessing case-specific fields. In return, you get simpler, more
+familiar syntax for working with case-specific fields, including mutable ones.&lt;/p&gt;
+
+&lt;p&gt;Also, it allows a single record to have a mixture of shared and case-specific
+fields:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;bonus&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;bonus&lt;/code&gt; can be accessed on all &lt;code&gt;Weapon&lt;/code&gt; instances, but the
+other fields are case specific. It sort of combines product and sum types into a
+single construct. I&amp;rsquo;ve found this to be really handy in practice.&lt;/p&gt;
+
+&lt;p&gt;I haven&amp;rsquo;t decided if I&amp;rsquo;m totally sold on this feature yet. But in the
+(admittedly small) amount of example code I&amp;rsquo;ve written using it so far, it seems
+to feel pretty nice. For a small game scripting language, I think it may strike
+a decent balance between static safety and simplicity.&lt;/p&gt;</content>
+  </entry>
 
   <entry>
     <id>http://journal.stuffwithstuff.com/2023/01/03/type-checking-if-expressions</id>
@@ -4253,7 +4666,7 @@ doing asynchronous programming&lt;/a&gt;, they&amp;rsquo;re trying to cope at th
 level with a problem that the language foisted onto them.&lt;/p&gt;
 
 &lt;div class=&quot;update&quot;&gt;
-&lt;p&gt;&lt;em&gt;Update 2021/12/03:&lt;/em&gt; 1,5118 async libraries as of today.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Update 2021/12/03:&lt;/em&gt; 15,118 async libraries as of today.&lt;/p&gt;
 &lt;/div&gt;
 
 &lt;h2&gt;I promise the future is better&lt;/h2&gt;
@@ -4469,400 +4882,6 @@ eliminated.&lt;/p&gt;
 awesome its concurrency story is because it has asynchronous APIs, now you&amp;rsquo;ll
 know why I start grinding my teeth. Because it means you&amp;rsquo;re right back to red
 functions and blue ones.&lt;/p&gt;</content>
-  </entry>
-
-  <entry>
-    <id>http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes</id>
-    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/"/>
-    <title>Rooms and Mazes: A Procedural Dungeon Generator</title>
-    <published>2014-12-21T08:00:00.000Z</published>
-    <updated>2014-12-21T08:00:00.000Z</updated>
-    <author>
-      <name>Robert Nystrom</name>
-      <uri>http://journal.stuffwithstuff.com/</uri>
-    </author>
-    <content type="html">&lt;style&gt;
-canvas {
-  background: #222;
-  display: inline-block;
-  max-width: 100%;
-}
-&lt;/style&gt;
-
-&lt;p&gt;Several months ago I promised a follow-up to my previous blog post about
-&lt;a href=&quot;/2014/07/15/a-turn-based-game-loop/&quot;&gt;turn-based game loops&lt;/a&gt; in &lt;a href=&quot;https://github.com/munificent/hauberk&quot;&gt;my roguelike&lt;/a&gt;. Then I got
-completely sidetracked by &lt;a href=&quot;/2014/11/03/bringing-my-web-book-to-print-and-ebook/&quot;&gt;self-publishing&lt;/a&gt; &lt;a href=&quot;/2014/11/20/how-my-book-launch-went/&quot;&gt;my book&lt;/a&gt;, &lt;a href=&quot;http://gameprogrammingpatterns.com/&quot;&gt;&lt;em&gt;Game
-Programming Patterns&lt;/em&gt;&lt;/a&gt;, and forgot all about it. I totally left you
-hanging.&lt;/p&gt;
-
-&lt;p&gt;Well, I finally got some time to think about my roguelike again and today, I&amp;rsquo;m
-here to&amp;hellip; keep you hanging. Alas, you are at the mercy of my wandering
-attention span! Instead of game loops, today we&amp;rsquo;re going to talk about possibly
-the most fun and challenging part of making a roguelike: generating dungeons!&lt;/p&gt;
-
-&lt;p&gt;Go ahead and click the little box below to see what we end up with:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;enchilada&quot; width=&quot;570&quot; height=&quot;390&quot;&gt;Sorry, you need canvas
-support for this demo.&lt;/canvas&gt;
-&lt;figcaption&gt;Click it again to restart it.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Pretty neat, huh? If you want to skip the prose, the code is &lt;a href=&quot;https://github.com/munificent/hauberk/blob/db360d9efa714efb6d937c31953ef849c7394a39/lib/src/content/dungeon.dart&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;One of my earliest memories of computing is a maze generator running on my
-family&amp;rsquo;s Apple IIe. It filled the screen with a grid of green squares, then
-incrementally cut holes in the walls. Eventually, every square of the grid was
-connected and the screen was filled with a complete, perfect maze.&lt;/p&gt;
-
-&lt;p&gt;My little home computer could create something that had deep structure&amp;mdash;every
-square of the maze could be reached from any other&amp;mdash;and yet it seemed to be
-chaotic&amp;mdash;it carved at random and every maze was different. This was enough to
-blow my ten-year-old mind. It still kind of does today.&lt;/p&gt;
-
-&lt;h2&gt;What&amp;rsquo;s in a dungeon?&lt;/h2&gt;
-
-&lt;p&gt;Procedural generation&amp;mdash;having the game build stuff randomly instead of using
-hand-authored content&amp;mdash;is amazing when it works well. You get a ton of
-replayability because the game is different every time. As the person
-implementing the game, you also get the critical feature of not knowing what
-you&amp;rsquo;re going to get even though you wrote the code. The game can surprise &lt;em&gt;you&lt;/em&gt;
-too.&lt;/p&gt;
-
-&lt;p&gt;People get into procedural generation because it seems easier. Hand-authoring
-content is obviously a lot of work. If you want your game to have a hundred
-levels, you have to make a hundred things. But make one little random level
-generator and you can have a hundred levels, a thousand, or a million, for free!&lt;/p&gt;
-
-&lt;p&gt;Alas, it doesn&amp;rsquo;t &lt;em&gt;quite&lt;/em&gt; work out that way. You see, &lt;em&gt;defining the procedure&lt;/em&gt; is
-a hell of a lot harder than just sitting down and banging out some content. You
-have to take some very nebulous, artistic chunk of your brain, figure out
-precisely what it&amp;rsquo;s doing, and translate that to code. You&amp;rsquo;re coding a
-simulation of yourself.&lt;/p&gt;
-
-&lt;p&gt;It must balance a number of technical and aesthetic constraints. For mine, I focused on:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;It needs to be &lt;strong&gt;fairly efficient.&lt;/strong&gt; The generator only runs when the player
-enters a new level, so it doesn&amp;rsquo;t have to be &lt;em&gt;super&lt;/em&gt; fast, but I still don&amp;rsquo;t
-want a several second pause giving the player time to question whether they
-should be playing a game or doing something more productive with their life.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The dungeon needs to be &lt;strong&gt;connected.&lt;/strong&gt; Like the mazes on my old green-screen
-Apple, that means from any point in the dungeon, there is a way&amp;mdash;possibly
-circuitous&amp;mdash;to any other point.&lt;/p&gt;
-
-&lt;p&gt;This is vital because if player has to complete a quest like &amp;ldquo;find the magic
-chalice&amp;rdquo; or &amp;ldquo;kill the cockatrice&amp;rdquo;, it&amp;rsquo;s pretty cruel if the dungeon drops
-that in some walled-off room the player can&amp;rsquo;t get to. It also avoids wasting
-time generating and populating areas the player can never see.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Further, I want dungeons to &lt;strong&gt;not be perfect.&lt;/strong&gt; &amp;ldquo;Perfect&amp;rdquo; in the context of
-mazes and graphs (which are synonymous) means there is &lt;em&gt;only one&lt;/em&gt; path
-between any two points. If you flatten out all of the windy passages, you&amp;rsquo;ll
-discover your twisty maze is really just a tree all crumpled up. Passageways
-branch but never merge. &lt;em&gt;Im&lt;/em&gt;-perfect mazes have loops and cycles&amp;mdash;multiple
-paths from A to B.&lt;/p&gt;
-
-&lt;p&gt;This is a gameplay constraint, not a technical one. You could make a
-roguelike with perfect dungeons, and many simple roguelikes do that because
-generators for those are easier to design and implement.&lt;/p&gt;
-
-&lt;p&gt;But I find them less fun to play. When you hit a dead end (which is often),
-you have to do a lot of backtracking to get to a new area to explore. You
-can&amp;rsquo;t circle around to avoid certain enemies, or sneak out a back passage.
-Neither can the bad guys, for that matter.&lt;/p&gt;
-
-&lt;p&gt;Fundamentally, games are about making decisions from a set of alternatives.
-At a literal level, perfect dungeons only give you one path to choose from.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;I want &lt;strong&gt;open rooms.&lt;/strong&gt; I could make dungeons just be nothing but mazes of
-narrow passages, but then you could never get surrounded by a horde of
-monsters. It would feel claustrophic and kill a bunch of interesting combat
-tactics.&lt;/p&gt;
-
-&lt;p&gt;Wide open areas are critical for area effect spells, and big dramatic
-battles. They also provide space for interesting decorations and themed
-areas. Vaults, pits, traps, treasure rooms, etc. Rooms are the high points
-of the hero&amp;rsquo;s journey.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;I want &lt;strong&gt;passageways.&lt;/strong&gt; At the same time, I don&amp;rsquo;t want the dungeon to &lt;em&gt;just&lt;/em&gt;
-be rooms. There are some games that create levels this way where doors
-directly join room to room. It works OK, but I find it a bit monotonous. I
-like the player feeling confined part of the time, and having narrow
-corridors that the player can draw monsters into is a key tactic in the
-game.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;All of this needs to be &lt;strong&gt;tunable.&lt;/strong&gt; Many roguelikes have one huge
-multi-floor dungeon where depths vary in difficulty but not much else. My
-game is different. It has a number of different &lt;em&gt;areas&lt;/em&gt;. Each has its own
-look and feel. Some may be small and cramped, others spacious and orderly.&lt;/p&gt;
-
-&lt;p&gt;I solve this partially by having multiple distinct dungeon generation
-algorithms. Outdoor areas use an entirely different process. (I should
-probably write about that too sometime. Look, another unfulfilled promise!)
-But coding a new dungeon generator from scratch for &lt;em&gt;every&lt;/em&gt; area is a huge
-time sink. Instead, I want the generator to have a bunch of knobs and levers
-I can tweak so I can make a number of areas that share the same code but
-have their own feel.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;A room with a view&lt;/h2&gt;
-
-&lt;p&gt;I&amp;rsquo;ve been working on this game pretty much forever (it&amp;rsquo;s gone through four
-different implementation languages!) and I&amp;rsquo;ve tried a number of different
-dungeon generators. My main source of inspiration is a game called &lt;a href=&quot;http://rephial.org/&quot;&gt;Angband&lt;/a&gt;.
-The only thing I&amp;rsquo;ve sunk more of my life into than working on my game is playing
-that one.&lt;/p&gt;
-
-&lt;p&gt;Angband is fantastically old. When it forked off of Moria, Nancy Kerrigan had
-just taken a round of melee damage from a club-wielding troll. On machines of
-that time, it was much harder to make a fast dungeon generator, and Angband&amp;rsquo;s is
-pretty simple:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Sprinkle a bunch of randomly located, non-overlapping rooms.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Draw random corridors to connect them.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;To ensure rooms don&amp;rsquo;t overlap, I just discard a room if it collides with any
-previously placed one. To avoid a possible infinite loop, instead of trying
-until a certain number of rooms are successfully &lt;em&gt;placed&lt;/em&gt;, I do a fixed number
-of &lt;em&gt;attempts&lt;/em&gt; to place rooms. Failure becomes more common as the dungeon gets
-fuller&amp;mdash;after all, you can only fit so many rooms in a given area&amp;mdash;but
-tuning this gives you some control over room density, like so:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;rooms&quot; width=&quot;570&quot; height=&quot;390&quot;&gt;Sorry, you need canvas support for this demo.&lt;/canvas&gt;
-&lt;label for=&quot;attempts&quot;&gt;Attempts:&lt;/label&gt;
-&lt;input type=&quot;range&quot; id=&quot;attempts&quot; min=&quot;10&quot; value=&quot;200&quot; max=&quot;1000&quot;&gt;
-&lt;output for=&quot;attempts&quot; id=&quot;attempts-output&quot;&gt;200&lt;/output&gt;
-&lt;/figure&gt;
-
-&lt;h2&gt;A dark and twisty passageway&lt;/h2&gt;
-
-&lt;p&gt;Most of the dungeon generators I&amp;rsquo;ve written start with this. The hard part, by
-far, is making good passageways to connect them. That&amp;rsquo;s really what this post is
-about&amp;mdash;a neat way to solve that problem.&lt;/p&gt;
-
-&lt;p&gt;Angband&amp;rsquo;s solution is brute force but surprisingly effective. It picks a pair of
-rooms&amp;mdash;completely ignoring how far apart they are&amp;mdash;and starts a passageway
-that wanders randomly from one (hopefully) to the other. It&amp;rsquo;s got a few clever
-checks to keep things from overlapping too much but passageways can and do cut
-through other rooms, cross other passages or dead end.&lt;/p&gt;
-
-&lt;p&gt;I tried implementing that a number of times but (likely failures on my part)
-never got to something I really liked. The corridors I ended up with always
-looked too straight, or overlapped other stuff in unattractive ways.&lt;/p&gt;
-
-&lt;p&gt;Then, a few months ago, I stumbled onto a &lt;a href=&quot;http://www.reddit.com/r/roguelikedev/comments/2brhl8/screenshot_saturday_08/cj87umz&quot;&gt;description of a dungeon
-generator&lt;/a&gt; by &lt;a href=&quot;http://www.reddit.com/user/FastAsUcan&quot;&gt;/u/FastAsUcan&lt;/a&gt; on the &lt;a href=&quot;http://www.reddit.com/r/roguelikedev/&quot;&gt;/r/roguelikedev&lt;/a&gt; subreddit. His
-generator, &lt;a href=&quot;http://www.odedwelgreen.com/karcero/&quot;&gt;Karcero&lt;/a&gt;, is based on &lt;a href=&quot;http://weblog.jamisbuck.org/&quot;&gt;Jamis Buck&amp;rsquo;s&lt;/a&gt; dungeon generator. If
-you&amp;rsquo;ve ever done any procedural dungeon generation, you know&amp;mdash;or should
-know&amp;mdash;who Buck is. He&amp;rsquo;s got a ton of great articles on random mazes.&lt;/p&gt;
-
-&lt;p&gt;Years ago, I remember seeing an actual &lt;a href=&quot;http://www.myth-weavers.com/generate_dungeon.php&quot;&gt;dungeon generator&lt;/a&gt; he wrote for
-use with pen-and-paper Dungeons &amp;amp; Dragons. Unlike most of his maze stuff, this
-had actual rooms, and the results looked great.&lt;/p&gt;
-
-&lt;p&gt;But, at the time, I didn&amp;rsquo;t know how it &lt;em&gt;worked&lt;/em&gt;. How do you go from mazes to
-open winding corridors and rooms? I tucked this open question away in the corner
-of my mind and immediately forgot about it.&lt;/p&gt;
-
-&lt;p&gt;The post by FastAsUcan provides the answer. It works like so:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Make a perfect maze. There are a number of different algorithms for this,
-but they&amp;rsquo;re all fairly straightforward.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Make the maze &lt;em&gt;sparse&lt;/em&gt;. Find dead end passages and fill them back in with
-solid rock.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pick some of the remaining dead ends and cut holes in them to adjacent
-walls. This makes the maze imperfect. (Remember, this is a good thing!)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Create rooms and find good locations to place them. &amp;ldquo;Good&amp;rdquo; here means not
-overlapping the maze but &lt;em&gt;near&lt;/em&gt; it so you can add a door and connect it.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The magic step, and the piece I was missing, is &lt;em&gt;sparseness&lt;/em&gt;. A normal maze
-fills every single square of the world, leaving no areas where you can fit a
-room. The trick that Jamis and FastAsUcan do here is to carve the whole maze and
-then &lt;em&gt;uncarve&lt;/em&gt; the dead ends.&lt;/p&gt;
-
-&lt;p&gt;Doing that is actually pretty easy. A dead end is just a tile that has walls on
-three sides. When you find one of those, you fill that tile back in. That may in
-turn make the tile it connects to a dead end. Keep doing this until you run out
-of dead ends and you&amp;rsquo;ll end up with lots of solid area where rooms can be
-placed.&lt;/p&gt;
-
-&lt;p&gt;Of course, if you do that starting with a perfect maze and run to completion,
-you&amp;rsquo;ll erase the whole maze! A perfect maze has no loops so &lt;em&gt;everything&lt;/em&gt; is a
-dead end if you follow passages long enough. Jamis&amp;rsquo; solution is to not erase
-&lt;em&gt;all&lt;/em&gt; of the dead ends, just some. It stops after a while. Something like this:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;dead-ends&quot; width=&quot;570&quot; height=&quot;390&quot;&gt;Sorry, you need canvas
-support for this demo.&lt;/canvas&gt;
-&lt;label for=&quot;dead-end-open&quot;&gt;Corridors to leave:&lt;/label&gt;
-&lt;input type=&quot;range&quot; id=&quot;dead-end-open&quot; min=&quot;1&quot; value=&quot;1000&quot; max=&quot;3000&quot;&gt;
-&lt;output for=&quot;dead-end-open&quot; id=&quot;dead-end-open-output&quot;&gt;1000&lt;/output&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;Once you do that, you can start placing rooms. The process Jamis uses for this
-is interesting. He picks a room size and then tries to place it on every single
-location in the dungeon. Any location that overlaps a room or passageway is
-discarded. The remaining positions are &amp;ldquo;ranked&amp;rdquo; where rooms that are near
-passageways are better. It then picks the best position and places the room
-there, and puts some doors between the room and the passage.&lt;/p&gt;
-
-&lt;p&gt;Rinse, lather, repeat and you&amp;rsquo;ve got yourself a dungeon.&lt;/p&gt;
-
-&lt;h2&gt;Rooms &lt;em&gt;then&lt;/em&gt; mazes&lt;/h2&gt;
-
-&lt;p&gt;I went ahead and coded this up exactly as described. It went OK, but I found
-that the process of placing rooms was pretty slow. It works well for dungeons of
-the small size you do for a tabletop role-playing game, but not so much at the
-scale of a computer roguelike.&lt;/p&gt;
-
-&lt;p&gt;So, I did some tinkering and came up with a slight variation. My contribution is
-pretty minor, but I thought it would be worth writing down. (Honestly, I just
-think it&amp;rsquo;s fun to watch animated dungeon generators, and the prose is pure
-fluff.)&lt;/p&gt;
-
-&lt;p&gt;Where Buck and Karcero start with the maze and then add the rooms, mine does
-things in the opposite order. First, it places a bunch of random rooms. Then, it
-iterates over every tile in the dungeon. When it finds a solid tile where an
-open area &lt;em&gt;could&lt;/em&gt; be, it starts running a maze generator at that point.&lt;/p&gt;
-
-&lt;p&gt;Maze generators work by incrementally carving passages while avoiding cutting
-into an already open area. That&amp;rsquo;s how you ensure the maze only has one solution.
-If you let it carve into existing passages, you&amp;rsquo;d get loops.&lt;/p&gt;
-
-&lt;p&gt;This is conveniently exactly what you need to let the maze grow and fill the odd
-shaped areas that surround the rooms. In other words, a maze generator is a
-randomized &lt;a href=&quot;http://en.wikipedia.org/wiki/Flood_fill&quot;&gt;flood fill&lt;/a&gt; algorithm. Run this on every solid region between the
-rooms and we&amp;rsquo;re left with the entire dungeon packed full of disconnected rooms
-and mazes.&lt;/p&gt;
-
-&lt;figure&gt;
-  &lt;canvas id=&quot;maze-fill&quot; width=&quot;570&quot; height=&quot;390&quot;&gt;
-      Sorry, you need canvas support for this demo.
-  &lt;/canvas&gt;
-  &lt;figcaption&gt;
-    Each color here represents a different region of connected tiles.
-  &lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;h2&gt;Looking for a connection&lt;/h2&gt;
-
-&lt;p&gt;All that remains is to stitch those back together into a single continuous
-dungeon. Fortunately, that&amp;rsquo;s pretty easy to do. The room generator chooses odd
-sizes and positions for rooms so they are aligned with the mazes. Those in turn
-fill in all of the unused area, so we&amp;rsquo;re assured that each unconnected region is
-only a single tile away from its neighbors.&lt;/p&gt;
-
-&lt;p&gt;After filling in the rooms and mazes, we find all of those possible
-&lt;em&gt;connectors&lt;/em&gt;. These are tiles that are:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Solid rock.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Adjacent to two regions of different colors.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Here they are highlighted:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;connectors&quot; width=&quot;570&quot; height=&quot;390&quot;&gt;
-Sorry, you need canvas support for this demo.
-&lt;/canvas&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;We use these to tie the regions together. Normally we think of the entire
-dungeon as a graph with each tile a vertex, but we&amp;rsquo;re going to go up a level of
-abstraction. Now, we treat each &lt;em&gt;region&lt;/em&gt; of tiles as a single vertex and each
-connector as an edge between them.&lt;/p&gt;
-
-&lt;p&gt;If we use &lt;em&gt;all&lt;/em&gt; of the connectors, our dungeon would be way too densely
-connected. Instead, we carve through just the connectors we need to get each
-region connected to the whole &lt;em&gt;once&lt;/em&gt;. In fancy terms, we&amp;rsquo;re finding a &lt;a href=&quot;http://en.wikipedia.org/wiki/Spanning_tree&quot;&gt;&lt;em&gt;spanning
-tree&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The process is pretty straightforward:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Pick a random room to be the main region.&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Pick a random connector that touches the main region and open it up.&lt;/strong&gt; In
-the demo, it does that by placing a door, but you can do an open passageway,
-locked door, or magical wardrobe. Be creative.&lt;/p&gt;
-
-&lt;p&gt;Note that this process is agnostic about rooms and mazes. It just deals in
-&amp;ldquo;regions&amp;rdquo;. That means it can connect rooms directly to other rooms sometimes. You can avoid that if you want, but I find the resulting dungeons more fun to play.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;The connected region is now part of the main one. Unify it.&lt;/strong&gt; In the demo,
-I use a little flood fill algorithm to color in the newly merged region
-because it looks pretty. In a real implementation, you don&amp;rsquo;t need to mess
-with tiles. Just make a little data structure that tracks &amp;ldquo;region X is now
-merged&amp;rdquo;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Remove any extraneous connectors.&lt;/strong&gt; There are likely other existing
-connectors that connect the two regions that just merged. Since they no
-longer connect two separate regions and we want a spanning tree, discard
-them.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;If there are still connectors left, go to #2.&lt;/strong&gt; Any remaining connectors
-imply that there is still at least one disconnected region. Keep looping
-until all of the unconnected regions are merged into the main one.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Earlier, I said that I don&amp;rsquo;t want a perfect dungeon because they make for crappy
-gameplay. But, since this creates a spanning tree, that&amp;rsquo;s exactly what we&amp;rsquo;ve
-got. We only allow a single connector between any two regions so our dungeon
-&lt;em&gt;is&lt;/em&gt; a tree and there&amp;rsquo;s only a single path between any two points.&lt;/p&gt;
-
-&lt;p&gt;Fixing that is pretty simple. In step 3, when we cull the unneeded connectors,
-we give them a &lt;em&gt;slight&lt;/em&gt; chance of being opened up. Something like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;rng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;oneIn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_carve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;CELL_DOOR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This occasionally carves an extra opening between regions. That gives us the
-imperfect loops we want to make the dungeon more fun to play in. Note that this
-is also easily tunable. If we make the chance more likely, we get more densely
-connected dungeons.&lt;/p&gt;
-
-&lt;h2&gt;Uncarving&lt;/h2&gt;
-
-&lt;p&gt;If we stop here, we&amp;rsquo;ll get dungeons that are packed chock full of maze
-corridors, most of which are dead ends. That has a certain sadistic appeal, but
-isn&amp;rsquo;t exactly what I&amp;rsquo;m going for. The last remaining step is the &amp;ldquo;sparseness&amp;rdquo;
-pass described earlier.&lt;/p&gt;
-
-&lt;p&gt;Now that we&amp;rsquo;ve got all of our rooms connected to each other, we can remove all
-of the dead ends in the maze. When we do that, the mazes are reduced to just the
-winding set of passageways needed to connect the rooms to each other. Every
-corridor is guaranteed to go somewhere interesting.&lt;/p&gt;
-
-&lt;h2&gt;What we ended up with&lt;/h2&gt;
-
-&lt;p&gt;In summary:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Place a bunch of random non-overlapping rooms.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Fill in the remaining solid regions with mazes.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Connect each of the mazes and rooms to their neighbors, with a chance to add some extra connections.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Remove all of the dead ends.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I&amp;rsquo;m pretty happy with it so far. It&amp;rsquo;s not perfect, though. It tends to produce
-annoyingly windy passages between rooms. You can tune that by tweaking your maze
-generation algorithm, but making the passageways less windy tends to make them
-wander to the edge of the dungeon, which has its own strange look.&lt;/p&gt;
-
-&lt;p&gt;The fact that rooms and mazes are aligned to odd boundaries makes things simpler
-and helps fill it in nicely, but it does give the dungeon a bit of an
-artificially aligned look. But, overall, it&amp;rsquo;s an improvement over what I had
-before, and the dungeons it makes seem to be pretty fun to play.&lt;/p&gt;
-
-&lt;p&gt;If you want to see for yourself, you can play the game &lt;a href=&quot;http://munificent.github.io/hauberk/&quot;&gt;right in your
-browser&lt;/a&gt;. The code for these demos is &lt;a href=&quot;https://github.com/munificent/rooms-and-mazes&quot;&gt;here&lt;/a&gt;, but it&amp;rsquo;s pretty
-gnarly. Making them animated adds a lot of complexity. Instead, &lt;a href=&quot;https://github.com/munificent/hauberk/blob/db360d9efa714efb6d937c31953ef849c7394a39/lib/src/content/dungeon.dart&quot;&gt;here&lt;/a&gt; is
-the much cleaner implementation my game uses.&lt;/p&gt;
-
-&lt;p&gt;As a bonus for making it this far, here&amp;rsquo;s a super dense giant dungeon. I find it hypnotic:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;giant&quot; width=&quot;570&quot; height=&quot;390&quot;&gt;
-Sorry, you need canvas support for this demo.
-&lt;/canvas&gt;
-&lt;/figure&gt;&lt;script type=&quot;application/dart&quot; src=&quot;/code/2014-12-21-rooms-and-mazes/main.dart&quot;&gt;&lt;/script&gt;&lt;script src=&quot;/code/2014-12-21-rooms-and-mazes/packages/browser/dart.js&quot;&gt;&lt;/script&gt;</content>
   </entry>
     
 

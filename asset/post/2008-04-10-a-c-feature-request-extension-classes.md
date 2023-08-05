@@ -9,7 +9,7 @@ you use them is the [lack][] of extension properties. Since I like properties
 more than I like extension methods, this really bummed me out. So for kicks, I'd
 like to propose a C# feature request: **Extension classes**.
 
-[ext]: http://journal.stuffwithstuff.com/2008/02/09/c-extension-methods-not-just-for-breakfast/
+[ext]: /2008/02/09/c-extension-methods-not-just-for-breakfast/
 [extension methods]: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods
 [lack]: http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx#2019379
 

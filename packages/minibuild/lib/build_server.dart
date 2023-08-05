@@ -55,7 +55,7 @@ class BuildServer {
         if (entry is! File) continue;
 
         // Skip hidden files like .DS_Store.
-        if (p.basename(entry.path).startsWith('.')) continue;
+        if (_ignoreFile(entry.path)) continue;
 
         var file = FileAsset(entry);
         _graph.addAsset(file.path, file);
@@ -117,6 +117,9 @@ class BuildServer {
 
   Future<void> _onWatchEvent(WatchEvent event) async {
     var key = Key(event.path);
+
+    if (_ignoreFile(event.path)) return;
+
     switch (event.type) {
       case ChangeType.ADD:
       case ChangeType.MODIFY:
@@ -183,5 +186,12 @@ class BuildServer {
       print('${request.method} Not found: ${request.url} ($assetPath)');
       return shelf.Response.notFound('Could not find "$assetPath".');
     }
+  }
+
+  /// Whether [path] should be a file visible to the build or not.
+  bool _ignoreFile(String path) {
+    if (p.basename(path) == '.DS_Store') return true;
+
+    return false;
   }
 }

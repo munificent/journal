@@ -247,7 +247,7 @@ Monkey, I want it to always be a *monkey*, not "possibly a monkey, but also
 possibly this other magical missing monkey value".
 
 [doozy]: http://lambda-the-ultimate.org/node/3186
-[null]: http://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/
+[null]: /2010/08/23/void-null-maybe-and-nothing/
 
 The problem then is that it isn't always possible to create a value of some
 arbitrary type *ex nihilo*. We can't just default initialize a field of Monkey

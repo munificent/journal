@@ -165,8 +165,8 @@ That's really about it. You might want to [follow me on twitter][twitter] or
 [point your RSS reader at my blog][blog] too. Beyond that, we'll have to see
 where it goes from here.
 
-[twitter]: http://twitter.com/#!/munificentbob
-[blog]: http://journal.stuffwithstuff.com
+[twitter]: https://twitter.com/munificentbob
+[blog]: https://journal.stuffwithstuff.com
 
 ## What comes next
 

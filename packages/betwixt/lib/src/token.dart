@@ -19,6 +19,7 @@ class Token {
 
   Token(this.type, this.span, this.text);
 
+  @override
   String toString() => '$type "${text.toStringLiteral()}" ${span.start}';
 }
 

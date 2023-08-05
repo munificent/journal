@@ -1,7 +1,7 @@
 name: minibuild
 description: A simple in-memory incremental build graph thing.
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '^3.0.0'
 dependencies:
   mime_type: ^1.0.0
   path: ^1.8.0

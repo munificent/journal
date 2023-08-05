@@ -14,7 +14,7 @@ caption, tbody, tfoot, thead, tr, th, td {
 body {
   line-height: 1;
   color: #222;
-  background: #f8f5f2;
+  background: hsl(35, 30%, 96%);
 }
 
 table {
@@ -53,7 +53,7 @@ nav {
   margin-top: 48px;
   padding: 0 48px 24px 48px;
   font: 13px/20px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  color: #8f6d3d;
+  color: hsl(35, 40%, 40%);
 }
 nav img.bob {
   border-radius: 4px;
@@ -71,7 +71,7 @@ nav img.rss {
 }
 nav h2 {
   margin: 24px 0 4px 0;
-  color: #dbaf70;
+  color: hsl(35, 60%, 65%);
   font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   font-weight: 600;
   text-transform: uppercase;
@@ -81,10 +81,10 @@ nav code {
   font: 13px "Source Code Pro", Courier, monospace;
 }
 nav a {
-  color: #c38022;
+  color: hsl(35, 70%, 45%);
 }
 nav a:hover {
-  color: #f0bd75;
+  color: hsl(35, 80%, 70%);
 }
 nav p {
   margin-bottom: 12px;
@@ -158,7 +158,7 @@ article h2 {
 }
 article h2 code {
   background: inherit;
-  color: #304550;
+  color: hsl(200, 25%, 25%);
   font: 24px "Source Code Pro", Courier, monospace;
   font-weight: 700;
   padding: 0;
@@ -169,7 +169,7 @@ article h3 {
 }
 article h3 code {
   background: inherit;
-  color: #304550;
+  color: hsl(200, 25%, 25%);
   font: italic 19px "Source Code Pro", Courier, monospace;
   padding: 0;
 }
@@ -195,10 +195,10 @@ article h4 .tags a {
   margin-left: 5px;
 }
 article a {
-  color: #006699;
+  color: hsl(200, 100%, 30%);
 }
 article a:hover {
-  color: #00aaff;
+  color: hsl(200, 100%, 50%);
 }
 article p {
   font: 16px/24px "PT Serif", Georgia, serif;
@@ -216,10 +216,10 @@ article ol li {
   font: bold 13px "PT Serif", Georgia, serif;
 }
 article a, article a code {
-  color: #006699;
+  color: hsl(200, 100%, 30%);
 }
 article a:hover, article a code:hover {
-  color: #00aaff;
+  color: hsl(200, 100%, 50%);
 }
 article strong code {
   font-weight: bold;
@@ -228,9 +228,9 @@ article code {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #f5f8fa;
+  background: hsl(200, 30%, 97%);
   padding: 1px 3px;
-  color: #304550;
+  color: hsl(200, 25%, 25%);
   font: 15px/18px "Source Code Pro", Courier, monospace;
   white-space: pre;
 }
@@ -238,10 +238,10 @@ article pre {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #f5f8fa;
+  background: hsl(200, 30%, 97%);
   margin: 6px 0;
   padding: 6px 12px;
-  color: #304550;
+  color: hsl(200, 25%, 25%);
   overflow: auto;
 }
 article pre code {
@@ -253,7 +253,7 @@ article pre code.language-asciiart {
 }
 article tt {
   font: 13px/18px "Source Code Pro", Courier, monospace;
-  color: #304550;
+  color: hsl(200, 25%, 25%);
 }
 article blockquote {
   color: #7a7a7a;
@@ -299,24 +299,24 @@ article .update {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #fff7eb;
+  background: hsl(35, 100%, 96%);
   margin: 12px 0;
   padding: 0 12px;
-  color: #b3884d;
+  color: hsl(35, 40%, 50%);
 }
 article .update p {
   font: 14px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  color: #b3884d;
+  color: hsl(35, 40%, 50%);
 }
 article .update code {
   background: #eee9df;
   font-size: 13px/22px;
 }
 article .update a, article .update a code {
-  color: #da840b;
+  color: hsl(35, 90%, 45%);
 }
 article .update a:hover, article .update a code:hover {
-  color: #995900;
+  color: hsl(35, 100%, 30%);
 }
 article img {
   border-radius: 4px;
@@ -328,13 +328,13 @@ article img {
   margin: 6px auto;
 }
 article img.framed {
-  background: #f4f9fb;
+  background: hsl(200, 50%, 97%);
 }
 article figure {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #f4f9fb;
+  background: hsl(200, 50%, 97%);
   display: block;
   box-sizing: border-box;
   padding: 10px;
@@ -360,7 +360,7 @@ article .table {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: #f8f5f2;
+  background: hsl(35, 30%, 96%);
   padding: 6px;
   margin: 6px 0;
 }
@@ -374,12 +374,12 @@ article table td {
   padding: 0 6px;
 }
 article table thead td {
-  color: #b89e7a;
+  color: hsl(35, 30%, 60%);
   font: 13px/24px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   font-weight: 600;
 }
 article table tbody tr:nth-child(odd) {
-  background: #fdfdfc;
+  background: hsl(35, 30%, 99%);
 }
 
 .social {
@@ -394,19 +394,19 @@ article table tbody tr:nth-child(odd) {
 .comments {
   margin: 0 -48px -48px -48px;
   padding: 24px 48px;
-  background: #f1ece4;
-  color: #8f6d3d;
+  background: hsl(35, 30%, 92%);
+  color: hsl(35, 40%, 40%);
   font: normal 13px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 .comments a.dsq-subscribe-email em, .comments a.dsq-subscribe-rss em {
   text-decoration: none;
 }
 .comments a {
-  color: #c38022;
+  color: hsl(35, 70%, 45%);
   text-decoration: none;
 }
 .comments a:hover {
-  color: #f0bd75;
+  color: hsl(35, 80%, 70%);
 }
 
 .dsq-comment-text blockquote {
@@ -436,43 +436,43 @@ article table tbody tr:nth-child(odd) {
   color: #6b7b83;
 }
 .highlight span.n {
-  color: #dd573c;
+  color: hsl(10, 70%, 55%);
 }
 .highlight span.s {
-  color: #cc6600;
+  color: hsl(30, 100%, 40%);
 }
 .highlight span.e {
-  color: #e6a21a;
+  color: hsl(40, 80%, 50%);
 }
 .highlight span.f {
-  color: #559933;
+  color: hsl(100, 50%, 40%);
 }
 .highlight span.t {
-  color: #009999;
+  color: hsl(180, 100%, 30%);
 }
 .highlight span.g {
-  color: #009999;
+  color: hsl(180, 100%, 30%);
 }
 .highlight span.o {
-  color: #3d748f;
+  color: hsl(200, 40%, 40%);
 }
 .highlight span.k {
-  color: #0088cc;
+  color: hsl(200, 100%, 40%);
 }
 .highlight span.a {
-  color: #a667e4;
+  color: hsl(270, 70%, 65%);
 }
 .highlight span.r {
-  color: #ac39ac;
+  color: hsl(300, 50%, 45%);
 }
 .highlight span.c {
   color: #939fa5;
 }
 .highlight span.blue {
-  color: #1a66ff;
+  color: hsl(220, 100%, 55%);
 }
 .highlight span.red {
-  color: #e61300;
+  color: hsl(5, 100%, 45%);
 }
 .highlight span.x {
   font-style: italic;
@@ -480,8 +480,8 @@ article table tbody tr:nth-child(odd) {
   background-color: #ebeff2;
 }
 .highlight span.u {
-  background-color: #ffd0cc;
-  color: #b30f00;
+  background-color: hsl(5, 100%, 90%);
+  color: hsl(5, 100%, 35%);
 }
 
 @media only screen and (max-width: 1008px) {
@@ -492,31 +492,26 @@ article table tbody tr:nth-child(odd) {
   header h1 {
     display: block;
   }
-
   article {
     margin: 0 48px;
     padding-top: 96px;
   }
-
   nav {
     position: relative;
     display: table;
     margin: 0 48px;
     padding-top: 48px;
     width: inherit;
-    background: #eae2d7;
+    background: hsl(35, 30%, 88%);
   }
-
   .nav-first, .nav-second {
     display: table-cell;
     vertical-align: top;
     width: 50%;
   }
-
   .nav-first {
     padding-right: 24px;
   }
-
   .nav-second {
     padding-left: 24px;
   }
@@ -528,7 +523,6 @@ article table tbody tr:nth-child(odd) {
   article, nav {
     margin: 0;
   }
-
   header a.older {
     left: -52px;
   }
@@ -540,18 +534,15 @@ article table tbody tr:nth-child(odd) {
   article {
     padding: 72px 24px 24px 24px;
   }
-
   nav {
     padding: 24px;
   }
-
   .comments {
     margin: 0 -24px -24px -24px;
     padding: 24px;
   }
-
   header a.older, header a.newer {
-    background: #f8f5f2;
+    background: hsl(35, 30%, 96%);
     top: -72px;
     bottom: inherit;
   }
@@ -569,7 +560,6 @@ article table tbody tr:nth-child(odd) {
     border-top-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-
   nav {
     display: inherit;
   }
@@ -577,17 +567,14 @@ article table tbody tr:nth-child(odd) {
     display: block;
     margin: -8px auto 16px;
   }
-
   .nav-first, .nav-second {
     display: inherit;
     width: inherit;
     padding: 0;
   }
-
   .nav-second h2 {
     margin-top: 24px;
   }
-
   .post-box .date {
     font-size: 11px;
     width: 48px;
@@ -596,7 +583,6 @@ article table tbody tr:nth-child(odd) {
     font-size: 14px;
     line-height: 22px;
   }
-
   header h1 {
     font-size: 28px;
     line-height: 36px;
@@ -604,7 +590,6 @@ article table tbody tr:nth-child(odd) {
   header h1 code {
     font-size: 24px;
   }
-
   article h2 {
     font-size: 20px;
     padding: 20px 0 10px 0;

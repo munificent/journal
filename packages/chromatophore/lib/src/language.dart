@@ -1,11 +1,10 @@
-import 'package:chromatophore/src/language/fortran.dart';
-
 import 'category.dart';
 import 'language/c.dart';
 import 'language/c_plus_plus.dart';
 import 'language/c_sharp.dart';
 import 'language/dart.dart';
 import 'language/f_sharp.dart';
+import 'language/fortran.dart';
 import 'language/go.dart';
 import 'language/java.dart';
 import 'language/javascript.dart';

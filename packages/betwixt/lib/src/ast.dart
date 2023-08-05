@@ -8,6 +8,7 @@ abstract class Stmt {
 
 /// Placeholder node created when a parse error occurs.
 class ErrorStmt implements Stmt {
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitErrorStmt(this);
 }
 
@@ -31,6 +32,7 @@ class ForStmt implements Stmt {
   ForStmt(this.variable, this.expression, this.body, this.between, this.before,
       this.after, this.elseStatement);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitForStmt(this);
 }
 
@@ -42,6 +44,7 @@ class IfStmt implements Stmt {
 
   IfStmt(this.condition, this.thenStatement, this.elseStatement);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitIfStmt(this);
 }
 
@@ -56,6 +59,7 @@ class IncludeStmt implements Stmt {
 
   IncludeStmt(this.name, this.variables);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitIncludeStmt(this);
 }
 
@@ -66,6 +70,7 @@ class LetStmt implements Stmt {
 
   LetStmt(this.name, this.value);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitLetStmt(this);
 }
 
@@ -75,6 +80,7 @@ class SequenceStmt implements Stmt {
 
   SequenceStmt(this.statements);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitSequenceStmt(this);
 }
 
@@ -85,6 +91,7 @@ class SetStmt implements Stmt {
 
   SetStmt(this.name, this.value);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitSetStmt(this);
 }
 
@@ -94,6 +101,7 @@ class TextStmt implements Stmt {
 
   TextStmt(this.text);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitTextStmt(this);
 }
 
@@ -103,6 +111,7 @@ class RenderStmt implements Stmt {
 
   RenderStmt(this.expression);
 
+  @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitRenderStmt(this);
 }
 
@@ -134,8 +143,10 @@ class BinaryExpr extends Expr {
 
   BinaryExpr(this.left, this.op, this.right);
 
+  @override
   FileSpan get span => left.span.expand(right.span);
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitBinaryExpr(this);
 }
 
@@ -149,15 +160,19 @@ class CallExpr extends Expr {
 
   CallExpr(this.name, this.arguments, this.rightParen);
 
+  @override
   FileSpan get span => name.span.expand(rightParen.span);
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitCallExpr(this);
 }
 
 /// Placeholder node created when a parse error occurs.
 class ErrorExpr implements Expr {
+  @override
   FileSpan get span => throw UnsupportedError('');
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitErrorExpr(this);
 }
 
@@ -167,8 +182,10 @@ class LiteralExpr extends Expr {
 
   LiteralExpr(this.token, this.value);
 
+  @override
   FileSpan get span => token.span;
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitLiteralExpr(this);
 }
 
@@ -178,8 +195,10 @@ class PropertyExpr extends Expr {
 
   PropertyExpr(this.receiver, this.name);
 
+  @override
   FileSpan get span => receiver.span.expand(name.span);
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitPropertyExpr(this);
 }
 
@@ -189,8 +208,10 @@ class UnaryExpr extends Expr {
 
   UnaryExpr(this.op, this.expression);
 
+  @override
   FileSpan get span => op.span.expand(expression.span);
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitUnaryExpr(this);
 }
 
@@ -199,8 +220,10 @@ class VariableExpr extends Expr {
 
   VariableExpr(this.name);
 
+  @override
   FileSpan get span => name.span;
 
+  @override
   R accept<R>(ExprVisitor<R> visitor) => visitor.visitVariableExpr(this);
 }
 

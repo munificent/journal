@@ -126,12 +126,10 @@ class BuildServer {
         print('Changed $key');
         // TODO: What if `event.path` is a directory?
         _changedFiles[key] = FileAsset(File(event.path));
-        break;
 
       case ChangeType.REMOVE:
         print('Removed $key');
         _removedFiles.add(key);
-        break;
     }
 
     // If a build is already running, then we will look for changes after it

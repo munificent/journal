@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:test/test.dart';
-
 import 'package:betwixt/betwixt.dart';
+import 'package:test/test.dart';
 
 import 'utils.dart';
 
@@ -115,23 +114,18 @@ class _TestTemplateData implements TemplateData {
 
   @override
   FutureOr<Object?> lookup(String property) {
-    switch (property) {
-      case 'present':
-        return 'value';
-      case 'nil':
-        return null;
-      case 'future':
-        return Future.value('later');
-      case 'throw':
-        throw Exception('boom!');
-      default:
-        return TemplateData.unknownProperty;
-    }
+    return switch (property) {
+      'present' => 'value',
+      'nil' => null,
+      'future' => Future.value('later'),
+      'throw' => throw Exception('boom!'),
+      _ => TemplateData.unknownProperty,
+    };
   }
 }
 
 void _testProperty(Object? object, String property, String expected) {
-  test('property "$property" should be "${expected}"', () async {
+  test('property "$property" should be "$expected"', () async {
     var reporter = TestErrorReporter();
     var template =
         await Template.compile('{{ $property }}', 'test', reporter: reporter);
@@ -146,7 +140,7 @@ void _testProperty(Object? object, String property, String expected) {
 }
 
 void _testPropertyError(Object? object, String property, String expectedError) {
-  test('property "$property" should return error "${expectedError}"', () async {
+  test('property "$property" should return error "$expectedError"', () async {
     var reporter = TestErrorReporter();
     var template =
         await Template.compile('{{ $property }}', 'test', reporter: reporter);

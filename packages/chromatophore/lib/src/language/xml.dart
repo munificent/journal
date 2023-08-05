@@ -3,7 +3,7 @@ import '../language.dart';
 import 'shared.dart';
 
 Language makeXmlLanguage() {
-  const tagName = '[a-zA-Z_:][a-zA-Z_0-9:\.-]*';
+  const tagName = r'[a-zA-Z_:][a-zA-Z_0-9:\.-]*';
 
   var language = Language();
 

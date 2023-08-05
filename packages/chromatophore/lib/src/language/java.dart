@@ -6,7 +6,7 @@ Language makeJavaLanguage() {
   var language = Language();
 
   // Import.
-  language.capture('$b(import)($ss)(\w+(?:\.\w+)*)(;)',
+  language.capture(r'$b(import)($ss)(\w+(?:\.\w+)*)(;)',
       [Category.keyword, Category.text, Category.identifier, Category.text]);
   // Static import.
   language.capture(r'(import\s+static?)(\s+)(\w+(?:\.\w+)*(?:\.\*)?)(;)',

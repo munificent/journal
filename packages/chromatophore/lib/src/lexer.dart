@@ -2,7 +2,6 @@ import 'package:string_scanner/string_scanner.dart';
 
 import 'category.dart';
 import 'language.dart';
-import 'rule.dart';
 import 'token.dart';
 
 class Lexer {

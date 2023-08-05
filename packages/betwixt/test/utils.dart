@@ -7,6 +7,7 @@ class TestErrorReporter implements ErrorReporter {
 
   String get reportedErrors => _buffer.toString();
 
+  @override
   void report(SourceSpan span, String message) {
     _buffer.writeln(span.message(message));
   }

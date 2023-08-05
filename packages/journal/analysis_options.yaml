@@ -1,8 +1,4 @@
 include: package:lints/recommended.yaml
-analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
 linter:
   rules:
     avoid_renaming_method_parameters: false

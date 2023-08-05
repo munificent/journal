@@ -35,21 +35,14 @@ class Post implements TemplateData {
 
   @override
   FutureOr<Object?> lookup(String property) {
-    switch (property) {
-      case 'content':
-        return html;
-      case 'date':
-        return date;
-      case 'tags':
-        return tags;
-      case 'title':
-        return titleHtml;
-      case 'titleUrl':
-        return titleUrl;
-      case 'url':
-        return url;
-      default:
-        throw Exception('Unknown post key $property.');
-    }
+    return switch (property) {
+      'content' => html,
+      'date' => date,
+      'tags' => tags,
+      'title' => titleHtml,
+      'titleUrl' => titleUrl,
+      'url' => url,
+      _ => throw Exception('Unknown post key $property.'),
+    };
   }
 }

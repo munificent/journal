@@ -66,54 +66,42 @@ class Scanner {
       switch (_scanner.peekChar()) {
         case $lparen:
           _oneCharToken(TokenType.leftParen);
-          break;
         case $rparen:
           _oneCharToken(TokenType.rightParen);
-          break;
         case $exclamation:
           _oneOrTwoCharToken($equal, TokenType.bang, TokenType.bangEqual);
-          break;
         case $comma:
           _oneCharToken(TokenType.comma);
-          break;
         case $dot:
           _oneCharToken(TokenType.dot);
-          break;
         case $equal:
           _oneOrTwoCharToken($equal, TokenType.equal, TokenType.equalEqual);
-          break;
         case $minus:
           _oneCharToken(TokenType.minus);
-          break;
         case $plus:
           _oneCharToken(TokenType.plus);
-          break;
         case $double_quote:
           _stringLiteral();
-          break;
-        default:
-          if (_scanner.scan('}}')) {
-            _addToken(TokenType.closeTag);
+        case _ when _scanner.scan('}}'):
+          _addToken(TokenType.closeTag);
 
-            // Link it to its open tag.
-            if (_openTagStack.isNotEmpty) {
-              _openTagStack.last.closeTag = _tokens.length - 1;
-              _openTagStack.removeLast();
-            }
-
-            _isInCode = false;
-            return;
-          } else if (_scanner.scan(_identifierPattern)) {
-            _addToken(
-                _keywords[_scanner.lastMatch![0]!] ?? TokenType.identifier);
-          } else if (_scanner.scan(_numberPattern)) {
-            _addToken(TokenType.number);
-          } else {
-            // TODO: Numbers.
-            var start = _scanner.state;
-            _scanner.readChar();
-            _reporter.report(_scanner.spanFrom(start), 'Unexpected character.');
+          // Link it to its open tag.
+          if (_openTagStack.isNotEmpty) {
+            _openTagStack.last.closeTag = _tokens.length - 1;
+            _openTagStack.removeLast();
           }
+
+          _isInCode = false;
+          return;
+        case _ when _scanner.scan(_identifierPattern):
+          _addToken(_keywords[_scanner.lastMatch![0]!] ?? TokenType.identifier);
+        case _ when _scanner.scan(_numberPattern):
+          _addToken(TokenType.number);
+        default:
+          // TODO: Numbers.
+          var start = _scanner.state;
+          _scanner.readChar();
+          _reporter.report(_scanner.spanFrom(start), 'Unexpected character.');
       }
     }
   }

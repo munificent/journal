@@ -60,16 +60,17 @@ class PostBuilder extends Builder<StringAsset> {
                 title = title.substring(1, title.length - 1);
                 title = title.replaceAll('\\"', '"');
               }
-              break;
+
             case 'layout':
               // TODO: Ignore old layout tags. Eventually these should be
               // removed from the posts.
               break;
+
             case 'categories':
               // TODO: Rename to 'tags'.
               tags = value.split(' ').toList();
               tags.sort();
-              break;
+
             default:
               // TODO: Better error handling.
               throw Exception('Unknown metadata: $key');

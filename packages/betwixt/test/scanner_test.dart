@@ -175,12 +175,12 @@ void _testScanner(
           reason: 'Expected text "$text" at $i but was "${tokens[i].text}"');
     }
 
-    for (var i = tokens.length; i < expectedTokens.length; i++) {
-      fail('Missing expected token ${expectedTokens[i]}.');
-    }
-
-    for (var i = expectedTokens.length; i < tokens.length; i++) {
-      fail('Unexpected token ${tokens[i]}.');
+    if (expectedTokens.length > tokens.length) {
+      var missing = expectedTokens.sublist(tokens.length);
+      fail('Missing expected tokens ${missing.join(', ')}.');
+    } else if (tokens.length > expectedTokens.length) {
+      var unexpected = tokens.sublist(expectedTokens.length);
+      fail('Unexpected tokens ${unexpected.join(', ')}.');
     }
   });
 }

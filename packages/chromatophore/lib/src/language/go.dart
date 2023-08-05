@@ -1,6 +1,4 @@
 import '../../chromatophore.dart';
-import '../category.dart';
-import '../language.dart';
 import 'shared.dart';
 
 Language makeGoLanguage() {

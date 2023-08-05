@@ -1,7 +1,4 @@
 import '../../chromatophore.dart';
-import '../../chromatophore.dart';
-import '../category.dart';
-import '../language.dart';
 
 /// Common regex patterns in languages.
 

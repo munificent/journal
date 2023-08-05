@@ -142,48 +142,51 @@ class Renderer
   Future<Object?> visitBinaryExpr(BinaryExpr expr) async {
     var left = await expr.left.accept(this);
     var right = await expr.right.accept(this);
-    switch (expr.op.type) {
-      case TokenType.minus:
-        if (left is! num) {
-          _reporter.report(expr.left.span,
-              'Cannot subtract from a value of type ${left.runtimeType}.');
-          return null;
-        }
-
-        if (right is! num) {
-          _reporter.report(expr.right.span,
-              'Cannot subtract a value of type ${right.runtimeType}.');
-          return null;
-        }
-
+    switch ((left, expr.op.type, right)) {
+      case (num left, TokenType.minus, num right):
         return left - right;
 
-      case TokenType.plus:
-        if (left is num && right is num) {
-          return left + right;
-        } else if (left is String) {
-          return left + right.toString();
-        } else if (right is String) {
-          return left.toString() + right;
-        } else {
-          if (left is! num && left is! String) {
-            _reporter.report(expr.left.span,
-                'Operands to "+" must be numbers or strings, not ${left.runtimeType}.');
-          }
+      case (num _, TokenType.minus, _):
+        _reporter.report(expr.right.span,
+            'Cannot subtract a value of type ${right.runtimeType}.');
+        return null;
 
-          if (right is! num && right is! String) {
-            _reporter.report(expr.right.span,
-                'Operands to "+" must be numbers or strings, not ${right.runtimeType}.');
-          }
+      case (_, TokenType.minus, _):
+        _reporter.report(expr.left.span,
+            'Cannot subtract from a value of type ${left.runtimeType}.');
+        return null;
 
-          return null;
+      case (num left, TokenType.plus, num right):
+        return left + right;
+
+      case (String left, TokenType.plus, var right):
+        return left + right.toString();
+
+      case (var left, TokenType.plus, String right):
+        return left.toString() + right;
+
+      case (_, TokenType.plus, _):
+        if (left is! num && left is! String) {
+          _reporter.report(
+              expr.left.span,
+              'Operands to "+" must be numbers or strings, not '
+              '${left.runtimeType}.');
         }
 
-      case TokenType.bangEqual:
+        if (right is! num && right is! String) {
+          _reporter.report(
+              expr.right.span,
+              'Operands to "+" must be numbers or strings, not '
+              '${right.runtimeType}.');
+        }
+
+        return null;
+
+      case (_, TokenType.bangEqual, _):
         // TODO: Are there any implicit conversions?
         return left != right;
 
-      case TokenType.equalEqual:
+      case (_, TokenType.equalEqual, _):
         // TODO: Are there any implicit conversions?
         return left == right;
 
@@ -204,7 +207,7 @@ class Renderer
 
   @override
   Future<Object?> visitErrorExpr(ErrorExpr expr) async {
-    assert(false, 'Should not have errors.');
+    throw ArgumentError('Should not have errors.');
   }
 
   @override
@@ -219,13 +222,14 @@ class Renderer
 
   @override
   Future<Object?> visitUnaryExpr(UnaryExpr expr) async {
-    var value = await expr.expression.accept(this);
-    switch (expr.op.type) {
-      case TokenType.minus:
-        if (value is num) return -value;
+    var operand = await expr.expression.accept(this);
+    switch ((expr.op.type, operand)) {
+      case (TokenType.minus, num operand):
+        return -operand;
 
+      case (TokenType.minus, _):
         _reporter.report(expr.op.span,
-            'Cannot negate a value of type ${value.runtimeType}.');
+            'Cannot negate a value of type ${operand.runtimeType}.');
         return null;
 
       default:
@@ -279,68 +283,52 @@ class Renderer
     String? source;
 
     try {
-      if (data is TemplateData) {
-        value = await data.lookup(property.text);
-      } else if (data is Map<String, Object?>) {
-        if (!data.containsKey(property.text)) {
-          _reporter.report(
-              property.span, 'Map does not have key "${property.text}".');
-          return null;
-        }
+      switch ((data, property.text)) {
+        case (TemplateData template, var text):
+          value = await template.lookup(text);
 
-        source = 'in map';
-        value = await data[property.text];
-      } else if (data is FutureOr<Object?> Function(String key)) {
-        source = 'from accessor function';
-        value = await data(property.text);
-      } else if (data is DateTime) {
-        switch (property.text) {
-          case 'year':
-            value = data.year;
-            break;
-          case 'month':
-            value = data.month;
-            break;
-          case 'day':
-            value = data.day;
-            break;
-          case 'hour':
-            value = data.hour;
-            break;
-          case 'minute':
-            value = data.minute;
-            break;
-          case 'second':
-            value = data.second;
-            break;
-          case 'millisecond':
-            value = data.millisecond;
-            break;
-          case 'microsecond':
-            value = data.microsecond;
-            break;
-          case 'weekday':
-            value = data.weekday;
-            break;
-          case 'utc':
-            // TODO: Test.
-            value = data.toUtc();
-            break;
-          case 'iso8601':
-            // TODO: Test.
-            value = data.toIso8601String();
-            break;
-          default:
-            value = TemplateData.unknownProperty;
-        }
-      } else if (data is String) {
-        switch (property.text) {
-          case 'length':
-            value = data.length;
-            break;
-          default:
-            value = TemplateData.unknownProperty;
-        }
+        case (Map<String, Object?> map, var text):
+          if (!map.containsKey(text)) {
+            _reporter.report(property.span, 'Map does not have key "$text".');
+            return null;
+          }
+
+          source = 'in map';
+          value = map[text];
+          if (value is Future) value = await value;
+
+        case (FutureOr<Object?> Function(String key) accessor, var text):
+          source = 'from accessor function';
+          value = await accessor(text);
+
+        case (DateTime date, 'year'):
+          value = date.year;
+        case (DateTime date, 'month'):
+          value = date.month;
+        case (DateTime date, 'day'):
+          value = date.day;
+        case (DateTime date, 'hour'):
+          value = date.hour;
+        case (DateTime date, 'minute'):
+          value = date.minute;
+        case (DateTime date, 'second'):
+          value = date.second;
+        case (DateTime date, 'millisecond'):
+          value = date.millisecond;
+        case (DateTime date, 'microsecond'):
+          value = date.microsecond;
+        case (DateTime date, 'weekday'):
+          value = date.weekday;
+        case (DateTime date, 'utc'):
+          value = date.toUtc(); // TODO: Test.
+        case (DateTime date, 'iso8601'):
+          value = date.toIso8601String(); // TODO: Test.
+
+        case (String string, 'length'):
+          value = string.length;
+
+        default:
+          value = TemplateData.unknownProperty;
       }
     } catch (error, stack) {
       source ??= 'on ${data.runtimeType}';

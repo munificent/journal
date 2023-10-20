@@ -4,13 +4,602 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>2023-08-05T20:18:29.736175Z</updated>
+  <updated>2023-10-20T03:16:15.619555Z</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
     <email>robert@stuffwithstuff.com</email>
   </author>
 
+
+  <entry>
+    <id>http://journal.stuffwithstuff.com/2023/10/19/does-go-have-subtyping</id>
+    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2023/10/19/does-go-have-subtyping/"/>
+    <title>Does Go Have Subtyping?</title>
+    <published>2023-10-19T07:00:00.000Z</published>
+    <updated>2023-10-19T07:00:00.000Z</updated>
+    <author>
+      <name>Robert Nystrom</name>
+      <uri>http://journal.stuffwithstuff.com/</uri>
+    </author>
+    <content type="html">&lt;p&gt;I&amp;rsquo;ve been &lt;a href=&quot;/2023/01/03/type-checking-if-expressions/&quot;&gt;noodling on a static type system&lt;/a&gt; for my current hobby
+language. To try to keep the language as simple as possible, I&amp;rsquo;m trying to see
+if I can live without subtyping. Since most of my programming experience is in
+object-oriented languages, I&amp;rsquo;ve been learning more about languages that lack&amp;mdash;or at least claim to lack&amp;mdash;subyping, to see how they work.&lt;/p&gt;
+
+&lt;p&gt;The most intriguing one to me is Go because the authors say it doesn&amp;rsquo;t have
+subtyping, but when you look at interfaces, it does seem to have something
+&lt;em&gt;really close&lt;/em&gt; to subtyping. Is it subtyping just under another name, or is
+there really something different going on?&lt;/p&gt;
+
+&lt;p&gt;This post is the answer to that question as best as I can tell. The short answer
+is that no, Go doesn&amp;rsquo;t have subtyping. But also, yes, it sort of does.&lt;/p&gt;
+
+&lt;h2&gt;What is subtyping?&lt;/h2&gt;
+
+&lt;p&gt;If you&amp;rsquo;re reading my blog, you probably already know what subtyping is, but
+let&amp;rsquo;s make sure we&amp;rsquo;re all starting from the same place. Subtyping defines a
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Relation_(mathematics)&quot;&gt;&lt;em&gt;relation&lt;/em&gt;&lt;/a&gt; between two types. Given two types A and B, it might be
+the case that B is a subtype of A, or it might not be.&lt;/p&gt;
+
+&lt;p&gt;Since subtyping is a relation between a pair of types, it only comes into play
+in a language in places where two types are involved. The main place is
+assignment. You have a variable with type A and you&amp;rsquo;re assigning the result of
+an expression of type B to it. Is that assignment allowed?&lt;/p&gt;
+
+&lt;p&gt;Programming language folks usually generalize &amp;ldquo;assignment&amp;rdquo; to mean any place
+where a variable is given some value. That includes assignment expressions, but
+also covers initialized variable declarations and function calls where argument
+values are bound to parameters at the top of the function.&lt;/p&gt;
+
+&lt;p&gt;There are a couple of other places where subtyping comes into play, usually
+around type inference, but assignment is the main one: You have a context that
+requires some type A and a value of some type B. What are the types A and B
+where that code is valid?&lt;/p&gt;
+
+&lt;p&gt;That question is the heart of what a type checker &lt;em&gt;does&lt;/em&gt;. The main user
+interface of a static system is compile errors, and the most common compile
+error is &amp;ldquo;I expected a value of &lt;em&gt;this&lt;/em&gt; type but you gave me a value or this
+other type&amp;rdquo;.&lt;/p&gt;
+
+&lt;h2&gt;Why have subtyping?&lt;/h2&gt;
+
+&lt;p&gt;You have a context that expects type A and you give it a value of type B. In
+languages without subtyping, that&amp;rsquo;s only OK if A and B are the exact same type.
+In SML, if you declare a variable with type &lt;code&gt;int&lt;/code&gt;, the only thing you can
+initialize it with is a value of type &lt;code&gt;int&lt;/code&gt;. Subtyping exists largely to loosen
+that restriction&amp;mdash;to allow &lt;em&gt;multiple&lt;/em&gt; different types to flow into some
+context. Why might a language want to permit that?&lt;/p&gt;
+
+&lt;p&gt;The reason is &lt;em&gt;polymorphism&lt;/em&gt;: Subtyping lets you write a piece of code and reuse
+that same code with a range of different (but related) types. In languages
+without subtyping, you can often find yourself copy/pasting the same function to
+work with multiple different input types. (Generics can help, but that&amp;rsquo;s another
+form of polymorphism that we&amp;rsquo;ll ignore for this post.)&lt;/p&gt;
+
+&lt;p&gt;In say, Java, if you define a method that takes an &lt;code&gt;Iterable&lt;/code&gt;, then you can pass
+a &lt;code&gt;List&lt;/code&gt; to it, a &lt;code&gt;Stack&lt;/code&gt;, etc. You get to amortize the usefulness of that
+method across all types that implement the &lt;code&gt;Iterable&lt;/code&gt; interface. Subtyping is a
+force multiplier for your code.&lt;/p&gt;
+
+&lt;p&gt;(Of course, that benefit isn&amp;rsquo;t without significant costs in terms of language
+complexity, which is why I&amp;rsquo;m hoping to avoid it.)&lt;/p&gt;
+
+&lt;h2&gt;Does Go have subtyping?&lt;/h2&gt;
+
+&lt;p&gt;If you search the (extremely well-written!) &lt;a href=&quot;https://go.dev/ref/spec&quot;&gt;Go language spec&lt;/a&gt; for
+&amp;ldquo;subtype&amp;rdquo;, you get zero results. So the answer is a clear &amp;ldquo;no&amp;rdquo; at the textual
+level.&lt;/p&gt;
+
+&lt;p&gt;Java does have subtyping. Now, if you were to make a new language named &amp;ldquo;Blava&amp;rdquo;
+that was a literal copy/paste of the Java language specification with every use
+of &amp;ldquo;subtype&amp;rdquo; replaced with &amp;ldquo;blubtype&amp;rdquo;, would you say that Blava has subtyping?
+It behaves indistinguishably from a language with subtyping, so I&amp;rsquo;d be inclined
+to say yes.&lt;/p&gt;
+
+&lt;p&gt;The Go spec doesn&amp;rsquo;t mention &amp;ldquo;subtype&amp;rdquo;, but it does have a notion of
+&lt;a href=&quot;https://go.dev/ref/spec#Assignability&quot;&gt;&amp;ldquo;assignability&amp;rdquo;&lt;/a&gt;. When you have a context that expects some type
+and you give it a value of some other type, assignability determines which set
+of other types are allowed. Concretely, the rules are:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A non-interface type T is assignable to an interface type I if T
+implements I.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An interface type A is assignable to interface type B if A&amp;rsquo;s methods
+are a subset of B&amp;rsquo;s.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;You know, that sounds an &lt;em&gt;awful lot&lt;/em&gt; like subtyping. Is &amp;ldquo;assignable to&amp;rdquo; just Rob
+Pike&amp;rsquo;s idiosyncratic way of saying &amp;ldquo;subtype of&amp;rdquo;? Does Go have subtyping in
+everything except name? To fully answer that, we&amp;rsquo;ll need to look at all of the
+kinds of types in a program.&lt;/p&gt;
+
+&lt;h2&gt;Composite types and variance&lt;/h2&gt;
+
+&lt;p&gt;If the only types in Go&amp;rsquo;s type system were primitives like numbers, structs, and
+interface then I think you&amp;rsquo;d have a good argument that Go does have subtyping,
+just spelled differently. But once you start looking at slice types and function
+types, the story changes. (And array and channel types too, but slices and
+functions are enough to make the point.)&lt;/p&gt;
+
+&lt;p&gt;The thing that these latter kinds of types have in common is that they &lt;em&gt;contain
+other types&lt;/em&gt;. A slice type has an inner type for the slice elements. A function
+type has a list of parameter types and a list of return types.&lt;/p&gt;
+
+&lt;p&gt;You ready for some more computer science jargon? We&amp;rsquo;ve been talking about
+relations on pairs of types like &amp;ldquo;is subtype&amp;rdquo; and &amp;ldquo;is assignable&amp;rdquo;. But now we
+have types that contain other types. That raises the question of whether a
+relation on the inner types of two composite types says anything about the
+relation between the two outer types.&lt;/p&gt;
+
+&lt;p&gt;For example, let&amp;rsquo;s say we have two slice types &lt;code&gt;[]E1&lt;/code&gt; and &lt;code&gt;[]E2&lt;/code&gt; that are slices
+of elements of &lt;code&gt;E1&lt;/code&gt; and &lt;code&gt;E2&lt;/code&gt;, respectively. If &lt;code&gt;E1&lt;/code&gt; is assignable to &lt;code&gt;E2&lt;/code&gt; does
+that mean that &lt;code&gt;[]E1&lt;/code&gt; is assignable to &lt;code&gt;[]E2&lt;/code&gt;? Does the assignability
+&amp;ldquo;propagate&amp;rdquo; from the inner types to the outer types?&lt;/p&gt;
+
+&lt;p&gt;Computer scientists call this property (meta-property?) &lt;em&gt;variance&lt;/em&gt;. They phrase
+the question like &amp;ldquo;how does assignability of slice types &lt;em&gt;vary with respect to
+their element types&lt;/em&gt;?&amp;rdquo;. There are a few possible answers to a question like
+this.&lt;/p&gt;
+
+&lt;h3&gt;Variance of slice types&lt;/h3&gt;
+
+&lt;p&gt;For slice types in Go specifically, there are a handful of assignability rules,
+but the only one that can apply to slice types is:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;V and T are identical.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In other words, for two slice types to be assignable, they have to be the exact
+same type. That in turn means they must have the exact same element types. Even
+if two element types are assignable, slices of those two types are not.&lt;/p&gt;
+
+&lt;p&gt;Judging by an endless series of confused people asking questions on
+StackOverflow, that behavior is unintuitive to programmers, both in Go and in
+other languages. Let&amp;rsquo;s say you have this Go program:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Woof!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here we have a &lt;code&gt;Dog&lt;/code&gt; concrete type, which is assignable to the interface
+&lt;code&gt;Barker&lt;/code&gt;. So this is fine:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;speak&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;speak&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Sparky&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Given that, you might expect this to work too:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;speakAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;dogs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Sparky&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Fido&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;speakAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;dogs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But, no. The type system giveth and the type system taketh away:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;example.go:29:11: cannot use dogs (variable of type []Dog) as
+[]Barker value in argument to speakAll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If the type system didn&amp;rsquo;t yell at you, this program &lt;em&gt;would&lt;/em&gt; be fine at runtime.
+So what&amp;rsquo;s the deal? In this case, the program is &lt;em&gt;coincidentally&lt;/em&gt; fine because
+&lt;code&gt;speakAll()&lt;/code&gt; is only reading from the slice. But what if we wrote:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Tree&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;species&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Rough (but not ruff)!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;appendTree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Elm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There&amp;rsquo;s nothing wrong with this &lt;code&gt;appendTree()&lt;/code&gt; function. It adds a &lt;code&gt;Tree&lt;/code&gt; to
+the given slice. Since &lt;code&gt;Tree&lt;/code&gt; is assignable to &lt;code&gt;Barker&lt;/code&gt;, that&amp;rsquo;s fine. But if
+you were to call this and pass in a &lt;code&gt;[]Dog&lt;/code&gt;, you&amp;rsquo;d end up with an array of dogs
+that had a tree stuck in it! That would violate the soundness of the language.&lt;/p&gt;
+
+&lt;p&gt;This is why Go only treats two slice types as assignable if they have the exact
+same element types. In PL parlance, slice types are &lt;em&gt;invariant&lt;/em&gt; with respect
+to their element types. And, for a mutable data structure like slices, that
+rule makes sense.&lt;/p&gt;
+
+&lt;p&gt;(A reasonable person might wonder then why Java and C# &lt;em&gt;don&amp;rsquo;t&lt;/em&gt; have this rule
+and instead say that array types &lt;em&gt;are&lt;/em&gt; assignable if their element types are.
+And then, because as you can see, it isn&amp;rsquo;t safe to do so, they have to add
+&lt;a href=&quot;https://docs.oracle.com/javase/8/docs/api/java/lang/ArrayStoreException.html&quot;&gt;runtime&lt;/a&gt; &lt;a href=&quot;https://learn.microsoft.com/en-us/dotnet/api/system.arraytypemismatchexception?view=net-7.0&quot;&gt;checks&lt;/a&gt; if you try to stuff an element of the
+wrong type into the array.)&lt;/p&gt;
+
+&lt;p&gt;So, OK, it makes sense for slice (and array) types to be invariant. What about
+function types?&lt;/p&gt;
+
+&lt;h3&gt;Variance of function types&lt;/h3&gt;
+
+&lt;p&gt;To keep things simple, first we&amp;rsquo;ll consider just functions that don&amp;rsquo;t take any
+parameters and have a single return type. Given two function types like that,
+when are they assignable? Again, the only rule in the Go language spec that
+matches function types is &lt;code&gt;V and T are identical&lt;/code&gt;. So two function types are
+only assignable if they have the exact same return types. Even if the return
+types are themselves assignable, if they are different types, the functions
+aren&amp;rsquo;t assignable.&lt;/p&gt;
+
+&lt;p&gt;Do we need to be that strict to preserve soundness? Actually, no! Here&amp;rsquo;s an
+example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;returnDog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Rex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;useCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;callback&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;useCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;returnDog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So we have a function, &lt;code&gt;returnDog&lt;/code&gt; that returns a value of type &lt;code&gt;Dog&lt;/code&gt;. We pass a
+reference to that function that expects a function that returns a &lt;code&gt;Barker&lt;/code&gt;. The
+&lt;code&gt;Dog&lt;/code&gt; type does implement &lt;code&gt;Barker&lt;/code&gt;. If this program were run, it would be
+perfectly safe. And, in fact, there&amp;rsquo;s nothing you could put inside
+&lt;code&gt;useCallback()&lt;/code&gt; that would make passing &lt;code&gt;returnDog&lt;/code&gt; violate the soundness of the
+type system.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s theoretically safe&amp;hellip; but Go disallows it:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;.&amp;#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
+func() Barker value in argument to useCallback
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Every other language I know that has subtyping and function types allows this. A
+function type &lt;code&gt;A&lt;/code&gt; is a subtype of another function type &lt;code&gt;B&lt;/code&gt; if the return type
+of &lt;code&gt;A&lt;/code&gt; is a subtype of the return type of &lt;code&gt;B&lt;/code&gt;. So the subtyping relation of the
+return types propagates out to determine the subtype relation of the function
+types. We call this &lt;em&gt;covariance&lt;/em&gt; and say that function types are &lt;em&gt;covariant in
+their return types&lt;/em&gt;. The &amp;ldquo;co-&amp;rdquo; prefix means that the subtyping relation between
+the inner types goes in the &amp;ldquo;same direction&amp;rdquo; as the subtyping relation it
+implies about the outer types.&lt;/p&gt;
+
+&lt;p&gt;That direction matters because relations like subtyping and assignability aren&amp;rsquo;t
+symmetric. The &lt;code&gt;Dog&lt;/code&gt; type is assignable to &lt;code&gt;Barker&lt;/code&gt;, but &lt;code&gt;Barker&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt;
+assignable to &lt;code&gt;Dog&lt;/code&gt;. The underlying value might be a &lt;code&gt;Tree&lt;/code&gt;!&lt;/p&gt;
+
+&lt;p&gt;Are there cases where the variance of an inner type doesn&amp;rsquo;t go in the same
+direction as the outer types? Indeed there is, and they&amp;rsquo;re right there next to
+us. Instead of return types, let&amp;rsquo;s look at parameter types. Now let&amp;rsquo;s say we
+only care about functions that accept a single parameter and return nothing.
+Here&amp;rsquo;s an example:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;acceptBarker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;useCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;callback&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Laika&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;useCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;acceptBarker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that the parameter types are flipped compared to the return type example.
+Here, the callback type in &lt;code&gt;useCallback()&lt;/code&gt; takes a more precise type of &lt;code&gt;Dog&lt;/code&gt;.
+The function we pass to it, &lt;code&gt;acceptBarker&lt;/code&gt; has a parameter whose type is
+&lt;code&gt;Barker&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You may feel a slight disorientation here. The code feels weird and sort of
+backwards. Wait a minute and the dizziness will pass. Dramamine might help.&lt;/p&gt;
+
+&lt;p&gt;While this definitely isn&amp;rsquo;t as intuitive as return types being covariant, if you
+think about it carefully, you&amp;rsquo;ll see that the above program is completely sound.
+In other languages with subtyping, function type &lt;code&gt;A&lt;/code&gt; is a subtype of function
+type &lt;code&gt;B&lt;/code&gt; if the parameter types of &lt;code&gt;B&lt;/code&gt; are subtypes of the parameter types of
+&lt;code&gt;A&lt;/code&gt;. Note how &lt;code&gt;A&lt;/code&gt; and &lt;code&gt;B&lt;/code&gt; are reversed in the second half of that sentence. The
+variance of parameter types is reversed. In technical terms, we say that
+function types are &lt;em&gt;contravariant in their parameter types&lt;/em&gt;. The prefix
+&amp;ldquo;contra-&amp;rdquo; means &amp;ldquo;against&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;(You might wonder what happens when you have a function type with a parameter
+whose type is itself a function type with some parameter type. How does &lt;em&gt;that&lt;/em&gt;
+flow out? When there&amp;rsquo;s two levels of nesting it flips around to going in the
+same direction as the outermost type. The way I think about it is that
+contravariance is a 180° flip in the direction of the relation. If you nest
+contravariant types, you flip it twice and get back to the original direction.)&lt;/p&gt;
+
+&lt;p&gt;Contravariant parameter types are sound, but again Go doesn&amp;rsquo;t allow them. Two
+function types are only assignable if their parameter types are &lt;em&gt;exactly the
+same&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Invariance in Go&lt;/h2&gt;
+
+&lt;p&gt;In every language I know with subtyping, function types are &lt;a href=&quot;https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Function_types&quot;&gt;covariant in their
+return types and contravariant in their parameter types&lt;/a&gt;. But in
+Go, function types are invariant.&lt;/p&gt;
+
+&lt;p&gt;Go is not a language known for getting in the programmer&amp;rsquo;s way when they want to
+do something, so why are function types more restrictive than would be necessary
+for soundness?&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s not just function types either. &lt;em&gt;All&lt;/em&gt; composite types are invariant in Go:
+arrays, slices, channels, maps, functions. So &lt;em&gt;ground&lt;/em&gt; types&amp;mdash;types that don&amp;rsquo;t
+contain any other type&amp;mdash;have some subtype-like notion of assignability. But
+once you wrap a type in another, any notion of assignability goes away.&lt;/p&gt;
+
+&lt;p&gt;Why did the designers of Go do that? If you&amp;rsquo;re going to bother having interfaces
+and assignability, why not go all the way and have assignability for functions
+and other composite types where its sound?&lt;/p&gt;
+
+&lt;p&gt;If all the designers cared about was semantic correctness and having a beautiful
+elegant specification written in LaTeX, then they probably would have supported
+variance, at least for functions. (The other types all &lt;em&gt;should&lt;/em&gt; be invariant
+since they are mutable. When types can flow both in and out, any other variance
+isn&amp;rsquo;t sound.)&lt;/p&gt;
+
+&lt;p&gt;But Go was designed from day one to be a high-performance systems language. It&amp;rsquo;s
+the exact opposite of an ivory tower language designed for proofs and
+publications. The goal of the language is to let real users ship real
+applications. And, importantly, be able to ship &lt;em&gt;fast&lt;/em&gt; applications and &lt;em&gt;reason
+about the performance of their code&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Representing values&lt;/h2&gt;
+
+&lt;p&gt;Up to this point, we&amp;rsquo;ve only been concerned with how types flow through the type
+checker at compile time. But&amp;mdash;assuming there are no compile errors&amp;mdash;the
+compiler eventually excretes some code which gets executed at runtime. When that
+happens, all of the types the type checker poked at have cracked out of their
+chrysalides and emerged as beautiful runtime value butterflies flitting around
+in memory.&lt;/p&gt;
+
+&lt;p&gt;The choice of how values of different types are represented in memory has a
+massive effect on performance. So how do the rules around assignability and
+subtyping interact with those representation choices?&lt;/p&gt;
+
+&lt;p&gt;In many object-oriented languages (Java, C#, Python, etc.) values of object
+types are represented by pointers to a heap-allocated structure. That structure
+has some header information for garbage collection and runtime type tracking,
+maybe some kind of pointer to a &lt;a href=&quot;https://en.wikipedia.org/wiki/Virtual_method_table&quot;&gt;vtable&lt;/a&gt; for virtual method dispatch, then
+(finally!) the memory used to store the instance&amp;rsquo;s fields.&lt;/p&gt;
+
+&lt;p&gt;There are differences between language implementations, of course, but objects
+are generally both:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Slow to create since they are allocated on the heap.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Fairly large with some additional bookkeeping information stored for every
+single object.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Indirect, where a variable or field whose type is an object holds only a
+pointer to that object, which is always on the heap. Accessing state on an
+object always requires a pointer indirection which can be slow due
+to &lt;a href=&quot;https://gameprogrammingpatterns.com/data-locality.html&quot;&gt;poor locality and cache misses&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Struct types&lt;/h3&gt;
+
+&lt;p&gt;Those are unnacceptable costs for a systems language like Go. When you &lt;em&gt;want&lt;/em&gt;
+runtime polymorphism, of course, you have to pay for it somehow. But if you&amp;rsquo;re
+just storing data in memory, Go doesn&amp;rsquo;t want to make you pay for something you
+aren&amp;rsquo;t using. To that end values of struct types in Go store just the bytes
+needed for the struct&amp;rsquo;s own fields.&lt;/p&gt;
+
+&lt;p&gt;If a field of a struct is itself some struct type, the inner struct&amp;rsquo;s fields are
+splatted directly into the surrounding struct&amp;rsquo;s contiguous memory. If you have a
+local variable of a struct type, the fields are stored right on the stack
+(unless you take a pointer to the struct which escapes the function).&lt;/p&gt;
+
+&lt;p&gt;This reduces memory overhead for structs and (probably more importantly for
+performance) reduces pointer indirections. In a typical Java program, the heap
+ends up being a huge spiderweb of tiny objects all pointing to each other and
+the poor CPU an exhausted spider traipsing all over that web trying to find the
+actual bits of data it wants to eat.&lt;/p&gt;
+
+&lt;p&gt;In a typical Go program, more state is stored directly on the stack, and the
+heap is &amp;ldquo;chunkier&amp;rdquo; with fewer, larger blobs of memory. The CPU does fewer hops
+around the heap and chews on bigger cookies of data every time it does. That
+makes memory access more cache friendly and also lightens the load on the
+garbage collector since there are fewer individual allocations to traverse.&lt;/p&gt;
+
+&lt;p&gt;(Java does something similar for primitive types, as does C# for struct types.)&lt;/p&gt;
+
+&lt;h3&gt;Interface types&lt;/h3&gt;
+
+&lt;p&gt;So structs are fast, great. But Go does feature runtime polymorphism in the form
+of interfaces. How does interface method dispatch work if a value is stored
+directly inline with no extra data to track its runtime type or method
+implementations?&lt;/p&gt;
+
+&lt;p&gt;The answer is that interfaces have a &lt;a href=&quot;https://research.swtch.com/interfaces&quot;&gt;completely different runtime
+representation&lt;/a&gt;. A variable of interface type takes up two words:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;A pointer to the type information used for runtime dispatch of the interface
+methods (in other words, basically a &lt;a href=&quot;https://en.wikipedia.org/wiki/Virtual_method_table&quot;&gt;vtable&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A pointer to the actual data used by the concrete type implementing the
+interface. (In cases where the data is just a single word, I think it&amp;rsquo;s
+stored inline.)&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The cute industry term for a representation like this is &amp;ldquo;fat pointer&amp;rdquo;: instead
+of a single word with a single pointer, it&amp;rsquo;s a pair of them, one for data and
+one for some kind of metadata or bookkeeping information.&lt;/p&gt;
+
+&lt;p&gt;One of the really cool things about Go is that you only use this representation&amp;mdash;you only pay for the increased memory and indirection cost of this
+representation&amp;mdash;when you ask for it and when you need it. In places where you
+need some virtual dispatch, you use an interface type and accept the overhead of
+a fat pointer and indirection. But in places where you just want to store a
+single concrete type, you use its underlying type and the memory is stored
+directly inline.&lt;/p&gt;
+
+&lt;p&gt;C# supports a similar distinction with classes and structs. But that&amp;rsquo;s mostly a
+&amp;ldquo;declaration time&amp;rdquo; choice. Once you&amp;rsquo;ve decided something is a class, every
+variable of that class&amp;rsquo;s type will store it as a reference to a heap-allocated
+object. Conversely, if you&amp;rsquo;ve declared something as a struct, it will always be
+stored inline on the stack or in the containing object (unless you go out of
+your way to box it).&lt;/p&gt;
+
+&lt;p&gt;In Go, the distinction between stored inline versus stored indirectly is made at
+each use site. That leads to some additional complexity for the user: they
+always have to think &amp;ldquo;should I use an interface, pointer, or struct type here?&amp;rdquo;,
+but it gives them more fine-grained control over how they spend memory and
+pointer indirection costs.&lt;/p&gt;
+
+&lt;h2&gt;Implicit conversions&lt;/h2&gt;
+
+&lt;p&gt;We&amp;rsquo;re close to understanding why Go lets you assign a struct to an interface
+but not a slice of those same structs to a slice of that same interface.&lt;/p&gt;
+
+&lt;p&gt;If structs and interfaces have entirely different memory representations, how
+does assignability work at all? When you do:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Rex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Shouldn&amp;rsquo;t that just mangle memory when it tries to treat the memory
+representation of a struct as if it were an interface? The answer is of course
+no. When compiling your code, Go knows the type of every variable and every
+expression. At every assignment, variable declaration, or parameter binding,
+it reports an error if the value isn&amp;rsquo;t assignable to the destination.&lt;/p&gt;
+
+&lt;p&gt;When the value is assignable, it still also knows whether or not those types are
+the same. If they&amp;rsquo;re exactly identical, then the assignment can be compiled to a
+single register move or memory copy. When they are different but still
+assignable types, the compiler &lt;em&gt;silently inserts code to convert the value
+type&amp;rsquo;s memory representation to the destination type&amp;rsquo;s representation.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;When you assign a value of a struct type to an interface type, the compiler
+inserts code to build a fat pointer, wire up its method table pointer to the
+right interface implementation, move the struct&amp;rsquo;s data onto the heap, etc.&lt;/p&gt;
+
+&lt;p&gt;Likewise, if you assign one interface type to another, the compiler inserts code
+to copy the data pointers over but look up the correct method table for the
+destination interface given the type information of the value&amp;rsquo;s interface type.&lt;/p&gt;
+
+&lt;p&gt;This right here is the reason that all composite types are invariant in Go.
+When assigning a single value to a related but different type, the compiler
+can easily insert fixed-cost code to convert the value&amp;rsquo;s runtime representation
+to the destination type&amp;rsquo;s. But to convert a slice of some struct type to a
+slice of an interface type would require an &lt;code&gt;O(n)&lt;/code&gt; traversal of the entire
+slice to convert each element.&lt;/p&gt;
+
+&lt;p&gt;Function types are even harder. In order to support covariant return types and
+contravariant parameter types, the compiler would need to insert conversion code
+&lt;em&gt;somewhere&lt;/em&gt;, but there&amp;rsquo;s no right place to put it. Putting it inside the
+function itself doesn&amp;rsquo;t work because it might be called with a variety of
+different parameter types and we don&amp;rsquo;t know what to convert it from. Putting it
+at the callsite before the parameters are passed likewise wouldn&amp;rsquo;t work because
+we don&amp;rsquo;t know what types every callback might require.&lt;/p&gt;
+
+&lt;p&gt;There is potentially something clever you could do by supporting multiple
+entrypoints to functions for each pair of source and destination types, but
+with multiple parameters you quickly run the risk of exponential code size
+explosions.&lt;/p&gt;
+
+&lt;p&gt;This is why languages that do support subtyping and variance almost always have
+a uniform memory representation for all objects that participate in the subtype
+hierarchy.&lt;/p&gt;
+
+&lt;h2&gt;Does Go have subtyping?&lt;/h2&gt;
+
+&lt;p&gt;If you make it this far, congratulations. This ended up being a much deeper dive
+than I expected. I learned a lot exploring this corner of the language space and
+I hope you learned something too.&lt;/p&gt;
+
+&lt;p&gt;Getting back to the original question, I think we could accurately describe Go&amp;rsquo;s
+subtyping story in two equivalent ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Yes, Go has subtyping, but it has no support for variance and all
+composite types are invariant.&lt;/strong&gt; This is, I think, how someone who is
+focused only on the abstract semantics of the language would describe it. If
+you were writing papers about type systems and needed to model Go&amp;rsquo;s you
+might adopt this perspective. If you didn&amp;rsquo;t care about how Go could be
+efficiently implemented because you were treating it purely as an
+abstraction, then this is a good way to look at it and compare it to other
+languages.&lt;/p&gt;
+
+&lt;p&gt;The main problem with the looking at the language this way is that it
+obscures &lt;em&gt;why&lt;/em&gt; every composite type is invariant.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;No, Go doesn&amp;rsquo;t have subtyping, but it does have implicit conversions
+between some pairs of types.&lt;/strong&gt; This is how the designers of Go describe the
+language. It&amp;rsquo;s the way you&amp;rsquo;d want to look at the language if you were tasked
+with sitting down and writing a production quality implementation of it. It
+describes what the language &lt;em&gt;actually does mechanically&lt;/em&gt; at compile time and
+runtime.&lt;/p&gt;
+
+&lt;p&gt;The challenge I found with this perspective is that it made it harder for me
+to relate Go&amp;rsquo;s design choices to other more explicitly object-oriented
+languages. You can look at this entire long article as my process of trying
+to figure out the first interpretation in terms of this one.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I started digging into this not because I&amp;rsquo;m an active Go user and want to know
+what&amp;rsquo;s going on under the hood. &lt;a href=&quot;https://dart.dev/&quot;&gt;My job&lt;/a&gt; and hobby is designing
+programming languages, so I want to know how other languages work to see what
+good ideas are out there to be harvested.&lt;/p&gt;
+
+&lt;p&gt;So the question always on my mind at this point is, &amp;ldquo;&lt;em&gt;Why&lt;/em&gt; did they design it
+this way and does that choice make sense in other languages?&amp;rdquo; And for this
+specific design choice, I think it&amp;rsquo;s pretty cool. You can imagine a language
+wanting three things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Non-uniform representation:&lt;/strong&gt; Values in memory take up only as much space
+as they need and avoid pointer indirection when possible to maximize
+runtime efficiency.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Polymorphism:&lt;/strong&gt; The ability to reuse code to work with a range of values
+of different types.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Variance:&lt;/strong&gt; Sort of the &amp;ldquo;lifted&amp;rdquo; form of polymorphism: The ability to
+reuse code to work with composite types that contain a range of inner types.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Those are all nice to have features, but it&amp;rsquo;s really hard to get all three at
+once. Most object-oriented languages sacrifice the first one to get the other
+two. That gives you flexibility and expressiveness but at a pervasive runtime
+cost spread throughout the entire program.&lt;/p&gt;
+
+&lt;p&gt;Some simpler statically-typed languages like C, Pascal, and SML give up
+polymorphism and variance which can give you more efficient representations at
+the cost of less code reuse.&lt;/p&gt;
+
+&lt;p&gt;Languages like C++ and Rust more or less give you all three at the expense of
+the compiler monomorphizing and generating specialized versions of every
+function that can work with multiple types, which makes compilation much slower
+and can have some runtime costs from all of the extra code sitting around in
+memory.&lt;/p&gt;
+
+&lt;p&gt;Go is aiming for a sweet spot where they give you fast compiles, efficient
+runtime execution, and as much flexibility as they can get away with. It
+sacrifices variance but keeps polymorphism at the individual value level. That
+married with implicit conversions enables non-uniform representation. Of the
+three, variance is probably the least valuable for users, so I think that&amp;rsquo;s a
+pretty smart trade-off.&lt;/p&gt;</content>
+  </entry>
 
   <entry>
     <id>http://journal.stuffwithstuff.com/2023/08/04/representing-heterogeneous-data</id>
@@ -4526,450 +5115,6 @@ good enough for me, and I hope this will be helpful for you too.&lt;/p&gt;
 
 &lt;p&gt;If you want to see all of the code for these demos, it&amp;rsquo;s &lt;a href=&quot;https://github.com/munificent/fov&quot;&gt;here&lt;/a&gt;. Or, in
 the context of &lt;a href=&quot;https://github.com/munificent/hauberk&quot;&gt;my game&lt;/a&gt; &lt;a href=&quot;https://github.com/munificent/hauberk/blob/afb52670ab0650aff97cb112d752a6b49f8593a4/lib/src/engine/stage/fov.dart&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;&lt;script type=&quot;application/dart&quot; src=&quot;/code/2015-09-07-what-the-hero-sees/main.dart&quot;&gt;&lt;/script&gt;&lt;script src=&quot;/code/2015-09-07-what-the-hero-sees/packages/browser/dart.js&quot;&gt;&lt;/script&gt;</content>
-  </entry>
-
-  <entry>
-    <id>http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function</id>
-    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/"/>
-    <title>What Color is Your Function?</title>
-    <published>2015-02-01T08:00:00.000Z</published>
-    <updated>2015-02-01T08:00:00.000Z</updated>
-    <author>
-      <name>Robert Nystrom</name>
-      <uri>http://journal.stuffwithstuff.com/</uri>
-    </author>
-    <content type="html">&lt;p&gt;I don&amp;rsquo;t know about you, but nothing gets me going in the morning quite like a
-good old fashioned programming language rant. It stirs the blood to see someone
-skewer one of those &lt;a href=&quot;http://www.paulgraham.com/avg.html&quot;&gt;&amp;ldquo;blub&amp;rdquo;&lt;/a&gt; languages the plebians use, muddling through
-their day with it between furtive visits to StackOverflow.&lt;/p&gt;
-
-&lt;p&gt;(Meanwhile, you and I, only use the most enlightened of languages. Chisel-sharp
-tools designed for the manicured hands of expert craftspersons such as
-ourselves.)&lt;/p&gt;
-
-&lt;p&gt;Of course, as the &lt;em&gt;author&lt;/em&gt; of said screed, I run a risk. The language I mock
-could be one you like! Without realizing it, I could have let the rabble into my
-blog, pitchforks and torches at the ready, and my fool-hardy pamphlet could draw
-their ire!&lt;/p&gt;
-
-&lt;p&gt;To protect myself from the heat of those flames, and to avoid offending your
-possibly delicate sensibilities, instead, I&amp;rsquo;ll rant about a language I just made
-up. A strawman whose sole purpose is to be set aflame.&lt;/p&gt;
-
-&lt;p&gt;I know, this seems pointless right? Trust me, by the end, we&amp;rsquo;ll see whose face
-(or faces!) have been painted on his straw noggin.&lt;/p&gt;
-
-&lt;h2&gt;A new language&lt;/h2&gt;
-
-&lt;p&gt;Learning an entire new (crappy) language just for a blog post is a tall order,
-so let&amp;rsquo;s say it&amp;rsquo;s mostly similar to one you and I already know. We&amp;rsquo;ll say it has
-syntax sorta like JS. Curly braces and semicolons. &lt;code&gt;if&lt;/code&gt;, &lt;code&gt;while&lt;/code&gt;, etc. The
-&lt;em&gt;lingua franca&lt;/em&gt; of the programming grotto.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;m picking JS &lt;em&gt;not&lt;/em&gt; because that&amp;rsquo;s what this post is about. It&amp;rsquo;s just that it&amp;rsquo;s
-the language you, statistical representation of the average reader, are most
-likely to be able grok. Voilà:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;thisIsAFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;It&amp;#39;s awesome&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Because our strawman is a &lt;em&gt;modern&lt;/em&gt; (shitty) language, we also have first-class
-functions. So you can make something like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Return a list containing all of the elements in collection&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// that match predicate.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;predicate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;predicate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This is one of those &lt;em&gt;higher-order&lt;/em&gt; functions, and, like the name implies, they
-are classy as all get out and super useful. You&amp;rsquo;re probably used to them for
-mucking around with collections, but once you internalize the concept, you start
-using them damn near everywhere.&lt;/p&gt;
-
-&lt;p&gt;Maybe in your testing framework:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;i&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;An apple&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ain&amp;#39;t no orange&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Apple&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Orange&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Or when you need to parse some data:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;i&quot;&gt;tokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;LEFT_BRACKET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;// Parse a list literal...&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;tokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;consume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;RIGHT_BRACKET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;So you go to town and write all sorts of awesome reusable libraries and
-applications passing around functions, calling functions, returning functions.
-Functapalooza.&lt;/p&gt;
-
-&lt;h2&gt;What color is your function?&lt;/h2&gt;
-
-&lt;p&gt;Except wait. Here&amp;rsquo;s where our language gets screwy. It has this one peculiar
-feature:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1. Every function has a color.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Each function&amp;mdash;anonymous callback or regular named one&amp;mdash;is either red or
-blue. Instead of a single &lt;code&gt;function&lt;/code&gt; keyword, there are two:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;blue&quot;&gt;blue_function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;doSomethingAzure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;// This is a blue function...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;red&quot;&gt;red_function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;doSomethingCarnelian&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;// This is a red function...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There are &lt;em&gt;no&lt;/em&gt; colorless functions in the language. Want to make a function?
-Gotta pick a color. Them&amp;rsquo;s the rules. And, actually, there are a couple more
-rules you have to follow too:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2. The way you call a function depends on its color.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Imagine a &amp;ldquo;blue call&amp;rdquo; syntax and a &amp;ldquo;red call&amp;rdquo; syntax. Something like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;i&quot;&gt;doSomethingAzure&lt;/span&gt;&lt;span class=&quot;blue&quot;&gt;()blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;doSomethingCarnelian&lt;/span&gt;&lt;span class=&quot;red&quot;&gt;()red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;When calling a function, you need to use the call that corresponds to its color.
-If you get it wrong&amp;mdash;call a red function with &lt;code&gt;blue&lt;/code&gt; after the parentheses
-or vice versa&amp;mdash;it does something bad. Dredge up some long-forgotten
-nightmare from your childhood like a clown with snakes for arms hiding under
-your bed. That jumps out of your monitor and sucks out your vitreous humour.&lt;/p&gt;
-
-&lt;p&gt;Annoying rule, right? Oh, and one more:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;3. You can only call a red function from within another red function.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;You &lt;em&gt;can&lt;/em&gt; call a blue function from within a red one. This is kosher:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;red&quot;&gt;red_function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;doSomethingCarnelian&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;doSomethingAzure&lt;/span&gt;&lt;span class=&quot;blue&quot;&gt;()blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;But you can&amp;rsquo;t go the other way. If you try to do this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;blue&quot;&gt;blue_function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;doSomethingAzure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;doSomethingCarnelian&lt;/span&gt;&lt;span class=&quot;red&quot;&gt;()red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Well, you&amp;rsquo;re gonna get a visit from old Spidermouth the Night Clown.&lt;/p&gt;
-
-&lt;p&gt;This makes writing higher-order functions like our &lt;code&gt;filter()&lt;/code&gt; example trickier.
-We have to pick a color for &lt;em&gt;it&lt;/em&gt; and that affects the colors of the functions
-we&amp;rsquo;re allowed to pass to it. The obvious solution is to make &lt;code&gt;filter()&lt;/code&gt; red.
-That way, it can take either red or blue functions and call them. But then we
-run into the next itchy spot in the hairshirt that is this language:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;4. Red functions are more painful to call.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;For now, I won&amp;rsquo;t precisely define &amp;ldquo;painful&amp;rdquo;, but just imagine that the
-programmer has to jump through some kind of annoying hoops every time they call
-a red function. Maybe it&amp;rsquo;s really verbose, or maybe you can&amp;rsquo;t do it inside
-certain kinds of statements. Maybe you can only call them on line numbers that
-are prime.&lt;/p&gt;
-
-&lt;p&gt;What matters is that if you decide to make a function red, everyone using your
-API will want to spit in your coffee and/or deposit some even less savory fluids
-in it.&lt;/p&gt;
-
-&lt;p&gt;The obvious solution then is to &lt;em&gt;never&lt;/em&gt; use red functions. Just make everything
-blue and you&amp;rsquo;re back to the sane world where all functions have the same color,
-which is equivalent to them all having no color, which is equivalent to our
-language not being entirely stupid.&lt;/p&gt;
-
-&lt;p&gt;Alas, the sadistic language designers&amp;mdash;and we all know all programming
-language designers are sadists, don&amp;rsquo;t we?&amp;mdash;jabbed one final thorn in our side:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;5. Some core library functions are red.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;There are some functions built in to the platform, functions that we &lt;em&gt;need&lt;/em&gt; to
-use, that we are unable to write ourselves, that only come in red. At this
-point, a reasonable person might think the language hates us.&lt;/p&gt;
-
-&lt;h2&gt;It&amp;rsquo;s functional programming&amp;rsquo;s fault!&lt;/h2&gt;
-
-&lt;p&gt;You might be thinking that the problem here is we&amp;rsquo;re trying to use higher-order
-functions. If we just stop flouncing around in all of that functional frippery
-and write normal blue collar first-order functions like God intended, we&amp;rsquo;d
-spare ourselves all the heartache.&lt;/p&gt;
-
-&lt;p&gt;If we only call blue functions, make our function blue. Otherwise, make it red.
-As long as we never make functions that accept functions, we don&amp;rsquo;t have to worry
-about trying to be &amp;ldquo;polymorphic over function color&amp;rdquo; (&amp;ldquo;polychromatic&amp;rdquo;?) or any
-nonsense like that.&lt;/p&gt;
-
-&lt;p&gt;But, alas, higher order functions are just one example. This problem is
-pervasive any time we want to break our program down into separate functions
-that get reused.&lt;/p&gt;
-
-&lt;p&gt;For example, let&amp;rsquo;s say we have a nice little blob of code that, I don&amp;rsquo;t know,
-implements Dijkstra&amp;rsquo;s algorithm over a graph representing how much your social
-network are crushing on each other. (I spent way too long trying to decide what
-such a result would even represent. Transitive undesirability?)&lt;/p&gt;
-
-&lt;p&gt;Later, you end up needing to use this same blob of code somewhere else. You do
-the natural thing and hoist it out into a separate function. You call it from
-the old place and your new code that uses it. But what color should it be?
-Obviously, you&amp;rsquo;ll make it blue if you can, but what if it uses one of those
-nasty red-only core library functions?&lt;/p&gt;
-
-&lt;p&gt;What if the new place you want to call it is blue? You&amp;rsquo;ll have to turn it red.
-Then you&amp;rsquo;ll have to turn the function that calls &lt;em&gt;it&lt;/em&gt; red. Ugh. No matter what,
-you&amp;rsquo;ll have to think about color constantly. It will be the sand in your
-swimsuit on the beach vacation of development.&lt;/p&gt;
-
-&lt;h2&gt;A colorful allegory&lt;/h2&gt;
-
-&lt;p&gt;Of course, I&amp;rsquo;m not really talking about color here, am I? It&amp;rsquo;s an allegory, a
-literary trick. The Sneetches isn&amp;rsquo;t about stars on bellies, it&amp;rsquo;s about race. By
-now, you may have an inkling of what color actually represents. If not, here&amp;rsquo;s
-the big reveal:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Red functions are asynchronous ones.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;If you&amp;rsquo;re programming in JavaScript on Node.js, everytime you define a function
-that &amp;ldquo;returns&amp;rdquo; a value by invoking a callback, you just made a red function.
-Look back at that list of rules and see how my metaphor stacks up:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Synchronous functions return values, async ones do not and instead invoke
-callbacks.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Synchronous functions give their result as a return value, async functions
-give it by invoking a callback you pass to it.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;You can&amp;rsquo;t call an async function from a synchronous one because you won&amp;rsquo;t be
-able to determine the result until the async one completes later.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Async functions don&amp;rsquo;t compose in expressions because of the callbacks, have
-different error-handling, and can&amp;rsquo;t be used with &lt;code&gt;try/catch&lt;/code&gt; or inside a lot
-of other control flow statements.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Node&amp;rsquo;s whole shtick is that the core libs are all asynchronous. (Though they
-did dial that back and start adding &lt;code&gt;___Sync()&lt;/code&gt; versions of a lot of
-things.)&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;When people talk about &amp;ldquo;callback hell&amp;rdquo; they&amp;rsquo;re talking about how annoying it is
-to have red functions in their language. When they create &lt;a href=&quot;https://www.npmjs.com/search?q=async&quot;&gt;4,089 libraries for
-doing asynchronous programming&lt;/a&gt;, they&amp;rsquo;re trying to cope at the library
-level with a problem that the language foisted onto them.&lt;/p&gt;
-
-&lt;div class=&quot;update&quot;&gt;
-&lt;p&gt;&lt;em&gt;Update 2021/12/03:&lt;/em&gt; 15,118 async libraries as of today.&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;h2&gt;I promise the future is better&lt;/h2&gt;
-
-&lt;p&gt;People in the Node community have realized that callbacks are a pain for a long
-time, and have looked around for solutions. One technique that gets a bunch of
-people excited is &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise&quot;&gt;&lt;em&gt;promises&lt;/em&gt;&lt;/a&gt;, which you may also know by their
-rapper name &amp;ldquo;futures&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;These are sort of a jacked up wrapper around a callback and an error handler. If
-you think of passing a callback and errorback to a function as a &lt;em&gt;concept&lt;/em&gt;, a
-promise is basically a &lt;em&gt;reification&lt;/em&gt; of that idea. It&amp;rsquo;s a first-class object
-that represents an asynchronous operation.&lt;/p&gt;
-
-&lt;p&gt;I just jammed a bunch of fancy PL language in that paragraph so it probably
-sounds like a sweet deal, but it&amp;rsquo;s basically snake oil. Promises &lt;em&gt;do&lt;/em&gt; make async
-code a little easier to write. They compose a bit better, so rule #4 isn&amp;rsquo;t
-&lt;em&gt;quite&lt;/em&gt; so onerous.&lt;/p&gt;
-
-&lt;p&gt;But, honestly, it&amp;rsquo;s like the difference between being punched in the gut versus
-being punched in the privates. Technically less painful, yes, but I don&amp;rsquo;t think
-anyone should really get thrilled about the value proposition.&lt;/p&gt;
-
-&lt;p&gt;You still can&amp;rsquo;t use them with exception handling or other control flow
-statements. You still can&amp;rsquo;t call a function that returns a future from
-synchronous code. (Well, you &lt;em&gt;can&lt;/em&gt;, but if you do, the person who later
-maintains your code will invent a time machine, travel back in time to the
-moment that you did this and stab you in the face with a #2 pencil.)&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ve still divided your entire world into asynchronous and synchronous halves
-and all of the misery that entails. So, even if your language features promises
-or futures, its face looks an awful lot like the one on my strawman.&lt;/p&gt;
-
-&lt;p&gt;(Yes, that means even &lt;a href=&quot;http://dartlang.org&quot;&gt;Dart&lt;/a&gt;, the language I work on. That&amp;rsquo;s why I&amp;rsquo;m so
-excited some of the team are &lt;a href=&quot;https://github.com/dart-lang/fletch&quot;&gt;experimenting with other concurrency
-models&lt;/a&gt;.)&lt;/p&gt;
-
-&lt;h2&gt;I&amp;rsquo;m awaiting a solution&lt;/h2&gt;
-
-&lt;p&gt;C# programmers are probably feeling pretty smug right now (a condition they&amp;rsquo;ve
-increasingly fallen prey to as Hejlsberg and company have piled sweet feature
-after sweet feature into the language). In C#, you can use &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/hh191443.aspx&quot;&gt;the &lt;code&gt;await&lt;/code&gt;
-keyword&lt;/a&gt; to invoke an
-asynchronous function.&lt;/p&gt;
-
-&lt;p&gt;This lets you make asynchronous calls just as easily as you can synchronous
-ones, with the tiny addition of a cute little keyword. You can nest &lt;code&gt;await&lt;/code&gt;
-calls in expressions, use them in exception handling code, stuff them inside
-control flow. Go nuts. Make it rain &lt;code&gt;await&lt;/code&gt; calls like a they&amp;rsquo;re dollars in the
-advance you got for your new rap album.&lt;/p&gt;
-
-&lt;p&gt;Async-await &lt;em&gt;is&lt;/em&gt; nice, which is why we&amp;rsquo;re adding it to Dart. It makes it a lot
-easier to &lt;em&gt;write&lt;/em&gt; asynchronous code. You know a &amp;ldquo;but&amp;rdquo; is coming. It is.
-&lt;em&gt;But&amp;hellip;&lt;/em&gt; you still have divided the world in two. Those async functions are
-easier to write, but &lt;em&gt;they&amp;rsquo;re still async functions&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ve still got two colors. Async-await solves annoying rule #4: they make red
-functions not much worse to call than blue ones. But all of the other rules are
-still there:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Synchronous functions return values, async ones return &lt;code&gt;Task&amp;lt;T&amp;gt;&lt;/code&gt; (or
-&lt;code&gt;Future&amp;lt;T&amp;gt;&lt;/code&gt; in Dart) wrappers around the value.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Sync functions are just called, async ones need an &lt;code&gt;await&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If you call an async function you&amp;rsquo;ve got this wrapper object when you
-actually want the &lt;code&gt;T&lt;/code&gt;. You can&amp;rsquo;t unwrap it unless you make &lt;em&gt;your&lt;/em&gt; function
-async and await it. (But see below.)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Aside from a liberal garnish of &lt;code&gt;await&lt;/code&gt;, we did at least fix this.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;C#&amp;rsquo;s core library is actually older than async so I guess they never had
-this problem.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;It &lt;em&gt;is&lt;/em&gt; better. I will take async-await over bare callbacks or futures any day
-of the week. But we&amp;rsquo;re lying to ourselves if we think all of our troubles are
-gone. As soon as you start trying to write higher-order functions, or reuse
-code, you&amp;rsquo;re right back to realizing color is still there, bleeding all over
-your codebase.&lt;/p&gt;
-
-&lt;h2&gt;What language &lt;em&gt;isn&amp;rsquo;t&lt;/em&gt; colored?&lt;/h2&gt;
-
-&lt;p&gt;So JS, Dart, C#, and Python have this problem. CoffeeScript and most other
-languages that compile to JS do too (which is why Dart inherited it). I &lt;em&gt;think&lt;/em&gt;
-even ClojureScript has this issue even though they&amp;rsquo;ve tried really hard to push
-against it with their &lt;a href=&quot;https://github.com/clojure/core.async&quot;&gt;core.async&lt;/a&gt; stuff.&lt;/p&gt;
-
-&lt;p&gt;Wanna know one that doesn&amp;rsquo;t? &lt;em&gt;Java.&lt;/em&gt; I know right? How often do you get to say,
-&amp;ldquo;Yeah, Java is the one that really does this right.&amp;rdquo;? But there you go. In
-their defense, they are actively trying to correct this oversight by moving to
-futures and async IO. It&amp;rsquo;s like a race to the bottom.&lt;/p&gt;
-
-&lt;p&gt;C# also actually &lt;em&gt;can&lt;/em&gt; avoid this problem too. They opted &lt;em&gt;in&lt;/em&gt; to having color.
-Before they added async-await and all of the &lt;code&gt;Task&amp;lt;T&amp;gt;&lt;/code&gt; stuff, you just used
-regular sync API calls. Three more languages that don&amp;rsquo;t have this problem: Go,
-Lua, and Ruby.&lt;/p&gt;
-
-&lt;p&gt;Any guess what they have in common?&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Threads.&lt;/em&gt; Or, more precisely: &lt;em&gt;multiple independent callstacks that &lt;a href=&quot;/2013/01/13/iteration-inside-and-out/&quot;&gt;can be
-switched between&lt;/a&gt;&lt;/em&gt;. It isn&amp;rsquo;t strictly necessary for them to be operating
-system threads. Goroutines in Go, coroutines in Lua, and fibers in Ruby are
-perfectly adequate.&lt;/p&gt;
-
-&lt;p&gt;(That&amp;rsquo;s why C# has that little caveat. You can avoid the pain of async in C# by
-using threads.)&lt;/p&gt;
-
-&lt;h2&gt;Remembrance of operations past&lt;/h2&gt;
-
-&lt;p&gt;The fundamental problem is &amp;ldquo;How do you pick up where you left off when an
-operation completes&amp;rdquo;? You&amp;rsquo;ve built up some big callstack and then you call some
-IO operation. For performance, that operation uses the operating system&amp;rsquo;s
-underlying asynchronous API. You &lt;em&gt;cannot&lt;/em&gt; wait for it to complete because it
-won&amp;rsquo;t. You have to return all the way back to your language&amp;rsquo;s event loop and
-give the OS some time to spin before it will be done.&lt;/p&gt;
-
-&lt;p&gt;Once operation completes, you need to resume what you were doing. The usual way
-a language &amp;ldquo;remembers where it is&amp;rdquo; is the &lt;em&gt;callstack&lt;/em&gt;. That tracks all of the
-functions that are currently being invoked and where the instruction pointer is
-in each one.&lt;/p&gt;
-
-&lt;p&gt;But to do async IO, you have to unwind and discard the entire C callstack. Kind
-of a Catch-22. You can do super fast IO, you just can&amp;rsquo;t do anything with the
-result! Every language that has async IO in its core&amp;mdash;or in the case of JS,
-the browser&amp;rsquo;s event loop&amp;mdash;copes with this in some way.&lt;/p&gt;
-
-&lt;p&gt;Node with its ever-marching-to-the-right callbacks stuffs all of those
-callframes in closures. When you do:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;makeSundae&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;scoopIceCream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;iceCream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;warmUpCaramel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;caramel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;i&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pourOnIceCream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;iceCream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;caramel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Each of those function expressions &lt;em&gt;closes&lt;/em&gt; over all of its surrounding
-context. That moves parameters like &lt;code&gt;iceCream&lt;/code&gt; and &lt;code&gt;caramel&lt;/code&gt; off the callstack
-and onto the heap. When the outer function returns and the callstack is
-trashed, it&amp;rsquo;s cool. That data is still floating around the heap.&lt;/p&gt;
-
-&lt;p&gt;The problem is you have to &lt;em&gt;manually&lt;/em&gt; reify every damn one of these steps.
-There&amp;rsquo;s actually a name for this transformation: &lt;a href=&quot;http://en.wikipedia.org/wiki/Continuation-passing_style&quot;&gt;&lt;em&gt;continuation-passing
-style&lt;/em&gt;&lt;/a&gt;. It was invented by language hackers in the 70s as an intermediate
-representation to use in the internals of their compilers. It&amp;rsquo;s a really bizarro
-way to represent code that happens to make some compiler optimizations easier to
-do.&lt;/p&gt;
-
-&lt;p&gt;No one ever for a second thought that a programmer would &lt;em&gt;write actual code
-like that&lt;/em&gt;. And then Node came along and all of the sudden here we are
-pretending to be compiler backends. Where did we go wrong?&lt;/p&gt;
-
-&lt;p&gt;Note that promises and futures don&amp;rsquo;t actually buy you anything, either. If
-you&amp;rsquo;ve used them, you know you&amp;rsquo;re still hand-creating giant piles of function
-literals. You&amp;rsquo;re just passing them to &lt;code&gt;.then()&lt;/code&gt; instead of to the asynchronous
-function itself.&lt;/p&gt;
-
-&lt;h2&gt;Awaiting a generated solution&lt;/h2&gt;
-
-&lt;p&gt;Async-await &lt;em&gt;does&lt;/em&gt; help. If you peel back your compiler&amp;rsquo;s skull and see what
-it&amp;rsquo;s doing when it hits an &lt;code&gt;await&lt;/code&gt; call you&amp;rsquo;d see it actually doing the
-CPS-transform. That&amp;rsquo;s &lt;em&gt;why&lt;/em&gt; you need to use &lt;code&gt;await&lt;/code&gt; in C#: it&amp;rsquo;s a clue to the
-compiler to say, &amp;ldquo;break the function in half here&amp;rdquo;. Everything after the &lt;code&gt;await&lt;/code&gt;
-gets hoisted into a new function that the compiler synthesizes on your behalf.&lt;/p&gt;
-
-&lt;p&gt;This is why async-await didn&amp;rsquo;t need any &lt;em&gt;runtime&lt;/em&gt; support in the .NET
-framework. The compiler compiles it away to a series of chained closures that
-it can already handle. (Interestingly, closures themselves also don&amp;rsquo;t need
-runtime support. &lt;em&gt;They&lt;/em&gt; get compiled to anonymous classes. In C#, closures
-really &lt;em&gt;are&lt;/em&gt; a &lt;a href=&quot;http://c2.com/cgi/wiki?ClosuresAndObjectsAreEquivalent&quot;&gt;poor man&amp;rsquo;s objects&lt;/a&gt;.)&lt;/p&gt;
-
-&lt;p&gt;You might be wondering when I&amp;rsquo;m going to bring up generators. Does your
-language have a &lt;code&gt;yield&lt;/code&gt; keyword? Then it can do something very similar.&lt;/p&gt;
-
-&lt;p&gt;(In fact, I &lt;em&gt;believe&lt;/em&gt; generators and async-await are isomorphic. I&amp;rsquo;ve got a bit
-of code floating around in some dark corner of my hard disc that implements a
-generator-style game loop using only async-await.)&lt;/p&gt;
-
-&lt;p&gt;Where was I? Oh, right. So with callbacks, promises, async-await, and
-generators, you ultimately end up taking your asynchronous function and
-smearing it out into a bunch of closures that live over in the heap.&lt;/p&gt;
-
-&lt;p&gt;Your function passes the outermost one into the runtime. When the event loop or
-IO operation is done, it invokes that function and you pick up where you left
-off. But that means everything above you &lt;em&gt;also&lt;/em&gt; has to return. You still have
-to unwind the &lt;em&gt;whole&lt;/em&gt; stack.&lt;/p&gt;
-
-&lt;p&gt;This is where the &amp;ldquo;red functions can only be called by red functions&amp;rdquo; rule
-comes from. You have to closurify the entire callstack all the way back to
-&lt;code&gt;main()&lt;/code&gt; or the event handler.&lt;/p&gt;
-
-&lt;h2&gt;Reified callstacks&lt;/h2&gt;
-
-&lt;p&gt;But if you have threads (green- or OS-level), you don&amp;rsquo;t need to do that. You
-can just suspend the entire thread and hop straight back to the OS or event
-loop &lt;em&gt;without having to return from all of those functions&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Go is the language that does this most beautifully in my opinion. As soon as
-you do any IO operation, it just parks that goroutine and resumes any other
-ones that aren&amp;rsquo;t blocked on IO.&lt;/p&gt;
-
-&lt;p&gt;If you look at the IO operations in the standard library, they seem
-synchronous. In other words, they just do work and then return a result when
-they are done. But it&amp;rsquo;s not that they&amp;rsquo;re synchronous in the sense that it would
-mean in JavaScript. Other Go code can run while one of these operations is
-pending. It&amp;rsquo;s that Go has &lt;em&gt;eliminated the distinction between synchronous and
-asynchronous code&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Concurrency in Go is a facet of how &lt;em&gt;you&lt;/em&gt; choose to model your program, and not
-a color seared into each function in the standard library. This means all of
-the pain of the five rules I mentioned above is completely and totally
-eliminated.&lt;/p&gt;
-
-&lt;p&gt;So, the next time you start telling me about some new hot language and how
-awesome its concurrency story is because it has asynchronous APIs, now you&amp;rsquo;ll
-know why I start grinding my teeth. Because it means you&amp;rsquo;re right back to red
-functions and blue ones.&lt;/p&gt;</content>
   </entry>
     
 

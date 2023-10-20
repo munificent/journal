@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Fri, 20 Oct 2023 03:16:15 GMT</pubDate>
-    <lastBuildDate>Fri, 20 Oct 2023 03:16:15 GMT</lastBuildDate>
+    <pubDate>Fri, 20 Oct 2023 13:42:39 GMT</pubDate>
+    <lastBuildDate>Fri, 20 Oct 2023 13:42:39 GMT</lastBuildDate>
 
 
     <item>
@@ -60,7 +60,7 @@ other type&amp;rdquo;.&lt;/p&gt;
 
 &lt;p&gt;You have a context that expects type A and you give it a value of type B. In
 languages without subtyping, that&amp;rsquo;s only OK if A and B are the exact same type.
-In SML, if you declare a variable with type &lt;code&gt;int&lt;/code&gt;, the only thing you can
+In Pascal, if you declare a variable with type &lt;code&gt;int&lt;/code&gt;, the only thing you can
 initialize it with is a value of type &lt;code&gt;int&lt;/code&gt;. Subtyping exists largely to loosen
 that restriction&amp;mdash;to allow &lt;em&gt;multiple&lt;/em&gt; different types to flow into some
 context. Why might a language want to permit that?&lt;/p&gt;

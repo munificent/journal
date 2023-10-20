@@ -52,7 +52,7 @@ other type".
 
 You have a context that expects type A and you give it a value of type B. In
 languages without subtyping, that's only OK if A and B are the exact same type.
-In SML, if you declare a variable with type `int`, the only thing you can
+In Pascal, if you declare a variable with type `int`, the only thing you can
 initialize it with is a value of type `int`. Subtyping exists largely to loosen
 that restriction -- to allow *multiple* different types to flow into some
 context. Why might a language want to permit that?

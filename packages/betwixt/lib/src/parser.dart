@@ -33,7 +33,8 @@ class Parser {
   /// Parses a sequence of code and text until it hits the end of the file.
   ///
   /// If [endKeywords] is given, stops if it encounters `{{` followed by any of
-  /// those keywords. This is used for parsing the contents of control flow tags.
+  /// those keywords. This is used for parsing the contents of control flow
+  /// tags.
   Stmt _sequence([List<TokenType>? endKeywords]) {
     var statements = <Stmt>[];
 

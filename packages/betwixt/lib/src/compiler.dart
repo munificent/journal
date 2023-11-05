@@ -120,9 +120,9 @@ class _Resolver implements ExprVisitor<void>, StmtVisitor<void> {
 
   @override
   void visitForStmt(ForStmt stmt) {
-    stmt.expression.accept(this);
+    stmt.sequence.accept(this);
     _blockScope(stmt.body, [stmt.variable]);
-    _blockScope(stmt.between, [stmt.before, stmt.after]);
+    _blockScope(stmt.betweenStatement, [stmt.before, stmt.after]);
     _blockScope(stmt.elseStatement);
   }
 

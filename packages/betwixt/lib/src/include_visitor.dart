@@ -22,7 +22,7 @@ class IncludeVisitor implements StmtVisitor<Future<void>> {
   @override
   Future<void> visitForStmt(ForStmt stmt) async {
     await stmt.body.accept(this);
-    await stmt.between?.accept(this);
+    await stmt.betweenStatement?.accept(this);
     await stmt.elseStatement?.accept(this);
   }
 

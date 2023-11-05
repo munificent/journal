@@ -23,7 +23,7 @@ entire system. Incrementality goes out the window.
 I wanted a template engine that could render a template and ask the host app for
 pieces of data *dynamically*. Instead of the host preemptively passing every bit
 of data to the renderer, the renderer *requests* data only when it is actually
-needed. This is what I mean by "lazy". The host app only calculates and provide
+needed. This is what I mean by "lazy". The host app only calculates and provides
 the data that the template actually ends up rendering.
 
 Some of this data might be generated dynamically. It might even be produced

@@ -32,9 +32,9 @@ class Renderer
 
   @override
   Future<void> visitForStmt(ForStmt stmt) async {
-    var sequence = await stmt.expression.accept(this);
+    var sequence = await stmt.sequence.accept(this);
     if (sequence is! Iterable<Object?>) {
-      _reporter.report(stmt.expression.span,
+      _reporter.report(stmt.sequence.span,
           'Object of type ${sequence.runtimeType} is not iterable.');
       return;
     }
@@ -44,12 +44,12 @@ class Renderer
     for (var element in sequence) {
       // TODO: Can the element be a future?
 
-      if (!isEmpty && stmt.between != null) {
+      if (!isEmpty && stmt.betweenStatement != null) {
         if (stmt.before != null) {
-          await _runInScope(stmt.between!,
+          await _runInScope(stmt.betweenStatement!,
               {stmt.before!.text: previous, stmt.after!.text: element});
         } else {
-          await _runInScope(stmt.between!);
+          await _runInScope(stmt.betweenStatement!);
         }
       }
 

@@ -13,13 +13,16 @@ class ErrorStmt implements Stmt {
 }
 
 class ForStmt implements Stmt {
+  /// Name of the variable for the current element.
   final Token variable;
-  // TODO: Rename.
-  final Expr expression;
+
+  /// Expression that evaluates to the sequence being iterated over.
+  final Expr sequence;
+
   final Stmt body;
 
-  // TODO: Rename.
-  final Stmt? between;
+  // The between clause, or `null` if there is none.
+  final Stmt? betweenStatement;
 
   /// Variable for the before variable in a between clause or `null` if none.
   final Token? before;
@@ -29,8 +32,8 @@ class ForStmt implements Stmt {
 
   final Stmt? elseStatement;
 
-  ForStmt(this.variable, this.expression, this.body, this.between, this.before,
-      this.after, this.elseStatement);
+  ForStmt(this.variable, this.sequence, this.body, this.betweenStatement,
+      this.before, this.after, this.elseStatement);
 
   @override
   R accept<R>(StmtVisitor<R> visitor) => visitor.visitForStmt(this);
@@ -135,7 +138,6 @@ abstract class Expr {
   R accept<R>(ExprVisitor<R> visitor);
 }
 
-// TODO: Test.
 class BinaryExpr extends Expr {
   final Expr left;
   final Token op;

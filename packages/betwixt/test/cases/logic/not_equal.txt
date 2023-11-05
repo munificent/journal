@@ -1,0 +1,19 @@
+same number {{ 123 != 123 }}
+different number {{ 123 != 124 }}
+different number type {{ 123.0 != 123 }}
+different type {{ 123 != "123" }}
+same string {{ "str" != "str" }}
+different string {{ "str" != "ing" }}
+same list {{ list1 != list1 }}
+different list {{ list1 != list2 }}
+--- output
+same number false
+different number true
+different number type false
+different type true
+same string false
+different string true
+same list false
+different list true
+--- data
+{"list1": [1, 2, 3], "list2": [1, 2, 3]}

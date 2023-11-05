@@ -69,13 +69,14 @@ class PrettyPrinter implements ExprVisitor<void>, StmtVisitor<void> {
   @override
   void visitForStmt(ForStmt stmt) {
     _beginBlock('for',
-        inline: [stmt.variable, 'in', stmt.expression], body: stmt.body);
+        inline: [stmt.variable, 'in', stmt.sequence], body: stmt.body);
 
     if (stmt.before != null) {
       _blockClause('between',
-          inline: [stmt.before, 'and', stmt.after], body: stmt.between);
+          inline: [stmt.before, 'and', stmt.after],
+          body: stmt.betweenStatement);
     } else {
-      _blockClause('between', body: stmt.between);
+      _blockClause('between', body: stmt.betweenStatement);
     }
 
     _blockClause('else', body: stmt.elseStatement);

@@ -52,7 +52,6 @@ enum TokenType {
   comma,
   dot,
   equal,
-  // TODO: Implement.
   bang,
   minus,
   plus,

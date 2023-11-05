@@ -224,12 +224,20 @@ class Renderer
   Future<Object?> visitUnaryExpr(UnaryExpr expr) async {
     var operand = await expr.expression.accept(this);
     switch ((expr.op.type, operand)) {
+      case (TokenType.bang, bool operand):
+        return !operand;
+
+      case (TokenType.bang, _):
+        _reporter.report(expr.op.span,
+            'Operand to "!" must be a Boolean but was ${operand.runtimeType}.');
+        return null;
+
       case (TokenType.minus, num operand):
         return -operand;
 
       case (TokenType.minus, _):
         _reporter.report(expr.op.span,
-            'Cannot negate a value of type ${operand.runtimeType}.');
+            'Operand to "-" must be a number but was ${operand.runtimeType}.');
         return null;
 
       default:

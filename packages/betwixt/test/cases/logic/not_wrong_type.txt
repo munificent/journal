@@ -1,0 +1,7 @@
+{{ !"wat" }}
+--- runtime errors
+line 1, column 4 of test: Operand to "!" must be a Boolean but was String.
+  ╷
+1 │ {{ !"wat" }}
+  │    ^
+  ╵

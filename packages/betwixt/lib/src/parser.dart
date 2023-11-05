@@ -237,7 +237,7 @@ class Parser {
   }
 
   Expr _unary() {
-    if (_match(TokenType.minus)) {
+    if (_match(TokenType.minus) || _match(TokenType.bang)) {
       var op = _previous;
       return UnaryExpr(op, _unary());
     }

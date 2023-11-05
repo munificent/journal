@@ -1,0 +1,11 @@
+{{ !yes }}
+{{ !no }}
+{{ !!yes }}
+{{ !!!no }}
+--- output
+false
+true
+true
+true
+--- data
+{"yes": true, "no": false}

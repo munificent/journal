@@ -73,7 +73,7 @@ class _Resolver implements ExprVisitor<void>, StmtVisitor<void> {
       } else if (maxArguments != null && expr.arguments.length > maxArguments) {
         _error(
             expr.name.span,
-            'Too many arguments. Expected at no more than '
+            'Too many arguments. Expected no more than '
             '$maxArguments but got ${expr.arguments.length}.');
       }
 

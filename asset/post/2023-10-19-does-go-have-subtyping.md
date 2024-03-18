@@ -96,7 +96,7 @@ of other types are allowed. Concretely, the rules are:
 >       implements I.
 >
 >   *   An interface type A is assignable to interface type B if A's methods
->       are a subset of B's.
+>       are a superset of B's.
 
 You know, that sounds an *awful lot* like subtyping. Is "assignable to" just Rob
 Pike's idiosyncratic way of saying "subtype of"? Does Go have subtyping in
@@ -271,7 +271,7 @@ perfectly safe. And, in fact, there's nothing you could put inside
 `useCallback()` that would make passing `returnDog` violate the soundness of the
 type system.
 
-It's theoretically safe... but Go disallows it:
+It's sound and semantically kosher in principle... but Go disallows it:
 
 ```
 ./prog.go:49:14: cannot use returnDog (value of type func() Dog) as
@@ -604,15 +604,15 @@ once. Most object-oriented languages sacrifice the first one to get the other
 two. That gives you flexibility and expressiveness but at a pervasive runtime
 cost spread throughout the entire program.
 
-Some simpler statically-typed languages like C, Pascal, and SML give up
-polymorphism and variance which can give you more efficient representations at
-the cost of less code reuse.
+Some statically-typed languages with simpler type systems like C, Pascal, and
+SML (ignoring modules, which are a whole other thing) give up polymorphism and
+variance which can give you more efficient representations at the cost of less
+code reuse.
 
 Languages like C++ and Rust more or less give you all three at the expense of
-the compiler monomorphizing and generating specialized versions of every
-function that can work with multiple types, which makes compilation much slower
-and can have some runtime costs from all of the extra code sitting around in
-memory.
+the compiler monomorphizing and generating specialized versions of a function
+for the different types it gets passed, which makes compilation much slower and
+can have some runtime costs from all of the extra code sitting around in memory.
 
 Go is aiming for a sweet spot where they give you fast compiles, efficient
 runtime execution, and as much flexibility as they can get away with. It

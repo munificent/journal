@@ -124,7 +124,7 @@ of other types are allowed. Concretely, the rules are:</p>
 <li><p>A non-interface type T is assignable to an interface type I if T
 implements I.</p></li>
 <li><p>An interface type A is assignable to interface type B if A&rsquo;s methods
-are a subset of B&rsquo;s.</p></li>
+are a superset of B&rsquo;s.</p></li>
 </ul>
 </blockquote>
 
@@ -284,7 +284,7 @@ perfectly safe. And, in fact, there&rsquo;s nothing you could put inside
 <code>useCallback()</code> that would make passing <code>returnDog</code> violate the soundness of the
 type system.</p>
 
-<p>It&rsquo;s theoretically safe&hellip; but Go disallows it:</p>
+<p>It&rsquo;s sound and semantically kosher in principle&hellip; but Go disallows it:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>.&#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
 func() Barker value in argument to useCallback
 </code></pre></div>
@@ -600,15 +600,15 @@ once. Most object-oriented languages sacrifice the first one to get the other
 two. That gives you flexibility and expressiveness but at a pervasive runtime
 cost spread throughout the entire program.</p>
 
-<p>Some simpler statically-typed languages like C, Pascal, and SML give up
-polymorphism and variance which can give you more efficient representations at
-the cost of less code reuse.</p>
+<p>Some statically-typed languages with simpler type systems like C, Pascal, and
+SML (ignoring modules, which are a whole other thing) give up polymorphism and
+variance which can give you more efficient representations at the cost of less
+code reuse.</p>
 
 <p>Languages like C++ and Rust more or less give you all three at the expense of
-the compiler monomorphizing and generating specialized versions of every
-function that can work with multiple types, which makes compilation much slower
-and can have some runtime costs from all of the extra code sitting around in
-memory.</p>
+the compiler monomorphizing and generating specialized versions of a function
+for the different types it gets passed, which makes compilation much slower and
+can have some runtime costs from all of the extra code sitting around in memory.</p>
 
 <p>Go is aiming for a sweet spot where they give you fast compiles, efficient
 runtime execution, and as much flexibility as they can get away with. It

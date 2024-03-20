@@ -16,3 +16,15 @@ class BetwixtFunction {
 
   BetwixtFunction(this.function, this.minimumArguments, this.maximumArguments);
 }
+
+/// Exception class used to report a runtime error from calling a function.
+class FunctionCallException {
+  /// The error message.
+  final String message;
+
+  /// The index of the argument that led to this error or -1 if the error isn't
+  /// associated with a particular argument.
+  final int argumentIndex;
+
+  FunctionCallException(this.message, [this.argumentIndex = -1]);
+}

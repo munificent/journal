@@ -16,6 +16,10 @@ final _testFunctions = {
   'oneArg': BetwixtFunction((args) => 'one arg(${args[0]})', 1, 1),
   'threeArgs': BetwixtFunction(
       (args) => 'three args(${args[0]}, ${args[1]}, ${args[2]})', 3, 3),
+  'twoToThreeArgs': BetwixtFunction((args) {
+    if (args.length == 2) return 'two(${args[0]}, ${args[1]})';
+    return 'three(${args[0]}, ${args[1]}, ${args[2]})';
+  }, 2, 3),
   'asynchronous': BetwixtFunction((args) => Future.value('later'), 0, 0),
   'testDate':
       BetwixtFunction((args) => DateTime(123, 4, 5, 6, 7, 8, 9, 10), 0, 0),

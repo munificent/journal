@@ -340,6 +340,7 @@ class Parser {
     // text.
     while (!_isDone) {
       _advance();
+      if (_isDone) return;
 
       if (_current.type == TokenType.closeTag) {
         _advance();

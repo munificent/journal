@@ -64,17 +64,18 @@ class _Resolver implements ExprVisitor<void>, StmtVisitor<void> {
         findFunction(expr.name.text);
 
     if (function != null) {
-      var maxArguments = function.maximumArguments;
-      if (expr.arguments.length < function.minimumArguments) {
-        _error(
-            expr.name.span,
-            'Not enough arguments. Expected at least '
-            '${function.minimumArguments} but got ${expr.arguments.length}.');
-      } else if (maxArguments != null && expr.arguments.length > maxArguments) {
-        _error(
-            expr.name.span,
-            'Too many arguments. Expected no more than '
-            '$maxArguments but got ${expr.arguments.length}.');
+      var min = function.minimumArguments;
+      var max = function.maximumArguments;
+      var arity = expr.arguments.length;
+      if (min == max && arity != min) {
+        _error(expr.name.span,
+            'Wrong number of arguments. Expected $min but got $arity.');
+      } else if (arity < min) {
+        _error(expr.name.span,
+            'Not enough arguments. Expected at least $min but got $arity.');
+      } else if (max != null && arity > max) {
+        _error(expr.name.span,
+            'Too many arguments. Expected no more than $max but got $arity.');
       }
 
       expr.function = function.function;

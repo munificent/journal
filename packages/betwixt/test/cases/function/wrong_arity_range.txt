@@ -1,0 +1,27 @@
+{{ twoToThreeArgs() }}
+{{ twoToThreeArgs(1) }}
+OK {{ twoToThreeArgs(1, 2) }}
+OK {{ twoToThreeArgs(1, 2, 3) }}
+{{ twoToThreeArgs(1, 2, 3, 4) }}
+{{ twoToThreeArgs(1, 2, 3, 4, 5) }}
+--- compile errors
+line 1, column 4 of test: Not enough arguments. Expected at least 2 but got 0.
+  ╷
+1 │ {{ twoToThreeArgs() }}
+  │    ^^^^^^^^^^^^^^
+  ╵
+line 2, column 4 of test: Not enough arguments. Expected at least 2 but got 1.
+  ╷
+2 │ {{ twoToThreeArgs(1) }}
+  │    ^^^^^^^^^^^^^^
+  ╵
+line 5, column 4 of test: Too many arguments. Expected no more than 3 but got 4.
+  ╷
+5 │ {{ twoToThreeArgs(1, 2, 3, 4) }}
+  │    ^^^^^^^^^^^^^^
+  ╵
+line 6, column 4 of test: Too many arguments. Expected no more than 3 but got 5.
+  ╷
+6 │ {{ twoToThreeArgs(1, 2, 3, 4, 5) }}
+  │    ^^^^^^^^^^^^^^
+  ╵

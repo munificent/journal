@@ -202,7 +202,18 @@ class Renderer
       arguments.add(await argument.accept(this));
     }
 
-    return expr.function(arguments);
+    try {
+      return expr.function(arguments);
+    } on FunctionCallException catch (exception) {
+      // Catch and report the runtime error.
+      var span = expr.name.span;
+      if (exception.argumentIndex != -1) {
+        span = expr.arguments[exception.argumentIndex].span;
+      }
+
+      _reporter.report(span, exception.message);
+      return null;
+    }
   }
 
   @override

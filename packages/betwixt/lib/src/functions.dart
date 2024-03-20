@@ -27,10 +27,11 @@ Object? _escapeXml(List<Object?> arguments) {
 }
 
 Object? _formatDate(List<Object?> arguments) {
-  var format = DateFormat(arguments[1].toString());
+  var date = _checkArgument<DateTime>(arguments, 'Date', 0);
+  var format = _checkArgument<String>(arguments, 'Format', 1);
+
   // TODO: Support other locales.
-  // TODO: Handle type errors better.
-  return format.format(arguments[0] as DateTime);
+  return DateFormat(format).format(date);
 }
 
 Object? _htmlEntitiesToXml(List<Object?> arguments) {
@@ -392,4 +393,18 @@ Object? _take(List<Object?> arguments) {
   var iterable = arguments[0] as Iterable<Object?>;
   var count = arguments[1] as int;
   return iterable.take(count);
+}
+
+/// Check that the argument at [argumentIndex] in [arguments] has type [T].
+///
+/// If so, returns it as that type. Otherwise, throws a runtime exception
+/// describing the incorrect argument.
+T _checkArgument<T>(
+    List<Object?> arguments, String argumentName, int argumentIndex) {
+  var argument = arguments[argumentIndex];
+  if (argument is T) return argument;
+
+  throw FunctionCallException(
+      '$argumentName must be a $T but was ${argument.runtimeType}.',
+      argumentIndex);
 }

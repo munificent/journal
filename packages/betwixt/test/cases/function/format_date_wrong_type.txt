@@ -1,0 +1,21 @@
+{{ format_date("not date", "d") }}
+{{ format_date(1234, "MMMM") }}
+
+{{ let date = testDate() }}
+{{ format_date(date, 1234) }}
+--- runtime errors
+line 1, column 16 of test: Date must be a DateTime but was String.
+  ╷
+1 │ {{ format_date("not date", "d") }}
+  │                ^^^^^^^^^^
+  ╵
+line 2, column 16 of test: Date must be a DateTime but was int.
+  ╷
+2 │ {{ format_date(1234, "MMMM") }}
+  │                ^^^^
+  ╵
+line 5, column 22 of test: Format must be a String but was int.
+  ╷
+5 │ {{ format_date(date, 1234) }}
+  │                      ^^^^
+  ╵

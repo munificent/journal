@@ -101,7 +101,7 @@ of other types are allowed. Concretely, the rules are:&lt;/p&gt;
 &lt;li&gt;&lt;p&gt;A non-interface type T is assignable to an interface type I if T
 implements I.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;An interface type A is assignable to interface type B if A&amp;rsquo;s methods
-are a subset of B&amp;rsquo;s.&lt;/p&gt;&lt;/li&gt;
+are a superset of B&amp;rsquo;s.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/blockquote&gt;
 
@@ -261,7 +261,7 @@ perfectly safe. And, in fact, there&amp;rsquo;s nothing you could put inside
 &lt;code&gt;useCallback()&lt;/code&gt; that would make passing &lt;code&gt;returnDog&lt;/code&gt; violate the soundness of the
 type system.&lt;/p&gt;
 
-&lt;p&gt;It&amp;rsquo;s theoretically safe&amp;hellip; but Go disallows it:&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s sound and semantically kosher in principle&amp;hellip; but Go disallows it:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;.&amp;#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
 func() Barker value in argument to useCallback
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -577,15 +577,15 @@ once. Most object-oriented languages sacrifice the first one to get the other
 two. That gives you flexibility and expressiveness but at a pervasive runtime
 cost spread throughout the entire program.&lt;/p&gt;
 
-&lt;p&gt;Some simpler statically-typed languages like C, Pascal, and SML give up
-polymorphism and variance which can give you more efficient representations at
-the cost of less code reuse.&lt;/p&gt;
+&lt;p&gt;Some statically-typed languages with simpler type systems like C, Pascal, and
+SML (ignoring modules, which are a whole other thing) give up polymorphism and
+variance which can give you more efficient representations at the cost of less
+code reuse.&lt;/p&gt;
 
 &lt;p&gt;Languages like C++ and Rust more or less give you all three at the expense of
-the compiler monomorphizing and generating specialized versions of every
-function that can work with multiple types, which makes compilation much slower
-and can have some runtime costs from all of the extra code sitting around in
-memory.&lt;/p&gt;
+the compiler monomorphizing and generating specialized versions of a function
+for the different types it gets passed, which makes compilation much slower and
+can have some runtime costs from all of the extra code sitting around in memory.&lt;/p&gt;
 
 &lt;p&gt;Go is aiming for a sweet spot where they give you fast compiles, efficient
 runtime execution, and as much flexibility as they can get away with. It

@@ -29,33 +29,35 @@ the case that B is a subtype of A, or it might not be.
 [relation]: https://en.wikipedia.org/wiki/Relation_(mathematics)
 
 Since subtyping is a relation between a pair of types, it only comes into play
-in a language in places where two types are involved. The main place is
-assignment. You have a variable with type A and you're assigning the result of
-an expression of type B to it. Is that assignment allowed?
+in places in code where two types are involved. The main place is assignment.
+You have an expression of type A and you assign the result to a variable with
+type B. Is that assignment allowed?
 
 Programming language folks usually generalize "assignment" to mean any place
 where a variable is given some value. That includes assignment expressions, but
 also covers initialized variable declarations and function calls where argument
-values are bound to parameters at the top of the function.
+values passed to the function are bound to their corresponding parameters.
 
 There are a couple of other places where subtyping comes into play, usually
 around type inference, but assignment is the main one: You have a context that
-requires some type A and a value of some type B. What are the types A and B
+requires some type B and a value of some type A. What are the types A and B
 where that code is valid?
 
 That question is the heart of what a type checker *does*. The main user
 interface of a static system is compile errors, and the most common compile
-error is "I expected a value of *this* type but you gave me a value or this
-other type".
+error is "I expected a value of *this* type but you gave me a value of *this
+other type*".
 
 ## Why have subtyping?
 
-You have a context that expects type A and you give it a value of type B. In
+You have a context that expects type B and you give it a value of type A. In
 languages without subtyping, that's only OK if A and B are the exact same type.
-In Pascal, if you declare a variable with type `int`, the only thing you can
-initialize it with is a value of type `int`. Subtyping exists largely to loosen
-that restriction -- to allow *multiple* different types to flow into some
-context. Why might a language want to permit that?
+In Pascal, if you declare a variable with type `integer`, the only thing you can
+initialize it with is a value of type `integer`.
+
+Subtyping exists largely to loosen that restriction -- to allow *multiple*
+different types to flow into some context. Why might a language want to permit
+that?
 
 The reason is *polymorphism*: Subtyping lets you write a piece of code and reuse
 that same code with a range of different (but related) types. In languages
@@ -63,8 +65,8 @@ without subtyping, you can often find yourself copy/pasting the same function to
 work with multiple different input types. (Generics can help, but that's another
 form of polymorphism that we'll ignore for this post.)
 
-In say, Java, if you define a method that takes an `Iterable`, then you can pass
-a `List` to it, a `Stack`, etc. You get to amortize the usefulness of that
+In, say, Java, if you define a method that takes an `Iterable`, then you can
+pass a `List` to it, a `Stack`, etc. You get to amortize the usefulness of that
 method across all types that implement the `Iterable` interface. Subtyping is a
 force multiplier for your code.
 
@@ -75,7 +77,7 @@ complexity, which is why I'm hoping to avoid it.)
 
 If you search the (extremely well-written!) [Go language spec][go spec] for
 "subtype", you get zero results. So the answer is a clear "no" at the textual
-level.
+level. However, we needer a deeper hermeneutics.
 
 [go spec]: https://go.dev/ref/spec
 
@@ -100,13 +102,15 @@ of other types are allowed. Concretely, the rules are:
 
 You know, that sounds an *awful lot* like subtyping. Is "assignable to" just Rob
 Pike's idiosyncratic way of saying "subtype of"? Does Go have subtyping in
-everything except name? To fully answer that, we'll need to look at all of the
-kinds of types in a program.
+everything except name? Are we just playing semantics? (I mean, we're designing
+a programming language, so obviously *everything* we do is playing semantics.
+But I mean are we playing semantics with the language spec itself?) To fully
+answer that, we'll need to look at all of the kinds of types in a program.
 
 ## Composite types and variance
 
 If the only types in Go's type system were primitives like numbers, structs, and
-interface then I think you'd have a good argument that Go does have subtyping,
+interfaces then I think you'd have a good argument that Go does have subtyping,
 just spelled differently. But once you start looking at slice types and function
 types, the story changes. (And array and channel types too, but slices and
 functions are enough to make the point.)
@@ -121,8 +125,8 @@ have types that contain other types. That raises the question of whether a
 relation on the inner types of two composite types says anything about the
 relation between the two outer types.
 
-For example, let's say we have two slice types `[]E1` and `[]E2` that are slices
-of elements of `E1` and `E2`, respectively. If `E1` is assignable to `E2` does
+For example, let's say we have two slice types `[]E1` and `[]E2`. They have
+element types `E1` and `E2`, respectively. If `E1` is assignable to `E2` does
 that mean that `[]E1` is assignable to `[]E2`? Does the assignability
 "propagate" from the inner types to the outer types?
 
@@ -134,7 +138,7 @@ this.
 ### Variance of slice types
 
 For slice types in Go specifically, there are a handful of assignability rules,
-but the only one that can apply to slice types is:
+but the only one that applies to slice types is:
 
 >   *   <p>V and T are identical.</p>
 
@@ -196,8 +200,10 @@ example.go:29:11: cannot use dogs (variable of type []Dog) as
 ```
 
 If the type system didn't yell at you, this program *would* be fine at runtime.
-So what's the deal? In this case, the program is *coincidentally* fine because
-`speakAll()` is only reading from the slice. But what if we wrote:
+All it does is call `Bark()` on every element in the array, and both Sparky and
+Fido do implement that method. So what's the deal? In this case, the program is
+*coincidentally* fine because `speakAll()` is only reading from the slice. But
+what if we wrote:
 
 ```go
 type Tree struct {
@@ -265,11 +271,11 @@ func main() {
 ```
 
 So we have a function, `returnDog` that returns a value of type `Dog`. We pass a
-reference to that function that expects a function that returns a `Barker`. The
-`Dog` type does implement `Barker`. If this program were run, it would be
-perfectly safe. And, in fact, there's nothing you could put inside
-`useCallback()` that would make passing `returnDog` violate the soundness of the
-type system.
+reference to that function to `useCallback()` whic expects a function that
+returns a `Barker`. The `Dog` type does implement `Barker`. If this program were
+run, it would be perfectly safe. And, in fact, there's nothing you could put
+inside `useCallback()` that would make passing `returnDog` to it violate the
+soundness of the type system.
 
 It's sound and semantically kosher in principle... but Go disallows it:
 
@@ -292,7 +298,7 @@ symmetric. The `Dog` type is assignable to `Barker`, but `Barker` is *not*
 assignable to `Dog`. The underlying value might be a `Tree`!
 
 Are there cases where the variance of an inner type doesn't go in the same
-direction as the outer types? Indeed there is, and they're right there next to
+direction as the outer types? Indeed there are, and they're right there next to
 us. Instead of return types, let's look at parameter types. Now let's say we
 only care about functions that accept a single parameter and return nothing.
 Here's an example:
@@ -376,10 +382,10 @@ about the performance of their code*.
 
 Up to this point, we've only been concerned with how types flow through the type
 checker at compile time. But -- assuming there are no compile errors -- the
-compiler eventually excretes some code which gets executed at runtime. When that
-happens, all of the types the type checker poked at have cracked out of their
-chrysalides and emerged as beautiful runtime value butterflies flitting around
-in memory.
+compiler eventually excretes some machine code which gets executed at runtime.
+When that happens, all of the types the type checker poked at have cracked out
+of their chrysalides and emerged as beautiful runtime value butterflies flitting
+around in memory.
 
 The choice of how values of different types are represented in memory has a
 massive effect on performance. So how do the rules around assignability and
@@ -427,9 +433,9 @@ actual bits of data it wants to eat.
 
 In a typical Go program, more state is stored directly on the stack, and the
 heap is "chunkier" with fewer, larger blobs of memory. The CPU does fewer hops
-around the heap and chews on bigger cookies of data every time it does. That
-makes memory access more cache friendly and also lightens the load on the
-garbage collector since there are fewer individual allocations to traverse.
+around the heap and chews on bigger data insects every time it does. That makes
+memory access more cache friendly and also lightens the load on the garbage
+collector since there are fewer individual allocations to traverse.
 
 (Java does something similar for primitive types, as does C# for struct types.)
 
@@ -453,7 +459,7 @@ representation][interface rep]. A variable of interface type takes up two words:
 [interface rep]: https://research.swtch.com/interfaces
 [vtable]: https://en.wikipedia.org/wiki/Virtual_method_table
 
-The cute industry term for a representation like this is "fat pointer": instead
+The cute industry term for a representation like this is *fat pointer*: instead
 of a single word with a single pointer, it's a pair of them, one for data and
 one for some kind of metadata or bookkeeping information.
 
@@ -506,9 +512,9 @@ no. When compiling your code, Go knows the type of every variable and every
 expression. At every assignment, variable declaration, or parameter binding,
 it reports an error if the value isn't assignable to the destination.
 
-When the value is assignable, it still also knows whether or not those types are
-the same. If they're exactly identical, then the assignment can be compiled to a
-single register move or memory copy. When they are different but still
+When the value is assignable, the compiler also knows whether or not those types
+are the same. If they're exactly identical, then the assignment can be compiled
+to a single register move or memory copy. When they are different but still
 assignable types, the compiler *silently inserts code to convert the value
 type's memory representation to the destination type's representation.*
 

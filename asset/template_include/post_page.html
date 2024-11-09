@@ -11,10 +11,8 @@
 {{ if older_post }}
   <a class="older" href="/{{ older_post.url }}/"
      title="Older Post &ldquo;{{ older_post.title }}&rdquo;">&#8617;</a>
-
 {{ end }}
 {{ if newer_post }}
-
   <a class="newer" href="/{{ newer_post.url }}/"
      title="Newer Post &ldquo;{{ newer_post.title }}&rdquo;">&#8618;</a>
 {{ end }}
@@ -25,8 +23,6 @@
 </h4>
 
 {{ post.content }}
-{{ include "social" with post = post }}
-
   
   <div class="comments">
     <div id="disqus_thread"></div>
@@ -45,6 +41,5 @@
   </div>
   
 </article>
-
 
 {{ include "nav" }}

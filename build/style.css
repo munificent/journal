@@ -392,7 +392,7 @@ article table tbody tr:nth-child(odd) {
 }
 
 .comments {
-  margin: 0 -48px -48px -48px;
+  margin: 24px -48px -48px -48px;
   padding: 24px 48px;
   background: hsl(35, 30%, 92%);
   color: hsl(35, 40%, 40%);

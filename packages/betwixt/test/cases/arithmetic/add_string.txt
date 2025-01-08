@@ -1,0 +1,19 @@
+Using "+" on strings concatenates.
+{{ "str" + "ing" }}
+{{ "a" + "   " + "b" + "" + "c" + "d" }}
+
+If only one operand is a string, the other is stringified.
+{{ "str" + 345 }}
+{{ 123 + "ing" }}
+{{ "str" + null }}
+{{ null + "ing" }}
+--- output
+Using "+" on strings concatenates.
+string
+a   bcd
+
+If only one operand is a string, the other is stringified.
+str345
+123ing
+strnull
+nulling

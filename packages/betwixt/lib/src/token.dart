@@ -46,17 +46,21 @@ enum TokenType {
   string,
   number,
 
-  /// Punctuation.
+  /// Brackets.
   leftParen,
   rightParen,
+
+  /// Operators.
+  bang,
+  bangEqual,
   comma,
   dot,
   equal,
-  bang,
+  equalEqual,
   minus,
   plus,
-  bangEqual,
-  equalEqual,
+  slash,
+  star,
   // TODO: Others.
 
   /// Keywords.
@@ -89,14 +93,14 @@ extension TokenTypeExtension on TokenType {
     TokenType.number: 'number',
     TokenType.leftParen: 'leftParen',
     TokenType.rightParen: 'rightParen',
+    TokenType.bang: 'bang',
+    TokenType.bangEqual: 'bangEqual',
     TokenType.comma: 'comma',
     TokenType.dot: 'dot',
     TokenType.equal: 'equal',
-    TokenType.bang: 'bang',
+    TokenType.equalEqual: 'equalEqual',
     TokenType.minus: 'minus',
     TokenType.plus: 'plus',
-    TokenType.bangEqual: 'bangEqual',
-    TokenType.equalEqual: 'equalEqual',
     TokenType.andKeyword: 'and',
     TokenType.betweenKeyword: 'between',
     TokenType.elseKeyword: 'else',

@@ -143,6 +143,17 @@ class Renderer
     var left = await expr.left.accept(this);
     var right = await expr.right.accept(this);
     switch ((left, expr.op.type, right)) {
+      // "!=".
+      case (_, TokenType.bangEqual, _):
+        // TODO: Are there any implicit conversions?
+        return left != right;
+
+      // "==".
+      case (_, TokenType.equalEqual, _):
+        // TODO: Are there any implicit conversions?
+        return left == right;
+
+      // "-".
       case (num left, TokenType.minus, num right):
         return left - right;
 
@@ -156,41 +167,98 @@ class Renderer
             'Cannot subtract from a value of type ${left.runtimeType}.');
         return null;
 
+      // "+".
       case (num left, TokenType.plus, num right):
         return left + right;
 
+      // TODO: I don't like having "+" implicitly stringify. My experience is
+      // that it causes bugs more often than it does something useful. At the
+      // same time, having to do `toString()` explicitly is also really
+      // annoying. I think the right answer is probably an explicit
+      // concatenation operator. Maybe `++` since it's unlikely we'll want
+      // increment operators.
       case (String left, TokenType.plus, var right):
         return left + right.toString();
 
       case (var left, TokenType.plus, String right):
         return left.toString() + right;
 
-      case (_, TokenType.plus, _):
-        if (left is! num && left is! String) {
-          _reporter.report(
-              expr.left.span,
-              'Operands to "+" must be numbers or strings, not '
-              '${left.runtimeType}.');
-        }
-
-        if (right is! num && right is! String) {
-          _reporter.report(
-              expr.right.span,
-              'Operands to "+" must be numbers or strings, not '
-              '${right.runtimeType}.');
-        }
-
+      case (_, TokenType.plus, _) when left is! num && left is! String:
+        _reporter.report(
+            expr.left.span,
+            'Operands to "+" must be numbers or strings, not '
+            '${left.runtimeType}.');
         return null;
 
-      case (_, TokenType.bangEqual, _):
-        // TODO: Are there any implicit conversions?
-        return left != right;
+      case (_, TokenType.plus, _) when right is! num && right is! String:
+        _reporter.report(
+            expr.right.span,
+            'Operands to "+" must be numbers or strings, not '
+            '${right.runtimeType}.');
+        return null;
 
-      case (_, TokenType.equalEqual, _):
-        // TODO: Are there any implicit conversions?
-        return left == right;
+      // "/".
+      case (num left, TokenType.slash, num right):
+        return left / right;
+
+      case (num _, TokenType.slash, _):
+        _reporter.report(expr.right.span,
+            'Cannot divide by a value of type ${right.runtimeType}.');
+        return null;
+
+      case (_, TokenType.slash, _):
+        _reporter.report(expr.left.span,
+            'Cannot divide a value of type ${left.runtimeType}.');
+        return null;
+
+      // "*".
+      case (num left, TokenType.star, num right):
+        return left * right;
+
+      // Using "*" on a string repeats it.
+      case (num count, TokenType.star, String _) when count < 0:
+        _reporter.report(
+            expr.left.span, 'Count operand can\'t be negative, was $count.');
+        return null;
+      case (num count, TokenType.star, String _) when count.toInt() != count:
+        _reporter.report(expr.left.span,
+            'Count operand "*" must be an integer, was $count.');
+        return null;
+      case (num count, TokenType.star, String text):
+        return text * count.toInt();
+
+      case (String _, TokenType.star, num count) when count < 0:
+        _reporter.report(
+            expr.right.span, 'Count operand can\'t be negative, was $count.');
+        return null;
+      case (String _, TokenType.star, num count) when count.toInt() != count:
+        _reporter.report(expr.right.span,
+            'Count operand "*" must be an integer, was $count.');
+        return null;
+      case (String text, TokenType.star, num count):
+        return text * count.toInt();
+
+      case (String _, TokenType.star, String _):
+        _reporter.report(expr.left.span.expand(expr.right.span),
+            'Operands to "*" can\'t both be strings.');
+        return null;
+
+      case (_, TokenType.star, _) when left is! num && left is! String:
+        _reporter.report(
+            expr.left.span,
+            'Operands to "*" must be numbers or a number and a string, not '
+            '${left.runtimeType}.');
+        return null;
+
+      case (_, TokenType.star, _) when right is! num && right is! String:
+        _reporter.report(
+            expr.right.span,
+            'Operands to "*" must be numbers or a number and a string, not '
+            '${right.runtimeType}.');
+        return null;
 
       default:
+        // We should handle all operand types before getting here.
         throw ArgumentError('Invalid binary operator ${expr.op.text}.');
     }
   }

@@ -1,0 +1,43 @@
+{{ true * 1 }}
+{{ 2 * false }}
+{{ 2 * null }}
+{{ null * 3 }}
+{{ "repeat" * null }}
+{{ null * "repeat" }}
+{{ "two" * "strings" }}
+--- runtime errors
+line 1, column 4 of test: Operands to "*" must be numbers or a number and a string, not bool.
+  ╷
+1 │ {{ true * 1 }}
+  │    ^^^^
+  ╵
+line 2, column 8 of test: Operands to "*" must be numbers or a number and a string, not bool.
+  ╷
+2 │ {{ 2 * false }}
+  │        ^^^^^
+  ╵
+line 3, column 8 of test: Operands to "*" must be numbers or a number and a string, not Null.
+  ╷
+3 │ {{ 2 * null }}
+  │        ^^^^
+  ╵
+line 4, column 4 of test: Operands to "*" must be numbers or a number and a string, not Null.
+  ╷
+4 │ {{ null * 3 }}
+  │    ^^^^
+  ╵
+line 5, column 15 of test: Operands to "*" must be numbers or a number and a string, not Null.
+  ╷
+5 │ {{ "repeat" * null }}
+  │               ^^^^
+  ╵
+line 6, column 4 of test: Operands to "*" must be numbers or a number and a string, not Null.
+  ╷
+6 │ {{ null * "repeat" }}
+  │    ^^^^
+  ╵
+line 7, column 4 of test: Operands to "*" can't both be strings.
+  ╷
+7 │ {{ "two" * "strings" }}
+  │    ^^^^^^^^^^^^^^^^^
+  ╵

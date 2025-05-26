@@ -80,6 +80,10 @@ class Scanner {
           _oneCharToken(TokenType.minus);
         case $plus:
           _oneCharToken(TokenType.plus);
+        case $slash:
+          _oneCharToken(TokenType.slash);
+        case $asterisk:
+          _oneCharToken(TokenType.star);
         case $double_quote:
           _stringLiteral();
         case _ when _scanner.scan('}}'):

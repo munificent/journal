@@ -1,0 +1,13 @@
+{{ "repeat" * 2 }}
+{{ 3 * "repeat" }}
+{{ "repeat" * 2.0 }}
+{{ 3.0 * "repeat" }}
+ze{{0 * "repeat"}}ro
+ze{{"repeat" * 0.0}}ro
+--- output
+repeatrepeat
+repeatrepeatrepeat
+repeatrepeat
+repeatrepeatrepeat
+zero
+zero

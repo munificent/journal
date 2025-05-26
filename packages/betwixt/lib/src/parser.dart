@@ -226,9 +226,21 @@ class Parser {
   }
 
   Expr _term() {
-    var expr = _unary();
+    var expr = _factor();
 
     while (_match(TokenType.plus) || _match(TokenType.minus)) {
+      var op = _previous;
+      var right = _factor();
+      expr = BinaryExpr(expr, op, right);
+    }
+
+    return expr;
+  }
+
+  Expr _factor() {
+    var expr = _unary();
+
+    while (_match(TokenType.slash) || _match(TokenType.star)) {
       var op = _previous;
       var right = _unary();
       expr = BinaryExpr(expr, op, right);

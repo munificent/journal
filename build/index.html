@@ -22,605 +22,465 @@
 <article>
 <header>
 <h1>
-  <a href="/2023/10/19/does-go-have-subtyping/" rel="bookmark"
-     title="Permanent Link to Does Go Have Subtyping?">
-    Does Go Have Subtyping?
+  <a href="/2025/05/26/access-control-syntax/" rel="bookmark"
+     title="Permanent Link to Access Control Syntax">
+    Access Control Syntax
   </a>
 </h1>
-  <a class="older" href="/2023/08/04/representing-heterogeneous-data/"
-     title="Older Post &ldquo;Representing Heterogeneous Data&rdquo;">&larr;</a>
+  <a class="older" href="/2023/10/19/does-go-have-subtyping/"
+     title="Older Post &ldquo;Does Go Have Subtyping?&rdquo;">&larr;</a>
 </header>
-<h4><a href="/archive">October 19, 2023</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/go">go</a> <a href="/category/language">language</a></span>
+<h4><a href="/archive">May 26, 2025</a>
+    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/vgs">vgs</a></span>
 </h4>
-<p>I&rsquo;ve been <a href="/2023/01/03/type-checking-if-expressions/">noodling on a static type system</a> for my current hobby
-language. To try to keep the language as simple as possible, I&rsquo;m trying to see
-if I can live without subtyping. Since most of my programming experience is in
-object-oriented languages, I&rsquo;ve been learning more about languages that lack&mdash;or at least claim to lack&mdash;subyping, to see how they work.</p>
+<p>I&rsquo;m still tinkering on a <a href="/2023/01/03/type-checking-if-expressions/">scripting language for my hobby fantasy console
+project</a>. I&rsquo;m ashamed to admit this, but up to this point, the language
+had absolutely no notion of modules. Literally every source file is dumped into
+one big global namespace and compiled together.</p>
 
-<p>The most intriguing one to me is Go because the authors say it doesn&rsquo;t have
-subtyping, but when you look at interfaces, it does seem to have something
-<em>really close</em> to subtyping. Is it subtyping just under another name, or is
-there really something different going on?</p>
-
-<p>This post is the answer to that question as best as I can tell. The short answer
-is that no, Go doesn&rsquo;t have subtyping. But also, yes, it sort of does.</p>
-
-<h2>What is subtyping?</h2>
-
-<p>If you&rsquo;re reading my blog, you probably already know what subtyping is, but
-let&rsquo;s make sure we&rsquo;re all starting from the same place. Subtyping defines a
-<a href="https://en.wikipedia.org/wiki/Relation_(mathematics)"><em>relation</em></a> between two types. Given two types A and B, it might be
-the case that B is a subtype of A, or it might not be.</p>
-
-<p>Since subtyping is a relation between a pair of types, it only comes into play
-in places in code where two types are involved. The main place is assignment.
-You have an expression of type A and you assign the result to a variable with
-type B. Is that assignment allowed?</p>
-
-<p>Programming language folks usually generalize &ldquo;assignment&rdquo; to mean any place
-where a variable is given some value. That includes assignment expressions, but
-also covers initialized variable declarations and function calls where argument
-values passed to the function are bound to their corresponding parameters.</p>
-
-<p>There are a couple of other places where subtyping comes into play, usually
-around type inference, but assignment is the main one: You have a context that
-requires some type B and a value of some type A. What are the types A and B
-where that code is valid?</p>
-
-<p>That question is the heart of what a type checker <em>does</em>. The main user
-interface of a static system is compile errors, and the most common compile
-error is &ldquo;I expected a value of <em>this</em> type but you gave me a value of <em>this
-other type</em>&rdquo;.</p>
-
-<h2>Why have subtyping?</h2>
-
-<p>You have a context that expects type B and you give it a value of type A. In
-languages without subtyping, that&rsquo;s only OK if A and B are the exact same type.
-In Pascal, if you declare a variable with type <code>integer</code>, the only thing you can
-initialize it with is a value of type <code>integer</code>.</p>
-
-<p>Subtyping exists largely to loosen that restriction&mdash;to allow <em>multiple</em>
-different types to flow into some context. Why might a language want to permit
-that?</p>
-
-<p>The reason is <em>polymorphism</em>: Subtyping lets you write a piece of code and reuse
-that same code with a range of different (but related) types. In languages
-without subtyping, you can often find yourself copy/pasting the same function to
-work with multiple different input types. (Generics can help, but that&rsquo;s another
-form of polymorphism that we&rsquo;ll ignore for this post.)</p>
-
-<p>In, say, Java, if you define a method that takes an <code>Iterable</code>, then you can
-pass a <code>List</code> to it, a <code>Stack</code>, etc. You get to amortize the usefulness of that
-method across all types that implement the <code>Iterable</code> interface. Subtyping is a
-force multiplier for your code.</p>
-
-<p>(Of course, that benefit isn&rsquo;t without significant costs in terms of language
-complexity, which is why I&rsquo;m hoping to avoid it.)</p>
-
-<h2>Does Go have subtyping?</h2>
-
-<p>If you search the (extremely well-written!) <a href="https://go.dev/ref/spec">Go language spec</a> for
-&ldquo;subtype&rdquo;, you get zero results. So the answer is a clear &ldquo;no&rdquo; at the textual
-level. However, we needer a deeper hermeneutics.</p>
-
-<p>Java does have subtyping. Now, if you were to make a new language named &ldquo;Blava&rdquo;
-that was a literal copy/paste of the Java language specification with every use
-of &ldquo;subtype&rdquo; replaced with &ldquo;blubtype&rdquo;, would you say that Blava has subtyping?
-It behaves indistinguishably from a language with subtyping, so I&rsquo;d be inclined
-to say yes.</p>
-
-<p>The Go spec doesn&rsquo;t mention &ldquo;subtype&rdquo;, but it does have a notion of
-<a href="https://go.dev/ref/spec#Assignability">&ldquo;assignability&rdquo;</a>. When you have a context that expects some type
-and you give it a value of some other type, assignability determines which set
-of other types are allowed. Concretely, the rules are:</p>
-
-<blockquote>
-<ul>
-<li><p>A non-interface type T is assignable to an interface type I if T
-implements I.</p></li>
-<li><p>An interface type A is assignable to interface type B if A&rsquo;s methods
-are a superset of B&rsquo;s.</p></li>
-</ul>
-</blockquote>
-
-<p>You know, that sounds an <em>awful lot</em> like subtyping. Is &ldquo;assignable to&rdquo; just Rob
-Pike&rsquo;s idiosyncratic way of saying &ldquo;subtype of&rdquo;? Does Go have subtyping in
-everything except name? Are we just playing semantics? (I mean, we&rsquo;re designing
-a programming language, so obviously <em>everything</em> we do is playing semantics.
-But I mean are we playing semantics with the language spec itself?) To fully
-answer that, we&rsquo;ll need to look at all of the kinds of types in a program.</p>
-
-<h2>Composite types and variance</h2>
-
-<p>If the only types in Go&rsquo;s type system were primitives like numbers, structs, and
-interfaces then I think you&rsquo;d have a good argument that Go does have subtyping,
-just spelled differently. But once you start looking at slice types and function
-types, the story changes. (And array and channel types too, but slices and
-functions are enough to make the point.)</p>
-
-<p>The thing that these latter kinds of types have in common is that they <em>contain
-other types</em>. A slice type has an inner type for the slice elements. A function
-type has a list of parameter types and a list of return types.</p>
-
-<p>You ready for some more computer science jargon? We&rsquo;ve been talking about
-relations on pairs of types like &ldquo;is subtype&rdquo; and &ldquo;is assignable&rdquo;. But now we
-have types that contain other types. That raises the question of whether a
-relation on the inner types of two composite types says anything about the
-relation between the two outer types.</p>
-
-<p>For example, let&rsquo;s say we have two slice types <code>[]E1</code> and <code>[]E2</code>. They have
-element types <code>E1</code> and <code>E2</code>, respectively. If <code>E1</code> is assignable to <code>E2</code> does
-that mean that <code>[]E1</code> is assignable to <code>[]E2</code>? Does the assignability
-&ldquo;propagate&rdquo; from the inner types to the outer types?</p>
-
-<p>Computer scientists call this property (meta-property?) <em>variance</em>. They phrase
-the question like &ldquo;how does assignability of slice types <em>vary with respect to
-their element types</em>?&rdquo;. There are a few possible answers to a question like
-this.</p>
-
-<h3>Variance of slice types</h3>
-
-<p>For slice types in Go specifically, there are a handful of assignability rules,
-but the only one that applies to slice types is:</p>
-
-<blockquote>
-<ul>
-<li><p>V and T are identical.</p></li>
-</ul>
-</blockquote>
-
-<p>In other words, for two slice types to be assignable, they have to be the exact
-same type. That in turn means they must have the exact same element types. Even
-if two element types are assignable, slices of those two types are not.</p>
-
-<p>Judging by an endless series of confused people asking questions on
-StackOverflow, that behavior is unintuitive to programmers, both in Go and in
-other languages. Let&rsquo;s say you have this Go program:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span> <span class="p">{</span>
-  <span class="i">name</span> <span class="t">string</span>
-<span class="p">}</span>
-
-<span class="k">type</span> <span class="i">Barker</span> <span class="k">interface</span> <span class="p">{</span>
-  <span class="i">Bark</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="i">d</span> <span class="i">Dog</span><span class="p">)</span> <span class="i">Bark</span><span class="p">()</span> <span class="p">{</span>
-  <span class="i">fmt</span><span class="p">.</span><span class="i">Println</span><span class="p">(</span><span class="s">&quot;Woof!&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Here we have a <code>Dog</code> concrete type, which is assignable to the interface
-<code>Barker</code>. So this is fine:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speak</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
-  <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="i">speak</span><span class="p">(</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Sparky&quot;</span><span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Given that, you might expect this to work too:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speakAll</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">for</span> <span class="i">_</span><span class="p">,</span> <span class="i">barker</span> <span class="p">:</span><span class="o">=</span> <span class="k">range</span> <span class="i">barkers</span> <span class="p">{</span>
-    <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="i">dogs</span> <span class="p">:</span><span class="o">=</span> <span class="p">[]</span><span class="i">Dog</span><span class="p">{</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Sparky&quot;</span><span class="p">},</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Fido&quot;</span><span class="p">}}</span>
-  <span class="i">speakAll</span><span class="p">(</span><span class="i">dogs</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>But, no. The type system giveth and the type system taketh away:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>example.go:29:11: cannot use dogs (variable of type []Dog) as
-[]Barker value in argument to speakAll
-</code></pre></div>
-<p>If the type system didn&rsquo;t yell at you, this program <em>would</em> be fine at runtime.
-All it does is call <code>Bark()</code> on every element in the array, and both Sparky and
-Fido do implement that method. So what&rsquo;s the deal? In this case, the program is
-<em>coincidentally</em> fine because <code>speakAll()</code> is only reading from the slice. But
-what if we wrote:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Tree</span> <span class="k">struct</span> <span class="p">{</span>
-  <span class="i">species</span> <span class="t">string</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="i">t</span> <span class="i">Tree</span><span class="p">)</span> <span class="i">Bark</span><span class="p">()</span> <span class="p">{</span>
-  <span class="i">fmt</span><span class="p">.</span><span class="i">Println</span><span class="p">(</span><span class="s">&quot;Rough (but not ruff)!&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">appendTree</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">[]</span><span class="i">Barker</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="i">append</span><span class="p">(</span><span class="i">barkers</span><span class="p">,</span> <span class="i">Tree</span><span class="p">{</span><span class="s">&quot;Elm&quot;</span><span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>There&rsquo;s nothing wrong with this <code>appendTree()</code> function. It adds a <code>Tree</code> to
-the given slice. Since <code>Tree</code> is assignable to <code>Barker</code>, that&rsquo;s fine. But if
-you were to call this and pass in a <code>[]Dog</code>, you&rsquo;d end up with an array of dogs
-that had a tree stuck in it! That would violate the soundness of the language.</p>
-
-<p>This is why Go only treats two slice types as assignable if they have the exact
-same element types. In PL parlance, slice types are <em>invariant</em> with respect
-to their element types. And, for a mutable data structure like slices, that
-rule makes sense.</p>
-
-<p>(A reasonable person might wonder then why Java and C# <em>don&rsquo;t</em> have this rule
-and instead say that array types <em>are</em> assignable if their element types are.
-And then, because as you can see, it isn&rsquo;t safe to do so, they have to add
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ArrayStoreException.html">runtime</a> <a href="https://learn.microsoft.com/en-us/dotnet/api/system.arraytypemismatchexception?view=net-7.0">checks</a> if you try to stuff an element of the
-wrong type into the array.)</p>
-
-<p>So, OK, it makes sense for slice (and array) types to be invariant. What about
-function types?</p>
-
-<h3>Variance of function types</h3>
-
-<p>To keep things simple, first we&rsquo;ll consider just functions that don&rsquo;t take any
-parameters and have a single return type. Given two function types like that,
-when are they assignable? Again, the only rule in the Go language spec that
-matches function types is <code>V and T are identical</code>. So two function types are
-only assignable if they have the exact same return types. Even if the return
-types are themselves assignable, if they are different types, the functions
-aren&rsquo;t assignable.</p>
-
-<p>Do we need to be that strict to preserve soundness? Actually, no! Here&rsquo;s an
-example:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go">
-<span class="k">func</span> <span class="i">returnDog</span><span class="p">()</span> <span class="i">Dog</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Rex&quot;</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">useCallback</span><span class="p">(</span><span class="i">callback</span> <span class="k">func</span><span class="p">()</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
-  <span class="i">barker</span> <span class="p">:</span><span class="o">=</span> <span class="i">callback</span><span class="p">()</span>
-  <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="i">useCallback</span><span class="p">(</span><span class="i">returnDog</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>So we have a function, <code>returnDog</code> that returns a value of type <code>Dog</code>. We pass a
-reference to that function to <code>useCallback()</code> whic expects a function that
-returns a <code>Barker</code>. The <code>Dog</code> type does implement <code>Barker</code>. If this program were
-run, it would be perfectly safe. And, in fact, there&rsquo;s nothing you could put
-inside <code>useCallback()</code> that would make passing <code>returnDog</code> to it violate the
-soundness of the type system.</p>
-
-<p>It&rsquo;s sound and semantically kosher in principle&hellip; but Go disallows it:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>.&#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
-func() Barker value in argument to useCallback
-</code></pre></div>
-<p>Every other language I know that has subtyping and function types allows this. A
-function type <code>A</code> is a subtype of another function type <code>B</code> if the return type
-of <code>A</code> is a subtype of the return type of <code>B</code>. So the subtyping relation of the
-return types propagates out to determine the subtype relation of the function
-types. We call this <em>covariance</em> and say that function types are <em>covariant in
-their return types</em>. The &ldquo;co-&rdquo; prefix means that the subtyping relation between
-the inner types goes in the &ldquo;same direction&rdquo; as the subtyping relation it
-implies about the outer types.</p>
-
-<p>That direction matters because relations like subtyping and assignability aren&rsquo;t
-symmetric. The <code>Dog</code> type is assignable to <code>Barker</code>, but <code>Barker</code> is <em>not</em>
-assignable to <code>Dog</code>. The underlying value might be a <code>Tree</code>!</p>
-
-<p>Are there cases where the variance of an inner type doesn&rsquo;t go in the same
-direction as the outer types? Indeed there are, and they&rsquo;re right there next to
-us. Instead of return types, let&rsquo;s look at parameter types. Now let&rsquo;s say we
-only care about functions that accept a single parameter and return nothing.
-Here&rsquo;s an example:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">acceptBarker</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
-  <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">useCallback</span><span class="p">(</span><span class="i">callback</span> <span class="k">func</span><span class="p">(</span><span class="i">Dog</span><span class="p">))</span> <span class="p">{</span>
-  <span class="i">callback</span><span class="p">(</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Laika&quot;</span><span class="p">})</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="i">useCallback</span><span class="p">(</span><span class="i">acceptBarker</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Note that the parameter types are flipped compared to the return type example.
-Here, the callback type in <code>useCallback()</code> takes a more precise type of <code>Dog</code>.
-The function we pass to it, <code>acceptBarker</code> has a parameter whose type is
-<code>Barker</code>.</p>
-
-<p>You may feel a slight disorientation here. The code feels weird and sort of
-backwards. Wait a minute and the dizziness will pass. Dramamine might help.</p>
-
-<p>While this definitely isn&rsquo;t as intuitive as return types being covariant, if you
-think about it carefully, you&rsquo;ll see that the above program is completely sound.
-In other languages with subtyping, function type <code>A</code> is a subtype of function
-type <code>B</code> if the parameter types of <code>B</code> are subtypes of the parameter types of
-<code>A</code>. Note how <code>A</code> and <code>B</code> are reversed in the second half of that sentence. The
-variance of parameter types is reversed. In technical terms, we say that
-function types are <em>contravariant in their parameter types</em>. The prefix
-&ldquo;contra-&rdquo; means &ldquo;against&rdquo;.</p>
-
-<p>(You might wonder what happens when you have a function type with a parameter
-whose type is itself a function type with some parameter type. How does <em>that</em>
-flow out? When there&rsquo;s two levels of nesting it flips around to going in the
-same direction as the outermost type. The way I think about it is that
-contravariance is a 180° flip in the direction of the relation. If you nest
-contravariant types, you flip it twice and get back to the original direction.)</p>
-
-<p>Contravariant parameter types are sound, but again Go doesn&rsquo;t allow them. Two
-function types are only assignable if their parameter types are <em>exactly the
-same</em>.</p>
-
-<h2>Invariance in Go</h2>
-
-<p>In every language I know with subtyping, function types are <a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Function_types">covariant in their
-return types and contravariant in their parameter types</a>. But in
-Go, function types are invariant.</p>
-
-<p>Go is not a language known for getting in the programmer&rsquo;s way when they want to
-do something, so why are function types more restrictive than would be necessary
-for soundness?</p>
-
-<p>It&rsquo;s not just function types either. <em>All</em> composite types are invariant in Go:
-arrays, slices, channels, maps, functions. So <em>ground</em> types&mdash;types that don&rsquo;t
-contain any other type&mdash;have some subtype-like notion of assignability. But
-once you wrap a type in another, any notion of assignability goes away.</p>
-
-<p>Why did the designers of Go do that? If you&rsquo;re going to bother having interfaces
-and assignability, why not go all the way and have assignability for functions
-and other composite types where its sound?</p>
-
-<p>If all the designers cared about was semantic correctness and having a beautiful
-elegant specification written in LaTeX, then they probably would have supported
-variance, at least for functions. (The other types all <em>should</em> be invariant
-since they are mutable. When types can flow both in and out, any other variance
-isn&rsquo;t sound.)</p>
-
-<p>But Go was designed from day one to be a high-performance systems language. It&rsquo;s
-the exact opposite of an ivory tower language designed for proofs and
-publications. The goal of the language is to let real users ship real
-applications. And, importantly, be able to ship <em>fast</em> applications and <em>reason
-about the performance of their code</em>.</p>
-
-<h2>Representing values</h2>
-
-<p>Up to this point, we&rsquo;ve only been concerned with how types flow through the type
-checker at compile time. But&mdash;assuming there are no compile errors&mdash;the
-compiler eventually excretes some machine code which gets executed at runtime.
-When that happens, all of the types the type checker poked at have cracked out
-of their chrysalides and emerged as beautiful runtime value butterflies flitting
-around in memory.</p>
-
-<p>The choice of how values of different types are represented in memory has a
-massive effect on performance. So how do the rules around assignability and
-subtyping interact with those representation choices?</p>
-
-<p>In many object-oriented languages (Java, C#, Python, etc.) values of object
-types are represented by pointers to a heap-allocated structure. That structure
-has some header information for garbage collection and runtime type tracking,
-maybe some kind of pointer to a <a href="https://en.wikipedia.org/wiki/Virtual_method_table">vtable</a> for virtual method dispatch, then
-(finally!) the memory used to store the instance&rsquo;s fields.</p>
-
-<p>There are differences between language implementations, of course, but objects
-are generally both:</p>
-
-<ol>
-<li><p>Slow to create since they are allocated on the heap.</p></li>
-<li><p>Fairly large with some additional bookkeeping information stored for every
-single object.</p></li>
-<li><p>Indirect, where a variable or field whose type is an object holds only a
-pointer to that object, which is always on the heap. Accessing state on an
-object always requires a pointer indirection which can be slow due
-to <a href="https://gameprogrammingpatterns.com/data-locality.html">poor locality and cache misses</a>.</p></li>
-</ol>
-
-<h3>Struct types</h3>
-
-<p>Those are unnacceptable costs for a systems language like Go. When you <em>want</em>
-runtime polymorphism, of course, you have to pay for it somehow. But if you&rsquo;re
-just storing data in memory, Go doesn&rsquo;t want to make you pay for something you
-aren&rsquo;t using. To that end values of struct types in Go store just the bytes
-needed for the struct&rsquo;s own fields.</p>
-
-<p>If a field of a struct is itself some struct type, the inner struct&rsquo;s fields are
-splatted directly into the surrounding struct&rsquo;s contiguous memory. If you have a
-local variable of a struct type, the fields are stored right on the stack
-(unless you take a pointer to the struct which escapes the function).</p>
-
-<p>This reduces memory overhead for structs and (probably more importantly for
-performance) reduces pointer indirections. In a typical Java program, the heap
-ends up being a huge spiderweb of tiny objects all pointing to each other and
-the poor CPU an exhausted spider traipsing all over that web trying to find the
-actual bits of data it wants to eat.</p>
-
-<p>In a typical Go program, more state is stored directly on the stack, and the
-heap is &ldquo;chunkier&rdquo; with fewer, larger blobs of memory. The CPU does fewer hops
-around the heap and chews on bigger data insects every time it does. That makes
-memory access more cache friendly and also lightens the load on the garbage
-collector since there are fewer individual allocations to traverse.</p>
-
-<p>(Java does something similar for primitive types, as does C# for struct types.)</p>
-
-<h3>Interface types</h3>
-
-<p>So structs are fast, great. But Go does feature runtime polymorphism in the form
-of interfaces. How does interface method dispatch work if a value is stored
-directly inline with no extra data to track its runtime type or method
-implementations?</p>
-
-<p>The answer is that interfaces have a <a href="https://research.swtch.com/interfaces">completely different runtime
-representation</a>. A variable of interface type takes up two words:</p>
-
-<ol>
-<li><p>A pointer to the type information used for runtime dispatch of the interface
-methods (in other words, basically a <a href="https://en.wikipedia.org/wiki/Virtual_method_table">vtable</a>).</p></li>
-<li><p>A pointer to the actual data used by the concrete type implementing the
-interface. (In cases where the data is just a single word, I think it&rsquo;s
-stored inline.)</p></li>
-</ol>
-
-<p>The cute industry term for a representation like this is <em>fat pointer</em>: instead
-of a single word with a single pointer, it&rsquo;s a pair of them, one for data and
-one for some kind of metadata or bookkeeping information.</p>
-
-<p>One of the really cool things about Go is that you only use this representation&mdash;you only pay for the increased memory and indirection cost of this
-representation&mdash;when you ask for it and when you need it. In places where you
-need some virtual dispatch, you use an interface type and accept the overhead of
-a fat pointer and indirection. But in places where you just want to store a
-single concrete type, you use its underlying type and the memory is stored
-directly inline.</p>
-
-<p>C# supports a similar distinction with classes and structs. But that&rsquo;s mostly a
-&ldquo;declaration time&rdquo; choice. Once you&rsquo;ve decided something is a class, every
-variable of that class&rsquo;s type will store it as a reference to a heap-allocated
-object. Conversely, if you&rsquo;ve declared something as a struct, it will always be
-stored inline on the stack or in the containing object (unless you go out of
-your way to box it).</p>
-
-<p>In Go, the distinction between stored inline versus stored indirectly is made at
-each use site. That leads to some additional complexity for the user: they
-always have to think &ldquo;should I use an interface, pointer, or struct type here?&rdquo;,
-but it gives them more fine-grained control over how they spend memory and
-pointer indirection costs.</p>
-
-<h2>Implicit conversions</h2>
-
-<p>We&rsquo;re close to understanding why Go lets you assign a struct to an interface
-but not a slice of those same structs to a slice of that same interface.</p>
-
-<p>If structs and interfaces have entirely different memory representations, how
-does assignability work at all? When you do:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span><span class="p">{</span>
-  <span class="i">name</span> <span class="t">string</span>
-<span class="p">}</span>
-
-<span class="k">type</span> <span class="i">Barker</span> <span class="k">interface</span> <span class="p">{</span>
-  <span class="i">Bark</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">var</span> <span class="i">barker</span> <span class="i">Barker</span> <span class="o">=</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Rex&quot;</span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Shouldn&rsquo;t that just mangle memory when it tries to treat the memory
-representation of a struct as if it were an interface? The answer is of course
-no. When compiling your code, Go knows the type of every variable and every
-expression. At every assignment, variable declaration, or parameter binding,
-it reports an error if the value isn&rsquo;t assignable to the destination.</p>
-
-<p>When the value is assignable, the compiler also knows whether or not those types
-are the same. If they&rsquo;re exactly identical, then the assignment can be compiled
-to a single register move or memory copy. When they are different but still
-assignable types, the compiler <em>silently inserts code to convert the value
-type&rsquo;s memory representation to the destination type&rsquo;s representation.</em></p>
-
-<p>When you assign a value of a struct type to an interface type, the compiler
-inserts code to build a fat pointer, wire up its method table pointer to the
-right interface implementation, move the struct&rsquo;s data onto the heap, etc.</p>
-
-<p>Likewise, if you assign one interface type to another, the compiler inserts code
-to copy the data pointers over but look up the correct method table for the
-destination interface given the type information of the value&rsquo;s interface type.</p>
-
-<p>This right here is the reason that all composite types are invariant in Go.
-When assigning a single value to a related but different type, the compiler
-can easily insert fixed-cost code to convert the value&rsquo;s runtime representation
-to the destination type&rsquo;s. But to convert a slice of some struct type to a
-slice of an interface type would require an <code>O(n)</code> traversal of the entire
-slice to convert each element.</p>
-
-<p>Function types are even harder. In order to support covariant return types and
-contravariant parameter types, the compiler would need to insert conversion code
-<em>somewhere</em>, but there&rsquo;s no right place to put it. Putting it inside the
-function itself doesn&rsquo;t work because it might be called with a variety of
-different parameter types and we don&rsquo;t know what to convert it from. Putting it
-at the callsite before the parameters are passed likewise wouldn&rsquo;t work because
-we don&rsquo;t know what types every callback might require.</p>
-
-<p>There is potentially something clever you could do by supporting multiple
-entrypoints to functions for each pair of source and destination types, but
-with multiple parameters you quickly run the risk of exponential code size
-explosions.</p>
-
-<p>This is why languages that do support subtyping and variance almost always have
-a uniform memory representation for all objects that participate in the subtype
-hierarchy.</p>
-
-<h2>Does Go have subtyping?</h2>
-
-<p>If you make it this far, congratulations. This ended up being a much deeper dive
-than I expected. I learned a lot exploring this corner of the language space and
-I hope you learned something too.</p>
-
-<p>Getting back to the original question, I think we could accurately describe Go&rsquo;s
-subtyping story in two equivalent ways:</p>
+<p>I always planned to have some sort of module system. I just hadn&rsquo;t figured it
+out yet because I had other, harder <a href="/2023/08/04/representing-heterogeneous-data/">language design problems</a> to
+solve. I assumed that the module system mostly didn&rsquo;t interact with other
+language features, so I could kick it down the road for now.</p>
+
+<p>That was true until it wasn&rsquo;t. I&rsquo;ve been beating my head against the wall around
+generics for.. oh God I just checked the Git history and it&rsquo;s three years now. I
+still don&rsquo;t have that pinned down. Parametric types are hard.</p>
+
+<p>Anyway, one of the approaches I&rsquo;m exploring <em>does</em> get tangled up in modules and
+scoping so now I have to figure modules out. This post is about one little
+syntax design question I ran into: <em>how do you distinguish public and private
+declarations?</em></p>
+
+<h2>A basic module system</h2>
+
+<p>Since my language is a scripting language, my ambitions for the module system
+are pretty minimal. Think more like Python or Dart than Java or C#.</p>
+
+<p>Every file has its own top-level scope that isn&rsquo;t shared with others. If you
+want to access top-level declarations from another file, you import that file.
+That makes its top-level declarations available in the importing file.</p>
+
+<p>Of course, a module might have some declarations that are only for its own
+internal use and should <em>not</em> be made available when you import it. A module
+should be able to encapsulate parts of its implementation. Thus, I need a way
+for users to indicate which declarations are private and which are public.</p>
+
+<h2>What other languages do</h2>
+
+<p>Every language out there has <em>some</em> kind of module system and an ability to
+control access (though it did take JavaScript about 20 years to get there, bless
+its heart). In some sense, it&rsquo;s a solved problem. But they don&rsquo;t all solve it
+the same way, especially if you dig into some of the more obscure corners of the
+language world. Let&rsquo;s go on a tour&hellip;</p>
+
+<h3>Modifier keywords</h3>
+
+<p>The approach you probably already have in mind is modifiers before declarations.
+In Java, C#, PHP and others, that&rsquo;s <code>public</code>, <code>private</code>. Maybe also more
+specific ones like <code>protected</code>, and <code>internal</code>.</p>
+
+<p>It&rsquo;s clear, explicit, and gets the job done. It lets you support a large number
+of flavors of access control if you need. It&rsquo;s also extremely common, so easy
+for users coming to a new language to pick up.</p>
+
+<p>The flip side is that it&rsquo;s quite verbose. Java is reviled for being too
+boilerplate-heavy and wordy, and I believe that having <code>private</code> and <code>public</code>
+scattered throughout every single file is a major contributor to that.</p>
+
+<p>Picking the wrong defaults doesn&rsquo;t help. I used to program in C# professionally
+for several years and in that time, I can&rsquo;t recall <em>ever</em> wanting a member to
+have <code>internal</code> access, which is the default. So I had to write <code>public</code> or
+<code>private</code> on basically everything. I think the same is true in Java land.</p>
+
+<p>Rust improves the situation by having a shorter modifier, <code>pub</code>, and picking
+what is arguably the right default for a language designed for Serious
+Programming: private.</p>
+
+<h3>Modifier sections</h3>
+
+<p>C++ has a strange but perhaps underappreciated spin on modifiers. It has access
+modifier keywords, but they apply to <em>all subsequent declarations</em>. This lets
+you write a keyword once and apply it to a whole bunch of things. That really
+does cut down the verbosity.</p>
+
+<p>The price to pay is that it also makes the language curiously context-sensitive.
+If you&rsquo;re ever defined a preprocessor macro that inserts code in a class and had
+to be careful <em>where</em> in the class you called the macro, you&rsquo;ve run into this.</p>
+
+<p>Access control sections mean that you can&rsquo;t look at a single declaration and now
+what its access is. You have to know what section contains the declaration.</p>
+
+<p>There&rsquo;s also the funny historical thing where members in struct default to
+public and members in classes default to private. C++ is <em>weird</em>. Like a house
+built on the back of some Eldritch being whose architecture and plumbing reveals
+the unholy foundation it is mated with.</p>
+
+<p>For presumably less Eldritch reasons, I believe Ada takes a similar approach.</p>
+
+<h3>Sigils in the names</h3>
+
+<p>Modifiers are clear but verbose. If you want something more syntactically
+economical, why not encode the access control directly in the name of the
+declaration itself? That&rsquo;s what Python, Go, and Dart do.</p>
+
+<p>Python&rsquo;s system is a mixture of informal and language supported. A leading
+underscore in a name doesn&rsquo;t <em>prohibit</em> it from being used outside of the module
+but it sends a signal to the user that they <em>shouldn&rsquo;t</em> use it. Sort of &ldquo;velvet
+rope&rdquo; security. If a class member starts with <em>two</em> leading underscores, then it
+really is private. The language will name mangle it to make it inaccessible.</p>
+
+<p>In Go, if a declaration&rsquo;s name starts with a capital letter, it&rsquo;s public.
+Otherwise, it&rsquo;s private. Because Go allows any Unicode letter in identifiers,
+the definition of uppercase <a href="https://en.wikipedia.org/wiki/Unicode_character_property#Casing">is not trivial</a>. Wikipedia tells me there are
+1,858 uppercase letters and 2,258 lowercase letters that can be used in
+identifiers on Go. Fun!</p>
+
+<p>Dart only allows ASCII in identifiers and follows Python: If an identifier
+starts with <code>_</code>, it&rsquo;s private. Otherwise it&rsquo;s public. Unlike Python, this is
+strictly enforced by the language. Private names are completely inaccessible
+outside of the library where the declaration appears.</p>
+
+<p>I don&rsquo;t have enough Python experience to have an opinion there aside from
+finding <code>__</code> pretty long. I work full-time on Dart and have only tinkered in Go
+so I&rsquo;m highly biased, but Go&rsquo;s approach has always felt strange to me. I&rsquo;m sure
+it&rsquo;s mostly habit, but my monkey brain really wants case to be used to
+distinguish kinds of declarations: leading capitals for types and lowercase for
+functions. Seeing types with lowercase names or functions with capital names
+gives me the same squishy feeling in my gut as watching <a href="https://en.wikipedia.org/wiki/The_Polar_Express_(film)">The Polar Express</a>.
+Dumb subjective biases aside, though, it seems to work fine in practice.</p>
+
+<p>I&rsquo;m much more used to Dart&rsquo;s style. I don&rsquo;t love it, but, eh, it gets the job
+done.</p>
+
+<p>These approaches both have the advantage of being very terse. No modifiers, no additional reserved words. There are two strikes against them:</p>
 
 <ul>
-<li><p><strong>Yes, Go has subtyping, but it has no support for variance and all
-composite types are invariant.</strong> This is, I think, how someone who is
-focused only on the abstract semantics of the language would describe it. If
-you were writing papers about type systems and needed to model Go&rsquo;s you
-might adopt this perspective. If you didn&rsquo;t care about how Go could be
-efficiently implemented because you were treating it purely as an
-abstraction, then this is a good way to look at it and compare it to other
-languages.</p>
+<li><p><strong>They&rsquo;re obscure.</strong> If you&rsquo;re new to Java and you see the word <code>private</code>,
+you probably don&rsquo;t know what it does, but you can guess it has something to
+do with &ldquo;privacy&rdquo;. With Go, if you see that some names are capitalized and
+some aren&rsquo;t, that tells you absolutely nothing about what&rsquo;s going on.
+Historical baggage? Weird personal preference? Maybe the author is German
+and prefers capitalizing nouns?</p>
 
-<p>The main problem with the looking at the language this way is that it
-obscures <em>why</em> every composite type is invariant.</p></li>
-<li><p><strong>No, Go doesn&rsquo;t have subtyping, but it does have implicit conversions
-between some pairs of types.</strong> This is how the designers of Go describe the
-language. It&rsquo;s the way you&rsquo;d want to look at the language if you were tasked
-with sitting down and writing a production quality implementation of it. It
-describes what the language <em>actually does mechanically</em> at compile time and
-runtime.</p>
+<p>Likewise, if you&rsquo;re skimming some Dart code, why do some of the names start
+with <code>_</code>? Do you pronounce that when you say the name out loud?</p>
 
-<p>The challenge I found with this perspective is that it made it harder for me
-to relate Go&rsquo;s design choices to other more explicitly object-oriented
-languages. You can look at this entire long article as my process of trying
-to figure out the first interpretation in terms of this one.</p></li>
+<p>You just have to be told what&rsquo;s going on because the language&rsquo;s own syntax
+doesn&rsquo;t guide you towards an explanation.</p></li>
+<li><p><strong>They show up at the use sites.</strong> Access control is a property of a
+<em>declaration</em>. So, in principle, any syntax for specifying it should only
+appear at that declaration. When you go to use a name, either you can access
+it (in which case no syntax is necessary) or you can&rsquo;t (in which case
+there&rsquo;s nothing you could say). But with Go and Dart, every place you
+mention the name also carries the access control.</p>
+
+<p>In theory, this could be a major problem if you want to <em>change</em> the access
+control of a declaration. You have to fix the identifier at every single use
+site! In practice, this doesn&rsquo;t actually cause much pain. If a name is going
+from private to public, then every existing use site is already confined to
+one file, so you can rename those without affecting the rest of the program.
+If an identifier is going from public to private, again all uses must
+already be confined to that file or you <em>can&rsquo;t</em> make it private without
+actually breaking things.</p></li>
 </ul>
 
-<p>I started digging into this not because I&rsquo;m an active Go user and want to know
-what&rsquo;s going on under the hood. <a href="https://dart.dev/">My job</a> and hobby is designing
-programming languages, so I want to know how other languages work to see what
-good ideas are out there to be harvested.</p>
+<p>I used to say that if I had a time machine, I would go back and change Dart to
+not use <code>_</code> for privacy. But I have mellowed on that opinion over the years and
+now I&rsquo;m not sure. I don&rsquo;t like how it shows up at every use site, but it <em>is</em>
+terse, which is nice.</p>
 
-<p>So the question always on my mind at this point is, &ldquo;<em>Why</em> did they design it
-this way and does that choice make sense in other languages?&rdquo; And for this
-specific design choice, I think it&rsquo;s pretty cool. You can imagine a language
-wanting three things:</p>
+<h3>Export manifests</h3>
+
+<p>Modifers put access control at the declaration. Sigils put it at the declaration
+and the use sites. The third major approach puts it at <em>neither</em>.</p>
+
+<p>Someone will tell me this generalization is wrong but I think most functional
+languages including the ML family and Lisps (including Scheme) have some kind of
+separate syntax for listing <em>exports</em>. Within a module, you declare all the
+functions and types you want without worrying about modularity. Then at the top
+of the file, the language gives you some dedicated syntax to list the things
+that should be made visible outside of the module.</p>
+
+<p>For example, in Scheme, the syntax for defining a module looks like:</p>
+<div class="highlight"><pre><code class="language-scheme" data-lang="scheme">(library library-name
+  (export list-of-names-to-export...)
+  declarations-in-library...)
+</code></pre></div>
+<p>SML and its spawn have a notion of a <a href="https://smlhelp.github.io/book/docs/start/module-syntax">signature</a> which is
+declared separately from the module. You could also argue that header files in C
+and C++ are this pattern.</p>
+
+<p>A cool thing about export manifests is that they keep all the access control
+logic in one place. When you&rsquo;re writing declarations, you don&rsquo;t have to worry
+about access control then. You just write declarations. As a <em>user</em> of a library,
+you can look at just the export section to see what the module lets you do
+without digging in to the implementation at all.</p>
+
+<p>It does a good job of <em>firmly</em> separating interface from implementation.</p>
+
+<p>On the other hand, it&rsquo;s <em>quite</em> verbose. You end up saying the name of every
+exported declaration twice. Maybe even the full type signatures too. Since the
+export manifest is separate from the declarations, they have to be manually kept
+in sync. Rename an exported function and you have to remember to rename it in
+the manifest too.</p>
+
+<p>I ragged on JavaScript for not having its act together, but I gotta say when
+they did add modules, they came up with a clever blended approach. You can use
+<code>export</code> as a modifier right on a declaration:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="i">width</span> <span class="o">*</span> <span class="i">height</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>But you can also use the <code>export</code> keyword to export a set of declarations that
+are already declared elsewhere:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="p">{</span> <span class="i">area</span> <span class="p">};</span>
+
+<span class="c">// Code...</span>
+
+<span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="i">width</span> <span class="o">*</span> <span class="i">height</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Given that modules were added later to the language, I&rsquo;m guessing this makes it
+easier to add modularity to a large existing JS library.</p>
+
+<h3>Sigils at the declaration</h3>
+
+<p>In poking around the annals of language history, I found one last approach in
+Niklaus Wirth&rsquo;s magnum opus language <a href="https://oberon.org/en">Oberon</a>.</p>
+
+<p>In Oberon, top-level declarations are private by default and only accessible
+to the containing module. If you want to make a declaration public, you mark
+the declaration with an asterisk:</p>
+<div class="highlight"><pre><code class="language-oberon" data-lang="oberon">MODULE Hello;
+  IMPORT Out;
+
+  PROCEDURE SayHello*;
+  BEGIN
+    Out.String(&quot;Hello World!&quot;);
+    Out.Ln;
+  END SayHello;
+END Hello.
+</code></pre></div>
+<p>Here, the <code>*</code> after <code>PROCEDURE SayHello</code> means that <code>SayHello</code> is public. Note
+that this marker is only at the declaration. It&rsquo;s not part of the name. At
+callsites, the name is just <code>HelloWorld</code>.</p>
+
+<p>This has the same inscrutability that Python, Go, and Dart have. If you&rsquo;re a new
+Oberon programmer and you see <code>*</code>, you have no idea what it means. Fortunately,
+there are no new Oberon programmers, so this is not a problem in practice.</p>
+
+<p>This approach has the advantage of only appearing at the declaration. You don&rsquo;t
+have to repeat the sigil every time you use the thing.</p>
+
+<h2>Any syntax at all?</h2>
+
+<p>I&rsquo;m sure there are interesting tweaks and refinements in various languages, but
+I think that mostly covers the approaches in use out there. (If you&rsquo;re aware of
+any others, do tell.) Which approach is the right one for <em>my</em> little scripting
+language?</p>
+
+<p>A deeply related question is the choice of <em>defaults</em>. Java has <code>public</code> for
+public stuff and <code>private</code> for private stuff, but it also has a syntax for
+package private declarations: nothing at all. If you don&rsquo;t specify anything,
+C++ makes your struct members public and your class members private.</p>
+
+<p>It&rsquo;s hard to beat &ldquo;zero syntax at all&rdquo; when it comes to brevity, so the choice
+of what access control a declaration gets by default is an important one.</p>
+
+<p>When I put on my rigorous software engineer hat&mdash;probably some kind of
+construction site hard hat&mdash;the obvious right default is private. No one can
+fit an entire huge program in their head, so code needs to be broken into
+smaller isolated pieces you can reason about locally. Defaulting to private
+encourages users to make smaller independent modules.</p>
+
+<p>If I was making a language for big mission-critical infrastructure software, I
+would definitely do that. I think Rust made the right choice by defaulting to
+private and requiring you to opt in to public with <code>pub</code>.</p>
+
+<p>But I am making, like, the opposite of that. A hobby project that may never see
+the light of day for people to make their own hobby games that, realistically,
+also may never see the light of day. If anything, I want to encourage
+(hypothetical) users of my (currently mostly vaporware) language to <em>get things
+done</em>. Access control can get in the way of that.</p>
+
+<h3>Class modifiers in Dart</h3>
+
+<p>A few years ago, we added a slew of <a href="https://dart.dev/language/class-modifiers">class modifiers</a> to Dart. These are not
+directly tied to public and private, but in the process of designing those, I
+spent a lot of time talking to users about how they use the language and what
+defaults they prefer.</p>
+
+<p>Dart defaults to public. You have to opt in to private by prefixing a name with
+an underscore. It turns out that most users actually do prefer public being the
+default. And after looking at mountains of Dart code, what I see is that most
+Dart code is relatively small applications. Those apps are built on top of a set
+of frameworks and libraries, but compared to the volume of application code out
+there, those libraries make up a fairly small fraction of the entire Dart
+ecosystem.</p>
+
+<p>These apps are the leaves of the dependency tree. Nothing depends on them or
+imports them. The authors of most of those are just trying to slap some UI
+together and ship a thing. And for most of those, defaulting to public keeps the
+language out of their way.</p>
+
+<h2>Syntax for privacy</h2>
+
+<p>That all leads me to feel that my scripting language should default to public
+and have a way to opt in to private. How do to that?</p>
+
+<h3>No export manifests</h3>
+
+<p>I know I don&rsquo;t want export manifests. They are much too verbose. Also, there is
+some extra language complexity and error reporting that gets sucked in. Since
+the manifest is separate from the declaration, the compiler has to handle cases
+where you try to export a name that doesn&rsquo;t exist. My language also has
+overloading, which means when exporting a function, you would need to a way to
+specify which of the overloads to export and which to leave private.</p>
+
+<p>Export manifests are just way more machinery than fits for a scripting language.
+This approach is out.</p>
+
+<h3>No modifier sections</h3>
+
+<p>The C++ approach is nice in that it&rsquo;s clear while still being pretty terse. You
+only need to write a modifier and can apply it to a bunch of declarations in the
+same scope.</p>
+
+<p>But at least in C++ (not sure about Ada), that only works within a type
+declaration. My language isn&rsquo;t really object oriented. It&rsquo;s more procedural.
+Sort of &ldquo;structs plus functions&rdquo; like C. Instead of classes, you have records.
+But a record declaration tends to be pretty small with only a handful of fields
+in it. There&rsquo;s not enough <em>stuff</em> inside a single record to benefit from reusing
+a modifier for a bunch of nested declarations.</p>
+
+<p>I could allow <code>private</code> at the top level and have it apply to everything after,
+but that feels like it errs too far in the other direction. It would be really
+confusing to have a thousand line file and not realize that half of it is
+private because some modifier way offscreen above flipped the access control.</p>
+
+<p>Modifier sections are out.</p>
+
+<h3>No sigils in identifiers</h3>
+
+<p>Sigils in identifiers do have a sort of terse, scripty feel. No extra keywords.</p>
+
+<p>I can&rsquo;t do Go&rsquo;s approach because my language already makes identifier leading
+case significant. It supports <a href="https://en.wikipedia.org/wiki/Pattern_matching#Tree_patterns">destructuring pattern matching</a>. Like some
+functional languages, it uses case to distinguish when a pattern is binding a
+new local variable (lowercase) versus matching against a type or constant
+(uppercase).</p>
+
+<p>Now I&rsquo;m not sure that corner of the language will stick, but it&rsquo;s there right
+now.</p>
+
+<p>I could do Python/Dart&rsquo;s approach and use a leading underscore. But I&rsquo;d really
+prefer to not have to mention the sigil at every single use site. After having
+written probably a million lines of Dart code, I know it&rsquo;s not intolerable. But
+it feels like an annoying tax. And for a language I&rsquo;m designing for my own joy,
+I&rsquo;d like to eliminate as many annoyances as possible.</p>
+
+<h3>Maybe modifiers</h3>
+
+<p>That leaves two approaches and is where I&rsquo;m currently at. Approach one is the
+typical solution to use an access control modifier at the declaration.
+Unfortunately, defaulting to public makes this harder. In Rust, <code>pub</code> is a
+really nice little keyword to flip to public when the default is private, but
+there is no obvious converse. <code>private</code> would be the longest keyword in my
+language. <code>pri</code> doesn&rsquo;t read like anything. <code>priv</code> is&hellip; strange. I suppose that
+<code>pvt</code> is the well-established abbreviation for &ldquo;private&rdquo; but that feels a tad
+militaristic.</p>
+
+<p>I can&rsquo;t find any other synonyms for &ldquo;private&rdquo; that admit reasonable
+abbreviations either. So I&rsquo;m open to taking this path, but I&rsquo;m simply failing to
+come up with a good keyword for it.</p>
+
+<p>(A silly goblin part of my brain suggested I use <code>shh</code> to mean &ldquo;private&rdquo;, like
+the declaration is being whispered and can&rsquo;t be heard outside of its module.)</p>
+
+<h3>Maybe sigils at the declaration</h3>
+
+<p>This leaves Oberon&rsquo;s weird approach. There are several advantages here:</p>
 
 <ul>
-<li><p><strong>Non-uniform representation:</strong> Values in memory take up only as much space
-as they need and avoid pointer indirection when possible to maximize
-runtime efficiency.</p></li>
-<li><p><strong>Polymorphism:</strong> The ability to reuse code to work with a range of values
-of different types.</p></li>
-<li><p><strong>Variance:</strong> Sort of the &ldquo;lifted&rdquo; form of polymorphism: The ability to
-reuse code to work with composite types that contain a range of inner types.</p></li>
+<li><p>It is maximally terse. Zero syntax at the use site, and only a single
+character at the declaration site.</p></li>
+<li><p>No additional reserved words which might get in the way of user identifiers.</p></li>
+<li><p>By defaulting to public, the opacity of the syntax is less of an issue. Yes,
+the sigil won&rsquo;t immediately convey what it does, but if you&rsquo;re just starting
+to use the language, you don&rsquo;t need to even know it exists at first. You
+can just make everything public.</p></li>
 </ul>
 
-<p>Those are all nice to have features, but it&rsquo;s really hard to get all three at
-once. Most object-oriented languages sacrifice the first one to get the other
-two. That gives you flexibility and expressiveness but at a pervasive runtime
-cost spread throughout the entire program.</p>
+<p>So there is some appeal. I don&rsquo;t think I can literally take Oberon&rsquo;s syntax
+with <code>*</code> following the name. My language lets you define operators and it would
+be confusing to have <code>*</code> right after other punctuation:</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="o">+*</span><span class="p">(</span><span class="i">left</span> <span class="t">Vec</span><span class="p">,</span> <span class="i">right</span> <span class="t">Vec</span><span class="p">)</span>
+  <span class="t">Vec</span><span class="p">(</span><span class="i">left</span><span class="p">.</span><span class="i">x</span> <span class="o">+</span> <span class="i">right</span><span class="p">.</span><span class="i">x</span><span class="p">,</span> <span class="i">left</span><span class="p">.</span><span class="i">y</span> <span class="o">+</span> <span class="i">right</span><span class="p">.</span><span class="i">y</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This is declaring a private <code>+</code> function. It would probably look equally weird
+to have <code>*</code> after the name in a record declaration:</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Vec</span><span class="o">*</span>
+  <span class="i">val</span> <span class="i">left</span> <span class="t">Int</span>
+  <span class="i">val</span> <span class="i">right</span> <span class="t">Int</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>That led me to thinking the sigil should be by the declaration keyword. In my
+language, every declaration form does start with a leading keyword (unlike, say,
+C where function declarations don&rsquo;t have one), so it&rsquo;s feasible. Something like:</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span><span class="o">*</span> <span class="t">Vec</span>
+  <span class="i">val</span> <span class="i">left</span> <span class="t">Int</span>
+  <span class="i">val</span> <span class="i">right</span> <span class="t">Int</span>
+<span class="k">end</span>
 
-<p>Some statically-typed languages with simpler type systems like C, Pascal, and
-SML (ignoring modules, which are a whole other thing) give up polymorphism and
-variance which can give you more efficient representations at the cost of less
-code reuse.</p>
+<span class="k">def</span><span class="o">*</span> <span class="i">sayHi</span><span class="p">()</span>
+  <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>I don&rsquo;t hate it. But using <code>*</code> feels weird for &ldquo;private&rdquo;. If anything, it seems
+to emphasize the declaration (which is what it does in Oberon where it means
+&ldquo;public&rdquo;).</p>
 
-<p>Languages like C++ and Rust more or less give you all three at the expense of
-the compiler monomorphizing and generating specialized versions of a function
-for the different types it gets passed, which makes compilation much slower and
-can have some runtime costs from all of the extra code sitting around in memory.</p>
+<h3>Maybe alternate keywords</h3>
 
-<p>Go is aiming for a sweet spot where they give you fast compiles, efficient
-runtime execution, and as much flexibility as they can get away with. It
-sacrifices variance but keeps polymorphism at the individual value level. That
-married with implicit conversions enables non-uniform representation. Of the
-three, variance is probably the least valuable for users, so I think that&rsquo;s a
-pretty smart trade-off.</p>
+<p>That led to my last idea which I can&rsquo;t decide if I like or not. Given Python and
+Dart, it seems like underscore vaguely conveys &ldquo;private&rdquo; to some people. So
+maybe use that? It looks like:</p>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="i">rec_</span> <span class="t">Vec</span>
+  <span class="i">val</span> <span class="i">left</span> <span class="t">Int</span>
+  <span class="i">val</span> <span class="i">right</span> <span class="t">Int</span>
+<span class="k">end</span>
+
+<span class="i">def_</span> <span class="i">sayHi</span><span class="p">()</span>
+  <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>It looks odd, but I don&rsquo;t <em>hate</em> it. Or at least I don&rsquo;t hate it any more than
+any novel programming language syntax usually triggers revulsion.</p>
+
+<p>However, there&rsquo;s sort of a problem. Underscore is a valid identifier character.
+So the <a href="https://craftinginterpreters.com/scanning.html">lexer</a> is not going to scan <code>rec_</code> as a <code>rec</code> keyword token followed
+by a <code>_</code> token. Instead of will treat <code>rec_</code> as a single identifier.</p>
+
+<p>But then&hellip; I could just let it do that. I&rsquo;d then define a separate set of
+reserved words for all of the private declaration keywords: <code>def_</code>, <code>rec_</code>,
+<code>var_</code>, and <code>val_</code>.</p>
+
+<p>So now instead of a modifier or sigil to control access, you explicitly choose
+one of two declaration keywords. One makes it public and one makes it private.
+This technically means adding a handful more reserved words, but they aren&rsquo;t
+ones that are particularly useful for users anyway.</p>
+
+<p>I keep trying to talk myself out of this approach because it&rsquo;s so unusual but so
+far it seems to be lodged in my head better than any of the alternatives I&rsquo;ve
+considered. What do you think?</p>
   <div class="comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2023/10/19/does-go-have-subtyping/";
+        var disqus_url = "https://journal.stuffwithstuff.com/2025/05/26/access-control-syntax/";
 
         (function() {
             var dsq = document.createElement('script');
@@ -642,31 +502,32 @@ pretty smart trade-off.</p>
   <div class="nav-second">
     <h2>Tags</h2>
     <ul>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
+      <li><a href="/category/blog">blog</a></li>
+      <li><a href="/category/book">book</a></li>
+      <li><a href="/category/c">c</a></li>
       <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/java">java</a></li>
+      <li><a href="/category/code">code</a></li>
       <li><a href="/category/cpp">cpp</a></li>
+      <li><a href="/category/dart">dart</a></li>
       <li><a href="/category/design">design</a></li>
+      <li><a href="/category/f-sharp">f-sharp</a></li>
+      <li><a href="/category/finch">finch</a></li>
+      <li><a href="/category/game-dev">game-dev</a></li>
       <li><a href="/category/game-patterns">game-patterns</a></li>
       <li><a href="/category/go">go</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
+      <li><a href="/category/java">java</a></li>
       <li><a href="/category/javascript">javascript</a></li>
+      <li><a href="/category/js">js</a></li>
+      <li><a href="/category/language">language</a></li>
       <li><a href="/category/lua">lua</a></li>
+      <li><a href="/category/magpie">magpie</a></li>
       <li><a href="/category/music">music</a></li>
+      <li><a href="/category/parsing">parsing</a></li>
+      <li><a href="/category/personal">personal</a></li>
+      <li><a href="/category/python">python</a></li>
+      <li><a href="/category/roguelike">roguelike</a></li>
+      <li><a href="/category/ruby">ruby</a></li>
+      <li><a href="/category/vgs">vgs</a></li>
     </ul>
     <p class="archive"><a href="/archive">All articles&hellip;</a></p>
 <p>This blog is built using a bespoke static site generator. The source repo

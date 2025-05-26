@@ -4,13 +4,468 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>2025-05-26T20:52:09.797619Z</updated>
+  <updated>2025-05-26T20:57:16.073926Z</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
     <email>robert@stuffwithstuff.com</email>
   </author>
 
+
+  <entry>
+    <id>http://journal.stuffwithstuff.com/2025/05/26/access-control-syntax</id>
+    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2025/05/26/access-control-syntax/"/>
+    <title>Access Control Syntax</title>
+    <published>2025-05-26T07:00:00.000Z</published>
+    <updated>2025-05-26T07:00:00.000Z</updated>
+    <author>
+      <name>Robert Nystrom</name>
+      <uri>http://journal.stuffwithstuff.com/</uri>
+    </author>
+    <content type="html">&lt;p&gt;I&amp;rsquo;m still tinkering on a &lt;a href=&quot;/2023/01/03/type-checking-if-expressions/&quot;&gt;scripting language for my hobby fantasy console
+project&lt;/a&gt;. I&amp;rsquo;m ashamed to admit this, but up to this point, the language
+had absolutely no notion of modules. Literally every source file is dumped into
+one big global namespace and compiled together.&lt;/p&gt;
+
+&lt;p&gt;I always planned to have some sort of module system. I just hadn&amp;rsquo;t figured it
+out yet because I had other, harder &lt;a href=&quot;/2023/08/04/representing-heterogeneous-data/&quot;&gt;language design problems&lt;/a&gt; to
+solve. I assumed that the module system mostly didn&amp;rsquo;t interact with other
+language features, so I could kick it down the road for now.&lt;/p&gt;
+
+&lt;p&gt;That was true until it wasn&amp;rsquo;t. I&amp;rsquo;ve been beating my head against the wall around
+generics for.. oh God I just checked the Git history and it&amp;rsquo;s three years now. I
+still don&amp;rsquo;t have that pinned down. Parametric types are hard.&lt;/p&gt;
+
+&lt;p&gt;Anyway, one of the approaches I&amp;rsquo;m exploring &lt;em&gt;does&lt;/em&gt; get tangled up in modules and
+scoping so now I have to figure modules out. This post is about one little
+syntax design question I ran into: &lt;em&gt;how do you distinguish public and private
+declarations?&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;A basic module system&lt;/h2&gt;
+
+&lt;p&gt;Since my language is a scripting language, my ambitions for the module system
+are pretty minimal. Think more like Python or Dart than Java or C#.&lt;/p&gt;
+
+&lt;p&gt;Every file has its own top-level scope that isn&amp;rsquo;t shared with others. If you
+want to access top-level declarations from another file, you import that file.
+That makes its top-level declarations available in the importing file.&lt;/p&gt;
+
+&lt;p&gt;Of course, a module might have some declarations that are only for its own
+internal use and should &lt;em&gt;not&lt;/em&gt; be made available when you import it. A module
+should be able to encapsulate parts of its implementation. Thus, I need a way
+for users to indicate which declarations are private and which are public.&lt;/p&gt;
+
+&lt;h2&gt;What other languages do&lt;/h2&gt;
+
+&lt;p&gt;Every language out there has &lt;em&gt;some&lt;/em&gt; kind of module system and an ability to
+control access (though it did take JavaScript about 20 years to get there, bless
+its heart). In some sense, it&amp;rsquo;s a solved problem. But they don&amp;rsquo;t all solve it
+the same way, especially if you dig into some of the more obscure corners of the
+language world. Let&amp;rsquo;s go on a tour&amp;hellip;&lt;/p&gt;
+
+&lt;h3&gt;Modifier keywords&lt;/h3&gt;
+
+&lt;p&gt;The approach you probably already have in mind is modifiers before declarations.
+In Java, C#, PHP and others, that&amp;rsquo;s &lt;code&gt;public&lt;/code&gt;, &lt;code&gt;private&lt;/code&gt;. Maybe also more
+specific ones like &lt;code&gt;protected&lt;/code&gt;, and &lt;code&gt;internal&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s clear, explicit, and gets the job done. It lets you support a large number
+of flavors of access control if you need. It&amp;rsquo;s also extremely common, so easy
+for users coming to a new language to pick up.&lt;/p&gt;
+
+&lt;p&gt;The flip side is that it&amp;rsquo;s quite verbose. Java is reviled for being too
+boilerplate-heavy and wordy, and I believe that having &lt;code&gt;private&lt;/code&gt; and &lt;code&gt;public&lt;/code&gt;
+scattered throughout every single file is a major contributor to that.&lt;/p&gt;
+
+&lt;p&gt;Picking the wrong defaults doesn&amp;rsquo;t help. I used to program in C# professionally
+for several years and in that time, I can&amp;rsquo;t recall &lt;em&gt;ever&lt;/em&gt; wanting a member to
+have &lt;code&gt;internal&lt;/code&gt; access, which is the default. So I had to write &lt;code&gt;public&lt;/code&gt; or
+&lt;code&gt;private&lt;/code&gt; on basically everything. I think the same is true in Java land.&lt;/p&gt;
+
+&lt;p&gt;Rust improves the situation by having a shorter modifier, &lt;code&gt;pub&lt;/code&gt;, and picking
+what is arguably the right default for a language designed for Serious
+Programming: private.&lt;/p&gt;
+
+&lt;h3&gt;Modifier sections&lt;/h3&gt;
+
+&lt;p&gt;C++ has a strange but perhaps underappreciated spin on modifiers. It has access
+modifier keywords, but they apply to &lt;em&gt;all subsequent declarations&lt;/em&gt;. This lets
+you write a keyword once and apply it to a whole bunch of things. That really
+does cut down the verbosity.&lt;/p&gt;
+
+&lt;p&gt;The price to pay is that it also makes the language curiously context-sensitive.
+If you&amp;rsquo;re ever defined a preprocessor macro that inserts code in a class and had
+to be careful &lt;em&gt;where&lt;/em&gt; in the class you called the macro, you&amp;rsquo;ve run into this.&lt;/p&gt;
+
+&lt;p&gt;Access control sections mean that you can&amp;rsquo;t look at a single declaration and now
+what its access is. You have to know what section contains the declaration.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s also the funny historical thing where members in struct default to
+public and members in classes default to private. C++ is &lt;em&gt;weird&lt;/em&gt;. Like a house
+built on the back of some Eldritch being whose architecture and plumbing reveals
+the unholy foundation it is mated with.&lt;/p&gt;
+
+&lt;p&gt;For presumably less Eldritch reasons, I believe Ada takes a similar approach.&lt;/p&gt;
+
+&lt;h3&gt;Sigils in the names&lt;/h3&gt;
+
+&lt;p&gt;Modifiers are clear but verbose. If you want something more syntactically
+economical, why not encode the access control directly in the name of the
+declaration itself? That&amp;rsquo;s what Python, Go, and Dart do.&lt;/p&gt;
+
+&lt;p&gt;Python&amp;rsquo;s system is a mixture of informal and language supported. A leading
+underscore in a name doesn&amp;rsquo;t &lt;em&gt;prohibit&lt;/em&gt; it from being used outside of the module
+but it sends a signal to the user that they &lt;em&gt;shouldn&amp;rsquo;t&lt;/em&gt; use it. Sort of &amp;ldquo;velvet
+rope&amp;rdquo; security. If a class member starts with &lt;em&gt;two&lt;/em&gt; leading underscores, then it
+really is private. The language will name mangle it to make it inaccessible.&lt;/p&gt;
+
+&lt;p&gt;In Go, if a declaration&amp;rsquo;s name starts with a capital letter, it&amp;rsquo;s public.
+Otherwise, it&amp;rsquo;s private. Because Go allows any Unicode letter in identifiers,
+the definition of uppercase &lt;a href=&quot;https://en.wikipedia.org/wiki/Unicode_character_property#Casing&quot;&gt;is not trivial&lt;/a&gt;. Wikipedia tells me there are
+1,858 uppercase letters and 2,258 lowercase letters that can be used in
+identifiers on Go. Fun!&lt;/p&gt;
+
+&lt;p&gt;Dart only allows ASCII in identifiers and follows Python: If an identifier
+starts with &lt;code&gt;_&lt;/code&gt;, it&amp;rsquo;s private. Otherwise it&amp;rsquo;s public. Unlike Python, this is
+strictly enforced by the language. Private names are completely inaccessible
+outside of the library where the declaration appears.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t have enough Python experience to have an opinion there aside from
+finding &lt;code&gt;__&lt;/code&gt; pretty long. I work full-time on Dart and have only tinkered in Go
+so I&amp;rsquo;m highly biased, but Go&amp;rsquo;s approach has always felt strange to me. I&amp;rsquo;m sure
+it&amp;rsquo;s mostly habit, but my monkey brain really wants case to be used to
+distinguish kinds of declarations: leading capitals for types and lowercase for
+functions. Seeing types with lowercase names or functions with capital names
+gives me the same squishy feeling in my gut as watching &lt;a href=&quot;https://en.wikipedia.org/wiki/The_Polar_Express_(film)&quot;&gt;The Polar Express&lt;/a&gt;.
+Dumb subjective biases aside, though, it seems to work fine in practice.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m much more used to Dart&amp;rsquo;s style. I don&amp;rsquo;t love it, but, eh, it gets the job
+done.&lt;/p&gt;
+
+&lt;p&gt;These approaches both have the advantage of being very terse. No modifiers, no additional reserved words. There are two strikes against them:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;They&amp;rsquo;re obscure.&lt;/strong&gt; If you&amp;rsquo;re new to Java and you see the word &lt;code&gt;private&lt;/code&gt;,
+you probably don&amp;rsquo;t know what it does, but you can guess it has something to
+do with &amp;ldquo;privacy&amp;rdquo;. With Go, if you see that some names are capitalized and
+some aren&amp;rsquo;t, that tells you absolutely nothing about what&amp;rsquo;s going on.
+Historical baggage? Weird personal preference? Maybe the author is German
+and prefers capitalizing nouns?&lt;/p&gt;
+
+&lt;p&gt;Likewise, if you&amp;rsquo;re skimming some Dart code, why do some of the names start
+with &lt;code&gt;_&lt;/code&gt;? Do you pronounce that when you say the name out loud?&lt;/p&gt;
+
+&lt;p&gt;You just have to be told what&amp;rsquo;s going on because the language&amp;rsquo;s own syntax
+doesn&amp;rsquo;t guide you towards an explanation.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;They show up at the use sites.&lt;/strong&gt; Access control is a property of a
+&lt;em&gt;declaration&lt;/em&gt;. So, in principle, any syntax for specifying it should only
+appear at that declaration. When you go to use a name, either you can access
+it (in which case no syntax is necessary) or you can&amp;rsquo;t (in which case
+there&amp;rsquo;s nothing you could say). But with Go and Dart, every place you
+mention the name also carries the access control.&lt;/p&gt;
+
+&lt;p&gt;In theory, this could be a major problem if you want to &lt;em&gt;change&lt;/em&gt; the access
+control of a declaration. You have to fix the identifier at every single use
+site! In practice, this doesn&amp;rsquo;t actually cause much pain. If a name is going
+from private to public, then every existing use site is already confined to
+one file, so you can rename those without affecting the rest of the program.
+If an identifier is going from public to private, again all uses must
+already be confined to that file or you &lt;em&gt;can&amp;rsquo;t&lt;/em&gt; make it private without
+actually breaking things.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I used to say that if I had a time machine, I would go back and change Dart to
+not use &lt;code&gt;_&lt;/code&gt; for privacy. But I have mellowed on that opinion over the years and
+now I&amp;rsquo;m not sure. I don&amp;rsquo;t like how it shows up at every use site, but it &lt;em&gt;is&lt;/em&gt;
+terse, which is nice.&lt;/p&gt;
+
+&lt;h3&gt;Export manifests&lt;/h3&gt;
+
+&lt;p&gt;Modifers put access control at the declaration. Sigils put it at the declaration
+and the use sites. The third major approach puts it at &lt;em&gt;neither&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Someone will tell me this generalization is wrong but I think most functional
+languages including the ML family and Lisps (including Scheme) have some kind of
+separate syntax for listing &lt;em&gt;exports&lt;/em&gt;. Within a module, you declare all the
+functions and types you want without worrying about modularity. Then at the top
+of the file, the language gives you some dedicated syntax to list the things
+that should be made visible outside of the module.&lt;/p&gt;
+
+&lt;p&gt;For example, in Scheme, the syntax for defining a module looks like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scheme&quot; data-lang=&quot;scheme&quot;&gt;(library library-name
+  (export list-of-names-to-export...)
+  declarations-in-library...)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;SML and its spawn have a notion of a &lt;a href=&quot;https://smlhelp.github.io/book/docs/start/module-syntax&quot;&gt;signature&lt;/a&gt; which is
+declared separately from the module. You could also argue that header files in C
+and C++ are this pattern.&lt;/p&gt;
+
+&lt;p&gt;A cool thing about export manifests is that they keep all the access control
+logic in one place. When you&amp;rsquo;re writing declarations, you don&amp;rsquo;t have to worry
+about access control then. You just write declarations. As a &lt;em&gt;user&lt;/em&gt; of a library,
+you can look at just the export section to see what the module lets you do
+without digging in to the implementation at all.&lt;/p&gt;
+
+&lt;p&gt;It does a good job of &lt;em&gt;firmly&lt;/em&gt; separating interface from implementation.&lt;/p&gt;
+
+&lt;p&gt;On the other hand, it&amp;rsquo;s &lt;em&gt;quite&lt;/em&gt; verbose. You end up saying the name of every
+exported declaration twice. Maybe even the full type signatures too. Since the
+export manifest is separate from the declarations, they have to be manually kept
+in sync. Rename an exported function and you have to remember to rename it in
+the manifest too.&lt;/p&gt;
+
+&lt;p&gt;I ragged on JavaScript for not having its act together, but I gotta say when
+they did add modules, they came up with a clever blended approach. You can use
+&lt;code&gt;export&lt;/code&gt; as a modifier right on a declaration:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But you can also use the &lt;code&gt;export&lt;/code&gt; keyword to export a set of declarations that
+are already declared elsewhere:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;// Code...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Given that modules were added later to the language, I&amp;rsquo;m guessing this makes it
+easier to add modularity to a large existing JS library.&lt;/p&gt;
+
+&lt;h3&gt;Sigils at the declaration&lt;/h3&gt;
+
+&lt;p&gt;In poking around the annals of language history, I found one last approach in
+Niklaus Wirth&amp;rsquo;s magnum opus language &lt;a href=&quot;https://oberon.org/en&quot;&gt;Oberon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In Oberon, top-level declarations are private by default and only accessible
+to the containing module. If you want to make a declaration public, you mark
+the declaration with an asterisk:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-oberon&quot; data-lang=&quot;oberon&quot;&gt;MODULE Hello;
+  IMPORT Out;
+
+  PROCEDURE SayHello*;
+  BEGIN
+    Out.String(&amp;quot;Hello World!&amp;quot;);
+    Out.Ln;
+  END SayHello;
+END Hello.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, the &lt;code&gt;*&lt;/code&gt; after &lt;code&gt;PROCEDURE SayHello&lt;/code&gt; means that &lt;code&gt;SayHello&lt;/code&gt; is public. Note
+that this marker is only at the declaration. It&amp;rsquo;s not part of the name. At
+callsites, the name is just &lt;code&gt;HelloWorld&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This has the same inscrutability that Python, Go, and Dart have. If you&amp;rsquo;re a new
+Oberon programmer and you see &lt;code&gt;*&lt;/code&gt;, you have no idea what it means. Fortunately,
+there are no new Oberon programmers, so this is not a problem in practice.&lt;/p&gt;
+
+&lt;p&gt;This approach has the advantage of only appearing at the declaration. You don&amp;rsquo;t
+have to repeat the sigil every time you use the thing.&lt;/p&gt;
+
+&lt;h2&gt;Any syntax at all?&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;m sure there are interesting tweaks and refinements in various languages, but
+I think that mostly covers the approaches in use out there. (If you&amp;rsquo;re aware of
+any others, do tell.) Which approach is the right one for &lt;em&gt;my&lt;/em&gt; little scripting
+language?&lt;/p&gt;
+
+&lt;p&gt;A deeply related question is the choice of &lt;em&gt;defaults&lt;/em&gt;. Java has &lt;code&gt;public&lt;/code&gt; for
+public stuff and &lt;code&gt;private&lt;/code&gt; for private stuff, but it also has a syntax for
+package private declarations: nothing at all. If you don&amp;rsquo;t specify anything,
+C++ makes your struct members public and your class members private.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s hard to beat &amp;ldquo;zero syntax at all&amp;rdquo; when it comes to brevity, so the choice
+of what access control a declaration gets by default is an important one.&lt;/p&gt;
+
+&lt;p&gt;When I put on my rigorous software engineer hat&amp;mdash;probably some kind of
+construction site hard hat&amp;mdash;the obvious right default is private. No one can
+fit an entire huge program in their head, so code needs to be broken into
+smaller isolated pieces you can reason about locally. Defaulting to private
+encourages users to make smaller independent modules.&lt;/p&gt;
+
+&lt;p&gt;If I was making a language for big mission-critical infrastructure software, I
+would definitely do that. I think Rust made the right choice by defaulting to
+private and requiring you to opt in to public with &lt;code&gt;pub&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;But I am making, like, the opposite of that. A hobby project that may never see
+the light of day for people to make their own hobby games that, realistically,
+also may never see the light of day. If anything, I want to encourage
+(hypothetical) users of my (currently mostly vaporware) language to &lt;em&gt;get things
+done&lt;/em&gt;. Access control can get in the way of that.&lt;/p&gt;
+
+&lt;h3&gt;Class modifiers in Dart&lt;/h3&gt;
+
+&lt;p&gt;A few years ago, we added a slew of &lt;a href=&quot;https://dart.dev/language/class-modifiers&quot;&gt;class modifiers&lt;/a&gt; to Dart. These are not
+directly tied to public and private, but in the process of designing those, I
+spent a lot of time talking to users about how they use the language and what
+defaults they prefer.&lt;/p&gt;
+
+&lt;p&gt;Dart defaults to public. You have to opt in to private by prefixing a name with
+an underscore. It turns out that most users actually do prefer public being the
+default. And after looking at mountains of Dart code, what I see is that most
+Dart code is relatively small applications. Those apps are built on top of a set
+of frameworks and libraries, but compared to the volume of application code out
+there, those libraries make up a fairly small fraction of the entire Dart
+ecosystem.&lt;/p&gt;
+
+&lt;p&gt;These apps are the leaves of the dependency tree. Nothing depends on them or
+imports them. The authors of most of those are just trying to slap some UI
+together and ship a thing. And for most of those, defaulting to public keeps the
+language out of their way.&lt;/p&gt;
+
+&lt;h2&gt;Syntax for privacy&lt;/h2&gt;
+
+&lt;p&gt;That all leads me to feel that my scripting language should default to public
+and have a way to opt in to private. How do to that?&lt;/p&gt;
+
+&lt;h3&gt;No export manifests&lt;/h3&gt;
+
+&lt;p&gt;I know I don&amp;rsquo;t want export manifests. They are much too verbose. Also, there is
+some extra language complexity and error reporting that gets sucked in. Since
+the manifest is separate from the declaration, the compiler has to handle cases
+where you try to export a name that doesn&amp;rsquo;t exist. My language also has
+overloading, which means when exporting a function, you would need to a way to
+specify which of the overloads to export and which to leave private.&lt;/p&gt;
+
+&lt;p&gt;Export manifests are just way more machinery than fits for a scripting language.
+This approach is out.&lt;/p&gt;
+
+&lt;h3&gt;No modifier sections&lt;/h3&gt;
+
+&lt;p&gt;The C++ approach is nice in that it&amp;rsquo;s clear while still being pretty terse. You
+only need to write a modifier and can apply it to a bunch of declarations in the
+same scope.&lt;/p&gt;
+
+&lt;p&gt;But at least in C++ (not sure about Ada), that only works within a type
+declaration. My language isn&amp;rsquo;t really object oriented. It&amp;rsquo;s more procedural.
+Sort of &amp;ldquo;structs plus functions&amp;rdquo; like C. Instead of classes, you have records.
+But a record declaration tends to be pretty small with only a handful of fields
+in it. There&amp;rsquo;s not enough &lt;em&gt;stuff&lt;/em&gt; inside a single record to benefit from reusing
+a modifier for a bunch of nested declarations.&lt;/p&gt;
+
+&lt;p&gt;I could allow &lt;code&gt;private&lt;/code&gt; at the top level and have it apply to everything after,
+but that feels like it errs too far in the other direction. It would be really
+confusing to have a thousand line file and not realize that half of it is
+private because some modifier way offscreen above flipped the access control.&lt;/p&gt;
+
+&lt;p&gt;Modifier sections are out.&lt;/p&gt;
+
+&lt;h3&gt;No sigils in identifiers&lt;/h3&gt;
+
+&lt;p&gt;Sigils in identifiers do have a sort of terse, scripty feel. No extra keywords.&lt;/p&gt;
+
+&lt;p&gt;I can&amp;rsquo;t do Go&amp;rsquo;s approach because my language already makes identifier leading
+case significant. It supports &lt;a href=&quot;https://en.wikipedia.org/wiki/Pattern_matching#Tree_patterns&quot;&gt;destructuring pattern matching&lt;/a&gt;. Like some
+functional languages, it uses case to distinguish when a pattern is binding a
+new local variable (lowercase) versus matching against a type or constant
+(uppercase).&lt;/p&gt;
+
+&lt;p&gt;Now I&amp;rsquo;m not sure that corner of the language will stick, but it&amp;rsquo;s there right
+now.&lt;/p&gt;
+
+&lt;p&gt;I could do Python/Dart&amp;rsquo;s approach and use a leading underscore. But I&amp;rsquo;d really
+prefer to not have to mention the sigil at every single use site. After having
+written probably a million lines of Dart code, I know it&amp;rsquo;s not intolerable. But
+it feels like an annoying tax. And for a language I&amp;rsquo;m designing for my own joy,
+I&amp;rsquo;d like to eliminate as many annoyances as possible.&lt;/p&gt;
+
+&lt;h3&gt;Maybe modifiers&lt;/h3&gt;
+
+&lt;p&gt;That leaves two approaches and is where I&amp;rsquo;m currently at. Approach one is the
+typical solution to use an access control modifier at the declaration.
+Unfortunately, defaulting to public makes this harder. In Rust, &lt;code&gt;pub&lt;/code&gt; is a
+really nice little keyword to flip to public when the default is private, but
+there is no obvious converse. &lt;code&gt;private&lt;/code&gt; would be the longest keyword in my
+language. &lt;code&gt;pri&lt;/code&gt; doesn&amp;rsquo;t read like anything. &lt;code&gt;priv&lt;/code&gt; is&amp;hellip; strange. I suppose that
+&lt;code&gt;pvt&lt;/code&gt; is the well-established abbreviation for &amp;ldquo;private&amp;rdquo; but that feels a tad
+militaristic.&lt;/p&gt;
+
+&lt;p&gt;I can&amp;rsquo;t find any other synonyms for &amp;ldquo;private&amp;rdquo; that admit reasonable
+abbreviations either. So I&amp;rsquo;m open to taking this path, but I&amp;rsquo;m simply failing to
+come up with a good keyword for it.&lt;/p&gt;
+
+&lt;p&gt;(A silly goblin part of my brain suggested I use &lt;code&gt;shh&lt;/code&gt; to mean &amp;ldquo;private&amp;rdquo;, like
+the declaration is being whispered and can&amp;rsquo;t be heard outside of its module.)&lt;/p&gt;
+
+&lt;h3&gt;Maybe sigils at the declaration&lt;/h3&gt;
+
+&lt;p&gt;This leaves Oberon&amp;rsquo;s weird approach. There are several advantages here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;It is maximally terse. Zero syntax at the use site, and only a single
+character at the declaration site.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;No additional reserved words which might get in the way of user identifiers.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;By defaulting to public, the opacity of the syntax is less of an issue. Yes,
+the sigil won&amp;rsquo;t immediately convey what it does, but if you&amp;rsquo;re just starting
+to use the language, you don&amp;rsquo;t need to even know it exists at first. You
+can just make everything public.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So there is some appeal. I don&amp;rsquo;t think I can literally take Oberon&amp;rsquo;s syntax
+with &lt;code&gt;*&lt;/code&gt; following the name. My language lets you define operators and it would
+be confusing to have &lt;code&gt;*&lt;/code&gt; right after other punctuation:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is declaring a private &lt;code&gt;+&lt;/code&gt; function. It would probably look equally weird
+to have &lt;code&gt;*&lt;/code&gt; after the name in a record declaration:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That led me to thinking the sigil should be by the declaration keyword. In my
+language, every declaration form does start with a leading keyword (unlike, say,
+C where function declarations don&amp;rsquo;t have one), so it&amp;rsquo;s feasible. Something like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I don&amp;rsquo;t hate it. But using &lt;code&gt;*&lt;/code&gt; feels weird for &amp;ldquo;private&amp;rdquo;. If anything, it seems
+to emphasize the declaration (which is what it does in Oberon where it means
+&amp;ldquo;public&amp;rdquo;).&lt;/p&gt;
+
+&lt;h3&gt;Maybe alternate keywords&lt;/h3&gt;
+
+&lt;p&gt;That led to my last idea which I can&amp;rsquo;t decide if I like or not. Given Python and
+Dart, it seems like underscore vaguely conveys &amp;ldquo;private&amp;rdquo; to some people. So
+maybe use that? It looks like:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;i&quot;&gt;rec_&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;i&quot;&gt;def_&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It looks odd, but I don&amp;rsquo;t &lt;em&gt;hate&lt;/em&gt; it. Or at least I don&amp;rsquo;t hate it any more than
+any novel programming language syntax usually triggers revulsion.&lt;/p&gt;
+
+&lt;p&gt;However, there&amp;rsquo;s sort of a problem. Underscore is a valid identifier character.
+So the &lt;a href=&quot;https://craftinginterpreters.com/scanning.html&quot;&gt;lexer&lt;/a&gt; is not going to scan &lt;code&gt;rec_&lt;/code&gt; as a &lt;code&gt;rec&lt;/code&gt; keyword token followed
+by a &lt;code&gt;_&lt;/code&gt; token. Instead of will treat &lt;code&gt;rec_&lt;/code&gt; as a single identifier.&lt;/p&gt;
+
+&lt;p&gt;But then&amp;hellip; I could just let it do that. I&amp;rsquo;d then define a separate set of
+reserved words for all of the private declaration keywords: &lt;code&gt;def_&lt;/code&gt;, &lt;code&gt;rec_&lt;/code&gt;,
+&lt;code&gt;var_&lt;/code&gt;, and &lt;code&gt;val_&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So now instead of a modifier or sigil to control access, you explicitly choose
+one of two declaration keywords. One makes it public and one makes it private.
+This technically means adding a handful more reserved words, but they aren&amp;rsquo;t
+ones that are particularly useful for users anyway.&lt;/p&gt;
+
+&lt;p&gt;I keep trying to talk myself out of this approach because it&amp;rsquo;s so unusual but so
+far it seems to be lodged in my head better than any of the alternatives I&amp;rsquo;ve
+considered. What do you think?&lt;/p&gt;</content>
+  </entry>
 
   <entry>
     <id>http://journal.stuffwithstuff.com/2023/10/19/does-go-have-subtyping</id>
@@ -4649,478 +5104,6 @@ it accidentally collapsed two branches that &lt;em&gt;would&lt;/em&gt; eventuall
 &lt;p&gt;That bullet list was paid for in blood, sweat, and tears. I honestly don&amp;rsquo;t think
 I could have figured them out at all until late in the project when I had a
 &lt;a href=&quot;https://github.com/dart-lang/dart_style/tree/3b3277668b2ff0cb7be954c3217c73264454bd7c/test&quot;&gt;comprehensive test suite&lt;/a&gt;.&lt;/p&gt;</content>
-  </entry>
-
-  <entry>
-    <id>http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees</id>
-    <link type="text/html" rel="alternate" href="http://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/"/>
-    <title>What the Hero Sees: Field-of-View for Roguelikes</title>
-    <published>2015-09-07T07:00:00.000Z</published>
-    <updated>2015-09-07T07:00:00.000Z</updated>
-    <author>
-      <name>Robert Nystrom</name>
-      <uri>http://journal.stuffwithstuff.com/</uri>
-    </author>
-    <content type="html">&lt;style&gt;
-canvas {
-  display: inline-block;
-  max-width: 100%;
-  cursor: crosshair;
-}
-&lt;/style&gt;
-
-&lt;p&gt;This post explains the algorithm I use for field of view in my game. I&amp;rsquo;ve been
-meaning to write about it for a &lt;em&gt;long&lt;/em&gt; time. While I procrastinated, I moved
-four times, got married, had two kids, and ported my roguelike to &lt;a href=&quot;https://www.dartlang.org/&quot;&gt;a
-language&lt;/a&gt; that didn&amp;rsquo;t exist when I first wrote the code this post is
-about. You can thank Simon Andersson for prodding me to finally write it down.&lt;/p&gt;
-
-&lt;p&gt;Every good game, or genre of games, has a pyramid of rewards. From simple
-pleasures that mete out a droplet of endorphins when you click the next button
-up to the deep, abiding feeling of accomplishment you get from slaying the final
-boss on nightmare mode.&lt;/p&gt;
-
-&lt;p&gt;The roguelike genre standardizes many of these, and one of my favorites is the
-joy of &lt;em&gt;exploring the dungeon&lt;/em&gt;. You start out on a black screen, only one tiny
-room visible. As you walk around, the map incrementally fills in&amp;mdash;a perfect
-graphical representation of your own knowledge and mastery increasing.&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;explore&quot;&gt;Sorry, you need canvas support for this demo.&lt;/canvas&gt;
-&lt;figcaption&gt;Click and drag the hero to explore. Click walls and floors to
-alter the dungeon.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;There wouldn&amp;rsquo;t be much to explore if your hero could see through walls. The
-second they entered the dungeon, the entire map would be filled in, all of the
-crypt&amp;rsquo;s hidden secrets laid bare to warrior and player alike. To prevent that,
-we need to simulate something that seems trivial: &lt;em&gt;walls blocking the hero&amp;rsquo;s
-view&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;In the roguelike scene, this is referred to as &lt;em&gt;field of view&lt;/em&gt;, and there are &lt;a href=&quot;http://www.roguebasin.com/index.php?title=Field_of_Vision&quot;&gt;a
-number of ways to do it&lt;/a&gt;. Many of the posts linked there talk about &amp;ldquo;light&amp;rdquo;
-and &amp;ldquo;shadow&amp;rdquo; as well, but they calculate the same thing as visilibity. In both
-cases, we&amp;rsquo;re trying to find the set of tiles that can be reached by rays
-emanating from some point source. I&amp;rsquo;ll use both terms interchangeably.&lt;/p&gt;
-
-&lt;h2&gt;Brute force line-of-sight?&lt;/h2&gt;
-
-&lt;p&gt;The simplest solution is to repurpose your line-of-sight code. You already need
-code to determine if there is an open line from one point to another on the map.
-You use that to tell if things like arrows and fireballs reach their target or
-bounce harmlessly off the dungeon wall.&lt;/p&gt;
-
-&lt;p&gt;This is invariably done using &lt;a href=&quot;https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm&quot;&gt;Bresenham&amp;rsquo;s line algorithm&lt;/a&gt;. It&amp;rsquo;s one
-of the true classics of graphics programming&amp;mdash;an elegant, simple algorithm
-from 1962 that&amp;rsquo;s still useful today. (This kind of living connection to CS&amp;rsquo;s
-past is one of the things I love about hacking on a roguelike. How often do you
-have a good reason to recode a procedure originally devised for a 1950s-era drum
-plotter?)&lt;/p&gt;
-
-&lt;p&gt;As you&amp;rsquo;d imagine for an algorithm designed to run on a machine that took punch
-cards, it&amp;rsquo;s very efficient&amp;hellip; for tracing a line between &lt;em&gt;two points&lt;/em&gt;. But field
-of view is different. We need to scan the entire dungeon&amp;mdash;or at least the part
-that fits on the player&amp;rsquo;s screen&amp;mdash;and calculate the visibility of &lt;em&gt;every&lt;/em&gt;
-tile.&lt;/p&gt;
-
-&lt;p&gt;You actually &lt;em&gt;can&lt;/em&gt; run Bresenham a few thousand times whenever the hero moves on
-a modern machine, but doing that feels like cheating to me. Can we come up with
-something more efficient?&lt;/p&gt;
-
-&lt;p&gt;The answer is, of course, &amp;ldquo;yes&amp;rdquo;. (It would be a short post if it wasn&amp;rsquo;t.) And,
-in fact, a lot of others have already done so. But, one lazy sunny Saturday
-morning in 2006, I didn&amp;rsquo;t see any I liked and wanted to come up with one that
-made more sense to me.&lt;/p&gt;
-
-&lt;h2&gt;Pieces of eight&lt;/h2&gt;
-
-&lt;p&gt;If you have the mind of a programmer, the first thing you do when presented with
-a problem is to break it into multiple (hopefully) smaller problems. Our goal is
-to calculate the entire field of view surrounding the hero, but we can slice
-that 360&amp;deg; problem into 45&amp;deg; pie pieces. One wedge looks like this:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;octant&quot;&gt;Sorry, you need canvas support for this demo.&lt;/canvas&gt;
-&lt;figcaption&gt;Click to paint a wedge.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;This wedge is called an &lt;a href=&quot;https://en.wikipedia.org/wiki/Octant_(plane_geometry)&quot;&gt;&lt;em&gt;octant&lt;/em&gt;&lt;/a&gt;, and it&amp;rsquo;s common in 2D algorithms. We
-can paint every tile in that triangle like so:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxDistance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;i&quot;&gt;paint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If we take that wedge and apply some transformations, we can cover the entire
-field around the hero. The above code is most of the way there. If you squint,
-you can see there are two coordinate systems. The &lt;code&gt;row&lt;/code&gt; and &lt;code&gt;col&lt;/code&gt; variables are
-in the octant&amp;rsquo;s coordinate space. Meanwhile, &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; are in real tile
-space&amp;mdash;what you see on screen.&lt;/p&gt;
-
-&lt;p&gt;The first two lines inside the loops map octant space to tile space. Using just
-&lt;code&gt;+&lt;/code&gt; and &lt;code&gt;-&lt;/code&gt; and &lt;code&gt;row&lt;/code&gt; and &lt;code&gt;col&lt;/code&gt;, there are eight ways to calculate &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;.
-Each represents a reflection or 90&amp;deg; rotation of the original octant. If we
-enumerate them all, we get:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;transformOctant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Each case represents a different octant, starting at the top and going clockwise
-around the circle. Painting them all covers the whole view (with a bit of
-innocuous overlap):&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;octants&quot;&gt;Sorry, you need canvas support for this demo.&lt;/canvas&gt;
-&lt;figcaption&gt;Click to paint the whole view.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;From here on out, we only have deal with a single triangle&amp;rsquo;s worth of &lt;code&gt;row&lt;/code&gt; and
-&lt;code&gt;col&lt;/code&gt;, and we can cover the entire field of view just by running the same code
-eight times, once for each octant.&lt;/p&gt;
-
-&lt;h2&gt;A Line of Shadows&lt;/h2&gt;
-
-&lt;p&gt;Another way to simplify a problem is solve its negation, and that&amp;rsquo;s what this
-algorithm does. Instead of calculating which tiles are visible, it figures out
-which are hidden, which puts it in a family of algorithms that do &amp;ldquo;shadow
-casting&amp;rdquo;. Before I explain it, try it out yourself:&lt;/p&gt;
-
-&lt;figure&gt;
-&lt;canvas id=&quot;shadow-cast&quot;&gt;Sorry, you need canvas support for this demo.&lt;/canvas&gt;
-&lt;figcaption&gt;Drag the slider up to advance the shadow line. Click anywhere
-else to change the dungeon.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;We start at the hero and work upwards one row at a time. As we sweep through the
-octant, we incrementally update a data structure called the &lt;em&gt;shadow line&lt;/em&gt;. It&amp;rsquo;s
-the white line you see next to the slider. It tracks which parts of the row are
-in the shade of opaque tiles on previous rows and which aren&amp;rsquo;t.&lt;/p&gt;
-
-&lt;p&gt;The shadow line is a series of segments, each representing one obscured region
-of the line. We can define it like so:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ShadowLine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The interesting question is, &amp;ldquo;What is the &lt;em&gt;range&lt;/em&gt; of &lt;code&gt;start&lt;/code&gt; and &lt;code&gt;end&lt;/code&gt;?&amp;rdquo; The
-naïve answer is to use tile coordinates. If we&amp;rsquo;re five rows in and the shadow
-line is five tiles long, the segment coordinates would range from 0 to 5.&lt;/p&gt;
-
-&lt;p&gt;The problem is that since light expands outwards from a point, the shadows
-stretch out as they get farther away. We don&amp;rsquo;t want to have to recalculate the
-segment positions each time we advance a row and the rays spread out.&lt;/p&gt;
-
-&lt;p&gt;Instead, we store their &lt;em&gt;slopes&lt;/em&gt;. Regardless of what row we&amp;rsquo;re on, they always
-range from 0 (the short vertical edge of the octant) to 1 (the diagonal edge).
-Slopes are distance-independent. This is what the black line in the demo above
-shows. As you click to add and remove walls, you can see new shadows appear, but
-the black lines don&amp;rsquo;t move or grow as you sweep the row up and down.&lt;/p&gt;
-
-&lt;h2&gt;Projecting a tile&lt;/h2&gt;
-
-&lt;p&gt;The tricky part is calculating those slopes given some tile in the octant. There
-are a couple of corner cases to consider. Literally. A tile is a square, and the
-shadow it projects goes from one corner of the square to another.&lt;/p&gt;
-
-&lt;p&gt;Given our canonical octant, we know the tile will be above and to the right of
-the hero. That means the projected shadow&amp;rsquo;s extent will always be from the
-top-left corner of a tile to the bottom-right corner. The other two corners lie
-in the middle of the shadow. (This isn&amp;rsquo;t strictly true if the tile is straight
-up from the hero, but we can safely ignore that.)&lt;/p&gt;
-
-&lt;p&gt;What we need, then, is to calculate the slopes of those two corners of a tile.
-The math is a kind of fussy, but it&amp;rsquo;s:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;/// Creates a [Shadow] that corresponds to the projected&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;/// silhouette of the tile at [row], [col].&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;projectTile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;topLeft&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;bottomRight&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;topLeft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;bottomRight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This function has two uses. The obvious one is that we call this for each opaque
-tile and add its result to the shadow line. But the projection comes into play
-before that too.&lt;/p&gt;
-
-&lt;p&gt;You can think of the result of this function as the shadow that the tile casts
-&lt;em&gt;past&lt;/em&gt; itself, but it also describes the projection from the hero &lt;em&gt;to&lt;/em&gt; this
-tile. In other words, it describes which angles need to be unblocked for this
-tile to be visible.&lt;/p&gt;
-
-&lt;p&gt;When we scan a row, we call &lt;code&gt;projectTile()&lt;/code&gt; on every tile&amp;mdash;transparent or
-opaque&amp;mdash;and compare it to the existing shadow line. If the tile&amp;rsquo;s projection
-is covered by the shadow line, we know it can&amp;rsquo;t be seen. If it isn&amp;rsquo;t, it can.&lt;/p&gt;
-
-&lt;p&gt;An interesting edge case is tiles whose projection is &lt;em&gt;partially&lt;/em&gt; covered by the
-shadow line. Different games take different approaches here. Mine is considered
-&lt;em&gt;permissive&lt;/em&gt;: if you can see any part of a tile, it&amp;rsquo;s visible. A tile&amp;rsquo;s
-projection has to be totally covered by the shadow to be hidden. If you want
-something less permissive, this algorithm is easy to tweak.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s code! First, we&amp;rsquo;ll add a method to see if one shadow totally covers
-another:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;/// Returns `true` if [other] is completely covered by this shadow.&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Then we use that to see if any shadow in the line covers the tile:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ShadowLine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isInShadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Using that, we can determine the visibility of every tile in a row. Given a
-ShadowLine in &lt;code&gt;line&lt;/code&gt;, and a set of tiles in &lt;code&gt;tiles&lt;/code&gt;, it&amp;rsquo;s:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_projectTile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;transformOctant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;tiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isVisible&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isInShadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Inky pools of shadows&lt;/h2&gt;
-
-&lt;p&gt;We can calculate which tiles are obscured by the shadow line, but that isn&amp;rsquo;t
-very useful since our shadow line is always empty right now. Let&amp;rsquo;s fix that.&lt;/p&gt;
-
-&lt;p&gt;As we trace the row, each time we hit an opaque tile, we add it to the shadow
-line. If the shadow line was a simple list of these little shadow segments, the
-list would get longer and longer. In a dense dungeon, the hero may be near
-hundreds of solid tiles. Having to walk through an increasingly long list of
-shadow segments to see if a tile is obscured would get slower and slower.&lt;/p&gt;
-
-&lt;p&gt;Fortunately, I have a simple fix that makes the algorithm get &lt;em&gt;faster&lt;/em&gt; as tiles
-occlude more of the view. &lt;em&gt;This&lt;/em&gt; is the part where I think my algorithm is
-pretty cool, and it&amp;rsquo;s why I&amp;rsquo;m excited to share it with you.&lt;/p&gt;
-
-&lt;p&gt;Often, when a new segment is added to the shadow line, it overlaps other
-shadows. When that happens, we &lt;em&gt;merge&lt;/em&gt; it with the existing shadows. The end
-result is that the shadow line will have a single &lt;code&gt;Shadow&lt;/code&gt; object for each
-&lt;em&gt;contiguous&lt;/em&gt; range of obscured area.&lt;/p&gt;
-
-&lt;p&gt;This does mean adding a new shadow to the line is more complex. There are a
-handful of cases:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;The shadow is contained within an existing one.&lt;/strong&gt; That means the new
-shadow doesn&amp;rsquo;t cover any new territory, so we can discard it.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;old:    ..[======]..
-new:    ....[===]...
-        ------------
-result: ..[======]..&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;The shadow doesn&amp;rsquo;t overlap any other ones.&lt;/strong&gt; In this case, we insert it in
-sorted order between the segments that come before and after it.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;old:    [=].....[==]
-new:    ....[=].....
-        ------------
-result: [=].[=].[==]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;The shadow overlaps another shadow on its starting edge.&lt;/strong&gt; We take the
-previous shadow and grow it to encompass the new shadow&amp;rsquo;s endpoint and
-discard the new one.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;old:    [===]....[=]
-new:    ...[===]....
-        ------------
-result: [======].[=]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;The shadow overlaps another shadow on its ending edge.&lt;/strong&gt; Do the same
-thing, but in reverse: grow the following shadow to cover the new one.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;old:    [=]....[===]
-new:    ....[===]...
-        ------------
-result: [=].[======]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;The shadow overlaps shadows on &lt;em&gt;both&lt;/em&gt; ends.&lt;/strong&gt; This is the fun one. We take
-the previous shadow and extend it to cover the &lt;em&gt;next&lt;/em&gt; shadow&amp;rsquo;s endpoint.
-Then we discard both the new shadow and that next one.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;old:    ..[=]..[==].
-new:    ...[====]...
-        ------------
-result: ..[=======].&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The first case doesn&amp;rsquo;t change the list of shadows at all. In the second case,
-the list of shadows gets longer. In the next two, adding a new shadow doesn&amp;rsquo;t
-grow the list, it just shifts an endpoint. The last case is the fun one: there,
-the list gets &lt;em&gt;shorter&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;(Pop quiz! Why don&amp;rsquo;t we have to worry about cases where a shadow overlaps more
-than two existing ones?)&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s the entire method to add a shadow to the line:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ShadowLine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Shadow&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;// Figure out where to slot the new shadow in the list.&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;c&quot;&gt;// Stop when we hit the insertion point.&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;c&quot;&gt;// The new shadow is going here. See if it overlaps the&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;// previous or next.&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;overlappingPrevious&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;i&quot;&gt;overlappingPrevious&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;overlappingNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;i&quot;&gt;overlappingNext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;c&quot;&gt;// Insert and unify with overlapping shadows.&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;overlappingNext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;overlappingPrevious&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;c&quot;&gt;// Overlaps both, so unify one and delete the other.&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;overlappingPrevious&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;overlappingNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;removeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;c&quot;&gt;// Overlaps the next one, so unify it with that.&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;overlappingNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;overlappingPrevious&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;c&quot;&gt;// Overlaps the previous one, so unify it with that.&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;overlappingPrevious&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;c&quot;&gt;// Does not overlap anything, so insert.&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;shadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;OK, so that&amp;rsquo;s kind of hairy, but it&amp;rsquo;s not deep magic, just a bunch of different
-cases to handle. Clever readers are probably wondering why we don&amp;rsquo;t do a binary
-search to find the insertion point. The list is sorted after all. If you want to
-be super smart, go for it. In practice, I don&amp;rsquo;t think it makes much of a
-difference. The maximum size of the list is small enough that a linear search
-may actually be faster.&lt;/p&gt;
-
-&lt;p&gt;(Pop quiz two! What &lt;em&gt;is&lt;/em&gt; the maximum size of the list? Show your work.)&lt;/p&gt;
-
-&lt;p&gt;Very clever readers may have noticed we don&amp;rsquo;t check for the first case, a
-completely contained shadow here. That&amp;rsquo;s because we&amp;rsquo;ve already done that check.
-Earlier, when we detect if this tile is visible, that also tells us if it&amp;rsquo;s
-shadow is contained. If it is, we don&amp;rsquo;t bother calling &lt;code&gt;add()&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;There&amp;rsquo;s another simple optimization we can do. If we get to the point where the
-shadow line is a single segment from 0 to 1&amp;mdash;in other words, the whole line is
-in shadow&amp;mdash;then we can skip all of the projection calculation, updating, etc.
-Every tile will be hidden after that. Here&amp;rsquo;s how we detect that:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ShadowLine&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFullShadow&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;_shadows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In practice, this case happens often. Dungeons tend to be small rooms and twisty
-passages, so at some distance from the hero you typically reach a point where
-all tiles are occluded.&lt;/p&gt;
-
-&lt;h2&gt;Putting it all together&lt;/h2&gt;
-
-&lt;p&gt;OK, so we have code to:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Walk over every octant.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Walk every tile in an octant.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Update the tile&amp;rsquo;s visibility.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Update the shadow line if the tile is opaque.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Let&amp;rsquo;s stitch the last few pieces together along with a dash of bounds checking.
-Building on top of what we have above, here&amp;rsquo;s the top-level code to update the
-visibility of the whole dungeon:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;refreshVisibility&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;refreshOctant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;refreshOctant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ShadowLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;fullShadow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;// Stop once we go out of bounds.&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;transformOctant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;tiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;hero&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;transformOctant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;octant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-      &lt;span class=&quot;c&quot;&gt;// If we&amp;#39;ve traversed out of bounds, bail on this row.&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;tiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;fullShadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;tiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isVisible&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;projectTile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-        &lt;span class=&quot;c&quot;&gt;// Set the visibility of this tile.&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;visible&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isInShadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;tiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isVisible&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;visible&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-        &lt;span class=&quot;c&quot;&gt;// Add any opaque tiles to the shadow map.&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;visible&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;tiles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isWall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;projection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;fullShadow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;isFullShadow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;And there we have it. It runs very fast in wide open areas since there will be
-few shadow segments and the list is short. Likewise, it runs fast in closed
-areas since the shadow list will also be short&amp;mdash;it will contain a small number
-of long segments. It performs the worst in &amp;ldquo;spotty&amp;rdquo; areas with lots of small
-trees or pillars, but even there, the performance is pretty solid.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;d love to say I implemented a bunch of other algorithms and this one came out
-the winner, but honestly I was too lazy to do that. I will say that this has
-never shown up as a performance bottleneck when I&amp;rsquo;ve profiled the game. That&amp;rsquo;s
-good enough for me, and I hope this will be helpful for you too.&lt;/p&gt;
-
-&lt;p&gt;If you want to see all of the code for these demos, it&amp;rsquo;s &lt;a href=&quot;https://github.com/munificent/fov&quot;&gt;here&lt;/a&gt;. Or, in
-the context of &lt;a href=&quot;https://github.com/munificent/hauberk&quot;&gt;my game&lt;/a&gt; &lt;a href=&quot;https://github.com/munificent/hauberk/blob/afb52670ab0650aff97cb112d752a6b49f8593a4/lib/src/engine/stage/fov.dart&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;&lt;script type=&quot;application/dart&quot; src=&quot;/code/2015-09-07-what-the-hero-sees/main.dart&quot;&gt;&lt;/script&gt;&lt;script src=&quot;/code/2015-09-07-what-the-hero-sees/packages/browser/dart.js&quot;&gt;&lt;/script&gt;</content>
   </entry>
     
 

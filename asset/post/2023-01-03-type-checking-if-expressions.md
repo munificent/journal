@@ -1,7 +1,8 @@
 ---
 title: "Type Checking If Expressions"
-categories: code language
+categories: code language vgs
 ---
+
 I have this hobby project I've been hacking on for several years. It's a fantasy
 console, very much inspired by the delightful [PICO-8][]. Like PICO-8, my
 console has its own built-in scripting language. Because I'm me, I of course

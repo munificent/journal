@@ -54,12 +54,8 @@ Object? templateData(BuildContext context, String property,
       var tagSet = context.input<TagSet>(Key('tagset'));
       var tags = tagSet.tags.toList();
 
-      // Sort by descending count then by name.
-      tags.sort((a, b) {
-        var countCompare = tagSet.postCount(b).compareTo(tagSet.postCount(a));
-        if (countCompare != 0) return countCompare;
-        return a.compareTo(b);
-      });
+      // Sort by name.
+      tags.sort();
 
       // Convert to maps.
       var tagMaps = [

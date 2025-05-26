@@ -1,4 +1,3 @@
-      
 <article>
 <header>
 <h1>
@@ -7,23 +6,19 @@
     {{ post.title }}
   </a>
 </h1>
-
 {{ if older_post }}
   <a class="older" href="/{{ older_post.url }}/"
-     title="Older Post &ldquo;{{ older_post.title }}&rdquo;">&#8617;</a>
+     title="Older Post &ldquo;{{ older_post.title }}&rdquo;">&larr;</a>
 {{ end }}
 {{ if newer_post }}
   <a class="newer" href="/{{ newer_post.url }}/"
-     title="Newer Post &ldquo;{{ newer_post.title }}&rdquo;">&#8618;</a>
+     title="Newer Post &ldquo;{{ newer_post.title }}&rdquo;">&rarr;</a>
 {{ end }}
-
 </header>
 <h4><a href="/archive">{{ format_date(post.date, "MMMM dd, y") }}</a>
     <span class="tags">{{ for tag in post.tags }}<a href="/category/{{ tag }}">{{ tag }}</a>{{ between }} {{ end }}</span>
 </h4>
-
 {{ post.content }}
-  
   <div class="comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">
@@ -39,7 +34,5 @@
     </script>
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   </div>
-  
 </article>
-
 {{ include "nav" }}

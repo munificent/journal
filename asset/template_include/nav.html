@@ -1,17 +1,20 @@
-      <nav>
+<nav>
   <div class="nav-first">
     <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-
     <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
     <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
     <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
   </div>
   <div class="nav-second">
-    <h2>Categories</h2>
-    <ul>{{ for tag in tags }}<li><a href="/category/{{ tag.name }}">{{ tag.name }}</a> <small class='post-count'>{{ tag.count }}</small></li>{{ end }}</ul>
-
-    <p class="archive">All <a href="/archive">{{ post_count }} articles</a>&hellip;</p>
-
+    <h2>Tags</h2>
+    <ul>
+    {{ for tag in tags }}
+      {{ if tag.count > 1 }}
+      <li><a href="/category/{{ tag.name }}">{{ tag.name }}</a></li>
+      {{ end }}
+    {{ end }}
+    </ul>
+    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
     {{ include "footer" }}
   </div>
 </nav>

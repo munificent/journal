@@ -76,6 +76,10 @@ class Scanner {
           _oneCharToken(TokenType.dot);
         case $equal:
           _oneOrTwoCharToken($equal, TokenType.equal, TokenType.equalEqual);
+        case $greaterThan:
+          _oneOrTwoCharToken($equal, TokenType.greater, TokenType.greaterEqual);
+        case $lessThan:
+          _oneOrTwoCharToken($equal, TokenType.less, TokenType.lessEqual);
         case $minus:
           _oneCharToken(TokenType.minus);
         case $plus:

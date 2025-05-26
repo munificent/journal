@@ -153,6 +153,23 @@ class Renderer
         // TODO: Are there any implicit conversions?
         return left == right;
 
+      // TODO: Test comparisons.
+      // ">".
+      case (num left, TokenType.greater, num right):
+        return left > right;
+
+      // ">=".
+      case (num left, TokenType.greaterEqual, num right):
+        return left >= right;
+
+      // "<".
+      case (num left, TokenType.less, num right):
+        return left < right;
+
+      // "<=".
+      case (num left, TokenType.lessEqual, num right):
+        return left <= right;
+
       // "-".
       case (num left, TokenType.minus, num right):
         return left - right;

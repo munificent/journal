@@ -76,18 +76,18 @@ class BuildServer {
         var path = p.fromUri(key.toString());
         await Directory(p.dirname(path)).create(recursive: true);
 
-        var asset = _graph.assets[key]!;
-        if (asset is BinaryAsset) {
-          await File(path).writeAsBytes(await asset.readBytes());
-          written++;
-        } else if (asset is StringAsset) {
-          await File(path).writeAsString(await asset.readString());
-          written++;
-        } else if (asset is String) {
-          await File(path).writeAsString(asset);
-          written++;
-        } else {
-          print("Don't know how to write '$path' (${asset.runtimeType}).");
+        switch (_graph.assets[key]) {
+          case BinaryAsset asset:
+            await File(path).writeAsBytes(await asset.readBytes());
+            written++;
+          case StringAsset asset:
+            await File(path).writeAsString(await asset.readString());
+            written++;
+          case String string:
+            await File(path).writeAsString(string);
+            written++;
+          case var other:
+            print("Don't know how to write '$path' (${other.runtimeType}).");
         }
       }));
     }

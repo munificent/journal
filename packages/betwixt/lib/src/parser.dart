@@ -214,9 +214,24 @@ class Parser {
   }
 
   Expr _equality() {
-    var expr = _term();
+    var expr = _comparison();
 
     while (_match(TokenType.bangEqual) || _match(TokenType.equalEqual)) {
+      var op = _previous;
+      var right = _comparison();
+      expr = BinaryExpr(expr, op, right);
+    }
+
+    return expr;
+  }
+
+  Expr _comparison() {
+    var expr = _term();
+
+    while (_match(TokenType.greater) ||
+        _match(TokenType.greaterEqual) ||
+        _match(TokenType.less) ||
+        _match(TokenType.lessEqual)) {
       var op = _previous;
       var right = _term();
       expr = BinaryExpr(expr, op, right);

@@ -108,12 +108,6 @@ nav .archive {
   font-style: italic;
   color: #bda88a;
 }
-nav .post-count {
-  background: #f2ede8;
-  margin-left: 2px;
-  padding: 0 3px;
-  border-radius: 4px;
-}
 
 header {
   position: relative;
@@ -132,11 +126,11 @@ header h1 a {
 }
 header a.older, header a.newer {
   position: absolute;
-  font: normal 22px/40px "PT Serif", Georgia, serif;
+  font: normal 26px/40px "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   background: #fff;
   border-radius: 40px;
-  padding: 0 16px;
-  bottom: -80px;
+  padding: 0 12px;
+  bottom: -86px;
   color: #bdbdbd;
 }
 header .older {
@@ -181,7 +175,7 @@ article h4 {
   color: #bdbdbd;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: solid 1px #eee;
+  border-bottom: solid 2px #eee;
 }
 article h4 a {
   color: #bdbdbd;

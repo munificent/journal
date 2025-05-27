@@ -253,15 +253,15 @@ Niklaus Wirth&rsquo;s magnum opus language <a href="https://oberon.org/en">Obero
 <p>In Oberon, top-level declarations are private by default and only accessible
 to the containing module. If you want to make a declaration public, you mark
 the declaration with an asterisk:</p>
-<div class="highlight"><pre><code class="language-oberon" data-lang="oberon">MODULE Hello;
-  IMPORT Out;
+<div class="highlight"><pre><code class="language-oberon" data-lang="oberon"><span class="k">MODULE</span> <span class="i">Hello</span><span class="p">;</span>
+  <span class="k">IMPORT</span> <span class="i">Out</span><span class="p">;</span>
 
-  PROCEDURE SayHello*;
-  BEGIN
-    Out.String(&quot;Hello World!&quot;);
-    Out.Ln;
-  END SayHello;
-END Hello.
+  <span class="k">PROCEDURE</span> <span class="i">SayHello</span><span class="o">*</span><span class="p">;</span>
+  <span class="k">BEGIN</span>
+    <span class="i">Out</span><span class="p">.</span><span class="i">String</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
+    <span class="i">Out</span><span class="p">.</span><span class="i">Ln</span><span class="p">;</span>
+  <span class="k">END</span> <span class="i">SayHello</span><span class="p">;</span>
+<span class="k">END</span> <span class="i">Hello</span><span class="p">.</span>
 </code></pre></div>
 <p>Here, the <code>*</code> after <code>PROCEDURE SayHello</code> means that <code>SayHello</code> is public. Note
 that this marker is only at the declaration. It&rsquo;s not part of the name. At
@@ -423,16 +423,16 @@ be confusing to have <code>*</code> right after other punctuation:</p>
 <p>This is declaring a private <code>+</code> function. It would probably look equally weird
 to have <code>*</code> after the name in a record declaration:</p>
 <div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Vec</span><span class="o">*</span>
-  <span class="i">val</span> <span class="i">left</span> <span class="t">Int</span>
-  <span class="i">val</span> <span class="i">right</span> <span class="t">Int</span>
+  <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
+  <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>That led me to thinking the sigil should be by the declaration keyword. In my
 language, every declaration form does start with a leading keyword (unlike, say,
 C where function declarations don&rsquo;t have one), so it&rsquo;s feasible. Something like:</p>
 <div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span><span class="o">*</span> <span class="t">Vec</span>
-  <span class="i">val</span> <span class="i">left</span> <span class="t">Int</span>
-  <span class="i">val</span> <span class="i">right</span> <span class="t">Int</span>
+  <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
+  <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 
 <span class="k">def</span><span class="o">*</span> <span class="i">sayHi</span><span class="p">()</span>
@@ -448,12 +448,12 @@ to emphasize the declaration (which is what it does in Oberon where it means
 <p>That led to my last idea which I can&rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &ldquo;private&rdquo; to some people. So
 maybe use that? It looks like:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="i">rec_</span> <span class="t">Vec</span>
-  <span class="i">val</span> <span class="i">left</span> <span class="t">Int</span>
-  <span class="i">val</span> <span class="i">right</span> <span class="t">Int</span>
+<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec_</span> <span class="t">Vec</span>
+  <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
+  <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 
-<span class="i">def_</span> <span class="i">sayHi</span><span class="p">()</span>
+<span class="k">def_</span> <span class="i">sayHi</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 </code></pre></div>

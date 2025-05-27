@@ -4,7 +4,7 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>2025-05-26T20:57:16.073926Z</updated>
+  <updated>2025-05-27T00:57:24.071903Z</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
@@ -242,15 +242,15 @@ Niklaus Wirth&amp;rsquo;s magnum opus language &lt;a href=&quot;https://oberon.o
 &lt;p&gt;In Oberon, top-level declarations are private by default and only accessible
 to the containing module. If you want to make a declaration public, you mark
 the declaration with an asterisk:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-oberon&quot; data-lang=&quot;oberon&quot;&gt;MODULE Hello;
-  IMPORT Out;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-oberon&quot; data-lang=&quot;oberon&quot;&gt;&lt;span class=&quot;k&quot;&gt;MODULE&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;IMPORT&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-  PROCEDURE SayHello*;
-  BEGIN
-    Out.String(&amp;quot;Hello World!&amp;quot;);
-    Out.Ln;
-  END SayHello;
-END Hello.
+  &lt;span class=&quot;k&quot;&gt;PROCEDURE&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;SayHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;BEGIN&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;Out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello World!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;i&quot;&gt;Out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Ln&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;END&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;SayHello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;END&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Here, the &lt;code&gt;*&lt;/code&gt; after &lt;code&gt;PROCEDURE SayHello&lt;/code&gt; means that &lt;code&gt;SayHello&lt;/code&gt; is public. Note
 that this marker is only at the declaration. It&amp;rsquo;s not part of the name. At
@@ -412,16 +412,16 @@ be confusing to have &lt;code&gt;*&lt;/code&gt; right after other punctuation:&l
 &lt;p&gt;This is declaring a private &lt;code&gt;+&lt;/code&gt; function. It would probably look equally weird
 to have &lt;code&gt;*&lt;/code&gt; after the name in a record declaration:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;That led me to thinking the sigil should be by the declaration keyword. In my
 language, every declaration form does start with a leading keyword (unlike, say,
 C where function declarations don&amp;rsquo;t have one), so it&amp;rsquo;s feasible. Something like:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
@@ -437,12 +437,12 @@ to emphasize the declaration (which is what it does in Oberon where it means
 &lt;p&gt;That led to my last idea which I can&amp;rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &amp;ldquo;private&amp;rdquo; to some people. So
 maybe use that? It looks like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;i&quot;&gt;rec_&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec_&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;span class=&quot;i&quot;&gt;def_&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def_&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

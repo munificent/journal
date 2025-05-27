@@ -9,6 +9,7 @@ import 'language/go.dart';
 import 'language/java.dart';
 import 'language/javascript.dart';
 import 'language/lisp.dart';
+import 'language/oberon.dart';
 import 'language/ocaml.dart';
 import 'language/python.dart';
 import 'language/ruby.dart';
@@ -28,6 +29,7 @@ class Language {
   static final java = makeJavaLanguage();
   static final javaScript = makeJavaScriptLanguage();
   static final lisp = makeLispLanguage();
+  static final oberon = makeOberonLanguage();
   static final ocaml = makeOCamlLanguage();
   static final python = makePythonLanguage();
   static final ruby = makeRubyLanguage();
@@ -45,6 +47,7 @@ class Language {
     'java': java,
     'javascript': javaScript,
     'lisp': lisp,
+    'oberon': oberon,
     'ocaml': ocaml,
     'python': python,
     'ruby': ruby,

@@ -17,22 +17,13 @@ Language makeVgsLanguage() {
     language.regExp('.', Category.string);
   });
 
-  // TODO: Hack. The `?` is an allowed identifier character, but we will end up
-  // recognizing a keyword followed by `?` as a keyword and not a single
-  // identifier.
-  language.regExp(r'\btrue\?', Category.identifier);
-
   language.keywords(
       Category.keyword,
       'and break case continue def do each else end for if in is match or rec '
-      'return then var while');
+      'return then val var while');
 
-  // Hack: These are not real keywords in Magpie, but a couple of posts use
-  // Magpie as pseudo-code.
-  language.keywords(Category.keyword, 'loop null');
-
-  // Unquote.
-  language.regExp(r'`[a-z_][a-zA-Z0-9_]*\b\??', Category.preprocessor);
+  // For the post talking about access modifiers.
+  language.keywords(Category.keyword, 'def_ rec_ val_ var_');
 
   language.regExp(r'[A-Z][a-zA-Z0-9_\$]*\??', Category.typeName);
   language.regExp(r'[a-z_\$][a-zA-Z0-9_\$]*\??', Category.identifier);

@@ -28,6 +28,8 @@
 </h1>
   <a class="older" href="/2023/10/19/does-go-have-subtyping/"
      title="Older Post &ldquo;Does Go Have Subtyping?&rdquo;">&larr;</a>
+  <a class="newer" href="/2025/05/30/consider-knitting/"
+     title="Newer Post &ldquo;Consider Knitting&rdquo;">&rarr;</a>
 </header>
 <h4><a href="/archive">May 26, 2025</a>
     <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/vgs">vgs</a></span>
@@ -43,8 +45,8 @@ solve. I assumed that the module system mostly didn&rsquo;t interact with other
 language features, so I could kick it down the road for now.</p>
 
 <p>That was true until it wasn&rsquo;t. I&rsquo;ve been beating my head against the wall around
-generics for.. oh God I just checked the Git history and it&rsquo;s three years now. I
-still don&rsquo;t have that pinned down. Parametric types are hard.</p>
+generics for&hellip; oh God I just checked the Git history and it&rsquo;s three years now.
+I still don&rsquo;t have that pinned down. Parametric types are hard.</p>
 
 <p>Anyway, one of the approaches I&rsquo;m exploring <em>does</em> get tangled up in modules and
 scoping so now I have to figure modules out. This post is about one little
@@ -107,8 +109,8 @@ does cut down the verbosity.</p>
 If you&rsquo;re ever defined a preprocessor macro that inserts code in a class and had
 to be careful <em>where</em> in the class you called the macro, you&rsquo;ve run into this.</p>
 
-<p>Access control sections mean that you can&rsquo;t look at a single declaration and now
-what its access is. You have to know what section contains the declaration.</p>
+<p>Access control sections mean that you can&rsquo;t look at a single declaration and
+know what its access is. You have to know what section contains the declaration.</p>
 
 <p>There&rsquo;s also the funny historical thing where members in struct default to
 public and members in classes default to private. C++ is <em>weird</em>. Like a house
@@ -133,7 +135,7 @@ really is private. The language will name mangle it to make it inaccessible.</p>
 Otherwise, it&rsquo;s private. Because Go allows any Unicode letter in identifiers,
 the definition of uppercase <a href="https://en.wikipedia.org/wiki/Unicode_character_property#Casing">is not trivial</a>. Wikipedia tells me there are
 1,858 uppercase letters and 2,258 lowercase letters that can be used in
-identifiers on Go. Fun!</p>
+identifiers in Go. Fun!</p>
 
 <p>Dart only allows ASCII in identifiers and follows Python: If an identifier
 starts with <code>_</code>, it&rsquo;s private. Otherwise it&rsquo;s public. Unlike Python, this is

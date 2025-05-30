@@ -18,8 +18,8 @@ language features, so I could kick it down the road for now.
 [heterogeneous]: /2023/08/04/representing-heterogeneous-data/
 
 That was true until it wasn't. I've been beating my head against the wall around
-generics for.. oh God I just checked the Git history and it's three years now. I
-still don't have that pinned down. Parametric types are hard.
+generics for... oh God I just checked the Git history and it's three years now.
+I still don't have that pinned down. Parametric types are hard.
 
 Anyway, one of the approaches I'm exploring *does* get tangled up in modules and
 scoping so now I have to figure modules out. This post is about one little
@@ -82,8 +82,8 @@ The price to pay is that it also makes the language curiously context-sensitive.
 If you're ever defined a preprocessor macro that inserts code in a class and had
 to be careful *where* in the class you called the macro, you've run into this.
 
-Access control sections mean that you can't look at a single declaration and now
-what its access is. You have to know what section contains the declaration.
+Access control sections mean that you can't look at a single declaration and
+know what its access is. You have to know what section contains the declaration.
 
 There's also the funny historical thing where members in struct default to
 public and members in classes default to private. C++ is *weird*. Like a house
@@ -108,7 +108,7 @@ In Go, if a declaration's name starts with a capital letter, it's public.
 Otherwise, it's private. Because Go allows any Unicode letter in identifiers,
 the definition of uppercase [is not trivial][lu]. Wikipedia tells me there are
 1,858 uppercase letters and 2,258 lowercase letters that can be used in
-identifiers on Go. Fun!
+identifiers in Go. Fun!
 
 [lu]: https://en.wikipedia.org/wiki/Unicode_character_property#Casing
 

@@ -6,9 +6,308 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Tue, 27 May 2025 00:57:24 GMT</pubDate>
-    <lastBuildDate>Tue, 27 May 2025 00:57:24 GMT</lastBuildDate>
+    <pubDate>Fri, 30 May 2025 23:32:29 GMT</pubDate>
+    <lastBuildDate>Fri, 30 May 2025 23:32:29 GMT</lastBuildDate>
 
+
+    <item>
+      <title>Consider Knitting</title>
+      <link>http://journal.stuffwithstuff.com/2025/05/30/consider-knitting/</link>
+      <pubDate>Fri, 30 May 2025 07:00:00 GMT</pubDate>
+      <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
+      <guid>http://journal.stuffwithstuff.com/2025/05/30/consider-knitting</guid>
+      <description>&lt;p&gt;Let&amp;rsquo;s say that, like me, you are a person who stares at a computer and writes
+code for a living. As a straight male who grew up in a time where knitting was
+very strongly female coded, it for the most part never occurred to me that
+knitting was a thing I could do and might enjoy. Regardless of your demographic
+categories and background, it&amp;rsquo;s possible that you have also not really
+considered knitting.&lt;/p&gt;
+
+&lt;p&gt;This article exists to get you to do so. Specifically, I&amp;rsquo;ll try to convince you,
+one software person to another, why it might be a good fit for your life and
+brain. This is a pitch for knitting, but&amp;mdash;for better or worse&amp;mdash;an extremely
+nerdily argued one.&lt;/p&gt;
+
+&lt;p&gt;Before I start, note that when I say &amp;ldquo;knitting&amp;rdquo;, you can read that as any of the
+various &lt;a href=&quot;https://en.wikipedia.org/wiki/Fiber_art&quot;&gt;fiber arts&lt;/a&gt;, including crochet, weaving, macramé, cross-stitch, etc.
+I talk about knitting here because that&amp;rsquo;s the one closest to my heart and I
+strive to speak from the heart. You can make stuff out of string however you
+want. We are all fiber friends.&lt;/p&gt;
+
+&lt;h2&gt;The sense of touch&lt;/h2&gt;
+
+&lt;p&gt;I love the aesthetics of programming. Sitting in a cool quiet room, techno
+thumping in my headphones, coffee mug next to me, while a neatly arranged field
+of glowing monospace glyphs stream across my screen. But there&amp;rsquo;s one sense
+unmentioned in that sentence: touch. The sense we devote more neurons to than
+any other is curiously underutilized while pumping out code.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s no surprise that some programmers &lt;a href=&quot;https://www.reddit.com/r/CustomKeyboards/&quot;&gt;fetishize&lt;/a&gt; &lt;a href=&quot;https://www.reddit.com/r/MechanicalKeyboards/&quot;&gt;keyboards&lt;/a&gt;. It&amp;rsquo;s just about the only part of programming that has any physical sensation &lt;em&gt;at all&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;I got into knitting a few years after the pandemic. While I have a variety of
+hobbies, most are still staring at a screen and maybe &lt;a href=&quot;https://tinywir.es/&quot;&gt;pushing some buttons and
+turning knobs&lt;/a&gt;. When I wasn&amp;rsquo;t doing those, I was staring at a screen
+for work, or staring at a screen for &lt;a href=&quot;https://www.reddit.com/r/memes/comments/f6omv0/enjoying_some_good_screen_now/&quot;&gt;not-work&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I don&amp;rsquo;t know if I have a good way to explain how much my body craved tactile
+experience by the end of that. It&amp;rsquo;s like my fingers ached. A deep hunger, but
+not for taste. I&amp;rsquo;d wander around the house, driving my wife insane, unable to
+sit down and get comfortable. My body was just screaming at me to &lt;em&gt;do
+something.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;My youngest daughter had just picked up knitting, and she taught me. At first it
+was frustrating and annoying. But once I had the basics down, it was like a a
+deep sigh felt in my hands. Knitting is &lt;em&gt;so&lt;/em&gt; touch-centered. Skilled knitters
+can knit without looking at their hands at all&amp;mdash;touch alone is sufficient.&lt;/p&gt;
+
+&lt;p&gt;There are so many different kinds of yarn to work with and they all feel
+different. Cotton is tough and firm, like twine. Wool is soft and springy,
+forgiving as you pull stitches open to work them. Superwash wool is smooth and
+glides off the needles. Non-superwash wool has this very slight stickiness to it
+that makes the resulting fabric feel solid and whole. Thin fingering weight yarn
+wraps tightly around your finger like a reminder knot. Working it is like
+performing delicate surgery. Squishy chunky wool spreads your fingers wide and
+works so quickly it&amp;rsquo;s like fabric is spooling out of your hands on its own
+accord.&lt;/p&gt;
+
+&lt;p&gt;Even needles each have their own personality. Stiff grippy bamboo with its dull
+clack. Less worrisome to use because stitches don&amp;rsquo;t slide off as easily, but
+harder work to push against the friction. Polished stainless steel where the
+stitches just fly off the needles&amp;mdash;good when you are done with those stitches
+but not so much otherwise.&lt;/p&gt;
+
+&lt;p&gt;Once you&amp;rsquo;ve worked a few thousand stitches into your muscle memory, you can
+watch your fingers form stitches almost of their own accord, hypnotically. Right
+needle opens the stitch and slides in. Left finger wraps the yarn around the
+needle. Right finger grabs yarn. Right hand pulls the needle back out, a new
+stitch formed and transferred to the other needle. Over and over, like a
+meditation in the body.&lt;/p&gt;
+
+&lt;p&gt;Knitting &lt;em&gt;feels good&lt;/em&gt;. It is an intimate, constant reminder that we are a tool-using species with thousands of years of evolution giving us incredible dexterity and the emotional wiring to make us want to use it.&lt;/p&gt;
+
+&lt;h2&gt;An open world game with optimized skill curve&lt;/h2&gt;
+
+&lt;p&gt;Of course, you could get much of that same tactile joy by driving to your
+nearest yarn store and wandering around the aisles jamming your fingers into
+every ball and skein of yarn they have. (An activity I certainly &lt;em&gt;also&lt;/em&gt; do and
+highly recommend.) Knitting isn&amp;rsquo;t just about having a hedonistic tactile
+experience. It is a skilled art with an unbelievably deep lore.&lt;/p&gt;
+
+&lt;p&gt;I &lt;a href=&quot;https://www.mobygames.com/person/102093/bob-nystrom/&quot;&gt;used to be a game programmer&lt;/a&gt;, and I tend to look at a lot of
+activities through the lens of game design. Games are interesting because they
+are user experience distilled to its essence. When you are, say, using a banking
+app to transfer some money into savings, there is a user experience in play. But
+there&amp;rsquo;s also a &lt;em&gt;utility&lt;/em&gt;, a real effect you are trying to have in the material
+world. You may use your banking app and be satisfied that it helps you save
+money even if the UX is trash.&lt;/p&gt;
+
+&lt;p&gt;But a game, almost by definition, doesn&amp;rsquo;t &lt;em&gt;do&lt;/em&gt; anything &amp;ldquo;out there&amp;rdquo;. Aside from
+leaderboards and stuff, the point of a game is to be a low-stakes sandbox where
+you can play without, you know, accidentally deleting money out of your bank
+account. Because of that, it&amp;rsquo;s a pure user experience. All experience and
+nothing else.&lt;/p&gt;
+
+&lt;p&gt;Therefore, skilled game designers are possibly the best user experience
+designers in the world, and the tools they use to think about game design are
+useful lenses to evaluate just about any kind of human endeavor.&lt;/p&gt;
+
+&lt;p&gt;Two aspects (at least) are relevant to knitting.&lt;/p&gt;
+
+&lt;h3&gt;Linearity&lt;/h3&gt;
+
+&lt;p&gt;A game is &amp;ldquo;linear&amp;rdquo; if there&amp;rsquo;s only one path from beginning to end, one way to
+play. Don&amp;rsquo;t particularly enjoy the desert level? Tough shit, you gotta get
+through it to get to the end. &amp;ldquo;Nonlinear&amp;rdquo; games let players choose among
+multiple paths to reach the end. &amp;ldquo;Open world&amp;rdquo; or &amp;ldquo;sandbox&amp;rdquo; games blow the
+gameplay wide open and let players go where they want when they want. The game
+may not even &lt;em&gt;have&lt;/em&gt; an &amp;ldquo;end&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Knitting is an open world game. There are all sorts of objects you can make out
+of yarn, and all sorts of styles and techniques to make them. Don&amp;rsquo;t like socks?
+Fine, you don&amp;rsquo;t ever have to go through a &amp;ldquo;sock making phase&amp;rdquo; to graduate into
+what you really want to make. Find stranded colorwork too fiddly? There&amp;rsquo;s
+intarsia or just buy a ball of self-striping yarn and let the yarn change
+colors for you. Is a sweater too big of a commitment? You can make hats forever.&lt;/p&gt;
+
+&lt;p&gt;Once you get past the very basics of getting loops on the needles and making
+stitches, knitting very rarely forces you to slog through something you don&amp;rsquo;t
+want to do in order to reach some other goal. Except weaving in ends, I guess,
+which is kind of a chore. But, honestly, it&amp;rsquo;s not that bad.&lt;/p&gt;
+
+&lt;h3&gt;Skill curve&lt;/h3&gt;
+
+&lt;p&gt;A skill curve is sort of like a learning curve. It&amp;rsquo;s an imaginary graph of how
+much effort it takes to reach greater and more rewarding levels of skill. Some
+skill curves are steep at the beginning and then flatten out once you&amp;rsquo;re over
+the hump. When you first start playing guitar and don&amp;rsquo;t have the hand strength,
+callouses, or dexterity to form chords, it&amp;rsquo;s &lt;em&gt;really&lt;/em&gt; hard. But after a few days
+you can get the basics down. Then it&amp;rsquo;s pretty easy to learn more and more chords
+after that.&lt;/p&gt;
+
+&lt;p&gt;Other skill curves start shallow and get steeper. You can learn chess in a day
+and have fun playing it, but as you get more serious about, each incremental
+increase in skill requires a greater commitment to studying the theory of the
+game.&lt;/p&gt;
+
+&lt;p&gt;Knitting has a marvellously smooth, user-controllable skill curve. There&amp;rsquo;s a
+small hump at the beginning. It does take a little while to figure out how to
+hold the needles, control the tension of the yarn with your fingers, and get
+your hands to work in concert to make stitches. It feels like you&amp;rsquo;re making a
+shadow puppet of a sewing machine. Your initial experience will be frustrating.&lt;/p&gt;
+
+&lt;p&gt;But you can push through that in an hour or so. In a day, you can learn a basic
+way to cast stitches onto the needles, make knit and purl stitches, and then
+cast off to finish the work. With just those, you can make scarves and
+dishclothes. You are a knitter.&lt;/p&gt;
+
+&lt;p&gt;Then the world is your oyster. There are &lt;a href=&quot;https://www.ravelry.com/&quot;&gt;thousands of patterns out
+there&lt;/a&gt;, each listing the techniques required. You can pick ones well
+inside your comfort zone and grow your skills slowly. Or you can challenge
+yourself to learn a bunch of techniques at once. There are dozens of tiny little
+independent tricks to learn, each it&amp;rsquo;s own little merit badge serotonin hit:
+long-tail cast on, increases and decreases, cables, etc. So many fun different
+ways to form stitches. Each is one bite-sized lesson and no matter how many or
+few you want to chew on at a time, there is a project out there that will
+satisfy your appetite.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s not just the steepness of the curve, but also its height. Some skill curves
+top out early. I suspect the world&amp;rsquo;s greatest kazoo player is not profoundly
+better at kazoo than I am. Others seem to have no limit, like the world&amp;rsquo;s best
+violinists or Go players.&lt;/p&gt;
+
+&lt;p&gt;Friend, the knitting lore goes &lt;em&gt;deep&lt;/em&gt;. People have been developing this artform
+for literally over a thousand years. Knitters have sat there, brain semi-idle,
+while their fingers worked yarn for millions of hours. They had &lt;em&gt;plenty&lt;/em&gt; of time
+to invent all sorts of crazy ways to tangle yarn up. You could knit full-time
+for the rest of your life and never run out of new things to learn. Knitting
+will never stop rewarding you.&lt;/p&gt;
+
+&lt;h2&gt;Structured but not a game&lt;/h2&gt;
+
+&lt;p&gt;To be clear, I&amp;rsquo;m talking about knitting and videogames &lt;em&gt;as a metaphor&lt;/em&gt;. I don&amp;rsquo;t
+think of knitting as a game to win. Like a lot of programmers, I am prone to
+pointing my dumb optimizing brain at random activities and trying to min-max the
+shit out of it. Ask my wife how many ways to make coffee I have tried to find
+the optimal effort/reward ratio.&lt;/p&gt;
+
+&lt;p&gt;When I knit, I do try to knit efficiently. I mean, if I&amp;rsquo;ve gotta make 10,000
+stitches to finish a single scarf, it pays to put some thought into the process.
+At the same time, knitting isn&amp;rsquo;t just a pointless exercise to scratch my
+gamification itch. It is a real artform, and I am making real objects.&lt;/p&gt;
+
+&lt;p&gt;For me, knitting strikes a good balance between structure and unstructure. I
+like making music and when it goes well, it&amp;rsquo;s very rewarding. But sometimes I
+sit down and every melody that comes out sounds like a knock-off NES game (and
+not in that cool chiptune way). Or I&amp;rsquo;ll spend an entire evening working on the
+drum mixing and at the end I can&amp;rsquo;t tell if I made things better or worse. It&amp;rsquo;s
+&lt;em&gt;too&lt;/em&gt; unstructured.&lt;/p&gt;
+
+&lt;p&gt;When I sit down to knit, I might make a mistake that needs unwinding and fixing.
+But for the most part, I can be confident that an hour spent knitting will get
+me closer to a beautiful finished object. It provides a reliable serotonin hit
+of &amp;ldquo;I&amp;rsquo;m making progress&amp;rdquo;. But it&amp;rsquo;s not so rigidly structured that it triggers my
+optimizing brain into sucking the joy out of it by turning it into math
+homework.&lt;/p&gt;
+
+&lt;h2&gt;A time and a space&lt;/h2&gt;
+
+&lt;p&gt;A particularly nice property of knitting is that it is able to provide that
+reliable gratification while accommodating all of the other complexities in my
+life. It takes very little time to make progress knitting. Unlike, say,
+painting, there&amp;rsquo;s almost no set up at the beginning of a session or clean up at
+the end. When I pick up the kids from school, I can get ten minutes of knitting
+in while I wait for the bell.&lt;/p&gt;
+
+&lt;p&gt;Nor does it take up much space. A zip-loc bag with a ball of yarn and two
+needles is basically all you need, which is always in my backpack when I get on
+an airplane now.&lt;/p&gt;
+
+&lt;p&gt;Conveniently, the TSA &lt;a href=&quot;https://www.tsa.gov/travel/security-screening/whatcanibring/items/knitting-needles&quot;&gt;specifically allows knitting needles on flights&lt;/a&gt;.
+(The fact that the TSA is explicitly fine with you bringing a satchel full of
+foot-long sharpened metal spikes onto a plane as long as its accompanied by some
+string really says something about it as security theatre.) Note that this only
+applies to domestic flights in the US. Other countries have their own rules,
+though I haven&amp;rsquo;t had any trouble bringing knitting to Denmark or Costa Rica.&lt;/p&gt;
+
+&lt;p&gt;Knitting expands and contracts around not just physical space, but headspace
+too. Had a long day and want something mindless to help you unwind? Slap
+together a &lt;a href=&quot;https://www.ravelry.com/projects/munificent/slanting-stripes-scarf&quot;&gt;garter stitch scarf&lt;/a&gt; and just do the same stitch over and
+over again. Stressed out by work or grieving a loss and need something consuming
+to take your mind off it? Start a lacework or cable knit project and the chart
+and counting won&amp;rsquo;t leave room to think about anything else.&lt;/p&gt;
+
+&lt;p&gt;Whatever logistical or mental capacities you have, there is a knitting project
+that will tuck neatly into it.&lt;/p&gt;
+
+&lt;h2&gt;And then at the end&lt;/h2&gt;
+
+&lt;p&gt;So far, I&amp;rsquo;ve been talking about knitting as an &lt;em&gt;activity&lt;/em&gt;. A personal hobby to
+kill time for your own joy. Kill time it does, but knitting isn&amp;rsquo;t just about
+whiling away the hours. It&amp;rsquo;s not playing solitaire or binging a TV show for the
+fifth time.&lt;/p&gt;
+
+&lt;p&gt;As yarn spools through your fingers and the hands twirl around the clock, an
+actual physical, beautiful object emerges at the end. Well, your first couple of
+objects may not be so beautiful. But even the lumpiest knitted scarf is imbued
+with something increasingly elusive these days: &lt;em&gt;care&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The first real thing I knitted was a scarf for my mother-in-law. In retrospect,
+I can&amp;rsquo;t say it&amp;rsquo;s a great scarf. Kinda cheap acrylic yarn. Not really her color.
+4x4 rib was about all I could handle complexity-wise at the time, and it means
+the scarf tends to bunch up on itself. But when she opened the package on
+Christmas and saw it, her eyes teared up. Mine are tearing up now writing this.&lt;/p&gt;
+
+&lt;p&gt;Because regardless of how good the object itself is, it is an inarguable
+testament to the fact that I chose to spend dozens of quiet hours making stitch
+after stitch, all the while thinking about her and how much she means to me. A
+fraction of my life&amp;rsquo;s wick that I burned for her and no one else.&lt;/p&gt;
+
+&lt;p&gt;In a world where so many seem to want to get more and more out of less and less,
+to automate and AI-ify everything until an infinite content firehose is blasting
+into every orifice of every consumer, hand knitting to me is the antidote. An
+acknowledgement that all we really have is time and thus there is no gift more
+precious than spending it on someone.&lt;/p&gt;
+
+&lt;p&gt;Also, once you finish a project, you get to buy more yarn. Because, if I&amp;rsquo;m
+honest, a little consumption feels kinda nice too.&lt;/p&gt;
+
+&lt;h2&gt;OK, I&amp;rsquo;m sold&lt;/h2&gt;
+
+&lt;p&gt;Anyway, this is what knitting means to me. Which, now that I read all this, is a
+lot more than I realized. If that didn&amp;rsquo;t pique your interest, fine. It&amp;rsquo;s not for
+everyone. I do hope you find something out there to spend your time on that
+provides as much joy as knitting does to me. You deserve that.&lt;/p&gt;
+
+&lt;p&gt;If this did make you want to give knitting a try, you&amp;rsquo;re probably wondering what
+next. Fortunately, there are, like, a million &amp;ldquo;learn how to knit&amp;rdquo; tutorials out
+there. One of the actually marvellous things about living in the world today is
+good access to lots of videos, and knitting is an activity that&amp;rsquo;s &lt;em&gt;really&lt;/em&gt; hard
+to convey in book form. You kind of need to watch someone&amp;rsquo;s hands. Learning from
+someone in person is best, but if you don&amp;rsquo;t have that, YouTube is a pretty good
+substitute.&lt;/p&gt;
+
+&lt;p&gt;Keep in mind that everyone&amp;rsquo;s hands are different! There are many ways (a
+handful, heh heh) to hold the needles and form stitches because our anatomy and
+the texture of our skin varies so much. Watch a few videos and don&amp;rsquo;t worry if
+what works for them doesn&amp;rsquo;t work for you. Eventually, you&amp;rsquo;ll find one that does.&lt;/p&gt;
+
+&lt;p&gt;Expect to be challenged and frustrated at first. There&amp;rsquo;s a lot to going on all
+at once: controlling the tension of the working yarn, keeping the stitches from
+the previous row on the left needle, keeping the new stitches on the right
+needle, forming new stitches. This may be one of the first times you&amp;rsquo;ve used
+this many of your fingers doing &lt;em&gt;different&lt;/em&gt; things all at once.&lt;/p&gt;
+
+&lt;p&gt;I promise that if you&amp;rsquo;re patient with yourself and give it a few tries, you will
+get over the hump. Once you can knit a swatch of garter stitch, everything else
+will come naturally over time.&lt;/p&gt;
+
+&lt;p&gt;So go your local craft store, buy a cheap pair of size 7 needles, a ball of
+worsted (i.e. medium) weight acrylic or wool yarn in a color you think is
+pretty, and give it a try. The worst that can happen is you&amp;rsquo;ll waste a few
+bucks. If you&amp;rsquo;re lucky, you might end up making your mother-in-law cry (in a
+good way).&lt;/p&gt;
+</description>
+    </item>
 
     <item>
       <title>Access Control Syntax</title>
@@ -27,8 +326,8 @@ solve. I assumed that the module system mostly didn&amp;rsquo;t interact with ot
 language features, so I could kick it down the road for now.&lt;/p&gt;
 
 &lt;p&gt;That was true until it wasn&amp;rsquo;t. I&amp;rsquo;ve been beating my head against the wall around
-generics for.. oh God I just checked the Git history and it&amp;rsquo;s three years now. I
-still don&amp;rsquo;t have that pinned down. Parametric types are hard.&lt;/p&gt;
+generics for&amp;hellip; oh God I just checked the Git history and it&amp;rsquo;s three years now.
+I still don&amp;rsquo;t have that pinned down. Parametric types are hard.&lt;/p&gt;
 
 &lt;p&gt;Anyway, one of the approaches I&amp;rsquo;m exploring &lt;em&gt;does&lt;/em&gt; get tangled up in modules and
 scoping so now I have to figure modules out. This post is about one little
@@ -91,8 +390,8 @@ does cut down the verbosity.&lt;/p&gt;
 If you&amp;rsquo;re ever defined a preprocessor macro that inserts code in a class and had
 to be careful &lt;em&gt;where&lt;/em&gt; in the class you called the macro, you&amp;rsquo;ve run into this.&lt;/p&gt;
 
-&lt;p&gt;Access control sections mean that you can&amp;rsquo;t look at a single declaration and now
-what its access is. You have to know what section contains the declaration.&lt;/p&gt;
+&lt;p&gt;Access control sections mean that you can&amp;rsquo;t look at a single declaration and
+know what its access is. You have to know what section contains the declaration.&lt;/p&gt;
 
 &lt;p&gt;There&amp;rsquo;s also the funny historical thing where members in struct default to
 public and members in classes default to private. C++ is &lt;em&gt;weird&lt;/em&gt;. Like a house
@@ -117,7 +416,7 @@ really is private. The language will name mangle it to make it inaccessible.&lt;
 Otherwise, it&amp;rsquo;s private. Because Go allows any Unicode letter in identifiers,
 the definition of uppercase &lt;a href=&quot;https://en.wikipedia.org/wiki/Unicode_character_property#Casing&quot;&gt;is not trivial&lt;/a&gt;. Wikipedia tells me there are
 1,858 uppercase letters and 2,258 lowercase letters that can be used in
-identifiers on Go. Fun!&lt;/p&gt;
+identifiers in Go. Fun!&lt;/p&gt;
 
 &lt;p&gt;Dart only allows ASCII in identifiers and follows Python: If an identifier
 starts with &lt;code&gt;_&lt;/code&gt;, it&amp;rsquo;s private. Otherwise it&amp;rsquo;s public. Unlike Python, this is
@@ -4298,779 +4597,6 @@ nationalities, we can drop those adjectives (#2):&lt;/p&gt;
 worry about this stuff, but I believe that &lt;a href=&quot;/2009/06/05/naming-things-in-code/&quot;&gt;naming things&lt;/a&gt; is one of the most
 fundamental tasks we do when programming. Names are the structure we impose on
 the formless sea of bits that is computing.&lt;/p&gt;
-</description>
-    </item>
-
-    <item>
-      <title>The Hardest Program I&#8217;ve Ever Written</title>
-      <link>http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/</link>
-      <pubDate>Tue, 08 Sep 2015 07:00:00 GMT</pubDate>
-      <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
-      <guid>http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written</guid>
-      <description>&lt;style&gt;
-.skull, .skull-note {
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-
-  background: hsl(35, 100%, 96%);
-  color: hsl(35, 40%, 50%);
-
-  padding: 1px;
-}
-
-.skull::before, .skull-note::before {
-  content: &quot;\01f480&quot;;
-  margin-right: -2px;
-}
-
-a.skull {
-  position: relative;
-  top: -0.4em;
-  font-size: 80%;
-}
-
-a.skull:hover, a.skull-note:hover {
-  color: hsl(35, 100%, 30%);
-}
-&lt;/style&gt;
-
-&lt;p&gt;The hardest program I&amp;rsquo;ve ever written, once you strip out the whitespace, is
-3,835 lines long. That handful of code took me almost a year to write. Granted,
-that doesn&amp;rsquo;t take into account the code that didn&amp;rsquo;t make it. The &lt;a href=&quot;https://github.com/dart-lang/dart_style/commits/master&quot;&gt;commit
-history&lt;/a&gt; shows that I deleted 20,704 lines of code over that time. Every
-surviving line has about three fallen comrades.&lt;/p&gt;
-
-&lt;p&gt;If it took that much thrashing to get it right, you&amp;rsquo;d expect it to do something
-pretty deep right? Maybe a low-level hardware interface or some wicked graphics
-demo with tons of math and pumping early-90s-style techno? A likely-to-turn-evil
-machine learning AI Skynet thing?&lt;/p&gt;
-
-&lt;p&gt;Nope. It reads in a string and writes out a string. The only difference between
-the input and output strings is that it modifies some of the whitespace
-characters. I&amp;rsquo;m talking, of course, about &lt;a href=&quot;https://github.com/dart-lang/dart_style&quot;&gt;an automated code
-formatter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2&gt;Introducing dartfmt&lt;/h2&gt;
-
-&lt;p&gt;I work on the &lt;a href=&quot;https://www.dartlang.org/&quot;&gt;Dart&lt;/a&gt; programming language. Part of my job is helping make Dart
-code more readable, idiomatic, and consistent, which is why I ended up writing
-our &lt;a href=&quot;https://www.dartlang.org/articles/style-guide/&quot;&gt;style guide&lt;/a&gt;. That was a good first step, but any style guide written in
-English is either so brief that it&amp;rsquo;s ambiguous, or so long that no one reads it.&lt;/p&gt;
-
-&lt;p&gt;Go&amp;rsquo;s &lt;a href=&quot;https://golang.org/cmd/gofmt/&quot;&gt;gofmt&lt;/a&gt; tool showed a better solution: automatically format
-everything. Code is easier to read and contribute to because it&amp;rsquo;s already in the
-style you&amp;rsquo;re used to. Even if the output of the formatter isn&amp;rsquo;t great, it ends
-those interminable soul-crushing arguments on code reviews about formatting.&lt;/p&gt;
-
-&lt;p&gt;Of course, I still have to sell users on running the formatter in the first
-place. For &lt;em&gt;that&lt;/em&gt;, having great output really does matter. Also, I&amp;rsquo;m pretty
-picky with the formatting in my own code, and I didn&amp;rsquo;t want to tell users to use
-a tool that I didn&amp;rsquo;t use myself.&lt;/p&gt;
-
-&lt;p&gt;Getting that kind of quality means applying pretty sophisticated formatting
-rules. That in turn makes &lt;em&gt;performance&lt;/em&gt; difficult. I knew balancing quality and
-speed would be hard, but I didn&amp;rsquo;t realize just how deep the rabbit hole went.&lt;/p&gt;
-
-&lt;p&gt;I have finally emerged back into the sun, and I&amp;rsquo;m pleased with what I brought
-back. I like the output, and the performance is solid. On my laptop, it can blow
-through over two million lines of code in about 45 seconds, using a single core.&lt;/p&gt;
-
-&lt;h2&gt;Why is formatting hard?&lt;/h2&gt;
-
-&lt;p&gt;At this point, you&amp;rsquo;re probably thinking, &amp;ldquo;Wait. What&amp;rsquo;s so hard about
-formatting?&amp;rdquo; After you&amp;rsquo;ve parsed, can&amp;rsquo;t you just walk the &lt;a href=&quot;https://en.wikipedia.org/wiki/Abstract_syntax_tree&quot;&gt;AST&lt;/a&gt; and
-&lt;a href=&quot;https://en.wikipedia.org/wiki/Prettyprint&quot;&gt;pretty-print&lt;/a&gt; it with some whitespace?&lt;/p&gt;
-
-&lt;p&gt;If every statement fit within the column limit of the page, yup. It&amp;rsquo;s a piece of
-cake. (I think that&amp;rsquo;s what gofmt does.) But our formatter also keeps your code
-within the line length limit. That means adding line breaks (or &amp;ldquo;splits&amp;rdquo; as the
-formatter calls them), and determining the best place to add those is &lt;a href=&quot;https://en.wikipedia.org/wiki/Line_wrap_and_word_wrap#Knuth.27s_algorithm&quot;&gt;famously
-hard&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Check out this guy:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;experimental&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;querySelectorAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;link&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;rel&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;import&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;href&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;POLYMER_EXPERIMENTAL_HTML&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There are thirteen places where a line break is possible here according to our
-style rules. That&amp;rsquo;s 8,192 different combinations if we brute force them all &lt;a
-id=&quot;1&quot; href=&quot;#1-note&quot; class=&quot;skull&quot;&gt;1&lt;/a&gt;. The search space we have to cover is
-&lt;em&gt;exponentially&lt;/em&gt; large, and even ranking different solutions is a subtle problem.
-Is it better to split before the &lt;code&gt;.any()&lt;/code&gt;? Why or why not?&lt;/p&gt;
-
-&lt;div class=&quot;update&quot;&gt;
-&lt;p&gt;&lt;strong&gt;What is up with the skulls?&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;I had two goals with this article: to explain how dartfmt works, and to show
-a realistic picture of how a real programmer solves a difficult problem with all
-of the messiness that entails. Alas, the first is more than long enough to try
-your patience, so I shunted all of the dead ends and failed attempts to
-footnotes. Click the skulls to laugh at my misfortune.&lt;/p&gt;&lt;/div&gt;
-
-&lt;p&gt;In Dart, we made things harder on ourselves. We have anonymous functions, lots
-of &lt;a href=&quot;https://api.dartlang.org/133511/dart-core/Iterable-class.html&quot;&gt;higher-order functions&lt;/a&gt;, and&amp;mdash;until we added &lt;a href=&quot;https://www.dartlang.org/articles/await-async/&quot;&gt;&lt;code&gt;async&lt;/code&gt; and
-&lt;code&gt;await&lt;/code&gt;&lt;/a&gt;&amp;mdash;used &lt;a href=&quot;https://api.dartlang.org/1.12.1/dart-async/Future-class.html&quot;&gt;futures&lt;/a&gt; for concurrency. That means lots of
-callbacks and lots of long method chains. Some Dart users really dig a
-functional style and appear to be playing a game where whoever writes the most
-code with the fewest semicolons wins.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;rsquo;s real code from an amateur player:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;_bindAssignablePropsOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;eventName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;eventName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;zone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;bindAssignableProps&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;propAndExp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;propAndExp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;assign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                &lt;span class=&quot;i&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;jsNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;propAndExp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])))));&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Yeah, that&amp;rsquo;s four nested functions. 1,048,576 ways to split that one. Here&amp;rsquo;s one
-of the best that I&amp;rsquo;ve found. This is what a pro player brings to the game:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;doughnutFryer&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_frostingGlazer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Future&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;_conveyorBelts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;sprinkleSprinkler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;sauceDripper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;catchError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;cannotGetConveyorBeltRunning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;tellEveryoneDonutsAreJustAboutDone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Future&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;croissantFactory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;_giantBakingOvens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-          &lt;span class=&quot;i&quot;&gt;butterbutterer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;catchError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_handleBakingFailures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;scriptLoadingTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;i&quot;&gt;onTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_handleBakingFailures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;catchError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;cannotGetConveyorBeltRunning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;catchError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;cannotGetConveyorBeltRunning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;i&quot;&gt;_logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Let&amp;#39;s eat!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;(The funny names are because this was sanitized from internal code.) That&amp;rsquo;s a
-&lt;em&gt;single&lt;/em&gt; statement, all 565 characters of it. There are about 549 &lt;em&gt;billion&lt;/em&gt; ways
-we could line break it.&lt;/p&gt;
-
-&lt;p&gt;Ultimately, this is what the formatter does. It applies some fairly
-sophisticated ranking rules to find the best set of line breaks from an
-exponential solution space. Note that &amp;ldquo;best&amp;rdquo; is a property of the &lt;em&gt;entire
-statement&lt;/em&gt; being formatted. A line break changes the indentation of the
-remainder of the statement, which in turn affects which other line breaks are
-needed. Sorry, Knuth. No &lt;a href=&quot;https://en.wikipedia.org/wiki/Dynamic_programming&quot;&gt;dynamic programming&lt;/a&gt; this time &lt;a id=&quot;2&quot;
-href=&quot;#2-note&quot; class=&quot;skull&quot;&gt;2&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I think the formatter does a good job, but &lt;em&gt;how&lt;/em&gt; it does it is a mystery to
-users. People get spooked when robots surprise them, so I thought I would trace
-the inner workings of its metal mind. And maybe try to justify to myself why it
-took me a year to write a program whose behavior in many ways is
-indistinguishable from &lt;code&gt;cat&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2&gt;How the formatter sees your code&lt;/h2&gt;
-
-&lt;p&gt;As you&amp;rsquo;d expect from a program that works on source code, the formatter is
-structured much like a compiler. It has a &lt;a href=&quot;https://en.wikipedia.org/wiki/Compiler#Structure_of_a_compiler&quot;&gt;front end&lt;/a&gt; that parses your code
-and converts that to an &lt;a href=&quot;https://en.wikipedia.org/wiki/Intermediate_language#Intermediate_representation&quot;&gt;intermediate representation&lt;/a&gt; &lt;a id=&quot;3&quot;
-href=&quot;#3-note&quot; class=&quot;skull&quot;&gt;3&lt;/a&gt;. It does some optimization and clean up on
-that &lt;a id=&quot;4&quot; href=&quot;#4-note&quot; class=&quot;skull&quot;&gt;4&lt;/a&gt;, and then the IR goes to a
-back end &lt;a id=&quot;5&quot; href=&quot;#5-note&quot; class=&quot;skull&quot;&gt;5&lt;/a&gt; that produces the final
-output. The main objects here are &lt;strong&gt;chunks&lt;/strong&gt;, &lt;strong&gt;rules&lt;/strong&gt;, and &lt;strong&gt;spans&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Chunks&lt;/h3&gt;
-
-&lt;p&gt;A &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk.dart&quot;&gt;chunk&lt;/a&gt; is an atomic unit of formatting. It&amp;rsquo;s a contiguous region of
-characters that we know will not contain any line breaks. Given this code:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;/* comment */&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We break it into these chunks: &lt;code&gt;format&lt;/code&gt;, &lt;code&gt;/* comment */&lt;/code&gt;, and &lt;code&gt;this;&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Chunks are similar to a &lt;a href=&quot;https://en.wikipedia.org/wiki/Lexical_analysis#Token&quot;&gt;token&lt;/a&gt; in a conventional compiler, but they tend to
-be, well, &lt;em&gt;chunkier&lt;/em&gt;. Often, the text for several tokens ends up in the same
-chunk, like &lt;code&gt;this&lt;/code&gt; and &lt;code&gt;;&lt;/code&gt; here. If a line break can never occur between two
-tokens, they end up in the same chunk &lt;a id=&quot;6&quot; href=&quot;#6-note&quot;
-class=&quot;skull&quot;&gt;6&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Chunks are mostly linear. For example, given an expression like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;some&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;nested&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;ca&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;ll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We chunk it to the flat list: &lt;code&gt;some(&lt;/code&gt; &lt;code&gt;nested,&lt;/code&gt; &lt;code&gt;function(&lt;/code&gt; &lt;code&gt;ca +&lt;/code&gt; &lt;code&gt;ll))&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;We could treat an entire source file like a single flat sequence of chunks, but
-it would take forever and a day to line break the whole thing &lt;a id=&quot;7&quot;
-href=&quot;#7-note&quot; class=&quot;skull&quot;&gt;7&lt;/a&gt;. With things like long chains of asynchronous
-code, a single &amp;ldquo;statement&amp;rdquo; may be hundreds of lines of code containing several
-nested functions or collections that each contain their own piles of code.&lt;/p&gt;
-
-&lt;p&gt;We can&amp;rsquo;t treat those nested functions or collection literals entirely
-independently because the surrounding expression affects how they are indented.
-That in turn affects how long their lines are. Indent a function body two more
-spaces and now its statements have two fewer spaces before they hit the end of
-the line.&lt;/p&gt;
-
-&lt;p&gt;Instead, we treat nested block bodies as a separate little list of chunks to be
-formatted mostly on their own but subordinate to where they appear. The chunk
-that begins one of these literals, like the &lt;code&gt;{&lt;/code&gt; preceding a function or map,
-contains a list of child &lt;em&gt;block chunks&lt;/em&gt; for the contained block. In other words,
-chunks do form a tree, but one that only reflects block nesting, not
-expressions.&lt;/p&gt;
-
-&lt;p&gt;The end of a chunk marks the point where a split may occur in the final output,
-and the chunk has some data describing it &lt;a id=&quot;8&quot; href=&quot;#8-note&quot;
-class=&quot;skull&quot;&gt;8&lt;/a&gt;. It keeps track of whether a blank line should be added
-between the chunks (like between two class definitions), how much the next line
-should be indented, and the expression nesting depth at that point in the code.&lt;/p&gt;
-
-&lt;p&gt;The most important bit of data about the split is the &lt;em&gt;rule&lt;/em&gt; that controls it &lt;a
-id=&quot;9&quot; href=&quot;#9-note&quot; class=&quot;skull&quot;&gt;9&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Rules&lt;/h3&gt;
-
-&lt;p&gt;Each potential split in the program is owned by a &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart&quot;&gt;rule&lt;/a&gt;. A single rule may
-own the splits of several chunks. For example, a series of binary operators of
-the same kind like &lt;code&gt;a + b + c + d&lt;/code&gt; uses a single rule for the splits after each
-&lt;code&gt;+&lt;/code&gt; operator.&lt;/p&gt;
-
-&lt;p&gt;A rule controls which of its splits break and which don&amp;rsquo;t. It determines this
-based on the state that the rule is in, which it calls its &lt;em&gt;value&lt;/em&gt;. You can
-think of a rule like a dial and the value is what you&amp;rsquo;ve turned it to. Given a
-value, the rule will tell you which of its chunks get split.&lt;/p&gt;
-
-&lt;p&gt;The simplest rule is a &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart#L85&quot;&gt;hard split rule&lt;/a&gt;. It says that its chunk &lt;em&gt;always&lt;/em&gt;
-splits, so it only has one value: &lt;code&gt;0&lt;/code&gt;. This is useful for things like line
-comments where you always need to split after it, even in the middle of an
-expression &lt;a id=&quot;10&quot; href=&quot;#10-note&quot; class=&quot;skull&quot;&gt;10&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Then there is a &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/rule.dart#L104&quot;&gt;simple split rule&lt;/a&gt;. It allows two values: &lt;code&gt;0&lt;/code&gt; means
-none of its chunks split and &lt;code&gt;1&lt;/code&gt; means they all do. Since most splits are
-independent of the others, this gets used for most of the splits in the program.&lt;/p&gt;
-
-&lt;p&gt;Beyond that, there are &lt;a href=&quot;https://github.com/dart-lang/dart_style/tree/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule&quot;&gt;a handful of special-case rules&lt;/a&gt;. These are used
-in places where we want to more precisely control the configuration of a set of
-splits. For example, the positional argument list in a function list is
-controlled by &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/argument.dart&quot;&gt;a single rule&lt;/a&gt;. A function call like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Will have splits after &lt;code&gt;function(&lt;/code&gt;, &lt;code&gt;first,&lt;/code&gt;, &lt;code&gt;second,&lt;/code&gt;, and &lt;code&gt;third)&lt;/code&gt;. They are
-all owned by a single rule that only allows the following configurations:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// 0: Don&amp;#39;t split at all.&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// 1: Split before the first.&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// 2: Split only before the last argument.&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// 3: Split only before the middle argument.&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// 4: Split before all of them.&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Having a single rule for this instead of individual rules for each argument lets
-us prohibit undesired outputs like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Constraints&lt;/h3&gt;
-
-&lt;p&gt;Grouping a range of splits under a single rule helps us prevent split
-configurations we want to avoid like the previous example, but it&amp;rsquo;s not enough.
-There are more complex constraints we want to enforce like: &amp;ldquo;if a split occurs
-inside a list element, the list should split too&amp;rdquo;. That avoids output like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;third&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;fourth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Here, the list and the &lt;code&gt;+&lt;/code&gt; expression have their own rules, but those rules need
-to interact. If the &lt;code&gt;+&lt;/code&gt; takes value &lt;code&gt;1&lt;/code&gt;, the list rule needs to as well. To
-support this, rules can &lt;em&gt;constrain&lt;/em&gt; each other. Any rule can limit the values
-another rule is allowed to take based on its own value. Typically, constraints
-are used to make a subexpression rule force the surrounding rules to split
-when the subexpression splits &lt;a id=&quot;11&quot; href=&quot;#11-note&quot; class=&quot;skull&quot;&gt;11&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Finally, each rule has a &lt;em&gt;cost&lt;/em&gt;. This is a numeric penalty that applies when any
-of that rule&amp;rsquo;s chunks are split. This helps us determine which sets of splits
-are better or worse than others &lt;a id=&quot;12&quot; href=&quot;#12-note&quot; class=&quot;skull&quot;&gt;12&lt;/a&gt;.
-Rule costs are only part of how overall fitness is calculated. Most of the cost
-calculation comes from spans.&lt;/p&gt;
-
-&lt;h3&gt;Spans&lt;/h3&gt;
-
-&lt;p&gt;A &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk.dart#L331&quot;&gt;span&lt;/a&gt; marks a series of contiguous chunks that we want to avoid splitting.
-I picture it like a rubber band stretching around them. If a split happens in
-any of those chunks, the span is broken. When that happens, the solution is
-penalized based on the cost of the span.&lt;/p&gt;
-
-&lt;p&gt;Spans can nest arbitrarily deeply. In an expression like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There will be spans around &lt;code&gt;a, b&lt;/code&gt; and &lt;code&gt;c, d&lt;/code&gt; to try to keep those argument lists
-from splitting, but also another span around &lt;code&gt;first(a, b), second(c, d)&lt;/code&gt; to keep
-the outer argument list from splitting:&lt;/p&gt;
-
-&lt;p&gt;If a split occurs between &lt;code&gt;a,&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt;, the &lt;code&gt;a, b&lt;/code&gt; span splits, but so does the
-&lt;code&gt;first(a, b), second(c, d)&lt;/code&gt; one. However, if a split occurs after &lt;code&gt;first(a, b),&lt;/code&gt;
-then the &lt;code&gt;a, b&lt;/code&gt; span is still fine. In this way, spans teach the formatter to
-prefer splitting at a higher level of nesting when possible since it breaks
-fewer nested spans.&lt;/p&gt;
-
-&lt;h2&gt;Parsing source to chunks&lt;/h2&gt;
-
-&lt;p&gt;Converting your raw source code to this representation is fairly
-straightforward. The formatter uses the wonderful &lt;a href=&quot;https://pub.dev/packages/analyzer&quot;&gt;analyzer&lt;/a&gt; package to parse
-your code to an &lt;a href=&quot;https://en.wikipedia.org/wiki/Abstract_syntax_tree&quot;&gt;AST&lt;/a&gt;. This gives us a tree structure that represents every
-single byte of your program. Unlike many ASTs, it even includes comments.&lt;/p&gt;
-
-&lt;p&gt;Once we have that, the formatter does a &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/source_visitor.dart&quot;&gt;top-down traversal of the
-tree&lt;/a&gt;. As it walks, it &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart&quot;&gt;writes out chunks, rules, and spans&lt;/a&gt;
-for the various grammar productions. This is where the formatting &amp;ldquo;style&amp;rdquo; is
-determined.&lt;/p&gt;
-
-&lt;p&gt;There&amp;rsquo;s no rocket science here, but there are a &lt;em&gt;lot&lt;/em&gt; of &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L184&quot;&gt;hairy&lt;/a&gt;
-&lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L210&quot;&gt;corner&lt;/a&gt; &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L283&quot;&gt;cases&lt;/a&gt;. Comments can appear in weird places. We have
-to handle weird things like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// comment&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Here, we normally would have a split after the first argument owned by an
-argument list rule. But the line comment adheres to the &lt;code&gt;,&lt;/code&gt; and has a hard split
-after it, so we need to make sure the argument list rule handles that.&lt;/p&gt;
-
-&lt;p&gt;Whitespace is only implicitly tracked by the AST so we have to &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/source_visitor.dart#L1979&quot;&gt;reconstitute
-it&lt;/a&gt; in the few places where your original whitespace affects the output.
-Having a detailed test suite really helps here.&lt;/p&gt;
-
-&lt;p&gt;Once we&amp;rsquo;ve visited the entire tree, the AST has been converted to a tree of
-chunks and a bunch of spans wrapped around pieces of it.&lt;/p&gt;
-
-&lt;h2&gt;Formatting chunks&lt;/h2&gt;
-
-&lt;p&gt;We&amp;rsquo;ve got ourselves a big tree of chunks owned by a slew of rules. Earlier, I
-said rule values are like knobs. Now we get to dial those knobs in. Doing this
-naïvely is infeasible. Even a small source file contains hundreds of individual
-rules and the set of possible solutions is exponential in the number of rules.&lt;/p&gt;
-
-&lt;p&gt;The first thing we do is &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L736&quot;&gt;divide the chunk list&lt;/a&gt; into regions we &lt;em&gt;know&lt;/em&gt;
-can&amp;rsquo;t interfere with each other. These are roughly &amp;ldquo;lines&amp;rdquo; of code. So with:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We know that how we split the first statement has no effect on the second one.
-So we run through the list of chunks and break them into shorter lists whenever
-we hit a hard split that isn&amp;rsquo;t nested inside an expression.&lt;/p&gt;
-
-&lt;p&gt;Each of these shorter chunk lists is fed to the &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart&quot;&gt;line splitter&lt;/a&gt;. Its job is to
-pick the best set of values for all the rules used by the chunks in the line. In
-most cases, this is trivial: if the whole line fits on the page, every rule gets
-set to zero&amp;mdash;no splits&amp;mdash;and we&amp;rsquo;re done.&lt;/p&gt;
-
-&lt;p&gt;When a line doesn&amp;rsquo;t fit, the splitter has to figure out which combination of
-rule values produces the best result. That is:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;The one with the fewest characters that go over the column limit.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The one with the lowest cost, based on which rules and spans were split.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Calculating the cost for a set of rule values is pretty easy, but there are
-still way too many permutations to brute force it. If we can&amp;rsquo;t brute force it,
-how do we do it?&lt;/p&gt;
-
-&lt;h2&gt;How line splitting works&lt;/h2&gt;
-
-&lt;p&gt;Since I dropped out of college, my knowledge of algorithms was fairly, um,
-rudimentary. So before I interviewed at Google, I spent two days in a hotel room
-cramming as many of them&amp;mdash;mostly graph traversal&amp;mdash;in my head as I could. At
-the time, I thought graphs would never come up in the interviews&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;Then I had multiple interview questions that reduced down to doing the right
-kind of traversal over a graph. At the time, I thought this stuff would never be
-relevant to my actual job&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;Then I spent the past few years at Google discovering that damn near every
-program I have to write can be reduced down to some kind of graph search. I
-wrote a &lt;a href=&quot;https://pub.dev/&quot;&gt;package manager&lt;/a&gt; where dependencies are a transitive closure and
-version constraint solving is graph based. My &lt;a href=&quot;https://github.com/munificent/hauberk&quot;&gt;hobby roguelike&lt;/a&gt; uses
-graphs for pathfinding. Graphs out the wazoo. I can do BFS in my sleep now.&lt;/p&gt;
-
-&lt;p&gt;Naturally, after several other failed approaches, I found that line splitting
-can be handled like a graph search problem &lt;a id=&quot;13&quot; href=&quot;#13-note&quot;
-class=&quot;skull&quot;&gt;13&lt;/a&gt;. Each node in the graph represents a &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart&quot;&gt;solution&lt;/a&gt;&amp;mdash;a set
-of values for each rule. Solutions can be &lt;em&gt;partial&lt;/em&gt;: some rules may be left with
-their values unbound.&lt;/p&gt;
-
-&lt;p&gt;From a given partial solution (including the initial &amp;ldquo;no rules bound&amp;rdquo; one),
-there are edges to new partial solutions. Each edges binds one additional rule
-to a value. By starting from an empty solution and walking this graph, we
-eventually reach complete solutions where all of the rules have been bound to
-values.&lt;/p&gt;
-
-&lt;p&gt;Graph search is great if you know where your destination is and you&amp;rsquo;re trying to
-find the best path. But we don&amp;rsquo;t actually know that. We don&amp;rsquo;t know what the best
-complete solution &lt;em&gt;is&lt;/em&gt;. (If we did, we&amp;rsquo;ve be done already!)&lt;/p&gt;
-
-&lt;p&gt;Given this, no textbook graph search algorithm is sufficient. We need to apply
-some domain knowledge&amp;mdash;we need to take advantage of rules and conditions
-implicit in the &lt;em&gt;specific&lt;/em&gt; problem we&amp;rsquo;re solving.&lt;/p&gt;
-
-&lt;p&gt;After a dozen dead ends, I found three (sort of four) that are enough to get it
-finding the right solution quickly:&lt;/p&gt;
-
-&lt;h3&gt;Bailing early&lt;/h3&gt;
-
-&lt;p&gt;We are trying to minimize two soft constraints at the same time:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;We want to minimize the number of characters that overflow the line length
-limit. We can&amp;rsquo;t make this a hard constraint that there is &lt;em&gt;no&lt;/em&gt; overflow
-because it&amp;rsquo;s possible for a long identifier or string literal to overflow in
-&lt;em&gt;every&lt;/em&gt; solution. In that case, we still need to find the result that&amp;rsquo;s
-closest to fitting.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;We want to find the lowest cost&amp;mdash;the fewest split rules and broken
-spans.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The first constraint dominates the second&amp;mdash;we prefer a solution with any cost
-if it fits one more character in. In practice, there is almost always a solution
-that does fit, so it usually comes down to picking the lowest cost solution &lt;a
-id=&quot;14&quot; href=&quot;#14-note&quot; class=&quot;skull&quot;&gt;14&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;We don&amp;rsquo;t know &lt;em&gt;a priori&lt;/em&gt; what the cost of the winning solution will be, but we
-do know one useful piece of information: &lt;em&gt;forcing a rule to split always
-increases the cost&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;If we treat any unbound rule as being implicitly unsplit &lt;a id=&quot;15&quot;
-href=&quot;#15-note&quot; class=&quot;skull&quot;&gt;15&lt;/a&gt;, that means the starting solution with
-every rule unbound always has the lowest cost (zero). We can then explore
-outward from there in order of increasing cost by adding one rule at a time.&lt;/p&gt;
-
-&lt;p&gt;This is a basic &lt;a href=&quot;https://en.wikipedia.org/wiki/Best-first_search&quot;&gt;best-first search&lt;/a&gt;. We keep a &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state_queue.dart&quot;&gt;running queue&lt;/a&gt; of all of
-the partial solutions we&amp;rsquo;ve haven&amp;rsquo;t explored yet, sorted from lowest cost to
-highest. Each iteration, we pop a solution off.&lt;/p&gt;
-
-&lt;p&gt;If the solution completely fits in the page width, then we know we&amp;rsquo;ve won the
-overflow constraint. Since we&amp;rsquo;re exploring in order of increasing cost, we also
-know it&amp;rsquo;s the lowest cost. So, ta-da!, &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart#L171&quot;&gt;we found the winner and can stop
-exploring&lt;/a&gt;. Otherwise, if the current best solution has any unbound rules,
-we enqueue new solutions, each of which binds one of those to a value.&lt;/p&gt;
-
-&lt;p&gt;We basically explore the entire solution space in order of increasing cost. As
-soon as we find a solution that fits in the page, we stop.&lt;/p&gt;
-
-&lt;h3&gt;Avoiding dead ends&lt;/h3&gt;
-
-&lt;p&gt;The above sounds pretty promising, but it turns out that there can be an
-imperial ton of &amp;ldquo;low-cost but overflowing&amp;rdquo; solutions. When you&amp;rsquo;re trying to
-format a really long line, there are plenty of ways it can &lt;em&gt;not&lt;/em&gt; fit, and this
-algorithm will try basically all of them. After all, they&amp;rsquo;re low cost since they
-don&amp;rsquo;t have many splits.&lt;/p&gt;
-
-&lt;p&gt;We need to avoid wasting time tweaking rules that aren&amp;rsquo;t part of the problem.
-For example, say we&amp;rsquo;re looking at a partial solution like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Blog-friendly 40-char line limit:    |&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;firstCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;secondCall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;very long argument string here&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There are a bunch of ways we can split the arguments to &lt;code&gt;firstCall()&lt;/code&gt;, but &lt;em&gt;we
-don&amp;rsquo;t need to&lt;/em&gt;. Its line already fits. The only line we need to worry about is
-the &lt;code&gt;secondCall()&lt;/code&gt; one.&lt;/p&gt;
-
-&lt;p&gt;So, when we are expanding a partial solution, we only bind &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state.dart#L28&quot;&gt;rules that have
-chunks &lt;em&gt;on overflowing lines&lt;/em&gt;&lt;/a&gt;. If all of a rule&amp;rsquo;s chunks are on lines
-that already fit, we don&amp;rsquo;t mess with it. In fact, we don&amp;rsquo;t even worry about
-rules on any overflowing line but the first. Since tweaking the first line will
-affect the others, there&amp;rsquo;s no reason to worry about them yet &lt;a id=&quot;16&quot;
-href=&quot;#16-note&quot; class=&quot;skull&quot;&gt;16&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;This &lt;em&gt;dramatically&lt;/em&gt; cuts down &amp;ldquo;branchiness&amp;rdquo; of the graph. Even though a partial
-solution may have dozens of unbound rules, usually only a couple are on long
-lines and only those get explored.&lt;/p&gt;
-
-&lt;h3&gt;Pruning redundant branches&lt;/h3&gt;
-
-&lt;p&gt;This gets us pretty far, but the splitter can still go off the deep end in some
-cases. The problem is that within large statements, you still run into cases
-where how you format part of the statement is &lt;em&gt;mostly&lt;/em&gt; independent of later
-parts.&lt;/p&gt;
-
-&lt;p&gt;Take something like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Blog-friendly 40-char line limit:    |&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Compiler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;assertions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;checked-mode&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;annotations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;annotations&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;primitives&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;primitives&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;minify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;minify&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;preserve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;preserve&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;liveAnalysis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;check&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;live&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;analysis&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;multi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;multi&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;i&quot;&gt;sourceMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;source-map&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Each of those named arguments can be split in a few different ways. And, since
-those are less nested&amp;mdash;which means fewer split spans&amp;mdash;than that nasty
-&lt;code&gt;liveAnalysis:&lt;/code&gt; line, &lt;em&gt;it will try every combination of all of them&lt;/em&gt; before it
-finally gets down to the business of splitting that &lt;code&gt;check()&lt;/code&gt; call.&lt;/p&gt;
-
-&lt;p&gt;The best way to split the &lt;code&gt;liveAnalysis:&lt;/code&gt; line is the best way to split it
-regardless of how we split &lt;code&gt;assertions:&lt;/code&gt; or &lt;code&gt;annotations:&lt;/code&gt;. In other words,
-there are big branches of the solution space that initially differ in irrelevant
-ways, but eventually reconvene to roughly the same solution. We traverse every
-single one of them.&lt;/p&gt;
-
-&lt;p&gt;What we need is a way to prune entire branches of the solution space. Given two
-partial solutions A and B, if we could say not just &amp;ldquo;A is better than B&amp;rdquo; but
-&amp;ldquo;every solution we can get to from A will be better than every solution we can
-get to from B&amp;rdquo; then we can discard B &lt;em&gt;and the entire branch of solutions
-stemming from it&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;It took some work, but I finally figured out that you &lt;em&gt;can&lt;/em&gt; do this in many
-cases. Given two partial solutions, if one has a lower cost than the other and:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;They have the same set of unbound rules (but their bound rules have different
-values, obviously).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;None of their bound rules are on the same line as an unbound rule.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;None of their bound rules place constraints on an unbound rule.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Then the solution with a lower cost will always lead to solutions that also have
-lower costs. Its entire branch wins. We can &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/solve_state_queue.dart#L124&quot;&gt;discard the other
-solution&lt;/a&gt; and everything that it leads to. Once I got &lt;em&gt;this&lt;/em&gt; working,
-the formatter could line split damn near anything in record time &lt;a id=&quot;17&quot;
-href=&quot;#17-note&quot; class=&quot;skull&quot;&gt;17&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3&gt;An escape hatch&lt;/h3&gt;
-
-&lt;p&gt;Alas, that &amp;ldquo;damn near&amp;rdquo; is significant. There are still a &lt;em&gt;few&lt;/em&gt; cases where the
-formatter takes a long time. I&amp;rsquo;ve only ever seen this on machine generated code.
-Stuff like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ResolutionCopier&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;a&quot;&gt;@override&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;visitClassDeclaration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;ClassDeclaration&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;t&quot;&gt;ClassDeclaration&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;_toNode&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;ClassDeclaration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                &lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                        &lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                            &lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;javaBooleanAnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                                    &lt;span class=&quot;i&quot;&gt;_isEqualNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;documentationComment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                        &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;documentationComment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-                                    &lt;span class=&quot;i&quot;&gt;_isEqualNodeLists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                                        &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-                                &lt;span class=&quot;i&quot;&gt;_isEqualTokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;abstractKeyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                    &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;abstractKeyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_isEqualTokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                                &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;classKeyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;classKeyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-                            &lt;span class=&quot;i&quot;&gt;_isEqualNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                                &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_isEqualNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                            &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;typeParameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;typeParameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-                        &lt;span class=&quot;i&quot;&gt;_isEqualNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                            &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;extendsClause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;extendsClause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-                    &lt;span class=&quot;i&quot;&gt;_isEqualNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                        &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;withClause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;withClause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_isEqualNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                    &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;implementsClause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;implementsClause&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-                &lt;span class=&quot;i&quot;&gt;_isEqualTokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;leftBracket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;leftBracket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-            &lt;span class=&quot;i&quot;&gt;_isEqualNodeLists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-                &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;members&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;members&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
-        &lt;span class=&quot;i&quot;&gt;_isEqualTokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;i&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;rightBracket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;i&quot;&gt;toNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;rightBracket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Yeah, welcome to my waking nightmare. Unsurprisingly, code like this bogs down
-the formatter. I want dartfmt to be usable in things like presubmit scripts
-where it will have a ton of weird code thrown at it and it &lt;em&gt;must&lt;/em&gt; complete in a
-reliable amount of time.&lt;/p&gt;
-
-&lt;p&gt;So there is one final escape hatch. If the line splitter tries, like, 5,000
-solutions and still hasn&amp;rsquo;t found a winner yet, it just picks the best it found
-so far and &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/line_splitting/line_splitter.dart#L181&quot;&gt;bails&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;In practice, I only see it hit this case on generated code. Thank God.&lt;/p&gt;
-
-&lt;h2&gt;Finally, output&lt;/h2&gt;
-
-&lt;p&gt;Once the line splitter has picked values for all of the rules, the rest is easy.
-The formatter &lt;a href=&quot;https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart&quot;&gt;walks the tree of chunks&lt;/a&gt;, printing their text. When a
-rule forces a chunk to split, it outputs a newline (or two), updates the
-indentation appropriately and keeps trucking.&lt;/p&gt;
-
-&lt;p&gt;The end result is a string of (I hope!) beautifully formatted Dart code. So much
-work just to add or remove a few spaces!&lt;/p&gt;
-
-&lt;h3&gt;Footnotes&lt;/h3&gt;
-
-&lt;p&gt;&lt;a id=&quot;1-note&quot; href=&quot;#1&quot; class=&quot;skull-note&quot;&gt;1&lt;/a&gt; Yes, I really did brute force
-all of the combinations at first. It let me focus on getting the output correct
-before I worried about performance. Speed was fine for most statements. The
-other few wouldn&amp;rsquo;t finish until after the heat death of the universe.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;2-note&quot; href=&quot;#2&quot; class=&quot;skull-note&quot;&gt;2&lt;/a&gt; For most of the time, the
-formatter &lt;em&gt;did&lt;/em&gt; use dynamic programming and memoization. I felt like a wizard
-when I first figured out how to do it. It worked fairly well, but was a
-nightmare to debug.&lt;/p&gt;
-
-&lt;p&gt;It was &lt;em&gt;highly&lt;/em&gt; recursive, and ensuring that the keys to the memoization table
-were precise enough to not cause bugs but not &lt;em&gt;so&lt;/em&gt; precise that the cache
-lookups always fail was a very delicate balancing act. Over time, the amount of
-data needed to uniquely identify the state of a subproblem grew, including
-things like the entire expression nesting stack at a point in the line, and the
-memoization table performed worse and worse.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;3-note&quot; href=&quot;#3&quot; class=&quot;skull-note&quot;&gt;3&lt;/a&gt; The IR evolved constantly.
-Spans and rules were later additions. Even the way chunks tracked indentation
-changed frequently. Indentation used to be stored in levels, where each level
-was two spaces. Then directly in spaces. Expression nesting went through a
-number of representations.&lt;/p&gt;
-
-&lt;p&gt;In all of this, the IR&amp;rsquo;s job is to balance being easy for the front-end to
-&lt;em&gt;produce&lt;/em&gt; while being efficient for the back end to &lt;em&gt;consume&lt;/em&gt;. The back end
-really drives this. The IR is structured to be the right data structure for the
-algorithm the back end wants to use.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;4-note&quot; href=&quot;#4&quot; class=&quot;skull-note&quot;&gt;4&lt;/a&gt; Comments were the one of the
-biggest challenges. The formatter initially assumed there would be no newlines
-in some places. Who would expect a newline, say, between the keywords in
-&lt;code&gt;abstract class&lt;/code&gt;? Alas, there&amp;rsquo;s nothing preventing a user from doing:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// Oh, crap. A line comment.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Foo&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;So I had to do a ton of work to make it resilient in the face of comments and
-newlines appearing in all sorts of weird places. There&amp;rsquo;s no single clean
-solution for this, just lots of edge cases and special handling.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;5-note&quot; href=&quot;#5&quot; class=&quot;skull-note&quot;&gt;5&lt;/a&gt; The back end is where all of
-the performance challenges come from, and it went through two almost complete
-rewrites before it ended up where it is today.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;6-note&quot; href=&quot;#6&quot; class=&quot;skull-note&quot;&gt;6&lt;/a&gt; I started from a simpler
-formatter written by a teammate that treated text, whitespace, and splits all as
-separate chunks. I unified those so that each chunk included non-whitespace
-text, line split information, and whitespace information if it didn&amp;rsquo;t split.
-That simplified a lot.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;7-note&quot; href=&quot;#7&quot; class=&quot;skull-note&quot;&gt;7&lt;/a&gt; When I added support for
-better indentation of nested functions, I broke the code that handled dividing
-the source code into separate line-splittable regions. For a while, a single
-top-level statement would be split as a single unit, even if it contained nested
-functions with hundreds of lines of code. It was&amp;hellip; not fast.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;8-note&quot; href=&quot;#8&quot; class=&quot;skull-note&quot;&gt;8&lt;/a&gt; Ideally, the split information
-in a chunk would describe the split &lt;em&gt;before&lt;/em&gt; the chunk&amp;rsquo;s text. This would avoid
-the pointless split information on the last chunk, and also solve annoying
-special-case handling of the indentation before the very first chunk.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ve tried to correct this mistake a number of times, but it causes a
-near-infinite number of off-by-one bugs and I just haven&amp;rsquo;t had the time to push
-it all the way through and fix everything.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;9-note&quot; href=&quot;#9&quot; class=&quot;skull-note&quot;&gt;9&lt;/a&gt; Rules are a relatively recent
-addition. Originally each chunk&amp;rsquo;s split was handled independently. You could
-specify some relations between them like &amp;ldquo;if this chunk splits then this other
-one has to as well&amp;rdquo;, but you could not express things like &amp;ldquo;only one of these
-three chunks may split&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;Eventually, I realized the latter is what I really needed to get argument lists
-formatting well, so I conceived of rules as a separate concept and rewrote the
-front and line splitter to work using those.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;10-note&quot; href=&quot;#10&quot; class=&quot;skull-note&quot;&gt;10&lt;/a&gt; At first, I thought hard
-splits weren&amp;rsquo;t needed. Any place a mandatory newline appears (like between two
-statements) is a place where you could just break the list of chunks in two and
-line split each half independently. From the line splitter&amp;rsquo;s perspective, there
-would be no hard splits.&lt;/p&gt;
-
-&lt;p&gt;Which would work&amp;hellip; except for line comments:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;some&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;expression&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-   &lt;span class=&quot;c&quot;&gt;// with a line comment&lt;/span&gt;
-   &lt;span class=&quot;i&quot;&gt;rightInTheMiddleOfIt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This has to be split as a single unit to get the expression nesting and
-indentation correct, but it also contains a mandatory newline after the line
-comment.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;11-note&quot; href=&quot;#11&quot; class=&quot;skull-note&quot;&gt;11&lt;/a&gt; There used to be a separate
-class for a &amp;ldquo;multisplit&amp;rdquo; to directly handle forcing outer expressions to split
-when inner ones did. Once rules came along, they also needed to express
-constraints between them, and eventually those constraints were expressive
-enough to be able to handle the multisplit behavior directly and multisplits
-were removed.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;12-note&quot; href=&quot;#12&quot; class=&quot;skull-note&quot;&gt;12&lt;/a&gt; I spent a &lt;em&gt;lot&lt;/em&gt; of time
-tuning costs for different grammar productions to control how tightly bound
-different expressions were. The goal was to allow splits at the places where the
-reader thought code was &amp;ldquo;loosest&amp;rdquo;, so stuff like higher precedence expressions
-would have higher costs.&lt;/p&gt;
-
-&lt;p&gt;Tuning these costs was a nightmare. It was like a hanging mobile where tweaking
-one cost would unbalance all of the others. On more than one occasion, I found
-myself considering making them floating point instead of integers, a sure sign
-of madness.&lt;/p&gt;
-
-&lt;p&gt;It turns out spans are what you really want in order to express looseness.
-Nested infix operators then fall out naturally because you have more spans
-around the deeper nested operands. The parse tree gives it to you for free.&lt;/p&gt;
-
-&lt;p&gt;These days, almost every chunk and span has a cost of 1, and it&amp;rsquo;s the &lt;em&gt;quantity&lt;/em&gt;
-of nested spans and contained chunks that determine where it splits.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;13-note&quot; href=&quot;#13&quot; class=&quot;skull-note&quot;&gt;13&lt;/a&gt; I had known that
-&lt;a href=&quot;http://clang.llvm.org/docs/ClangFormat.html&quot;&gt;clang-format&lt;/a&gt; worked this way for a long time, but I could never wrap my head
-around how to apply it to dartfmt&amp;rsquo;s richer chunk/rule/span system.&lt;/p&gt;
-
-&lt;p&gt;I took a lot of walks along the bike trail next to work trying to think through
-a way to get graph search working when the two numbers being optimized (overflow
-characters and cost) are in direct opposition, and we don&amp;rsquo;t even know what the
-goal state looks like. It took a long time before it clicked. Even then, it
-didn&amp;rsquo;t work at all until I figured out the right heuristics to use to optimize
-it.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;14-note&quot; href=&quot;#14&quot; class=&quot;skull-note&quot;&gt;14&lt;/a&gt; For a long time, overflow
-and cost were treated as a single fitness function. Every overflow character
-just added a very high value to the cost to make the splitter strongly want to
-avoid them.&lt;/p&gt;
-
-&lt;p&gt;Splitting overflow out as a separate metric turned out to be key to getting the
-graph search to work because it let us order the solutions by cost independently
-of overflow characters.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;15-note&quot; href=&quot;#15&quot; class=&quot;skull-note&quot;&gt;15&lt;/a&gt; I went back and forth on
-how an unbound rule should implicitly behave. Treating it as implicitly split
-gives you solutions with fewer overflow characters sooner. Treating it as
-unsplit gives you lower costs.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;16-note&quot; href=&quot;#16&quot; class=&quot;skull-note&quot;&gt;16&lt;/a&gt; Oh, God. I tried a million
-different ways to reduce the branchiness before I hit on only looking at rules
-in the first long line. I&amp;rsquo;m still amazed that it works.&lt;/p&gt;
-
-&lt;p&gt;I could also talk about how controlling branchiness lets us avoid reaching the
-same state from multiple different paths. After all, it&amp;rsquo;s a &lt;em&gt;graph&lt;/em&gt;, but
-everything I&amp;rsquo;ve described talks about it like it&amp;rsquo;s a tree. By carefully
-controlling how we extend partial solutions, we ensure we only take a single
-path to any given complete solution.&lt;/p&gt;
-
-&lt;p&gt;Before I got that working, I had to keep a &amp;ldquo;visited&amp;rdquo; set to make sure we didn&amp;rsquo;t
-explore the same regions twice, but just maintaining that set was a big
-performance sink.&lt;/p&gt;
-
-&lt;p&gt;&lt;a id=&quot;17-note&quot; href=&quot;#17&quot; class=&quot;skull-note&quot;&gt;17&lt;/a&gt; Discarding overlapping
-branches is the last macro-optimization I did and its behavior is very subtle.
-Correctly detecting when two partial solutions overlap took a &lt;em&gt;lot&lt;/em&gt; of
-iteration. Every time I thought I had it, one random weird test would fail where
-it accidentally collapsed two branches that &lt;em&gt;would&lt;/em&gt; eventually diverge.&lt;/p&gt;
-
-&lt;p&gt;That bullet list was paid for in blood, sweat, and tears. I honestly don&amp;rsquo;t think
-I could have figured them out at all until late in the project when I had a
-&lt;a href=&quot;https://github.com/dart-lang/dart_style/tree/3b3277668b2ff0cb7be954c3217c73264454bd7c/test&quot;&gt;comprehensive test suite&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
 

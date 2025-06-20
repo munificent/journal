@@ -142,7 +142,7 @@ you can get the basics down. Then it's pretty easy to learn more and more chords
 after that.
 
 Other skill curves start shallow and get steeper. You can learn chess in a day
-and have fun playing it, but as you get more serious about, each incremental
+and have fun playing it, but as you get more serious about it, each incremental
 increase in skill requires a greater commitment to studying the theory of the
 game.
 

@@ -6,9 +6,258 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Fri, 20 Jun 2025 16:13:00 GMT</pubDate>
-    <lastBuildDate>Fri, 20 Jun 2025 16:13:00 GMT</lastBuildDate>
+    <pubDate>Sun, 13 Jul 2025 18:42:02 GMT</pubDate>
+    <lastBuildDate>Sun, 13 Jul 2025 18:42:02 GMT</lastBuildDate>
 
+
+    <item>
+      <title>Setting Up an SDL3 Mac App in XCode 16</title>
+      <link>http://journal.stuffwithstuff.com/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/</link>
+      <pubDate>Sun, 13 Jul 2025 07:00:00 GMT</pubDate>
+      <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
+      <guid>http://journal.stuffwithstuff.com/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16</guid>
+      <description>&lt;p&gt;This is mainly a note for my future self, but making it a blog post in case it
+helps anyone else. This weekend, I decided to try making a little SDL3 app on my
+new M4 MacBook Pro. It took me a few hours to figure out how to get XCode to
+play nice with the SDL3 framework given MacOS&amp;rsquo;s paranoia around unsigned code
+and malware.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the summary for anyone whose Google searching takes them here. The
+instructions are fairly similar to &lt;a href=&quot;https://wiki.libsdl.org/SDL3/README-macos#setting-up-a-new-project-by-hand&quot;&gt;the SDL3 README for MacOS&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Start up XCode. Choose &amp;ldquo;File &amp;gt; New &amp;gt; Project&amp;hellip;&amp;rdquo;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select &amp;ldquo;macOS&amp;rdquo;, then under &amp;ldquo;Application&amp;rdquo; choose &amp;ldquo;App&amp;rdquo;. &lt;em&gt;This step is
+important. Choosing &amp;ldquo;Command Line Tool&amp;rdquo; will &lt;strong&gt;not&lt;/strong&gt; work.&lt;/em&gt; Click &amp;ldquo;Next&amp;rdquo;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Give your app a name. For &amp;ldquo;Interface&amp;rdquo;, choose &amp;ldquo;XIB&amp;rdquo;. For &amp;ldquo;Language&amp;rdquo;, choose
+&amp;ldquo;Objective-C&amp;rdquo;. Click &amp;ldquo;Next&amp;rdquo;. Choose a place to save your project.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now you have a vanilla &amp;ldquo;Hello World&amp;rdquo; Mac app. The next step is integrating SDL:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Download &lt;a href=&quot;https://github.com/libsdl-org/SDL/releases&quot;&gt;a release&lt;/a&gt; of SDL. As I&amp;rsquo;m writing this, the latest is
+3.2.16. Download the corresponding &lt;code&gt;.dmg&lt;/code&gt; file. Open it in Finder.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Open &lt;code&gt;SDL3.xcframework/macos-arm64_x86_64&lt;/code&gt; and copy &lt;code&gt;SDL3.framework&lt;/code&gt; from
+there to somewhere in your XCode project&amp;rsquo;s source tree. (I made a &lt;code&gt;lib&lt;/code&gt;
+folder and put it there in mine.)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In XCode, in the file explorer on the left, click the top project icon to
+open the settings for it. In the main panel on the right, click the icon
+for your app target under &amp;ldquo;Targets&amp;rdquo; to open the target settings.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Under &amp;ldquo;Frameworks, Libraries, and Embedded Content&amp;rdquo;, click the &amp;ldquo;+&amp;rdquo; to add a
+new framework. In the popup that appears, click &amp;ldquo;Add Other&amp;hellip; &amp;gt; Add
+Files&amp;hellip;&amp;rdquo;. Navigate to wherever you copied &amp;ldquo;SDL3.framework&amp;rdquo; and choose it.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Then let&amp;rsquo;s use SDL and verify everything is working.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In &lt;code&gt;main.m&lt;/code&gt;, comment out the entire &lt;code&gt;main()&lt;/code&gt; function.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Make a new &lt;code&gt;main.c&lt;/code&gt; file and copy the contents of &lt;a href=&quot;https://github.com/libsdl-org/SDL/blob/main/docs/hello.c&quot;&gt;hello.c&lt;/a&gt; from
+the SDL docs into it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Compile and run.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If that all works, you should see a delightful pixelated &amp;ldquo;Hello World!&amp;rdquo; fill
+your screen. Press any key to quit.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s make sure the full iteration loop works. (Read below to see why I feel
+the need to verify this.):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In &lt;code&gt;main.c&lt;/code&gt; inside &lt;code&gt;SDL_AppIterate()&lt;/code&gt;, change the message string.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Hit Command-R to run. You should see your updated message on screen.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There you go, you now have a working shell of a Mac app with using a local
+install of SDL3. You can probably delete the &lt;code&gt;main.m&lt;/code&gt; file entirely and maybe
+some of the other generated files that XCode put in the new project, but I
+haven&amp;rsquo;t figured that out yet.&lt;/p&gt;
+
+&lt;p&gt;Now here&amp;rsquo;s all the wrong stuff I tried first before I got that working&amp;hellip;&lt;/p&gt;
+
+&lt;h2&gt;Attempt 1: Download a release and use the xcframework&lt;/h2&gt;
+
+&lt;p&gt;In XCode, I created a new &amp;ldquo;CLI Command&amp;rdquo; C app. That got me a &amp;ldquo;Hello, world!&amp;rdquo; up
+and running without any problems. Then I copied the contents of &lt;a href=&quot;https://github.com/libsdl-org/SDL/blob/main/docs/hello.c&quot;&gt;this SDL hello
+example&lt;/a&gt; into my source file.&lt;/p&gt;
+
+&lt;p&gt;As expected, that failed to compile because it couldn&amp;rsquo;t find &lt;code&gt;SDL3/SDL.h&lt;/code&gt;. So
+next is getting SDL linked in.&lt;/p&gt;
+
+&lt;p&gt;The first thing I did was download &lt;a href=&quot;https://github.com/libsdl-org/SDL/releases/tag/release-3.2.16&quot;&gt;the 3.2.16 stable release
+installer&lt;/a&gt;. I downloaded the DMG file and opened that. Then following
+the instructions, I dragged the entire &lt;code&gt;SDL3.xcframework&lt;/code&gt; directory into the
+XCode project.&lt;/p&gt;
+
+&lt;p&gt;That correctly added a reference to the Framework and got XCode to a point where
+it could resolve the include and compile the program. Great.&lt;/p&gt;
+
+&lt;p&gt;But when I ran it, it failed at startup. The OS tried to dynamically load the
+SDL3 framework, but then balked because it thinks the framework isn&amp;rsquo;t correctly
+signed and safe to use. The OS gave me a popup error with &amp;ldquo;SDL3.framework Not
+Opened&amp;rdquo; because &amp;ldquo;macOS cannot verify that this app is free from malware&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Crap.&lt;/p&gt;
+
+&lt;h2&gt;Attempt 2: Embed the framework&lt;/h2&gt;
+
+&lt;p&gt;Poking around online, some people say this error can be fixed by embedding the
+SDL framework in my app and having XCode sign it when it embeds it. In XCode, in
+the target settings under &amp;ldquo;Build Phases&amp;rdquo;, there is a panel for &amp;ldquo;Embed
+Frameworks&amp;rdquo;. I dragged &lt;code&gt;SDL3.xcframework&lt;/code&gt; under there and checked &amp;ldquo;Code Sign On
+Copy&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Alas, when I tried to compile, now I got a build error. It complained that two
+tasks in the build were trying to produce the same file. I&amp;rsquo;ve lost the exact
+error message but it looked like one of the tasks was a simple file copy and the
+other was a &amp;ldquo;ProcessXCFramework&amp;rdquo; invocation. I&amp;rsquo;m guessing the latter is the task
+that signs and embeds the framework.&lt;/p&gt;
+
+&lt;p&gt;I tried basically every combination of build settings to try to fix this:
+removing the framework from &amp;ldquo;Link Binary with Libraries&amp;rdquo;, checking &amp;ldquo;Copy only
+when installing&amp;rdquo;, and a bunch of other things I don&amp;rsquo;t remember. Nothing worked.
+Either I removed so much that the compiler couldn&amp;rsquo;t find the framework at all,
+or it got the duplicate build file error.&lt;/p&gt;
+
+&lt;h2&gt;Attempt 3: Don&amp;rsquo;t use the entire &amp;ldquo;SDL3.xcframework&amp;rdquo;&lt;/h2&gt;
+
+&lt;p&gt;I started watching &lt;a href=&quot;https://www.youtube.com/watch?v=tRqgh8Xwe1E&quot;&gt;this video&lt;/a&gt; to see if it could help. He doesn&amp;rsquo;t use
+the entire &lt;code&gt;SDL3.xcframework&lt;/code&gt; bundle. Instead, he opens that, goes into
+&lt;code&gt;macos-arm64_x86_64&lt;/code&gt; and copies the &lt;code&gt;SDL3.framework&lt;/code&gt; framework out of there.&lt;/p&gt;
+
+&lt;p&gt;I removed &lt;code&gt;SDL3.xcframework&lt;/code&gt; from my XCode project and dragged &lt;code&gt;SDL3.framework&lt;/code&gt;
+into it instead. That gave me something that compiled, but when I tried to run,
+it failed at load time with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;dyld[15605]: Library not loaded: @rpath&amp;#47;SDL3.framework&amp;#47;Versions&amp;#47;A&amp;#47;SDL3
+Referenced from: &amp;lt;...&amp;gt; &amp;#47;Users&amp;#47;...
+Reason: tried: &amp;#39;&amp;#47;Users&amp;#47;...&amp;#47;Build&amp;#47;Products&amp;#47;Debug&amp;#47;SDL3.framework&amp;#47;
+Versions&amp;#47;A&amp;#47;SDL3&amp;#39; (no such file)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the target settings, I again added the framework (but this time
+&lt;code&gt;SDL3.framework&lt;/code&gt; not &lt;code&gt;SDL3.xcframework&lt;/code&gt; to &amp;ldquo;Embed frameworks&amp;rdquo;). For reasons
+that are entirely unclear to me, that worked. I hit Command-R and&amp;hellip;&lt;/p&gt;
+
+&lt;figure&gt;
+&lt;img class=&quot;framed&quot; src=&quot;/image/2025/07/hello.gif&quot;&gt;
+&lt;figcaption&gt;Hallelujah.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;All done, right? Not so fast. I made a tiny tweak to the code and tried to run
+it again. The compile immediately failed with:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;SDL3&amp;#47;SDL.h&amp;#39; file not found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What? I literally just compiled and ran it. Just to make sure I wasn&amp;rsquo;t crazy,
+I cleaned the build directory and compiled again. That worked! &amp;ldquo;Hello World!&amp;rdquo;
+popped up on screen again.&lt;/p&gt;
+
+&lt;p&gt;Build again&amp;hellip; same error.&lt;/p&gt;
+
+&lt;p&gt;Clean build and then build. Works!&lt;/p&gt;
+
+&lt;p&gt;So I can build &lt;em&gt;once&lt;/em&gt; but then something in the build directly causes any
+subsequent compile to fail. The full error is:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&lt;span&gt;&lt;/span&gt;Did not find header &amp;#39;SDL.h&amp;#39; in framework &amp;#39;SDL3&amp;#39; (loaded from
+  &amp;#39;&amp;#47;Users&amp;#47;...&amp;#47;Index.noindex&amp;#47;Build&amp;#47;Products&amp;#47;Debug&amp;#39;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So what I &lt;em&gt;think&lt;/em&gt; is happening is that in the first clean build, it locates the
+framework inside my app&amp;rsquo;s main directory. That framework does have the headers
+so the compiler can find what it needs.&lt;/p&gt;
+
+&lt;p&gt;Then after that first build, the compiler starts using the framework that it
+copied into the build directory. But when I look in there, &lt;code&gt;Debug&lt;/code&gt; is completely
+empty.&lt;/p&gt;
+
+&lt;h2&gt;Attempt 4: Project-relative DerivedData&lt;/h2&gt;
+
+&lt;p&gt;I hate when tools stuff built data in random system directories unrelated to
+the project I&amp;rsquo;m working on because those files end up sitting around forever.
+So the next thing I did was go under &amp;ldquo;Project Settings&amp;rdquo; and changed the
+&amp;ldquo;Derived Data&amp;rdquo; to be &amp;ldquo;Project-relative Location&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;I cleaned and built successfully. But, again, if I made a trivial code change
+and tried to build again, it failed. This time, though, there was actually
+something in &lt;code&gt;DerivedData/my_app/Build/Products/Debug/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I can see an &lt;code&gt;SDL3.framework&lt;/code&gt; directory under there. It contains
+&lt;code&gt;Versions/A/SDL3&lt;/code&gt; (and some other stuff). So the library is there as expected.
+But there is no &lt;code&gt;Headers&lt;/code&gt; directory under &lt;code&gt;Versions/A/&lt;/code&gt;, nor is there a
+&lt;code&gt;Headers&lt;/code&gt; symlink in &lt;code&gt;SDL3.framework&lt;/code&gt; pointing to it.&lt;/p&gt;
+
+&lt;p&gt;In theory, that&amp;rsquo;s fine. In the compiled app, all that&amp;rsquo;s needed is the library
+itself. But for reasons I don&amp;rsquo;t understand, XCode is trying to use this
+semi-copied version of the framework for subsequent compiles instead of the
+original one in my project&amp;rsquo;s source tree.&lt;/p&gt;
+
+&lt;h2&gt;Attempt 5: Explicit header search path&lt;/h2&gt;
+
+&lt;p&gt;OK, if XCode can&amp;rsquo;t find the headers because it&amp;rsquo;s looking in the wrong place,
+maybe I can just tell it where to look. Under &amp;ldquo;Search Paths&amp;rdquo;, I added
+&lt;code&gt;lib/SDL3.framework/Headers&lt;/code&gt; to &amp;ldquo;Header Search Paths&amp;rdquo;. (I put the framework
+under &lt;code&gt;lib&lt;/code&gt; in my project tree, hence the &lt;code&gt;lib/&lt;/code&gt; part.) Didn&amp;rsquo;t help. Tried
+making it recursive. Nope.&lt;/p&gt;
+
+&lt;p&gt;Maybe just &lt;code&gt;lib/SDL3.framework&lt;/code&gt;? No.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m guessing the problem here is that the include paths look like &lt;code&gt;SDL3/SDL.h&lt;/code&gt;,
+not just &lt;code&gt;SDL.h&lt;/code&gt;, so I need to get XCode to understand that the headers are
+inside a framework to resolve the &lt;code&gt;SDL3/&lt;/code&gt; part.&lt;/p&gt;
+
+&lt;h2&gt;Attempt 6: Framework search path&lt;/h2&gt;
+
+&lt;p&gt;OK, so maybe it&amp;rsquo;s not a header search path. Instead, I tried adding &lt;code&gt;lib/&lt;/code&gt; to
+&amp;ldquo;Framework Search Paths&amp;rdquo;. No help. Making it recursive didn&amp;rsquo;t help. Neither
+did &lt;code&gt;lib/SDL3.framework&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I do a bunch of Googling and eventually stumble onto &lt;a href=&quot;https://stackoverflow.com/questions/63630876/xcode-cant-find-the-header-path-after-build/63668035&quot;&gt;this old StackOverflow
+post&lt;/a&gt;. He specifically mentions only getting the error after the first
+build, so this is my exact issue. And the author apparently found a solution!&lt;/p&gt;
+
+&lt;p&gt;&amp;hellip;which they described only as &amp;ldquo;It works know after certain changes!&amp;rdquo;. So
+helpful.&lt;/p&gt;
+
+&lt;p&gt;I eventually found &lt;a href=&quot;https://developer.apple.com/forums/thread/750074&quot;&gt;this Apple Developer forum thread&lt;/a&gt;, which also
+sounds like my problem.&lt;/p&gt;
+
+&lt;h2&gt;Attempt 7: An App instead of a CLI Command&lt;/h2&gt;
+
+&lt;p&gt;The forum thread suggests that the issue may have something to do with creating
+a &amp;ldquo;CLI Command&amp;rdquo; instead of an &amp;ldquo;App&amp;rdquo;. I&amp;rsquo;ve always done the former in XCode
+because that seemed like the simplest way to get a vanilla C/C++ app up and
+running. In older versions of XCode/macOS, it worked fine. But maybe it doesn&amp;rsquo;t
+play nice with frameworks in later versions?&lt;/p&gt;
+
+&lt;p&gt;I trash the entire XCode project and create a new one. This time I choose &amp;ldquo;App&amp;rdquo;
+instead of &amp;ldquo;CLI Command&amp;rdquo;. I set the language to &amp;ldquo;Objective-C&amp;rdquo; (because that&amp;rsquo;s
+the &amp;ldquo;closest&amp;rdquo; to C, I guess&amp;mdash;I&amp;rsquo;m winging it here). I set &amp;ldquo;Interface&amp;rdquo; to &amp;ldquo;XIB&amp;rdquo;
+based on &lt;a href=&quot;https://wiki.libsdl.org/SDL3/README-macos&quot;&gt;this README&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I run it and get an empty window, the &amp;ldquo;Hello World&amp;rdquo; of GUI apps. OK.&lt;/p&gt;
+
+&lt;p&gt;I copy &lt;code&gt;SDL3.framework&lt;/code&gt; out of &lt;code&gt;SDL3.xcframework/macos-arm64_x86-x64&lt;/code&gt; into
+&lt;code&gt;lib/&lt;/code&gt; in my new app&amp;rsquo;s source tree. Then in XCode, in the &amp;ldquo;General&amp;rdquo; tab of the
+main target, under &amp;ldquo;Frameworks, Libraries, and Embedded Content&amp;rdquo;, I click the
+&amp;ldquo;+&amp;rdquo;. From there I choose &amp;ldquo;Add Other&amp;hellip;&amp;rdquo;, &amp;ldquo;Add Files&amp;hellip;&amp;rdquo;, and add
+&lt;code&gt;lib/SDL3.framework&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I admit to feeling a moment of anticipation. Will this actually work?&lt;/p&gt;
+
+&lt;p&gt;I make a new &lt;code&gt;.c&lt;/code&gt; file and paste in the &lt;code&gt;hello.c&lt;/code&gt; SDL3 example code. I comment
+out &lt;code&gt;main()&lt;/code&gt; in the &lt;code&gt;main.m&lt;/code&gt; that XCode generated. Compile and&amp;hellip; it runs! I&amp;rsquo;ve
+got an SDL3 &amp;ldquo;Hello World!&amp;rdquo; on screen again.&lt;/p&gt;
+
+&lt;p&gt;Now the real test&amp;hellip; can I make a change and build again?&lt;/p&gt;
+
+&lt;p&gt;Yes! It works! &lt;em&gt;Finally!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As far as I can tell, I am up and running now. I didn&amp;rsquo;t have to add SDL3 to my
+system framework path. (I didn&amp;rsquo;t want to do that because ultimately, I want an
+app that users can just run without having to install SDL themselves.)&lt;/p&gt;
+
+&lt;p&gt;So it looks like the failure mode was creating a &amp;ldquo;CLI Command&amp;rdquo; instead of an
+&amp;ldquo;App&amp;rdquo;. How on &lt;em&gt;Earth&lt;/em&gt; would I be expected to know that?&lt;/p&gt;
+</description>
+    </item>
 
     <item>
       <title>Consider Knitting</title>
@@ -4375,228 +4624,6 @@ soon.&lt;/p&gt;
 &lt;p&gt;Forty feels like all my younger selves are lost, receded far into the past. Yet,
 at the same time, they still burn vibrantly alive inside, refusing to be
 forgotten.&lt;/p&gt;
-</description>
-    </item>
-
-    <item>
-      <title>Long Names Are Long</title>
-      <link>http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long/</link>
-      <pubDate>Thu, 16 Jun 2016 07:00:00 GMT</pubDate>
-      <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
-      <guid>http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long</guid>
-      <description>&lt;p&gt;One smart thing Google does is rigorous code reviews. Every change, before you
-can land it, gets reviewed in at least two ways. First, someone on the team does
-a normal review to make sure the code does what it&amp;rsquo;s supposed to.&lt;/p&gt;
-
-&lt;p&gt;But, then, there&amp;rsquo;s a second layer of review called &lt;em&gt;readability&lt;/em&gt;. It makes sure
-the code is, well, readable: Is it easy to understand and maintain? Does it
-follow the style and idioms of the language? Is it well-documented?&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.dartlang.org/&quot;&gt;Dart&lt;/a&gt; usage inside Google is cranking up, so I&amp;rsquo;ve been doing a ton of these
-kind of code reviews. As a language designer, it&amp;rsquo;s fascinating. I get a
-firsthand view into how people use Dart, which is really useful for evolving the
-language. I have a clearer picture of which mistakes are common and which
-features are heavily used. I feel like an ethnographer journaling the lives of
-natives.&lt;/p&gt;
-
-&lt;p&gt;But, anyway, that&amp;rsquo;s not what this is about. Heck, it&amp;rsquo;s not even about Dart. What
-I want to talk about is something I see in a lot of code that drives me up the
-wall: &lt;strong&gt;identifiers that are too damn long.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Yes, names can be too short. Back when C only required external identifiers to
-be unique up to the first six characters; auto-complete hadn&amp;rsquo;t been invented;
-and every keypress had to be made uphill, in the snow, both ways; it was a
-problem. I&amp;rsquo;m glad we now live in a futuristic utopia where keyboard farts like
-&lt;code&gt;p&lt;/code&gt;, &lt;code&gt;idxcrpm&lt;/code&gt;, and &lt;code&gt;x3&lt;/code&gt; are rare.&lt;/p&gt;
-
-&lt;p&gt;But the pendulum has swung too far in the other direction. We shouldn&amp;rsquo;t be
-Hemingway, but we don&amp;rsquo;t need to be Tennessee Williams either. Very &lt;em&gt;long&lt;/em&gt; names
-also hurt the clarity of the code where they are used. Giant identifiers dwarf
-the operations you&amp;rsquo;re performing on them, are hard to visually scan, and force
-extra line breaks which interrupt the flow of the code.&lt;/p&gt;
-
-&lt;p&gt;Long class names discourage users from declaring variables of that type, leading
-to massive, gnarly nested expressions instead of hoisting things out to locals.
-Long method names obscure their equally important argument lists. Long variables
-are annoying to use repeatedly, leading to sprawling method chains or cascades.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ve seen identifiers over 60 characters long. You could fit a haiku or a koan
-in there (and likely enlighten the reader more than the actual chosen name did).
-Fear not, I am here to help.&lt;/p&gt;
-
-&lt;h2&gt;Choosing a Good Name&lt;/h2&gt;
-
-&lt;p&gt;A name has two goals:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;It needs to be &lt;em&gt;clear&lt;/em&gt;: you need to know what the name refers to.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;It needs to be &lt;em&gt;precise&lt;/em&gt;: you need to know what it does &lt;em&gt;not&lt;/em&gt; refer to.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;After a name has accomplished those goals, any additional characters are dead
-weight. Here&amp;rsquo;s some guidelines I use when I names things in my code:&lt;/p&gt;
-
-&lt;h3&gt;1. Omit words that are obvious given a variable&amp;rsquo;s or parameter&amp;rsquo;s type&lt;/h3&gt;
-
-&lt;p&gt;If your language has a static type system, users usually know the type of a
-variable. Methods tend to be short, so even when looking at local variable whose
-type was inferred, or in a code review or some place where static analysis isn&amp;rsquo;t
-available, it rarely takes more than scanning a few lines to tell what type a
-variable has.&lt;/p&gt;
-
-&lt;p&gt;Given that, it&amp;rsquo;s redundant to put the type in the variable&amp;rsquo;s name. We have
-rightfully abandoned &lt;a href=&quot;https://en.wikipedia.org/wiki/Hungarian_notation&quot;&gt;Hungarian notation&lt;/a&gt;. &lt;em&gt;Let it go.&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Bad:&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;nameString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;DockableModelessWindow&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;dockableModelessWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// Better:&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;DockableModelessWindow&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In particular, for collections, it&amp;rsquo;s almost always better to just use a plural
-noun describing the &lt;em&gt;contents&lt;/em&gt; instead of a singular noun describing the
-&lt;em&gt;collection&lt;/em&gt;. If the reader cares more about what&amp;rsquo;s &lt;em&gt;in&lt;/em&gt; the collection, the
-name should reflect that.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Bad:&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;DateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;holidayDateList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Employee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Role&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;employeeRoleHashMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// Better:&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;DateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;holidays&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;t&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Employee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Role&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;employeeRoles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This also applies to method names. The method name doesn&amp;rsquo;t need to describe its
-parameters or their types&amp;mdash;the parameter list does that for you.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Bad:&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;mergeTableCells&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;TableCell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;cells&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;sortEventsUsingComparator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;t&quot;&gt;Comparator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;comparator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// Better:&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;TableCell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;cells&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Comparator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;comparator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This tends to make callsites read better:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;i&quot;&gt;mergeTableCells&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;tableCells&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;sortEventsUsingComparator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;comparator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Is it just me, or is there an echo echo in here here?&lt;/p&gt;
-
-&lt;h3&gt;2. Omit words that don&amp;rsquo;t disambiguate the name&lt;/h3&gt;
-
-&lt;p&gt;Some people tend to cram everything they know about something into its name.
-Remember, the name is an &lt;em&gt;identifier&lt;/em&gt;: it points you to &lt;em&gt;where&lt;/em&gt; it&amp;rsquo;s defined.
-It&amp;rsquo;s not an exhaustive catalog of everything the reader could want to know about
-the object. The definition does that. The name just gets them there.&lt;/p&gt;
-
-&lt;p&gt;When I see an identifier like &lt;code&gt;recentlyUpdatedAnnualSalesBid&lt;/code&gt;, I ask:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Are there updated annual sales bids that aren&amp;rsquo;t recent?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Are there recent annual sales bids that were not updated?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Are there recently updated sales bids that aren&amp;rsquo;t annual?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Are there recently updated annual bids not related to sales?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Are there recently updated annual sales things that are not bids?&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;A &amp;ldquo;no&amp;rdquo; for any of these usually points to an extraneous word.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Bad:&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;finalBattleMostDangerousBossMonster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;weaklingFirstEncounterMonster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// Better:&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;boss&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;firstMonster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Of course, you can go too far. Shortening that first example to &lt;code&gt;bid&lt;/code&gt; might be a
-little &lt;em&gt;too&lt;/em&gt; vague. But, when in doubt, leave it out. You can always add
-qualifiers later if the name proves to cause a collision or be imprecise but
-it&amp;rsquo;s unlikely you&amp;rsquo;ll come back later to trim the fat.&lt;/p&gt;
-
-&lt;h3&gt;3. Omit words that are known from the surrounding context&lt;/h3&gt;
-
-&lt;p&gt;I can use &amp;ldquo;I&amp;rdquo; in this paragraph because you can see this post is by Bob Nystrom.
-My dumb face is right up there. I don&amp;rsquo;t need to keep saying “Bob Nystrom”
-everywhere here (despite Bob Nystrom&amp;rsquo;s temptation to aggrandize Bob Nystrom by
-doing so). Code works the same way. A method or field occurs in the context of a
-class. A variable occurs in the context of a method. Take that context for
-granted and don&amp;rsquo;t repeat it.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;c&quot;&gt;// Bad:&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;AnnualHolidaySale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_annualSaleRebate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;promoteHolidaySale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// Better:&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;AnnualHolidaySale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_rebate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;promote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In practice, this means that the more deeply nested a name is, the more
-surrounding context it has. That in turn means it usually has a shorter name.
-The effect is that identifiers with shorter scopes have shorter names.&lt;/p&gt;
-
-&lt;h3&gt;4. Omit words that don&amp;rsquo;t mean much of anything&lt;/h3&gt;
-
-&lt;p&gt;I used to see this a lot in the game industry. Some people succumb to the
-temptation to inflate their identifiers by adding Serious Business sounding
-words. I guess it makes their code feel more important and, by extension, makes
-&lt;em&gt;them&lt;/em&gt; feel more important.&lt;/p&gt;
-
-&lt;p&gt;In many cases, the words carry no meaningful information. They&amp;rsquo;re just fluff or
-jargon. Usual suspects include: &lt;code&gt;data&lt;/code&gt;, &lt;code&gt;state&lt;/code&gt;, &lt;code&gt;amount&lt;/code&gt;, &lt;code&gt;value&lt;/code&gt;, &lt;code&gt;manager&lt;/code&gt;,
-&lt;code&gt;engine&lt;/code&gt;, &lt;code&gt;object&lt;/code&gt;, &lt;code&gt;entity&lt;/code&gt;, and &lt;code&gt;instance&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;A good name paints a picture in the mind of the reader. Calling something a
-&amp;ldquo;manager&amp;rdquo; doesn&amp;rsquo;t convey any image to the reader about what the thing does. Does
-it do performance evaluations? Lean over your cubicle and ask for TPS reports?&lt;/p&gt;
-
-&lt;p&gt;Ask yourself &amp;ldquo;Would this identifier mean the same thing if I removed the word?&amp;rdquo;
-If so, the word doesn&amp;rsquo;t carry its weight. Vote if off the island.&lt;/p&gt;
-
-&lt;h2&gt;Applying the Guidelines&amp;hellip; to Waffles&lt;/h2&gt;
-
-&lt;p&gt;To give you a feel for how these rules work in practice, here&amp;rsquo;s an example that
-breaks all of these rules. This contrived example is tragically close to real
-code I&amp;rsquo;ve seen in reviews:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;DeliciousBelgianWaffleObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;garnishDeliciousBelgianWaffleWithStrawberryList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-      &lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Strawberry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;strawberryList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We know from the type that it takes a list of strawberries (#1), so let&amp;rsquo;s cut
-that out:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;DeliciousBelgianWaffleObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;garnishDeliciousBelgianWaffle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Strawberry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;strawberries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Unless our program has foul-tasting Belgian waffles, or waffles of other
-nationalities, we can drop those adjectives (#2):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;WaffleObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;garnishWaffle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Strawberry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;strawberries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The method is inside a &lt;code&gt;WaffleObject&lt;/code&gt;, so we know what it&amp;rsquo;s going to garnish
-(#3):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;WaffleObject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;garnish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Strawberry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;strawberries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Obviously it&amp;rsquo;s an object. Everything is an object. That&amp;rsquo;s kind of what
-&amp;ldquo;object-oriented&amp;rdquo; means (#4):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Waffle&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;garnish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;Strawberry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;strawberries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There, much better.&lt;/p&gt;
-
-&lt;p&gt;I think these are pretty simple guidelines. You may think it&amp;rsquo;s pointless to
-worry about this stuff, but I believe that &lt;a href=&quot;/2009/06/05/naming-things-in-code/&quot;&gt;naming things&lt;/a&gt; is one of the most
-fundamental tasks we do when programming. Names are the structure we impose on
-the formless sea of bits that is computing.&lt;/p&gt;
 </description>
     </item>
 

@@ -1,0 +1,10 @@
+false is falsey: {{ false and "right" }}
+null is falsey: {{ null and "right" }}
+empty string is falsey: [{{ "" and "right" }}]
+returns right if left is truthy: {{ true and "right" }}
+
+--- output
+false is falsey: false
+null is falsey: null
+empty string is falsey: []
+returns right if left is truthy: right

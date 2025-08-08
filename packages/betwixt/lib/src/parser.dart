@@ -209,8 +209,31 @@ class Parser {
   }
 
   Expr _expression() {
-    // TODO: Operators, etc.
-    return _equality();
+    return _logicOr();
+  }
+
+  Expr _logicOr() {
+    var expr = _logicAnd();
+
+    while (_match(TokenType.orKeyword)) {
+      var op = _previous;
+      var right = _logicAnd();
+      expr = BinaryExpr(expr, op, right);
+    }
+
+    return expr;
+  }
+
+  Expr _logicAnd() {
+    var expr = _equality();
+
+    while (_match(TokenType.andKeyword)) {
+      var op = _previous;
+      var right = _equality();
+      expr = BinaryExpr(expr, op, right);
+    }
+
+    return expr;
   }
 
   Expr _equality() {

@@ -143,6 +143,16 @@ class Renderer
     var left = await expr.left.accept(this);
     var right = await expr.right.accept(this);
     switch ((left, expr.op.type, right)) {
+      // "or".
+      case (_, TokenType.orKeyword, _):
+        if (_isTruthy(left, expr.left.span)) return left;
+        return right;
+
+      // "and".
+      case (_, TokenType.andKeyword, _):
+        if (!_isTruthy(left, expr.left.span)) return left;
+        return right;
+
       // "!=".
       case (_, TokenType.bangEqual, _):
         // TODO: Are there any implicit conversions?

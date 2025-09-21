@@ -1,0 +1,9 @@
+empty ({{ for i in take(list, 0) }}{{ i }}{{ end }})
+one ({{ for i in take(list, 1) }}{{ i }}{{ end }})
+more than length ({{ for i in take(list, 100) }}{{ i }}{{ end }})
+--- output
+empty ()
+one (first)
+more than length (firstsecondthird)
+--- data
+{"list": ["first", "second", "third"]}

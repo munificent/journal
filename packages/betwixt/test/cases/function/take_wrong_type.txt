@@ -1,0 +1,21 @@
+{{ take("not iterable", 1) }}
+{{ take(null, 1) }}
+{{ take(list, "not int") }}
+--- runtime errors
+line 1, column 9 of test: Sequence must be a Iterable<Object?> but was String.
+  ╷
+1 │ {{ take("not iterable", 1) }}
+  │         ^^^^^^^^^^^^^^
+  ╵
+line 2, column 9 of test: Sequence must be a Iterable<Object?> but was Null.
+  ╷
+2 │ {{ take(null, 1) }}
+  │         ^^^^
+  ╵
+line 3, column 15 of test: Count must be a int but was String.
+  ╷
+3 │ {{ take(list, "not int") }}
+  │               ^^^^^^^^^
+  ╵
+--- data
+{"list": ["first", "second", "third"]}

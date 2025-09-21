@@ -389,9 +389,8 @@ Object? _htmlEntitiesToXml(List<Object?> arguments) {
 }
 
 Object? _take(List<Object?> arguments) {
-  // TODO: Handle type errors.
-  var iterable = arguments[0] as Iterable<Object?>;
-  var count = arguments[1] as int;
+  var iterable = _checkArgument<Iterable<Object?>>(arguments, 'Sequence', 0);
+  var count = _checkArgument<int>(arguments, 'Count', 1);
   return iterable.take(count);
 }
 

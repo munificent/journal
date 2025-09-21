@@ -2,7 +2,6 @@ import 'package:source_span/source_span.dart';
 
 import '../betwixt.dart';
 import 'ast.dart';
-import 'error_reporter.dart';
 import 'functions.dart';
 import 'include_visitor.dart';
 import 'parser.dart';

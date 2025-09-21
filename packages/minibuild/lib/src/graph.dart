@@ -1,6 +1,7 @@
 import 'package:stack_trace/stack_trace.dart';
 
 import 'key.dart';
+import 'term.dart' as term;
 
 /// The asset build graph.
 class Graph {
@@ -121,9 +122,7 @@ class Graph {
     try {
       await node.builder._build(context, node.group, node.declaredInputs);
     } catch (error, stack) {
-      var chain = Chain.forTrace(stack).terse;
-      print('Build error in ${node.builder.runtimeType} on "${node.group}":\n'
-          '$error\n$chain');
+      context._uncaughtException(error, stack);
       return;
     }
 
@@ -264,11 +263,22 @@ class BuildContext {
       return asset;
     }
 
-    // TODO: Better exception.
-    if (asset == null) throw Exception('Missing input $key.');
+    if (asset == null) throw MissingInputException(key);
 
-    // TODO: Better exception.
-    throw Exception('Wrong input type ${asset.runtimeType} was not $T');
+    throw WrongInputTypeException(key, asset, T);
+  }
+
+  /// Tries to get the asset of type [T] with [key].
+  ///
+  /// Returns `null` if the asset doesn't exist or has a different type.
+  T? tryInput<T extends Object>(Key key) {
+    var asset = _graph._assets[key];
+    if (asset is T) {
+      _node.readInputs.add(key);
+      return asset;
+    }
+
+    return null;
   }
 
   /// Add [asset] with [key] as an output from this build.
@@ -286,6 +296,23 @@ class BuildContext {
     // print('${_node.builder.runtimeType} -> $key');
     _node.outputs[key] = asset;
   }
+
+  /// Reports a fatal error.
+  void error(String message) {
+    print(term.red('ERROR ${_node.group} (${_node.builder.runtimeType}):\n'
+        '${_indentLines(message)}'));
+    // TODO: Should cause this build's output to be discarded.
+  }
+
+  void _uncaughtException(Object exception, StackTrace stackTrace) {
+    var chain = Chain.forTrace(stackTrace).terse.toString().trim();
+    print(term.red('ERROR ${_node.group} (${_node.builder.runtimeType}) '
+        'uncaught exception:\n  $exception\n${_indentLines(chain)}'));
+    // TODO: Should cause this build's output to be discarded.
+  }
+
+  static String _indentLines(String message) =>
+      message.split('\n').map((line) => '  $line').join('\n');
 }
 
 class _BuildNode {
@@ -303,4 +330,25 @@ class _BuildNode {
   final Map<Key, Object> outputs = {};
 
   _BuildNode(this.builder, this.group);
+}
+
+class MissingInputException implements Exception {
+  final Key key;
+
+  MissingInputException(this.key);
+
+  @override
+  toString() => 'Missing input $key.';
+}
+
+class WrongInputTypeException implements Exception {
+  final Key key;
+  final Object asset;
+  final Type expectedType;
+
+  WrongInputTypeException(this.key, this.asset, this.expectedType);
+
+  @override
+  toString() =>
+      'Input $key had type ${asset.runtimeType} ' 'but expected $expectedType.';
 }

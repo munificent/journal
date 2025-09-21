@@ -2,7 +2,7 @@ import 'package:betwixt/betwixt.dart';
 import 'package:minibuild/minibuild.dart';
 
 import '../model/tag_set.dart';
-import '../model/template_data.dart';
+import '../model/template.dart';
 
 // TODO: Something more data-driven? How about a tag map asset file?
 const _customTagTitles = {
@@ -40,10 +40,8 @@ class TagPageBuilder extends Builder<Tag> {
 
     var title = 'Stuff I Wrote About $tagName';
 
-    // TODO: Pass in error reporter that plumbs through build system.
-    var html = await template.render((String property) =>
-        templateData(context, property, tag: tag, tagTitle: title));
-
+    var html =
+        await renderTemplate(template, context, tag: tag, tagTitle: title);
     // TODO: Also output at "tag" path. (Keep "category" for backwards
     // compatibility.)
     var pageKey = Key.join('build', 'category', key.basename, 'index.html');

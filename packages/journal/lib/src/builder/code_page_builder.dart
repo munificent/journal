@@ -4,7 +4,7 @@ import 'package:betwixt/betwixt.dart';
 import 'package:journal/src/markdown.dart';
 import 'package:minibuild/minibuild.dart';
 
-import '../model/template_data.dart';
+import '../model/template.dart';
 import '../model/post.dart';
 
 /// Builds a page containing all code snippets.
@@ -50,15 +50,12 @@ class CodePageBuilder extends GroupBuilder<Post> {
       }
     }
 
-    var codeHtml = renderMarkdown(lines);
+    var codeHtml = renderMarkdown(context, lines);
 
     var postTemplate =
         context.input<Template>(Key('betwixt/asset/template/all_code.html'));
-
-    // TODO: Pass in error reporter that plumbs through build system.
-    var html = await postTemplate.render((String property) =>
-        templateData(context, property, data: {'code': codeHtml}));
-
+    var html =
+        await renderTemplate(postTemplate, context, data: {'code': codeHtml});
     context.output(key, html);
   }
 }

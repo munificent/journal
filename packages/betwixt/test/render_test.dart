@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:betwixt/src/error_reporter.dart';
 import 'package:path/path.dart' as p;
 import 'package:source_span/src/span.dart';
 import 'package:test/test.dart';

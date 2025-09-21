@@ -8,14 +8,14 @@ import 'chromatophore.dart';
 class HighlightedCodeBlockSyntax extends BlockSyntax {
   static final _codeFencePattern = RegExp(r'^(\s*)```(.*)$');
 
-  final Map<String, Language> _languages;
+  final LanguageProvider _languages;
   final HtmlFormatter _formatter;
 
   @override
   RegExp get pattern => _codeFencePattern;
 
   HighlightedCodeBlockSyntax(
-      {Map<String, Language> languages = const {},
+      {LanguageProvider languages = const LanguageProvider(),
       Map<Category, String>? cssClasses})
       : _languages = languages,
         _formatter =
@@ -58,11 +58,7 @@ class HighlightedCodeBlockSyntax extends BlockSyntax {
 
     // Don't syntax highlight text.
     if (languageName != 'text') {
-      language = _languages[languageName] ?? Language.find(languageName);
-      if (language == null) {
-        print('Cannot find highlighter for "$languageName".');
-        // TODO: Better error reporting.
-      }
+      language = _languages.find(languageName);
     }
 
     String code;

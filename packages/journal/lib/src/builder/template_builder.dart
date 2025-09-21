@@ -1,6 +1,8 @@
 import 'package:betwixt/betwixt.dart';
 import 'package:minibuild/minibuild.dart';
 
+import '../model/template.dart';
+
 /// Parses a Betwixt HTML file to a [Template].
 class TemplateBuilder extends Builder<StringAsset> {
   /// Match Markdown files in the static directory.
@@ -18,10 +20,9 @@ class TemplateBuilder extends Builder<StringAsset> {
       return includeSource.readString();
     }
 
-    // TODO: Plumb in error reporter.
     var template = await Template.compile(
         await htmlFile.readString(), key.toString(),
-        loader: readInclude);
+        loader: readInclude, reporter: MinibuildErrorReporter(context));
 
     if (template != null) {
       context.output(Key.join('betwixt', key), template);

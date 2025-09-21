@@ -5,6 +5,7 @@ import 'src/lexer.dart';
 export 'src/category.dart';
 export 'src/formatter.dart';
 export 'src/language.dart';
+export 'src/language_provider.dart';
 
 /// Takes a string of [source], parses it according to [language], and formats
 /// the result using [formatter].

@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:betwixt/betwixt.dart';
 import 'package:typographic_markdown/typographic_markdown.dart';
 
-import '../markdown.dart';
-
 /// A parsed Markdown blog post.
 class Post implements TemplateData {
   final DateTime date;
@@ -28,10 +26,11 @@ class Post implements TemplateData {
   /// The Markdown contents of the post.
   final List<String> contents;
 
-  /// The rendered HTML from the Markdown, initialized lazily.
-  late final String html = renderMarkdown(contents);
+  /// The rendered HTML from the Markdown.
+  final String html;
 
-  Post(this.date, this.title, this.titleUrl, this.tags, this.contents);
+  Post(this.date, this.title, this.titleUrl, this.tags, this.contents,
+      this.html);
 
   @override
   FutureOr<Object?> lookup(String property) {

@@ -8,6 +8,7 @@ import 'src/renderer.dart';
 
 export 'src/betwixt_function.dart';
 export 'src/data.dart';
+export 'src/error_reporter.dart';
 
 typedef IncludeLoader = Future<String?> Function(String name);
 

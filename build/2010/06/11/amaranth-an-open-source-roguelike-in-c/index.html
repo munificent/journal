@@ -42,27 +42,22 @@ below. I also ported it all to <a href="http://dart.dev">Dart</a>:
 <a href="https://github.com/munificent/hauberk">Hauberk</a> (was Amaranth). The
 game is still nowhere near being done.</p>
 </div>
-
 <p>Tonight I get to do something I&rsquo;ve wanted to do for a really long time: I&rsquo;m
 open-sourcing the <a href="http://en.wikipedia.org/wiki/Roguelike">roguelike</a> I&rsquo;ve been working on for several years. Amaranth
 is an old-school terminal-based roguelike written in C#. It looks like this:</p><img alt="Screenshot of Amaranth" src="/image/2010/06/amaranth.png" class="framed"/>
-
 <p>Because I&rsquo;m crazy about decoupling, it&rsquo;s actually split into three separate
 projects:</p>
-
 <p><strong><a href="https://github.com/munificent/bramble-dotnet">Bramble</a></strong> is a very small low-level library containing utility classes. It
 doesn&rsquo;t rely on anything beyond core .NET collections and provides more useful
 2D <a href="https://github.com/munificent/bramble-dotnet/blob/master/Bramble.Core/Vec.cs">vector</a> and <a href="https://github.com/munificent/bramble-dotnet/blob/master/Bramble.Core/Rect.cs">rectangle</a> classes, along with some <a href="https://github.com/munificent/bramble-dotnet/blob/master/Bramble.Core/Int32Extensions.cs">other handy
 stuff</a>. Even if you aren&rsquo;t working on a game, there may be something in
 here you can use, which is why it&rsquo;s separated into its own project.</p>
-
 <p><strong><a href="http://github.com/munificent/malison-dotnet">Malison</a></strong> is the terminal library Amaranth uses for its user interface.
 Like many roguelikes, Amaranth doesn&rsquo;t have graphics. Instead, it draws the game
 world in ASCII like an old computer terminal. Malison is a generic library for
 drawing to a virtual terminal. Even if you don&rsquo;t care about Amaranth, Malison
 should be exactly what you need if you&rsquo;re going to write your own roguelike or
 other terminal-style app in C#.</p>
-
 <p>One nice feature it has is that it decouples a logical terminal from a specific
 renderer. It provides a renderer using <a href="http://github.com/munificent/malison-dotnet/blob/master/Malison.WinForms/">WinForms</a>, but it should be simple to
 implement other renderers on top of XNA, WPF, or Silverlight. Code that writes
@@ -70,32 +65,41 @@ to a terminal only knows about the <a href="http://github.com/munificent/malison
 you could have a single game engine that supports rendering to a bunch of
 different terminal implementations. I wrote about the design of the terminal API
 in <a href="/2008/02/26/avoiding-overload-hell-in-c/">this post</a>.</p>
-
 <p><strong><a href="https://github.com/munificent/amaranth">Amaranth</a></strong> is the actual game, or the beginnings of one. I have lots of
 work left to do here, but a lot is also done. I&rsquo;ll be writing more about
 interesting bits of the engine, I hope. In the meantime you&rsquo;ll have to dig
 around in the code if you&rsquo;re curious. Some fun stuff it supports:</p>
-
 <ul>
-<li><p>The game engine is completely decoupled from UI. It was designed so that if
+<li>
+<p>The game engine is completely decoupled from UI. It was designed so that if
 I later write a graphical front-end for it, <em>zero</em> engine code would need to
-change.</p></li>
-<li><p>The <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Game.cs#cl-255">game loop</a> handles different entity speeds, decoupling from UI, makes
+change.</p>
+</li>
+<li>
+<p>The <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Game.cs#cl-255">game loop</a> handles different entity speeds, decoupling from UI, makes
 no distinction between player-controlled and AI entities, and makes <a href="/2008/11/17/using-an-iterator-as-a-game-loop/">clever
-use of coroutines</a>.</p></li>
-<li><p><a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Data/Data/">Game content</a> is data-driven and loaded from <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Data/Data/Monsters/J%20-%20Jelly.txt">friendly human-readable
-text files</a>.</p></li>
-<li><p>Expected roguelike features are in there: <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Dungeon/Generation/FeatureCreepGenerator.cs">random dungeons</a>,
+use of coroutines</a>.</p>
+</li>
+<li>
+<p><a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Data/Data/">Game content</a> is data-driven and loaded from <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Data/Data/Monsters/J%20-%20Jelly.txt">friendly human-readable
+text files</a>.</p>
+</li>
+<li>
+<p>Expected roguelike features are in there: <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Dungeon/Generation/FeatureCreepGenerator.cs">random dungeons</a>,
 <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Los.cs">line-of-sight</a>, <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Fov.cs">field-of-view</a>, <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Things/Items/Inventory.cs">inventory</a>, <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Dungeon/Town/">stores</a>, <a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Processing/Actions/Magic/">spells</a>,
-etc.</p></li>
-<li><p>The game loop was designed to support emergent behavior and interactions
+etc.</p>
+</li>
+<li>
+<p>The game loop was designed to support emergent behavior and interactions
 between entities. For example, hitting a monster could cause it to explode
 in a fireball which will in turn light a nearby torch, blinding an adjacent
 zombie. (There isn&rsquo;t <em>content</em> for this stuff yet, though, just engine
-support.)</p></li>
-<li><p><a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Content/Content.cs">No global state</a>. <a href="http://gameprogrammingpatterns.com/singleton.html">Singletons</a> are for amateurs.</p></li>
+support.)</p>
+</li>
+<li>
+<p><a href="https://github.com/munificent/amaranth/tree/master/Amaranth.Engine/Classes/Content/Content.cs">No global state</a>. <a href="http://gameprogrammingpatterns.com/singleton.html">Singletons</a> are for amateurs.</p>
+</li>
 </ul>
-
 <p>It&rsquo;s all up on GitHub: <a href="https://github.com/munificent/bramble-dotnet">Bramble</a>, <a href="http://github.com/munificent/malison-dotnet">Malison</a>, <a href="https://github.com/munificent/amaranth">Amaranth</a>. Feel free to try
 it out, fork it, or whatever. In the meantime, I&rsquo;ll try to find time to start
 writing some documentation on more interesting parts of what&rsquo;s in there.</p>

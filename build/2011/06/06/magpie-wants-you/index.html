@@ -38,88 +38,79 @@
 <p><em>Update 2021/09/12:</em> Magpie is very old and long-dead at this point. I learned a lot from it, but I&rsquo;m no longer maintaining it.
 </p>
 </div>
-
 <p>I&rsquo;ve been very fortunate to get lots of feedback and encouragement so far while
 I&rsquo;ve worked on my <a href="https://magpie-lang.org/">little language Magpie</a>, but I haven&rsquo;t actually asked
 for people to get directly involved. I still had lots of basic syntax and
 semantic decisions to make and it would have been an exercise in frustration to
 drag anyone else along through that.</p>
-
 <p>I may be entirely wrong, but I think I&rsquo;m past the worst of that. Now that
 <a href="http://magpie-lang.org/classes.html">classes</a>, <a href="http://magpie-lang.org/patterns.html">patterns</a>, and <a href="http://magpie-lang.org/multimethods.html">multimethods</a> are implemented and working, I
 believe Magpie may be at a point where adventurous souls could try to play with
 it. Multimethods were the big missing piece, and I&rsquo;m super excited that they&rsquo;re
 working now. To give you an idea why, here&rsquo;s some fun stuff they enable:</p>
-
 <h2>Overloading methods</h2>
-
 <p>Magpie is a dynamically typed language (flirtations with optional static typing
 notwithstanding). But in Magpie, every method is a multimethod, which means you
 can overload them.</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">()</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">()</span>
   <span class="k">this</span> <span class="i">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">separator</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span>
   <span class="p">...</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Here we&rsquo;ve defined two <code>split</code> methods on strings. The first takes no
 arguments, and the second takes a separator. That means you can do both:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">)</span>
-<span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">()</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">)</span>
+<span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">()</span></code></pre>
+</div>
 <p>In most dynamic languages, you&rsquo;d have to implement that by doing some manual
 <code>instanceof</code> or <code>!== undefined</code> checks in the body of a single <code>split()</code> method.
 In Magpie, it just works. You can overload by arity, or type, or both:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">maxResults</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">maxResults</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span>
     <span class="p">...</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">separator</span> <span class="k">is</span> <span class="t">String</span><span class="p">,</span> <span class="i">maxResults</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span>
     <span class="p">...</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Pretty much any kind of argument list can be overloaded and Magpie will pick the
 right one at runtime based on what you actually pass it.</p>
-
 <p>And just to clarify, you don&rsquo;t have to define all of these methods in one place
 or even in one module. They can be anywhere you want. In fact, you&rsquo;re free to
 define methods on types you didn&rsquo;t create, which leads us to&hellip;</p>
-
 <h2>Sane monkey-patching</h2>
-
 <p>One of the most powerful features of Ruby is that you can extend existing
 classes with new methods. This lets you define libraries which make the most of
 Ruby&rsquo;s <code>object.method</code> syntax and can lead to beautifully readable APIs.</p>
-
 <p>The problem, though, is that if two libraries happen to cram a method with the
 <em>same</em> name on the <em>same</em> class, <a href="https://web.archive.org/web/20110809115625/http://www.benjamincoe.com/post/6234388028/why-i-hate-ruby-or-at-least-some-common-practices-of">all hell breaks loose</a>. Very high on my
 list of goals for Magpie was to solve this problem, which is why classes don&rsquo;t
 own methods. Instead, they are lexically scoped like variables.</p>
-
 <p>This means that when you define a method &ldquo;on&rdquo; a class like our <code>split</code> method up
 there, you aren&rsquo;t touching the class at all. Instead, you&rsquo;re defining a function
 in your local scope that happens to take a String as its left-hand argument.
 Outside of the scope where you defined it, that method doesn&rsquo;t exist.</p>
-
 <p>If two different modules define methods on the same class with the same name,
 there&rsquo;s no collision, as long as they don&rsquo;t import each other. You can even use
 both of those modules in the same program without collision. You should be free
 to define methods on any classes you like if it makes your code easier to read.</p>
-
 <h2>Do actual stuff</h2>
-
 <p>Of course, all of the neat language features in the world are pretty useless if
 the language can&rsquo;t solve actual problems. For almost all of its history, the
 only thing you could actually do with Magpie was print to standard out. I know,
 not very inspiring.</p>
-
 <p>Fortunately, I&rsquo;m finally getting to the fun part of building real APIs for file
 IO, concurrency, networking, etc. I have a <em>ton</em> of work to do here (hopefully
 with your help!) but at least now you can read files and spawn threads. To prove
 it, here&rsquo;s a toy asynchronous web server:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">import</span> <span class="i">io</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">import</span> <span class="i">io</span>
 <span class="k">import</span> <span class="i">net</span>
 <span class="k">import</span> <span class="k">async</span>
 
@@ -138,55 +129,57 @@ it, here&rsquo;s a toy asynchronous web server:</p>
     <span class="k">end</span>
     <span class="i">socket</span> <span class="i">close</span><span class="p">()</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <h2>Where you come in</h2>
-
 <p>If you&rsquo;ve ever had the desire to help build a programming language and its
 ecosystem, and what you see here looks cool, I&rsquo;d love to have you involved. It
 will be a lot of work, and it&rsquo;s likely that more things are broken than working,
 but you&rsquo;ll have the chance to get in on the ground floor. Hell, you may be
 <em>building</em> the ground floor. If that sounds like fun, here&rsquo;s what you can do:</p>
-
 <ul>
-<li><p>Join the <a href="https://groups.google.com/g/magpie-lang?pli=1">mailing list</a>. It&rsquo;s&hellip; um&hellip; <em>dormant</em> right now, but with your
-help I hope we can get it going.</p></li>
-<li><p>If you aren&rsquo;t an IRC noob like me, try to get a channel for Magpie set up
-and let me know. I&rsquo;ll try to hang out on it as much as I can.</p></li>
-<li><p>Read <a href="https://magpie-lang.org/">the guide</a>. It still needs work, but the majority of the
+<li>
+<p>Join the <a href="https://groups.google.com/g/magpie-lang?pli=1">mailing list</a>. It&rsquo;s&hellip; um&hellip; <em>dormant</em> right now, but with your
+help I hope we can get it going.</p>
+</li>
+<li>
+<p>If you aren&rsquo;t an IRC noob like me, try to get a channel for Magpie set up
+and let me know. I&rsquo;ll try to hang out on it as much as I can.</p>
+</li>
+<li>
+<p>Read <a href="https://magpie-lang.org/">the guide</a>. It still needs work, but the majority of the
 language features are documented there. Let me know if you find errors,
 omissions, or stuff that&rsquo;s unclear. Take a look at some <a href="https://github.com/munificent/magpie/tree/master/example">example programs</a>
-too.</p></li>
-<li><p>Try out the interpreter. <a href="https://github.com/munificent/magpie">Clone the repo</a>, build it, and try writing
+too.</p>
+</li>
+<li>
+<p>Try out the interpreter. <a href="https://github.com/munificent/magpie">Clone the repo</a>, build it, and try writing
 toy programs. What worked like you expected, and what didn&rsquo;t? Let me know,
-preferably on the list.</p></li>
-<li><p>Start looking at the code. The current implementation is focused on
+preferably on the list.</p>
+</li>
+<li>
+<p>Start looking at the code. The current implementation is focused on
 simplicity and certainly not efficiency. If you can read Java you might not
 find it too difficult. If you&rsquo;re feeling brave, start hacking. Fleshing out
-APIs like IO would be hugely helpful, but scratch whatever itches you.</p></li>
+APIs like IO would be hugely helpful, but scratch whatever itches you.</p>
+</li>
 </ul>
-
 <p>That&rsquo;s really about it. You might want to <a href="https://twitter.com/munificentbob">follow me on twitter</a> or
 <a href="https://journal.stuffwithstuff.com">point your RSS reader at my blog</a> too. Beyond that, we&rsquo;ll have to see
 where it goes from here.</p>
-
 <h2>What comes next</h2>
-
 <p>Of course, it&rsquo;s entirely possible that no one will sign the charter for this
 little voyage but me, and that&rsquo;s OK. I&rsquo;ll keep hacking on Magpie regardless,
 but for the next few weeks, I&rsquo;ve got something much more fun to focus on:
 preparing for <a href="https://web.archive.org/web/20111105005623/http://www.oscon.com/oscon2011/public/schedule/detail/18551">my talk on Magpie at OSCON</a>.</p>
-
 <p>I feel like I didn&rsquo;t stress that enough. <a href="https://web.archive.org/web/20111105005623/http://www.oscon.com/oscon2011/public/schedule/detail/18551">OMG I&rsquo;M GIVING A TALK ON MAGPIE AT
 OSCON</a>. It&rsquo;s hard to describe how that makes me feel. Kind of like kissing
 the prettiest girl in middle school behind the bleachers but also I just drank a
 huge cherry Slurpy and I kind of feel like I need to throw up. Something like
 that.</p>
-
 <p>I will be speaking on Thursday July 28th at 1:40 PM. I&rsquo;m not sure if that means
 that I&rsquo;ll be drinking <em>before</em> 1:40 or <em>after</em>. Perhaps a little bit of both
 just to be safe.</p>
-
 <p>So, if you&rsquo;re going to be at OSCON this year (and you should be because OMG I&rsquo;m
 giving a talk at it!), come see my talk. At the very worst, I promise to give
 you a hug afterwards if you ask nicely. So even if the talk bombs, you get a

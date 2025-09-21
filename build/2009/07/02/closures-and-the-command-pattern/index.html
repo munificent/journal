@@ -39,33 +39,28 @@ While I don&rsquo;t treat it like the sacred tome that many think it is, I learn
 lot of tricks for solving design problems from it. As I&rsquo;ve moved from C++
 towards other languages, it&rsquo;s become clear that many patterns in the book exist
 just to get around limitations in C++.</p>
-
 <p>The anti-C++ crowd just uses this as evidence that C++ sucks since you have to
 write a whole book to get around its shortcomings. Let&rsquo;s not go there.</p>
-
 <p>Instead, I want to see if I can show you a bit about a language feature that C++
 lacks and that you may not know (<a href="http://en.wikipedia.org/wiki/Closure_%28computer_science%29">closures</a>) by getting there from something
 familiar to an average C++ object-oriented programmer (the <a href="http://en.wikipedia.org/wiki/Command_pattern">Command Pattern</a>)
 and changing it in stages. I&rsquo;ll use C# as the example language here, but any
 language with closures will work: Lua, Scheme, etc.</p>
-
 <h2>The Command Pattern</h2>
-
 <p>Let&rsquo;s say you&rsquo;re writing a chess program. You want it to support both regular
 human players and built-in AI players. The core chess engine doesn&rsquo;t care about
 what kind of players it&rsquo;s dealing with. All it needs to know is for a given
 player, what that player&rsquo;s move is.</p>
-
 <p>For a human player, the user interface gets the user&rsquo;s move selection and passes
 that to the engine. For a computer-controlled player, the AI rules select the
 best move and pass it in.</p>
-
 <p>To represent a &ldquo;move&rdquo;, we use the Command Pattern. The basic idea is that you
 have a <em>command</em> class that encapsulates some procedure to perform and any data
 that procedure needs. You can think of it like a function call and its arguments
 bottled up together to be opened later by some other part of the program. A
 vanilla implementation is something like:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">interface</span> <span class="t">ICommand</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">interface</span> <span class="t">ICommand</span>
 <span class="p">{</span>
     <span class="k">void</span> <span class="i">Invoke</span><span class="p">();</span>
 <span class="p">}</span>
@@ -80,11 +75,12 @@ vanilla implementation is something like:</p>
     <span class="p">{</span>
         <span class="i">Piece</span><span class="p">.</span><span class="i">MoveTo</span><span class="p">(</span><span class="i">X</span><span class="p">,</span> <span class="i">Y</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>We&rsquo;ll also create a little factory for creating the commands. This isn&rsquo;t
 necessary now, but it&rsquo;ll make sense later when we start moving things around.</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">static</span> <span class="k">class</span> <span class="t">Commands</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">static</span> <span class="k">class</span> <span class="t">Commands</span>
 <span class="p">{</span>
     <span class="c">// Create a command to move a piece.</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">ICommand</span> <span class="i">MovePiece</span><span class="p">(</span><span class="t">Piece</span> <span class="i">piece</span><span class="p">,</span> <span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">)</span>
@@ -96,10 +92,11 @@ necessary now, but it&rsquo;ll make sense later when we start moving things arou
 
         <span class="k">return</span> <span class="i">command</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>To complete this first pass, here&rsquo;s a little block to test our code:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="t">Program</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">class</span> <span class="t">Program</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="i">Main</span><span class="p">(</span><span class="t">string</span><span class="p">[]</span> <span class="i">args</span><span class="p">)</span>
     <span class="p">{</span>
@@ -110,16 +107,16 @@ necessary now, but it&rsquo;ll make sense later when we start moving things arou
         <span class="c">// Chess engine invokes it.</span>
         <span class="i">command</span><span class="p">.</span><span class="i">Invoke</span><span class="p">();</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <h2>The first change: delegates</h2>
-
 <p>The first change we&rsquo;ll make is a pretty minor one. The <code>ICommand</code> interface only
 has a single method, <code>Invoke()</code>, so there&rsquo;s no real reason to make an interface
 for it. Since delegates in C# work fine on instance methods, we can just use
 that instead. We&rsquo;ll define a delegate type for a function that takes no
 arguments and returns nothing, just like the <code>Invoke()</code> method in <code>ICommand</code>.</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">delegate</span> <span class="i">CommandDel</span><span class="p">();</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">delegate</span> <span class="i">CommandDel</span><span class="p">();</span>
 
 <span class="k">class</span> <span class="t">MovePieceCommand</span>
 <span class="p">{</span>
@@ -158,18 +155,17 @@ arguments and returns nothing, just like the <code>Invoke()</code> method in <co
         <span class="c">// Chess engine invokes it.</span>
         <span class="i">command</span><span class="p">();</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Not much different, although we did get to ditch the interface without any
 loss in functionality.</p>
-
 <h2>The second change: ditch <code>Invoke()</code></h2>
-
 <p>That <code>Invoke()</code> method up there really doesn&rsquo;t do much. It just calls another
 function. Let&rsquo;s see if we can pull that out. C# has &ldquo;anonymous delegates&rdquo;, which
 are basically functions defined within the body of another function. We&rsquo;ll try
 that.</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="t">MovePieceCommand</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">class</span> <span class="t">MovePieceCommand</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">Piece</span> <span class="i">Piece</span><span class="p">;</span>
     <span class="k">public</span> <span class="t">int</span>   <span class="i">X</span><span class="p">;</span>
@@ -193,47 +189,41 @@ that.</p>
 
         <span class="k">return</span> <span class="i">invoke</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Now instead of an <code>Invoke()</code> <em>method</em> we have an anonymous function stored in a
 local <code>invoke</code> variable. But this local function isn&rsquo;t a method, so it doesn&rsquo;t
 have a <code>this</code> reference. How does it get access to the <code>MovePieceCommand</code> that
 stores the piece and location to move it to?</p>
-
 <p>Like a little magic trick, the body of the <code>invoke</code> delegate actually accesses
 the <code>MovePieceCommand</code> stored in <code>command</code>, a local variable defined <em>outside</em>
 of itself in <code>MovePiece</code>. <em>That&rsquo;s</em> a closure: a local function that references a
 variable defined outside of its scope.</p>
-
 <p>In C#, the compiler will make sure those closed over local variables get moved
 to the heap, so that our delegate still has access to them even after
 <code>MovePiece</code> has returned. It actually does this by building a little class like
 our old <code>MovePieceCommand</code> and turns the delegate we just made back into a
 method. The advantage is that the <em>compiler</em> writes the class for us. We don&rsquo;t
 have to. Call me lazy, but if there&rsquo;s anything I like, it&rsquo;s <em>doing less</em>.</p>
-
 <h2>Clean up</h2>
-
 <p>By now it&rsquo;s clear that <code>MovePieceCommand</code> isn&rsquo;t doing much. It&rsquo;s just a bag of
 data. If our anonymous delegate can access local variables outside its scope
 anyway, there&rsquo;s no reason to bundle them into an object. Let&rsquo;s kill it.</p>
-
 <p>To clean things up a bit more, we&rsquo;ll also define the delegate using C#&rsquo;s newer
 <a href="http://msdn.microsoft.com/en-us/library/bb397687.aspx">lambda syntax</a>. It does the exact same thing, but more tersely.</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">static</span> <span class="k">class</span> <span class="t">Commands</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">static</span> <span class="k">class</span> <span class="t">Commands</span>
 <span class="p">{</span>
     <span class="c">// create a command to move a piece</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">Action</span> <span class="i">MovePiece</span><span class="p">(</span><span class="t">Piece</span> <span class="i">piece</span><span class="p">,</span> <span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">piece</span><span class="p">.</span><span class="i">MoveTo</span><span class="p">(</span><span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>And just like that, our whole command pattern has become a single line of
 code.</p>
-
 <h2>Conclusion</h2>
-
 <p>There are plenty of cases where it&rsquo;s still useful to implement a full command
 pattern: maybe you need to be able to invoke the command in multiple ways, or
 undo it. However, for simple problems, I go for the simple solution. If you&rsquo;re

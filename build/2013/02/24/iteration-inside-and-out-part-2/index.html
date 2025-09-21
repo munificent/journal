@@ -35,37 +35,31 @@
     <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/go">go</a> <a href="/category/language">language</a> <a href="/category/lua">lua</a> <a href="/category/magpie">magpie</a> <a href="/category/python">python</a> <a href="/category/ruby">ruby</a></span>
 </h4>
 <p><em>You&rsquo;ll probably want to read <a href="/2013/01/13/iteration-inside-and-out/">part one</a> first unless you&rsquo;re feeling brave.</em></p>
-
 <p>In our last episode, we learned that iteration involves two chunks of code: one
 generating values, and one consuming them. During a loop, these two chunks take
 turns in a cycle of generate, consume, generate, consume, like some sort of
 weird incremental Ouroboros. This means that one chunk has to fully return and
 unwind its stack frames before it can hand off to the next one.</p>
-
 <p>We also learned that external and internal iterators each nail some problems and
 totally fail at others. The discrepency boils down to which chunk of code has
 more useful stuff to store on the callstack.</p>
-
 <p>With external iterators, the code <em>consuming</em> values has control over the stack,
 so it works well with problems where most complexity is in consuming values. For
 example, short-circuiting or interleaving multiple iterators is trivial in an
 external iterator.</p>
-
 <p>Conversely, internal iterators put the code <em>generating</em> values in control. They
 excel when generating values is complicated, like walking a tree and iterating
 over the nodes.</p>
-
 <p>Now we&rsquo;ll see some techniques to deal with each style&rsquo;s shortcomings. The basic
 idea is <a href="http://en.wikipedia.org/wiki/Reification_(computer_science)"><em>reification</em></a>. If you&rsquo;ve got some data on the callstack that
 you want to hang onto, you need to find a place to store it.</p>
-
 <h2>Iterators and generators</h2>
-
 <p>Say we want to define a method that concatenates two sequences. We don&rsquo;t want to
 actually create a data structure that contains the elements of both, we just
 want to return an iterator that walks the first sequence and then the second
 one. Here&rsquo;s how you could do that in C#:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="k">return</span> <span class="k">new</span> <span class="t">ConcatEnumerable</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span>
 <span class="p">}</span>
@@ -119,63 +113,60 @@ one. Here&rsquo;s how you could do that in C#:</p>
   <span class="p">{</span>
     <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="i">onFirst</span> <span class="o">?</span> <span class="i">a</span><span class="p">.</span><span class="i">Current</span> <span class="p">:</span> <span class="i">b</span><span class="p">.</span><span class="i">Current</span><span class="p">;</span> <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Oof, that seems like a pile of code for such a simple goal. The problem is that
 we&rsquo;ve got all of this state to maintain: the two sequences being iterated, which
 one we&rsquo;re in, and where we are in it. Since this is an <em>external</em> iterator, we
 can&rsquo;t just store that as local variables on the stack because we have to return
 from <code>MoveNext()</code> between each item.</p>
-
 <p>But but but! C# has something called <em>iterators</em>. (A confusing name. What other
 languages call &ldquo;iterators&rdquo;, C# calls &ldquo;enumerators&rdquo;. So &ldquo;iterator&rdquo; means
 something special in C#-land.) The above code can also be written:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">a</span><span class="p">)</span> <span class="k">yield return</span> <span class="i">item</span><span class="p">;</span>
   <span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">b</span><span class="p">)</span> <span class="k">yield return</span> <span class="i">item</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>How&rsquo;s that for an improvement? (Note: if your employer pays you by the line,
 you&rsquo;ll want to avoid this.) The magic here is <code>yield return</code>. When a method
 contains it, the compiler turns the method into an <em>iterator</em>. You can think of
 it sort of as a &ldquo;resumable method&rdquo;. When you call <code>Concat()</code>, it runs to the
 first <code>yield return</code>, then stops. Then when you resume it, it picks up where it
 left after the <code>yield return</code>.</p>
-
 <p>So here it iterates through the first sequence, stopping at each item and
 returning it. Then it does the same thing with the second sequence. But what
 does it mean to &ldquo;resume&rdquo; a method?</p>
-
 <p>The return type here clarifies that. When you call <code>Concat()</code>, what you get back
 is an <code>IEnumerable</code>. This is C#&rsquo;s <a href="http://msdn.microsoft.com/en-us/library/system.collections.ienumerable.aspx">iterable sequence type</a>. So what
 you get back is a &ldquo;collection&rdquo;. &ldquo;Resuming the method&rdquo; just means &ldquo;get the next
 value in the sequence&rdquo;.</p>
-
 <p>So, given the above, we&rsquo;ve got a nice solution to our original problem. We can
 use it like so:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">Concat</span><span class="p">(</span><span class="i">stuff</span><span class="p">,</span> <span class="i">moreStuff</span><span class="p">))</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">Concat</span><span class="p">(</span><span class="i">stuff</span><span class="p">,</span> <span class="i">moreStuff</span><span class="p">))</span>
 <span class="p">{</span>
   <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">(</span><span class="i">item</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Using <code>yield return</code> lets us store all of the interesting state&mdash;the two
 sequences and our current location in them&mdash;just as local variables right in
 the <code>Concat()</code> method. C# will <em>reify</em> that stuff for us so that when the
 <code>Concat()</code> method &ldquo;returns&rdquo;, that data gets squirreled away somewhere safe.</p>
-
 <p>You may wonder how C# does that reification. That&rsquo;s kind of the funny bit. In
 the case of C#, the answer is that the compiler itself <a href="http://startbigthinksmall.wordpress.com/2008/06/09/behind-the-scenes-of-the-c-yield-keyword/">automatically generates
 a little hidden class</a> exactly like our ConcatEnumerator up there. The
 actual runtime (the <a href="http://en.wikipedia.org/wiki/Common_Language_Runtime">CLR</a>) doesn&rsquo;t have any support for <code>yield return</code>. It&rsquo;s
 done purely by automatically generating code at compile time. It&rsquo;s a large,
 delicious lump of <a href="http://en.wikipedia.org/wiki/Syntactic_sugar">syntactic sugar</a>.</p>
-
 <p>In the last post, I crafted some glorious ASCII art showing where all of the
 state is being stored. The main problem was that the state for the code
 generating values and the state for the code consuming them both live on the
 stack. Using an iterator, though, gives you this:</p>
-<div class="highlight"><pre><code class="language-asciiart" data-lang="asciiart">  stack                       heap
+<div class="highlight">
+<pre><code class="language-asciiart" data-lang="asciiart">  stack                       heap
 ┌─────────────────────┐
 │ iterator.MoveNext() │
 ├─────────────────────┤     ┌───────────────────┐
@@ -183,25 +174,23 @@ stack. Using an iterator, though, gives you this:</p>
 └─────────────────────┘     └───────────────────┘
   ...
 
-  main()
-</code></pre></div>
+  main()</code></pre>
+</div>
 <p>So the stack has the state for the code consuming values. But the state needed
 to generate values lives on the <em>heap</em>. There&rsquo;s an instance of this little class
 that the compiler created for us. When <code>MoveNext()</code> returns, we don&rsquo;t trash the
 state because it&rsquo;s still over there in the heap available the next time we call
 <code>MoveNext()</code>.</p>
-
 <p>There are a few other languages that do (or will) work this way. Python calls
 these &ldquo;<a href="http://www.python.org/dev/peps/pep-0255/">generators</a>&rdquo; and uses a similar <code>yield</code> statement. The next version
 of JavaScript will have <a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">something similar</a>. The language that invented
 generators and the <code>yield</code> keyword was Barbara Liskov&rsquo;s <a href="http://en.wikipedia.org/wiki/CLU_(programming_language)">CLU</a>, immortalized
 forever in <a href="http://en.wikipedia.org/wiki/List_of_Tron_characters#CLU">Tron</a>. (I&rsquo;m not making that up.)</p>
-
 <h3>Deep yields</h3>
-
 <p>There&rsquo;s a limitation here, though. You can only yield from the method itself.
 Let&rsquo;s say (for whatever reason) we wanted to organize our C# code like:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="i">WalkFirst</span><span class="p">(</span><span class="i">a</span><span class="p">);</span>
   <span class="i">WalkSecond</span><span class="p">(</span><span class="i">b</span><span class="p">);</span>
@@ -215,15 +204,16 @@ Let&rsquo;s say (for whatever reason) we wanted to organize our C# code like:</p
 <span class="t">IEnumerable</span> <span class="i">WalkSecond</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">a</span><span class="p">)</span> <span class="k">yield return</span> <span class="i">item</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>What we <em>want</em> to have happen is that the <code>yield return</code> in <code>WalkFirst()</code> and
 <code>WalkSecond()</code> causes <code>Concat()</code> itself to yield and return, but it doesn&rsquo;t work
 that way. Iterators/generators reify a stack frame for you, but they only reify
 <em>one</em>. If you want to have your iteration logic call other methods which also
 yield, you have to manually reify every level yourself by walking the sequence
 at each level. Something like:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">WalkFirst</span><span class="p">(</span><span class="i">a</span><span class="p">))</span> <span class="k">yield return</span> <span class="i">item</span><span class="p">;</span>
   <span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">WalkSecond</span><span class="p">(</span><span class="i">a</span><span class="p">))</span> <span class="k">yield return</span> <span class="i">item</span><span class="p">;</span>
@@ -237,17 +227,16 @@ at each level. Something like:</p>
 <span class="t">IEnumerable</span> <span class="i">WalkSecond</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="k">foreach</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">a</span><span class="p">)</span> <span class="k">yield return</span> <span class="i">item</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>You see how we&rsquo;re doing <code>foreach</code> and <code>yield return</code> both in the <code>Walk___()</code>
 methods <em>and</em> in <code>Concat()</code> itself? We&rsquo;re explicitly making <em>every</em> level of the
 callstack an iterator. That makes sure every call frame gets reified like we
 need. Can we do better?</p>
-
 <h2>Python 3.3: delegating generators</h2>
-
 <p>The above example can be translated to Python like so:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="i">concat</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">):</span>
+<div class="highlight">
+<pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="i">concat</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">):</span>
   <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">walkFirst</span><span class="p">(</span><span class="i">a</span><span class="p">):</span> <span class="k">yield</span> <span class="i">item</span>
   <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">walkSecond</span><span class="p">(</span><span class="i">a</span><span class="p">):</span> <span class="k">yield</span> <span class="i">item</span>
 
@@ -255,11 +244,12 @@ need. Can we do better?</p>
   <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">a</span><span class="p">:</span> <span class="k">yield</span> <span class="i">item</span>
 
 <span class="k">def</span> <span class="i">walkSecond</span><span class="p">(</span><span class="i">a</span><span class="p">):</span>
-  <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">b</span><span class="p">:</span> <span class="k">yield</span> <span class="i">item</span>
-</code></pre></div>
+  <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">b</span><span class="p">:</span> <span class="k">yield</span> <span class="i">item</span></code></pre>
+</div>
 <p>Aside from being more terse, this is a one-to-one mapping with the C# code. But
 Python 3.3 adds <a href="http://www.python.org/dev/peps/pep-0380/">something new</a> for us here. Let&rsquo;s use it:</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="i">concat</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">):</span>
+<div class="highlight">
+<pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="i">concat</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">):</span>
   <span class="k">yield</span> <span class="k">from</span> <span class="i">walkFirst</span><span class="p">(</span><span class="i">a</span><span class="p">)</span>
   <span class="k">yield</span> <span class="k">from</span> <span class="i">walkSecond</span><span class="p">(</span><span class="i">a</span><span class="p">)</span>
 
@@ -267,39 +257,34 @@ Python 3.3 adds <a href="http://www.python.org/dev/peps/pep-0380/">something new
   <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">a</span><span class="p">:</span> <span class="k">yield</span> <span class="i">item</span>
 
 <span class="k">def</span> <span class="i">walkSecond</span><span class="p">(</span><span class="i">a</span><span class="p">):</span>
-  <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">b</span><span class="p">:</span> <span class="k">yield</span> <span class="i">item</span>
-</code></pre></div>
+  <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">b</span><span class="p">:</span> <span class="k">yield</span> <span class="i">item</span></code></pre>
+</div>
 <p>The explicit loops in <code>concat()</code> have been replaced with a new <code>yield from</code>
 statement. Nice. This makes composing generators a little cleaner. But there&rsquo;s
 no real magic here. We still have to have <code>yield</code> at every level of our
 iteration code.</p>
-
 <p>In most cases, this is just a bit tedious but not a showstopper. But if you have
 higher-order functions this can actually prevent code reuse. If you have some
 higher-order function that takes a callback, it doesn&rsquo;t know if that callback
 wants to yield or not, so the higher-order function doesn&rsquo;t know if <em>it</em> needs
 to yield. You may end up having to implement that function twice, once for each
 style.</p>
-
 <p>So <code>yield from</code> is only a tiny improvement. Can we do better?</p>
-
 <h2>Ruby: enumerables, enumerators, and fibers</h2>
-
 <p>If you ever find yourself in a game of &ldquo;which language has a better feature than
 X&rdquo;, Ruby is usually a safe play. Matz has culled an impressive array of features
 from Smalltalk and Lisp. (And let&rsquo;s not forget Perl, the ugly duckling paddling
 around Ruby&rsquo;s Pond of Inspiration.)</p>
-
 <p>In Ruby, iteration is usually internal. The idiomatic way to go through a
 collection is by passing a <a href="http://eli.thegreenplace.net/2006/04/18/understanding-ruby-blocks-procs-and-methods/">block</a>&mdash;more or less a callback, if you&rsquo;re
 not familiar with Ruby/Smalltalk parlance&mdash;to the <code>each</code> method on a
 collection. But it also supports external iterators and a <code>for</code> expression.
 Impressively, Ruby can convert the former to the latter. (Going the other way is
 trivial in any language.)</p>
-
 <p>Let&rsquo;s dig up an example from the previous post. Here&rsquo;s some Ruby code for
 defining a tree and iterating over the nodes of the tree in order:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Tree</span>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Tree</span>
   <span class="i">attr_accessor</span> <span class="p">:</span><span class="i">left</span><span class="p">,</span> <span class="p">:</span><span class="i">label</span><span class="p">,</span> <span class="p">:</span><span class="i">right</span>
 
   <span class="k">def</span> <span class="i">initialize</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">label</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
@@ -313,19 +298,20 @@ defining a tree and iterating over the nodes of the tree in order:</p>
     <span class="i">code</span><span class="p">.</span><span class="i">call</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
     <span class="f">@right</span><span class="p">.</span><span class="i">each</span> <span class="o">&amp;</span><span class="i">code</span> <span class="k">if</span> <span class="f">@right</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>We can use it like:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="i">tree</span><span class="p">.</span><span class="i">each</span> <span class="p">{</span> <span class="o">|</span><span class="i">node</span><span class="o">|</span> <span class="i">puts</span> <span class="i">node</span><span class="p">.</span><span class="i">label</span> <span class="p">}</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="i">tree</span><span class="p">.</span><span class="i">each</span> <span class="p">{</span> <span class="o">|</span><span class="i">node</span><span class="o">|</span> <span class="i">puts</span> <span class="i">node</span><span class="p">.</span><span class="i">label</span> <span class="p">}</span></code></pre>
+</div>
 <p>This is using internal iteration. We pass in that <code>{ |node| ... }</code> block and the
 Tree class itself recursively walks the nodes and invokes the callback on each
 node.</p>
-
 <p>Say we want this to be an external iterator instead. Maybe we want to walk two
 trees in parallel to see if they have the same labels. We can do this something
 like:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Tree</span>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Tree</span>
   <span class="c"># Mixin all of the enumerable methods to our class.</span>
   <span class="i">include</span> <span class="t">Enumerable</span>
 <span class="k">end</span>
@@ -335,96 +321,94 @@ like:</p>
 
 <span class="k">if</span> <span class="i">a</span><span class="p">.</span><span class="i">zip</span><span class="p">(</span><span class="i">b</span><span class="p">).</span><span class="i">each</span><span class="p">.</span><span class="i">all?</span> <span class="p">{</span> <span class="o">|</span><span class="i">pair</span><span class="o">|</span> <span class="i">pair</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="o">==</span> <span class="i">pair</span><span class="p">[</span><span class="n">1</span><span class="p">]</span> <span class="p">}</span>
   <span class="i">puts</span> <span class="s">&quot;Equal!&quot;</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>The <code>zip()</code> method takes an enumerable on the left and another on the right and
 &ldquo;zips&rdquo; them together one pair at a time. The result is an array of pairs of
 elements. If you zip <code>[1, 2, 3]</code> and <code>[7, 8, 9]</code> together, you get <code>[[1, 7], [2, 8], [3, 9]]</code>. Neat.</p>
-
 <p>Then <code>all?</code> walks an array, testing each element using the given block. If the
 block returns <code>true</code> for every element, <code>all?</code> returns <code>true</code> too. Swell.</p>
-
 <p>But there&rsquo;s a subtle problem here. The <code>zip()</code> method converts its arguments to
 <em>arrays</em> before doing anything. So we&rsquo;ve got our nice <code>each</code> method on Tree that
 generates values incrementally without wasting memory, but then we throw the
 iterator at <code>zip()</code> which goes ahead and allocates big arrays to store all of
 these intermediate values. If the two trees we&rsquo;re comparing are huge, that&rsquo;s a
 lot of wasted memory.</p>
-
 <p>What we&rsquo;d like is a way to walk those two trees <em>iteratively</em> without creating
 any intermediate arrays. The <code>each()</code> method on Tree does that, but it&rsquo;s an
 internal iterator. External iterators are perfect for this task. Can we convert
 it? In Ruby, that&rsquo;s as easy as:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="i">a</span> <span class="o">=</span> <span class="c"># Some tree...</span>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="i">a</span> <span class="o">=</span> <span class="c"># Some tree...</span>
 <span class="i">b</span> <span class="o">=</span> <span class="c"># Another tree...</span>
 
 <span class="i">a_enum</span> <span class="o">=</span> <span class="i">a</span><span class="p">.</span><span class="i">to_enum</span>
-<span class="i">b_enum</span> <span class="o">=</span> <span class="i">b</span><span class="p">.</span><span class="i">to_enum</span>
-</code></pre></div>
+<span class="i">b_enum</span> <span class="o">=</span> <span class="i">b</span><span class="p">.</span><span class="i">to_enum</span></code></pre>
+</div>
 <p>That little <code>to_enum</code> method takes an object that implements <code>each</code> and returns
 an external iterator. We can use these iterators like so:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="i">loop</span> <span class="k">do</span>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="i">loop</span> <span class="k">do</span>
   <span class="k">if</span> <span class="i">a_enum</span><span class="p">.</span><span class="k">next</span> <span class="o">!=</span> <span class="i">b_enum</span><span class="p">.</span><span class="k">next</span>
     <span class="i">puts</span> <span class="s">&quot;Not equal!&quot;</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>The protocol here is that <code>next</code> returns the next item in the sequence. If there
 are no more items, it raises a StopIteration error which <code>loop</code> conveniently
 catches and handles.</p>
-
 <p>Double-plus good! We&rsquo;ve got nice support for both internal and external
 iterators, and we can easily convert back and forth between them. It&rsquo;s like
 having cake <em>and</em> pie for dessert. The one remaining question is <em>how does this
 work</em>? Look at what we have here:</p>
-
 <ol>
-<li><p>The internal iterator (the <code>each()</code> method on Tree) recursively calls itself
-and builds a deep callstack. At any point during that, it may emit values.</p></li>
-<li><p>The <code>to_enum</code> method takes that and returns an enumerable object. When you
+<li>
+<p>The internal iterator (the <code>each()</code> method on Tree) recursively calls itself
+and builds a deep callstack. At any point during that, it may emit values.</p>
+</li>
+<li>
+<p>The <code>to_enum</code> method takes that and returns an enumerable object. When you
 call <code>next</code>, it runs that recursive code then somehow suspends it whenever a
-value is generated.</p></li>
-<li><p>The next time you call <code>next</code> execution picks up exactly where it left off.
+value is generated.</p>
+</li>
+<li>
+<p>The next time you call <code>next</code> execution picks up exactly where it left off.
 Somehow that entire callstack gets frozen and then thawed between each call
-to <code>next</code>.</p></li>
+to <code>next</code>.</p>
+</li>
 </ol>
-
 <p>There must be some kind of data structure that represents an entire callstack.
 It doesn&rsquo;t reify a stack <em>frame</em> like generators, it reifies the whole <em>stack.</em></p>
-
 <h2>A fiber by any other name</h2>
-
 <p>This mystery data structure is what Ruby calls a <em>fiber</em>. Its sort of like a
 thread in that it represents an in-progress computation. It has a callstack,
 local variables, etc. Unlike a &ldquo;real&rdquo; thread, though, it doesn&rsquo;t involve the OS,
 kernel scheduling and all of that other heavyweight stuff.</p>
-
 <p>It&rsquo;s also <em>cooperatively</em> scheduled instead of <em>preemptively</em>. That&rsquo;s a fancy
 way of saying fibers have to play nice with other. If you want a fiber to run,
 you have to give it control. It can&rsquo;t take control from you.</p>
-
 <p>These constructs have been given as many names as languages that support them.
 Lua calls them &ldquo;<a href="http://www.lua.org/pil/9.html">coroutines</a>&rdquo; (which is, I think, the <a href="http://en.wikipedia.org/wiki/Coroutine">oldest
 name</a> for the idea). <a href="http://www.stackless.com/">Stackless Python</a> calls them &ldquo;tasklets&rdquo;. Go&rsquo;s
 &ldquo;<a href="http://golang.org/doc/effective_go.html#goroutines">goroutines</a>&rdquo; are similar, though with some interesting differences.</p>
-
 <p>Fibers are the special sauce we need for <code>to_enum</code>. When you call <code>to_enum</code>,
 Ruby spins up a new fiber. Then the interpreter runs the internal iterator on
 that <em>new</em> fiber. When you call <code>next</code> on the enumerator, Ruby runs that fiber
 until it generates a value. When a value is yielded, Ruby suspends the fiber,
 returns the value, and runs the main fiber. When we need the next value, Ruby
 just suspends the main fiber and resumes the spawned one again.</p>
-
 <p>In other words, a simplified implementation of <code>to_enum</code> looks a bit like:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Object</span>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Object</span>
   <span class="k">def</span> <span class="i">to_enum</span>
     <span class="t">MyEnumerator</span><span class="p">.</span><span class="i">new</span> <span class="k">self</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>And the MyEnumerator class (which is simplified from <a href="http://stackoverflow.com/a/1437678/9457">this excellent
 StackOverflow answer</a>) is:</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">MyEnumerator</span>
+<div class="highlight">
+<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">MyEnumerator</span>
   <span class="i">include</span> <span class="t">Enumerable</span>
 
   <span class="k">def</span> <span class="i">initialize</span><span class="p">(</span><span class="i">obj</span><span class="p">)</span>
@@ -441,33 +425,27 @@ StackOverflow answer</a>) is:</p>
     <span class="f">@fiber</span><span class="p">.</span><span class="i">resume</span>          <span class="c"># When the next value is requested,</span>
                            <span class="c"># resume the fiber.</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <h2>Iteration or concurrency?</h2>
-
 <p>I started this two-parter with a question about how you can make iteration
 beautiful and easy to work with. This leads us to wanting both internal and
 external iteration, and the ability to go from one to the other. The piece
 needed to really make that work is <em>an easy way to create a new callstack</em>. And
 fibers are a great answer for that.</p>
-
 <p>But what I find interesting is where we arrived at. We started talking about
 <em>iteration</em>, one of the most shallow of flow control structures. But look where
 we ended up. Fibers are a <em>concurrency</em> mechanism. Concurrency is way over in
 the deep end of language features.</p>
-
 <p>I don&rsquo;t think this is a coincidence. If you look at iteration, it actually is
 about concurrency. You&rsquo;ve got two &ldquo;threads&rdquo; of behavior: one that&rsquo;s generating
 values and one that&rsquo;s consuming them. You need to run these two threads together
 and coordinate them. That <em>is</em> concurrency. We&rsquo;re just so used to it, that we
 don&rsquo;t think of it that way.</p>
-
 <h2>Wait, what about Magpie?</h2>
-
 <p>I screwed myself over here. The secret agenda of this pair of posts was to trick
 you into reading about <em>my</em> language by promising to teach you something about
 other languages you may actually use in real life.</p>
-
 <p>If we&rsquo;re both lucky you did learn something, but I haven&rsquo;t gotten to my language
 yet. Alas, I&rsquo;m already 5,000 words in and I&rsquo;ve surely exhausted your patience. I
 guess Magpie will have to wait for a later post. Trust me, though. It&rsquo;s

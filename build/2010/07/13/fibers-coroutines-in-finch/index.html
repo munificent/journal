@@ -37,33 +37,28 @@
 <div class="update">
 <p><em>Update 2021/10/09:</em> Finch is <a href="https://github.com/munificent/finch">on GitHub now</a>.</p>
 </div>
-
 <p>With <a href="https://github.com/munificent/finch/commit/e2c73911a9d0e8d87d9aa598325a95f6c2a83231">this surprisingly straightforward commit</a>, I&rsquo;ve accomplished
 something I&rsquo;ve wanted to do for a long time: I&rsquo;ve implemented <a href="http://en.wikipedia.org/wiki/Coroutine">coroutines</a> in
 a programming language. I call them <a href="http://en.wikipedia.org/wiki/Fiber_%28computer_science%29">fibers</a> in Finch, mainly for brevity, but
 the idea is the same. Since I think coroutines are both really cool and not very
 well known, I thought it would be worthwhile to show how they work in Finch and
 why I added them.</p>
-
 <p>If you like textbook definitions, here&rsquo;s one for you:</p>
-
 <blockquote>
 <p>Fibers are a lightweight cooperative multi-tasking construct that let you
 switch between multiple flows of execution.</p>
 </blockquote>
-
 <p>If you&rsquo;re familiar with threads this might explain it better: Imagine a system
 where all of your threads run at the highest priority so that when one thread is
 running, all others get <em>zero</em> CPU time. In that scenario, the only way another
 thread can execute is if the running one explicitly calls <code>sleep()</code>. Now imagine
 that a call to <code>sleep()</code> requires an argument: the next thread to take over when
 this one sleeps. Now you&rsquo;ve got the idea.</p>
-
 <h2>Some code</h2>
-
 <p>I can only read about two paragraphs in a blog post without code before I get
 bored, so here&rsquo;s some:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="c">&#39; Create a fiber.</span>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="c">&#39; Create a fiber.</span>
 <span class="i">fiber</span> <span class="o">&lt;-</span> <span class="t">Fiber</span> <span class="k">new:</span> <span class="p">{</span>
   <span class="k">writeLine:</span> <span class="s">&quot;fiber started&quot;</span>
   <span class="t">Fiber</span> <span class="i">yield</span>
@@ -75,91 +70,88 @@ bored, so here&rsquo;s some:</p>
 <span class="i">fiber</span> <span class="i">run</span>
 <span class="k">writeLine:</span> <span class="s">&quot;main resumed&quot;</span>
 <span class="i">fiber</span> <span class="i">run</span>
-<span class="k">writeLine:</span> <span class="s">&quot;done&quot;</span>
-</code></pre></div>
+<span class="k">writeLine:</span> <span class="s">&quot;done&quot;</span></code></pre>
+</div>
 <p>If you run this, it outputs:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>main started
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">main started
 fiber started
 main resumed
 fiber resumed
-done
-</code></pre></div>
+done</code></pre>
+</div>
 <p>The two fibers interleave together like dance partners. There are three
 important steps in this tango. First off, we need to create a fiber. The fiber
 constructor, <code>Fiber new:</code> takes one argument, the block that makes up the body
 of the fiber and returns a new fiber. Note that it <em>doesn&rsquo;t</em> start the fiber
 running. The new fiber is just standing off to the side of the dancefloor
 patiently waiting to catch the eye of a partner.</p>
-
 <p>Once you have some fibers, there are two methods to transfer control between
 them. The first one is <code>run</code>:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="i">someFiberObj</span> <span class="i">run</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="i">someFiberObj</span> <span class="i">run</span></code></pre>
+</div>
 <p>When you send that message to a fiber object, it starts running and the current
 fiber pauses. The sister to <code>run</code> is <code>yield</code>:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="t">Fiber</span> <span class="i">yield</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="t">Fiber</span> <span class="i">yield</span></code></pre>
+</div>
 <p>That pauses the current fiber and transfers control <em>back</em> to the fiber that ran
 this one.</p>
-
 <p>The <em>only</em> difference between <code>run</code> and <code>yield</code> is that <code>run</code> is called directly
 on a fiber object to control which fiber to switch to where <code>yield</code> implicitly
 switches to whatever fiber previously started this one. (In fact, if you look at
 the code, you&rsquo;ll see they&rsquo;re both implemented in terms of a single
 <code>switchToFiber:</code> primitive.)</p>
-
 <h2>Communication</h2>
-
 <p>That&rsquo;s the basic system, but there&rsquo;s one more handy feature mixed in: you can
 pass data between fibers when you switch control. In addition to <code>Fiber yield</code>,
 there is also <code>Fiber yield:</code> which takes a single argument. The value passed to
 that will be sent back to the resuming fiber as the return value from the call
 to <code>run</code>. An example will really help here:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="i">fiber</span> <span class="o">&lt;-</span> <span class="t">Fiber</span> <span class="k">new:</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="i">fiber</span> <span class="o">&lt;-</span> <span class="t">Fiber</span> <span class="k">new:</span> <span class="p">{</span>
   <span class="t">Fiber</span> <span class="k">yield:</span> <span class="s">&quot;a marmot&quot;</span>
 <span class="p">}</span>
 
 <span class="i">result</span> <span class="o">&lt;-</span> <span class="i">fiber</span> <span class="i">run</span>
-<span class="k">writeLine:</span> <span class="i">result</span>
-</code></pre></div>
+<span class="k">writeLine:</span> <span class="i">result</span></code></pre>
+</div>
 <p>That will print out &ldquo;a marmot&rdquo;, as you&rsquo;d hope. When you call <code>run</code>, the time
 stops in that fiber. It doesn&rsquo;t resume until the fiber you ran yields. When the
 clock starts again, the call to <code>run</code> finally completes, returning the value
 passed to <code>yield:</code>.</p>
-
 <p>This may remind you of <a href="http://www.python.org/dev/peps/pep-0255/">generators</a> in Python or <a href="https://docs.microsoft.com/en-us/dotnet/csharp/iterators">iterators</a> in C#.
 Coroutines are a superset of both of those, so now Finch has generators too.
 Unlike generators or iterators, communication also works going the other
 direction. You can pass data <em>to</em> a fiber when you run it like this:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="i">fiber</span> <span class="o">&lt;-</span> <span class="t">Fiber</span> <span class="k">new:</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="i">fiber</span> <span class="o">&lt;-</span> <span class="t">Fiber</span> <span class="k">new:</span> <span class="p">{</span>
   <span class="i">result</span> <span class="o">&lt;-</span> <span class="t">Fiber</span> <span class="i">yield</span>
   <span class="k">writeLine:</span> <span class="i">result</span>
 <span class="p">}</span>
 
 <span class="i">fiber</span> <span class="i">run</span>
-<span class="i">fiber</span> <span class="k">run:</span> <span class="s">&quot;a dingo&quot;</span>
-</code></pre></div>
+<span class="i">fiber</span> <span class="k">run:</span> <span class="s">&quot;a dingo&quot;</span></code></pre>
+</div>
 <p>An extra call to <code>run</code> is needed here at the beginning. That runs the fiber up
 to the first <code>yield</code>, which returns control back. Like in our previous example,
 time stops for the fiber in the middle of its call to <code>yield</code>. The second <code>run:</code>
 resumes the fiber, passing in a value which becomes the return value for the
 <code>yield</code> method.</p>
-
 <p>That probably sounds a little confusing. Play around with it a bit and it&rsquo;ll
 make more sense.</p>
-
 <h2>Why is this cool?</h2>
-
 <p>The reason I like coroutines is that they&rsquo;re a perfect fit for simulating
 multiple entities simultaneously. And by that I mean <em>games</em>. In most games,
 you&rsquo;ve got a bunch of stuff going on at the same time: multiple enemies walking
 around, the player, various projectiles and special effects, etc.</p>
-
 <p>The way that&rsquo;s typically implemented is the game loop gives each actor a tiny
 slice of time each turn. Each entity will have an <code>Update()</code> method that takes
 one step and then returns, so a monster that just patrols back and forth,
 waiting a bit at each end will have something like:</p>
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="t">Patroller</span><span class="p">::</span><span class="i">update</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-cpp" data-lang="cpp"><span class="t">Patroller</span><span class="p">::</span><span class="i">update</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">switch</span> <span class="p">(</span><span class="i">state_</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="r">WALK_LEFT</span><span class="p">:</span>
       <span class="i">x_</span> <span class="o">-=</span> <span class="r">WALK_SPEED</span><span class="p">;</span>
@@ -187,17 +179,17 @@ waiting a bit at each end will have something like:</p>
       <span class="k">if</span> <span class="p">(</span><span class="i">wait_</span> <span class="o">==</span> <span class="n">0</span><span class="p">)</span> <span class="i">state_</span> <span class="o">=</span> <span class="r">WALK_LEFT</span><span class="p">;</span>
       <span class="k">break</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>You can see that the logic has to be split up into separate pieces and a bunch
 of data has to be pushed into member variables like <code>state_</code> and <code>wait_</code> so that
 it persists across frames. It&rsquo;s harder to tell what the intent of the behavior
 is even in this absolutely trivial example. Imagine what it&rsquo;s like when the
 entity is trying to walk a complex path or follow some strategy.</p>
-
 <p>If your system supports coroutines, you&rsquo;ve got a much easier way to do this&mdash;simply spin up a fiber for each entity and have them yield once per turn. The
 patrol behavior example turns into:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="t">Patroller</span> <span class="p">::</span> <span class="i">behavior</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="t">Patroller</span> <span class="p">::</span> <span class="i">behavior</span> <span class="p">{</span>
   <span class="c">&#39; Walk left.</span>
   <span class="k">from:</span> <span class="t">MaxX</span> <span class="k">to:</span> <span class="t">MinX</span> <span class="k">do:</span> <span class="p">{|</span><span class="i">x</span><span class="p">|</span>
     <span class="f">_x</span> <span class="o">&lt;-</span> <span class="i">x</span>
@@ -215,13 +207,14 @@ patrol behavior example turns into:</p>
 
   <span class="c">&#39; Wait.</span>
   <span class="k">from:</span> <span class="n">1</span> <span class="k">to:</span> <span class="t">WaitTime</span> <span class="k">do:</span> <span class="p">{</span> <span class="t">Fiber</span> <span class="i">yield</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Even better, because fibers maintain their own entire callstacks, you can switch
 between them even from within other function calls. This lets us refactor code
 that uses them into smaller functions, so the previous could would likely be
 something like:</p>
-<div class="highlight"><pre><code class="language-finch" data-lang="finch"><span class="t">Patroller</span> <span class="p">::</span> <span class="p">(</span>
+<div class="highlight">
+<pre><code class="language-finch" data-lang="finch"><span class="t">Patroller</span> <span class="p">::</span> <span class="p">(</span>
   <span class="i">behavior</span> <span class="p">{</span>
     <span class="k">self</span> <span class="k">walkFrom:</span> <span class="t">MaxX</span> <span class="k">to:</span> <span class="t">MinX</span>
     <span class="k">self</span> <span class="k">wait:</span> <span class="t">WaitTime</span>
@@ -239,8 +232,8 @@ something like:</p>
   <span class="k">wait:</span> <span class="i">frames</span> <span class="p">{</span>
     <span class="k">from:</span> <span class="n">1</span> <span class="k">to:</span> <span class="t">WaitTime</span> <span class="k">do:</span> <span class="p">{</span> <span class="t">Fiber</span> <span class="i">yield</span> <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">)</span>
-</code></pre></div>
+<span class="p">)</span></code></pre>
+</div>
 <p>Now our top-level code for patrolling is practically pseudocode for what we want
 the entity to do. Pretty swell!</p>
   <div class="comments">

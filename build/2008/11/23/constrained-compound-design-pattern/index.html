@@ -41,38 +41,29 @@ I figured the least I could do was try to document it and add to the design
 pattern language. After thinking about it a bit more, I realized actually I
 <em>don&rsquo;t</em> need inheritance to do it anyway. So, here&rsquo;s a little design pattern for
 you, solved with and without inheritance:</p>
-
 <blockquote>
 <p><strong>Problem:</strong></p>
-
 <p>Often you need to define a number of behaviors in terms of (and only in terms
 of) a small set of atomic operations that can be freely combined.</p>
 </blockquote>
-
 <p>Consider a UI framework that draws widgets. Each widget needs to be drawn its
 own way, but all of them are drawn using a few primitive drawing operations:
 text, lines, and shapes. Since this drawing will happen frequently and at
 unpredictable times, you want to encourage the widget implementers to only use
 those basic operations and not call into all sorts of places in the codebase.</p>
-
 <p>As the API developer, there&rsquo;s basically two things you want to provide to your
 clients: the set of operations, and the sandbox to combine them in. If you make
 both of those apparent enough, then <a href="http://blogs.msdn.com/brada/archive/2003/10/02/50420.aspx">they&rsquo;ll stick to those
 operations</a>.</p>
-
 <blockquote>
 <p><strong>Solution:</strong></p>
-
 <p>Allow the user to define a function whose body has access to an object (either
 <code>this</code> or an explicit parameter) that contains only the operations they should
 use to implement the function.</p>
 </blockquote>
-
 <p>There&rsquo;s two ways I&rsquo;ve found myself providing this kind of system, one of which
 uses inheritance, one of which does not.</p>
-
 <h2>Operations as protected methods</h2>
-
 <p>The most frequent way I use the pattern is by defining a base class with a
 number of protected methods and a single abstract one. The protected methods are
 the atomic operations, and the abstract one is the sandbox where they&rsquo;re used.
@@ -81,7 +72,8 @@ to derivers: these methods are here for your use. The abstract sandbox method
 says, &ldquo;here&rsquo;s where you do your work&rdquo;. If you&rsquo;ve minimized global and static
 objects then the limited parameters to the sandbox say, &ldquo;you only really have
 access to the methods in <code>this</code>&rdquo; so just use those. Here&rsquo;s an example:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
 <span class="p">{</span>
     <span class="c">// The sandbox.</span>
     <span class="k">public</span> <span class="k">abstract</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">();</span>
@@ -103,14 +95,15 @@ access to the methods in <code>this</code>&rdquo; so just use those. Here&rsquo;
             <span class="i">DrawLine</span><span class="p">(</span><span class="i">x</span><span class="p">,</span> <span class="n">15</span><span class="p">,</span> <span class="i">x</span><span class="p">,</span> <span class="n">20</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>If you try to go down this path, one limitation you will quickly realize is that
 often the base class itself doesn&rsquo;t have enough contextual information to
 provide those atomic functions. That needs to be passed in, but you don&rsquo;t want
 the sandbox to have it (since it could then poke at it directly). Here&rsquo;s a
 typical way around it:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
 <span class="p">{</span>
     <span class="c">// The external public API.</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">DrawContext</span> <span class="i">context</span><span class="p">)</span>
@@ -133,20 +126,19 @@ typical way around it:</p>
     <span class="k">protected</span> <span class="k">void</span> <span class="i">DrawRect</span><span class="p">(</span><span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">,</span> <span class="t">int</span> <span class="i">w</span><span class="p">,</span> <span class="t">int</span> <span class="i">h</span><span class="p">)</span> <span class="p">{</span> <span class="c">/* */</span> <span class="p">}</span>
 
     <span class="k">private</span> <span class="t">DrawContext</span> <span class="i">mContext</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Now <code>DrawString()</code>, etc. have access to the DrawContext, but the derived
 widget itself does not.</p>
-
 <h2>Atomic operations on a parameter</h2>
-
 <p>If you&rsquo;re not a fan of OOP or inheritance, here&rsquo;s another way to do the pattern.
 If you notice above, what we&rsquo;re basically doing is providing all of the atomic
 operations as methods available on <code>this</code>, which is then an implicit argument to
 the sandbox method <code>Draw()</code>. Instead of using <code>this</code> you can always make those
 operations on an explicit parameter. Here&rsquo;s a way to use that to have different
 widgets draw differently without using inheritance:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">Widget</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Widget</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="i">Widget</span><span class="p">(</span><span class="t">Action</span><span class="o">&lt;</span><span class="t">DrawOperations</span><span class="o">&gt;</span> <span class="i">drawFunc</span><span class="p">)</span>
     <span class="p">{</span>
@@ -192,14 +184,12 @@ widgets draw differently without using inheritance:</p>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="i">widget</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>This has the advantage of letting you later change how a widget draws without
 baking it into the class hierarchy, but may be a bit odd to people with only
 class-based OOP language experience.</p>
-
 <h2>A note on patterns</h2>
-
 <p>There&rsquo;s a lot of hype that surrounds the idea of <a href="http://en.wikipedia.org/wiki/Design_pattern_(computer_science)">design patterns</a>. When <a href="http://en.wikipedia.org/wiki/Design_Patterns">the
 book</a> first came out, C++ people who were struggling to understand OOP
 swarmed to it like it contained revelation from on high. After a while, people
@@ -211,7 +201,6 @@ of things people are already doing, and the language of patterns is intended to
 always be evolving and growing. It&rsquo;s neither revelation nor prescription (do
 this, don&rsquo;t do that). It&rsquo;s simply &ldquo;here&rsquo;s this problem we see often and here&rsquo;s a
 good way we see people solve it.&rdquo;</p>
-
 <p>Patterns are <em>not</em> supposed to be complex high-tech innovations (an excellent
 pattern in <em>A Pattern Language</em> encourages you to put a bench by your front
 door). If you read the Constrained Compound pattern above and thought, &ldquo;Oh yeah,

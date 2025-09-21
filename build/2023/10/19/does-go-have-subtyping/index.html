@@ -38,147 +38,121 @@
 language. To try to keep the language as simple as possible, I&rsquo;m trying to see
 if I can live without subtyping. Since most of my programming experience is in
 object-oriented languages, I&rsquo;ve been learning more about languages that lack&mdash;or at least claim to lack&mdash;subyping, to see how they work.</p>
-
 <p>The most intriguing one to me is Go because the authors say it doesn&rsquo;t have
 subtyping, but when you look at interfaces, it does seem to have something
 <em>really close</em> to subtyping. Is it subtyping just under another name, or is
 there really something different going on?</p>
-
 <p>This post is the answer to that question as best as I can tell. The short answer
 is that no, Go doesn&rsquo;t have subtyping. But also, yes, it sort of does.</p>
-
 <h2>What is subtyping?</h2>
-
 <p>If you&rsquo;re reading my blog, you probably already know what subtyping is, but
 let&rsquo;s make sure we&rsquo;re all starting from the same place. Subtyping defines a
 <a href="https://en.wikipedia.org/wiki/Relation_(mathematics)"><em>relation</em></a> between two types. Given two types A and B, it might be
 the case that B is a subtype of A, or it might not be.</p>
-
 <p>Since subtyping is a relation between a pair of types, it only comes into play
 in places in code where two types are involved. The main place is assignment.
 You have an expression of type A and you assign the result to a variable with
 type B. Is that assignment allowed?</p>
-
 <p>Programming language folks usually generalize &ldquo;assignment&rdquo; to mean any place
 where a variable is given some value. That includes assignment expressions, but
 also covers initialized variable declarations and function calls where argument
 values passed to the function are bound to their corresponding parameters.</p>
-
 <p>There are a couple of other places where subtyping comes into play, usually
 around type inference, but assignment is the main one: You have a context that
 requires some type B and a value of some type A. What are the types A and B
 where that code is valid?</p>
-
 <p>That question is the heart of what a type checker <em>does</em>. The main user
 interface of a static system is compile errors, and the most common compile
 error is &ldquo;I expected a value of <em>this</em> type but you gave me a value of <em>this
 other type</em>&rdquo;.</p>
-
 <h2>Why have subtyping?</h2>
-
 <p>You have a context that expects type B and you give it a value of type A. In
 languages without subtyping, that&rsquo;s only OK if A and B are the exact same type.
 In Pascal, if you declare a variable with type <code>integer</code>, the only thing you can
 initialize it with is a value of type <code>integer</code>.</p>
-
 <p>Subtyping exists largely to loosen that restriction&mdash;to allow <em>multiple</em>
 different types to flow into some context. Why might a language want to permit
 that?</p>
-
 <p>The reason is <em>polymorphism</em>: Subtyping lets you write a piece of code and reuse
 that same code with a range of different (but related) types. In languages
 without subtyping, you can often find yourself copy/pasting the same function to
 work with multiple different input types. (Generics can help, but that&rsquo;s another
 form of polymorphism that we&rsquo;ll ignore for this post.)</p>
-
 <p>In, say, Java, if you define a method that takes an <code>Iterable</code>, then you can
 pass a <code>List</code> to it, a <code>Stack</code>, etc. You get to amortize the usefulness of that
 method across all types that implement the <code>Iterable</code> interface. Subtyping is a
 force multiplier for your code.</p>
-
 <p>(Of course, that benefit isn&rsquo;t without significant costs in terms of language
 complexity, which is why I&rsquo;m hoping to avoid it.)</p>
-
 <h2>Does Go have subtyping?</h2>
-
 <p>If you search the (extremely well-written!) <a href="https://go.dev/ref/spec">Go language spec</a> for
 &ldquo;subtype&rdquo;, you get zero results. So the answer is a clear &ldquo;no&rdquo; at the textual
 level. However, we needer a deeper hermeneutics.</p>
-
 <p>Java does have subtyping. Now, if you were to make a new language named &ldquo;Blava&rdquo;
 that was a literal copy/paste of the Java language specification with every use
 of &ldquo;subtype&rdquo; replaced with &ldquo;blubtype&rdquo;, would you say that Blava has subtyping?
 It behaves indistinguishably from a language with subtyping, so I&rsquo;d be inclined
 to say yes.</p>
-
 <p>The Go spec doesn&rsquo;t mention &ldquo;subtype&rdquo;, but it does have a notion of
 <a href="https://go.dev/ref/spec#Assignability">&ldquo;assignability&rdquo;</a>. When you have a context that expects some type
 and you give it a value of some other type, assignability determines which set
 of other types are allowed. Concretely, the rules are:</p>
-
 <blockquote>
 <ul>
-<li><p>A non-interface type T is assignable to an interface type I if T
-implements I.</p></li>
-<li><p>An interface type A is assignable to interface type B if A&rsquo;s methods
-are a superset of B&rsquo;s.</p></li>
+<li>
+<p>A non-interface type T is assignable to an interface type I if T
+implements I.</p>
+</li>
+<li>
+<p>An interface type A is assignable to interface type B if A&rsquo;s methods
+are a superset of B&rsquo;s.</p>
+</li>
 </ul>
 </blockquote>
-
 <p>You know, that sounds an <em>awful lot</em> like subtyping. Is &ldquo;assignable to&rdquo; just Rob
 Pike&rsquo;s idiosyncratic way of saying &ldquo;subtype of&rdquo;? Does Go have subtyping in
 everything except name? Are we just playing semantics? (I mean, we&rsquo;re designing
 a programming language, so obviously <em>everything</em> we do is playing semantics.
 But I mean are we playing semantics with the language spec itself?) To fully
 answer that, we&rsquo;ll need to look at all of the kinds of types in a program.</p>
-
 <h2>Composite types and variance</h2>
-
 <p>If the only types in Go&rsquo;s type system were primitives like numbers, structs, and
 interfaces then I think you&rsquo;d have a good argument that Go does have subtyping,
 just spelled differently. But once you start looking at slice types and function
 types, the story changes. (And array and channel types too, but slices and
 functions are enough to make the point.)</p>
-
 <p>The thing that these latter kinds of types have in common is that they <em>contain
 other types</em>. A slice type has an inner type for the slice elements. A function
 type has a list of parameter types and a list of return types.</p>
-
 <p>You ready for some more computer science jargon? We&rsquo;ve been talking about
 relations on pairs of types like &ldquo;is subtype&rdquo; and &ldquo;is assignable&rdquo;. But now we
 have types that contain other types. That raises the question of whether a
 relation on the inner types of two composite types says anything about the
 relation between the two outer types.</p>
-
 <p>For example, let&rsquo;s say we have two slice types <code>[]E1</code> and <code>[]E2</code>. They have
 element types <code>E1</code> and <code>E2</code>, respectively. If <code>E1</code> is assignable to <code>E2</code> does
 that mean that <code>[]E1</code> is assignable to <code>[]E2</code>? Does the assignability
 &ldquo;propagate&rdquo; from the inner types to the outer types?</p>
-
 <p>Computer scientists call this property (meta-property?) <em>variance</em>. They phrase
 the question like &ldquo;how does assignability of slice types <em>vary with respect to
 their element types</em>?&rdquo;. There are a few possible answers to a question like
 this.</p>
-
 <h3>Variance of slice types</h3>
-
 <p>For slice types in Go specifically, there are a handful of assignability rules,
 but the only one that applies to slice types is:</p>
-
 <blockquote>
 <ul>
 <li><p>V and T are identical.</p></li>
 </ul>
 </blockquote>
-
 <p>In other words, for two slice types to be assignable, they have to be the exact
 same type. That in turn means they must have the exact same element types. Even
 if two element types are assignable, slices of those two types are not.</p>
-
 <p>Judging by an endless series of confused people asking questions on
 StackOverflow, that behavior is unintuitive to programmers, both in Go and in
 other languages. Let&rsquo;s say you have this Go program:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span> <span class="p">{</span>
   <span class="i">name</span> <span class="t">string</span>
 <span class="p">}</span>
 
@@ -188,20 +162,22 @@ other languages. Let&rsquo;s say you have this Go program:</p>
 
 <span class="k">func</span> <span class="p">(</span><span class="i">d</span> <span class="i">Dog</span><span class="p">)</span> <span class="i">Bark</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">fmt</span><span class="p">.</span><span class="i">Println</span><span class="p">(</span><span class="s">&quot;Woof!&quot;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Here we have a <code>Dog</code> concrete type, which is assignable to the interface
 <code>Barker</code>. So this is fine:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speak</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speak</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">speak</span><span class="p">(</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Sparky&quot;</span><span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Given that, you might expect this to work too:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speakAll</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speakAll</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="i">_</span><span class="p">,</span> <span class="i">barker</span> <span class="p">:</span><span class="o">=</span> <span class="k">range</span> <span class="i">barkers</span> <span class="p">{</span>
     <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
   <span class="p">}</span>
@@ -210,18 +186,20 @@ other languages. Let&rsquo;s say you have this Go program:</p>
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">dogs</span> <span class="p">:</span><span class="o">=</span> <span class="p">[]</span><span class="i">Dog</span><span class="p">{</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Sparky&quot;</span><span class="p">},</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Fido&quot;</span><span class="p">}}</span>
   <span class="i">speakAll</span><span class="p">(</span><span class="i">dogs</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>But, no. The type system giveth and the type system taketh away:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>example.go:29:11: cannot use dogs (variable of type []Dog) as
-[]Barker value in argument to speakAll
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">example.go:29:11: cannot use dogs (variable of type []Dog) as
+[]Barker value in argument to speakAll</code></pre>
+</div>
 <p>If the type system didn&rsquo;t yell at you, this program <em>would</em> be fine at runtime.
 All it does is call <code>Bark()</code> on every element in the array, and both Sparky and
 Fido do implement that method. So what&rsquo;s the deal? In this case, the program is
 <em>coincidentally</em> fine because <code>speakAll()</code> is only reading from the slice. But
 what if we wrote:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Tree</span> <span class="k">struct</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Tree</span> <span class="k">struct</span> <span class="p">{</span>
   <span class="i">species</span> <span class="t">string</span>
 <span class="p">}</span>
 
@@ -231,29 +209,24 @@ what if we wrote:</p>
 
 <span class="k">func</span> <span class="i">appendTree</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">[]</span><span class="i">Barker</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">append</span><span class="p">(</span><span class="i">barkers</span><span class="p">,</span> <span class="i">Tree</span><span class="p">{</span><span class="s">&quot;Elm&quot;</span><span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>There&rsquo;s nothing wrong with this <code>appendTree()</code> function. It adds a <code>Tree</code> to
 the given slice. Since <code>Tree</code> is assignable to <code>Barker</code>, that&rsquo;s fine. But if
 you were to call this and pass in a <code>[]Dog</code>, you&rsquo;d end up with an array of dogs
 that had a tree stuck in it! That would violate the soundness of the language.</p>
-
 <p>This is why Go only treats two slice types as assignable if they have the exact
 same element types. In PL parlance, slice types are <em>invariant</em> with respect
 to their element types. And, for a mutable data structure like slices, that
 rule makes sense.</p>
-
 <p>(A reasonable person might wonder then why Java and C# <em>don&rsquo;t</em> have this rule
 and instead say that array types <em>are</em> assignable if their element types are.
 And then, because as you can see, it isn&rsquo;t safe to do so, they have to add
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ArrayStoreException.html">runtime</a> <a href="https://learn.microsoft.com/en-us/dotnet/api/system.arraytypemismatchexception?view=net-7.0">checks</a> if you try to stuff an element of the
 wrong type into the array.)</p>
-
 <p>So, OK, it makes sense for slice (and array) types to be invariant. What about
 function types?</p>
-
 <h3>Variance of function types</h3>
-
 <p>To keep things simple, first we&rsquo;ll consider just functions that don&rsquo;t take any
 parameters and have a single return type. Given two function types like that,
 when are they assignable? Again, the only rule in the Go language spec that
@@ -261,10 +234,10 @@ matches function types is <code>V and T are identical</code>. So two function ty
 only assignable if they have the exact same return types. Even if the return
 types are themselves assignable, if they are different types, the functions
 aren&rsquo;t assignable.</p>
-
 <p>Do we need to be that strict to preserve soundness? Actually, no! Here&rsquo;s an
 example:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go">
+<div class="highlight">
+<pre><code class="language-go" data-lang="go">
 <span class="k">func</span> <span class="i">returnDog</span><span class="p">()</span> <span class="i">Dog</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Rex&quot;</span><span class="p">}</span>
 <span class="p">}</span>
@@ -276,19 +249,19 @@ example:</p>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">useCallback</span><span class="p">(</span><span class="i">returnDog</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>So we have a function, <code>returnDog</code> that returns a value of type <code>Dog</code>. We pass a
 reference to that function to <code>useCallback()</code> whic expects a function that
 returns a <code>Barker</code>. The <code>Dog</code> type does implement <code>Barker</code>. If this program were
 run, it would be perfectly safe. And, in fact, there&rsquo;s nothing you could put
 inside <code>useCallback()</code> that would make passing <code>returnDog</code> to it violate the
 soundness of the type system.</p>
-
 <p>It&rsquo;s sound and semantically kosher in principle&hellip; but Go disallows it:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>.&#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
-func() Barker value in argument to useCallback
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">.&#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
+func() Barker value in argument to useCallback</code></pre>
+</div>
 <p>Every other language I know that has subtyping and function types allows this. A
 function type <code>A</code> is a subtype of another function type <code>B</code> if the return type
 of <code>A</code> is a subtype of the return type of <code>B</code>. So the subtyping relation of the
@@ -297,17 +270,16 @@ types. We call this <em>covariance</em> and say that function types are <em>cova
 their return types</em>. The &ldquo;co-&rdquo; prefix means that the subtyping relation between
 the inner types goes in the &ldquo;same direction&rdquo; as the subtyping relation it
 implies about the outer types.</p>
-
 <p>That direction matters because relations like subtyping and assignability aren&rsquo;t
 symmetric. The <code>Dog</code> type is assignable to <code>Barker</code>, but <code>Barker</code> is <em>not</em>
 assignable to <code>Dog</code>. The underlying value might be a <code>Tree</code>!</p>
-
 <p>Are there cases where the variance of an inner type doesn&rsquo;t go in the same
 direction as the outer types? Indeed there are, and they&rsquo;re right there next to
 us. Instead of return types, let&rsquo;s look at parameter types. Now let&rsquo;s say we
 only care about functions that accept a single parameter and return nothing.
 Here&rsquo;s an example:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">acceptBarker</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">acceptBarker</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
 <span class="p">}</span>
 
@@ -317,16 +289,14 @@ Here&rsquo;s an example:</p>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">useCallback</span><span class="p">(</span><span class="i">acceptBarker</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Note that the parameter types are flipped compared to the return type example.
 Here, the callback type in <code>useCallback()</code> takes a more precise type of <code>Dog</code>.
 The function we pass to it, <code>acceptBarker</code> has a parameter whose type is
 <code>Barker</code>.</p>
-
 <p>You may feel a slight disorientation here. The code feels weird and sort of
 backwards. Wait a minute and the dizziness will pass. Dramamine might help.</p>
-
 <p>While this definitely isn&rsquo;t as intuitive as return types being covariant, if you
 think about it carefully, you&rsquo;ll see that the above program is completely sound.
 In other languages with subtyping, function type <code>A</code> is a subtype of function
@@ -335,158 +305,137 @@ type <code>B</code> if the parameter types of <code>B</code> are subtypes of the
 variance of parameter types is reversed. In technical terms, we say that
 function types are <em>contravariant in their parameter types</em>. The prefix
 &ldquo;contra-&rdquo; means &ldquo;against&rdquo;.</p>
-
 <p>(You might wonder what happens when you have a function type with a parameter
 whose type is itself a function type with some parameter type. How does <em>that</em>
 flow out? When there&rsquo;s two levels of nesting it flips around to going in the
 same direction as the outermost type. The way I think about it is that
 contravariance is a 180° flip in the direction of the relation. If you nest
 contravariant types, you flip it twice and get back to the original direction.)</p>
-
 <p>Contravariant parameter types are sound, but again Go doesn&rsquo;t allow them. Two
 function types are only assignable if their parameter types are <em>exactly the
 same</em>.</p>
-
 <h2>Invariance in Go</h2>
-
 <p>In every language I know with subtyping, function types are <a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Function_types">covariant in their
 return types and contravariant in their parameter types</a>. But in
 Go, function types are invariant.</p>
-
 <p>Go is not a language known for getting in the programmer&rsquo;s way when they want to
 do something, so why are function types more restrictive than would be necessary
 for soundness?</p>
-
 <p>It&rsquo;s not just function types either. <em>All</em> composite types are invariant in Go:
 arrays, slices, channels, maps, functions. So <em>ground</em> types&mdash;types that don&rsquo;t
 contain any other type&mdash;have some subtype-like notion of assignability. But
 once you wrap a type in another, any notion of assignability goes away.</p>
-
 <p>Why did the designers of Go do that? If you&rsquo;re going to bother having interfaces
 and assignability, why not go all the way and have assignability for functions
 and other composite types where its sound?</p>
-
 <p>If all the designers cared about was semantic correctness and having a beautiful
 elegant specification written in LaTeX, then they probably would have supported
 variance, at least for functions. (The other types all <em>should</em> be invariant
 since they are mutable. When types can flow both in and out, any other variance
 isn&rsquo;t sound.)</p>
-
 <p>But Go was designed from day one to be a high-performance systems language. It&rsquo;s
 the exact opposite of an ivory tower language designed for proofs and
 publications. The goal of the language is to let real users ship real
 applications. And, importantly, be able to ship <em>fast</em> applications and <em>reason
 about the performance of their code</em>.</p>
-
 <h2>Representing values</h2>
-
 <p>Up to this point, we&rsquo;ve only been concerned with how types flow through the type
 checker at compile time. But&mdash;assuming there are no compile errors&mdash;the
 compiler eventually excretes some machine code which gets executed at runtime.
 When that happens, all of the types the type checker poked at have cracked out
 of their chrysalides and emerged as beautiful runtime value butterflies flitting
 around in memory.</p>
-
 <p>The choice of how values of different types are represented in memory has a
 massive effect on performance. So how do the rules around assignability and
 subtyping interact with those representation choices?</p>
-
 <p>In many object-oriented languages (Java, C#, Python, etc.) values of object
 types are represented by pointers to a heap-allocated structure. That structure
 has some header information for garbage collection and runtime type tracking,
 maybe some kind of pointer to a <a href="https://en.wikipedia.org/wiki/Virtual_method_table">vtable</a> for virtual method dispatch, then
 (finally!) the memory used to store the instance&rsquo;s fields.</p>
-
 <p>There are differences between language implementations, of course, but objects
 are generally both:</p>
-
 <ol>
-<li><p>Slow to create since they are allocated on the heap.</p></li>
-<li><p>Fairly large with some additional bookkeeping information stored for every
-single object.</p></li>
-<li><p>Indirect, where a variable or field whose type is an object holds only a
+<li>
+<p>Slow to create since they are allocated on the heap.</p>
+</li>
+<li>
+<p>Fairly large with some additional bookkeeping information stored for every
+single object.</p>
+</li>
+<li>
+<p>Indirect, where a variable or field whose type is an object holds only a
 pointer to that object, which is always on the heap. Accessing state on an
 object always requires a pointer indirection which can be slow due
-to <a href="https://gameprogrammingpatterns.com/data-locality.html">poor locality and cache misses</a>.</p></li>
+to <a href="https://gameprogrammingpatterns.com/data-locality.html">poor locality and cache misses</a>.</p>
+</li>
 </ol>
-
 <h3>Struct types</h3>
-
 <p>Those are unnacceptable costs for a systems language like Go. When you <em>want</em>
 runtime polymorphism, of course, you have to pay for it somehow. But if you&rsquo;re
 just storing data in memory, Go doesn&rsquo;t want to make you pay for something you
 aren&rsquo;t using. To that end values of struct types in Go store just the bytes
 needed for the struct&rsquo;s own fields.</p>
-
 <p>If a field of a struct is itself some struct type, the inner struct&rsquo;s fields are
 splatted directly into the surrounding struct&rsquo;s contiguous memory. If you have a
 local variable of a struct type, the fields are stored right on the stack
 (unless you take a pointer to the struct which escapes the function).</p>
-
 <p>This reduces memory overhead for structs and (probably more importantly for
 performance) reduces pointer indirections. In a typical Java program, the heap
 ends up being a huge spiderweb of tiny objects all pointing to each other and
 the poor CPU an exhausted spider traipsing all over that web trying to find the
 actual bits of data it wants to eat.</p>
-
 <p>In a typical Go program, more state is stored directly on the stack, and the
 heap is &ldquo;chunkier&rdquo; with fewer, larger blobs of memory. The CPU does fewer hops
 around the heap and chews on bigger data insects every time it does. That makes
 memory access more cache friendly and also lightens the load on the garbage
 collector since there are fewer individual allocations to traverse.</p>
-
 <p>(Java does something similar for primitive types, as does C# for struct types.)</p>
-
 <h3>Interface types</h3>
-
 <p>So structs are fast, great. But Go does feature runtime polymorphism in the form
 of interfaces. How does interface method dispatch work if a value is stored
 directly inline with no extra data to track its runtime type or method
 implementations?</p>
-
 <p>The answer is that interfaces have a <a href="https://research.swtch.com/interfaces">completely different runtime
 representation</a>. A variable of interface type takes up two words:</p>
-
 <ol>
-<li><p>A pointer to the type information used for runtime dispatch of the interface
-methods (in other words, basically a <a href="https://en.wikipedia.org/wiki/Virtual_method_table">vtable</a>).</p></li>
-<li><p>A pointer to the actual data used by the concrete type implementing the
+<li>
+<p>A pointer to the type information used for runtime dispatch of the interface
+methods (in other words, basically a <a href="https://en.wikipedia.org/wiki/Virtual_method_table">vtable</a>).</p>
+</li>
+<li>
+<p>A pointer to the actual data used by the concrete type implementing the
 interface. (In cases where the data is just a single word, I think it&rsquo;s
-stored inline.)</p></li>
+stored inline.)</p>
+</li>
 </ol>
-
 <p>The cute industry term for a representation like this is <em>fat pointer</em>: instead
 of a single word with a single pointer, it&rsquo;s a pair of them, one for data and
 one for some kind of metadata or bookkeeping information.</p>
-
 <p>One of the really cool things about Go is that you only use this representation&mdash;you only pay for the increased memory and indirection cost of this
 representation&mdash;when you ask for it and when you need it. In places where you
 need some virtual dispatch, you use an interface type and accept the overhead of
 a fat pointer and indirection. But in places where you just want to store a
 single concrete type, you use its underlying type and the memory is stored
 directly inline.</p>
-
 <p>C# supports a similar distinction with classes and structs. But that&rsquo;s mostly a
 &ldquo;declaration time&rdquo; choice. Once you&rsquo;ve decided something is a class, every
 variable of that class&rsquo;s type will store it as a reference to a heap-allocated
 object. Conversely, if you&rsquo;ve declared something as a struct, it will always be
 stored inline on the stack or in the containing object (unless you go out of
 your way to box it).</p>
-
 <p>In Go, the distinction between stored inline versus stored indirectly is made at
 each use site. That leads to some additional complexity for the user: they
 always have to think &ldquo;should I use an interface, pointer, or struct type here?&rdquo;,
 but it gives them more fine-grained control over how they spend memory and
 pointer indirection costs.</p>
-
 <h2>Implicit conversions</h2>
-
 <p>We&rsquo;re close to understanding why Go lets you assign a struct to an interface
 but not a slice of those same structs to a slice of that same interface.</p>
-
 <p>If structs and interfaces have entirely different memory representations, how
 does assignability work at all? When you do:</p>
-<div class="highlight"><pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span><span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span><span class="p">{</span>
   <span class="i">name</span> <span class="t">string</span>
 <span class="p">}</span>
 
@@ -496,35 +445,30 @@ does assignability work at all? When you do:</p>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">barker</span> <span class="i">Barker</span> <span class="o">=</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Rex&quot;</span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Shouldn&rsquo;t that just mangle memory when it tries to treat the memory
 representation of a struct as if it were an interface? The answer is of course
 no. When compiling your code, Go knows the type of every variable and every
 expression. At every assignment, variable declaration, or parameter binding,
 it reports an error if the value isn&rsquo;t assignable to the destination.</p>
-
 <p>When the value is assignable, the compiler also knows whether or not those types
 are the same. If they&rsquo;re exactly identical, then the assignment can be compiled
 to a single register move or memory copy. When they are different but still
 assignable types, the compiler <em>silently inserts code to convert the value
 type&rsquo;s memory representation to the destination type&rsquo;s representation.</em></p>
-
 <p>When you assign a value of a struct type to an interface type, the compiler
 inserts code to build a fat pointer, wire up its method table pointer to the
 right interface implementation, move the struct&rsquo;s data onto the heap, etc.</p>
-
 <p>Likewise, if you assign one interface type to another, the compiler inserts code
 to copy the data pointers over but look up the correct method table for the
 destination interface given the type information of the value&rsquo;s interface type.</p>
-
 <p>This right here is the reason that all composite types are invariant in Go.
 When assigning a single value to a related but different type, the compiler
 can easily insert fixed-cost code to convert the value&rsquo;s runtime representation
 to the destination type&rsquo;s. But to convert a slice of some struct type to a
 slice of an interface type would require an <code>O(n)</code> traversal of the entire
 slice to convert each element.</p>
-
 <p>Function types are even harder. In order to support covariant return types and
 contravariant parameter types, the compiler would need to insert conversion code
 <em>somewhere</em>, but there&rsquo;s no right place to put it. Putting it inside the
@@ -532,27 +476,22 @@ function itself doesn&rsquo;t work because it might be called with a variety of
 different parameter types and we don&rsquo;t know what to convert it from. Putting it
 at the callsite before the parameters are passed likewise wouldn&rsquo;t work because
 we don&rsquo;t know what types every callback might require.</p>
-
 <p>There is potentially something clever you could do by supporting multiple
 entrypoints to functions for each pair of source and destination types, but
 with multiple parameters you quickly run the risk of exponential code size
 explosions.</p>
-
 <p>This is why languages that do support subtyping and variance almost always have
 a uniform memory representation for all objects that participate in the subtype
 hierarchy.</p>
-
 <h2>Does Go have subtyping?</h2>
-
 <p>If you make it this far, congratulations. This ended up being a much deeper dive
 than I expected. I learned a lot exploring this corner of the language space and
 I hope you learned something too.</p>
-
 <p>Getting back to the original question, I think we could accurately describe Go&rsquo;s
 subtyping story in two equivalent ways:</p>
-
 <ul>
-<li><p><strong>Yes, Go has subtyping, but it has no support for variance and all
+<li>
+<p><strong>Yes, Go has subtyping, but it has no support for variance and all
 composite types are invariant.</strong> This is, I think, how someone who is
 focused only on the abstract semantics of the language would describe it. If
 you were writing papers about type systems and needed to model Go&rsquo;s you
@@ -560,57 +499,57 @@ might adopt this perspective. If you didn&rsquo;t care about how Go could be
 efficiently implemented because you were treating it purely as an
 abstraction, then this is a good way to look at it and compare it to other
 languages.</p>
-
 <p>The main problem with the looking at the language this way is that it
-obscures <em>why</em> every composite type is invariant.</p></li>
-<li><p><strong>No, Go doesn&rsquo;t have subtyping, but it does have implicit conversions
+obscures <em>why</em> every composite type is invariant.</p>
+</li>
+<li>
+<p><strong>No, Go doesn&rsquo;t have subtyping, but it does have implicit conversions
 between some pairs of types.</strong> This is how the designers of Go describe the
 language. It&rsquo;s the way you&rsquo;d want to look at the language if you were tasked
 with sitting down and writing a production quality implementation of it. It
 describes what the language <em>actually does mechanically</em> at compile time and
 runtime.</p>
-
 <p>The challenge I found with this perspective is that it made it harder for me
 to relate Go&rsquo;s design choices to other more explicitly object-oriented
 languages. You can look at this entire long article as my process of trying
-to figure out the first interpretation in terms of this one.</p></li>
+to figure out the first interpretation in terms of this one.</p>
+</li>
 </ul>
-
 <p>I started digging into this not because I&rsquo;m an active Go user and want to know
 what&rsquo;s going on under the hood. <a href="https://dart.dev/">My job</a> and hobby is designing
 programming languages, so I want to know how other languages work to see what
 good ideas are out there to be harvested.</p>
-
 <p>So the question always on my mind at this point is, &ldquo;<em>Why</em> did they design it
 this way and does that choice make sense in other languages?&rdquo; And for this
 specific design choice, I think it&rsquo;s pretty cool. You can imagine a language
 wanting three things:</p>
-
 <ul>
-<li><p><strong>Non-uniform representation:</strong> Values in memory take up only as much space
+<li>
+<p><strong>Non-uniform representation:</strong> Values in memory take up only as much space
 as they need and avoid pointer indirection when possible to maximize
-runtime efficiency.</p></li>
-<li><p><strong>Polymorphism:</strong> The ability to reuse code to work with a range of values
-of different types.</p></li>
-<li><p><strong>Variance:</strong> Sort of the &ldquo;lifted&rdquo; form of polymorphism: The ability to
-reuse code to work with composite types that contain a range of inner types.</p></li>
+runtime efficiency.</p>
+</li>
+<li>
+<p><strong>Polymorphism:</strong> The ability to reuse code to work with a range of values
+of different types.</p>
+</li>
+<li>
+<p><strong>Variance:</strong> Sort of the &ldquo;lifted&rdquo; form of polymorphism: The ability to
+reuse code to work with composite types that contain a range of inner types.</p>
+</li>
 </ul>
-
 <p>Those are all nice to have features, but it&rsquo;s really hard to get all three at
 once. Most object-oriented languages sacrifice the first one to get the other
 two. That gives you flexibility and expressiveness but at a pervasive runtime
 cost spread throughout the entire program.</p>
-
 <p>Some statically-typed languages with simpler type systems like C, Pascal, and
 SML (ignoring modules, which are a whole other thing) give up polymorphism and
 variance which can give you more efficient representations at the cost of less
 code reuse.</p>
-
 <p>Languages like C++ and Rust more or less give you all three at the expense of
 the compiler monomorphizing and generating specialized versions of a function
 for the different types it gets passed, which makes compilation much slower and
 can have some runtime costs from all of the extra code sitting around in memory.</p>
-
 <p>Go is aiming for a sweet spot where they give you fast compiles, efficient
 runtime execution, and as much flexibility as they can get away with. It
 sacrifices variance but keeps polymorphism at the individual value level. That

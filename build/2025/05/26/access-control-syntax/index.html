@@ -38,110 +38,83 @@
 project</a>. I&rsquo;m ashamed to admit this, but up to this point, the language
 had absolutely no notion of modules. Literally every source file is dumped into
 one big global namespace and compiled together.</p>
-
 <p>I always planned to have some sort of module system. I just hadn&rsquo;t figured it
 out yet because I had other, harder <a href="/2023/08/04/representing-heterogeneous-data/">language design problems</a> to
 solve. I assumed that the module system mostly didn&rsquo;t interact with other
 language features, so I could kick it down the road for now.</p>
-
 <p>That was true until it wasn&rsquo;t. I&rsquo;ve been beating my head against the wall around
 generics for&hellip; oh God I just checked the Git history and it&rsquo;s three years now.
 I still don&rsquo;t have that pinned down. Parametric types are hard.</p>
-
 <p>Anyway, one of the approaches I&rsquo;m exploring <em>does</em> get tangled up in modules and
 scoping so now I have to figure modules out. This post is about one little
 syntax design question I ran into: <em>how do you distinguish public and private
 declarations?</em></p>
-
 <h2>A basic module system</h2>
-
 <p>Since my language is a scripting language, my ambitions for the module system
 are pretty minimal. Think more like Python or Dart than Java or C#.</p>
-
 <p>Every file has its own top-level scope that isn&rsquo;t shared with others. If you
 want to access top-level declarations from another file, you import that file.
 That makes its top-level declarations available in the importing file.</p>
-
 <p>Of course, a module might have some declarations that are only for its own
 internal use and should <em>not</em> be made available when you import it. A module
 should be able to encapsulate parts of its implementation. Thus, I need a way
 for users to indicate which declarations are private and which are public.</p>
-
 <h2>What other languages do</h2>
-
 <p>Every language out there has <em>some</em> kind of module system and an ability to
 control access (though it did take JavaScript about 20 years to get there, bless
 its heart). In some sense, it&rsquo;s a solved problem. But they don&rsquo;t all solve it
 the same way, especially if you dig into some of the more obscure corners of the
 language world. Let&rsquo;s go on a tour&hellip;</p>
-
 <h3>Modifier keywords</h3>
-
 <p>The approach you probably already have in mind is modifiers before declarations.
 In Java, C#, PHP and others, that&rsquo;s <code>public</code>, <code>private</code>. Maybe also more
 specific ones like <code>protected</code>, and <code>internal</code>.</p>
-
 <p>It&rsquo;s clear, explicit, and gets the job done. It lets you support a large number
 of flavors of access control if you need. It&rsquo;s also extremely common, so easy
 for users coming to a new language to pick up.</p>
-
 <p>The flip side is that it&rsquo;s quite verbose. Java is reviled for being too
 boilerplate-heavy and wordy, and I believe that having <code>private</code> and <code>public</code>
 scattered throughout every single file is a major contributor to that.</p>
-
 <p>Picking the wrong defaults doesn&rsquo;t help. I used to program in C# professionally
 for several years and in that time, I can&rsquo;t recall <em>ever</em> wanting a member to
 have <code>internal</code> access, which is the default. So I had to write <code>public</code> or
 <code>private</code> on basically everything. I think the same is true in Java land.</p>
-
 <p>Rust improves the situation by having a shorter modifier, <code>pub</code>, and picking
 what is arguably the right default for a language designed for Serious
 Programming: private.</p>
-
 <h3>Modifier sections</h3>
-
 <p>C++ has a strange but perhaps underappreciated spin on modifiers. It has access
 modifier keywords, but they apply to <em>all subsequent declarations</em>. This lets
 you write a keyword once and apply it to a whole bunch of things. That really
 does cut down the verbosity.</p>
-
 <p>The price to pay is that it also makes the language curiously context-sensitive.
 If you&rsquo;re ever defined a preprocessor macro that inserts code in a class and had
 to be careful <em>where</em> in the class you called the macro, you&rsquo;ve run into this.</p>
-
 <p>Access control sections mean that you can&rsquo;t look at a single declaration and
 know what its access is. You have to know what section contains the declaration.</p>
-
 <p>There&rsquo;s also the funny historical thing where members in struct default to
 public and members in classes default to private. C++ is <em>weird</em>. Like a house
 built on the back of some Eldritch being whose architecture and plumbing reveals
 the unholy foundation it is mated with.</p>
-
 <p>For presumably less Eldritch reasons, I believe Ada takes a similar approach.</p>
-
 <h3>Sigils in the names</h3>
-
 <p>Modifiers are clear but verbose. If you want something more syntactically
 economical, why not encode the access control directly in the name of the
 declaration itself? That&rsquo;s what Python, Go, and Dart do.</p>
-
 <p>Python&rsquo;s system is a mixture of informal and language supported. A leading
 underscore in a name doesn&rsquo;t <em>prohibit</em> it from being used outside of the module
 but it sends a signal to the user that they <em>shouldn&rsquo;t</em> use it. Sort of &ldquo;velvet
 rope&rdquo; security. If a class member starts with <em>two</em> leading underscores, then it
 really is private. The language will name mangle it to make it inaccessible.</p>
-
 <p>In Go, if a declaration&rsquo;s name starts with a capital letter, it&rsquo;s public.
 Otherwise, it&rsquo;s private. Because Go allows any Unicode letter in identifiers,
 the definition of uppercase <a href="https://en.wikipedia.org/wiki/Unicode_character_property#Casing">is not trivial</a>. Wikipedia tells me there are
 1,858 uppercase letters and 2,258 lowercase letters that can be used in
 identifiers in Go. Fun!</p>
-
 <p>Dart only allows ASCII in identifiers and follows Python: If an identifier
 starts with <code>_</code>, it&rsquo;s private. Otherwise it&rsquo;s public. Unlike Python, this is
 strictly enforced by the language. Private names are completely inaccessible
 outside of the library where the declaration appears.</p>
-
 <p>I don&rsquo;t have enough Python experience to have an opinion there aside from
 finding <code>__</code> pretty long. I work full-time on Dart and have only tinkered in Go
 so I&rsquo;m highly biased, but Go&rsquo;s approach has always felt strange to me. I&rsquo;m sure
@@ -150,32 +123,29 @@ distinguish kinds of declarations: leading capitals for types and lowercase for
 functions. Seeing types with lowercase names or functions with capital names
 gives me the same squishy feeling in my gut as watching <a href="https://en.wikipedia.org/wiki/The_Polar_Express_(film)">The Polar Express</a>.
 Dumb subjective biases aside, though, it seems to work fine in practice.</p>
-
 <p>I&rsquo;m much more used to Dart&rsquo;s style. I don&rsquo;t love it, but, eh, it gets the job
 done.</p>
-
 <p>These approaches both have the advantage of being very terse. No modifiers, no additional reserved words. There are two strikes against them:</p>
-
 <ul>
-<li><p><strong>They&rsquo;re obscure.</strong> If you&rsquo;re new to Java and you see the word <code>private</code>,
+<li>
+<p><strong>They&rsquo;re obscure.</strong> If you&rsquo;re new to Java and you see the word <code>private</code>,
 you probably don&rsquo;t know what it does, but you can guess it has something to
 do with &ldquo;privacy&rdquo;. With Go, if you see that some names are capitalized and
 some aren&rsquo;t, that tells you absolutely nothing about what&rsquo;s going on.
 Historical baggage? Weird personal preference? Maybe the author is German
 and prefers capitalizing nouns?</p>
-
 <p>Likewise, if you&rsquo;re skimming some Dart code, why do some of the names start
 with <code>_</code>? Do you pronounce that when you say the name out loud?</p>
-
 <p>You just have to be told what&rsquo;s going on because the language&rsquo;s own syntax
-doesn&rsquo;t guide you towards an explanation.</p></li>
-<li><p><strong>They show up at the use sites.</strong> Access control is a property of a
+doesn&rsquo;t guide you towards an explanation.</p>
+</li>
+<li>
+<p><strong>They show up at the use sites.</strong> Access control is a property of a
 <em>declaration</em>. So, in principle, any syntax for specifying it should only
 appear at that declaration. When you go to use a name, either you can access
 it (in which case no syntax is necessary) or you can&rsquo;t (in which case
 there&rsquo;s nothing you could say). But with Go and Dart, every place you
 mention the name also carries the access control.</p>
-
 <p>In theory, this could be a major problem if you want to <em>change</em> the access
 control of a declaration. You have to fix the identifier at every single use
 site! In practice, this doesn&rsquo;t actually cause much pain. If a name is going
@@ -183,78 +153,71 @@ from private to public, then every existing use site is already confined to
 one file, so you can rename those without affecting the rest of the program.
 If an identifier is going from public to private, again all uses must
 already be confined to that file or you <em>can&rsquo;t</em> make it private without
-actually breaking things.</p></li>
+actually breaking things.</p>
+</li>
 </ul>
-
 <p>I used to say that if I had a time machine, I would go back and change Dart to
 not use <code>_</code> for privacy. But I have mellowed on that opinion over the years and
 now I&rsquo;m not sure. I don&rsquo;t like how it shows up at every use site, but it <em>is</em>
 terse, which is nice.</p>
-
 <h3>Export manifests</h3>
-
 <p>Modifers put access control at the declaration. Sigils put it at the declaration
 and the use sites. The third major approach puts it at <em>neither</em>.</p>
-
 <p>Someone will tell me this generalization is wrong but I think most functional
 languages including the ML family and Lisps (including Scheme) have some kind of
 separate syntax for listing <em>exports</em>. Within a module, you declare all the
 functions and types you want without worrying about modularity. Then at the top
 of the file, the language gives you some dedicated syntax to list the things
 that should be made visible outside of the module.</p>
-
 <p>For example, in Scheme, the syntax for defining a module looks like:</p>
-<div class="highlight"><pre><code class="language-scheme" data-lang="scheme">(library library-name
+<div class="highlight">
+<pre><code class="language-scheme" data-lang="scheme">(library library-name
   (export list-of-names-to-export...)
-  declarations-in-library...)
-</code></pre></div>
+  declarations-in-library...)</code></pre>
+</div>
 <p>SML and its spawn have a notion of a <a href="https://smlhelp.github.io/book/docs/start/module-syntax">signature</a> which is
 declared separately from the module. You could also argue that header files in C
 and C++ are this pattern.</p>
-
 <p>A cool thing about export manifests is that they keep all the access control
 logic in one place. When you&rsquo;re writing declarations, you don&rsquo;t have to worry
 about access control then. You just write declarations. As a <em>user</em> of a library,
 you can look at just the export section to see what the module lets you do
 without digging in to the implementation at all.</p>
-
 <p>It does a good job of <em>firmly</em> separating interface from implementation.</p>
-
 <p>On the other hand, it&rsquo;s <em>quite</em> verbose. You end up saying the name of every
 exported declaration twice. Maybe even the full type signatures too. Since the
 export manifest is separate from the declarations, they have to be manually kept
 in sync. Rename an exported function and you have to remember to rename it in
 the manifest too.</p>
-
 <p>I ragged on JavaScript for not having its act together, but I gotta say when
 they did add modules, they came up with a clever blended approach. You can use
 <code>export</code> as a modifier right on a declaration:</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">width</span> <span class="o">*</span> <span class="i">height</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>But you can also use the <code>export</code> keyword to export a set of declarations that
 are already declared elsewhere:</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="p">{</span> <span class="i">area</span> <span class="p">};</span>
+<div class="highlight">
+<pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="p">{</span> <span class="i">area</span> <span class="p">};</span>
 
 <span class="c">// Code...</span>
 
 <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">width</span> <span class="o">*</span> <span class="i">height</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Given that modules were added later to the language, I&rsquo;m guessing this makes it
 easier to add modularity to a large existing JS library.</p>
-
 <h3>Sigils at the declaration</h3>
-
 <p>In poking around the annals of language history, I found one last approach in
 Niklaus Wirth&rsquo;s magnum opus language <a href="https://oberon.org/en">Oberon</a>.</p>
-
 <p>In Oberon, top-level declarations are private by default and only accessible
 to the containing module. If you want to make a declaration public, you mark
 the declaration with an asterisk:</p>
-<div class="highlight"><pre><code class="language-oberon" data-lang="oberon"><span class="k">MODULE</span> <span class="i">Hello</span><span class="p">;</span>
+<div class="highlight">
+<pre><code class="language-oberon" data-lang="oberon"><span class="k">MODULE</span> <span class="i">Hello</span><span class="p">;</span>
   <span class="k">IMPORT</span> <span class="i">Out</span><span class="p">;</span>
 
   <span class="k">PROCEDURE</span> <span class="i">SayHello</span><span class="o">*</span><span class="p">;</span>
@@ -262,57 +225,45 @@ the declaration with an asterisk:</p>
     <span class="i">Out</span><span class="p">.</span><span class="i">String</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
     <span class="i">Out</span><span class="p">.</span><span class="i">Ln</span><span class="p">;</span>
   <span class="k">END</span> <span class="i">SayHello</span><span class="p">;</span>
-<span class="k">END</span> <span class="i">Hello</span><span class="p">.</span>
-</code></pre></div>
+<span class="k">END</span> <span class="i">Hello</span><span class="p">.</span></code></pre>
+</div>
 <p>Here, the <code>*</code> after <code>PROCEDURE SayHello</code> means that <code>SayHello</code> is public. Note
 that this marker is only at the declaration. It&rsquo;s not part of the name. At
 callsites, the name is just <code>HelloWorld</code>.</p>
-
 <p>This has the same inscrutability that Python, Go, and Dart have. If you&rsquo;re a new
 Oberon programmer and you see <code>*</code>, you have no idea what it means. Fortunately,
 there are no new Oberon programmers, so this is not a problem in practice.</p>
-
 <p>This approach has the advantage of only appearing at the declaration. You don&rsquo;t
 have to repeat the sigil every time you use the thing.</p>
-
 <h2>Any syntax at all?</h2>
-
 <p>I&rsquo;m sure there are interesting tweaks and refinements in various languages, but
 I think that mostly covers the approaches in use out there. (If you&rsquo;re aware of
 any others, do tell.) Which approach is the right one for <em>my</em> little scripting
 language?</p>
-
 <p>A deeply related question is the choice of <em>defaults</em>. Java has <code>public</code> for
 public stuff and <code>private</code> for private stuff, but it also has a syntax for
 package private declarations: nothing at all. If you don&rsquo;t specify anything,
 C++ makes your struct members public and your class members private.</p>
-
 <p>It&rsquo;s hard to beat &ldquo;zero syntax at all&rdquo; when it comes to brevity, so the choice
 of what access control a declaration gets by default is an important one.</p>
-
 <p>When I put on my rigorous software engineer hat&mdash;probably some kind of
 construction site hard hat&mdash;the obvious right default is private. No one can
 fit an entire huge program in their head, so code needs to be broken into
 smaller isolated pieces you can reason about locally. Defaulting to private
 encourages users to make smaller independent modules.</p>
-
 <p>If I was making a language for big mission-critical infrastructure software, I
 would definitely do that. I think Rust made the right choice by defaulting to
 private and requiring you to opt in to public with <code>pub</code>.</p>
-
 <p>But I am making, like, the opposite of that. A hobby project that may never see
 the light of day for people to make their own hobby games that, realistically,
 also may never see the light of day. If anything, I want to encourage
 (hypothetical) users of my (currently mostly vaporware) language to <em>get things
 done</em>. Access control can get in the way of that.</p>
-
 <h3>Class modifiers in Dart</h3>
-
 <p>A few years ago, we added a slew of <a href="https://dart.dev/language/class-modifiers">class modifiers</a> to Dart. These are not
 directly tied to public and private, but in the process of designing those, I
 spent a lot of time talking to users about how they use the language and what
 defaults they prefer.</p>
-
 <p>Dart defaults to public. You have to opt in to private by prefixing a name with
 an underscore. It turns out that most users actually do prefer public being the
 default. And after looking at mountains of Dart code, what I see is that most
@@ -320,70 +271,52 @@ Dart code is relatively small applications. Those apps are built on top of a set
 of frameworks and libraries, but compared to the volume of application code out
 there, those libraries make up a fairly small fraction of the entire Dart
 ecosystem.</p>
-
 <p>These apps are the leaves of the dependency tree. Nothing depends on them or
 imports them. The authors of most of those are just trying to slap some UI
 together and ship a thing. And for most of those, defaulting to public keeps the
 language out of their way.</p>
-
 <h2>Syntax for privacy</h2>
-
 <p>That all leads me to feel that my scripting language should default to public
 and have a way to opt in to private. How do to that?</p>
-
 <h3>No export manifests</h3>
-
 <p>I know I don&rsquo;t want export manifests. They are much too verbose. Also, there is
 some extra language complexity and error reporting that gets sucked in. Since
 the manifest is separate from the declaration, the compiler has to handle cases
 where you try to export a name that doesn&rsquo;t exist. My language also has
 overloading, which means when exporting a function, you would need to a way to
 specify which of the overloads to export and which to leave private.</p>
-
 <p>Export manifests are just way more machinery than fits for a scripting language.
 This approach is out.</p>
-
 <h3>No modifier sections</h3>
-
 <p>The C++ approach is nice in that it&rsquo;s clear while still being pretty terse. You
 only need to write a modifier and can apply it to a bunch of declarations in the
 same scope.</p>
-
 <p>But at least in C++ (not sure about Ada), that only works within a type
 declaration. My language isn&rsquo;t really object oriented. It&rsquo;s more procedural.
 Sort of &ldquo;structs plus functions&rdquo; like C. Instead of classes, you have records.
 But a record declaration tends to be pretty small with only a handful of fields
 in it. There&rsquo;s not enough <em>stuff</em> inside a single record to benefit from reusing
 a modifier for a bunch of nested declarations.</p>
-
 <p>I could allow <code>private</code> at the top level and have it apply to everything after,
 but that feels like it errs too far in the other direction. It would be really
 confusing to have a thousand line file and not realize that half of it is
 private because some modifier way offscreen above flipped the access control.</p>
-
 <p>Modifier sections are out.</p>
-
 <h3>No sigils in identifiers</h3>
-
 <p>Sigils in identifiers do have a sort of terse, scripty feel. No extra keywords.</p>
-
 <p>I can&rsquo;t do Go&rsquo;s approach because my language already makes identifier leading
 case significant. It supports <a href="https://en.wikipedia.org/wiki/Pattern_matching#Tree_patterns">destructuring pattern matching</a>. Like some
 functional languages, it uses case to distinguish when a pattern is binding a
 new local variable (lowercase) versus matching against a type or constant
 (uppercase).</p>
-
 <p>Now I&rsquo;m not sure that corner of the language will stick, but it&rsquo;s there right
 now.</p>
-
 <p>I could do Python/Dart&rsquo;s approach and use a leading underscore. But I&rsquo;d really
 prefer to not have to mention the sigil at every single use site. After having
 written probably a million lines of Dart code, I know it&rsquo;s not intolerable. But
 it feels like an annoying tax. And for a language I&rsquo;m designing for my own joy,
 I&rsquo;d like to eliminate as many annoyances as possible.</p>
-
 <h3>Maybe modifiers</h3>
-
 <p>That leaves two approaches and is where I&rsquo;m currently at. Approach one is the
 typical solution to use an access control modifier at the declaration.
 Unfortunately, defaulting to public makes this harder. In Rust, <code>pub</code> is a
@@ -392,88 +325,86 @@ there is no obvious converse. <code>private</code> would be the longest keyword 
 language. <code>pri</code> doesn&rsquo;t read like anything. <code>priv</code> is&hellip; strange. I suppose that
 <code>pvt</code> is the well-established abbreviation for &ldquo;private&rdquo; but that feels a tad
 militaristic.</p>
-
 <p>I can&rsquo;t find any other synonyms for &ldquo;private&rdquo; that admit reasonable
 abbreviations either. So I&rsquo;m open to taking this path, but I&rsquo;m simply failing to
 come up with a good keyword for it.</p>
-
 <p>(A silly goblin part of my brain suggested I use <code>shh</code> to mean &ldquo;private&rdquo;, like
 the declaration is being whispered and can&rsquo;t be heard outside of its module.)</p>
-
 <h3>Maybe sigils at the declaration</h3>
-
 <p>This leaves Oberon&rsquo;s weird approach. There are several advantages here:</p>
-
 <ul>
-<li><p>It is maximally terse. Zero syntax at the use site, and only a single
-character at the declaration site.</p></li>
-<li><p>No additional reserved words which might get in the way of user identifiers.</p></li>
-<li><p>By defaulting to public, the opacity of the syntax is less of an issue. Yes,
+<li>
+<p>It is maximally terse. Zero syntax at the use site, and only a single
+character at the declaration site.</p>
+</li>
+<li>
+<p>No additional reserved words which might get in the way of user identifiers.</p>
+</li>
+<li>
+<p>By defaulting to public, the opacity of the syntax is less of an issue. Yes,
 the sigil won&rsquo;t immediately convey what it does, but if you&rsquo;re just starting
 to use the language, you don&rsquo;t need to even know it exists at first. You
-can just make everything public.</p></li>
+can just make everything public.</p>
+</li>
 </ul>
-
 <p>So there is some appeal. I don&rsquo;t think I can literally take Oberon&rsquo;s syntax
 with <code>*</code> following the name. My language lets you define operators and it would
 be confusing to have <code>*</code> right after other punctuation:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="o">+*</span><span class="p">(</span><span class="i">left</span> <span class="t">Vec</span><span class="p">,</span> <span class="i">right</span> <span class="t">Vec</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="o">+*</span><span class="p">(</span><span class="i">left</span> <span class="t">Vec</span><span class="p">,</span> <span class="i">right</span> <span class="t">Vec</span><span class="p">)</span>
   <span class="t">Vec</span><span class="p">(</span><span class="i">left</span><span class="p">.</span><span class="i">x</span> <span class="o">+</span> <span class="i">right</span><span class="p">.</span><span class="i">x</span><span class="p">,</span> <span class="i">left</span><span class="p">.</span><span class="i">y</span> <span class="o">+</span> <span class="i">right</span><span class="p">.</span><span class="i">y</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>This is declaring a private <code>+</code> function. It would probably look equally weird
 to have <code>*</code> after the name in a record declaration:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Vec</span><span class="o">*</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Vec</span><span class="o">*</span>
   <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
   <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>That led me to thinking the sigil should be by the declaration keyword. In my
 language, every declaration form does start with a leading keyword (unlike, say,
 C where function declarations don&rsquo;t have one), so it&rsquo;s feasible. Something like:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span><span class="o">*</span> <span class="t">Vec</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span><span class="o">*</span> <span class="t">Vec</span>
   <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
   <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 
 <span class="k">def</span><span class="o">*</span> <span class="i">sayHi</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>I don&rsquo;t hate it. But using <code>*</code> feels weird for &ldquo;private&rdquo;. If anything, it seems
 to emphasize the declaration (which is what it does in Oberon where it means
 &ldquo;public&rdquo;).</p>
-
 <h3>Maybe alternate keywords</h3>
-
 <p>That led to my last idea which I can&rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &ldquo;private&rdquo; to some people. So
 maybe use that? It looks like:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">rec_</span> <span class="t">Vec</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec_</span> <span class="t">Vec</span>
   <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
   <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 
 <span class="k">def_</span> <span class="i">sayHi</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>It looks odd, but I don&rsquo;t <em>hate</em> it. Or at least I don&rsquo;t hate it any more than
 any novel programming language syntax usually triggers revulsion.</p>
-
 <p>However, there&rsquo;s sort of a problem. Underscore is a valid identifier character.
 So the <a href="https://craftinginterpreters.com/scanning.html">lexer</a> is not going to scan <code>rec_</code> as a <code>rec</code> keyword token followed
 by a <code>_</code> token. Instead of will treat <code>rec_</code> as a single identifier.</p>
-
 <p>But then&hellip; I could just let it do that. I&rsquo;d then define a separate set of
 reserved words for all of the private declaration keywords: <code>def_</code>, <code>rec_</code>,
 <code>var_</code>, and <code>val_</code>.</p>
-
 <p>So now instead of a modifier or sigil to control access, you explicitly choose
 one of two declaration keywords. One makes it public and one makes it private.
 This technically means adding a handful more reserved words, but they aren&rsquo;t
 ones that are particularly useful for users anyway.</p>
-
 <p>I keep trying to talk myself out of this approach because it&rsquo;s so unusual but so
 far it seems to be lodged in my head better than any of the alternatives I&rsquo;ve
 considered. What do you think?</p>

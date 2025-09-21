@@ -38,7 +38,6 @@
 new eyes. While your first fascination with everything new and different in the
 foreign land may enventually be replaced by homesickness, you always want to
 bring back a souvenir, a little bit of the best of where you&rsquo;ve been.</p>
-
 <p>C# is my home country these days, but I&rsquo;ve been vacationing in F#. There&rsquo;s a lot
 there that&rsquo;s absolutely brilliant, like <a href="http://en.wikipedia.org/wiki/Currying">currying</a> and <a href="http://ejohn.org/blog/partial-functions-in-javascript/">partial
 application</a>, <a href="http://www.infoq.com/articles/pickering-fsharp-workflow">workflows</a>, and <a href="http://www.markhneedham.com/blog/2009/01/02/f-option-types/">option types</a> (no more
@@ -46,23 +45,25 @@ application</a>, <a href="http://www.infoq.com/articles/pickering-fsharp-workflo
 in the language was pattern matching. Pattern matching in F# (and its ancestors
 ML and OCaml) is something like <code>switch/case</code> on steroids. Here&rsquo;s a simple
 example of a <code>switch/case</code> in C#:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="n">2</span><span class="p">;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="n">2</span><span class="p">;</span>
 <span class="k">switch</span> <span class="p">(</span><span class="i">i</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">case</span> <span class="n">0</span><span class="p">:</span>  <span class="i">Print</span><span class="p">(</span><span class="s">&quot;zero&quot;</span><span class="p">);</span>
     <span class="k">case</span> <span class="n">1</span><span class="p">:</span>  <span class="i">Print</span><span class="p">(</span><span class="s">&quot;one&quot;</span><span class="p">);</span>
     <span class="k">case</span> <span class="n">2</span><span class="p">:</span>  <span class="i">Print</span><span class="p">(</span><span class="s">&quot;two&quot;</span><span class="p">);</span>
     <span class="k">default</span><span class="p">:</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;some other value&quot;</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Here&rsquo;s what the same logic would look like in F#:</p>
-<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="k">let</span> <span class="i">i</span> <span class="o">=</span> <span class="n">2</span>
+<div class="highlight">
+<pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="i">i</span> <span class="o">=</span> <span class="n">2</span>
 <span class="k">match</span> <span class="i">i</span> <span class="k">with</span>
 <span class="o">|</span> <span class="n">0</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;zero&quot;</span><span class="p">)</span>
 <span class="o">|</span> <span class="n">1</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;one&quot;</span><span class="p">)</span>
 <span class="o">|</span> <span class="n">2</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;two&quot;</span><span class="p">)</span>
-<span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;some other value&quot;</span><span class="p">)</span>
-</code></pre></div>
+<span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;some other value&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>You can probably infer what&rsquo;s going on. Pretty similar to our familiar
 <code>switch/case</code>. It checks each value and executes the clause on the right the
 first time it finds a match. The <code>_</code> bit on the last line is equivalent to
@@ -70,23 +71,23 @@ first time it finds a match. The <code>_</code> bit on the last line is equivale
 stuff, but pattern matching can do so much more. Before I can explain <em>that</em>,
 though, we&rsquo;ll need to take a little side trip to see another F# feature:
 <a href="http://en.wikipedia.org/wiki/Variant_record">discriminated unions</a>.</p>
-
 <h2>Discriminated unions</h2>
-
 <p>Where C# has enums, F# has discriminated unions. The main difference between the
 two is that each value in the union can have additional data fields. Imagine you
 want to enumerate the different kinds of <a href="http://en.wikipedia.org/wiki/Image_macro">image macros</a>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">enum</span> <span class="t">ImageMacro</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">enum</span> <span class="t">ImageMacro</span>
 <span class="p">{</span>
     <span class="i">Lolcat</span><span class="p">,</span>
     <span class="i">Lolrus</span><span class="p">,</span>
     <span class="i">ORlyOwl</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Pretty basic. Now if it&rsquo;s a <a href="http://en.wikipedia.org/wiki/Lolcat">lolcat</a>, we also want to note the text of the
 caption, and if it&rsquo;s a <a href="http://icanhascheezburger.com/2007/01/14/i-has-a-bucket/">lolrus</a>, we want to note how many buckets it has. In
 C#, we&rsquo;d have to ditch the enum and resort to a class hierarchy:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">abstract</span> <span class="k">class</span> <span class="t">ImageMacro</span> <span class="p">{</span> <span class="p">}</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">abstract</span> <span class="k">class</span> <span class="t">ImageMacro</span> <span class="p">{</span> <span class="p">}</span>
 
 <span class="k">class</span> <span class="t">Lolcat</span> <span class="p">:</span> <span class="t">ImageMacro</span>
 <span class="p">{</span>
@@ -100,59 +101,57 @@ C#, we&rsquo;d have to ditch the enum and resort to a class hierarchy:</p>
     <span class="k">public</span> <span class="i">Lolrus</span><span class="p">(</span><span class="t">int</span> <span class="i">buckets</span><span class="p">)</span> <span class="p">{</span> <span class="i">Buckets</span> <span class="o">=</span> <span class="i">buckets</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">class</span> <span class="t">ORlyOwl</span> <span class="p">:</span> <span class="t">ImageMacro</span> <span class="p">{</span> <span class="p">}</span>
-</code></pre></div>
+<span class="k">class</span> <span class="t">ORlyOwl</span> <span class="p">:</span> <span class="t">ImageMacro</span> <span class="p">{</span> <span class="p">}</span></code></pre>
+</div>
 <p>Classic OOP design, and it gets the job done. In F#, you can simply add fields
 to a discriminated union and accomplish the exact same thing:</p>
-<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="k">type</span> <span class="i">ImageMacro</span> <span class="o">=</span>
+<div class="highlight">
+<pre><code class="language-fsharp" data-lang="fsharp"><span class="k">type</span> <span class="i">ImageMacro</span> <span class="o">=</span>
     <span class="o">|</span> <span class="i">Lolcat</span>    <span class="k">of</span> <span class="i">string</span>
     <span class="o">|</span> <span class="i">Lolrus</span>    <span class="k">of</span> <span class="i">int</span>
-    <span class="o">|</span> <span class="i">ORlyOwl</span>
-</code></pre></div>
+    <span class="o">|</span> <span class="i">ORlyOwl</span></code></pre>
+</div>
 <p>The <code>of string</code> says that when you make a Lolcat ImageMacro (and <em>only</em> a
 Lolcat) that you must also provide a caption. Likewise, the <code>of int</code> says that a
 Lolrus needs a number of buckets.</p>
-
 <h2>Pattern matching discriminated unions</h2>
-
 <p>These two features, pattern matching and discriminated unions, go together in F#
 like gondolas and striped shirts. Each is much less awesome without the other.
 Now let&rsquo;s get back to pattern matching and see something it can do that a
 <code>switch/case</code> definitely can&rsquo;t. Given our above ImageMacro type, let&rsquo;s say we
 want to print it out:</p>
-<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="k">let</span> <span class="i">image</span> <span class="o">=</span> <span class="i">Lolcat</span><span class="p">(</span><span class="s">&quot;I made you a cookie&quot;</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-fsharp" data-lang="fsharp"><span class="k">let</span> <span class="i">image</span> <span class="o">=</span> <span class="i">Lolcat</span><span class="p">(</span><span class="s">&quot;I made you a cookie&quot;</span><span class="p">)</span>
 <span class="k">match</span> <span class="i">image</span> <span class="k">with</span>
 <span class="o">|</span> <span class="i">Lolcat</span><span class="p">(</span><span class="i">caption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="o">+</span> <span class="i">caption</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
 <span class="o">|</span> <span class="i">Lolrus</span><span class="p">(</span><span class="i">buckets</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolrus has &quot;</span> <span class="o">+</span> <span class="i">buckets</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)</span>
-<span class="o">|</span> <span class="i">ORlyOwn</span>         <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">)</span>
-</code></pre></div>
+<span class="o">|</span> <span class="i">ORlyOwn</span>         <span class="o">-&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>Now <em>that&rsquo;s</em> pretty nice. Not only does it switch on what kind of image macro
 it is, it also pulls out the data associated with each one (&ldquo;destructures&rdquo; in
 the local parlance). This would definitely be nice to have in C#.</p>
-
 <h2>A little souvenir: <code>Pattern.Match</code></h2>
-
 <p>So can we bring discriminated union pattern matching back to C#? Since C#
 doesn&rsquo;t have discriminated unions, we&rsquo;ll have to make it work with the little
 inheritance tree up there. Here&rsquo;s what I got:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">ImageMacro</span> <span class="i">image</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Lolcat</span><span class="p">(</span><span class="s">&quot;I made you a cookie&quot;</span><span class="p">);</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">ImageMacro</span> <span class="i">image</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Lolcat</span><span class="p">(</span><span class="s">&quot;I made you a cookie&quot;</span><span class="p">);</span>
 <span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolcat</span><span class="p">,</span> <span class="t">string</span><span class="o">&gt;</span> <span class="p">(</span><span class="i">c</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="o">+</span> <span class="i">c</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolrus</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span>    <span class="p">(</span><span class="i">b</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="o">+</span> <span class="i">b</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
-    <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span>        <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span>
-</code></pre></div>
+    <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span>        <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span></code></pre>
+</div>
 <p>A little strange, but not <em>too</em> bad. Looks kind of like a <code>switch/case</code> but
 switches based on type. For <code>Lolcat</code> and <code>Lolrus</code>, we pull out the caption and
 number of buckets. How does this work? Let&rsquo;s build it from the bottom up.</p>
-
 <h2>The <code>Case()</code> method</h2>
-
 <p>A single case in our pattern matcher needs to specify three things: the type
 being selected (Lolcat, Lolrus, etc.), the field(s) to pull out (if any), and
 the action to perform when the case is successfully matched. Let&rsquo;s start with
 the simplest possible system: one that can only match a single value based on
 type, with no fields. Here&rsquo;s the basic class:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="i">Matcher</span><span class="p">(</span><span class="t">T</span> <span class="i">value</span><span class="p">)</span> <span class="p">{</span> <span class="i">mValue</span> <span class="o">=</span> <span class="i">value</span><span class="p">;</span> <span class="p">}</span>
 
@@ -162,36 +161,36 @@ type, with no fields. Here&rsquo;s the basic class:</p>
     <span class="p">}</span>
 
     <span class="k">private</span> <span class="t">T</span> <span class="i">mValue</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>The action being passed in is a delegate, and we construct it using C# 3.5&rsquo;s
 handy lambda notation. For the ORlyOwl, it&rsquo;s:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>Aside from being a nice clean notation, the other nice thing about lambdas (and
 anonymous delegates) is that they can access variables defined in the outside
 scope. This lets our <code>Case</code> clauses do everything a regular <code>case</code> can do in a
 vanilla <code>switch/case</code>.</p>
-
 <h3>Chaining cases using a fluent interface</h3>
-
 <p>What we have so far is simple, but it only lets us select a single case. To be
 able to chain multiple cases together, we&rsquo;re going to use something the hip
 kids are calling a &ldquo;fluent interface&rdquo;. The basic idea is to make methods
 return <code>this</code> so that you can call multiple methods on the same object by
 <code>chaining.Them().Like().This()</code>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="i">mValue</span> <span class="k">is</span> <span class="t">TCase</span><span class="p">)</span> <span class="i">action</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <h3>Preventing multiple matches</h3>
-
 <p>There&rsquo;s a problem here. A pattern should only match the <em>first</em> successful case.
 If we just allow arbitrary chaining, it would be possible to have multiple
 matches. Here&rsquo;s a solution:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">virtual</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">virtual</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="i">mValue</span> <span class="k">is</span> <span class="t">TCase</span><span class="p">)</span>
     <span class="p">{</span>
@@ -199,31 +198,33 @@ matches. Here&rsquo;s a solution:</p>
         <span class="k">return</span> <span class="k">new</span> <span class="t">NullMatcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Now when we have a successful match, instead of continuing the fluent
 interface and returning <code>this</code>, we return a <code>NullMatcher&lt;T&gt;</code> As you can
 probably guess, that class has the same methods as <code>Matcher&lt;T&gt;</code>, but never
 actually matches:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">NullMatcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">:</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">NullMatcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">:</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">override</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <h3>Extracting fields</h3>
-
 <p>So far, we&rsquo;re up to being able to do this:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolcat</span><span class="o">&gt;</span> <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;?&#39;&quot;</span><span class="p">)).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolrus</span><span class="o">&gt;</span> <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolrus has ? buckets&quot;</span><span class="p">)).</span>
-    <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span>
-</code></pre></div>
+    <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span></code></pre>
+</div>
 <p>The last remaining step is to pull out the <code>caption</code> and <code>buckets</code> from the
 <code>Lolcat</code> and <code>Lolrus</code> types. We&rsquo;ll do this by overloading <code>Case()</code>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">virtual</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="p">,</span> <span class="t">TArg</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span><span class="o">&lt;</span><span class="t">TArg</span><span class="o">&gt;</span> <span class="i">action</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">virtual</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Case</span><span class="o">&lt;</span><span class="t">TCase</span><span class="p">,</span> <span class="t">TArg</span><span class="o">&gt;</span><span class="p">(</span><span class="t">Action</span><span class="o">&lt;</span><span class="t">TArg</span><span class="o">&gt;</span> <span class="i">action</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="t">IMatchable</span><span class="o">&lt;</span><span class="t">TArg</span><span class="o">&gt;</span> <span class="i">matchable</span> <span class="o">=</span> <span class="i">mValue</span> <span class="k">as</span> <span class="t">IMatchable</span><span class="o">&lt;</span><span class="t">TArg</span><span class="o">&gt;</span><span class="p">;</span>
 
@@ -236,8 +237,8 @@ actually matches:</p>
     <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>What this new method does is both check the value&rsquo;s type and see if it
 implements <code>IMatchable&lt;T&gt;</code>. That little interface lets a class expose a field
 for pattern matching. (We could also do this using reflection. That would free
@@ -245,7 +246,8 @@ us up from having explicitly implement pattern matching support in classes, but
 would also incur a performance penalty and bind the pattern matching to the
 internals of the matched classes.) Here&rsquo;s the interface and its implementation
 in our macro classes:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">interface</span> <span class="t">IMatchable</span><span class="o">&lt;</span><span class="t">TArg</span><span class="o">&gt;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">interface</span> <span class="t">IMatchable</span><span class="o">&lt;</span><span class="t">TArg</span><span class="o">&gt;</span>
 <span class="p">{</span>
     <span class="t">TArg</span> <span class="i">GetArg</span><span class="p">();</span>
 <span class="p">}</span>
@@ -264,119 +266,113 @@ in our macro classes:</p>
     <span class="k">public</span> <span class="i">Lolrus</span><span class="p">(</span><span class="t">int</span> <span class="i">numBuckets</span><span class="p">)</span> <span class="p">{</span> <span class="i">NumBuckets</span> <span class="o">=</span> <span class="i">numBuckets</span><span class="p">;</span> <span class="p">}</span>
 
     <span class="t">int</span> <span class="t">IMatchable</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">.</span><span class="i">GetArg</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="i">NumBuckets</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>I&rsquo;m using explicit interface implementation here, because users only really
 care about using <code>GetArg()</code> when they&rsquo;re doing pattern matching. Otherwise,
 there&rsquo;s no reason to make it a visible part of the class&rsquo;s interface.</p>
-
 <h2>The <code>Pattern</code> class</h2>
-
 <p>We&rsquo;ve built back almost up the to the top. The last little bit left is the
 simplest:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">)</span></code></pre>
+</div>
 <p><code>Pattern</code> is simply a static class with one method <code>Match()</code>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="t">Pattern</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">class</span> <span class="t">Pattern</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="t">Match</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="t">T</span> <span class="i">value</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="k">new</span> <span class="t">Matcher</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="i">value</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>The Pattern class exists simply because C# requires all functions to be in a
 class. However, constructing Matchers through <code>Match&lt;T&gt;</code> does have one nice
 side-effect: it lets the compiler infer the type parameter so you don&rsquo;t have to
 explicitly write it out like you would when calling a constructor.</p>
-
 <p>With this little bit in place, we&rsquo;ve reached our goal of being able to get
 something like matching discriminated unions working in C#:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolcat</span><span class="p">,</span> <span class="t">string</span><span class="o">&gt;</span><span class="p">(</span><span class="i">c</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="o">+</span> <span class="i">c</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolrus</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span>   <span class="p">(</span><span class="i">b</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="o">+</span> <span class="i">b</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
-    <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span>       <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span>
-</code></pre></div>
+    <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span>       <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span></code></pre>
+</div>
 <h2>But wait, that&rsquo;s not all!</h2>
-
 <p>This is only the beginning of what we can do with our little matching class.
 Here are a few other things the full code lets you do:</p>
-
 <h3>Extracting multiple fields</h3>
-
 <p>In the example above, we only pull a single field out of a given case. F#
 supports multiple fields as well, as does the Matcher class (up to four):</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">Case</span><span class="o">&lt;</span><span class="t">Loldog</span><span class="p">,</span> <span class="t">string</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="p">((</span><span class="i">caption</span><span class="p">,</span> <span class="i">dogs</span><span class="p">)</span> <span class="o">=&gt;</span>
-    <span class="i">Print</span><span class="p">(</span><span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="i">caption</span> <span class="o">+</span> <span class="s">&quot;&#39;, says &quot;</span> <span class="o">+</span> <span class="i">dogs</span> <span class="o">+</span> <span class="s">&quot; hotdogs&quot;</span><span class="p">)).</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">Case</span><span class="o">&lt;</span><span class="t">Loldog</span><span class="p">,</span> <span class="t">string</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="p">((</span><span class="i">caption</span><span class="p">,</span> <span class="i">dogs</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="i">Print</span><span class="p">(</span><span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="i">caption</span> <span class="o">+</span> <span class="s">&quot;&#39;, says &quot;</span> <span class="o">+</span> <span class="i">dogs</span> <span class="o">+</span> <span class="s">&quot; hotdogs&quot;</span><span class="p">)).</span></code></pre>
+</div>
 <h3>A default case</h3>
-
 <p>It&rsquo;s also useful to have a <code>default</code>-like case that will always succeed if no
 other case matches:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolrus</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="p">(</span><span class="i">b</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="o">+</span> <span class="i">buckets</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
-    <span class="i">Default</span>           <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">));</span>
-</code></pre></div>
+    <span class="i">Default</span>           <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">));</span></code></pre>
+</div>
 <h3>Equality matching</h3>
-
 <p>Another way to match values is if they are equal. We can do this generically
 since <code>Equals()</code> is part of the .NET framework.</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">).</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">).</span>
     <span class="i">Case</span><span class="p">(</span><span class="s">&quot;not&quot;</span><span class="p">,</span>      <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;should not match&quot;</span><span class="p">)).</span>
-    <span class="i">Case</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;should match&quot;</span><span class="p">));</span>
-</code></pre></div>
+    <span class="i">Case</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;should match&quot;</span><span class="p">));</span></code></pre>
+</div>
 <p>The example here uses strings, but this works with any type as long as it
 implements <code>Equals()</code> correctly.</p>
-
 <h3>Matching on any predicate</h3>
-
 <p>As you can see, there are a bunch of different ways users may want to match
 data, and it&rsquo;s futile to try to bake all of them into the class. The most
 obvious solution then is to simply let users pass in an arbitrary predicate (a
 predicate is a function that returns a bool) and have the match succeed based
 on that:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="n">123</span><span class="p">).</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="n">123</span><span class="p">).</span>
     <span class="i">Case</span><span class="p">(</span><span class="i">value</span> <span class="o">=&gt;</span> <span class="i">value</span> <span class="o">&lt;</span> <span class="n">100</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;less than 100&quot;</span><span class="p">)).</span>
-    <span class="i">Case</span><span class="p">(</span><span class="i">value</span> <span class="o">=&gt;</span> <span class="i">value</span> <span class="o">&gt;</span> <span class="n">100</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;greater than 100&quot;</span><span class="p">));</span>
-</code></pre></div>
+    <span class="i">Case</span><span class="p">(</span><span class="i">value</span> <span class="o">=&gt;</span> <span class="i">value</span> <span class="o">&gt;</span> <span class="n">100</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;greater than 100&quot;</span><span class="p">));</span></code></pre>
+</div>
 <p>You&rsquo;ll note that in the final code below, all of the other matching types are
 built on top of this.</p>
-
 <h3>Returning a value</h3>
-
 <p>F#, unlike C#, treats everything as an expression, even flow control
 statements like <code>if/then</code> and <code>match</code>. This means a match can return a result:</p>
-<div class="highlight"><pre><code class="language-fsharp" data-lang="fsharp"><span></span><span class="c">// F#:</span>
+<div class="highlight">
+<pre><code class="language-fsharp" data-lang="fsharp"><span class="c">// F#:</span>
 <span class="k">let</span> <span class="i">isTwo</span> <span class="o">=</span> <span class="k">match</span> <span class="n">2</span> <span class="k">with</span>
             <span class="o">|</span> <span class="n">2</span> <span class="o">-&gt;</span> <span class="k">true</span>
-            <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="k">false</span>
-</code></pre></div>
+            <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="k">false</span></code></pre>
+</div>
 <p>In C#, you&rsquo;d have to do an assignment:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="c">// C#:</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="c">// C#:</span>
 <span class="t">bool</span> <span class="i">isTwo</span><span class="p">;</span>
 <span class="k">switch</span> <span class="p">(</span><span class="n">2</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">case</span> <span class="n">2</span><span class="p">:</span>  <span class="i">isTwo</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
     <span class="k">default</span><span class="p">:</span> <span class="i">isTwo</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Our pattern matching class can do this too, even within C#:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">bool</span> <span class="i">isTwo</span> <span class="o">=</span> <span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="o">&lt;</span><span class="t">int</span><span class="p">,</span> <span class="t">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">2</span><span class="p">).</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">bool</span> <span class="i">isTwo</span> <span class="o">=</span> <span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="o">&lt;</span><span class="t">int</span><span class="p">,</span> <span class="t">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">2</span><span class="p">).</span>
                  <span class="i">Case</span><span class="p">(</span><span class="n">2</span><span class="p">,</span>  <span class="k">true</span><span class="p">).</span>
-                 <span class="i">Default</span><span class="p">(</span> <span class="k">false</span><span class="p">);</span>
-</code></pre></div>
+                 <span class="i">Default</span><span class="p">(</span> <span class="k">false</span><span class="p">);</span></code></pre>
+</div>
 <h2>Conclusion</h2>
-
 <p>They say you never know your home until you travel abroad. I&rsquo;ve been enjoying F#
 a lot, but C# still feels more comfortable to me. However, it&rsquo;s always useful to
 see how other languages solve problems, and see what new techniques can be
 brought home with you. While our pattern matching class isn&rsquo;t quite as clean in
-C# as it is in F#, I think it&rsquo;s a useful tool in its own right.</p>
-
-<div class="update">
+C# as it is in F#, I think it&rsquo;s a useful tool in its own right.</p><div class="update">
 <p><em>Update 2021/10/05:</em> Moved it to <a href="https://github.com/munificent/pattern_matching">GitHub</a>.</p>
 </div>
-
 <p>If you&rsquo;d like to play with it, <a href="https://github.com/munificent/pattern_matching">I&rsquo;ve put it up on GitHub</a>. Have fun!</p>
   <div class="comments">
     <div id="disqus_thread"></div>

@@ -37,20 +37,18 @@
 <div class="update">
 <p><em>Update 2011/09/9:</em> Moved JASIC from bitbucket to github.</p>
 </div>
-
 <p>I just put the finishing touches on a tiny little interpreter project: Jasic.
 Jasic is a dialect of the <a href="http://en.wikipedia.org/wiki/Dartmouth_BASIC">original BASIC</a> programming language. It lacks
 functions and scope, but it&rsquo;s a usable language. Even on an old Apple IIe, it
 was powerful enough to get me hooked on coding for life. Also, you can <a href="http://github.com/munificent/jasic/blob/master/sample/mandel.jas">draw a
 Mandelbrot set</a> with it.</p>
-
 <p>I wanted to see if I could fit a complete interpreter in a single readable
 Java file. It worked out better than expected, so I went ahead and cleaned up
 the code and commented the hell out of it. If you&rsquo;ve always wanted to learn
 more about interpreters, now you&rsquo;ve got a little primer.</p>
-
 <p>Here&rsquo;s a little code to give you a flavor of the language:</p>
-<div class="highlight"><pre><code class="language-jasic" data-lang="jasic"><span class="c">&#39; Initialize the loop counter.</span>
+<div class="highlight">
+<pre><code class="language-jasic" data-lang="jasic"><span class="c">&#39; Initialize the loop counter.</span>
 <span class="i">count</span> <span class="o">=</span> <span class="n">10</span>
 
 <span class="c">&#39; Stop looping if we&#39;re done.</span>
@@ -61,8 +59,8 @@ more about interpreters, now you&rsquo;ve got a little primer.</p>
 <span class="c">&#39; Decrement and restart the loop.</span>
 <span class="i">count</span> <span class="o">=</span> <span class="i">count</span> <span class="o">-</span> <span class="n">1</span>
 <span class="k">goto</span> <span class="i">top</span>
-<span class="a">end:</span>
-</code></pre></div>
+<span class="a">end:</span></code></pre>
+</div>
 <p>Old school! All of the code is <a href="http://github.com/munificent/jasic/blob/master/com/stuffwithstuff/Jasic.java">right here in Jasic.java</a>. There&rsquo;s also a
 <a href="http://github.com/munificent/jasic/blob/master/README">README</a> to help get you started. What are you waiting for?</p>
   <div class="comments">

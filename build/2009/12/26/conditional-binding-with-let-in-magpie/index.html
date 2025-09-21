@@ -38,59 +38,59 @@
 expect to see: <code>while</code>, <code>if</code>, and <code>for</code> (although they&rsquo;re a little different
 from their C counterparts). However, Magpie has one other control flow construct
 you probably haven&rsquo;t seen before: <code>let then</code>, the conditional binder.</p>
-
 <h2>A motivating example or two</h2>
-
 <p>Before I explain it, let&rsquo;s go over a couple of examples in other languages where
 it would be useful. First up: converting strings to other types. In C#, you&rsquo;d do
 something like:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">int</span> <span class="i">value</span> <span class="o">=</span> <span class="i">Int32</span><span class="p">.</span><span class="i">Parse</span><span class="p">(</span><span class="s">&quot;1234&quot;</span><span class="p">);</span>
-<span class="c">// Do something with value...</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">int</span> <span class="i">value</span> <span class="o">=</span> <span class="i">Int32</span><span class="p">.</span><span class="i">Parse</span><span class="p">(</span><span class="s">&quot;1234&quot;</span><span class="p">);</span>
+<span class="c">// Do something with value...</span></code></pre>
+</div>
 <p>That&rsquo;s fine and dandy except that the parse can fail and throw an exception.
 If you don&rsquo;t want to deal with the exception, the easier solution is to use
 the conveniently provided <code>TryParse</code> function:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">int</span> <span class="i">value</span><span class="p">;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">int</span> <span class="i">value</span><span class="p">;</span>
 <span class="k">if</span> <span class="p">(</span><span class="i">Int32</span><span class="p">.</span><span class="i">TryParse</span><span class="p">(</span><span class="s">&quot;1234&quot;</span><span class="p">,</span> <span class="k">out</span> <span class="i">value</span><span class="p">))</span>
 <span class="p">{</span>
     <span class="c">// Do something with value...</span>
 
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>That&rsquo;s the idiomatic way to convert strings to ints in C#. Aside from the
 cumbersome out parameter, what&rsquo;s lame about this code is that <code>value</code> is scoped
 <em>outside</em> of the <code>if</code> block where we actually want to use it. If the conversion
 fails, we have this weird unassigned <code>value</code> variable floating around.</p>
-
 <p>Here&rsquo;s another example: downcasting. Let&rsquo;s say we have a variable of type <code>Base</code>
 and we want to downcast it to a <code>Derived</code> subclass. The normal way to do that
 is:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">Derived</span> <span class="i">derived</span> <span class="o">=</span> <span class="i">someBase</span> <span class="k">as</span> <span class="t">Derived</span><span class="p">;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">Derived</span> <span class="i">derived</span> <span class="o">=</span> <span class="i">someBase</span> <span class="k">as</span> <span class="t">Derived</span><span class="p">;</span>
 <span class="k">if</span> <span class="p">(</span><span class="i">derived</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="c">// Do something with derived...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>A third and final example: looking up a value in a dictionary. If you aren&rsquo;t
 sure the key exists, the typical solution is:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="t">Dictionary</span><span class="o">&lt;</span><span class="t">string</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="i">dict</span> <span class="o">=</span> <span class="c">// Get dictionary...</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="t">Dictionary</span><span class="o">&lt;</span><span class="t">string</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="i">dict</span> <span class="o">=</span> <span class="c">// Get dictionary...</span>
 
 <span class="t">int</span> <span class="i">value</span><span class="p">;</span>
 <span class="k">if</span> <span class="p">(</span><span class="i">dict</span><span class="p">.</span><span class="i">TryGetValue</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">,</span> <span class="k">out</span> <span class="i">value</span><span class="p">))</span>
 <span class="p">{</span>
     <span class="c">// Do something with value...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>You&rsquo;re seeing the pattern by now. All of these have the exact same structure.
 We have some operation that may return a value or may fail for some reason. If
 it succeeds, we want to do something with the returned value.</p>
-
 <h2>Let</h2>
-
 <p>The <code>let</code> keyword in Magpie lets you implement that pattern directly, without
 the gross scoping issues or output parameters. The above examples in Magpie look
 like this:</p>
-<div class="highlight"><pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Parse:</span>
+<div class="highlight">
+<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Parse:</span>
 <span class="k">let</span> <span class="i">value</span> <span class="o">&lt;-</span> <span class="s">&quot;1234&quot;</span><span class="p">.</span><span class="i">AsInt</span> <span class="k">then</span>
     <span class="c">// Do something with value...</span>
 <span class="k">end</span>
@@ -103,42 +103,39 @@ like this:</p>
 <span class="c">// Look up in dictionary:</span>
 <span class="k">let</span> <span class="i">value</span> <span class="o">&lt;-</span> <span class="i">Find</span> <span class="p">(</span><span class="i">dict</span><span class="p">,</span> <span class="s">&quot;key&quot;</span><span class="p">)</span> <span class="k">then</span>
     <span class="c">// Do something with value.</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>The way this works is pretty simple. Magpie has an <code>Option</code> type, which is the
 same as F#&rsquo;s <a href="http://msdn.microsoft.com/en-us/library/dd233245%28VS.100%29.aspx">option</a> or Haskell&rsquo;s <a href="http://en.wikibooks.org/wiki/Haskell/Hierarchical_libraries/Maybe">Maybe</a>. A <code>let</code> expression looks like:</p>
-<div class="highlight"><pre><code class="language-magpie1" data-lang="magpie1"><span class="k">let</span> <span class="x">&lt;variable&gt;</span> <span class="o">&lt;-</span> <span class="x">&lt;expression&gt;</span> <span class="k">then</span> <span class="x">&lt;body&gt;</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie1" data-lang="magpie1"><span class="k">let</span> <span class="x">&lt;variable&gt;</span> <span class="o">&lt;-</span> <span class="x">&lt;expression&gt;</span> <span class="k">then</span> <span class="x">&lt;body&gt;</span></code></pre>
+</div>
 <p>The <code>&lt;expression&gt;</code> is expected to return an <code>Option</code> value. If it evaluates to
 <code>Some</code>, then the value is extracted and assigned to <code>&lt;variable&gt;</code> and the
 <code>&lt;body&gt;</code> is evaluated. If <code>None</code> is returned instead, the variable isn&rsquo;t bound
 and the body is skipped. Pretty straightforward.</p>
-
 <p>What&rsquo;s nice about this syntax is that the bound variable is scoped to the body
 of the <code>let</code> expression and disappears afterwards. This means that if the
 expression fails and returns <code>None</code>, the variable disappears entirely. It&rsquo;s
 syntactically impossible to access that variable when it has no value.</p>
-
 <h2>What else?</h2>
-
 <p>Because <code>let</code> is essentially another kind of <code>if</code>, it also supports an <code>else</code>
 clause:</p>
-<div class="highlight"><pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Parse:</span>
+<div class="highlight">
+<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Parse:</span>
 <span class="k">let</span> <span class="i">value</span> <span class="o">&lt;-</span> <span class="s">&quot;1234&quot;</span><span class="p">.</span><span class="i">AsInt</span> <span class="k">then</span>
     <span class="c">// Do something with value...</span>
 <span class="k">else</span>
     <span class="i">Print</span> <span class="s">&quot;Couldn&#39;t parse string.&quot;</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <h2>A bit on naming</h2>
-
 <p>I probably spend more time than I should thinking about the minutia of language
 syntax. I chose <code>let</code> because to me that implies <em>permission</em>: it <em>may</em> &ldquo;let&rdquo;
 you do something or it may not, which lines up with the conditional nature of
 the construct. Using <code>then</code> to separate the expression from the body both
 reinforces that this is an &ldquo;if-like&rdquo; conditional block and lets me reuse an
 existing keyword.</p>
-
 <p>Of course, programmers of the ML-family will likely recognize <code>let</code> as a poor
 man&rsquo;s pattern matching. This isn&rsquo;t far from the truth, but I do think Magpie&rsquo;s
 &ldquo;light&rdquo; version is kind of nice in its own regard.</p>

@@ -40,28 +40,23 @@ systems are prone to enraging the <a href="http://lambda-the-ultimate.org/node/4
 ones</a>. And doing anything that <a href="http://www.2ality.com/2011/09/google-dart.html">approaches JavaScript</a> is bound to
 infuriate a set of people that are passionately devoted to JS and The Way of the
 Prototype.</p>
-
 <p>So, really, <a href="https://dart.dev/">Dart</a> was a perfect storm. It&rsquo;s been strangely fun watching the
 complaints, critiques, feature requests and condemnation roll in. One particular
 issue has incited way more attention than I expected given its significance in
 the grand scheme of things: semicolons.</p>
-
 <p>Dart requires semicolons as statement terminators just like C, C++, Java, and C#
 do. (And JavaScript unless you&rsquo;re <strike>brave</strike> insane enough to use
 <abbr title="Automatic Semicolon Insertion">ASI</abbr>.) Making them optional is
 currently <a href="https://github.com/dart-lang/sdk/issues/34">the second-most starred bug</a> on the tracker. It&rsquo;s one
 of the most frequently discussed points on <a href="http://www.reddit.com/r/programming/comments/l6uwv/dart_programming_language/">this insanely long reddit
 thread</a>.</p>
-
 <p>Whatever your opinion of them, you have to admit they&rsquo;re a relatively innocuous
 language feature. Making them optional has very little impact on your code, and
 there isn&rsquo;t anything you can express without them that you couldn&rsquo;t with (and
 vice versa). What&rsquo;s the big deal?</p>
-
 <p>Here&rsquo;s my theory: <strong>semicolons are a shibboleth to tell which language camp the
 designers come from.</strong> If you don&rsquo;t know the term, &ldquo;<a href="http://en.wikipedia.org/wiki/Shibboleth">shibboleth</a>&rdquo; comes from
 this passage in the Old Testament:</p>
-
 <blockquote>
 <p>Gilead then cut Ephraim off from the fords of the Jordan, and whenever
 Ephraimite fugitives said, &lsquo;Let me cross,&rsquo; the men of Gilead would ask, &lsquo;Are
@@ -70,74 +65,62 @@ you an Ephraimite?&rsquo; If he said, &lsquo;No,&rsquo; they then said, &lsquo;V
 pronounce it, then they would seize him and kill him by the fords of the
 Jordan. Forty-two thousand Ephraimites fell on this occasion.</p>
 </blockquote><p class="cite">Judges 12:5-6, NJB</p>
-
 <h2>The two camps</h2>
-
 <p>I hate generalizations, and I particularly hate dichotomies, so I apologize for
 doing both right here. There is a huge amount of untruth to what I&rsquo;m about to
 say, but I hope enough truth for this to be worth your time. Here&rsquo;s two opposing
 philosophies for programming languages:</p>
-
 <ol>
-<li><p>A language is a tool to tame the complexity of the problems we&rsquo;re solving.
+<li>
+<p>A language is a tool to tame the complexity of the problems we&rsquo;re solving.
 It should protect me from my fallibility&mdash;and more importantly the
 fallibility of the other jack-asses on my team. The more it can help me
 control things and prevent problems, the better. <em>Good fences make good
-neighbors.</em></p></li>
-<li><p>A language is a tool for expressing my ideas. It should amplify my
+neighbors.</em></p>
+</li>
+<li>
+<p>A language is a tool for expressing my ideas. It should amplify my
 creativity&mdash;and that of the smart people writing the cool libraries I use.
 The fewer restrictions it gives me, the better. <em>We&rsquo;re all consenting adults
-here.</em></p></li>
+here.</em></p>
+</li>
 </ol>
-
 <p>I think you can divide languages pretty effectively into those two camps. The
 former has the &ldquo;serious business&rdquo; languages: Fortran, C++, Java, C#. The latter
 gets you the hipster languages: JavaScript, Ruby, Python, Lisp.</p>
-
 <p>Which camp is Dart in? Usually the presence of a static type system alone is
 enough to toss it into the first camp, but Dart&rsquo;s type system is so&hellip;
 <em>optional</em>, that it sort of hovers in the <a href="http://en.wikipedia.org/wiki/Uncanny_valley">uncanny valley</a> between static and
 dynamic.</p>
-
 <p>If you&rsquo;re trying to figure out whether you should give a damn about Dart, you&rsquo;ll
 want to know if its philosophy lines up with yours. You can look at the language
 today, but it&rsquo;s hard to know how much that tells you since the it&rsquo;s clearly not
 done yet.</p>
-
 <h2>Semicolons</h2>
-
 <p>So you ask the shibboleth question: &ldquo;mandatory semicolons?&rdquo;</p>
-
 <p>By itself, semicolons mean little to the language, but almost all of the second
 camp languages make them optional or eschew them completely. They say
 punctuation is ugly, makes the code less beautiful, and is needless boilerplate
 since they are almost always at the ends of lines anyway. Requiring them makes
 the programmer do mindless gruntwork.</p>
-
 <p>But a &ldquo;serious business&rdquo; programmer likes them: they are simple and unambiguous
 to parse. You don&rsquo;t have to worry about some other guy&rsquo;s weird coding style
 making it impossible for you to understand their code. We&rsquo;ve been using
 semicolons for years, why stop now? They&rsquo;re safe and familiar.</p>
-
 <p>Asking which way Dart is going to go with semicolons is, I think, a way of
 asking which group of programmers the language wants to cater to. Either choice
 carries an implied signal about how other choices in the language will likely be
 made: will it favor individual expressiveness over group consistency? Freedom
 over safety?</p>
-
 <h2>So how does Dart pronounce it?</h2>
-
 <p>So the question is, what will Dart do?</p>
-
 <p>I honestly have no idea. I&rsquo;m not one of the designers, and I think they may be
 split on the issue. I have my own personal preference, but that carries about as
 much weight as yours. Even if they were to make semicolons optional, I don&rsquo;t
 think that necessarily says much about your or my other pet features being
 included.</p>
-
 <p>I think Dart really is trying to inhabit the ground between these two camps, so
 each attempt to pull in one direction or the other will be handled individually.</p>
-
 <p>But, like everyone else, I hope they decide to go with <em>my</em> preference, which is
 of course the right one.</p>
   <div class="comments">

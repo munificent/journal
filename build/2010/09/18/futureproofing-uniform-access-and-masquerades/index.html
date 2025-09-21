@@ -35,31 +35,28 @@
     <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
 </h4>
 <p>Take a look at this Java code:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">class</span> <span class="t">Person</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">class</span> <span class="t">Person</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">String</span> <span class="i">name</span><span class="p">;</span>
   <span class="k">public</span> <span class="t">int</span> <span class="i">age</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Does it make you cringe a little bit? If so, I&rsquo;m guessing it&rsquo;s because those
 fields aren&rsquo;t wrapped in nice getters and setters.</p>
-
 <p>But why do that? What if we want them to be mutable and don&rsquo;t have any
 validation or logic to perform when they change? Isn&rsquo;t simpler better? The
 answer, of course, is that just because we don&rsquo;t need that <em>now</em>, that doesn&rsquo;t
 mean we won&rsquo;t need them <em>later</em>.</p>
-
 <p>I think of this kind of speculative defensive coding as <em>future-proofing</em>, and
 it drives me crazy that I have to do it. Eventually, this post will get around
 to being about <a href="https://magpie-lang.org/">Magpie</a>, but I hope that there is food for thought here even
 if you never take an interest in that little language.</p>
-
 <p>Before we really get going, let me show you a couple of other common
 future-proofing practices I see.</p>
-
 <h3>Hiding constructors behind factories</h3>
-
 <p>Java loves this one:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">PersonFactory</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">PersonFactory</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Person</span> <span class="i">create</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">Person</span><span class="p">();</span>
   <span class="p">}</span>
@@ -68,16 +65,15 @@ future-proofing practices I see.</p>
 <span class="t">void</span> <span class="i">doSomething</span><span class="p">(</span><span class="t">PersonFactory</span> <span class="i">factory</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">Person</span> <span class="i">person</span> <span class="o">=</span> <span class="i">factory</span><span class="p">.</span><span class="i">create</span><span class="p">();</span>
   <span class="c">// ...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Assuming you can dodge the infinite regress of <code>FactoryFactoryFactories</code>, this
 helps abstract out the places where you call a constructor directly. Wrapping
 that behind a factory lets you swap out the concrete class being constructed.</p>
-
 <h3>Hiding classes behind interfaces</h3>
-
 <p>The pattern looks like this (here in C#, where its most applicable):</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">interface</span> <span class="t">IPerson</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">interface</span> <span class="t">IPerson</span>
 <span class="p">{</span>
   <span class="t">string</span> <span class="i">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
   <span class="t">int</span>    <span class="i">Age</span>  <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -92,51 +88,40 @@ that behind a factory lets you swap out the concrete class being constructed.</p
 <span class="k">void</span> <span class="i">DoSomethingWithPerson</span><span class="p">(</span><span class="t">IPerson</span> <span class="i">person</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="c">// ...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>All of your concrete classes get squirrelled away and you only ever visibly deal
 with the interface types. I&rsquo;ve seen entire codebases designed around this.</p>
-
 <p>This lets us swap out our use of <code>Person</code> with some other concrete class that
 implements the same interface. This can be really helpful for replacing concrete
 classes with <a href="http://en.wikipedia.org/wiki/Mock_object">mocks</a> for unit testing, which can otherwise be tricky in C# and
 C++ where methods default to non-virtual.</p>
-
 <h2>Why do we do this?</h2>
-
 <p>If all of this seems like a pain in the ass with little benefit,
 congratulations, you&rsquo;ve just earned your &ldquo;Feel Superior to Enterprise OOP
 Programmers&rdquo; merit badge. Your complimentary Ruby T-shirt should be arriving in
 the mail shortly. It <em>is</em> a pain. Actually, it&rsquo;s worse than a pain, it&rsquo;s
 <em>boring</em>. Boring work is a cardinal sin in programming&mdash;it indicates something
 that the computer <em>should</em> be doing but isn&rsquo;t.</p>
-
 <p>So why do we end up writing this kind of code all the time? There are plenty of
 other speculative things we could do now that we manage to shrug off by claiming
 <a href="http://c2.com/xp/YouArentGonnaNeedIt.html">YAGNI</a>. What&rsquo;s special about the examples I listed?</p>
-
 <p>Let&rsquo;s say we <em>don&rsquo;t</em> futureproof. Say we use public fields everywhere. Then
 later we realize we do need to validate the field. What will we have to do to
 make that change?</p>
-
 <h2>Depth not volume</h2>
-
 <p>What&rsquo;s easier: changing a hundred lines of code in one file, or changing one
 line of code in a hundred files? The former you can do before lunch. The latter
 means you might need to call a meeting, coordinate with teams, slap some
 <a href="http://download.oracle.com/javase/1.5.0/docs/guide/javadoc/deprecation/deprecation.html">deprecated annotations</a> on things, plan a release, aww hell just give up.</p>
-
 <p>Making non-local changes <em>hurts</em>. It hurts badly enough that a lot of our core
 ideas about good software engineering, things like coupling and cohesion, exist
 in part to localize stuff to minimize that hurt.</p>
-
 <p>We futureproof not to minimize the <em>amount</em> of change we&rsquo;ll need to do in the
 future but to minimize the <em>width</em> of change we&rsquo;ll have to do. Ask yourself
 this: How often do you apply defensive practices inside the bodies of methods
 compared to in the public signature of a type?</p>
-
 <h2>The uniform access principle</h2>
-
 <p>Now we get to the heart of the problem. What&rsquo;s special about these examples that
 causes them to lead to <em>wide</em> changes? The key issue is that making any of the
 changes described touches <em>every callsite</em>. If you change a field to a getter in
@@ -144,161 +129,146 @@ Java, you have to add parentheses every place that field is used. If you hide a
 constructor behind a factory, you&rsquo;ll be grepping for every <code>new</code> in your
 codebase. In C#, if you decide to replace every mention of a class with an
 interface, you&rsquo;ll at the very least have to change the name.</p>
-
 <p>The problem here is that these examples violate what Bertrand Meyer calls the
 <a href="http://en.wikipedia.org/wiki/Uniform_access_principle">uniform access principle</a>. In Java, accessing a field is fundamentally
 syntactically different from calling a getter. If you go from one to the other,
 each callsite has to change. According to Meyer, that&rsquo;s because access to fields
 and calculated values isn&rsquo;t <em>uniform</em>.</p>
-
 <h3>Properties</h3>
-
 <p>Most other languages in wide use today have addressed that problem. Python,
 Ruby, C#, and Javascript support <em>properties</em>: things that <em>look</em> like fields
 but behave like functions. This means you can transparently switch between the
 two without affecting every callsite. You no longer need to futureproof them.
 Java, as always, is like Chunk in The Goonies, struggling to keep up with the
 rest of the gang.</p>
-
 <p>(Caveat: fields and properties are <em>source</em> compatible in C#, but not <em>binary</em>
 compatible, which is why you&rsquo;ll see many C# programmers always wrapping fields
 in properties.)</p>
-
 <h3>Constructors and factories</h3>
-
 <p>One of the things that got me thinking about this idea was <a href="http://blog.hackensplat.com/2010/09/construct-something-else-c.html">this recent
 post</a>. The author painted himself into a corner by not futureproofing: he
 was calling a constructor directly but now needed it to construct a different
 class. Worse, the callsite was outside of code he had control over.</p>
-
 <p>Meyer&rsquo;s idea of uniform access to fields is really a small piece of a larger
 idea: Can users define their own abstractions that are syntactically identical
 to built-in behavior? Can we swap out default language-provided behavior with
 our own logic without having to change the calling convention?</p>
-
 <p>Unfortunately, this is a case where the answer is &ldquo;no.&rdquo; In all of the dominant
 static OOP languages, calling <code>new</code> always returns an instance of a fixed class.
-There&rsquo;s no way to replace it with our own logic. We&rsquo;re stuck with factories.</p>
-
-<div class="update">
-<p><em>Update 2021/10/16:</em> <a href="https://dart.dev">Dart</a>, which was
+There&rsquo;s no way to replace it with our own logic. We&rsquo;re stuck with factories.</p><div class="update"><p><em>Update 2021/10/16:</em> <a href="https://dart.dev">Dart</a>, which was
 created a couple of years after I wrote this post allows you to define
 <a href="https://dart.dev/guides/language/language-tour#factory-constructors">
 &ldquo;factory&rdquo; constructors</a> that don&lsquo;t implicitly create a new
 instance of the containing class.</p></div>
-
 <h3>Interfaces and classes</h3>
-
 <p>The other example is a messier problem. What does it mean to later replace
 references to a class with references to an interface? In C#, at the least
 you&rsquo;ll be adding <code>I</code> to the name everywhere, but there are likely other changes
 involved too. Calls to static methods on the class will need to be refactored,
 and any place where you&rsquo;re calling a constructor will need to be changed
 somehow. This is a sticky problem to get tangled up in after the fact.</p>
-
 <p>Again, C# and simliar languages don&rsquo;t give you much help here. Of course,
 dynamic languages like Ruby and Python <em>do</em> have you covered. If there&rsquo;s no type
 annotations to begin with, duck typing lets you swap things out all you want. Go
 to town!</p>
-
 <h2>How Magpie approaches this (or how it <em>will</em> once it&rsquo;s implemented)</h2>
-
 <p>I look at the dynamic solution as throwing out the baby with the bathwater. I
 really like type checking. It sucks to have to discard it completely just to
 avoid having to do some boring future-proofing. Can we keep the type checking
 and still solve the above two problems? I think so.</p>
-
 <h3>Constructors and factories</h3>
-
 <p>Constructors are the easy one. Magpie has no special syntax for constructors.
 <code>new</code> is just a method you call on a class object:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">bob</span> <span class="o">=</span> <span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">bob</span> <span class="o">=</span> <span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>If you later decide you need that to construct a different type, you can
 always swap out the method:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="t">Person</span> <span class="i">defineMethod</span><span class="p">(</span><span class="s">&quot;rawNew&quot;</span><span class="p">,</span> <span class="t">Person</span> <span class="i">getMethod</span><span class="p">(</span><span class="s">&quot;new&quot;</span><span class="p">))</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="t">Person</span> <span class="i">defineMethod</span><span class="p">(</span><span class="s">&quot;rawNew&quot;</span><span class="p">,</span> <span class="t">Person</span> <span class="i">getMethod</span><span class="p">(</span><span class="s">&quot;new&quot;</span><span class="p">))</span>
 <span class="k">def</span> <span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">)</span>
   <span class="c">// Don&#39;t want to create a person...</span>
   <span class="t">Dude</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>To be honest, though, that&rsquo;s kinda gross. Try not to do that. A better solution
 really is to use a factory here&mdash;some object that you can swap out that will
 create people. Fortunately, Magpie makes this a bit easier too. A class <em>is</em> a
 factory:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">makeSomeone</span><span class="p">(</span><span class="i">name</span><span class="p">,</span> <span class="i">factory</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">makeSomeone</span><span class="p">(</span><span class="i">name</span><span class="p">,</span> <span class="i">factory</span><span class="p">)</span>
   <span class="i">factory</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="i">makeSomeone</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="t">Person</span><span class="p">)</span> <span class="c">// Makes a person.</span>
-<span class="i">makeSomeone</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="t">Hero</span><span class="p">)</span>   <span class="c">// Makes a hero.</span>
-</code></pre></div>
+<span class="i">makeSomeone</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="t">Hero</span><span class="p">)</span>   <span class="c">// Makes a hero.</span></code></pre>
+</div>
 <p>Since classes are first, uh, class, you can just pass them around and use them
 like factories as-is. Because they&rsquo;re also instances of a class (their
 metaclass), they can even implement interfaces:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">interface</span> <span class="t">NamedFactory</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">interface</span> <span class="t">NamedFactory</span>
   <span class="i">new</span><span class="p">(</span><span class="i">name</span> <span class="t">String</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Now any class that has a constructor that takes a string will implicitly
 implement that interface. You get type-safe factories without having to actually
 create separate special factory classes.</p>
-
 <h3>Classes and mocks</h3>
-
 <p>The other example problem is a little trickier. You have a concrete class that
 you&rsquo;re using everywhere and you realize later that you actually need to swap it
 out. One solution is to subclass the concrete class but that always feels dirty
 to me in Java. If I&rsquo;m creating a mock class, I don&rsquo;t actually want to reuse any
 of the code from the base class, so why am I inheriting it?</p>
-
 <p>Instead, Magpie has (will have) a relatively simple feature called
 <em>masquerades</em>. Say we have a concrete class like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">Person</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Person</span>
   <span class="k">this</span> <span class="p">(</span><span class="i">name</span><span class="p">)</span>
     <span class="k">this</span> <span class="i">name</span> <span class="o">=</span> <span class="i">name</span>
   <span class="k">end</span>
 
   <span class="i">greet</span><span class="p">()</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hi, I&#39;m &quot;</span> <span class="o">+</span> <span class="i">name</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>We&rsquo;re using it like this:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">greetEachOther</span><span class="p">(</span><span class="i">a</span> <span class="t">Person</span><span class="p">,</span> <span class="i">b</span> <span class="t">Person</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">greetEachOther</span><span class="p">(</span><span class="i">a</span> <span class="t">Person</span><span class="p">,</span> <span class="i">b</span> <span class="t">Person</span><span class="p">)</span>
   <span class="i">a</span> <span class="i">greet</span>
   <span class="i">b</span> <span class="i">greet</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>In most static languages, since <code>greetEachOther</code> is typed to expect instances of
 the concrete <code>Person</code>, the only other option you have is passing in a subclass.
 Magpie gives you another alternative. Here&rsquo;s the class we want to use in place
 of a person:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">Robot</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Robot</span>
   <span class="i">name</span> <span class="o">=</span> <span class="s">&quot;Robot&quot;</span>
 
   <span class="i">greet</span><span class="p">()</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Greetings, fleshy human.&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>This class has no relation to <code>Person</code> in the class hierarchy. But it <em>does</em>
 happen to have all of the methods that <code>Person</code> has. If there was some
 hypothetical <code>IPerson</code> interface that <code>Person</code> implemented, <code>Robot</code> would
 implement it too. Masquerades let us approximate that. You can ask an object of
 one type to masquerade as another. As long as they have compatible methods, it
 will succeed, <em>even though both types are concrete and unrelated</em>:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">robot</span> <span class="o">=</span> <span class="t">Robot</span> <span class="i">new</span>
   <span class="c">// robot&#39;s type is Robot</span>
   <span class="k">var</span> <span class="i">imposter</span> <span class="o">=</span> <span class="i">robot</span> <span class="i">masqueradeAs</span><span class="p">[</span><span class="t">Person</span><span class="p">]</span>
   <span class="c">// imposter&#39;s type is Person but is still a reference to robot</span>
   <span class="c">// and this is now type-safe:</span>
   <span class="i">greetEachOther</span><span class="p">(</span><span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">),</span> <span class="i">imposter</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>As far as I know, this is a novel feature in programming languages, but I think
 it&rsquo;s a useful one. I would definitely appreciate any feedback on it either way,
 though.</p>
-
 <h2>Wrap it up</h2>
-
 <p>One of the ideas I&rsquo;ve been following with the design of Magpie without realizing
 it is to try to maximize this uniform access principle. As much as possible, you
 should be able to write the code <em>today</em> for the problems you have <em>today</em>. You
@@ -306,7 +276,6 @@ shouldn&rsquo;t need to waste time futureproofing. It&rsquo;s the language&rsquo
 flexible enough to handle that. Making sure that the built-in language
 constructs are syntactically compatible with user-defined abstractions is one
 important piece for doing that.</p>
-
 <p>As a nice side-effect, it makes the language more consistent and gives more
 power to users. There&rsquo;s less &ldquo;well the built-in stuff can do that, but you
 can&rsquo;t.&rdquo; That, to me, is a sign of a good language.</p>

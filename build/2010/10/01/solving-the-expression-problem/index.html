@@ -39,47 +39,50 @@ used. One of the key itches I wanted to scratch is something called the
 <a href="http://lambda-the-ultimate.org/node/2232">expression problem</a>. The original formulation of it isn&rsquo;t very helpful to
 someone not writing a compiler, so I&rsquo;ll recast it to something that&rsquo;s a little
 more tangible and relevant to the kind of code you find yourself writing.</p>
-
 <p>The core problem is one of extension: <em>How do you make it easy to add both new
 datatypes and new behaviors to an existing system?</em></p>
-
 <p>Let&rsquo;s say we&rsquo;re writing a document editor. We&rsquo;ve got a few kinds of documents
 that it can work with: Text, Drawings, and Spreadsheets. And we&rsquo;ve got a few
 operations we need to be able to do with a document: draw it to the screen, load
 it, and save it to disc. They form a grid, like so:</p>
-<div class="highlight"><pre><code class="language-asciiart" data-lang="asciiart">            Text       Drawing   Spreadsheet
+<div class="highlight">
+<pre><code class="language-asciiart" data-lang="asciiart">            Text       Drawing   Spreadsheet
         ┌───────────┬───────────┬───────────┐
 draw()  │           │           │           │
         ├───────────┼───────────┼───────────┤
 load()  │           │           │           │
         ├───────────┼───────────┼───────────┤
 save()  │           │           │           │
-        └───────────┴───────────┴───────────┘
-</code></pre></div>
+        └───────────┴───────────┴───────────┘</code></pre>
+</div>
 <p>Each cell in that grid is a chunk of code we&rsquo;ve got to write. We need to draw
 text, load a drawing, save a spreadsheet, etc. All nine combinations are
 functions that need to be implemented or we&rsquo;ll have problems if we&rsquo;re trying to
 deal with documents generically.</p>
-
 <p>There are a couple of questions to answer:</p>
-
 <ol>
-<li><p>How do we organize the code for this?</p></li>
-<li><p>How do we add new columns&mdash;new types of documents?</p></li>
-<li><p>How do we add new rows&mdash;new operations you can perform on any document?</p></li>
-<li><p>How do we ensure all of the cells are implemented?</p></li>
+<li>
+<p>How do we organize the code for this?</p>
+</li>
+<li>
+<p>How do we add new columns&mdash;new types of documents?</p>
+</li>
+<li>
+<p>How do we add new rows&mdash;new operations you can perform on any document?</p>
+</li>
+<li>
+<p>How do we ensure all of the cells are implemented?</p>
+</li>
 </ol>
-
 <p>The way you&rsquo;ll answer those is strongly influenced by your choice of language.
 In many ways language paradigms differ exactly in how they answer just those
 questions. For our purposes, we&rsquo;ll only care about three flavors:</p>
-
 <h2>Statically typed object-oriented languages</h2>
-
 <p>These are the most popular languages on the block today, and include C++, Java,
 and C#. They organize code into classes, and define operations as methods on
 those classes. A Java implementation of the above table looks something like:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">interface</span> <span class="t">Document</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">interface</span> <span class="t">Document</span> <span class="p">{</span>
   <span class="t">void</span> <span class="i">draw</span><span class="p">();</span>
   <span class="t">void</span> <span class="i">load</span><span class="p">();</span>
   <span class="t">void</span> <span class="i">save</span><span class="p">();</span>
@@ -101,46 +104,39 @@ those classes. A Java implementation of the above table looks something like:</p
   <span class="k">public</span> <span class="t">void</span> <span class="i">draw</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* Draw spreadsheet... */</span> <span class="p">}</span>
   <span class="k">public</span> <span class="t">void</span> <span class="i">load</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* Load spreadsheet... */</span> <span class="p">}</span>
   <span class="k">public</span> <span class="t">void</span> <span class="i">save</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* Save spreadsheet... */</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>An object-oriented language answers question 1 by saying that all operations for
 a single type should be lumped together. Everything you can do with a
 spreadsheet&mdash; drawing, loading, and saving&mdash; goes together in the same
 class and typically the same file. The downside is that the operations are
 smeared across the codebase. If you want to see how all file saving is handled,
 you need to look at three files.</p>
-
 <p>Question 2 is easy: you define a new class that implements the interface (or
 inherits from a base class). Object-oriented languages are good at this. You can
 do this even if the base class or interface is in some other library.</p>
-
 <p>Question 3 is a bit tougher. Let&rsquo;s say we decide we want to add support for
 printing. We&rsquo;ll have to add a <code>print()</code> method to our base <code>Document</code> interface
 and then touch every file that implements it. Gross. If <code>Document</code> happens to be
 defined in code we don&rsquo;t control, we&rsquo;re out of luck.</p>
-
 <p>Even worse, it means we tend to put things in classes that don&rsquo;t really belong
 together. Do we really want to mix the logic for rendering and interacting with
 the file system in the same class? There are solutions and patterns to mitigate
 this, but they&rsquo;re complex and awkward (I&rsquo;m looking at you, <a href="http://en.wikipedia.org/wiki/Visitor_pattern">Visitor Pattern</a>).</p>
-
 <p>But at least question 4 is easy. The compiler tells us if we don&rsquo;t fully
 implement an interface, so if we declare that a class implements <code>Document</code> then
 we can be sure that all of the cells in the grid are covered.</p>
-
 <h2>Statically typed functional languages</h2>
-
 <p>Let&rsquo;s see how the other half lives. Languages in the ML family like Haskell and
 F# tend to divide things up differently. Where an object-oriented language
 breaks the grid along column boundaries, a functional language breaks it into
 rows.</p>
-
 <p>This even explains the names of the paradigms: Object-oriented languages place
 emphasis on <em>objects</em> (the columns). Functional languages place emphasis on the
 <em>functions</em> (the rows).</p>
-
 <p>A Caml implementation of our example looks like:</p>
-<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">type</span> <span class="i">document</span>
+<div class="highlight">
+<pre><code class="language-ocaml" data-lang="ocaml"><span class="k">type</span> <span class="i">document</span>
   <span class="o">=</span> <span class="t">Text</span>
   <span class="o">|</span> <span class="t">Drawing</span>
   <span class="o">|</span> <span class="t">Spreadsheet</span>
@@ -155,76 +151,65 @@ emphasis on <em>objects</em> (the columns). Functional languages place emphasis 
 
 <span class="k">fun</span> <span class="i">save</span> <span class="p">(</span><span class="t">Text</span><span class="p">)</span>        <span class="o">=</span> <span class="c">(* Save text doc... *)</span>
   <span class="o">|</span> <span class="i">save</span> <span class="p">(</span><span class="t">Drawing</span><span class="p">)</span>     <span class="o">=</span> <span class="c">(* Save drawing doc... *)</span>
-  <span class="o">|</span> <span class="i">save</span> <span class="p">(</span><span class="t">Spreadsheet</span><span class="p">)</span> <span class="o">=</span> <span class="c">(* Save spreadsheet... *)</span>
-</code></pre></div>
+  <span class="o">|</span> <span class="i">save</span> <span class="p">(</span><span class="t">Spreadsheet</span><span class="p">)</span> <span class="o">=</span> <span class="c">(* Save spreadsheet... *)</span></code></pre>
+</div>
 <p>(At least, I hope that&rsquo;s right. Please let me know what I get wrong.)</p>
-
 <p>The <code>document</code> interface has become an <a href="http://en.wikipedia.org/wiki/Algebraic_data_type">algebraic datatype</a> with cases for
 the different concrete document types. Each operation is a single function
 that uses pattern matching to select behavior appropriate for that type.</p>
-
 <p>In other words, we switch up its answer to the first question. Functions are
 lumped together, with a single <code>draw</code> function having the logic to draw all
 different types of documents together. This keeps different kinds of behavior
 nicely isolated from each other&mdash;these functions could be put into different
 files without any problem.</p>
-
 <p>Question 3 is answered easily: just define a new function somewhere that handles
 all of the different document types. Question 2 is where the pain is. If we add
 a new document type, we have to add a new case to the datatype and touch every
 function in the codebase to handle that case. If the core <code>document</code> datatype is
 defined in code we don&rsquo;t control, we&rsquo;re hosed again.</p>
-
 <p>Again, though, static typing helps us with question 4: the compiler will tell us
 if one of these functions doesn&rsquo;t match a document type. So there&rsquo;s no net win
 between the two, we&rsquo;ve just changed how we slice the same cake. Let&rsquo;s look at a
 third option:</p>
-
 <h2>Dynamically typed languages</h2>
-
 <p>Way on the other side of town are dynamic languages like Python, Ruby and
 Javascript (and their non-OOP progenitors like Scheme, but I&rsquo;ll focus on OOP
 ones here because that&rsquo;s what I&rsquo;m most familiar with). They&rsquo;re super flexible
 and tons of fun to code in. How do they stack up?</p>
-
 <p>The big win is that you can generally organize your code how you want and add
 both new operations and new types with impunity. The normal case is to organize
 things like a static OOP language where all of the operations for a type are
 lumped together into one file.</p>
-
 <p>However, the dynamism gives you more flexibility. If you want to add a new
 operation to existing types, you have the freedom to do so outside of the file
 where that type is defined. You can <a href="http://en.wikipedia.org/wiki/Monkey_patch">add new methods</a> into existing
 classes. This lets you, for example, pull the save/load logic from our document
 classes out into separate <em>files</em> but then mix that back into the original
 <em>classes</em> so they&rsquo;re still as easy to use. No visitor pattern in sight.</p>
-
 <p>So that leaves one last question: How do we ensure all of the squares are
 covered? And that&rsquo;s when the <a href="http://www.sadtrombone.com/">sad trombone</a> comes in. There is no compile-time
 checking for this. The best you can do is write lots of tests and hope you&rsquo;re
 covered.</p>
-
 <p>Call me crazy, but I&rsquo;m not happy with <em>any</em> of these solutions. I want the
 simplicity of defining a class and putting its core operations all in one place.
 At the same time, I want to be able to mix in new methods into classes outside
 of the file where its defined. I want to group some code by row (operation) and
 other code by column (type), each where it makes the most sense.</p>
-
 <p>And once all that&rsquo;s done, I want the language to be smart enough to tell if I
 forgot something or messed something up.</p>
-
 <h2>Magpie = open classes + static checking</h2>
-
 <p>Here&rsquo;s how you accomplish this in Magpie. First, we define an interface that all
 documents will implement:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">interface</span> <span class="t">Document</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">interface</span> <span class="t">Document</span>
   <span class="i">draw</span><span class="p">()</span>
   <span class="i">load</span><span class="p">()</span>
   <span class="i">save</span><span class="p">()</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Then we create some classes that implement them:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">class</span> <span class="t">TextDocument</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">TextDocument</span>
   <span class="i">draw</span><span class="p">()</span> <span class="c">// Draw text doc...</span>
   <span class="i">load</span><span class="p">()</span> <span class="c">// Load text doc...</span>
   <span class="i">save</span><span class="p">()</span> <span class="c">// Save text doc...</span>
@@ -240,64 +225,66 @@ documents will implement:</p>
   <span class="i">draw</span><span class="p">()</span> <span class="c">// Draw spreadsheet...</span>
   <span class="i">load</span><span class="p">()</span> <span class="c">// Load spreadsheet...</span>
   <span class="i">save</span><span class="p">()</span> <span class="c">// Save spreadsheet...</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>So far, this looks pretty much like the static OOP solution with a bit less
 boilerplate. The biggest difference is that there&rsquo;s no explicit <code>implements Document</code> on the classes. In Magpie, if a class has all of the methods that an
 interface requires, then it is automatically considered to implement the
 interface.</p>
-
 <p>When you try to use the concrete class in a place where the interface is
 expected, the interpreter checks to make sure that the class implements it. Note
 that it does this <em>statically</em>, before <code>main()</code> has ever been called, like a
 typical static language.</p>
-
 <h2>Extending a class</h2>
-
 <p>Here is where it gets interesting. Now we decide we want to add printing
 support. In Magpie, classes and interfaces are open for extension. So we can
 just do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">extend</span> <span class="k">interface</span> <span class="t">Document</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">extend</span> <span class="k">interface</span> <span class="t">Document</span>
     <span class="i">print</span><span class="p">()</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>If we try to run the program now, we get type check errors every place we pass a
 concrete document class to something that expects the interface: the classes no
 longer implement <code>Document</code> since they lack the required <code>print()</code> method. To
 patch that up, we implement those:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="t">TextDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print text doc...</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="t">TextDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print text doc...</span>
 <span class="k">def</span> <span class="t">DrawingDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print drawing...</span>
-<span class="k">def</span> <span class="t">SpreadsheetDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print spreadsheet...</span>
-</code></pre></div>
+<span class="k">def</span> <span class="t">SpreadsheetDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print spreadsheet...</span></code></pre>
+</div>
 <p>(<code>def</code> is one of two syntaxes for adding members to a class. It&rsquo;s nice for
 adding a single member to a class. If you&rsquo;re adding a bunch of members to one
 class, you can also do <code>extend class</code> which works like a regular class
 definition but adds to an existing class.)</p>
-
 <p>We can do this wherever we like, in any file. This lets us keep all of the code
 for printing lumped together and isolated from the rest of the code just like a
 dynamic language.</p>
-
 <p>The magical part is that this is <em>statically</em> type checked too. The program
 won&rsquo;t run until we&rsquo;ve made sure that every document type now has all four
 methods.</p>
-
 <p>Magpie&rsquo;s answers for the original four questions are:</p>
-
 <ol>
-<li><p><strong>How do we organize code?</strong> However you like. Put stuff together
-where it makes sense.</p></li>
-<li><p><strong>How do we add new columns&mdash;new types of documents?</strong> Like a typical OOP
+<li>
+<p><strong>How do we organize code?</strong> However you like. Put stuff together
+where it makes sense.</p>
+</li>
+<li>
+<p><strong>How do we add new columns&mdash;new types of documents?</strong> Like a typical OOP
 language: define a new class. If it has the necessary methods, it&rsquo;s a
-<code>Document</code>.</p></li>
-<li><p><strong>How do we add new rows&mdash;new operations you can perform on any
+<code>Document</code>.</p>
+</li>
+<li>
+<p><strong>How do we add new rows&mdash;new operations you can perform on any
 document?</strong> Add new methods to the classes that need them. This can be done
-outside of the file where the class is defined.</p></li>
-<li><p><strong>How do we ensure all of the cells are covered?</strong> Add the new operation to
+outside of the file where the class is defined.</p>
+</li>
+<li>
+<p><strong>How do we ensure all of the cells are covered?</strong> Add the new operation to
 the interface too. The static checker will then make sure only classes that
-have the operation are used in places that expect a <code>Document</code>.</p></li>
+have the operation are used in places that expect a <code>Document</code>.</p>
+</li>
 </ol>
-
 <p>When you&rsquo;re defining things, you get the flexibility of a dynamic language.
 Before it runs, though, you get the safety of a static language.</p>
   <div class="comments">

@@ -38,27 +38,23 @@
 console, very much inspired by the delightful <a href="https://www.lexaloffle.com/pico-8.php">PICO-8</a>. Like PICO-8, my
 console has its own built-in scripting language. Because I&rsquo;m me, I of course
 took the opportunity to design an entirely new language.</p>
-
 <p>My goal for the project is a fun way to build small-ish 2D games. I want its
 scripting language to be expressive enough to be joyful, but small enough that
 you can learn the whole language and never need to consult a reference manual
 after that. My dream is a goofy little pixellated IDE where you can get lost in
 your own flow state and just make shit without having to periodically hit
 StackOverflow and then get distracted by the wonders/horrors of the Internet.</p>
-
 <p>I don&rsquo;t know if I&rsquo;ll ever pull this off or the language will ever see the light of day, but it&rsquo;s a fun therapeutic thing for me to noodle on.</p>
-
 <h2>A dynamically typed scripting language</h2>
-
 <p>To make a language that fits in your head (or at least my head, whose working
 space seems to get smaller every year), I needed to jettison as many feature as
 I could. My experience across a range of hobby and <a href="https://dart.dev/">not-so-hobby</a>
 languages is that static types add roughly an order of magnitude of complexity,
 so types were one of the first things to go. Like most scripting languages, I
 made mine dynamically typed.</p>
-
 <p>Here&rsquo;s an example:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">onTick</span><span class="p">()</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">onTick</span><span class="p">()</span>
   <span class="k">var</span> <span class="i">d</span> <span class="o">=</span> <span class="n">0</span>
   <span class="k">if</span> <span class="i">buttonHeld</span><span class="p">(</span><span class="n">2</span><span class="p">)</span> <span class="k">then</span> <span class="i">d</span> <span class="o">=</span> <span class="i">d</span> <span class="o">-</span> <span class="n">1</span> <span class="k">end</span>
   <span class="k">if</span> <span class="i">buttonHeld</span><span class="p">(</span><span class="n">3</span><span class="p">)</span> <span class="k">then</span> <span class="i">d</span> <span class="o">=</span> <span class="i">d</span> <span class="o">+</span> <span class="n">1</span> <span class="k">end</span>
@@ -90,26 +86,25 @@ made mine dynamically typed.</p>
       <span class="i">v</span> <span class="o">=</span> <span class="o">-</span><span class="n">10.0</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Another simplification I made is to eliminate the distinction between statements
 and expressions. As in Ruby, Kotlin, and most functional languages, everything
 is an expression. The previous chained <code>if</code> could be written in a more
 explicitly expression-y style like:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="i">h</span> <span class="o">=</span> <span class="i">h</span> <span class="o">+</span> <span class="k">if</span> <span class="i">d</span> <span class="o">!=</span> <span class="n">0</span> <span class="k">then</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="i">h</span> <span class="o">=</span> <span class="i">h</span> <span class="o">+</span> <span class="k">if</span> <span class="i">d</span> <span class="o">!=</span> <span class="n">0</span> <span class="k">then</span>
   <span class="i">d</span>
 <span class="k">else</span> <span class="k">if</span> <span class="i">h</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="k">then</span>
   <span class="o">-</span><span class="n">0.5</span>
 <span class="k">else</span> <span class="k">if</span> <span class="i">h</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="k">then</span>
   <span class="n">0.5</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Unifying statements and expressions means the language doesn&rsquo;t need a separate
 <code>if</code> statement and conditional expression. Also, I don&rsquo;t know, I just like
 expression-oriented languages.</p>
-
 <h2>An imperative language</h2>
-
 <p>Even though the language is expression-oriented, it&rsquo;s not explicitly
 <em>functional</em>. Functional languages are close to my heart, but this is a game
 scripting language. A game world is basically a big ball of incrementally
@@ -117,241 +112,225 @@ updated mutable state. For the kind of programs and user experience I have in
 mind, I think an imperative, procedural style is easy to learn, and fun to
 program in. I want users thinking about their game, not, like, monads and
 persistent data structures.</p>
-
 <p>So while everything is an expression in my language, it doesn&rsquo;t at all shy away
 from side effects and imperative control flow. Variables are assignable. Fields
 are settable. There are loops and breaks and early returns. All of those are as
 natural and idiomatic as they are in C++, JavaScript, C#, or any of the other
 languages that the majority of the world&rsquo;s code is written in.</p>
-
 <h2>Handmade Seattle</h2>
-
 <p>Last fall, I attended the wonderful <a href="https://handmade-seattle.com/">Handmade Seattle</a> conference. I had a
 particularly inspiring conversation with <a href="https://wiki.xxiivv.com/site/home.html">Devine Lu Linvega</a> about their
 tiny <a href="https://wiki.xxiivv.com/site/uxn.html">uxn</a> VM. They had this idea to build the smallest possible system and
 programming language for their own use. Then they rebuilt their own personal
 tools&mdash;text editor, music stuff, etc.&mdash;using that.</p>
-
 <p>Now, UXN is <em>really</em> minimal. I get a certain satisfaction from programming in
 assembly, but it&rsquo;s not the language I would want to use for my own joy. But it
 did make me rethink the scripting language for my fantasy console. I picked
 dynamic types because that made the language smaller and I figured it would be a
 good fit for my (entirely hypothetical at this point) users.</p>
-
 <p>But is it what <em>I&rsquo;d</em> want to use to make little 2D videogames? The game I&rsquo;ve
 spent the most time hacking on is my also-perennially-incomplete roguelike
 <a href="https://github.com/munificent/hauberk">Hauberk</a>. I&rsquo;ve rewritten it several times, but every incarnation has been in
 a statically typed language: C++, C#, Java, and now Dart.</p>
-
 <p>My most pleasurable time spent working on Hauberk is when I&rsquo;m refactoring and
 the type system guides me to what&rsquo;s left to clean up. I just really like working
 with types. (It&rsquo;s OK if you don&rsquo;t. As our Burger Sovereign says, have it your
 way.)</p>
-
 <p>After talking to Devine, I realized that if I was making this fantasy console
 <em>for me personally</em>, its language would be typed. So over the past few weeks,
 I&rsquo;ve been sketching out a statically typed variant of my console&rsquo;s scripting
 language. I don&rsquo;t know if it will really come together, but I thought maybe it
 would be fun to write about the exploration.</p>
-
 <h2>Type checking <code>if</code> expressions</h2>
-
 <p>I slapped together a new prototype interpreter for my language. (The main
 implementation is a bytecode VM in C++, which is pretty fast but not exactly
 easy to hack on.) Then I dutifully started adding a type checking pass to it.
 One of the first challenges I hit is how to type check <code>if</code> expressions.</p>
-
 <p>As the title up there implies, that&rsquo;s what this post is really about. Because it
 turns out that having <code>if</code> be an expression while also fully embracing an
 imperative style gets a little weird when it comes to type checking.</p>
-
 <p>I&rsquo;ll walk through a bunch of examples and build up to the type checking rules I
 have settled on (so far, at least). We&rsquo;ll start simple:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="s">&quot;not in love&quot;</span> <span class="k">end</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="s">&quot;not in love&quot;</span> <span class="k">end</span></code></pre>
+</div>
 <p>We need a type for the <code>if</code> expression so that we can infer a type for the
 variable <code>love</code>. In this case, the type is obviously String since both the then
 and else branches evaluate to strings.</p>
-
 <p>So the basic rule we&rsquo;ll start with is: <strong>An <code>if</code> expression&rsquo;s type is the type
 of the branches.</strong></p>
-
 <h2>Different branch types</h2>
-
 <p>But what if they don&rsquo;t have the same type? What about:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="n">0</span> <span class="k">end</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="n">0</span> <span class="k">end</span></code></pre>
+</div>
 <p>Here, <code>love</code> could end up being initialized to either a <code>String</code> or an <code>Int</code>.
 Now what type do we choose? <a href="https://crystal-lang.org/reference/1.7/syntax_and_semantics/if.html">Crystal&rsquo;s answer</a> is <code>String | Int</code>. Union
 types are cool but definitely too complex for the language I&rsquo;m trying to make.</p>
-
 <p>In Kotlin, which is also typed and expression-oriented, the answer is,
 apparently, <code>{Comparable&lt;CapturedType(*)&gt; &amp; java.io.Serializable}</code>. Which I have
 to say does not seem <em>super</em> helpful.</p>
-
 <p>I assume that the compiler goes looking for a shared supertype of the two branch
 types, String and Int. Since String and Int both happen to implement Comparable
 (and I guess some serialization interface), you get that as the common
 supertype.</p>
-
 <p>In object-oriented languages with subtyping and where the type hierarchy forms a
 <a href="https://en.wikipedia.org/wiki/Lattice_(order)">lattice</a>, this common supertype is the least upper bound, and it&rsquo;s a natural
 answer to the problem. It shows up in other languages when type-checking
 conditional <code>?:</code> expressions and a few other places.</p>
-
 <p>It works, but, as we can see in the Kotlin example here, it doesn&rsquo;t always
 produce intuitive or useful results. More to the point, one of the <em>other</em>
 features I jettisoned from my scripting language is subtyping, so LUB is off
 the table.</p>
-
 <p>Without subtyping, every type is disjoint: a value of one type is never a value
 of any other type too. That means that if the two branches of an <code>if</code> have
 different types, then there is no possible type I can infer that contains all of
 their values. The only other response is to make it a type error.</p>
-
 <p>That&rsquo;s the next rule: <strong>If the branches have different types, it&rsquo;s a compile
 error.</strong></p>
-
 <h2>Imperative ifs and unused values</h2>
-
 <p>That rule does work: It&rsquo;s basically SML&rsquo;s rule for <code>if</code> expressions. But I want
 my scripting language to feel familiar to users programming in an imperative
 style. Consider:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">daysNotInLove</span> <span class="o">=</span> <span class="n">0</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">daysNotInLove</span> <span class="o">=</span> <span class="n">0</span>
 <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;in love&quot;</span><span class="p">)</span>
 <span class="k">else</span>
   <span class="i">daysNotInLove</span> <span class="o">=</span> <span class="n">1</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Here, the two branches have different types. The then branch has type String
 because in my language, <code>print()</code> returns its argument. (That makes it handy for
 stuffing some debug printing in the middle of an expression.) The else branch
 has type Int because an assignment expression yields the assigned value.</p>
-
 <p>According to the previous rule, this is a type error because we don&rsquo;t know what
 type of value the <code>if</code> expression evaluates to.</p>
-
 <p>But it doesn&rsquo;t <em>matter</em> since the <code>if</code>&rsquo;s value isn&rsquo;t being used anyway. There&rsquo;s
 no need for the compiler to yell at you, and code like this turns out to be very
 common in practice.</p>
-
 <p>To address this, the type checker takes some of the surrounding context into
 account. When an <code>if</code> expression appears in a location where its value won&rsquo;t be
 used, then it&rsquo;s no longer an error for the branches to have different types. How
 complex is tracking that context? Not too bad, actually. There are a handful of
 cases:</p>
-
 <ul>
-<li><p>In a block or function body where you have a sequence of expressions, the
+<li>
+<p>In a block or function body where you have a sequence of expressions, the
 result is the value of the last expression. The values of all of the
 preceding expressions are discarded. So in an expression sequence, all but
-the last expression are in a &ldquo;value not used&rdquo; context.</p></li>
-<li><p>Like other expression-oriented languages, functions in my language
+the last expression are in a &ldquo;value not used&rdquo; context.</p>
+</li>
+<li>
+<p>Like other expression-oriented languages, functions in my language
 implicitly return the value that the function body expression evaluates to:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">three</span><span class="p">()</span> <span class="t">Int</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">three</span><span class="p">()</span> <span class="t">Int</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;About to return three...&quot;</span><span class="p">)</span>
   <span class="n">3</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="i">onInit</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="i">three</span><span class="p">())</span> <span class="c"># Prints &quot;About to return three...&quot; then &quot;3&quot;.</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>But if a function has no return type (the same as <code>void</code> or unit in other
 languages), it doesn&rsquo;t return a value. In that case, even the last
-expression in the body is a &ldquo;value not used&rdquo; context.</p></li>
-<li><p>Loop expressions don&rsquo;t produce values, so their body is always a &ldquo;value not
+expression in the body is a &ldquo;value not used&rdquo; context.</p>
+</li>
+<li>
+<p>Loop expressions don&rsquo;t produce values, so their body is always a &ldquo;value not
 used&rdquo; context. (I&rsquo;m toying with the idea of allowing <code>break</code> expressions to
-yield a value from the loop, but they don&rsquo;t right now.)</p></li>
-<li><p>Whenever an <code>if</code> or <code>match</code> expression is in a &ldquo;value not used&rdquo; context,
+yield a value from the loop, but they don&rsquo;t right now.)</p>
+</li>
+<li>
+<p>Whenever an <code>if</code> or <code>match</code> expression is in a &ldquo;value not used&rdquo; context,
 then we push that context into the branches too. Likewise with the
 right-hand side of <code>and</code> and <code>or</code> logic operators since those are control
-flow expressions to.</p></li>
+flow expressions to.</p>
+</li>
 </ul>
-
 <p>That&rsquo;s it. After I came up with this rule, I did some poking around and it seems
 like Kotlin does something similar. It frames it by saying that when you use an
 <code>if</code> &ldquo;as an expression&rdquo; then the two branches must have the same type. That&rsquo;s
 roughly the distinction I&rsquo;m making here too: when an <code>if</code> appears in a
 statement-like position where its value is discarded, then the branches can
 disagree.</p>
-
 <h2>Missing else</h2>
-
 <p>This rule allows us to support an even more important flavor of <code>if</code> expressions
 that are common in imperative code: those without <code>else</code> clauses. In SML and
 some other functional languages, every <code>if</code> expression <em>must</em> have an <code>else</code>
 clause because the presumption is that you will be using the value produced by
 the expression and you need a value even when the condition is false.</p>
-
 <p>But in imperative code, it&rsquo;s obviously common to have <code>if</code>s whose main purpose
 is a side effect and where an <code>else</code> clause isn&rsquo;t needed. In fact, when I
 analyzed a huge corpus of real-world Dart, I found that only about 20% of <code>if</code>
 statements had <code>else</code> branches.</p>
-
 <p>Now that we understand when an <code>if</code> expression is in a context where it&rsquo;s value
 isn&rsquo;t used, we can allow omitting <code>else</code> branches those. The next rule is: <strong>An
 <code>if</code> expression can can omit the else branch when in a context where its value
 isn&rsquo;t used.</strong></p>
-
 <h2>Exiting branches</h2>
-
 <p>We&rsquo;re almost there. It&rsquo;s starting to feel like we really are type-checking an
 imperative language, not ML in BASIC&rsquo;s clothing. I coded this up and
 successfully wrote some little example programs. It was starting to feel like a
 real typed language!</p>
-
 <p>I could stop here, but there&rsquo;s one last bit of type checking logic for <code>if</code>
 expressions. I haven&rsquo;t decided if it&rsquo;s worth keeping. Consider:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">onInit</span><span class="p">()</span>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">onInit</span><span class="p">()</span>
   <span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="k">return</span> <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>When <code>isFriday</code> is true, then this initializes <code>love</code> with the string &ldquo;in love&rdquo;.
 When <code>isFriday</code> is false, then the <code>return</code> exits from the function entirely so
 <code>love</code> never gets initialized at all. So even though these branches don&rsquo;t
 evaluate to the same type, <code>love</code> is always initialized with a String. This code
 should be fine.</p>
-
 <p>Or, at least, it should be <em>sound</em> according to the type system. Whether this is
 <em>good style</em> is definitely open for debate. I could probably not allow code like
 this. But my default stance is to be as permissive as possible without breaking
 soundness, and this is a corner where I can be.</p>
-
 <p>The trick is that expressions like <code>break</code>, <code>return</code>, and <code>throw</code> are special. While they are expressions <em>grammatically</em>, they don&rsquo;t actually evaluate to values. If you do:</p>
-<div class="highlight"><pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">x</span> <span class="o">=</span> <span class="k">return</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">x</span> <span class="o">=</span> <span class="k">return</span></code></pre>
+</div>
 <p>That <code>x</code> never gets initialized. A <code>return</code> expression always jumps out of the
 surrounding code instead of producing a value. Languages that have expressions
 which can do control flow model this by giving these expressions a special type
 variously called <a href="https://en.wikipedia.org/wiki/Bottom_type">&ldquo;bottom&rdquo;, <code>⊥</code> (&ldquo;up tack&rdquo;), <code>Never</code>, <code>noreturn</code>, etc</a>.
 This type means &ldquo;You&rsquo;re never gonna get a value from me.&rdquo;</p>
-
 <p>When checking the two branches of an <code>if</code> expression, if one branch has that
 special type (the compiler calls it &ldquo;unreachable&rdquo; right now), then we just use
 the type of the other branch for the <code>if</code> expression&rsquo;s type. That allows the
 above example to work. In the sample code I&rsquo;ve written so far, it rarely comes
 into play. It&rsquo;s usually more idiomatic to hoist that control flow out of the
 <code>if</code> entirely. But we can type check it easily, so the language lets you do it.</p>
-
 <h2>The rules altogether</h2>
-
 <p>That&rsquo;s where I&rsquo;m at right now. It took me a few iterations to get to a point
 where all the <code>if</code> expressions I expected to be able to write in my example
 programs actually type checked correctly but it seems pretty stable now. The
 rules are:</p>
-
 <ul>
-<li><p>When an <code>if</code> expression is in a context where its value is not used, then
-there is no restriction on what types the branches can have and we&rsquo;re done.</p></li>
-<li><p>Otherwise, there must be an <code>else</code> branch and:</p></li>
-<li><p>If both branches have type &ldquo;unreachable&rdquo; then the <code>if</code> expression&rsquo;s type is
-also &ldquo;unreachable&rdquo;.</p></li>
-<li><p>If one branch has type &ldquo;unreachable&rdquo; then the <code>if</code> expression&rsquo;s type is the
-type of the other branch.</p></li>
-<li><p>Otherwise, the two branches must have the same type and the type of the <code>if</code>
-is that type.</p></li>
+<li>
+<p>When an <code>if</code> expression is in a context where its value is not used, then
+there is no restriction on what types the branches can have and we&rsquo;re done.</p>
+</li>
+<li>
+<p>Otherwise, there must be an <code>else</code> branch and:</p>
+</li>
+<li>
+<p>If both branches have type &ldquo;unreachable&rdquo; then the <code>if</code> expression&rsquo;s type is
+also &ldquo;unreachable&rdquo;.</p>
+</li>
+<li>
+<p>If one branch has type &ldquo;unreachable&rdquo; then the <code>if</code> expression&rsquo;s type is the
+type of the other branch.</p>
+</li>
+<li>
+<p>Otherwise, the two branches must have the same type and the type of the <code>if</code>
+is that type.</p>
+</li>
 </ul>
   <div class="comments">
     <div id="disqus_thread"></div>

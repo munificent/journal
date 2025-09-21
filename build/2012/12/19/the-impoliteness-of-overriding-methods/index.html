@@ -39,10 +39,8 @@
 SELF</a>. What can I say, I have a weird idea of fun. If you&rsquo;re interested
 in prototypes, or you&rsquo;re a Javascripter&mdash;but I repeat myself&mdash;you owe it to
 yourself to read these papers. They are gems.</p>
-
 <p>But this post isn&rsquo;t about prototypes, it&rsquo;s about something the Self folks
 mention in passing:</p>
-
 <blockquote>
 <p>In BETA, virtual functions are invoked from least specific to most specific,
 with the keyword <code>inner</code> being used to invoke the next more specific method.
@@ -51,37 +49,31 @@ be behavioral extensions to their superclasses and therefore specialize the
 behavior of their superclasses at well-defined points (i.e. at calls to
 <code>inner</code>).</p>
 </blockquote>
-
 <p>It took me a while to tease out what this is saying, but once I did, it was like
 a dim little light bulb flickered on in my head.</p>
-
 <h2>What&rsquo;s BETA?</h2>
-
 <p>Before I get into the lightbulb part, a bit of history. <a href="http://daimi.au.dk/~beta">BETA</a> is a language
 that came out of the &ldquo;Scandinavian School&rdquo; in Denmark, the <a href="http://en.wikipedia.org/wiki/Kristen_Nygaard">same people</a> that
 brought you <a href="http://en.wikipedia.org/wiki/Simula">Simula</a> and kicked off the object-oriented revolution. Alan Kay
 may have coined &ldquo;object-oriented programming&rdquo;, but it was Simula that gave him
 the idea. Chances are, the language you should be coding in right now instead of
 slacking off reading my blog was directly inspired by these guys.</p>
-
 <p>So after Simula, they went off and made BETA. I think this is more or less
 equivalent to &ldquo;famous rock band goes into hiding for ten years and emerges with
 avant garde free jazz album&rdquo;. BETA was used as a teaching language, I think, and
 there were some papers about it, but I don&rsquo;t know if many people seriously used
 it in anger.</p>
-
 <p>(Trivia time! Some of the guys who made <a href="https://github.com/v8/v8">V8</a>, the famously-fast JavaScript
 engine in Chrome <em>did</em> use BETA. &ldquo;V8&rdquo; got its name because it&rsquo;s the eighth
 virtual machine that Lars Bak created. His first VM? A BETA one.)</p>
-
 <p>Part of the reason BETA didn&rsquo;t flourish may have to do with terminology. Instead
 of <em>classes</em> and <em>methods</em>, BETA has <em>patterns</em> which subsume both, somehow, and
 aren&rsquo;t related to other uses of the term in other languages. I wrote that
 sentence, and I don&rsquo;t even know what the hell that means.</p>
-
 <p>The <a href="http://daimi.au.dk/~beta/Books/index.html#betabook_download">BETA book</a> is
 a bit&hellip; dense. Or maybe it&rsquo;s just that the syntax is so <em>weird</em>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Account:
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">Account:
   (# balance: @integer;
     Deposit:
       (# amount: @integer
@@ -96,12 +88,13 @@ a bit&hellip; dense. Or maybe it&rsquo;s just that the syntax is so <em>weird</e
       do balance-amount-&gt;balance
       exit balance
       #);
-  #)
-</code></pre></div>
+  #)</code></pre>
+</div>
 <p>I pride myself on being able to grok syntax on a pretty wide variety of
 languages but I&rsquo;m not even sure what&rsquo;s a <em>comment</em> there. I <em>think</em> if you
 translated that to JavaScript, it would be something like:</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">account</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">account</span> <span class="o">=</span> <span class="p">{</span>
   <span class="i">balance</span><span class="p">:</span> <span class="i">undefined</span><span class="p">,</span>
 
   <span class="i">deposit</span><span class="p">:</span> <span class="k">function</span><span class="p">(</span><span class="i">amount</span><span class="p">)</span> <span class="p">{</span>
@@ -111,33 +104,33 @@ translated that to JavaScript, it would be something like:</p>
   <span class="i">withdraw</span><span class="p">:</span> <span class="k">function</span><span class="p">(</span><span class="i">amount</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="i">balance</span> <span class="o">-=</span> <span class="i">amount</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+<span class="p">};</span></code></pre>
+</div>
 <p>Like avant garde jazz, this may be genius, but it&rsquo;s so out there and
 unapproachable, it&rsquo;s hard to tell. Fortunately, the Self guys have deciphered
 some of the mystery and left that little nugget in their paper.</p>
-
 <h2>Overriding and <code>super()</code></h2>
-
 <p>Let&rsquo;s cover one last bit of context before I get to the point. If you&rsquo;re using
 any object-oriented language, you&rsquo;re hopefully familiar with overriding methods.
 Details vary between languages, but the two main points are:</p>
-
 <ol>
-<li><p>A subclass can <em>override</em> a method in its superclass. When you invoke the
+<li>
+<p>A subclass can <em>override</em> a method in its superclass. When you invoke the
 method on an instance of the subclass, the derived method gets called
-<em>first</em>.</p></li>
-<li><p>In the body of the overriding method, you can invoke the base class method
+<em>first</em>.</p>
+</li>
+<li>
+<p>In the body of the overriding method, you can invoke the base class method
 directly in order to chain the two methods together. In Java, you do so by
 calling <code>super.someMethod()</code>. In C# it&rsquo;s <code>base.someMethod()</code>. In CLOS, you
-use <code>call-next-method</code>. You get the idea.</p></li>
+use <code>call-next-method</code>. You get the idea.</p>
+</li>
 </ol>
-
 <p>I&rsquo;m using class terminology here, but all of the above applies equally well to
 prototypal languages too, with a couple of names changed.</p>
-
 <p>Here&rsquo;s an example:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Account</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Account</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">balance</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
   <span class="t">int</span> <span class="i">deposit</span><span class="p">(</span><span class="t">int</span> <span class="i">amount</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="i">balance</span> <span class="o">+=</span> <span class="i">amount</span><span class="p">;</span>
@@ -150,26 +143,25 @@ prototypal languages too, with a couple of names changed.</p>
     <span class="t">CrappyBank</span><span class="p">.</span><span class="i">mainAccount</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">2</span><span class="p">);</span>
     <span class="k">super</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="i">amount</span> <span class="o">-</span> <span class="n">2</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>So now, if you do something like this:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="t">Account</span> <span class="i">account</span> <span class="o">=</span> <span class="k">new</span> <span class="t">CrappyBankAccount</span><span class="p">();</span>
-<span class="i">account</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">23</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="t">Account</span> <span class="i">account</span> <span class="o">=</span> <span class="k">new</span> <span class="t">CrappyBankAccount</span><span class="p">();</span>
+<span class="i">account</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">23</span><span class="p">);</span></code></pre>
+</div>
 <p>First, it invokes <code>CrappyBankAccount#deposit()</code>. Then, when that calls
 <code>super.deposit()</code>, it chains to the base <code>Account#deposit()</code> method.</p>
-
 <h2>Who&rsquo;s in charge here?</h2>
-
 <p>What this means is that the <em>subclass</em> is in control of the dispatch chain. When
 you override a method in Java, you get to decide if you do stuff before calling
 <code>super</code> or after. You can change the arguments you pass to it, or even skip
 calling it entirely.</p>
-
 <p>This is great for flexibility, but as an API designer, that can be frustrating.
 When I&rsquo;m making a class that&rsquo;s designed to be subclassed, I often have
 constraints that I want my class to ensure. For example:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -182,27 +174,24 @@ constraints that I want my class to ensure. For example:</p>
     <span class="k">super</span><span class="p">.</span><span class="i">render</span><span class="p">(</span><span class="i">renderer</span><span class="p">);</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Here we&rsquo;re making a game with a base class for a character in the world. It
 provides a default <code>render()</code> method that tells the renderer where to render.
 The subclass overrides it and draws the specific image that&rsquo;s appropriate for
 that character.</p>
-
 <p>There&rsquo;s an implied requirement here: if you override <code>render()</code> in a subclass,
 you <em>must</em> call <code>super.render()</code> <em>before</em> you do any drawing. If you don&rsquo;t, the
 transform won&rsquo;t be set and it&rsquo;ll draw wrong.</p>
-
 <p>These hidden requirements rub me the wrong way. If you&rsquo;re implementing a
 subclass of <code>GameObject</code>, how are you supposed to know that you need to do that?
 You can document it, but it would be better if the base class itself made sure
 you did the right thing.</p>
-
 <h2><code>render()</code> and <code>onRender()</code></h2>
-
 <p>To solve this, what I (and lots of other people) do is split these into two
 methods, like so:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -217,42 +206,37 @@ methods, like so:</p>
   <span class="k">protected</span> <span class="t">void</span> <span class="i">onRender</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Our public <code>render()</code> method is now designed to <em>not</em> be overridden. (In C++ or
 C# you&rsquo;d make it non-virtual.) It does the setup it needs and calls the
 protected abstract <code>onRender()</code> method. That method <em>is</em> intended to be
 overridden, and by making it protected and abstract, it&rsquo;s clear you <em>must</em>
 override it. Marking it abstract also makes it clear that you don&rsquo;t need to call
 <code>super()</code>.</p>
-
 <p>This lets the base class stay in control of the dispatch process. It can do
 setup before and after the subclass&rsquo;s &ldquo;overridden&rdquo; method gets called. The
 dispatch order is reversed now. When you call <code>render()</code>, you hit the superclass
 <em>first</em> and then it calls <code>onRender()</code> in the subclass.</p>
-
 <p>This is almost always how I design classes that I intend to be subclassed. It&rsquo;s
 rare that I override methods in my code that aren&rsquo;t abstract, and I&rsquo;ve been on
 teams with style guides that enforced this pattern.</p>
-
 <h2>Back to BETA</h2>
-
 <p>Of course, the problem with this is that it <em>is</em> a pattern. You have to make a
 pair of methods, and every time you have another level of subclassing, you need
 a new name. (If there was a subclass of <code>ScaryMonster</code> that wanted to override
 <code>onRender()</code> then <code>ScaryMonster</code> would have to add a <code>onOnRender()</code>.) This
 brings us back to BETA.</p>
-
 <p>Overriding methods in BETA works exactly like this pattern, but baked right into
 the language. Instead of calling <code>super()</code> in the <em>derived</em> class, you call
 <code>inner()</code> in the <em>base</em> class. That tells it to chain <em>down</em> to the subclass at
 that point.</p>
-
 <p>When you invoke an overridden method, dispatch starts at the <em>base</em> class (just
 like we want in the <code>GameObject</code> example) and then walks down to the subclasses
 at the superclass&rsquo;s whim. In other words, our example with BETA-style overriding
 would look like:</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -265,12 +249,13 @@ would look like:</p>
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>If you chain more than two levels of subclasses, BETA scales better because you
 don&rsquo;t need to keep coming up with new names. It has some other neat attributes
 too.</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -284,35 +269,30 @@ too.</p>
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Here, we&rsquo;ve added a call to <code>restoreState()</code> after the call to <code>inner()</code>. By
 giving control of the dispatch to the base class, it can execute code both
 before <em>and</em> after the derived class code. <code>super()</code> doesn&rsquo;t let you do that.
 (Though <code>super()</code> does let you handle the opposite case: you can put code before
 and after the <em>base</em> class code in the derived method that calls <code>super()</code>.)</p>
-
 <p>It also gives you a convenient way to control which methods are virtual and
 which aren&rsquo;t. If a method doesn&rsquo;t call <code>inner()</code> it implicitly can&rsquo;t be
 overridden since it cedes no control to a subclass.</p>
-
 <p>What this means is that base classes have explicit control over how they can be
 extended. Outside of programming, &ldquo;override&rdquo; has negative connotations: it means
 you&rsquo;re hijacking something without its consent and indeed overriding does kind
 of work like that in most languages.</p>
-
 <p>In the early days of class-based OOP, people thought any old class could be
 spontaneously subclassed. You could just override some stuff and it would all
 magically work out. What we&rsquo;ve realized over time is that the API you expose to
 subclasses is another boundary layer that needs to be carefully designed. Ad-hoc
 subclassing rarely works and classes need to be carefully designed up front in
 order to be subclassed.</p>
-
 <p>BETA was designed around that model. With typical Scandinavian politeness, you
 don&rsquo;t <em>override</em> your base class, you politely request permission to extend it.
 I think right now, the style of a lot of object-oriented code today fits that
 model better.</p>
-
 <p>Most languages chose a different path than BETA, but this makes me wonder if
 Kristen and company had it right all along.</p>
   <div class="comments">

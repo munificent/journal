@@ -36,125 +36,132 @@
 </h4>
 <div class="update">
 <p>Oops! I got a bunch of this wrong because <code>Base</code> and <code>Derived</code> have no members. Since TypeScript is structurally typed, that's what allows all of the variance I describe below.</p>
-
 <p>See Anders Hejlsberg's comment at the end for more details.</p>
 </div>
-
 <p>This was just going to be a comment on <a href="http://www.reddit.com/r/programming/comments/1cyij4/typescript_09_early_previews_with_support_for/">this reddit thread</a>, but then it
 seemed to take on a life of its own, so I figured I may as well <s>milk it for
 all it&rsquo;s worth</s> make a nice post out of it.</p>
-
 <p>Yesterday, the TypeScript guys <a href="https://devblogs.microsoft.com/typescript/announcing-typescript-0-9/">announced a preview of the new 0.9.0
 version</a> of the language featuring generics. I, like a lot of people, was
 really curious to see what approach they&rsquo;d take with them. Retrofitting a type
 system onto a dynamic language is <em>hard</em> and generics are one of the places
 where that new suit of armor can really chafe the squishy flesh underneath.</p>
-
 <p>This is a topic strangely near to my heart for another reason too. I&rsquo;m on the
 <a href="http://www.dart.dev">Dart team</a> and when Dart was announced, we were widely criticized for its
 type system. Generics are covariant in Dart, which is a mortal sin to many.</p>
-
 <p>Now when any new type system comes out, my first thought is, &ldquo;I wonder if it&rsquo;s
 got covariant generics?&rdquo; (My second thought is, &ldquo;God, I need a hobby that
 doesn&rsquo;t involve programming languages.&rdquo;)</p>
-
 <p>Some more caveats before I get going:</p>
-
 <ul>
-<li><p>I literally spent five minutes poking at this, so I may have things wrong.</p></li>
-<li><p>Compiling programs with a compiler that isn&rsquo;t 1.0 yet and claiming that says
-something about the language specification is asking for trouble.</p></li>
-<li><p>I, despite my current occupation, am surprisingly bad at reading language
-specs.</p></li>
-<li><p>I am currently drinking a <a href="http://www.ratebeer.com/beer/elysian-bete-blanche-belgian-tripel-2011-and-later/138973/">fairly strong beer</a>.</p></li>
+<li>
+<p>I literally spent five minutes poking at this, so I may have things wrong.</p>
+</li>
+<li>
+<p>Compiling programs with a compiler that isn&rsquo;t 1.0 yet and claiming that says
+something about the language specification is asking for trouble.</p>
+</li>
+<li>
+<p>I, despite my current occupation, am surprisingly bad at reading language
+specs.</p>
+</li>
+<li>
+<p>I am currently drinking a <a href="http://www.ratebeer.com/beer/elysian-bete-blanche-belgian-tripel-2011-and-later/138973/">fairly strong beer</a>.</p>
+</li>
 </ul>
-
 <p>OK, party time! After playing around with it a bit, as far as I can tell, <em>TypeScript&rsquo;s subtype relations are more permissive than I expected</em>. This isn&rsquo;t necessarily bad, just surprising. As a preamble, let&rsquo;s define a supertype and subtype:</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Base</span> <span class="p">{}</span>
-<span class="k">class</span> <span class="t">Derived</span> <span class="k">extends</span> <span class="t">Base</span> <span class="p">{}</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Base</span> <span class="p">{}</span>
+<span class="k">class</span> <span class="t">Derived</span> <span class="k">extends</span> <span class="t">Base</span> <span class="p">{}</span></code></pre>
+</div>
 <p>Now consider:</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="i">constructor</span><span class="p">(</span><span class="i">public</span> <span class="i">value</span><span class="p">:</span> <span class="t">T</span><span class="p">)</span> <span class="p">{}</span>
-<span class="p">};</span>
-</code></pre></div>
+<span class="p">};</span></code></pre>
+</div>
 <p>This is the simplest possible generic type.</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">a</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span>
-<span class="k">var</span> <span class="i">b</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">a</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span>
+<span class="k">var</span> <span class="i">b</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span></code></pre>
+</div>
 <p>These are both fine, as you would expect.</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="i">number</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;not num&quot;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="i">number</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;not num&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>This gives:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&#47;generics.ts(5,0): error TS2081: Supplied parameters do not match
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">&#47;generics.ts(5,0): error TS2081: Supplied parameters do not match
 any signature of call target.
 &#47;generics.ts(5,0): error TS2085: Could not select overload for
-&#39;new&#39; expression.
-</code></pre></div>
+&#39;new&#39; expression.</code></pre>
+</div>
 <p>Looks about right. Now let&rsquo;s try covariance:</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">c</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">c</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span></code></pre>
+</div>
 <p>No errors. Contravariance?</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">d</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">d</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Derived</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">Base</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span></code></pre>
+</div>
 <p>Still no errors. This, I think, makes its type system looser than arrays in
 Java, and more permissive than Dart. Generics are <em>bi</em>variant in TypeScript.</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">e</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="i">number</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">string</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">e</span> <span class="p">:</span> <span class="t">Box</span><span class="o">&lt;</span><span class="i">number</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">string</span><span class="o">&gt;</span><span class="p">(</span><span class="k">null</span><span class="p">);</span></code></pre>
+</div>
 <p>As a sanity check, this <em>does</em> give an error.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&#47;generics.ts(73,4): error TS2012: Cannot convert &#39;Box&lt;string&gt;&#39; to
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">&#47;generics.ts(73,4): error TS2012: Cannot convert &#39;Box&lt;string&gt;&#39; to
 &#39;Box&lt;number&gt;&#39;: Types of property &#39;value&#39; of types &#39;Box&lt;string&gt;&#39; and
-&#39;Box&lt;number&gt;&#39; are incompatible.
-</code></pre></div>
+&#39;Box&lt;number&gt;&#39; are incompatible.</code></pre>
+</div>
 <p>So it doesn&rsquo;t just <em>ignore</em> the type parameters, it really is bivariant: it will
 allow either a subtype or supertype relation for the type parameters, but not no
 relation at all.</p>
-
 <p>Part of this may be because TypeScript&rsquo;s type system is structural (neat!). For
 example:</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">A</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">A</span> <span class="p">{</span>
   <span class="i">foo</span><span class="p">(</span><span class="i">arg</span> <span class="p">:</span> <span class="t">Base</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="t">B</span> <span class="p">{</span>
   <span class="i">foo</span><span class="p">(</span><span class="i">arg</span> <span class="p">:</span> <span class="t">Derived</span><span class="p">)</span> <span class="p">{}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Here we have two unrelated types that happen to have the same shape (method
 names and signatures). Perhaps surprisingly, there&rsquo;s no error here:</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">f</span> <span class="p">:</span> <span class="t">A</span> <span class="o">=</span> <span class="k">new</span> <span class="t">B</span><span class="p">();</span>
-<span class="k">var</span> <span class="i">g</span> <span class="p">:</span> <span class="t">B</span> <span class="o">=</span> <span class="k">new</span> <span class="t">A</span><span class="p">();</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">f</span> <span class="p">:</span> <span class="t">A</span> <span class="o">=</span> <span class="k">new</span> <span class="t">B</span><span class="p">();</span>
+<span class="k">var</span> <span class="i">g</span> <span class="p">:</span> <span class="t">B</span> <span class="o">=</span> <span class="k">new</span> <span class="t">A</span><span class="p">();</span></code></pre>
+</div>
 <p>This is perhaps extra surprising because <code>A</code> and <code>B</code> don&rsquo;t have the <em>exact</em> same
 signatures: their parameter types for <code>arg</code> are different. So the type system is
 both structural and allows either supertype or subtypes on parameters.</p>
-
 <p>If the type system is structural, maybe the <code>Box&lt;T&gt;</code> examples only worked then
 because it had no methods (aside from the <code>value</code> property) that used the type
 parameter. What if we make sure <code>T</code> shows up in parameter and return positions?</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Box</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="i">constructor</span><span class="p">(</span><span class="i">public</span> <span class="i">value</span><span class="p">:</span> <span class="t">T</span><span class="p">)</span> <span class="p">{}</span>
   <span class="i">takeParam</span><span class="p">(</span><span class="i">arg</span><span class="p">:</span> <span class="t">T</span><span class="p">)</span> <span class="p">{}</span>
   <span class="i">returnType</span><span class="p">():</span> <span class="t">T</span> <span class="p">{</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+<span class="p">};</span></code></pre>
+</div>
 <p>Nope, this makes no difference. Still same behavior as before.</p>
-
 <p>I believe the relevant bits of the spec are:</p>
-
 <blockquote>
 <p><strong>3.6.2.1 Type Arguments</strong></p>
-
 <p>A type reference to a generic type G designates a type wherein all
 occurrences of G’s type parameters have been replaced with the actual type
 arguments supplied in the type reference.</p>
 </blockquote>
-
 <p>I think this basically says that generics are structurally typed and the type
 relation is determined based on the <em>expanded</em> type where type arguments have
 been applied. In other words, generic types don&rsquo;t have type relations, just
 generic type <em>applications</em>. For example:</p>
-<div class="highlight"><pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Generic</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="highlight">
+<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Generic</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="i">method</span><span class="p">(</span><span class="i">arg</span><span class="p">:</span> <span class="t">T</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span>
 
@@ -162,57 +169,64 @@ generic type <em>applications</em>. For example:</p>
   <span class="i">method</span><span class="p">(</span><span class="i">arg</span><span class="p">:</span> <span class="i">number</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span>
 
-<span class="k">var</span> <span class="i">h</span> <span class="p">:</span> <span class="t">NotGeneric</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Generic</span><span class="o">&lt;</span><span class="i">number</span><span class="o">&gt;</span><span class="p">();</span>
-</code></pre></div>
+<span class="k">var</span> <span class="i">h</span> <span class="p">:</span> <span class="t">NotGeneric</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Generic</span><span class="o">&lt;</span><span class="i">number</span><span class="o">&gt;</span><span class="p">();</span></code></pre>
+</div>
 <p>This is fine in TypeScript unlike most nominally-typed languages. Pretty neat!</p>
-
 <blockquote>
 <p><strong>3.8.2 Subtypes and Supertypes</strong></p>
-
 <p>S is a subtype of a type T, and T is a supertype of S, if one of the
 following is true:</p>
-
 <ul>
-<li><p>S’ and T are object types and, for each member M in T, one of the
+<li>
+<p>S’ and T are object types and, for each member M in T, one of the
 following is true:</p>
-
 <ul>
-<li><p>M is a non-specialized call or construct signature and S’ contains a
+<li>
+<p>M is a non-specialized call or construct signature and S’ contains a
 call or construct signature N where, when substituting ‘Object’ for
 all type parameters declared by M and N (if any),</p>
-
 <ul>
-<li><p>for parameter positions that are present in both signatures,
+<li>
+<p>for parameter positions that are present in both signatures,
 <strong>each parameter type in N is a subtype or supertype of the
-corresponding parameter type in M</strong>,</p></li>
-<li><p>the result type of M is Void, or the result type of N is a
-subtype of that of M</p></li>
-<li><p>&hellip;</p></li>
-</ul></li>
-<li><p>&hellip;</p></li>
-</ul></li>
-<li><p>&hellip;</p></li>
+corresponding parameter type in M</strong>,</p>
+</li>
+<li>
+<p>the result type of M is Void, or the result type of N is a
+subtype of that of M</p>
+</li>
+<li>
+<p>&hellip;</p>
+</li>
+</ul>
+</li>
+<li>
+<p>&hellip;</p>
+</li>
+</ul>
+</li>
+<li>
+<p>&hellip;</p>
+</li>
 </ul>
 </blockquote>
-
 <p>My emphasis added. I believe this basically says that to compare two types, you
 walk their members and compare their types. For method parameters, &ldquo;subtype or
 supertype&rdquo; means bivariance: types go both ways. This is looser than the normal
 function typing rule which is contravariance for parameters and covariance for
 returns.</p>
-
 <p>All in all, I find this pretty interesting. TypeScript has both a structural and
 prototypal type system, so it&rsquo;s already pretty fascinating from a language
 design perspective. Allowing bivariance of parameter types is a pretty bold
 extension of that.</p>
-
 <p>Oh, if you&rsquo;d like to see this for yourself, here&rsquo;s how:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>$ git clone https:&#47;&#47;git01.codeplex.com&#47;typescript
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">$ git clone https:&#47;&#47;git01.codeplex.com&#47;typescript
 $ cd typescript
 $ git checkout develop
 $ jake local
-$ chmod +x bin&#47;tsc
-</code></pre></div>
+$ chmod +x bin&#47;tsc</code></pre>
+</div>
 <p>Then you can run <code>bin/tsc</code> to compile stuff with the bleeding edge compiler. The
 latest spec is under <code>doc/TypeScript Language Specification.pdf</code>.</p>
   <div class="comments">

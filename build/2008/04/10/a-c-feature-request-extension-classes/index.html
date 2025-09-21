@@ -39,18 +39,18 @@
 you use them is the <a href="http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx#2019379">lack</a> of extension properties. Since I like properties
 more than I like extension methods, this really bummed me out. So for kicks, I&rsquo;d
 like to propose a C# feature request: <strong>Extension classes</strong>.</p>
-
 <h2>What&rsquo;s an extension class?</h2>
-
 <p>An extension class is a class that adds methods, properties, etc. to another
 class. Given some class <code>Foo</code>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">Foo</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Foo</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>My proposed syntax is:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">DoubledValue</span>
     <span class="p">{</span>
@@ -61,40 +61,35 @@ class. Given some class <code>Foo</code>:</p>
     <span class="p">{</span>
         <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">(</span><span class="s">&quot;hi.&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>The magic bit up there is the <code>this Foo</code>. That basically says, &ldquo;the <code>this</code>
 reference inside this class is actually of this other type <code>Foo</code>&rdquo;. As you can
 see in the implementation of <code>DoubledValue</code>, it&rsquo;s accessing the <code>Value</code>
 property, which is defined in <code>Foo</code>.</p>
-
 <p>So, this solves the syntax problem for how to define an extension property. It
 makes sense, too, because if you&rsquo;ve used extension methods, you&rsquo;ve noticed that
 you always have to define them inside a &ldquo;special&rdquo; extension class anyway. This
 just moves the &ldquo;extension-ness&rdquo; indicator from the method level up to the
 containing class level.</p>
-
 <h2>What it&rsquo;s not</h2>
-
 <p>Just to be clear, this <em>isn&rsquo;t</em> the same as inheriting, partial classes, or open
 classes. There is no way to have a reference of type <code>FooExtensions</code>, because
 that class is not directly instantiable. It&rsquo;s just decorating another class.
 Likewise, <code>FooExtensions</code> does <em>not</em> have priveleged access to <code>Foo</code>. It can
 only use public members just like outside code. And, of course, <code>FooExtensions</code>
 can&rsquo;t replace any methods in Foo. No open classes.</p>
-
 <h2>And then?</h2>
-
 <p>OK, so we&rsquo;ve got properties in the mix, is there anything else we could add?</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="i">SomeMethod</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>How about static methods and properties? You could say there&rsquo;s no value in doing
 this since you have to access statics through the class name anyway, but I
 disagree.</p>
-
 <p>A design guideline that&rsquo;s been floating around in <a href="http://www.amazon.com/dp/0201924889">C++ land</a> for a long
 time is &ldquo;<a href="http://www.aristeia.com/effective-c++_frames.html">prefer non-member functions over member functions</a>&rdquo;. The
 idea is that coupling and priveleged access to a class are bad, so if you can
@@ -103,27 +98,22 @@ changes the calling convention, you&rsquo;ve affected all your call sites with w
 should be an implementation detail. I don&rsquo;t want users to have to <em>know</em> that
 <code>SomeMethod()</code> was implemented outside of <code>Foo</code>. That way, if I later need to
 move it <em>into</em> <code>Foo</code> (or vice versa), they aren&rsquo;t affected.</p>
-
 <h2>Where this is going</h2>
-
 <p>So, if you can move more and more <em>out</em> of <code>Foo</code>, what&rsquo;s left <em>in</em> it? The
 answer: data and validation. <code>Foo</code> itself is the only class that can have
 fields. In my world, the way I&rsquo;d like to design classes is like this: the core
 class <code>Foo</code> contains its fields and provides accessors and mutators to prevent
 it from being put in a bad state. <code>Foo</code> basically <em>is</em> state and state change.</p>
-
 <p>Almost everything else, the &ldquo;things you can do with a <code>Foo</code>&rdquo; would be pulled out
 into extension classes, likely in different namespaces. If you want to format a
 <code>Foo</code> for display, <code>UI.FooExtensions</code> will have methods for that. Need to
 serialize it? <code>Serialization.FooExtensions</code>.</p>
-
 <p>Aside from being crazy about decoupling, there&rsquo;s some more reasoning behind
 this. It turns out that state is actually one of the <a href="http://en.wikipedia.org/wiki/Side_effect_%28computer_science%29">trickiest</a> parts of
 programming. Computer scientists have been wrestling with its
 <a href="http://en.wikipedia.org/wiki/Memoization">implications</a> since the dawn of programming, and have tried <a href="http://en.wikipedia.org/wiki/Purely_functional">all
 sorts</a> of <a href="http://www.haskell.org/">ways</a> to get around it, up to the point of trying to
 abolish it completely (<a href="http://www.haskell.org/tutorial/monads.html">sort of</a>) in &ldquo;pure&rdquo; functional languages.</p>
-
 <p>Now the lack of real-world use of languages like that kind of hints that state
 is inevitable. One of the most useful things about computers is that they
 remember things. However, isolating and minimizing <em>where</em> and <em>how</em> they

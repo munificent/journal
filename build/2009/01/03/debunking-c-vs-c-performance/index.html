@@ -36,9 +36,7 @@
 </h4>
 <p>If you were on <a href="http://www.reddit.com/r/programming/">reddit</a> today, you probably saw <a href="http://systematicgaming.wordpress.com/2009/01/03/performance-c-vs-c/">this article</a>, damning C#&rsquo;s
 performance as being <strong>ten times worse than C++&rsquo;s</strong>. Holy shit balls, batman!</p>
-
 <p>Running his C# code, here are the results I got:</p>
-
 <h2>Original C# code</h2><div class="table">
 <table>
 <thead>
@@ -122,15 +120,15 @@ performance as being <strong>ten times worse than C++&rsquo;s</strong>. Holy shi
 </tr>
 </table>
 </div>
-
 <p>Pretty slow! So I took a look at the code. The first thing that would catch the
 eye of any C# programmer is this:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">unsafe</span> <span class="k">struct</span> <span class="t">Data</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">unsafe</span> <span class="k">struct</span> <span class="t">Data</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
     <span class="k">public</span> <span class="k">fixed</span> <span class="t">char</span> <span class="i">data</span><span class="p">[</span><span class="n">128</span><span class="p">];</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p><em>That&rsquo;s</em> the data structure he&rsquo;s sorting. An unsafe struct with a fixed array? I
 had to look up <code>fixed</code> to even know what that <em>means</em>. Now, I understand that
 he&rsquo;s trying to make an apples/apples comparison and keep the data structure as
@@ -138,17 +136,17 @@ close to the C++ one as possible, but I think that&rsquo;s missing the point. If
 you&rsquo;re going to compare two languages, using their <em>built-in typical sort
 functions</em>, shouldn&rsquo;t you use their typical <em>data structures</em> too? Here&rsquo;s how a
 regular C# developer would define <code>Data</code>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">class</span> <span class="t">Data</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">class</span> <span class="t">Data</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
     <span class="k">public</span> <span class="t">char</span><span class="p">[]</span> <span class="i">data</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="i">Data</span><span class="p">()</span> <span class="p">{</span> <span class="i">data</span> <span class="o">=</span> <span class="k">new</span> <span class="t">char</span><span class="p">[</span><span class="n">128</span><span class="p">];</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>No unmanaged code, no structs (which are rarely used in C#). Just a regular
 class with an array. Here&rsquo;s the results:</p>
-
 <h2>Modified to typical C# code</h2><div class="table">
 <table>
 <thead>
@@ -232,7 +230,6 @@ class with an array. Here&rsquo;s the results:</p>
 </tr>
 </table>
 </div>
-
 <p>Let&rsquo;s compare the last lines of each:</p><div class="table">
 <table>
 <thead>
@@ -267,15 +264,12 @@ class with an array. Here&rsquo;s the results:</p>
 </tr>
 </table>
 </div>
-
 <p>Um, <em>slightly</em> different? In his original post, he states that the indirect
 sorting is twice as fast in C++ than in C#. I can&rsquo;t do a direct comparison
 since I didn&rsquo;t run the C++ code, but since my change to the C# made it run
 2.885 times faster than his C# code, it stands to reason that the <strong>C# and C++
 performance are neck and neck, if not a bit faster in C#</strong>.</p>
-
 <h2>Apples to oranges to avocados</h2>
-
 <p>If you&rsquo;re rooting for the C++ side, you&rsquo;re probably thinking, &ldquo;No fair! The C#
 one didn&rsquo;t have to move the whole array around in memory!&rdquo; Well, yeah, it
 didn&rsquo;t: <em>because that&rsquo;s how C# programmers use the language</em>. Since it&rsquo;s safe
@@ -284,12 +278,11 @@ spend effort avoiding using &ldquo;dangerous&rdquo; pointers (i.e. reference typ
 is simply how the language is used. To me, the fairest comparison is one that
 preserves both the procedures (which he did by using the built-in sorts) <em>and</em>
 the data structures (which he did not do) used by each language.</p>
-
 <h2>The code</h2>
-
 <p>Aside from the <code>Data</code> change above, I cleaned up some of the copy and paste in
 his code. Here&rsquo;s what I used:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">using</span> <span class="i">System</span><span class="p">;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">using</span> <span class="i">System</span><span class="p">;</span>
 <span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Collections</span><span class="p">;</span>
 <span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Collections</span><span class="p">.</span><span class="i">Generic</span><span class="p">;</span>
 <span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Text</span><span class="p">;</span>
@@ -468,8 +461,8 @@ his code. Here&rsquo;s what I used:</p>
             <span class="i">Console</span><span class="p">.</span><span class="i">ReadKey</span><span class="p">();</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
   <div class="comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">

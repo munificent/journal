@@ -36,31 +36,29 @@
 </h4>
 <p>I hate <a href="http://en.wikipedia.org/wiki/DRY">duplicate code</a>. <a href="http://c2.com/cgi/wiki?DontRepeatYourself">Hate it</a> <a href="http://www.codinghorror.com/blog/archives/000805.html">hate it</a> <a href="http://www.thefrontside.net/blog/repeat_yourself">hate it</a>. At the same time, I <em>do</em> like having my code check its arguments. After a
 while, I noticed that half of the functions I wrote looked like this:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">Foo</span> <span class="i">foo</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">Foo</span> <span class="i">foo</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="i">foo</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="t">ArgumentNullException</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 
     <span class="c">// ...</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>That&rsquo;s good code in the sense that it bails on <code>null</code>, but it&rsquo;s got a couple
 of things I don&rsquo;t like. First, I have to keep copying and pasting that exception line in every method. I know, it&rsquo;s just one line, but it started to
 annoy me.</p>
-
 <p>Worse is that to a <em>caller</em> of the function, there&rsquo;s no way to tell that
 <code>SomeMethod()</code> doesn&rsquo;t allow a <code>null</code> value for <code>foo</code> without looking at the
 method body (which may not be available to an API user).</p>
-
 <p>The <a href="https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1?view=net-5.0"><code>Nullable&lt;T&gt;</code></a> type in the <a href="https://docs.microsoft.com/en-us/dotnet/standard/framework-libraries">BCL</a> (which is automatically
 aliased to it&rsquo;s more familiar <code>?</code>, as in <code>int?</code>) had me wondering. Can I make
 the opposite? A &ldquo;not nullable?&rdquo;</p>
-
 <h2>NotNull&lt;T&gt;</h2>
-
 <p>Let&rsquo;s build it a bit at a time. The core not-very-clever idea is just a class
 that wraps a reference. When you construct it, it throws our familiar
 <code>ArgumentNullException</code> if the reference is <code>null</code>:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">class</span> <span class="t">NotNull</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">NotNull</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">T</span> <span class="i">Value</span>
     <span class="p">{</span>
@@ -78,35 +76,41 @@ that wraps a reference. When you construct it, it throws our familiar
     <span class="p">}</span>
 
     <span class="k">private</span> <span class="t">T</span> <span class="i">mValue</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Definitely not rocket science. Now you can define methods like this:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">NotNull</span><span class="o">&lt;</span><span class="t">Foo</span><span class="o">&gt;</span> <span class="i">foo</span><span class="p">)</span> <span class="p">{}</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">NotNull</span><span class="o">&lt;</span><span class="t">Foo</span><span class="o">&gt;</span> <span class="i">foo</span><span class="p">)</span> <span class="p">{}</span></code></pre>
+</div>
 <p>By the time you get to your method body, you can be sure that <code>foo</code> is not
 <code>null</code>. Unfortunately, your call sites just got uglier:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">SomeMethod</span><span class="p">(</span><span class="k">new</span> <span class="t">NotNull</span><span class="p">(</span><span class="i">myFoo</span><span class="p">));</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">SomeMethod</span><span class="p">(</span><span class="k">new</span> <span class="t">NotNull</span><span class="p">(</span><span class="i">myFoo</span><span class="p">));</span></code></pre>
+</div>
 <p>A conversion operator will fix that:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="c">// In NotNull&lt;T&gt;:</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="c">// In NotNull&lt;T&gt;:</span>
 <span class="k">public</span> <span class="k">static</span> <span class="k">implicit</span> <span class="k">operator</span> <span class="t">NotNull</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="t">T</span> <span class="i">maybeNull</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">NotNull</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="i">maybeNull</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Now the call sites are unchanged:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">SomeMethod</span><span class="p">(</span><span class="i">mFoo</span><span class="p">);</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">SomeMethod</span><span class="p">(</span><span class="i">mFoo</span><span class="p">);</span></code></pre>
+</div>
 <p>When you make the call, the compiler automatically inserts a conversion, which
 in turn bails if <code>myFoo</code> is <code>null</code>. We can make things a little easier by
 providing a conversion the other way too:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">public</span> <span class="k">static</span> <span class="k">implicit</span> <span class="k">operator</span> <span class="i">T</span><span class="p">(</span><span class="t">NotNull</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="i">notNull</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">implicit</span> <span class="k">operator</span> <span class="i">T</span><span class="p">(</span><span class="t">NotNull</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="i">notNull</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="i">notNull</span><span class="p">.</span><span class="i">Value</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Now you can do this:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">NotNull</span><span class="o">&lt;</span><span class="t">Foo</span><span class="o">&gt;</span> <span class="i">foo</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">NotNull</span><span class="o">&lt;</span><span class="t">Foo</span><span class="o">&gt;</span> <span class="i">foo</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="c">// Automatically converts on assign. :)</span>
     <span class="t">Foo</span> <span class="i">someFoo</span> <span class="o">=</span> <span class="i">foo</span><span class="p">;</span>
@@ -114,35 +118,32 @@ providing a conversion the other way too:</p>
     <span class="c">// But not on member access. :(</span>
     <span class="c">// Can&#39;t do foo.SomeFooProperty, have to do:</span>
     <span class="i">foo</span><span class="p">.</span><span class="i">Value</span><span class="p">.</span><span class="i">SomeFooProperty</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Not too shabby. The bonus, and the real reason I like this is that you&rsquo;ve now
 <strong>decorated the function signature itself with its requirements</strong>. Any caller
 of <code>SomeMethod()</code> will now see in Intellisense that it requires a
 <code>NotNull&lt;Foo&gt;</code>. We&rsquo;ve moved an <em>imperative</em> exception check to a
 <em><a href="http://en.wikipedia.org/wiki/Declarative_programming">declarative</a> property</em> of the argument itself.</p>
-
 <h2>Caveats</h2>
-
 <p>I&rsquo;d like to say this is a perfect solution, but alas it&rsquo;s not. There&rsquo;s at
 least one caveat to be aware of. This won&rsquo;t work with interface types. That&rsquo;s
 because value types can implement interfaces too, and you can&rsquo;t compare a
 value type to <code>null</code>. If you can figure out a way around this, holler.</p>
-
 <p><strong>Edit:</strong> as Brad points out below, this does work with interfaces&hellip; sort of.
 The limitation is that implicit conversion operators don&rsquo;t work with them. The
 actual wrapping and <code>null</code> checks are fine. It&rsquo;s just that to use it with an
 interface, you have to do:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="i">SomeMethod</span><span class="p">(</span><span class="k">new</span> <span class="t">NotNull</span><span class="p">(</span><span class="i">myInterfaceFoo</span><span class="p">));</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="i">SomeMethod</span><span class="p">(</span><span class="k">new</span> <span class="t">NotNull</span><span class="p">(</span><span class="i">myInterfaceFoo</span><span class="p">));</span></code></pre>
+</div>
 <p>which is kind of lame. But aside from that, you can use interfaces with this.
 Thanks, B-Rad!</p>
-
 <h2>The whole shebang</h2>
-
 <p>Oh, and here&rsquo;s a prettier version with comments and stuff. Don&rsquo;t say I never
 gave you nothing:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="c">/// &lt;summary&gt;</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="c">/// &lt;summary&gt;</span>
 <span class="c">/// &lt;para&gt;</span>
 <span class="c">/// Wrapper around a reference that ensures the reference is not &lt;c&gt;null&lt;/c&gt;.</span>
 <span class="c">/// Provides implicit cast operators to automatically wrap and unwrap</span>
@@ -214,10 +215,11 @@ gave you nothing:</p>
     <span class="p">}</span>
 
     <span class="k">private</span> <span class="t">T</span> <span class="i">mValue</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>Here&rsquo;s a unit test:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span></span><span class="p">[</span><span class="a">TestFixture</span><span class="p">]</span>
+<div class="highlight">
+<pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="a">TestFixture</span><span class="p">]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="t">NotNullFixture</span>
 <span class="p">{</span>
     <span class="p">[</span><span class="a">Test</span><span class="p">]</span>
@@ -265,8 +267,8 @@ gave you nothing:</p>
     <span class="p">}</span>
 
     <span class="k">public</span> <span class="k">class</span> <span class="t">Foo</span> <span class="p">{</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
   <div class="comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">

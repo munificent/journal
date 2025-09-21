@@ -36,112 +36,115 @@
 </h4>
 <p><em>This is kinda like part three of the Iteration Inside and Out posts, so you may
 want to check out <a href="/2013/01/13/iteration-inside-and-out/">part one</a> and <a href="/2013/02/24/iteration-inside-and-out-part-2/">part two</a> too. But you don&rsquo;t have to.</em></p>
-
 <p>Most programming languages have one or two singleton values floating around.
 These are special built-in objects that only have a single instance. <code>null</code> or
 <code>nil</code> are common. Some languages put <code>true</code> and <code>false</code> in the same bucket.
 JavaScript, ever the hipster, ironically defines one called
 <a href="http://javascriptweblog.wordpress.com/2010/08/16/understanding-undefined-and-preventing-referenceerrors/"><code>undefined</code></a>.</p>
-
 <p>I wanted to talk a little bit about one I just added to my little language
 <a href="http://magpie-lang.org/">Magpie</a>: a <a href="http://en.wikipedia.org/wiki/Sentinel_value">sentinel value</a> called <code>done</code>. I&rsquo;m still not certain it&rsquo;s a great
 idea, but I&rsquo;ll walk you through my thoughts. If nothing else, maybe it will
 serve as a cautionary tale for other, smarter language designers.</p>
-
 <h2>Channels</h2>
-
 <p>I ran into the problem that ultimately led to <code>done</code> when I started working on
 Magpie&rsquo;s concurrency story. Its model is based on <a href="http://en.wikipedia.org/wiki/Green_threads">fibers</a> and <a href="http://golang.org/doc/effective_go.html#channels">channels</a>,
 much like <a href="http://golang.org/">Go</a> or other <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a>-inspired languages. You can spin up a new
 fiber using the <code>async</code> keyword:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;I&#39;m in another fiber!&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Fibers are cooperatively scheduled so they only yield to other fibers when they
 do something that requires waiting. Usually that means IO. So if you do the
 above, you won&rsquo;t see that message get printed until something causes the main
 fiber to yield. For example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;I&#39;m in another fiber!&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="i">print</span><span class="p">(</span><span class="s">&quot;Before&quot;</span><span class="p">)</span>
-<span class="i">print</span><span class="p">(</span><span class="s">&quot;After&quot;</span><span class="p">)</span>
-</code></pre></div>
+<span class="i">print</span><span class="p">(</span><span class="s">&quot;After&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>This program will create a second fiber (but not switch to it). Then it gets to
 <code>print("Before")</code> in the main fiber. Since printing is IO, that switches to the
 second fiber. That in turn queues up <em>its</em> <code>print</code> and suspends again, so the
 main fiber resumes. Ultimately, it prints:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Before
+<div class="highlight">
+<pre><code class="language-text" data-lang="text">Before
 I&#39;m in another fiber!
-After
-</code></pre></div>
+After</code></pre>
+</div>
 <p>You can spin up lots and lots of fibers because they don&rsquo;t use OS threads, just
 some memory in the interpreter. This is swell for decoupling stuff and running
 things concurrently. But sometimes you do need to coordinate fibers with each
 other. For that, we&rsquo;ve got channels.</p>
-
 <p>A channel is a simple object that you can send objects into and then receive
 them from another channel. You can create one like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">channel</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">channel</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span></code></pre>
+</div>
 <p>To send a value along it, just do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">channel</span> <span class="i">send</span><span class="p">(</span><span class="s">&quot;My value&quot;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="i">channel</span> <span class="i">send</span><span class="p">(</span><span class="s">&quot;My value&quot;</span><span class="p">)</span></code></pre>
+</div>
 <p>And you can receive it like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">channel</span> <span class="i">receive</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">channel</span> <span class="i">receive</span></code></pre>
+</div>
 <p>The fun bit is that when a fiber sends a value along a channel, it causes that
 fiber to suspend until some <em>other</em> fiber shows up to receive the value. A send
 doesn&rsquo;t complete until the object has been received. So channels let you not
 just communicate but also <em>synchronize.</em></p>
-
 <h2>Show&rsquo;s over, folks</h2>
-
 <p>There&rsquo;s one other thing you can do with a channel, you can close it:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">channel</span> <span class="i">close</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="i">channel</span> <span class="i">close</span></code></pre>
+</div>
 <p>That puts the channel out of commission and tells everyone that they will
 receive no more values from it. The question I ran into was, &ldquo;What happens to
 fibers that are waiting to receive on a channel when it gets closed?&rdquo; For
 example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">channel</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">channel</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span>
 
 <span class="c">// Wait for a value and print it.</span>
 <span class="k">async</span> <span class="i">print</span><span class="p">(</span><span class="i">channel</span> <span class="i">receive</span><span class="p">)</span>
 
 <span class="c">// From the main fiber, close the channel.</span>
-<span class="i">channel</span> <span class="i">close</span>
-</code></pre></div>
+<span class="i">channel</span> <span class="i">close</span></code></pre>
+</div>
 <p>Here, the second fiber is sitting there, relaxing, maybe having a cocktail while
 it waits for the channel to spew something forth. But it doesn&rsquo;t, it gets
 closed. The fiber shouldn&rsquo;t just stay suspended <em>forever</em>, so how should it get
 notified?</p>
-
 <p>One option would be have <code>receive</code> <a href="http://magpie-lang.org/error-handling.html">throw an error</a> when the channel gets
 closed. So you&rsquo;d handle it something like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
   <span class="k">do</span>
     <span class="i">print</span><span class="p">(</span><span class="i">channel</span> <span class="i">receive</span><span class="p">)</span>
   <span class="k">catch</span> <span class="i">err</span> <span class="k">is</span> <span class="t">ChannelClosedError</span> <span class="k">then</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;Sorry, no value for you&quot;</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Actually, any <a href="http://magpie-lang.org/blocks.html">block</a> can have a <code>catch</code> clause in Magpie, so the explicit
 <code>do</code> here is redundant. You&rsquo;d really just do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
   <span class="i">print</span><span class="p">(</span><span class="i">channel</span> <span class="i">receive</span><span class="p">)</span>
 <span class="k">catch</span> <span class="i">err</span> <span class="k">is</span> <span class="t">ChannelClosedError</span> <span class="k">then</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Sorry, no value for you&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>That&rsquo;s not too bad, but consider something a little more fleshed out. In many
 cases, you&rsquo;ll receive something from a channel and do different stuff based on
 what you get. Channels are often used for <em>messages</em> and the specific message
 will often cause different behavior. You can imagine something like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">channel</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">channel</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span>
 
 <span class="k">async</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">1</span>
@@ -151,12 +154,13 @@ will often cause different behavior. You can imagine something like:</p>
       <span class="k">case</span> <span class="s">&quot;dec&quot;</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="i">count</span> <span class="o">=</span> <span class="i">count</span> <span class="o">-</span> <span class="n">1</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Here we&rsquo;ve got a little concurrent counter that you can send messages to in
 order to increment and decrement the value. If it also needs to handle the
 channel closing, you&rsquo;d need to do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">1</span>
   <span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
     <span class="k">match</span> <span class="i">channel</span> <span class="i">receive</span>
@@ -166,34 +170,30 @@ channel closing, you&rsquo;d need to do:</p>
   <span class="k">catch</span> <span class="i">err</span> <span class="k">is</span> <span class="t">ChannelClosedError</span> <span class="k">then</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;Closed&quot;</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>That feels redundant to me. Catching errors is basically <a href="http://magpie-lang.org/patterns.html">pattern matching</a>
 (in fact, in Magpie it uses the exact same syntax and semantics as a
 <a href="http://magpie-lang.org/pattern-matching.html"><code>match</code></a> expression), so it feels dumb to have to have <em>two</em> matches,
 one for the set of normal values and then this extra <code>catch</code> for the one special
 &ldquo;no more values&rdquo; signal.</p>
-
 <p>It&rsquo;s not just redundant either. Even if you don&rsquo;t care about the channel
 closing, you <em>have</em> to add the <code>catch</code> here. Otherwise, since it&rsquo;s a <em>thrown</em>
 error, it will unwind the fiber&rsquo;s callstack on you.</p>
-
 <p>Both of those are no fun, so I figured, why not just make <code>receive</code> <em>return</em> a
 value when the channel is closed instead of <em>throwing</em> one. Magpie already has
 a <code>null</code>-like sentinel value called <a href="http://magpie-lang.org/primitives.html#nothing"><code>nothing</code></a>, so I could just say
 <code>receive</code> returns <code>nothing</code> when the channel is closed.</p>
-
 <p>But that&rsquo;s a bit lame. While <code>nothing</code> doesn&rsquo;t appear as often as <code>null</code> does
 in other languages, it&rsquo;s still a general-purpose &ldquo;no value here&rdquo; object that
 users need to be free to use anywhere. If <code>receive</code> returns <code>nothing</code> when the
 channel is closed, there&rsquo;d be no way to explicitly send <code>nothing</code> along an open
 channel. Receivers wouldn&rsquo;t be able to tell the difference.</p>
-
 <h2>Are we done?</h2>
-
 <p>So I made another singleton value: <code>done</code>. It exists solely to represent &ldquo;no
 more values&rdquo;. With this, the above code is like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">1</span>
   <span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
     <span class="k">match</span> <span class="i">channel</span> <span class="i">receive</span>
@@ -202,52 +202,55 @@ more values&rdquo;. With this, the above code is like:</p>
       <span class="k">case</span> <span class="i">done</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Closed&quot;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>It may seem weird to have a method return values of different types, but this
 is natural in Magpie. The language is dynamically typed, and revolves heavily
 around pattern matching. In, say, JavaScript, if you have a function that can
 return a number or a string and callers will want to handle those cases
 differently you get this ugly code:</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">foo</span><span class="p">();</span>
+<div class="highlight">
+<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">foo</span><span class="p">();</span>
 <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="i">result</span> <span class="o">===</span> <span class="s">&#39;number&#39;</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">console</span><span class="p">.</span><span class="i">log</span><span class="p">(</span><span class="s">&quot;number&quot;</span><span class="p">);</span>
 <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="i">result</span> <span class="o">===</span> <span class="s">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">console</span><span class="p">.</span><span class="i">log</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre>
+</div>
 <p>In Magpie, that&rsquo;s:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">match</span> <span class="i">foo</span><span class="p">()</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">match</span> <span class="i">foo</span><span class="p">()</span>
   <span class="k">case</span> <span class="k">is</span> <span class="t">Num</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;number&quot;</span><span class="p">)</span>
   <span class="k">case</span> <span class="k">is</span> <span class="t">String</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>Or, since the language is expression-oriented, you could even do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">print</span><span class="p">(</span><span class="k">match</span> <span class="i">foo</span><span class="p">()</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="i">print</span><span class="p">(</span><span class="k">match</span> <span class="i">foo</span><span class="p">()</span>
   <span class="k">case</span> <span class="k">is</span> <span class="t">Num</span> <span class="k">then</span> <span class="s">&quot;number&quot;</span>
   <span class="k">case</span> <span class="k">is</span> <span class="t">String</span> <span class="k">then</span> <span class="s">&quot;string&quot;</span>
-<span class="k">end</span><span class="p">)</span>
-</code></pre></div>
+<span class="k">end</span><span class="p">)</span></code></pre>
+</div>
 <p>In fact, because Magpie also has <a href="http://magpie-lang.org/multimethods.html">multimethods</a>, even this would do the right
 thing:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="i">showType</span><span class="p">(</span><span class="k">is</span> <span class="t">Num</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;number&quot;</span><span class="p">)</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">showType</span><span class="p">(</span><span class="k">is</span> <span class="t">Num</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;number&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="i">showType</span><span class="p">(</span><span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;string&quot;</span><span class="p">)</span>
 
-<span class="i">showType</span><span class="p">(</span><span class="i">foo</span><span class="p">())</span>
-</code></pre></div>
+<span class="i">showType</span><span class="p">(</span><span class="i">foo</span><span class="p">())</span></code></pre>
+</div>
 <p>Where was I? Oh, right. So it&rsquo;s totally kosher to have methods return values of
 different types and have callers dispatch on them. That was enough to talk
 myself into being OK with <code>receive</code> having a sort of ad-hoc variant-like return
 value.</p>
-
 <h2>The next iteration</h2>
-
 <p>Once I had that, I started fleshing out channels a bit more. One thing I noticed
 is that you often read from a channel repeatedly. See that <code>while true do</code> loop
 up there? That seemed a bit silly. Magpie has <code>for</code> loops. Like <a href="http://docs.oracle.com/javase/6/docs/api/java/util/Iterator.html">most</a>
 <a href="http://msdn.microsoft.com/en-us/library/78dfe2yb.aspx">languages</a>, those are syntactic sugar for an <a href="http://docs.python.org/2/c-api/iter.html">iteration
 protocol</a>. If I made channels support that directly, you could do:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">async</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">async</span>
     <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">1</span>
     <span class="k">for</span> <span class="i">value</span> <span class="k">in</span> <span class="i">channel</span> <span class="i">receive</span>
         <span class="k">match</span> <span class="i">value</span>
@@ -256,55 +259,55 @@ protocol</a>. If I made channels support that directly, you could do:</p>
         <span class="k">end</span>
     <span class="k">end</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;Closed&quot;</span><span class="p">)</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>This protocol has two levels: iter<em>able</em> and iter<em>ator</em>. The iterable protocol
 is for an object that can be iterated: lists, collections, etc. There&rsquo;s just one
 method:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Iterable</span><span class="p">)</span> <span class="i">iterate</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Iterable</span><span class="p">)</span> <span class="i">iterate</span></code></pre>
+</div>
 <p>An iterable type specializes <code>iterate</code> to return a new iterator for the object.
 This lets you iterate over objects without modifying the original object. It
 would be pretty weird if you could only use a list in one loop at a time.</p>
-
 <p>In the case of channels, though, iterating it <em>is</em> mutating the original object,
 so <code>iterate</code> on a channel just returns the same object. Channels are both
 iterables <em>and</em> iterators. The iterat<em>or</em> protocol was two methods:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Iterator</span><span class="p">)</span> <span class="i">advance</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Iterator</span><span class="p">)</span> <span class="i">advance</span></code></pre>
+</div>
 <p>This tries to advance the iterator to the next item and returns <code>true</code> if it
 found another item.</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Iterator</span><span class="p">)</span> <span class="i">current</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Iterator</span><span class="p">)</span> <span class="i">current</span></code></pre>
+</div>
 <p>This returns the current item. So there was a two method protocol here. Most
 other languages have something similar. You need two methods because one crank
 of the iterator needs to return two bits of data: whether or not you&rsquo;re done
 iterating, and the next value if you aren&rsquo;t.</p>
-
 <p>I say &ldquo;<em>was</em> a two method protocol&rdquo; because now that I had this <code>done</code> value, I
 realized I could simplify it. All I need is <code>advance</code>. It returns the next item
 if there is one, or <code>done</code> if there isn&rsquo;t. The only thing you lose is the
 ability to iterate over a collection that actually contains <code>done</code> as a value.
 But I&rsquo;m OK with that. That seems like a small thing to give up to get a simpler
 protocol.</p>
-
 <p>Now, not only can you use channels any place you work with sequences, but even
 implementing your own sequences is a little easier.</p>
-
 <h2>Your favorite functional friends</h2>
-
 <p>When I say &ldquo;any place you work with sequences,&rdquo; much of what I&rsquo;m thinking of is
 those workhorse methods that transform sequences. Good old <a href="http://en.wikipedia.org/wiki/Map_(higher-order_function)"><code>map()</code></a>,
 <a href="http://en.wikipedia.org/wiki/Filter_(higher-order_function)"><code>filter()</code></a>, <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)"><code>fold()</code></a>, etc. This gives you a feel for what they
 look like in Magpie:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">]</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">]</span>
 <span class="i">list</span> <span class="i">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="i">i</span> <span class="o">*</span> <span class="n">3</span><span class="p">)</span> <span class="c">// 3, 6, 9, 12.</span>
-<span class="i">list</span> <span class="i">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="i">i</span> <span class="o">%</span> <span class="n">2</span> <span class="o">==</span> <span class="n">0</span><span class="p">)</span> <span class="c">// 2, 4.</span>
-</code></pre></div>
+<span class="i">list</span> <span class="i">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="i">i</span> <span class="o">%</span> <span class="n">2</span> <span class="o">==</span> <span class="n">0</span><span class="p">)</span> <span class="c">// 2, 4.</span></code></pre>
+</div>
 <p>Since I specialized these on Iterable, that means any iterable type, including
 channels, gets them. For a longer example, Go has <a href="http://golang.org/doc/play/sieve.go">an example</a>
 showing a concurrent <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve of Eratosthenes</a>. Ported to Magpie, it looks like:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="c">// Send the sequence 2, 3, 4, ... to &#39;channel&#39;.</span>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="c">// Send the sequence 2, 3, 4, ... to &#39;channel&#39;.</span>
 <span class="k">def</span> <span class="i">generate</span><span class="p">(</span><span class="i">channel</span> <span class="k">is</span> <span class="t">Channel</span><span class="p">)</span> <span class="k">async</span>
   <span class="k">for</span> <span class="i">i</span> <span class="k">in</span> <span class="n">2.</span><span class="p">.</span><span class="n">9999</span> <span class="k">do</span> <span class="i">channel</span> <span class="i">send</span><span class="p">(</span><span class="i">i</span><span class="p">)</span>
 <span class="k">end</span>
@@ -324,53 +327,47 @@ showing a concurrent <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
   <span class="k">val</span> <span class="i">sieve</span> <span class="o">=</span> <span class="t">Channel</span> <span class="i">new</span>
   <span class="i">filter</span><span class="p">(</span><span class="i">channel</span><span class="p">,</span> <span class="i">sieve</span><span class="p">,</span> <span class="i">prime</span><span class="p">)</span>
   <span class="i">channel</span> <span class="o">=</span> <span class="i">sieve</span>
-<span class="k">end</span>
-</code></pre></div>
+<span class="k">end</span></code></pre>
+</div>
 <p>I won&rsquo;t walk you through the whole thing, but I do think it&rsquo;s pretty rad. The
 neat bit is this line:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="i">input</span> <span class="i">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="i">i</span> <span class="o">%</span> <span class="i">prime</span> <span class="o">!=</span> <span class="n">0</span><span class="p">)</span> <span class="i">pipeTo</span><span class="p">(</span><span class="i">output</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="i">input</span> <span class="i">where</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="i">i</span> <span class="o">%</span> <span class="i">prime</span> <span class="o">!=</span> <span class="n">0</span><span class="p">)</span> <span class="i">pipeTo</span><span class="p">(</span><span class="i">output</span><span class="p">)</span></code></pre>
+</div>
 <p>Here, <code>where()</code> is Magpie&rsquo;s filter function. It takes an iterable on the left
 and a predicate function on the right. It returns an iterable generating all of
 the items of the original sequence where the predicate returns <code>true</code>. Note that
 here, the argument on the left is a <em>channel</em> so this magically becomes an
 <em>asynchronous</em> filter.</p>
-
 <p>Likewise, <code>pipeTo()</code> is a method that takes an iterable and a channel and sends
 all of the values in the iterable to the channel. So we&rsquo;re taking a channel,
 filtering it like a collection, then pumping that collection back into a new
 channel. This all happens asynchronously, but the code looks like you&rsquo;re just
 playing with regular collections.</p>
-
 <p>Crap, I&rsquo;ve digressed again. I was supposed to be talking about <code>done</code>. I just
 think treating channels as sequences is really cool. OK, back to the matter at
 hand.</p>
-
 <h2>Now are we done yet?</h2>
-
 <p>The simplest of the higher-order methods for working with iterables is <code>each()</code>.
 All it does is call the given function for each item in the sequence. In other
 languages this is sometimes called <code>forEach()</code>. Most of the time you don&rsquo;t need
 it since it is almost identical to just using a built-in <code>for</code> loop. But
 sometimes it&rsquo;s convenient, so Magpie has it.</p>
-
 <p>If you&rsquo;ve worked with <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/forEach"><code>forEach()</code></a> in JavaScript, one nasty problem is
 how do you stop early if you don&rsquo;t actually need to walk the whole sequence?
 Ruby has some special syntax built into the language, <code>break</code> and <code>next</code>, that
 are designed to work specifically with blocks and iterators. JS ain&rsquo;t so lucky.</p>
-
 <p>Magpie has <code>break</code> for <code>for</code> loops, but a method like <code>each</code> is just a method
 that takes a function. You can&rsquo;t <code>break</code> from within a function. But&hellip; since we
 have this <code>done</code> value laying around, we can use it here too. So the way
 <code>each()</code> (and <code>map()</code> and <code>where()</code> and others) work is if the callback ever
 returns <code>done</code> that means &ldquo;stop iterating now&rdquo;.</p>
-
 <p>For example:</p>
-<div class="highlight"><pre><code class="language-magpie" data-lang="magpie"><span></span><span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">]</span> <span class="i">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="k">if</span> <span class="i">i</span> <span class="o">&lt;</span> <span class="n">3</span> <span class="k">then</span> <span class="i">i</span> <span class="o">*</span> <span class="n">2</span> <span class="k">else</span> <span class="i">done</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight">
+<pre><code class="language-magpie" data-lang="magpie"><span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">]</span> <span class="i">map</span><span class="p">(</span><span class="k">fn</span><span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="k">if</span> <span class="i">i</span> <span class="o">&lt;</span> <span class="n">3</span> <span class="k">then</span> <span class="i">i</span> <span class="o">*</span> <span class="n">2</span> <span class="k">else</span> <span class="i">done</span><span class="p">)</span></code></pre>
+</div>
 <p>This will not only transform the values&mdash;what <code>map()</code> usually does&mdash;but it
 will also truncate the sequence and just return <code>[2, 4]</code>.</p>
-
 <p>So we&rsquo;ve got an easier way to handle closed channels, a simpler iterator
 protocol, and more expressive collection-manipulation methods. Not too bad for
 one little sentinel value.</p>

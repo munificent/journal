@@ -45,7 +45,7 @@ I've seen identifiers over 60 characters long. You could fit a haiku or a koan
 in there (and likely enlighten the reader more than the actual chosen name did).
 Fear not, I am here to help.
 
-## Choosing a Good Name
+## Choosing a good name
 
 A name has two goals:
 
@@ -198,7 +198,7 @@ it do performance evaluations? Lean over your cubicle and ask for TPS reports?
 Ask yourself "Would this identifier mean the same thing if I removed the word?"
 If so, the word doesn't carry its weight. Vote if off the island.
 
-## Applying the Guidelines... to Waffles
+## Applying the guidelines... to waffles
 
 To give you a feel for how these rules work in practice, here's an example that
 breaks all of these rules. This contrived example is tragically close to real

@@ -4,8 +4,34 @@ tags: code language typescript dart
 ---
 
 <div class="update">
-<p>Oops! I got a bunch of this wrong because <code>Base</code> and <code>Derived</code> have no members. Since TypeScript is structurally typed, that's what allows all of the variance I describe below.</p>
-<p>See Anders Hejlsberg's comment at the end for more details.</p>
+
+Oops! I got a bunch of this wrong because `Base` and `Derived` have no members. Since TypeScript is structurally typed, that's what allows all of the variance I describe below.
+
+Anders Hejlsberg (!) commented on my post:
+
+> In general, our type system is structural and generics are co-variant—but
+> since parameters are naturally contra-variant, in aggregate they end up being
+> bi-variant, as you’ve discovered. In your examples, `Box<Base>` and
+> `Box<Derived>` are interchangeable because they’re structurally equivalent
+> (they have the same set of members, namely none). If you add a member to
+> `Derived`, you’ll notice that `Box<Base>` is no longer assignable to
+> `Box<Derived>`.
+>
+> TypeScript's view of classes is that they're just declarations of a named
+> interface and a constructor function, and the named interface is compatible
+> with any other interface that has the same set of members. What’s interesting
+> is our treatment of private members. Private members are inherited, but are
+> compatible only with themselves. If you add a private member to Base, then
+> only interfaces derived from Base can be compatible because only those
+> interfaces would have Base’s private member. Thus, private members become
+> “brands” that limit you to a particular branch of a hierarchy. This makes
+> sense because when a class has only public members, you could potentially
+> override every member—so it’s no different from interface. But when a private
+> member is introduced, the substitution principle would break down unless you
+> ensure every subtype has that exact private member.
+>
+> Fun stuff!
+
 </div>
 
 This was just going to be a comment on [this reddit thread][thread], but then it

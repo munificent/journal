@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Sun, 21 Sep 2025 18:56:29 GMT</pubDate>
-    <lastBuildDate>Sun, 21 Sep 2025 18:56:29 GMT</lastBuildDate>
+    <pubDate>Sun, 21 Sep 2025 22:50:28 GMT</pubDate>
+    <lastBuildDate>Sun, 21 Sep 2025 22:50:28 GMT</lastBuildDate>
 
 
     <item>
@@ -1784,7 +1784,7 @@ would quickly become annoying. Let&amp;rsquo;s say you refactor the above code t
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;checkRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Bool&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
-&lt;p&gt;That no longer works. Inside &lt;code&gt;checkRange()&lt;/code&gt; the compiles has lost track that
+&lt;p&gt;That no longer works. Inside &lt;code&gt;checkRange()&lt;/code&gt; the compiler has lost track that
 &lt;code&gt;weapon&lt;/code&gt; is always a &lt;code&gt;RangedWeapon&lt;/code&gt;. You could come up with a way to annotate
 that, but now we&amp;rsquo;re back to subtyping and all the complexity it involves.&lt;/p&gt;
 &lt;p&gt;So, overall, yes, subtyping and flow analysis is a thing that could work here,
@@ -2024,8 +2024,8 @@ analyzed a huge corpus of real-world Dart, I found that only about 20% of &lt;co
 statements had &lt;code&gt;else&lt;/code&gt; branches.&lt;/p&gt;
 &lt;p&gt;Now that we understand when an &lt;code&gt;if&lt;/code&gt; expression is in a context where it&amp;rsquo;s value
 isn&amp;rsquo;t used, we can allow omitting &lt;code&gt;else&lt;/code&gt; branches those. The next rule is: &lt;strong&gt;An
-&lt;code&gt;if&lt;/code&gt; expression can can omit the else branch when in a context where its value
-isn&amp;rsquo;t used.&lt;/strong&gt;&lt;/p&gt;
+&lt;code&gt;if&lt;/code&gt; expression can omit the else branch when in a context where its value isn&amp;rsquo;t
+used.&lt;/strong&gt;&lt;/p&gt;
 &lt;h2&gt;Exiting branches&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;re almost there. It&amp;rsquo;s starting to feel like we really are type-checking an
 imperative language, not ML in BASIC&amp;rsquo;s clothing. I coded this up and
@@ -2941,7 +2941,7 @@ project has &lt;a href=&quot;https://www.amazon.com/dp/0990582906&quot;&gt;hundr
 Korean, Japanese, Chinese, German, and Polish. The book did so much better than
 I expected that I&amp;rsquo;m still not sure how to process it, beyond feeling immense
 gratitude to everyone who read it, bought a copy, or cheered me on.&lt;/p&gt;
-&lt;h2&gt;The Seed of a book&lt;/h2&gt;
+&lt;h2&gt;The seed of a book&lt;/h2&gt;
 &lt;p&gt;Once I finished the print edition of &lt;em&gt;Game Programming Patterns&lt;/em&gt;, I took some
 time off. But it didn&amp;rsquo;t take too long for that itch to write about interpreters
 to come back. I knew exactly what I was getting into with writing a book now,
@@ -3266,7 +3266,7 @@ had a reasonably coherent concept and a roughly similar amount of code.&lt;/p&gt
 &lt;p&gt;Before, I felt like I had a language and code that wanted to get out there into
 the world. Now I felt like I had a book. Or, at least, I had all of the &lt;em&gt;code&lt;/em&gt;
 for a book.&lt;/p&gt;
-&lt;h2&gt;A Chapter at a time&lt;/h2&gt;
+&lt;h2&gt;A chapter at a time&lt;/h2&gt;
 &lt;p&gt;I wrote my first book one chapter at a time. I drafted, edited, illustrated each
 chapter and put it online before moving to the next one. Serial publishing for
 the digital age. I really loved that process. It helped build an audience for
@@ -3510,7 +3510,7 @@ to scramble time as it suits me.&lt;/p&gt;
 &lt;p&gt;40 is a pretty long list of songs. Heck, some days it feels like a long list of
 years. So we&amp;rsquo;re going to need some speed, and what better way to get moving
 then&amp;hellip;&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Vppbdf-qtGU&quot;&gt;La Grange&lt;/a&gt;&lt;/strong&gt; - ZZ Top&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Vppbdf-qtGU&quot;&gt;&amp;ldquo;La Grange&amp;rdquo;&lt;/a&gt; - ZZ Top&lt;/h2&gt;
 &lt;p&gt;As you&amp;rsquo;ll find out, I live for a good build-up, and there is none better than
 this. A couple of sticks on the edge of the snare and a palm-muted riff and
 &lt;em&gt;holy crap what just happened to my pulse&lt;/em&gt;. ZZ Top is possibly the &lt;em&gt;tightest&lt;/em&gt;
@@ -3519,7 +3519,7 @@ guitar and bass that it must have been played by a single giant six-armed demon.
 &lt;p&gt;If your car is on fumes, wheezing out its last few yards, threatening to leave
 you stranded in the desert, crank this song up and I promise you you&amp;rsquo;ll get
 another mile or two out of the tank.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=qeMFqkcPYcg&quot;&gt;Sweet Dreams (Are Made of This)&lt;/a&gt;&lt;/strong&gt; - Eurythmics&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=qeMFqkcPYcg&quot;&gt;&amp;ldquo;Sweet Dreams (Are Made of This)&amp;rdquo;&lt;/a&gt; - Eurythmics&lt;/h2&gt;
 &lt;p&gt;This is the first song that I distinctly remember hearing for the first time.
 Picture tiny me standing in front of a TV, staring mouth agape at Annie Lennox&amp;rsquo;s
 bright red hair and that weird-ass video, wondering what the hell was going on
@@ -3528,7 +3528,7 @@ and why I liked it so much.&lt;/p&gt;
 brain. Lord knows I love a synth bassline and a four on the floor kick to an
 unhealthy degree. That thing I have for short hair on women must have come from
 somewhere.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=yRYFKcMa_Ek&quot;&gt;Maneater&lt;/a&gt;&lt;/strong&gt; - Daryl Hall &amp;amp; John Oates&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=yRYFKcMa_Ek&quot;&gt;&amp;ldquo;Maneater&amp;rdquo;&lt;/a&gt; - Daryl Hall &amp;amp; John Oates&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;m just old enough to remember roller rinks. My older brother and I would go,
 and I have vivid memories of how &lt;em&gt;cool&lt;/em&gt; it felt to be in that dark, cavernous
 room, surrounded by pulsing sound.&lt;/p&gt;
@@ -3540,7 +3540,7 @@ but it still sounds just as spacious and moody today as it did then.&lt;/p&gt;
 &lt;p&gt;What I also remember is strapping on my skates every time and never &lt;em&gt;once&lt;/em&gt;
 having the courage to venture off the carpet onto the rink. It took me thirty
 years and a friend&amp;rsquo;s skating party to face that fear and finally get out there.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=0R6WIbx8ysE&quot;&gt;Send Me an Angel&lt;/a&gt;&lt;/strong&gt; - Real Life&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=0R6WIbx8ysE&quot;&gt;&amp;ldquo;Send Me an Angel&amp;rdquo;&lt;/a&gt; - Real Life&lt;/h2&gt;
 &lt;p&gt;Alright, I gotta speed this up if we&amp;rsquo;re going to get through all forty in a
 reasonable amount of time. There is a special place in the dark&amp;mdash;of course
 it&amp;rsquo;s dark&amp;mdash;corner of my soul for sad synthpop. I don&amp;rsquo;t know what it is, but
@@ -3562,7 +3562,7 @@ they were going to do a weird cover and if anyone knew the song, to shout out
 the name of the band. He played the first three notes of that melody and it was
 like the heavens opened above, presumably so angels could watch me yelling &amp;ldquo;Real
 Life!&amp;rdquo; over and over at the top of my lungs like an idiot.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=m0AKJMGxwpE&quot;&gt;Enjoy the Silence&lt;/a&gt;&lt;/strong&gt; - Depeche Mode&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=m0AKJMGxwpE&quot;&gt;&amp;ldquo;Enjoy the Silence&amp;rdquo;&lt;/a&gt; - Depeche Mode&lt;/h2&gt;
 &lt;p&gt;Speaking of synthpop songs with aching melodies. I&amp;rsquo;ve listened to Depeche Mode
 so much over the years that they are all over my memories. But the best, the
 one I&amp;rsquo;ve shared with literally no one until now&amp;hellip;&lt;/p&gt;
@@ -3571,7 +3571,7 @@ two total nerds (still are), but his sister was &lt;em&gt;so cool&lt;/em&gt;&amp
 artistic. Exhibit A: giant Depeche Mode posters on her wall. Exhibit B: a
 complete and utter disinterest in interacting with us for even a second. At that
 age, that was about all it took for a crush to blossom.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Cv6tuzHUuuk&quot;&gt;Walk Like an Egyptian&lt;/a&gt;&lt;/strong&gt; - Bangles&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Cv6tuzHUuuk&quot;&gt;&amp;ldquo;Walk Like an Egyptian&amp;rdquo;&lt;/a&gt; - Bangles&lt;/h2&gt;
 &lt;p&gt;At some point in my childhood, I informed my parents that I liked music and
 desired the ability to listen to it in my bedroom. My Dad, being the music snob
 he is, solved that problem by buying young me an honest-to-God record player. No
@@ -3580,18 +3580,18 @@ cassette tapes in this household, young man!&lt;/p&gt;
 lot of time listening to the bassline in this song, gazing at the photos on the
 cover, and having thoughts about Susanna Hoffs I wasn&amp;rsquo;t quite old enough to
 process yet.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://youtu.be/vsQrKZcYtqg?t=6&quot;&gt;Istanbul (Not Constantinople)&lt;/a&gt;&lt;/strong&gt; - They Might Be Giants&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://youtu.be/vsQrKZcYtqg?t=6&quot;&gt;&amp;ldquo;Istanbul (Not Constantinople)&quot;&lt;/a&gt; - They Might Be Giants&lt;/h2&gt;
 &lt;p&gt;Look, I don&amp;rsquo;t know what happened. I&amp;rsquo;ll blame it on incredible middle school
 awkwardness, but I went through a phase where I, I shit you not, listened to
 &lt;em&gt;nothing&lt;/em&gt; but TMBG. For like two years. I still know all of the lyrics to every
 single song on &amp;ldquo;Flood&amp;rdquo;, &amp;ldquo;Lincoln&amp;rdquo;, &amp;ldquo;Apollo 18&amp;rdquo;, and &amp;ldquo;John Henry&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;They aren&amp;rsquo;t my thing very much these days, but the lyrics are still up there in
 the wetware should a particularly odd karaoke night have need of them.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=EbI0cMyyw_M&quot;&gt;Run Through the Jungle&lt;/a&gt;&lt;/strong&gt; - CCR&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=EbI0cMyyw_M&quot;&gt;&amp;ldquo;Run Through the Jungle&amp;rdquo;&lt;/a&gt; - CCR&lt;/h2&gt;
 &lt;p&gt;I mentioned intros, right? This is another of the greats. I think most people
 like the happy-dumb CCR hits, but for me I want the ones that remind me that the
 US was goin&amp;rsquo; through some &lt;em&gt;shit&lt;/em&gt; when those songs came out. This tops that list.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=9muzyOd4Lh8&quot;&gt;Nights in White Satin&lt;/a&gt;&lt;/strong&gt; - Moody Blues&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=9muzyOd4Lh8&quot;&gt;&amp;ldquo;Nights in White Satin&amp;rdquo;&lt;/a&gt; - Moody Blues&lt;/h2&gt;
 &lt;p&gt;One of the things I truly lament about my generation and the generations to
 follow is our acute self-awareness. Ironic detachment of the 90s followed by
 &lt;a href=&quot;https://en.wikipedia.org/wiki/New_Sincerity&quot;&gt;ironic &lt;em&gt;attachment&lt;/em&gt;&lt;/a&gt; left us
@@ -3602,7 +3602,7 @@ orchestra, and then slapping a &lt;em&gt;poem&lt;/em&gt; on the end? And doing i
 heartfelt, unironic sincerity? It&amp;rsquo;s an ability that seems to be completely lost.&lt;/p&gt;
 &lt;p&gt;Thankfully, this song embedded itself in my subconscious before that cultural
 shift happened. I love every single bit of this song, completely, totally.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=I_izvAbhExY&quot;&gt;Stayin&amp;rsquo; Alive&lt;/a&gt;&lt;/strong&gt; - The Bee-Gees&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=I_izvAbhExY&quot;&gt;&amp;ldquo;Stayin&amp;rsquo; Alive&amp;rdquo;&lt;/a&gt; - The Bee-Gees&lt;/h2&gt;
 &lt;p&gt;Speaking of things I love un-ironically. For a nerdy white dude, I have spent a
 surprisingly large amount of time shaking my ass on various dancefloors across
 the United States. Not with any particular &lt;em&gt;skill&lt;/em&gt; mind you, but with
@@ -3613,17 +3613,17 @@ everything unnecessary filtered out. Picking one disco song is hard, and picking
 one played by white guys is a borderline travesty, but I&amp;rsquo;d be lying if I said I
 didn&amp;rsquo;t know every single cymbal crash in this song and had my arm thrust, finger
 extended, for each.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=gzoEK545j64&quot;&gt;Groove is in the Heart&lt;/a&gt;&lt;/strong&gt; - Deee-Lite&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=gzoEK545j64&quot;&gt;&amp;ldquo;Groove is in the Heart&amp;rdquo;&lt;/a&gt; - Deee-Lite&lt;/h2&gt;
 &lt;p&gt;Bootsy&amp;rsquo;s bassline. That beat. If this don&amp;rsquo;t get your booty movin&amp;rsquo;, your booty
 must be dead.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=1lWJXDG2i0A&quot;&gt;Free Fallin&amp;rsquo;&lt;/a&gt;&lt;/strong&gt; - Tom Petty&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=1lWJXDG2i0A&quot;&gt;&amp;ldquo;Free Fallin&amp;rsquo;&quot;&lt;/a&gt; - Tom Petty&lt;/h2&gt;
 &lt;p&gt;Thomas Earl Petty is another one like Depeche Mode where it&amp;rsquo;s hard to know where
 to slot him in. His music is a constant companion in my life. Narrowing his
 presence on this list down to a single song was hard enough. &amp;ldquo;You Wreck Me&amp;rdquo;,
 &amp;ldquo;Learning to Fly&amp;rdquo;, &amp;ldquo;American Girl&amp;rdquo;, &amp;ldquo;Breakdown&amp;rdquo; are all strong contenders.&lt;/p&gt;
 &lt;p&gt;I picked this one because it spans what I think of as the two sides of Petty&amp;mdash;the straightforward timeless American rock, and the bittersweet character
 studies.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hwZNL7QVJjE&quot;&gt;Stand By Me&lt;/a&gt;&lt;/strong&gt; - Ben E. King&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hwZNL7QVJjE&quot;&gt;&amp;ldquo;Stand By Me&amp;rdquo;&lt;/a&gt; - Ben E. King&lt;/h2&gt;
 &lt;p&gt;A high school friend got a cheap acoustic guitar and I eventually got my hands
 on it. Tinkering around, I figured out the bassline to &amp;ldquo;Stand By Me&amp;rdquo;, playing
 that guitar like a bass, upside down. (I&amp;rsquo;m left-handed and it was strung
@@ -3632,7 +3632,7 @@ right-handed.) This was the first bassline I ever learned.&lt;/p&gt;
 and only reluctantly recorded it himself when he had some extra time in the
 studio. Listen to that vocal performance. Can you imagine being so good that you
 can just toss something like that out there?&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=CC5ca6Hsb2Q&quot;&gt;Children&lt;/a&gt;&lt;/strong&gt; - Robert Miles&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=CC5ca6Hsb2Q&quot;&gt;&amp;ldquo;Children&amp;rdquo;&lt;/a&gt; - Robert Miles&lt;/h2&gt;
 &lt;p&gt;Apparently, there was a whole house and techno scene going on in the world.
 Maybe if I&amp;rsquo;d been a kid in Chicago or Detroit, I would have noticed. But none of
 that made its way to southern Louisiana until this instrumental, piano-driven
@@ -3640,7 +3640,7 @@ electronica song improbably came down from space and landed on commercial radio.
 &lt;p&gt;The first time I heard this song was a &lt;em&gt;revelation&lt;/em&gt;. I didn&amp;rsquo;t even know music
 like this existed. I loved everything about it, the rigid tempo, heartbeat kick,
 offset bass, heart-stirring melody. I couldn&amp;rsquo;t get enough.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=brZ_WBEzw6E&quot;&gt;Dark + Long (Dark Train)&lt;/a&gt;&lt;/strong&gt; - Underworld&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=brZ_WBEzw6E&quot;&gt;&amp;ldquo;Dark + Long (Dark Train)&quot;&lt;/a&gt; - Underworld&lt;/h2&gt;
 &lt;p&gt;Right around this time, I met a guy at work who wore these weird pants &lt;a href=&quot;https://www.google.com/search?q=jnco&amp;client=firefox-b-1-ab&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=0ahUKEwim2dT2j4zbAhVOyWMKHfZZDaMQ_AUICigB&amp;biw=1166&amp;bih=803&quot;&gt;with
 huge legs&lt;/a&gt;. What was that about? He told my brother and I he was a &amp;ldquo;raver&amp;rdquo;
 and there was this music called &amp;ldquo;techno&amp;rdquo; and you could hear it at these things
@@ -3658,19 +3658,19 @@ Still one of the best shows I ever saw.&lt;/p&gt;
 frustrating because for most, it&amp;rsquo;s associated with Trainspotting. But that&amp;rsquo;s not
 what I think when I hear this. To me, it&amp;rsquo;s driving home from raves at the State
 Palace Theatre in New Orleans as the sun comes up in our rearview mirror.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=bV-hSgL1R74&quot;&gt;Halcyon + On + On&lt;/a&gt;&lt;/strong&gt; - Orbital&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=bV-hSgL1R74&quot;&gt;&amp;ldquo;Halcyon + On + On&amp;rdquo;&lt;/a&gt; - Orbital&lt;/h2&gt;
 &lt;p&gt;A lot of techno at the 90s was, well, kind of dumb. Maybe a good beat to dance
 to, but it didn&amp;rsquo;t leave you thinking or feeling much of anything. Aphex Twin
 took care of the &amp;ldquo;thinking&amp;rdquo; part. Orbital took care of feeling. They showed that
 music made with computers could have as much heart as anything else.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m not the kind of person to fret about what song I want played at my funeral,
 but if I had to pick, this might be it.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=WQYsGWh_vpE&quot;&gt;Roads&lt;/a&gt;&lt;/strong&gt; - Portishead&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=WQYsGWh_vpE&quot;&gt;&amp;ldquo;Roads&amp;rdquo;&lt;/a&gt; - Portishead&lt;/h2&gt;
 &lt;p&gt;Oh, the tremolo on the Rhodes, mirroring Beth Gibbons&amp;rsquo; vibrato. Those ghost hits
 on the snare. The strings. &lt;em&gt;That bassline.&lt;/em&gt; Every ounce of this is flawless.&lt;/p&gt;
 &lt;p&gt;Like most people at the time, I got into trip-hop. Some of it doesn&amp;rsquo;t hold up,
 but some of it, like this, I seem to respond to more and more the older I get.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=tSRYvYN1ayw&quot;&gt;Gorecki&lt;/a&gt;&lt;/strong&gt; - Lamb&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=tSRYvYN1ayw&quot;&gt;&amp;ldquo;Gorecki&amp;rdquo;&lt;/a&gt; - Lamb&lt;/h2&gt;
 &lt;p&gt;Around this time, I was working at an Internet start-up during the first dotcom
 bubble. Amazon had just started selling CDs and they had this new &amp;ldquo;Customers who
 bought this also bought&amp;rdquo; thing. Today, we are inundated with machine learning
@@ -3689,7 +3689,7 @@ headphones. The first time this song came on, I was moved nearly to tears.&lt;/p
 &lt;p&gt;Granted, I was going through some girlfriend stuff at the time, so tears weren&amp;rsquo;t
 as far away as usual, but it&amp;rsquo;s still the most profoundly emotional listening
 experience of my life.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=U4U19zwFENs&quot;&gt;La Femme d&amp;rsquo;Argent&lt;/a&gt;&lt;/strong&gt; - Air&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=U4U19zwFENs&quot;&gt;&amp;ldquo;La Femme d&amp;rsquo;Argent&amp;rdquo;&lt;/a&gt; - Air&lt;/h2&gt;
 &lt;p&gt;One day, the roommate of the girl that caused the aforementioned troubles put in
 a CD in her car stereo. She said, &amp;ldquo;You like electronic stuff, you might like
 this.&amp;rdquo; I was totally flummoxed by what came on. It sounded like it had been
@@ -3697,7 +3697,7 @@ recorded in the 70s. Was it even &amp;ldquo;electronic&amp;rdquo; music? She ins
 out recently. I&amp;rsquo;d never heard anything like it. It was, and still is,
 magnificent. An album that stands outside of time and genre.&lt;/p&gt;
 &lt;p&gt;Much much later, it occurred to me that I had dated the wrong roommate.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Ci_LIavsEhQ&quot;&gt;Kathy&amp;rsquo;s Song&lt;/a&gt;&lt;/strong&gt; - Apoptygma Berzerk&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Ci_LIavsEhQ&quot;&gt;&amp;ldquo;Kathy&amp;rsquo;s Song&amp;rdquo;&lt;/a&gt; - Apoptygma Berzerk&lt;/h2&gt;
 &lt;p&gt;I love this song first because it reminds me of discovering a whole new genre of
 music (synthpop and EBM), a circle of friends (&amp;ldquo;the Baton Rouge goth community&amp;rdquo;
 as my friend used to say) and a new bar (The Spanish Moon) all at the same time.&lt;/p&gt;
@@ -3706,7 +3706,7 @@ led to me DJing at our house, which eventually led to me DJing at the Spanish
 Moon, which was a huge step for me to get past some of my crippling shyness.&lt;/p&gt;
 &lt;p&gt;I love this song second because my sister-in-law&amp;rsquo;s name is &amp;ldquo;Cathy&amp;rdquo;, and I played
 this at her wedding on the day that I got to officially call her family.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hpji_vmCUVU&quot;&gt;Remember (Mood II Swing Mix)&lt;/a&gt;&lt;/strong&gt; - BT&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hpji_vmCUVU&quot;&gt;&amp;ldquo;Remember (Mood II Swing Mix)&amp;rdquo;&lt;/a&gt; - BT&lt;/h2&gt;
 &lt;p&gt;There are a number of BT songs that could be on this list, but I picked this
 remix because it&amp;rsquo;s the track I&amp;rsquo;ve listened to the most over the years. &amp;ldquo;Flaming
 June&amp;rdquo; and &amp;ldquo;Poseidon&amp;rdquo; are up there too.&lt;/p&gt;
@@ -3714,13 +3714,13 @@ June&amp;rdquo; and &amp;ldquo;Poseidon&amp;rdquo; are up there too.&lt;/p&gt;
 can still perfectly picture the owner of The Spanish Moon sprinting across the
 dancefloor towards the DJ booth, panic in his eyes, because he thought I&amp;rsquo;d blown
 his sound system.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=sbnujaAbD2A&quot;&gt;Autumn Tactics&lt;/a&gt;&lt;/strong&gt; - Chicane&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=sbnujaAbD2A&quot;&gt;&amp;ldquo;Autumn Tactics&amp;rdquo;&lt;/a&gt; - Chicane&lt;/h2&gt;
 &lt;p&gt;That couple year span when &amp;ldquo;progressive house&amp;rdquo; was the thing brought a lot of
 great artists to my attention. Of all of them, I probably sunk more time into
 Chicane&amp;rsquo;s first two albums than anything else. This isn&amp;rsquo;t really a house track&amp;mdash;I don&amp;rsquo;t know how to categorize it, honestly&amp;mdash;and maybe that&amp;rsquo;s why it&amp;rsquo;s
 held up so well for me. I&amp;rsquo;ve been listening to it for close to twenty years, and
 I still haven&amp;rsquo;t tired of it.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=B4px0qQrG5E&quot;&gt;Poor Leno&lt;/a&gt;&lt;/strong&gt; - Röyksopp&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=B4px0qQrG5E&quot;&gt;&amp;ldquo;Poor Leno&amp;rdquo;&lt;/a&gt; - Röyksopp&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;re getting closer to the modern era, witnessed by the fact that I stumbled
 onto this song from a &lt;em&gt;video&lt;/em&gt; on the &lt;em&gt;Internet&lt;/em&gt;. This song led to me buying
 turntables. I was going to clubs listening to house all the time, but most of
@@ -3731,19 +3731,19 @@ wanted a chord progression.&lt;/p&gt;
 dancefloor, I was going to have to make it happen myself. I filled up my online
 shopping cart at Turntable Lab. A few weeks later some very large, very heavy
 boxes showed up at work, and I was off learning how to beatmatch.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=omJQVvKVQCk&quot;&gt;Tracey In My Room&lt;/a&gt;&lt;/strong&gt; - EBTG vs Soul Vision&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=omJQVvKVQCk&quot;&gt;&amp;ldquo;Tracey In My Room&amp;rdquo;&lt;/a&gt; - EBTG vs Soul Vision&lt;/h2&gt;
 &lt;p&gt;This song is a two-fer. Tracy Thorn from Everything but the Girl is one of my
 favorite vocalists. When Ben Watt took EBTG in a decidedly electronic direction
 with &amp;ldquo;Walking Wounded&amp;rdquo; and then &amp;ldquo;Temperamental&amp;rdquo;, I was right there with him.&lt;/p&gt;
 &lt;p&gt;But around this time was also when I started to get fully into house music, the
 more heartfelt the better. This record, a mash-up of a house song and the vocals
 from &amp;ldquo;Wrong&amp;rdquo; merges those two better than it has any right to.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=5ViItcZyYBw&quot;&gt;Unspoken&lt;/a&gt;&lt;/strong&gt; - Four Tet&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=5ViItcZyYBw&quot;&gt;&amp;ldquo;Unspoken&amp;rdquo;&lt;/a&gt; - Four Tet&lt;/h2&gt;
 &lt;p&gt;In my twenties, my friends and I used to hit &lt;a href=&quot;http://parkavecds.com/&quot;&gt;Park Ave.
 CDs&lt;/a&gt; every Tuesday when new music came out. This album
 was at a listening station on an end cap. When the first song came on, it was as
 if the lights in the building gradually dimmed, leaving nothing but sound.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=mMh-Y2IWJZc&quot;&gt;Back of my Hand&lt;/a&gt;&lt;/strong&gt; - Gemma Hayes&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=mMh-Y2IWJZc&quot;&gt;&amp;ldquo;Back of my Hand&amp;rdquo;&lt;/a&gt; - Gemma Hayes&lt;/h2&gt;
 &lt;p&gt;We went to this record store so often that the employees would hook us up with
 samplers and other merch. This song was on one. It&amp;rsquo;s not my usual genre and I
 can&amp;rsquo;t say I&amp;rsquo;ve listened to much else by her. But the production on this song
@@ -3759,7 +3759,7 @@ vocal range.&lt;/p&gt;
 &lt;p&gt;Listening brings back peaceful mornings sipping coffee in Orlando, and gentle
 nights in Washington stroking my daughters&amp;rsquo; hair as they fall asleep. It&amp;rsquo;s hard
 to imagine a better pair of bookends.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=0wrsZog8qXg&quot;&gt;Such Great Heights&lt;/a&gt;&lt;/strong&gt; - Postal Service&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=0wrsZog8qXg&quot;&gt;&amp;ldquo;Such Great Heights&amp;rdquo;&lt;/a&gt; - Postal Service&lt;/h2&gt;
 &lt;p&gt;The drag about being into electronic music in Orlando back then was, well, the
 other people into it. Instead of the fun rave scene of New Orleans where kids
 were down to Earth and just wanted a good time, Orlando was a &lt;em&gt;club&lt;/em&gt; scene&amp;mdash;overdressed bros and over-made-up woman desperately trying to impress each other
@@ -3771,28 +3771,28 @@ Friday night ended with a packed, sweaty, grinning mass of euphoric people.&lt;/
 &lt;p&gt;There are a number of songs I could pick to be the anthem for that time in my
 life, but this one also happens to mark a great point in a relationship (before
 the relationship went no-so-great).&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=SPlQpGeTbIE&quot;&gt;Move Your Feet&lt;/a&gt;&lt;/strong&gt; - Junior Senior&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=SPlQpGeTbIE&quot;&gt;&amp;ldquo;Move Your Feet&amp;rdquo;&lt;/a&gt; - Junior Senior&lt;/h2&gt;
 &lt;p&gt;One of the few things I love as much as dance music is pixel art, so this song&amp;rsquo;s
 video pushes all of the buttons on the 747 control panel of my heart.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Gs069dndIYk&quot;&gt;September&lt;/a&gt;&lt;/strong&gt; - Earth, Wind, and Fire&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Gs069dndIYk&quot;&gt;&amp;ldquo;September&amp;rdquo;&lt;/a&gt; - Earth, Wind, and Fire&lt;/h2&gt;
 &lt;p&gt;I expected more soul music to make this list, but somehow it didn&amp;rsquo;t. It would
 have been a real shame to omit this gem. Thursdays were soul night at I-Bar and
 I can&amp;rsquo;t hear this song without picturing my friend Amy cutting up the
 dancefloor.&lt;/p&gt;
 &lt;p&gt;This song gets twice my love because I also used to spin the fantastic &lt;a href=&quot;https://www.youtube.com/watch?v=wn5Q37qOiiA&quot;&gt;Phats &amp;amp;
 Small house remix&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=g6jhpaX7fNQ&quot;&gt;Under the Milky Way&lt;/a&gt;&lt;/strong&gt; - The Church&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=g6jhpaX7fNQ&quot;&gt;&amp;ldquo;Under the Milky Way&amp;rdquo;&lt;/a&gt; - The Church&lt;/h2&gt;
 &lt;p&gt;You know those songs that reside in a primordial part of your brain? I can&amp;rsquo;t
 recall ever &lt;em&gt;not&lt;/em&gt; knowing this song. I&amp;rsquo;m wired towards the low end of the
 frequency spectrum. I play bass, and tend to focus on the bass and rhythm side
 of songs. That extends to vocals. I can&amp;rsquo;t do histrionic screechy singers.
 Nothing sets my soul at ease quite like a soft baritone.&lt;/p&gt;
 &lt;p&gt;This is another song I used to sing to my kids as they fell asleep.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=2q9_ZEtuTR8&quot;&gt;Maybe Tomorrow&lt;/a&gt;&lt;/strong&gt; - Stereophonics&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=2q9_ZEtuTR8&quot;&gt;&amp;ldquo;Maybe Tomorrow&amp;rdquo;&lt;/a&gt; - Stereophonics&lt;/h2&gt;
 &lt;p&gt;The beginning of the video for this song is a dirty lie. This song wasn&amp;rsquo;t
 crafted by imperfect human hands. It was plucked, flawless, from some sonic vein
 deep within the Earth.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=BiPLOmTp6IA&quot;&gt;Stop&lt;/a&gt;&lt;/strong&gt; - Black Rebel Motorcycle Club&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=BiPLOmTp6IA&quot;&gt;&amp;ldquo;Stop&amp;rdquo;&lt;/a&gt; - Black Rebel Motorcycle Club&lt;/h2&gt;
 &lt;p&gt;Hanging out at Independent Bar opened one of the most fulfilling chapters of my
 life. It was there that I met my friend Mikey, which led to us starting a band.
 Playing music with others was a transcendent experience&amp;mdash;to hear four people
@@ -3802,19 +3802,19 @@ thing.&lt;/p&gt;
 &lt;p&gt;My bandmates introduced me to a lot of great rock, including BRMC. I used to
 listen to this track on the way to shows and by the time I got to the gig, that
 bassline had me feeling like I could walk through a brick wall.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=MYYG1lAUntM&quot;&gt;Baby in Two&lt;/a&gt;&lt;/strong&gt; - Pernice Brothers&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=MYYG1lAUntM&quot;&gt;&amp;ldquo;Baby in Two&amp;rdquo;&lt;/a&gt; - Pernice Brothers&lt;/h2&gt;
 &lt;p&gt;My drummer Shannon introduced me to Pernice Brothers. Our band days are over, we
 live about three thousand miles apart, but he will always be my drummer and I
 will always be his bassist. There&amp;rsquo;s a special kind of love that forms only
 between two halves of a rhythm section and this album is the soundtrack to mine.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=S28tILqie1o&quot;&gt;Cupid&lt;/a&gt;&lt;/strong&gt; - Sam Cooke&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=S28tILqie1o&quot;&gt;&amp;ldquo;Cupid&amp;rdquo;&lt;/a&gt; - Sam Cooke&lt;/h2&gt;
 &lt;p&gt;God, did they know how to record back then. Take one of the world&amp;rsquo;s greatest
 voices. Add beautiful, authentic reverb, and just enough tape saturation, and
 you get a sound so rich I can practically taste it.&lt;/p&gt;
 &lt;p&gt;But the technical merits are an aside. The real reason this is here is because
 it marks the time when I met my wife. This song is inseparable from her,
 from &lt;em&gt;us&lt;/em&gt;.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=L5dUsZ4Djd0&quot;&gt;Blue Ridge Mountains&lt;/a&gt;&lt;/strong&gt; - Fleet Foxes&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=L5dUsZ4Djd0&quot;&gt;&amp;ldquo;Blue Ridge Mountains&amp;rdquo;&lt;/a&gt; - Fleet Foxes&lt;/h2&gt;
 &lt;p&gt;By this time, I was burned out from eight years in the game industry. Tired of
 the heat and &lt;em&gt;sameness&lt;/em&gt; Florida&amp;mdash;every month indistinguishable from the
 previous, the days an unending blur of sunlight.&lt;/p&gt;
@@ -3823,9 +3823,9 @@ album non-stop during our honeymoon on the Olympic Peninsula, and by the end we
 were ready to uproot and move. Back in Florida, during the months it took for me
 to find work in Seattle, this record was a constant reminder of the promise
 awaiting us out west.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=NDHY1D0tKRA&quot;&gt;I Will Follow You Into the Dark&lt;/a&gt;&lt;/strong&gt; - Death Cab for Cutie&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=NDHY1D0tKRA&quot;&gt;&amp;ldquo;I Will Follow You Into the Dark&amp;rdquo;&lt;/a&gt; - Death Cab for Cutie&lt;/h2&gt;
 &lt;p&gt;There is a Seattle city ordinance that you must like Ben Gibbard.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=3mUfOs-CTCw&quot;&gt;Shooting Stars&lt;/a&gt;&lt;/strong&gt; - Bag Raiders&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=3mUfOs-CTCw&quot;&gt;&amp;ldquo;Shooting Stars&amp;rdquo;&lt;/a&gt; - Bag Raiders&lt;/h2&gt;
 &lt;p&gt;My love of disco and house naturally turned into a love of nu-disco. I don&amp;rsquo;t
 know what&amp;rsquo;s going on in Australia, but there&amp;rsquo;s a whole pile of bands out of
 Sydney and Melbourne that sound like they took everything I love about the 70s
@@ -3835,7 +3835,7 @@ the songs that will form their subconscious musical memory. They love this
 album, perhaps largely because I used to pick them up and dance with them in the
 kitchen every time we played it. I hope when they are much older and hear this,
 they still think of me.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=7HPMK9Uxq3I&quot;&gt;Elevate&lt;/a&gt;&lt;/strong&gt; - St. Lucia&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=7HPMK9Uxq3I&quot;&gt;&amp;ldquo;Elevate&amp;rdquo;&lt;/a&gt; - St. Lucia&lt;/h2&gt;
 &lt;p&gt;Like I said, the 80s is new again. I won&amp;rsquo;t lie. Listening to music that apes a
 genre that I still remember the first time it came around makes me feel pretty
 old. That weird cringe I get when I see fashion come full circle and the young
@@ -3845,11 +3845,11 @@ isn&amp;rsquo;t some ironic winking aping of the past (looking at you The Darkne
 Steel Panther). St. Lucia is a gushing love letter to everything great about
 beachy 80s pop. It&amp;rsquo;s mai tais, sand between your toes, coconut sunscreen.
 Endless summer and eternal youth.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=ImKY6TZEyrI&quot;&gt;Fade Into You&lt;/a&gt;&lt;/strong&gt; - Mazzy Star&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=ImKY6TZEyrI&quot;&gt;&amp;ldquo;Fade Into You&amp;rdquo;&lt;/a&gt; - Mazzy Star&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;re nearing the end of the list, nearly through forty years of living and
 listening. It&amp;rsquo;s been a long drive down a winding road, and the sun will be up
 soon.&lt;/p&gt;
-&lt;h3&gt;&lt;strong&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=xzQvGz6_fvA&quot;&gt;I&amp;rsquo;m on Fire&lt;/a&gt;&lt;/strong&gt; - Bruce Springsteen&lt;/h3&gt;
+&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=xzQvGz6_fvA&quot;&gt;&amp;ldquo;I&amp;rsquo;m on Fire&amp;rdquo;&lt;/a&gt; - Bruce Springsteen&lt;/h2&gt;
 &lt;p&gt;Forty feels like all my younger selves are lost, receded far into the past. Yet,
 at the same time, they still burn vibrantly alive inside, refusing to be
 forgotten.&lt;/p&gt;

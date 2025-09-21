@@ -45,7 +45,7 @@ roots hiding in there.
 
 [self]: http://selflanguage.org/
 
-## A Savior to Spread the Gospel
+## A savior to spread the gospel
 
 That myth wasn't created until much later, though. Before then, a funny thing
 happened. One day, Netscape woke up from a truly epic bender to discover it had

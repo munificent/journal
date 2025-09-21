@@ -410,7 +410,8 @@ the much cleaner implementation my game uses.
 [demo]: https://github.com/munificent/rooms-and-mazes
 [algo]: https://github.com/munificent/hauberk/blob/db360d9efa714efb6d937c31953ef849c7394a39/lib/src/content/dungeon.dart
 
-As a bonus for making it this far, here's a super dense giant dungeon. I find it hypnotic:
+As a bonus for making it this far, here's a super dense giant dungeon. I find it
+hypnotic:
 
 <figure>
   <canvas id="giant" width="570" height="390">

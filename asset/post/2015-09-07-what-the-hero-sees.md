@@ -306,7 +306,7 @@ handful of cases:
 1.  **The shadow is contained within an existing one.** That means the new
     shadow doesn't cover any new territory, so we can discard it.
 
-    ```
+    ```asciiart
     old:    ..[======]..
     new:    ....[===]...
             ------------
@@ -316,7 +316,7 @@ handful of cases:
 2.  **The shadow doesn't overlap any other ones.** In this case, we insert it in
     sorted order between the segments that come before and after it.
 
-    ```
+    ```asciiart
     old:    [=].....[==]
     new:    ....[=].....
             ------------
@@ -327,7 +327,7 @@ handful of cases:
     previous shadow and grow it to encompass the new shadow's endpoint and
     discard the new one.
 
-    ```
+    ```asciiart
     old:    [===]....[=]
     new:    ...[===]....
             ------------
@@ -337,7 +337,7 @@ handful of cases:
 4.  **The shadow overlaps another shadow on its ending edge.** Do the same
     thing, but in reverse: grow the following shadow to cover the new one.
 
-    ```
+    ```asciiart
     old:    [=]....[===]
     new:    ....[===]...
             ------------
@@ -348,7 +348,7 @@ handful of cases:
     the previous shadow and extend it to cover the *next* shadow's endpoint.
     Then we discard both the new shadow and that next one.
 
-    ```
+    ```asciiart
     old:    ..[=]..[==].
     new:    ...[====]...
             ------------

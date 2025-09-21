@@ -58,7 +58,7 @@ gratitude to everyone who read it, bought a copy, or cheered me on.
 [star]: https://www.amazon.com/dp/0990582906
 [print]: /2014/11/03/bringing-my-web-book-to-print-and-ebook/
 
-## The Seed of a book
+## The seed of a book
 
 Once I finished the print edition of *Game Programming Patterns*, I took some
 time off. But it didn't take too long for that itch to write about interpreters
@@ -459,7 +459,7 @@ Before, I felt like I had a language and code that wanted to get out there into
 the world. Now I felt like I had a book. Or, at least, I had all of the *code*
 for a book.
 
-## A Chapter at a time
+## A chapter at a time
 
 I wrote my first book one chapter at a time. I drafted, edited, illustrated each
 chapter and put it online before moving to the next one. Serial publishing for

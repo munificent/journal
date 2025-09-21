@@ -542,7 +542,7 @@ def checkRange(weapon Weapon, distance Int) Bool
 end
 ```
 
-That no longer works. Inside `checkRange()` the compiles has lost track that
+That no longer works. Inside `checkRange()` the compiler has lost track that
 `weapon` is always a `RangedWeapon`. You could come up with a way to annotate
 that, but now we're back to subtyping and all the complexity it involves.
 

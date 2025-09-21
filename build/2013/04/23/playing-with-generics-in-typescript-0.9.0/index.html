@@ -35,9 +35,30 @@
     <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/language">language</a> <a href="/category/typescript">typescript</a></span>
 </h4>
 <div class="update">
-<p>Oops! I got a bunch of this wrong because <code>Base</code> and <code>Derived</code> have no members. Since TypeScript is structurally typed, that's what allows all of the variance I describe below.</p>
-<p>See Anders Hejlsberg's comment at the end for more details.</p>
-</div>
+<p>Oops! I got a bunch of this wrong because <code>Base</code> and <code>Derived</code> have no members. Since TypeScript is structurally typed, that&rsquo;s what allows all of the variance I describe below.</p>
+<p>Anders Hejlsberg (!) commented on my post:</p>
+<blockquote>
+<p>In general, our type system is structural and generics are co-variant—but
+since parameters are naturally contra-variant, in aggregate they end up being
+bi-variant, as you’ve discovered. In your examples, <code>Box&lt;Base&gt;</code> and
+<code>Box&lt;Derived&gt;</code> are interchangeable because they’re structurally equivalent
+(they have the same set of members, namely none). If you add a member to
+<code>Derived</code>, you’ll notice that <code>Box&lt;Base&gt;</code> is no longer assignable to
+<code>Box&lt;Derived&gt;</code>.</p>
+<p>TypeScript&rsquo;s view of classes is that they&rsquo;re just declarations of a named
+interface and a constructor function, and the named interface is compatible
+with any other interface that has the same set of members. What’s interesting
+is our treatment of private members. Private members are inherited, but are
+compatible only with themselves. If you add a private member to Base, then
+only interfaces derived from Base can be compatible because only those
+interfaces would have Base’s private member. Thus, private members become
+“brands” that limit you to a particular branch of a hierarchy. This makes
+sense because when a class has only public members, you could potentially
+override every member—so it’s no different from interface. But when a private
+member is introduced, the substitution principle would break down unless you
+ensure every subtype has that exact private member.</p>
+<p>Fun stuff!</p>
+</blockquote></div>
 <p>This was just going to be a comment on <a href="http://www.reddit.com/r/programming/comments/1cyij4/typescript_09_early_previews_with_support_for/">this reddit thread</a>, but then it
 seemed to take on a life of its own, so I figured I may as well <s>milk it for
 all it&rsquo;s worth</s> make a nice post out of it.</p>

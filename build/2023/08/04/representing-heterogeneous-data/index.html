@@ -465,7 +465,7 @@ would quickly become annoying. Let&rsquo;s say you refactor the above code to:</
 <span class="k">def</span> <span class="i">checkRange</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span> <span class="t">Bool</span>
   <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span>
 <span class="k">end</span></pre>
-<p>That no longer works. Inside <code>checkRange()</code> the compiles has lost track that
+<p>That no longer works. Inside <code>checkRange()</code> the compiler has lost track that
 <code>weapon</code> is always a <code>RangedWeapon</code>. You could come up with a way to annotate
 that, but now we&rsquo;re back to subtyping and all the complexity it involves.</p>
 <p>So, overall, yes, subtyping and flow analysis is a thing that could work here,

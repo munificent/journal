@@ -258,7 +258,7 @@ handful of cases:</p>
 <li>
 <p><strong>The shadow is contained within an existing one.</strong> That means the new
 shadow doesn&rsquo;t cover any new territory, so we can discard it.</p>
-<pre class="highlight language-text">old:    ..[======]..
+<pre class="highlight language-asciiart">old:    ..[======]..
 new:    ....[===]...
         ------------
 result: ..[======]..</pre>
@@ -266,7 +266,7 @@ result: ..[======]..</pre>
 <li>
 <p><strong>The shadow doesn&rsquo;t overlap any other ones.</strong> In this case, we insert it in
 sorted order between the segments that come before and after it.</p>
-<pre class="highlight language-text">old:    [=].....[==]
+<pre class="highlight language-asciiart">old:    [=].....[==]
 new:    ....[=].....
         ------------
 result: [=].[=].[==]</pre>
@@ -275,7 +275,7 @@ result: [=].[=].[==]</pre>
 <p><strong>The shadow overlaps another shadow on its starting edge.</strong> We take the
 previous shadow and grow it to encompass the new shadow&rsquo;s endpoint and
 discard the new one.</p>
-<pre class="highlight language-text">old:    [===]....[=]
+<pre class="highlight language-asciiart">old:    [===]....[=]
 new:    ...[===]....
         ------------
 result: [======].[=]</pre>
@@ -283,7 +283,7 @@ result: [======].[=]</pre>
 <li>
 <p><strong>The shadow overlaps another shadow on its ending edge.</strong> Do the same
 thing, but in reverse: grow the following shadow to cover the new one.</p>
-<pre class="highlight language-text">old:    [=]....[===]
+<pre class="highlight language-asciiart">old:    [=]....[===]
 new:    ....[===]...
         ------------
 result: [=].[======]</pre>
@@ -292,7 +292,7 @@ result: [=].[======]</pre>
 <p><strong>The shadow overlaps shadows on <em>both</em> ends.</strong> This is the fun one. We take
 the previous shadow and extend it to cover the <em>next</em> shadow&rsquo;s endpoint.
 Then we discard both the new shadow and that next one.</p>
-<pre class="highlight language-text">old:    ..[=]..[==].
+<pre class="highlight language-asciiart">old:    ..[=]..[==].
 new:    ...[====]...
         ------------
 result: ..[=======].</pre>

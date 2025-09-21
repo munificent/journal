@@ -256,8 +256,8 @@ analyzed a huge corpus of real-world Dart, I found that only about 20% of <code>
 statements had <code>else</code> branches.</p>
 <p>Now that we understand when an <code>if</code> expression is in a context where it&rsquo;s value
 isn&rsquo;t used, we can allow omitting <code>else</code> branches those. The next rule is: <strong>An
-<code>if</code> expression can can omit the else branch when in a context where its value
-isn&rsquo;t used.</strong></p>
+<code>if</code> expression can omit the else branch when in a context where its value isn&rsquo;t
+used.</strong></p>
 <h2>Exiting branches</h2>
 <p>We&rsquo;re almost there. It&rsquo;s starting to feel like we really are type-checking an
 imperative language, not ML in BASIC&rsquo;s clothing. I coded this up and

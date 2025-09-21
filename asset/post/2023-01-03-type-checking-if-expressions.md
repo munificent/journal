@@ -294,8 +294,8 @@ statements had `else` branches.
 
 Now that we understand when an `if` expression is in a context where it's value
 isn't used, we can allow omitting `else` branches those. The next rule is: **An
-`if` expression can can omit the else branch when in a context where its value
-isn't used.**
+`if` expression can omit the else branch when in a context where its value isn't
+used.**
 
 ## Exiting branches
 

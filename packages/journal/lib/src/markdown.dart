@@ -1,13 +1,16 @@
+import 'package:chromatophore/chromatophore.dart';
 import 'package:typographic_markdown/typographic_markdown.dart';
 import 'package:chromatophore/markdown.dart';
 import 'package:markdown/markdown.dart';
 
+import 'code/ascii_art.dart';
 import 'code/finch.dart';
 import 'code/jasic.dart';
 import 'code/magpie.dart';
 import 'code/vgs.dart';
 
 final _languages = {
+  'asciiart': makeAsciiArtLanguage(),
   'magpie1': makeMagpie1Language(),
   'magpie': makeMagpieLanguage(),
   'finch': makeFinchLanguage(),

@@ -170,9 +170,9 @@ functions and types you want without worrying about modularity. Then at the top
 of the file, the language gives you some dedicated syntax to list the things
 that should be made visible outside of the module.</p>
 <p>For example, in Scheme, the syntax for defining a module looks like:</p>
-<pre class="highlight language-scheme">(library library-name
-  (export list-of-names-to-export...)
-  declarations-in-library...)</pre>
+<pre class="highlight language-scheme"><span class="p">(</span><span class="i">library</span> <span class="i">library-name</span>
+  <span class="p">(</span><span class="i">export</span> <span class="i">list-of-names-to-export...</span><span class="p">)</span>
+  <span class="i">declarations-in-library...</span><span class="p">)</span></pre>
 <p>SML and its spawn have a notion of a <a href="https://smlhelp.github.io/book/docs/start/module-syntax">signature</a> which is
 declared separately from the module. You could also argue that header files in C
 and C++ are this pattern.</p>

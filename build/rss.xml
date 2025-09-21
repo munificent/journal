@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Sun, 21 Sep 2025 05:28:43 GMT</pubDate>
-    <lastBuildDate>Sun, 21 Sep 2025 05:28:43 GMT</lastBuildDate>
+    <pubDate>Sun, 21 Sep 2025 18:56:29 GMT</pubDate>
+    <lastBuildDate>Sun, 21 Sep 2025 18:56:29 GMT</lastBuildDate>
 
 
     <item>
@@ -609,9 +609,9 @@ functions and types you want without worrying about modularity. Then at the top
 of the file, the language gives you some dedicated syntax to list the things
 that should be made visible outside of the module.&lt;/p&gt;
 &lt;p&gt;For example, in Scheme, the syntax for defining a module looks like:&lt;/p&gt;
-&lt;pre class=&quot;highlight language-scheme&quot;&gt;(library library-name
-  (export list-of-names-to-export...)
-  declarations-in-library...)&lt;/pre&gt;
+&lt;pre class=&quot;highlight language-scheme&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;library&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;library-name&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;list-of-names-to-export...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;i&quot;&gt;declarations-in-library...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;SML and its spawn have a notion of a &lt;a href=&quot;https://smlhelp.github.io/book/docs/start/module-syntax&quot;&gt;signature&lt;/a&gt; which is
 declared separately from the module. You could also argue that header files in C
 and C++ are this pattern.&lt;/p&gt;
@@ -3069,7 +3069,7 @@ They&amp;rsquo;re real programs.&lt;/p&gt;
 &lt;p&gt;Meanwhile, the text of the book is &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/tree/master/book&quot;&gt;authored in Markdown&lt;/a&gt;, one file per
 chapter, just like my first book. To include a snippet of code in the book, I
 put a tag in the Markdown like this:&lt;/p&gt;
-&lt;pre class=&quot;highlight language-md&quot;&gt;Which can be any of:
+&lt;pre class=&quot;highlight language-text&quot;&gt;Which can be any of:
 
 ^code is-alpha
 

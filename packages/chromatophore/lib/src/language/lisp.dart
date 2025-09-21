@@ -12,7 +12,7 @@ Language makeLispLanguage() {
   language.regExp(r'[\s\n\t]', Category.whitespace);
 
   language.regExp(r'[{}()[\]]', Category.punctuation);
-  language.regExp(r'[a-zA-Z0-9_!*/&%~+=<>|-]', Category.identifier);
+  language.regExp(r'[a-zA-Z0-9_.!*/&%~+=<>|-]', Category.identifier);
 
   doubleQuotedString(language);
 

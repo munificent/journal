@@ -13,6 +13,7 @@ import 'language/oberon.dart';
 import 'language/ocaml.dart';
 import 'language/python.dart';
 import 'language/ruby.dart';
+import 'language/shell.dart';
 import 'language/smalltalk.dart';
 import 'language/xml.dart';
 import 'rule.dart';
@@ -33,6 +34,7 @@ class Language {
   static final ocaml = makeOCamlLanguage();
   static final python = makePythonLanguage();
   static final ruby = makeRubyLanguage();
+  static final shell = makeShellLanguage();
   static final smalltalk = makeSmalltalkLanguage();
   static final xml = makeXmlLanguage();
 
@@ -51,6 +53,8 @@ class Language {
     'ocaml': ocaml,
     'python': python,
     'ruby': ruby,
+    'scheme': lisp,
+    'sh': shell,
     'smalltalk': smalltalk,
     'xml': xml,
   };

@@ -232,7 +232,7 @@ put a tag in the Markdown like this:
 
 [md]: https://github.com/munificent/craftinginterpreters/tree/master/book
 
-```md
+```
 Which can be any of:
 
 ^code is-alpha

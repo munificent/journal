@@ -60,7 +60,7 @@ class HighlightedCodeBlockSyntax extends BlockSyntax {
     if (languageName != 'text') {
       language = _languages[languageName] ?? Language.find(languageName);
       if (language == null) {
-        // print('Cannot find highlighter for "$languageName".');
+        print('Cannot find highlighter for "$languageName".');
         // TODO: Better error reporting.
       }
     }

@@ -151,8 +151,7 @@ if two element types are assignable, slices of those two types are not.</p>
 <p>Judging by an endless series of confused people asking questions on
 StackOverflow, that behavior is unintuitive to programmers, both in Go and in
 other languages. Let&rsquo;s say you have this Go program:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span> <span class="p">{</span>
+<pre class="highlight language-go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span> <span class="p">{</span>
   <span class="i">name</span> <span class="t">string</span>
 <span class="p">}</span>
 
@@ -162,22 +161,18 @@ other languages. Let&rsquo;s say you have this Go program:</p>
 
 <span class="k">func</span> <span class="p">(</span><span class="i">d</span> <span class="i">Dog</span><span class="p">)</span> <span class="i">Bark</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">fmt</span><span class="p">.</span><span class="i">Println</span><span class="p">(</span><span class="s">&quot;Woof!&quot;</span><span class="p">)</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Here we have a <code>Dog</code> concrete type, which is assignable to the interface
 <code>Barker</code>. So this is fine:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speak</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-go"><span class="k">func</span> <span class="i">speak</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">speak</span><span class="p">(</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Sparky&quot;</span><span class="p">})</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Given that, you might expect this to work too:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">speakAll</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-go"><span class="k">func</span> <span class="i">speakAll</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="i">_</span><span class="p">,</span> <span class="i">barker</span> <span class="p">:</span><span class="o">=</span> <span class="k">range</span> <span class="i">barkers</span> <span class="p">{</span>
     <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
   <span class="p">}</span>
@@ -186,20 +181,16 @@ other languages. Let&rsquo;s say you have this Go program:</p>
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">dogs</span> <span class="p">:</span><span class="o">=</span> <span class="p">[]</span><span class="i">Dog</span><span class="p">{</span><span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Sparky&quot;</span><span class="p">},</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Fido&quot;</span><span class="p">}}</span>
   <span class="i">speakAll</span><span class="p">(</span><span class="i">dogs</span><span class="p">)</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>But, no. The type system giveth and the type system taketh away:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">example.go:29:11: cannot use dogs (variable of type []Dog) as
-[]Barker value in argument to speakAll</code></pre>
-</div>
+<pre class="highlight language-text">example.go:29:11: cannot use dogs (variable of type []Dog) as
+[]Barker value in argument to speakAll</pre>
 <p>If the type system didn&rsquo;t yell at you, this program <em>would</em> be fine at runtime.
 All it does is call <code>Bark()</code> on every element in the array, and both Sparky and
 Fido do implement that method. So what&rsquo;s the deal? In this case, the program is
 <em>coincidentally</em> fine because <code>speakAll()</code> is only reading from the slice. But
 what if we wrote:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Tree</span> <span class="k">struct</span> <span class="p">{</span>
+<pre class="highlight language-go"><span class="k">type</span> <span class="i">Tree</span> <span class="k">struct</span> <span class="p">{</span>
   <span class="i">species</span> <span class="t">string</span>
 <span class="p">}</span>
 
@@ -209,8 +200,7 @@ what if we wrote:</p>
 
 <span class="k">func</span> <span class="i">appendTree</span><span class="p">(</span><span class="i">barkers</span> <span class="p">[]</span><span class="i">Barker</span><span class="p">)</span> <span class="p">[]</span><span class="i">Barker</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">append</span><span class="p">(</span><span class="i">barkers</span><span class="p">,</span> <span class="i">Tree</span><span class="p">{</span><span class="s">&quot;Elm&quot;</span><span class="p">})</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>There&rsquo;s nothing wrong with this <code>appendTree()</code> function. It adds a <code>Tree</code> to
 the given slice. Since <code>Tree</code> is assignable to <code>Barker</code>, that&rsquo;s fine. But if
 you were to call this and pass in a <code>[]Dog</code>, you&rsquo;d end up with an array of dogs
@@ -236,8 +226,7 @@ types are themselves assignable, if they are different types, the functions
 aren&rsquo;t assignable.</p>
 <p>Do we need to be that strict to preserve soundness? Actually, no! Here&rsquo;s an
 example:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go">
+<pre class="highlight language-go">
 <span class="k">func</span> <span class="i">returnDog</span><span class="p">()</span> <span class="i">Dog</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Rex&quot;</span><span class="p">}</span>
 <span class="p">}</span>
@@ -249,8 +238,7 @@ example:</p>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">useCallback</span><span class="p">(</span><span class="i">returnDog</span><span class="p">)</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>So we have a function, <code>returnDog</code> that returns a value of type <code>Dog</code>. We pass a
 reference to that function to <code>useCallback()</code> whic expects a function that
 returns a <code>Barker</code>. The <code>Dog</code> type does implement <code>Barker</code>. If this program were
@@ -258,10 +246,8 @@ run, it would be perfectly safe. And, in fact, there&rsquo;s nothing you could p
 inside <code>useCallback()</code> that would make passing <code>returnDog</code> to it violate the
 soundness of the type system.</p>
 <p>It&rsquo;s sound and semantically kosher in principle&hellip; but Go disallows it:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">.&#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
-func() Barker value in argument to useCallback</code></pre>
-</div>
+<pre class="highlight language-text">.&#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
+func() Barker value in argument to useCallback</pre>
 <p>Every other language I know that has subtyping and function types allows this. A
 function type <code>A</code> is a subtype of another function type <code>B</code> if the return type
 of <code>A</code> is a subtype of the return type of <code>B</code>. So the subtyping relation of the
@@ -278,8 +264,7 @@ direction as the outer types? Indeed there are, and they&rsquo;re right there ne
 us. Instead of return types, let&rsquo;s look at parameter types. Now let&rsquo;s say we
 only care about functions that accept a single parameter and return nothing.
 Here&rsquo;s an example:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go"><span class="k">func</span> <span class="i">acceptBarker</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-go"><span class="k">func</span> <span class="i">acceptBarker</span><span class="p">(</span><span class="i">barker</span> <span class="i">Barker</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">barker</span><span class="p">.</span><span class="i">Bark</span><span class="p">()</span>
 <span class="p">}</span>
 
@@ -289,8 +274,7 @@ Here&rsquo;s an example:</p>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">useCallback</span><span class="p">(</span><span class="i">acceptBarker</span><span class="p">)</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Note that the parameter types are flipped compared to the return type example.
 Here, the callback type in <code>useCallback()</code> takes a more precise type of <code>Dog</code>.
 The function we pass to it, <code>acceptBarker</code> has a parameter whose type is
@@ -434,8 +418,7 @@ pointer indirection costs.</p>
 but not a slice of those same structs to a slice of that same interface.</p>
 <p>If structs and interfaces have entirely different memory representations, how
 does assignability work at all? When you do:</p>
-<div class="highlight">
-<pre><code class="language-go" data-lang="go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span><span class="p">{</span>
+<pre class="highlight language-go"><span class="k">type</span> <span class="i">Dog</span> <span class="k">struct</span><span class="p">{</span>
   <span class="i">name</span> <span class="t">string</span>
 <span class="p">}</span>
 
@@ -445,8 +428,7 @@ does assignability work at all? When you do:</p>
 
 <span class="k">func</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">barker</span> <span class="i">Barker</span> <span class="o">=</span> <span class="i">Dog</span><span class="p">{</span><span class="s">&quot;Rex&quot;</span><span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Shouldn&rsquo;t that just mangle memory when it tries to treat the memory
 representation of a struct as if it were an interface? The answer is of course
 no. When compiling your code, Go knows the type of every variable and every

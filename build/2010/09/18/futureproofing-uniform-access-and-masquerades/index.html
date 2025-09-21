@@ -35,12 +35,10 @@
     <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
 </h4>
 <p>Take a look at this Java code:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">class</span> <span class="t">Person</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="k">class</span> <span class="t">Person</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">String</span> <span class="i">name</span><span class="p">;</span>
   <span class="k">public</span> <span class="t">int</span> <span class="i">age</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Does it make you cringe a little bit? If so, I&rsquo;m guessing it&rsquo;s because those
 fields aren&rsquo;t wrapped in nice getters and setters.</p>
 <p>But why do that? What if we want them to be mutable and don&rsquo;t have any
@@ -55,8 +53,7 @@ if you never take an interest in that little language.</p>
 future-proofing practices I see.</p>
 <h3>Hiding constructors behind factories</h3>
 <p>Java loves this one:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">PersonFactory</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">PersonFactory</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Person</span> <span class="i">create</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">Person</span><span class="p">();</span>
   <span class="p">}</span>
@@ -65,15 +62,13 @@ future-proofing practices I see.</p>
 <span class="t">void</span> <span class="i">doSomething</span><span class="p">(</span><span class="t">PersonFactory</span> <span class="i">factory</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">Person</span> <span class="i">person</span> <span class="o">=</span> <span class="i">factory</span><span class="p">.</span><span class="i">create</span><span class="p">();</span>
   <span class="c">// ...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Assuming you can dodge the infinite regress of <code>FactoryFactoryFactories</code>, this
 helps abstract out the places where you call a constructor directly. Wrapping
 that behind a factory lets you swap out the concrete class being constructed.</p>
 <h3>Hiding classes behind interfaces</h3>
 <p>The pattern looks like this (here in C#, where its most applicable):</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">interface</span> <span class="t">IPerson</span>
+<pre class="highlight language-csharp"><span class="k">interface</span> <span class="t">IPerson</span>
 <span class="p">{</span>
   <span class="t">string</span> <span class="i">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
   <span class="t">int</span>    <span class="i">Age</span>  <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -88,8 +83,7 @@ that behind a factory lets you swap out the concrete class being constructed.</p
 <span class="k">void</span> <span class="i">DoSomethingWithPerson</span><span class="p">(</span><span class="t">IPerson</span> <span class="i">person</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="c">// ...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>All of your concrete classes get squirrelled away and you only ever visibly deal
 with the interface types. I&rsquo;ve seen entire codebases designed around this.</p>
 <p>This lets us swap out our use of <code>Person</code> with some other concrete class that
@@ -179,38 +173,30 @@ and still solve the above two problems? I think so.</p>
 <h3>Constructors and factories</h3>
 <p>Constructors are the easy one. Magpie has no special syntax for constructors.
 <code>new</code> is just a method you call on a class object:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">bob</span> <span class="o">=</span> <span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">bob</span> <span class="o">=</span> <span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">)</span></pre>
 <p>If you later decide you need that to construct a different type, you can
 always swap out the method:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="t">Person</span> <span class="i">defineMethod</span><span class="p">(</span><span class="s">&quot;rawNew&quot;</span><span class="p">,</span> <span class="t">Person</span> <span class="i">getMethod</span><span class="p">(</span><span class="s">&quot;new&quot;</span><span class="p">))</span>
+<pre class="highlight language-magpie"><span class="t">Person</span> <span class="i">defineMethod</span><span class="p">(</span><span class="s">&quot;rawNew&quot;</span><span class="p">,</span> <span class="t">Person</span> <span class="i">getMethod</span><span class="p">(</span><span class="s">&quot;new&quot;</span><span class="p">))</span>
 <span class="k">def</span> <span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">)</span>
   <span class="c">// Don&#39;t want to create a person...</span>
   <span class="t">Dude</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>To be honest, though, that&rsquo;s kinda gross. Try not to do that. A better solution
 really is to use a factory here&mdash;some object that you can swap out that will
 create people. Fortunately, Magpie makes this a bit easier too. A class <em>is</em> a
 factory:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">makeSomeone</span><span class="p">(</span><span class="i">name</span><span class="p">,</span> <span class="i">factory</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">makeSomeone</span><span class="p">(</span><span class="i">name</span><span class="p">,</span> <span class="i">factory</span><span class="p">)</span>
   <span class="i">factory</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="i">makeSomeone</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="t">Person</span><span class="p">)</span> <span class="c">// Makes a person.</span>
-<span class="i">makeSomeone</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="t">Hero</span><span class="p">)</span>   <span class="c">// Makes a hero.</span></code></pre>
-</div>
+<span class="i">makeSomeone</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span> <span class="t">Hero</span><span class="p">)</span>   <span class="c">// Makes a hero.</span></pre>
 <p>Since classes are first, uh, class, you can just pass them around and use them
 like factories as-is. Because they&rsquo;re also instances of a class (their
 metaclass), they can even implement interfaces:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">interface</span> <span class="t">NamedFactory</span>
+<pre class="highlight language-magpie"><span class="k">interface</span> <span class="t">NamedFactory</span>
   <span class="i">new</span><span class="p">(</span><span class="i">name</span> <span class="t">String</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Now any class that has a constructor that takes a string will implicitly
 implement that interface. You get type-safe factories without having to actually
 create separate special factory classes.</p>
@@ -222,49 +208,41 @@ to me in Java. If I&rsquo;m creating a mock class, I don&rsquo;t actually want t
 of the code from the base class, so why am I inheriting it?</p>
 <p>Instead, Magpie has (will have) a relatively simple feature called
 <em>masquerades</em>. Say we have a concrete class like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Person</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Person</span>
   <span class="k">this</span> <span class="p">(</span><span class="i">name</span><span class="p">)</span>
     <span class="k">this</span> <span class="i">name</span> <span class="o">=</span> <span class="i">name</span>
   <span class="k">end</span>
 
   <span class="i">greet</span><span class="p">()</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hi, I&#39;m &quot;</span> <span class="o">+</span> <span class="i">name</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>We&rsquo;re using it like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">greetEachOther</span><span class="p">(</span><span class="i">a</span> <span class="t">Person</span><span class="p">,</span> <span class="i">b</span> <span class="t">Person</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">greetEachOther</span><span class="p">(</span><span class="i">a</span> <span class="t">Person</span><span class="p">,</span> <span class="i">b</span> <span class="t">Person</span><span class="p">)</span>
   <span class="i">a</span> <span class="i">greet</span>
   <span class="i">b</span> <span class="i">greet</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>In most static languages, since <code>greetEachOther</code> is typed to expect instances of
 the concrete <code>Person</code>, the only other option you have is passing in a subclass.
 Magpie gives you another alternative. Here&rsquo;s the class we want to use in place
 of a person:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Robot</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Robot</span>
   <span class="i">name</span> <span class="o">=</span> <span class="s">&quot;Robot&quot;</span>
 
   <span class="i">greet</span><span class="p">()</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Greetings, fleshy human.&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This class has no relation to <code>Person</code> in the class hierarchy. But it <em>does</em>
 happen to have all of the methods that <code>Person</code> has. If there was some
 hypothetical <code>IPerson</code> interface that <code>Person</code> implemented, <code>Robot</code> would
 implement it too. Masquerades let us approximate that. You can ask an object of
 one type to masquerade as another. As long as they have compatible methods, it
 will succeed, <em>even though both types are concrete and unrelated</em>:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">robot</span> <span class="o">=</span> <span class="t">Robot</span> <span class="i">new</span>
   <span class="c">// robot&#39;s type is Robot</span>
   <span class="k">var</span> <span class="i">imposter</span> <span class="o">=</span> <span class="i">robot</span> <span class="i">masqueradeAs</span><span class="p">[</span><span class="t">Person</span><span class="p">]</span>
   <span class="c">// imposter&#39;s type is Person but is still a reference to robot</span>
   <span class="c">// and this is now type-safe:</span>
   <span class="i">greetEachOther</span><span class="p">(</span><span class="t">Person</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">),</span> <span class="i">imposter</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>As far as I know, this is a novel feature in programming languages, but I think
 it&rsquo;s a useful one. I would definitely appreciate any feedback on it either way,
 though.</p>

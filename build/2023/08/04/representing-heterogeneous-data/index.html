@@ -48,16 +48,14 @@ language history to scavenge forgotten ideas.</p>
 <li>
 <p><strong>Data that might or might not be present.</strong> Imagine you have a record for
 storing a street address:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Address</span>
+<pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">Address</span>
   <span class="k">var</span> <span class="i">number</span> <span class="t">Int</span>
   <span class="k">var</span> <span class="i">street</span> <span class="t">String</span>
   <span class="k">var</span> <span class="i">apartmentNumber</span> <span class="t">Int</span>
   <span class="k">var</span> <span class="i">city</span> <span class="t">String</span>
   <span class="k">var</span> <span class="i">zipCode</span> <span class="t">Int</span>
   <span class="k">var</span> <span class="i">state</span> <span class="t">String</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>But some addresses don&rsquo;t have apartment numbers. How do you store the
 apartment number when an address has one but also support its absence?</p>
 </li>
@@ -127,8 +125,7 @@ accessing the data as the wrong type.</p></li>
 <p><strong>Subtyping.</strong> The object-oriented dual to sum types is subtyping: either
 inheritance or interface implementation. In an object-oriented language, we
 could model our weapon example like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">interface</span> <span class="k">class</span> <span class="t">Weapon</span> <span class="p">{}</span>
+<pre class="highlight language-dart"><span class="k">interface</span> <span class="k">class</span> <span class="t">Weapon</span> <span class="p">{}</span>
 
 <span class="k">class</span> <span class="t">MeleeWeapon</span> <span class="k">implements</span> <span class="t">Weapon</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">damage</span><span class="p">;</span>
@@ -141,8 +138,7 @@ could model our weapon example like:</p>
   <span class="t">int</span> <span class="i">maxRange</span><span class="p">;</span>
 
   <span class="t">RangedWeapon</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">minRange</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="i">maxRange</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Code that wants to work with weapons generally uses the <code>Weapon</code> supertype.
 The two subtypes for melee and ranged weapons each store the fields they
 need. If you want to go all the way to an object-oriented style, these
@@ -215,8 +211,7 @@ tee.</p>
 <p>The basic vibe I have for the language is similar to Pascal, C, or BASIC: In
 other words, a classic procedural language. Structures and functions. It looks
 like this:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">MeleeWeapon</span>
+<pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">MeleeWeapon</span>
   <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
 <span class="k">end</span>
 
@@ -234,15 +229,13 @@ like this:</p>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;You wound the monster.&quot;</span><span class="p">)</span>
     <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">-</span> <span class="i">damage</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>What&rsquo;s cool about simple procedural code is that even though I have no idea what
 language you know and you <em>certainly</em> have never programmed in <em>this</em> one, I&rsquo;m
 still pretty confident that you understand this code.</p>
 <h2>With sum types</h2>
 <p>Let&rsquo;s see how it looks with something like sum types:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Weapon</span>
+<pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">Weapon</span>
 <span class="k">case</span> <span class="t">MeleeWeapon</span>
   <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
 <span class="k">case</span> <span class="t">RangedWeapon</span>
@@ -273,8 +266,7 @@ still pretty confident that you understand this code.</p>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;You wound the monster.&quot;</span><span class="p">)</span>
     <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">-</span> <span class="i">damage</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The sort of weird <code>rec</code> syntax is defining a sum type, <code>Weapon</code>, with type
 constructors <code>MeleeWeapon</code> and <code>RangedWeapon</code>. I&rsquo;m still noodling on the syntax.</p>
 <p>Now, the code here works. And it&rsquo;s safe. The compiler and the structure of the
@@ -303,8 +295,7 @@ that <em>some</em> of those fields are only accessible when the record is one of
 different enumerated states.</p>
 <p>In C, it&rsquo;s common to wrap an untagged union in a struct along with a tag enum
 indicating which branch of the union is active:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
   <span class="r">WEAPON_MELEE</span><span class="p">,</span>
   <span class="r">WEAPON_RANGED</span>
 <span class="p">}</span> <span class="t">WeaponType</span><span class="p">;</span>
@@ -321,14 +312,11 @@ indicating which branch of the union is active:</p>
       <span class="t">int</span> <span class="i">maxRange</span><span class="p">;</span>
     <span class="p">}</span> <span class="i">ranged</span><span class="p">;</span>
   <span class="p">}</span> <span class="i">as</span><span class="p">;</span>
-<span class="p">}</span> <span class="t">Weapon</span><span class="p">;</span></code></pre>
-</div>
+<span class="p">}</span> <span class="t">Weapon</span><span class="p">;</span></pre>
 <p>Using it looks something like:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">Weapon</span> <span class="i">weapon</span><span class="p">;</span>
+<pre class="highlight language-c"><span class="t">Weapon</span> <span class="i">weapon</span><span class="p">;</span>
 <span class="i">weapon</span><span class="p">.</span><span class="i">type</span> <span class="o">=</span> <span class="r">WEAPON_MELEE</span><span class="p">;</span>
-<span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">melee</span><span class="p">.</span><span class="i">damage</span> <span class="o">=</span> <span class="n">6</span><span class="p">;</span></code></pre>
-</div>
+<span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">melee</span><span class="p">.</span><span class="i">damage</span> <span class="o">=</span> <span class="n">6</span><span class="p">;</span></pre>
 <p>A variant record in Pascal (as I understand it from the half dozen ancient
 slideshows I&rsquo;ve been able to find about it) essentially models that pattern
 directly.</p>
@@ -337,13 +325,11 @@ accessed using the same familiar field access syntax used everywhere else. That
 also means variant-specific fields can be mutable.</p>
 <p>Of course, the <em>not</em> cool thing about using that same field syntax is that
 there&rsquo;s nothing preventing you from accessing the <em>wrong</em> variant field:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">Weapon</span> <span class="i">weapon</span><span class="p">;</span>
+<pre class="highlight language-c"><span class="t">Weapon</span> <span class="i">weapon</span><span class="p">;</span>
 <span class="i">weapon</span><span class="p">.</span><span class="i">type</span> <span class="o">=</span> <span class="r">WEAPON_MELEE</span><span class="p">;</span>
 <span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">melee</span><span class="p">.</span><span class="i">damage</span> <span class="o">=</span> <span class="n">6</span><span class="p">;</span>
 
-<span class="i">printf</span><span class="p">(</span><span class="s">&quot;Min range %d</span><span class="e">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">ranged</span><span class="p">.</span><span class="i">minRange</span><span class="p">);</span> <span class="c">// Oops.</span></code></pre>
-</div>
+<span class="i">printf</span><span class="p">(</span><span class="s">&quot;Min range %d</span><span class="e">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="i">weapon</span><span class="p">.</span><span class="i">as</span><span class="p">.</span><span class="i">ranged</span><span class="p">.</span><span class="i">minRange</span><span class="p">);</span> <span class="c">// Oops.</span></pre>
 <p>There is a type tag, but the language doesn&rsquo;t know and doesn&rsquo;t check it. This is
 definitely true in C and I think true in Pascal. (It&rsquo;s always hard to talk about
 Pascal definitively because there&rsquo;s no &ldquo;Pascal&rdquo;, just a huge family of
@@ -354,19 +340,16 @@ to reinterpret memory. But that&rsquo;s a solvable problem.</p>
 <p>Which, finally, brings us to the feature I designed for my language. It&rsquo;s very
 close to variant records in Pascal. The type declaration looks just like the
 sum type example:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Weapon</span>
+<pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">Weapon</span>
 <span class="k">case</span> <span class="t">MeleeWeapon</span>
   <span class="k">var</span> <span class="i">damage</span> <span class="t">Int</span>
 <span class="k">case</span> <span class="t">RangedWeapon</span>
   <span class="k">var</span> <span class="i">minRange</span> <span class="t">Int</span>
   <span class="k">var</span> <span class="i">maxRange</span> <span class="t">Int</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The difference is that you don&rsquo;t need to rely on pattern matching to access the
 variant fields. They&rsquo;re just fields:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">MeleeWeapon</span> <span class="k">and</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">or</span>
       <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span>
       <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span> <span class="k">then</span>
@@ -387,8 +370,7 @@ variant fields. They&rsquo;re just fields:</p>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;You wound the monster.&quot;</span><span class="p">)</span>
     <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">=</span> <span class="i">monster</span><span class="p">.</span><span class="i">health</span> <span class="o">-</span> <span class="i">damage</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Of course, you lose the compile-time safety that pattern matching gives you
 where you can&rsquo;t access fields of the wrong type. But we don&rsquo;t need to go all the
 way to C&rsquo;s level of unsafety. Instead, when you access a case-specific field on
@@ -400,8 +382,7 @@ type tag when accessing case-specific fields. In return, you get simpler, more
 familiar syntax for working with case-specific fields, including mutable ones.</p>
 <p>Also, it allows a single record to have a mixture of shared and case-specific
 fields:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Weapon</span>
+<pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">Weapon</span>
   <span class="k">var</span> <span class="i">name</span> <span class="t">String</span>
   <span class="k">var</span> <span class="i">bonus</span> <span class="t">Int</span>
 <span class="k">case</span> <span class="t">MeleeWeapon</span>
@@ -409,8 +390,7 @@ fields:</p>
 <span class="k">case</span> <span class="t">RangedWeapon</span>
   <span class="k">var</span> <span class="i">minRange</span> <span class="t">Int</span>
   <span class="k">var</span> <span class="i">maxRange</span> <span class="t">Int</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here, <code>name</code> and <code>bonus</code> can be accessed on all <code>Weapon</code> instances, but the
 other fields are case specific. It sort of combines product and sum types into a
 single construct. I&rsquo;ve found this to be really handy in practice.</p>
@@ -421,8 +401,7 @@ a decent balance between static safety and simplicity.</p>
 <h2>Update: What about flow typing?</h2>
 <p>When I first posted this, the most common reply was why not do some sort of flow
 typing? In code like:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">RangedWeapon</span> <span class="k">and</span>
         <span class="p">(</span><span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span><span class="p">)</span> <span class="k">or</span>
       <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">then</span>
@@ -431,13 +410,11 @@ typing? In code like:</p>
   <span class="k">end</span>
 
   <span class="c"># ...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The compiler could do control flow analysis to determine that the <code>.minRange</code>
 and <code>.maxRange</code> calls are guarded by an <code>is RangedWeapon</code> and thus allow them.
 But if you <em>don&rsquo;t</em> guard the code with that kind of check, you&rsquo;d get an error:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="c"># Error! Can&#39;t access .minRange here.</span>
      <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span> <span class="k">then</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
@@ -445,8 +422,7 @@ But if you <em>don&rsquo;t</em> guard the code with that kind of check, you&rsqu
   <span class="k">end</span>
 
   <span class="c"># ...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This is definitely a thing you can do! TypeScript, Kotlin, Flow, Dart, and
 others all support it. The general technique is called &ldquo;control flow analysis&rdquo;
 and the specific feature is called &ldquo;flow typing&rdquo;, &ldquo;smart casts&rdquo;, or &ldquo;type
@@ -476,8 +452,7 @@ looks like a type test, but it&rsquo;s really more like an enum case check.</p>
 having the type checker track an extra &ldquo;known case&rdquo; property for each static
 type and then use that. That might work. But even with that, I worry that it
 would quickly become annoying. Let&rsquo;s say you refactor the above code to:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">weapon</span> <span class="k">is</span> <span class="t">RangedWeapon</span> <span class="k">and</span> <span class="i">checkRange</span><span class="p">(</span><span class="i">weapon</span><span class="p">,</span> <span class="i">distance</span><span class="p">)</span> <span class="k">or</span>
       <span class="i">distance</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="k">then</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;You are out of range.&quot;</span><span class="p">)</span>
@@ -489,8 +464,7 @@ would quickly become annoying. Let&rsquo;s say you refactor the above code to:</
 
 <span class="k">def</span> <span class="i">checkRange</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span> <span class="t">Bool</span>
   <span class="i">distance</span> <span class="o">&lt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">minRange</span> <span class="k">or</span> <span class="i">distance</span> <span class="o">&gt;</span> <span class="i">weapon</span><span class="p">.</span><span class="i">maxRange</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That no longer works. Inside <code>checkRange()</code> the compiles has lost track that
 <code>weapon</code> is always a <code>RangedWeapon</code>. You could come up with a way to annotate
 that, but now we&rsquo;re back to subtyping and all the complexity it involves.</p>

@@ -80,11 +80,9 @@ to doing anything. It was more a sort of recreational intellectual exercise. If
 I <em>were</em> to do a book, what would it look like? You know, <em>hypothetically
 speaking</em>.</p>
 <p>The very first note I wrote to myself said:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">high-level goal: a *small* book that builds a complete, efficient
+<pre class="highlight language-text">high-level goal: a *small* book that builds a complete, efficient
 interpreter. instead of a wide text about programming language*s*,
-it is a single path through the language space. aim for 60k words.</code></pre>
-</div>
+it is a single path through the language space. aim for 60k words.</pre>
 <p>My first book was about 90,000 words, and I didn&rsquo;t want to hike a trail that
 long again. I also had a meta-goal to make programming languages more
 approachable, and I figured a short text would help. I had this vision of
@@ -201,26 +199,22 @@ They&rsquo;re real programs.</p>
 <p>Meanwhile, the text of the book is <a href="https://github.com/munificent/craftinginterpreters/tree/master/book">authored in Markdown</a>, one file per
 chapter, just like my first book. To include a snippet of code in the book, I
 put a tag in the Markdown like this:</p>
-<div class="highlight">
-<pre><code class="language-md" data-lang="md">Which can be any of:
+<pre class="highlight language-md">Which can be any of:
 
 ^code is-alpha
 
-Once we&#39;ve found an identifier, we scan the rest of it using:</code></pre>
-</div>
+Once we&#39;ve found an identifier, we scan the rest of it using:</pre>
 <p>Here, the <code>^code</code> line says &ldquo;look up the snippet named &lsquo;is-alpha&rsquo; and insert it
 here.&rdquo; When the build script generates the HTML for this chapter, it goes off
 and hunts through the code for that snippet. Over in the code, special comments
 delimit snippets. The one included here looks like this:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="c">//&gt; Scanning on Demand is-alpha</span>
+<pre class="highlight language-c"><span class="c">//&gt; Scanning on Demand is-alpha</span>
 <span class="k">static</span> <span class="t">bool</span> <span class="i">isAlpha</span><span class="p">(</span><span class="t">char</span> <span class="i">c</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="p">(</span><span class="i">c</span> <span class="o">&gt;=</span> <span class="s">&#39;a&#39;</span> <span class="o">&amp;&amp;</span> <span class="i">c</span> <span class="o">&lt;=</span> <span class="s">&#39;z&#39;</span><span class="p">)</span> <span class="o">||</span>
          <span class="p">(</span><span class="i">c</span> <span class="o">&gt;=</span> <span class="s">&#39;A&#39;</span> <span class="o">&amp;&amp;</span> <span class="i">c</span> <span class="o">&lt;=</span> <span class="s">&#39;Z&#39;</span><span class="p">)</span> <span class="o">||</span>
           <span class="i">c</span> <span class="o">==</span> <span class="s">&#39;_&#39;</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="c">//&lt; Scanning on Demand is-alpha</span></code></pre>
-</div>
+<span class="c">//&lt; Scanning on Demand is-alpha</span></pre>
 <p>The <code>//&gt;</code> line begins the snippet and says what chapter the snippet appears in
 and the name of the snippet. The <code>//&lt;</code> line ends the snippet. Pretty
 straightforward.</p>
@@ -259,8 +253,7 @@ compiler will like what it sees.</p>
 <p>So, for any piece of code that later gets replaced&mdash;in other words code that
 is not part of the very final version of each interpreter&mdash;there is a
 different snippet syntax:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="k">static</span> <span class="t">void</span> <span class="i">concatenate</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="k">static</span> <span class="t">void</span> <span class="i">concatenate</span><span class="p">()</span> <span class="p">{</span>
 <span class="c">/* Strings concatenate &lt; Garbage Collection concatenate-peek
   ObjString* b = AS_STRING(pop());
   ObjString* a = AS_STRING(pop());
@@ -275,8 +268,7 @@ different snippet syntax:</p>
   <span class="i">memcpy</span><span class="p">(</span><span class="i">chars</span><span class="p">,</span> <span class="i">a</span><span class="o">-&gt;</span><span class="i">chars</span><span class="p">,</span> <span class="i">a</span><span class="o">-&gt;</span><span class="i">length</span><span class="p">);</span>
   <span class="i">memcpy</span><span class="p">(</span><span class="i">chars</span> <span class="o">+</span> <span class="i">a</span><span class="o">-&gt;</span><span class="i">length</span><span class="p">,</span> <span class="i">b</span><span class="o">-&gt;</span><span class="i">chars</span><span class="p">,</span> <span class="i">b</span><span class="o">-&gt;</span><span class="i">length</span><span class="p">);</span>
   <span class="i">chars</span><span class="p">[</span><span class="i">length</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;\0&#39;</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This block comment contains a snippet of code. The header indicates that this
 snippet is named &ldquo;concatenate&rdquo; and first appears in the &ldquo;Strings&rdquo; chapter. Then,
 later, it gets removed when the &ldquo;concatenate-peek&rdquo; snippet in the &ldquo;Garbage
@@ -286,8 +278,7 @@ previous two lines.</p>
 code as it is in the raw source file is still valid. In some places where the
 interpreter gets revised multiple times, the code can get pretty complex. Here
 is the <code>main()</code> function of the bytecode VM:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">int</span> <span class="i">main</span><span class="p">(</span><span class="t">int</span> <span class="i">argc</span><span class="p">,</span> <span class="k">const</span> <span class="t">char</span><span class="o">*</span> <span class="i">argv</span><span class="p">[])</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="t">int</span> <span class="i">main</span><span class="p">(</span><span class="t">int</span> <span class="i">argc</span><span class="p">,</span> <span class="k">const</span> <span class="t">char</span><span class="o">*</span> <span class="i">argv</span><span class="p">[])</span> <span class="p">{</span>
 <span class="c">//&gt; A Virtual Machine main-init-vm</span>
   <span class="i">initVM</span><span class="p">();</span>
 
@@ -359,8 +350,7 @@ is the <code>main()</code> function of the bytecode VM:</p>
   freeChunk(&amp;chunk);
 */</span>
   <span class="k">return</span> <span class="n">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Maintaining this is not super fun. But, thankfully, I have a build and test
 system to tell me when I break something.</p>
 <h2>Slicing up the interpreters</h2>

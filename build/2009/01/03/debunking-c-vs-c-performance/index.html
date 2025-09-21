@@ -122,13 +122,11 @@ performance as being <strong>ten times worse than C++&rsquo;s</strong>. Holy shi
 </div>
 <p>Pretty slow! So I took a look at the code. The first thing that would catch the
 eye of any C# programmer is this:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">unsafe</span> <span class="k">struct</span> <span class="t">Data</span>
+<pre class="highlight language-csharp"><span class="k">unsafe</span> <span class="k">struct</span> <span class="t">Data</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
     <span class="k">public</span> <span class="k">fixed</span> <span class="t">char</span> <span class="i">data</span><span class="p">[</span><span class="n">128</span><span class="p">];</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p><em>That&rsquo;s</em> the data structure he&rsquo;s sorting. An unsafe struct with a fixed array? I
 had to look up <code>fixed</code> to even know what that <em>means</em>. Now, I understand that
 he&rsquo;s trying to make an apples/apples comparison and keep the data structure as
@@ -136,15 +134,13 @@ close to the C++ one as possible, but I think that&rsquo;s missing the point. If
 you&rsquo;re going to compare two languages, using their <em>built-in typical sort
 functions</em>, shouldn&rsquo;t you use their typical <em>data structures</em> too? Here&rsquo;s how a
 regular C# developer would define <code>Data</code>:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">class</span> <span class="t">Data</span>
+<pre class="highlight language-csharp"><span class="k">class</span> <span class="t">Data</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">key</span><span class="p">;</span>
     <span class="k">public</span> <span class="t">char</span><span class="p">[]</span> <span class="i">data</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="i">Data</span><span class="p">()</span> <span class="p">{</span> <span class="i">data</span> <span class="o">=</span> <span class="k">new</span> <span class="t">char</span><span class="p">[</span><span class="n">128</span><span class="p">];</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>No unmanaged code, no structs (which are rarely used in C#). Just a regular
 class with an array. Here&rsquo;s the results:</p>
 <h2>Modified to typical C# code</h2><div class="table">
@@ -281,8 +277,7 @@ the data structures (which he did not do) used by each language.</p>
 <h2>The code</h2>
 <p>Aside from the <code>Data</code> change above, I cleaned up some of the copy and paste in
 his code. Here&rsquo;s what I used:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">using</span> <span class="i">System</span><span class="p">;</span>
+<pre class="highlight language-csharp"><span class="k">using</span> <span class="i">System</span><span class="p">;</span>
 <span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Collections</span><span class="p">;</span>
 <span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Collections</span><span class="p">.</span><span class="i">Generic</span><span class="p">;</span>
 <span class="k">using</span> <span class="i">System</span><span class="p">.</span><span class="i">Text</span><span class="p">;</span>
@@ -461,8 +456,7 @@ his code. Here&rsquo;s what I used:</p>
             <span class="i">Console</span><span class="p">.</span><span class="i">ReadKey</span><span class="p">();</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
   <div class="comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">

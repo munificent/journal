@@ -50,8 +50,7 @@ are doable or easy in Magpie that can be a pain in other languages.</p>
 <p>In Magpie, almost everything is a function, including constructors. Since it
 doesn&rsquo;t have an explicit <code>new</code> keyword, you can pass around a reference to a
 constructor like you can any other function.</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Define a type.</span>
+<pre class="highlight language-magpie1"><span class="c">// Define a type.</span>
 <span class="k">struct</span> <span class="t">Point</span>
     <span class="i">X</span> <span class="t">Int</span>
     <span class="i">Y</span> <span class="t">Int</span>
@@ -67,16 +66,14 @@ constructor like you can any other function.</p>
     <span class="k">def</span> <span class="i">point</span> <span class="o">&lt;-</span> <span class="i">func</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
 
     <span class="i">Print</span> <span class="p">(</span><span class="i">point</span><span class="p">.</span><span class="i">X</span><span class="p">.</span><span class="i">String</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="o">+</span> <span class="i">point</span><span class="p">.</span><span class="i">Y</span><span class="p">.</span><span class="i">String</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Try <em>that</em> C# and C++!</p>
 <h2>Tupled arguments</h2>
 <p>Functions in Magpie always take a single argument. To pass in multiple
 arguments, you use a tuple. Syntactically, it looks the same as other languages,
 but does have an interesting side-effect: you can treat the entire batch of
 arguments as a single value to be played with:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Define a function that takes three arguments.</span>
+<pre class="highlight language-magpie1"><span class="c">// Define a function that takes three arguments.</span>
 <span class="i">Sum</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span><span class="p">,</span> <span class="i">c</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span> <span class="o">+</span> <span class="i">c</span>
 
 <span class="i">Main</span> <span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
@@ -95,8 +92,7 @@ arguments as a single value to be played with:</p>
 <span class="k">end</span>
 
 <span class="c">// This function returns a tuple.</span>
-<span class="i">GetArgs</span> <span class="p">(</span><span class="o">-&gt;</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">))</span> <span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">,</span> <span class="n">6</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">GetArgs</span> <span class="p">(</span><span class="o">-&gt;</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">))</span> <span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">,</span> <span class="n">6</span><span class="p">)</span></pre>
 <h2>Is that it?</h2>
 <p>I know, I know. Not exactly mind-blowing. There&rsquo;s still lots of work for me to
 do on the language, but it&rsquo;s getting there. At the very least, there&rsquo;s a pretty

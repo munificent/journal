@@ -170,11 +170,9 @@ functions and types you want without worrying about modularity. Then at the top
 of the file, the language gives you some dedicated syntax to list the things
 that should be made visible outside of the module.</p>
 <p>For example, in Scheme, the syntax for defining a module looks like:</p>
-<div class="highlight">
-<pre><code class="language-scheme" data-lang="scheme">(library library-name
+<pre class="highlight language-scheme">(library library-name
   (export list-of-names-to-export...)
-  declarations-in-library...)</code></pre>
-</div>
+  declarations-in-library...)</pre>
 <p>SML and its spawn have a notion of a <a href="https://smlhelp.github.io/book/docs/start/module-syntax">signature</a> which is
 declared separately from the module. You could also argue that header files in C
 and C++ are this pattern.</p>
@@ -192,22 +190,18 @@ the manifest too.</p>
 <p>I ragged on JavaScript for not having its act together, but I gotta say when
 they did add modules, they came up with a clever blended approach. You can use
 <code>export</code> as a modifier right on a declaration:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">export</span> <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">width</span> <span class="o">*</span> <span class="i">height</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>But you can also use the <code>export</code> keyword to export a set of declarations that
 are already declared elsewhere:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">export</span> <span class="p">{</span> <span class="i">area</span> <span class="p">};</span>
+<pre class="highlight language-javascript"><span class="k">export</span> <span class="p">{</span> <span class="i">area</span> <span class="p">};</span>
 
 <span class="c">// Code...</span>
 
 <span class="k">function</span> <span class="i">area</span><span class="p">(</span><span class="i">width</span><span class="p">,</span> <span class="i">height</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">width</span> <span class="o">*</span> <span class="i">height</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Given that modules were added later to the language, I&rsquo;m guessing this makes it
 easier to add modularity to a large existing JS library.</p>
 <h3>Sigils at the declaration</h3>
@@ -216,8 +210,7 @@ Niklaus Wirth&rsquo;s magnum opus language <a href="https://oberon.org/en">Obero
 <p>In Oberon, top-level declarations are private by default and only accessible
 to the containing module. If you want to make a declaration public, you mark
 the declaration with an asterisk:</p>
-<div class="highlight">
-<pre><code class="language-oberon" data-lang="oberon"><span class="k">MODULE</span> <span class="i">Hello</span><span class="p">;</span>
+<pre class="highlight language-oberon"><span class="k">MODULE</span> <span class="i">Hello</span><span class="p">;</span>
   <span class="k">IMPORT</span> <span class="i">Out</span><span class="p">;</span>
 
   <span class="k">PROCEDURE</span> <span class="i">SayHello</span><span class="o">*</span><span class="p">;</span>
@@ -225,8 +218,7 @@ the declaration with an asterisk:</p>
     <span class="i">Out</span><span class="p">.</span><span class="i">String</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
     <span class="i">Out</span><span class="p">.</span><span class="i">Ln</span><span class="p">;</span>
   <span class="k">END</span> <span class="i">SayHello</span><span class="p">;</span>
-<span class="k">END</span> <span class="i">Hello</span><span class="p">.</span></code></pre>
-</div>
+<span class="k">END</span> <span class="i">Hello</span><span class="p">.</span></pre>
 <p>Here, the <code>*</code> after <code>PROCEDURE SayHello</code> means that <code>SayHello</code> is public. Note
 that this marker is only at the declaration. It&rsquo;s not part of the name. At
 callsites, the name is just <code>HelloWorld</code>.</p>
@@ -350,32 +342,26 @@ can just make everything public.</p>
 <p>So there is some appeal. I don&rsquo;t think I can literally take Oberon&rsquo;s syntax
 with <code>*</code> following the name. My language lets you define operators and it would
 be confusing to have <code>*</code> right after other punctuation:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="o">+*</span><span class="p">(</span><span class="i">left</span> <span class="t">Vec</span><span class="p">,</span> <span class="i">right</span> <span class="t">Vec</span><span class="p">)</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="o">+*</span><span class="p">(</span><span class="i">left</span> <span class="t">Vec</span><span class="p">,</span> <span class="i">right</span> <span class="t">Vec</span><span class="p">)</span>
   <span class="t">Vec</span><span class="p">(</span><span class="i">left</span><span class="p">.</span><span class="i">x</span> <span class="o">+</span> <span class="i">right</span><span class="p">.</span><span class="i">x</span><span class="p">,</span> <span class="i">left</span><span class="p">.</span><span class="i">y</span> <span class="o">+</span> <span class="i">right</span><span class="p">.</span><span class="i">y</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This is declaring a private <code>+</code> function. It would probably look equally weird
 to have <code>*</code> after the name in a record declaration:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span> <span class="t">Vec</span><span class="o">*</span>
+<pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">Vec</span><span class="o">*</span>
   <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
   <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That led me to thinking the sigil should be by the declaration keyword. In my
 language, every declaration form does start with a leading keyword (unlike, say,
 C where function declarations don&rsquo;t have one), so it&rsquo;s feasible. Something like:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec</span><span class="o">*</span> <span class="t">Vec</span>
+<pre class="highlight language-vgs"><span class="k">rec</span><span class="o">*</span> <span class="t">Vec</span>
   <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
   <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 
 <span class="k">def</span><span class="o">*</span> <span class="i">sayHi</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>I don&rsquo;t hate it. But using <code>*</code> feels weird for &ldquo;private&rdquo;. If anything, it seems
 to emphasize the declaration (which is what it does in Oberon where it means
 &ldquo;public&rdquo;).</p>
@@ -383,16 +369,14 @@ to emphasize the declaration (which is what it does in Oberon where it means
 <p>That led to my last idea which I can&rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &ldquo;private&rdquo; to some people. So
 maybe use that? It looks like:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">rec_</span> <span class="t">Vec</span>
+<pre class="highlight language-vgs"><span class="k">rec_</span> <span class="t">Vec</span>
   <span class="k">val</span> <span class="i">left</span> <span class="t">Int</span>
   <span class="k">val</span> <span class="i">right</span> <span class="t">Int</span>
 <span class="k">end</span>
 
 <span class="k">def_</span> <span class="i">sayHi</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>It looks odd, but I don&rsquo;t <em>hate</em> it. Or at least I don&rsquo;t hate it any more than
 any novel programming language syntax usually triggers revulsion.</p>
 <p>However, there&rsquo;s sort of a problem. Underscore is a valid identifier character.

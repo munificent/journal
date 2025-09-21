@@ -88,21 +88,18 @@ together <a href="https://github.com/munificent/bantam/blob/master/src/com/stuff
 are raining down from heaven or something.</p>
 <p>A token is the smallest chunk of meaningful code. It has a type and a string
 associated with it. Given <code>from + offset(time)</code>, the tokens would be:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">NAME &quot;from&quot;
+<pre class="highlight language-text">NAME &quot;from&quot;
 PLUS &quot;+&quot;
 NAME &quot;offset&quot;
 LEFT_PAREN &quot;(&quot;
 NAME &quot;time&quot;
-RIGHT_PAREN &quot;)&quot;</code></pre>
-</div>
+RIGHT_PAREN &quot;)&quot;</pre>
 <p>For this exercise, we won&rsquo;t be <em>interpreting</em> or <em>compiling</em> this code. We just
 want to parse it to a nice data structure. For our purposes, that means our
 parser should chew up a bunch of <a href="https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/Token.java">Token</a> objects and spit out an instance
 of some class that implements <a href="https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/Expression.java">Expression</a>. To give you an idea,
 here&rsquo;s a simplified version of the class for a <a href="https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/expressions/ConditionalExpression.java">conditional expression</a>:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">ConditionalExpression</span> <span class="k">implements</span> <span class="t">Expression</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">ConditionalExpression</span> <span class="k">implements</span> <span class="t">Expression</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">ConditionalExpression</span><span class="p">(</span>
       <span class="t">Expression</span> <span class="i">condition</span><span class="p">,</span>
       <span class="t">Expression</span> <span class="i">thenArm</span><span class="p">,</span>
@@ -115,8 +112,7 @@ here&rsquo;s a simplified version of the class for a <a href="https://github.com
   <span class="k">public</span> <span class="k">final</span> <span class="t">Expression</span> <span class="i">condition</span><span class="p">;</span>
   <span class="k">public</span> <span class="k">final</span> <span class="t">Expression</span> <span class="i">thenArm</span><span class="p">;</span>
   <span class="k">public</span> <span class="k">final</span> <span class="t">Expression</span> <span class="i">elseArm</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>(You gotta love Java&rsquo;s &ldquo;please sign it in quadruplicate&rdquo; level of bureaucracy
 here. Like I said, if you can tolerate this in Java, it can work in <em>any</em>
 language.)</p>
@@ -135,49 +131,40 @@ step at a time.</p>
 expressions. For those, the current token tells us everything we need to do.
 Bantam has one single-token expression: named variables. It has four prefix
 operators: <code>+</code>, <code>-</code>, <code>~</code>, and <code>!</code>. The simplest possible code to parse those is:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">Expression</span> <span class="i">parseExpression</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="t">Expression</span> <span class="i">parseExpression</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">match</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">NAME</span><span class="p">))</span>       <span class="c">// Return NameExpression...</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="i">match</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">PLUS</span><span class="p">))</span>  <span class="c">// Return prefix + operator...</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="i">match</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">MINUS</span><span class="p">))</span> <span class="c">// Return prefix - operator...</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="i">match</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">TILDE</span><span class="p">))</span> <span class="c">// Return prefix ~ operator...</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="i">match</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">BANG</span><span class="p">))</span>  <span class="c">// Return prefix ! operator...</span>
   <span class="k">else</span> <span class="k">throw</span> <span class="k">new</span> <span class="t">ParseException</span><span class="p">();</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>But that&rsquo;s a bit monolithic. As you can see, we&rsquo;re switching off of a TokenType
 to branch to different parsing behavior. Let&rsquo;s encode that directly by making a
 Map from TokenTypes to chunks of parsing code. We&rsquo;ll call these chunks
 &ldquo;parselets&rdquo;, and they will implement this:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">interface</span> <span class="t">PrefixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">interface</span> <span class="t">PrefixParselet</span> <span class="p">{</span>
   <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>An parselet implementation to parse variable names is simply:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">NameParselet</span> <span class="k">implements</span> <span class="t">PrefixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">NameParselet</span> <span class="k">implements</span> <span class="t">PrefixParselet</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">NameExpression</span><span class="p">(</span><span class="i">token</span><span class="p">.</span><span class="i">getText</span><span class="p">());</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>We can use a single class for all of the prefix operators since they only differ
 in the actual operator token itself:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">PrefixOperatorParselet</span> <span class="k">implements</span> <span class="t">PrefixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">PrefixOperatorParselet</span> <span class="k">implements</span> <span class="t">PrefixParselet</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
     <span class="t">Expression</span> <span class="i">operand</span> <span class="o">=</span> <span class="i">parser</span><span class="p">.</span><span class="i">parseExpression</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">PrefixExpression</span><span class="p">(</span><span class="i">token</span><span class="p">.</span><span class="i">getType</span><span class="p">(),</span> <span class="i">operand</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>You&rsquo;ll note that it calls back into <code>parseExpression()</code> to parse the operand
 that appears after the operator (for example, to parse the <code>a</code> in <code>-a</code>). This
 recursion takes care of nested operators like <code>-+~!a</code>.</p>
 <p>Back in Parser, the chained <code>if</code> statements are replaced with a map:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Parser</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">Parser</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Expression</span> <span class="i">parseExpression</span><span class="p">()</span> <span class="p">{</span>
     <span class="t">Token</span> <span class="i">token</span> <span class="o">=</span> <span class="i">consume</span><span class="p">();</span>
     <span class="t">PrefixParselet</span> <span class="i">prefix</span> <span class="o">=</span> <span class="i">mPrefixParselets</span><span class="p">.</span><span class="i">get</span><span class="p">(</span><span class="i">token</span><span class="p">.</span><span class="i">getType</span><span class="p">());</span>
@@ -192,27 +179,22 @@ recursion takes care of nested operators like <code>-+~!a</code>.</p>
 
   <span class="k">private</span> <span class="k">final</span> <span class="t">Map</span><span class="o">&lt;</span><span class="t">TokenType</span><span class="p">,</span> <span class="t">PrefixParselet</span><span class="o">&gt;</span> <span class="i">mPrefixParselets</span> <span class="o">=</span>
       <span class="k">new</span> <span class="t">HashMap</span><span class="o">&lt;</span><span class="t">TokenType</span><span class="p">,</span> <span class="t">PrefixParselet</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>To define the grammar we have so far&mdash;variables and the four prefix
 operators&mdash;we&rsquo;ll add these helper methods:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="t">void</span> <span class="i">register</span><span class="p">(</span><span class="t">TokenType</span> <span class="i">token</span><span class="p">,</span> <span class="t">PrefixParselet</span> <span class="i">parselet</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="t">void</span> <span class="i">register</span><span class="p">(</span><span class="t">TokenType</span> <span class="i">token</span><span class="p">,</span> <span class="t">PrefixParselet</span> <span class="i">parselet</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">mPrefixParselets</span><span class="p">.</span><span class="i">put</span><span class="p">(</span><span class="i">token</span><span class="p">,</span> <span class="i">parselet</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">public</span> <span class="t">void</span> <span class="i">prefix</span><span class="p">(</span><span class="t">TokenType</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">register</span><span class="p">(</span><span class="i">token</span><span class="p">,</span> <span class="k">new</span> <span class="t">PrefixOperatorParselet</span><span class="p">());</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>And now we can define the grammar like:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="i">register</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">NAME</span><span class="p">,</span> <span class="k">new</span> <span class="t">NameParselet</span><span class="p">());</span>
+<pre class="highlight language-java"><span class="i">register</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">NAME</span><span class="p">,</span> <span class="k">new</span> <span class="t">NameParselet</span><span class="p">());</span>
 <span class="i">prefix</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">PLUS</span><span class="p">);</span>
 <span class="i">prefix</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">MINUS</span><span class="p">);</span>
 <span class="i">prefix</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">TILDE</span><span class="p">);</span>
-<span class="i">prefix</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">BANG</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">prefix</span><span class="p">(</span><span class="t">TokenType</span><span class="p">.</span><span class="i">BANG</span><span class="p">);</span></pre>
 <p>This is already an improvement over a recursive descent parser because our
 grammar is now more declarative instead of being spread out over a few
 imperative functions, and we can see the actual grammar all in one place. Even
@@ -227,19 +209,15 @@ like <code>a + b</code>, we don&rsquo;t know we have an add expression until aft
 <p>Fortunately, we&rsquo;re in a good place to do so. Our current <code>parseExpression()</code>
 method parses a complete prefix expression including any nested prefix
 expressions and then stops. So, if we throw this at it:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="o">-</span><span class="i">a</span> <span class="o">+</span> <span class="i">b</span></code></pre>
-</div>
+<pre class="highlight language-java"><span class="o">-</span><span class="i">a</span> <span class="o">+</span> <span class="i">b</span></pre>
 <p>It will parse <code>-a</code> and leave us sitting on <code>+</code>. That&rsquo;s exactly the token we need
 to tell what infix expression we need to parse. Compared to prefix parsing, the
 only change for infix parsing is that there&rsquo;s another expression <em>before</em> the
 infix operator that the infix parser receives as an argument. Let&rsquo;s define a
 parselet that supports that:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">interface</span> <span class="t">InfixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">interface</span> <span class="t">InfixParselet</span> <span class="p">{</span>
   <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expression</span> <span class="i">left</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The only difference is that <code>left</code> argument, which is the expression we parsed
 before we got to the infix token. We wire this up to our parser by having
 another table of infix parselets.</p>
@@ -249,8 +227,7 @@ example, the prefix parselet for <code>(</code> handles grouping in an expressio
 <code>a(b)</code>.</p>
 <p>Now, after we parse the leading prefix expression, we look for an infix parser
 that matches the next token and wraps the prefix expression as an operand:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Parser</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">Parser</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">void</span> <span class="i">register</span><span class="p">(</span><span class="t">TokenType</span> <span class="i">token</span><span class="p">,</span> <span class="t">InfixParselet</span> <span class="i">parselet</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">mInfixParselets</span><span class="p">.</span><span class="i">put</span><span class="p">(</span><span class="i">token</span><span class="p">,</span> <span class="i">parselet</span><span class="p">);</span>
   <span class="p">}</span>
@@ -278,36 +255,30 @@ that matches the next token and wraps the prefix expression as an operand:</p>
 
   <span class="k">private</span> <span class="k">final</span> <span class="t">Map</span><span class="o">&lt;</span><span class="t">TokenType</span><span class="p">,</span> <span class="t">InfixParselet</span><span class="o">&gt;</span> <span class="i">mInfixParselets</span> <span class="o">=</span>
       <span class="k">new</span> <span class="t">HashMap</span><span class="o">&lt;</span><span class="t">TokenType</span><span class="p">,</span> <span class="t">InfixParselet</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Pretty straightforward. We can implement an infix parselet for binary arithmetic
 operators like <code>+</code> like so:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">BinaryOperatorParselet</span> <span class="k">implements</span> <span class="t">InfixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">BinaryOperatorParselet</span> <span class="k">implements</span> <span class="t">InfixParselet</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span>
       <span class="t">Expression</span> <span class="i">left</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
     <span class="t">Expression</span> <span class="i">right</span> <span class="o">=</span> <span class="i">parser</span><span class="p">.</span><span class="i">parseExpression</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">OperatorExpression</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">token</span><span class="p">.</span><span class="i">getType</span><span class="p">(),</span> <span class="i">right</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Infix parselets also works for postfix operators. I&rsquo;m calling them &ldquo;infix&rdquo;, but
 they&rsquo;re really &ldquo;anything but prefix&rdquo;. If there&rsquo;s some leading subexpression that
 comes before the token, the token will be handled by an infix parselet. That
 includes postfix expressions and mixfix ones like <code>?:</code>.</p>
 <p>Postfix expressions are as simple as single-token prefix parselets: they just
 take the <code>left</code> operand and wraps it in another expression:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">PostfixOperatorParselet</span> <span class="k">implements</span> <span class="t">InfixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">PostfixOperatorParselet</span> <span class="k">implements</span> <span class="t">InfixParselet</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expression</span> <span class="i">left</span><span class="p">,</span>
       <span class="t">Token</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">PostfixExpression</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">token</span><span class="p">.</span><span class="i">getType</span><span class="p">());</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Mixfix is easy too. It&rsquo;s similar to recursive descent:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">ConditionalParselet</span> <span class="k">implements</span> <span class="t">InfixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">ConditionalParselet</span> <span class="k">implements</span> <span class="t">InfixParselet</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expression</span> <span class="i">left</span><span class="p">,</span>
       <span class="t">Token</span> <span class="i">token</span><span class="p">)</span> <span class="p">{</span>
     <span class="t">Expression</span> <span class="i">thenArm</span> <span class="o">=</span> <span class="i">parser</span><span class="p">.</span><span class="i">parseExpression</span><span class="p">();</span>
@@ -316,8 +287,7 @@ take the <code>left</code> operand and wraps it in another expression:</p>
 
     <span class="k">return</span> <span class="k">new</span> <span class="t">ConditionalExpression</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">thenArm</span><span class="p">,</span> <span class="i">elseArm</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now we can parse prefix, postfix, infix, and even mixfix expressions. With a
 pretty small amount of code, we can parse complex nested expressions like <code>a + (b ? c! : -d)</code>. We&rsquo;re done, right? Well&hellip; almost.</p>
 <h2>Excuse you, aunt Sally</h2>
@@ -333,15 +303,12 @@ expression whose precedence is lower than we allow, it stops parsing and returns
 what it has so far.</p>
 <p>To make that check we need to know the precedence of any given infix
 expression. We&rsquo;ll let the parselet specify it:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">interface</span> <span class="t">InfixParselet</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="k">interface</span> <span class="t">InfixParselet</span> <span class="p">{</span>
   <span class="t">Expression</span> <span class="i">parse</span><span class="p">(</span><span class="t">Parser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expression</span> <span class="i">left</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
   <span class="t">int</span> <span class="i">getPrecedence</span><span class="p">();</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Using that, our core expression parser looks like this:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="t">Expression</span> <span class="i">parseExpression</span><span class="p">(</span><span class="t">int</span> <span class="i">precedence</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="t">Expression</span> <span class="i">parseExpression</span><span class="p">(</span><span class="t">int</span> <span class="i">precedence</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">Token</span> <span class="i">token</span> <span class="o">=</span> <span class="i">consume</span><span class="p">();</span>
   <span class="t">PrefixParselet</span> <span class="i">prefix</span> <span class="o">=</span> <span class="i">mPrefixParselets</span><span class="p">.</span><span class="i">get</span><span class="p">(</span><span class="i">token</span><span class="p">.</span><span class="i">getType</span><span class="p">());</span>
 
@@ -358,23 +325,19 @@ expression. We&rsquo;ll let the parselet specify it:</p>
   <span class="p">}</span>
 
   <span class="k">return</span> <span class="i">left</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That relies on a tiny helper function to get the precedence of the current
 token or a default value if there&rsquo;s no infix parselet for the token:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">private</span> <span class="t">int</span> <span class="i">getPrecedence</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">private</span> <span class="t">int</span> <span class="i">getPrecedence</span><span class="p">()</span> <span class="p">{</span>
   <span class="t">InfixParselet</span> <span class="i">parser</span> <span class="o">=</span> <span class="i">mInfixParselets</span><span class="p">.</span><span class="i">get</span><span class="p">(</span>
       <span class="i">lookAhead</span><span class="p">(</span><span class="n">0</span><span class="p">).</span><span class="i">getType</span><span class="p">());</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">parser</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="i">parser</span><span class="p">.</span><span class="i">getPrecedence</span><span class="p">();</span>
 
   <span class="k">return</span> <span class="n">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>And that&rsquo;s it. To wire precedence into Bantam&rsquo;s grammar, we set up a little
 precedence table:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">class</span> <span class="t">Precedence</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="k">class</span> <span class="t">Precedence</span> <span class="p">{</span>
   <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="t">int</span> <span class="i">ASSIGNMENT</span>  <span class="o">=</span> <span class="n">1</span><span class="p">;</span>
   <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="t">int</span> <span class="i">CONDITIONAL</span> <span class="o">=</span> <span class="n">2</span><span class="p">;</span>
   <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="t">int</span> <span class="i">SUM</span>         <span class="o">=</span> <span class="n">3</span><span class="p">;</span>
@@ -383,8 +346,7 @@ precedence table:</p>
   <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="t">int</span> <span class="i">PREFIX</span>      <span class="o">=</span> <span class="n">6</span><span class="p">;</span>
   <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="t">int</span> <span class="i">POSTFIX</span>     <span class="o">=</span> <span class="n">7</span><span class="p">;</span>
   <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="t">int</span> <span class="i">CALL</span>        <span class="o">=</span> <span class="n">8</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>To make our operators parse their operands with the correct precedence, they
 pass an appropriate value back into <code>parseExpression()</code> when they call it
 recursively. For example, the <a href="https://github.com/munificent/bantam/blob/master/src/com/stuffwithstuff/bantam/parselets/BinaryOperatorParselet.java">BinaryOperatorParselet</a> instance that handles

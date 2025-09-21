@@ -44,37 +44,27 @@ this might come in handy. At the very least, it&rsquo;ll help me remember where 
 at.</p>
 <p>First off, a quick primer in Magpie syntax. Here&rsquo;s a function to square a
 number:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">Square</span> <span class="p">(</span><span class="i">n</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">n</span> <span class="o">*</span> <span class="i">n</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">Square</span> <span class="p">(</span><span class="i">n</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">n</span> <span class="o">*</span> <span class="i">n</span></pre>
 <p>The name comes first, followed by the type signature in parentheses. To the left
 of the <code>-&gt;</code> is the argument, to the right is the return type. The body of the
 function is the single expression <code>n * n</code>. Like Ruby and most functional
 languages, returning is implicit: a function returns the result of evaluating
 its body.</p>
 <p>You can call it like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">Square</span> <span class="n">3</span> <span class="c">// Returns 9.</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">Square</span> <span class="n">3</span> <span class="c">// Returns 9.</span></pre>
 <p>Unlike C and other languages, function arguments aren&rsquo;t put inside
 parentheses.</p>
 <h2>So what if I want to pass in multiple args?</h2>
 <p>That&rsquo;s easy. Here&rsquo;s a function to multiply three numbers:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">Mult</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span><span class="p">,</span> <span class="i">c</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">a</span> <span class="o">*</span> <span class="i">b</span> <span class="o">*</span> <span class="i">c</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">Mult</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span><span class="p">,</span> <span class="i">c</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">a</span> <span class="o">*</span> <span class="i">b</span> <span class="o">*</span> <span class="i">c</span></pre>
 <p>You can call it like:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">Mult</span> <span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)</span> <span class="c">// Returns 24.</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">Mult</span> <span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)</span> <span class="c">// Returns 24.</span></pre>
 <h2>Hey! I thought you said functions always take one argument!</h2>
 <p>They do, they do. However, Magpie also supports <a href="http://en.wikipedia.org/wiki/Tuple">tuples</a>. A tuple lets you
 make a single value by combining others together. In Magpie, tuples are created
 using the comma operator:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>             <span class="c">// A tuple of two Int fields.</span>
-<span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">)</span> <span class="c">// A tuple of three fields of different type.</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>             <span class="c">// A tuple of two Int fields.</span>
+<span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">)</span> <span class="c">// A tuple of three fields of different type.</span></pre>
 <p>(They are also placed inside parentheses, but you can more or less ignore that.
 It&rsquo;s more for precedence reasons than anything else. The comma is where the
 magic is.)</p>
@@ -83,13 +73,11 @@ calling <code>Mult</code> with a single argument, the tuple <code>(2, 3, 4)</cod
 <h2>Are you just playing semantics?</h2>
 <p>No, this isn&rsquo;t just a semantic trick. <code>Mult</code> really does take a single value.
 I&rsquo;ll prove it:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Create a local variable and assign a tuple to it.</span>
+<pre class="highlight language-magpie1"><span class="c">// Create a local variable and assign a tuple to it.</span>
 <span class="k">def</span> <span class="i">arg</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)</span>
 
 <span class="c">// Pass the single argument to the function.</span>
-<span class="i">Mult</span> <span class="i">arg</span></code></pre>
-</div>
+<span class="i">Mult</span> <span class="i">arg</span></pre>
 <p>This is perfectly legit in Magpie and doesn&rsquo;t require function overloading or
 anything. In fact, this is kind of useful. When you start playing with function
 references (i.e. callbacks), it&rsquo;s really convenient to be able to pass around
@@ -101,18 +89,12 @@ of values, including one and zero. A single value <em>is</em> a one-value tuple 
 monuple?). But you can also have a tuple with <em>no</em> values, strange as that
 sounds. There&rsquo;s exactly one of them. (How could there be different ones?) It&rsquo;s
 called &ldquo;Unit&rdquo;, and looks like <code>()</code>. So if you had a function like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">SayHi</span> <span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span> <span class="i">Print</span> <span class="s">&quot;hi!&quot;</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">SayHi</span> <span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span> <span class="i">Print</span> <span class="s">&quot;hi!&quot;</span></pre>
 <p>You could call it like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">SayHi</span> <span class="p">()</span> <span class="c">// Prints &quot;hi&quot;.</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">SayHi</span> <span class="p">()</span> <span class="c">// Prints &quot;hi&quot;.</span></pre>
 <p>That&rsquo;s a bit tedious, though, so in most cases you can omit the <code>()</code> and Magpie
 will infer it:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">SayHi</span> <span class="c">// Prints &quot;hi&quot;.</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">SayHi</span> <span class="c">// Prints &quot;hi&quot;.</span></pre>
 <h2>What about returns? I don&rsquo;t see <code>Print</code> returning anything.</h2>
 <p>Sure, it is. Just like Unit can be omitted as an argument, it&rsquo;s also omitted as
 a return. <code>Print</code> returns <code>()</code> every time it&rsquo;s called. Since a function returns
@@ -122,9 +104,7 @@ the result of evaluating its body, that means <code>SayHi</code> also returns <c
 can return Unit like a value, Magpie doesn&rsquo;t need to make a distinction between
 <em>expressions</em> (which return things) and <em>statements</em> (which don&rsquo;t). This means
 that things like flow control can be regular expressions in Magpie. For example:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">Square</span> <span class="p">(</span><span class="k">if</span> <span class="n">1</span> <span class="o">&lt;</span> <span class="n">2</span> <span class="k">then</span> <span class="n">3</span> <span class="k">else</span> <span class="n">4</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie1"><span class="i">Square</span> <span class="p">(</span><span class="k">if</span> <span class="n">1</span> <span class="o">&lt;</span> <span class="n">2</span> <span class="k">then</span> <span class="n">3</span> <span class="k">else</span> <span class="n">4</span><span class="p">)</span></pre>
 <p>This calls the <code>Square</code> function and passes in 3. We can do this because
 <code>if/then/else</code> is a regular expression and can be used anywhere.</p>
 <p>So having &ldquo;nothing&rdquo; be a returnable value lets us make the language a lot more
@@ -132,11 +112,9 @@ flexible.</p>
 <h2>You still forgot one case&hellip;</h2>
 <p>And, of course, this also means you can return <em>multiple</em> values, just like
 you can in Python or Lua:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="i">Swap</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">))</span> <span class="p">(</span><span class="i">b</span><span class="p">,</span> <span class="i">a</span><span class="p">)</span>
+<pre class="highlight language-magpie1"><span class="i">Swap</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">))</span> <span class="p">(</span><span class="i">b</span><span class="p">,</span> <span class="i">a</span><span class="p">)</span>
 
-<span class="i">Swap</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="c">// returns (2, 1)</span></code></pre>
-</div>
+<span class="i">Swap</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="c">// returns (2, 1)</span></pre>
 <p>So, in the end, it isn&rsquo;t much of a limitation at all.</p>
   <div class="comments">
     <div id="disqus_thread"></div>

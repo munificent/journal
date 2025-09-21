@@ -62,8 +62,7 @@ We&rsquo;ll break that down into the two words, last one first:</p>
 <p>Say you want to make an &ldquo;object&rdquo; that represents a counter. It exposes three
 operations:  <code>increment()</code>, <code>get()</code>, and <code>set()</code>. You could make such an object
 in our Dart subset like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
   <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
 
@@ -87,13 +86,11 @@ in our Dart subset like this:</p>
     <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="k">set</span><span class="p">,</span>
     <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="i">increment</span>
   <span class="p">};</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Great. This works fine. But let&rsquo;s say we wanted to implement <code>increment()</code> in
 terms of <code>get()</code> and <code>set()</code>. One common feature of methods is that they can
 call each other. Let&rsquo;s try:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
   <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
 
@@ -117,8 +114,7 @@ call each other. Let&rsquo;s try:</p>
     <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="k">set</span><span class="p">,</span>
     <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="i">increment</span>
   <span class="p">};</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Oops! This doesn&rsquo;t work. The problem is that <code>increment()</code> is calling <code>get()</code>
 and <code>set()</code> here, but those functions haven&rsquo;t been declared yet. <a href="http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html">Unlike
 JavaScript</a>, Dart doesn&rsquo;t silently hoist function declarations up. So
@@ -143,8 +139,7 @@ their names are in scope so that they <em>could</em> do that.</p>
 <h2>&ldquo;Open&rdquo;</h2>
 <p>We can fake mutually recursive definitions in our mini-Dart by using function
 expressions and reassigning variables like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
   <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
 
@@ -171,8 +166,7 @@ expressions and reassigning variables like this:</p>
     <span class="s">&#39;set&#39;</span><span class="p">:</span> <span class="k">set</span><span class="p">,</span>
     <span class="s">&#39;increment&#39;</span><span class="p">:</span> <span class="i">increment</span>
   <span class="p">};</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Note the <code>=</code> between the method names and <code>()</code> now. That means we&rsquo;re assigning
 anonymous functions to the already-declared variables. This gives us recursive
 structures. Do we have objects yet? What&rsquo;s missing?</p>
@@ -182,8 +176,7 @@ is a modification of an existing object&rsquo;s behavior. Think overriding metho
 derived classes.</p>
 <p>Let&rsquo;s try to do that. We&rsquo;ll try to make a counter that logs itself. To avoid
 re-implementation, we&rsquo;ll piggyback the existing counter code:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">makeLoggingCounter</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">makeLoggingCounter</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">counter</span> <span class="o">=</span> <span class="i">makeCounter</span><span class="p">();</span>
 
   <span class="k">return</span> <span class="p">{</span>
@@ -200,8 +193,7 @@ re-implementation, we&rsquo;ll piggyback the existing counter code:</p>
       <span class="i">counter</span><span class="p">[</span><span class="s">&#39;increment&#39;</span><span class="p">]();</span>
     <span class="p">}</span>
   <span class="p">};</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>How did we do? When we call <code>get()</code> and <code>set()</code> on our logging counter, it does
 correctly print &ldquo;get!&rdquo; and &ldquo;set!&rdquo; and then updates the counter appropriately.
 The problem comes when we call <code>increment()</code>. That <em>does</em> print &ldquo;increment!&rdquo;.
@@ -215,8 +207,7 @@ derived logging counter, we&rsquo;ve just <em>shadowed</em> them.</p>
 isn&rsquo;t expressive enough to handle virtual methods. The problem is that inside
 <code>makeCounter()</code>, we don&rsquo;t see the instance of the logging counter at all. To fix
 this, we have to pass that object in explicitly:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">makeCounter</span><span class="p">(</span><span class="i">receiver</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">makeCounter</span><span class="p">(</span><span class="i">receiver</span><span class="p">)</span> <span class="p">{</span>
   <span class="c">// Declare the instance state for the &quot;object&quot;.</span>
   <span class="k">var</span> <span class="i">count</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
 
@@ -241,12 +232,10 @@ this, we have to pass that object in explicitly:</p>
   <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">get</span><span class="p">;</span>
   <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">set</span><span class="p">;</span>
   <span class="i">receiver</span><span class="p">[</span><span class="s">&#39;increment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="i">increment</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Note how now <code>increment()</code>&rsquo;s definition looks up <code>get()</code> and <code>set()</code> on that
 passed in <code>receiver()</code> object. To create the logging counter, now we do:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">makeLoggingCounter</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">makeLoggingCounter</span><span class="p">()</span> <span class="p">{</span>
   <span class="c">// Create a blank object.</span>
   <span class="i">counter</span> <span class="o">=</span> <span class="p">{};</span>
 
@@ -275,8 +264,7 @@ passed in <code>receiver()</code> object. To create the logging counter, now we 
   <span class="p">};</span>
 
   <span class="k">return</span> <span class="i">counter</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Ta-da!</p>
 <p>To make this work, we had to pass the <code>receiver</code> into <code>makeCounter()</code> so that
 its methods could see the &ldquo;derived&rdquo; object. This lets it see and call overridden

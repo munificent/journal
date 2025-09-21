@@ -84,16 +84,8 @@ class HighlightedCodeBlockSyntax extends BlockSyntax {
       code = highlight(language, childLines.join('\n'), _formatter);
     }
 
-    // TODO: This is just to be compatible with the Pygments output from the
-    // old blog. Simplify this once no longer trying to match the old HTML.
-    var element = Element.text('code', code);
-    element.attributes['class'] = 'language-$languageName';
-    element.attributes['data-lang'] = languageName;
-
-    element = Element('pre', [element]);
-    element = Element('div', [element]);
-    element.attributes['class'] = 'highlight';
-
+    var element = Element.text('pre', code);
+    element.attributes['class'] = 'highlight language-$languageName';
     return element;
   }
 }

@@ -55,61 +55,51 @@ annotations you&rsquo;ve provided.</p>
 </li>
 </ul>
 <p>Here&rsquo;s a simple example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">say</span><span class="p">(</span><span class="i">what</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">say</span><span class="p">(</span><span class="i">what</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
   <span class="i">print</span><span class="p">(</span><span class="i">what</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="i">say</span><span class="p">(</span><span class="s">&quot;hey&quot;</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">say</span><span class="p">(</span><span class="s">&quot;hey&quot;</span><span class="p">)</span></pre>
 <p>This program runs fine and does what you expect. Now consider this one:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">say</span><span class="p">(</span><span class="i">what</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">say</span><span class="p">(</span><span class="i">what</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
   <span class="i">print</span><span class="p">(</span><span class="i">what</span><span class="p">)</span>
 <span class="k">end</span>
 
-<span class="i">say</span><span class="p">(</span><span class="n">123</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">say</span><span class="p">(</span><span class="n">123</span><span class="p">)</span></pre>
 <p>This one actually runs without errors too (and prints &ldquo;123″ since <code>print</code>
 converts its argument to a string anyway). That&rsquo;s because the call to <code>say(123)</code>
 is at the top level, which is run before type checking. If we change it to this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">say</span><span class="p">(</span><span class="i">what</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">say</span><span class="p">(</span><span class="i">what</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
     <span class="i">print</span><span class="p">(</span><span class="i">what</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="k">var</span> <span class="i">main</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
     <span class="i">say</span><span class="p">(</span><span class="n">123</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Now we correctly get a error that <code>say</code> expects a <code>String</code> and is being passed
 an <code>Int</code>. The interpreter then stops without ever calling <code>main()</code>.</p>
 <h2>Conundrum!</h2>
 <p>All that so far is fine and dandy. Now lets consider something a little&hellip;
 softer:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">returnString</span><span class="p">(</span><span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">returnString</span><span class="p">(</span><span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span>
   <span class="i">a</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
   <span class="k">return</span> <span class="i">a</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This type checks fine too. At the point that we&rsquo;re returning <code>a</code>, the type
 checker knows its a <code>String</code> as expected. But this highlights an important
 feature: variables can change their type. That makes sense given that Magpie is
 at its core a dynamic language. It also plays nicely with some other features
 like <a href="/2010/08/23/void-null-maybe-and-nothing/">or types</a>.</p>
 <p>Unfortunately, it&rsquo;s also the heart of the problem. Consider this example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span>
 
 <span class="k">var</span> <span class="i">returnInt</span><span class="p">(</span><span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span>
   <span class="k">return</span> <span class="i">a</span>
 <span class="k">end</span>
 
 <span class="i">a</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
-<span class="i">returnInt</span><span class="p">()</span></code></pre>
-</div>
+<span class="i">returnInt</span><span class="p">()</span></pre>
 <p>The type checker runs through that top-down. First it evaluates <code>var a = 123</code>
 and records that <code>a</code> is defined with the type of <code>123</code>: <code>Int</code>. Then it verifies
 that <code>returnInt()</code> returns its declared type (<code>Int</code>) in the body of the

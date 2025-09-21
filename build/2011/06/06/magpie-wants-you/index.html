@@ -52,33 +52,27 @@ working now. To give you an idea why, here&rsquo;s some fun stuff they enable:</
 <p>Magpie is a dynamically typed language (flirtations with optional static typing
 notwithstanding). But in Magpie, every method is a multimethod, which means you
 can overload them.</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">()</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">()</span>
   <span class="k">this</span> <span class="i">split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">separator</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span>
   <span class="p">...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here we&rsquo;ve defined two <code>split</code> methods on strings. The first takes no
 arguments, and the second takes a separator. That means you can do both:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">)</span>
-<span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">()</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">)</span>
+<span class="s">&quot;eenie-meenie-miney-moe&quot;</span> <span class="i">split</span><span class="p">()</span></pre>
 <p>In most dynamic languages, you&rsquo;d have to implement that by doing some manual
 <code>instanceof</code> or <code>!== undefined</code> checks in the body of a single <code>split()</code> method.
 In Magpie, it just works. You can overload by arity, or type, or both:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">maxResults</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">maxResults</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span>
     <span class="p">...</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="p">(</span><span class="k">this</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="i">split</span><span class="p">(</span><span class="i">separator</span> <span class="k">is</span> <span class="t">String</span><span class="p">,</span> <span class="i">maxResults</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span>
     <span class="p">...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Pretty much any kind of argument list can be overloaded and Magpie will pick the
 right one at runtime based on what you actually pass it.</p>
 <p>And just to clarify, you don&rsquo;t have to define all of these methods in one place
@@ -109,8 +103,7 @@ not very inspiring.</p>
 IO, concurrency, networking, etc. I have a <em>ton</em> of work to do here (hopefully
 with your help!) but at least now you can read files and spawn threads. To prove
 it, here&rsquo;s a toy asynchronous web server:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">import</span> <span class="i">io</span>
+<pre class="highlight language-magpie"><span class="k">import</span> <span class="i">io</span>
 <span class="k">import</span> <span class="i">net</span>
 <span class="k">import</span> <span class="k">async</span>
 
@@ -129,8 +122,7 @@ it, here&rsquo;s a toy asynchronous web server:</p>
     <span class="k">end</span>
     <span class="i">socket</span> <span class="i">close</span><span class="p">()</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <h2>Where you come in</h2>
 <p>If you&rsquo;ve ever had the desire to help build a programming language and its
 ecosystem, and what you see here looks cool, I&rsquo;d love to have you involved. It

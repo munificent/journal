@@ -98,27 +98,21 @@ you can initialize nullable types with <code>null</code> like you&rsquo;d expect
 <em>not</em> a subtype of <em>non</em>-nullable types, you <em>cannot</em> initialize those with
 <code>null</code>. That implies that all variables of non-null types must be initialized.
 This is an error:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">int</span> <span class="i">a</span><span class="p">;</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">int</span> <span class="i">a</span><span class="p">;</span></pre>
 <p>As is this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Point</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Point</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
   <span class="t">Point</span><span class="p">();</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Requiring fields of non-nullable types to be initialized is a challenge in
 languages like Java and Scala where you can access a field before it&rsquo;s been
 initialized in the constructor. Fortunately, Dart already has constructor
 initialization lists, and they solve this problem handily. We can fix that
 <code>Point</code> class like so:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Point</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Point</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
   <span class="t">Point</span><span class="p">()</span> <span class="p">:</span> <span class="i">x</span> <span class="o">=</span> <span class="n">0</span><span class="p">,</span> <span class="i">y</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Since the constructor initializers are run before you can access <code>this</code>, we&rsquo;ve
 ensured that those fields will be initialized before <em>anyone</em> can see them.
 Neat.</p>
@@ -138,38 +132,26 @@ is one of those values.</p>
 <p>To go back and forth between nullable and non-nullable types, we rely on
 assignment compatibility. Dart&rsquo;s assignment compatibility rules are looser than
 other languages. Like most, they allow implicit upcasts. Given this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Base</span> <span class="p">{}</span>
-<span class="k">class</span> <span class="t">Derived</span> <span class="k">extends</span> <span class="t">Base</span> <span class="p">{}</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Base</span> <span class="p">{}</span>
+<span class="k">class</span> <span class="t">Derived</span> <span class="k">extends</span> <span class="t">Base</span> <span class="p">{}</span></pre>
 <p>Then this is allowed:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">Base</span> <span class="i">b</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">Base</span> <span class="i">b</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span></pre>
 <p>But Dart also allows implicit <em>downcasts</em> (in other words from supertype to
 subtype):</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">Base</span> <span class="i">b</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
-<span class="t">Derived</span> <span class="i">d</span> <span class="o">=</span> <span class="i">b</span><span class="p">;</span> <span class="c">// Allowed.</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">Base</span> <span class="i">b</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
+<span class="t">Derived</span> <span class="i">d</span> <span class="o">=</span> <span class="i">b</span><span class="p">;</span> <span class="c">// Allowed.</span></pre>
 <p>(The reasoning here is that many times a downcast <em>will</em> work correctly at
 runtime, and Dart&rsquo;s type system is optimistic that you know what you&rsquo;re doing.)</p>
 <p>Thanks to this, nullable types are easy to work with. It is, of course, always
 safe to go from a non-null type to a nullable one:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">int</span><span class="o">?</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">int</span><span class="o">?</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span></pre>
 <p>But it&rsquo;s equally easy (though not equally <em>safe</em>) to go in the other direction:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">int</span><span class="o">?</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span>
-<span class="t">int</span> <span class="i">b</span> <span class="o">=</span> <span class="i">a</span><span class="p">;</span> <span class="c">// Allowed.</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">int</span><span class="o">?</span> <span class="i">a</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span>
+<span class="t">int</span> <span class="i">b</span> <span class="o">=</span> <span class="i">a</span><span class="p">;</span> <span class="c">// Allowed.</span></pre>
 <p>If you actually want to be safe, you just need to check for null first:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">if</span> <span class="p">(</span><span class="i">a</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">if</span> <span class="p">(</span><span class="i">a</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">b</span> <span class="o">=</span> <span class="i">a</span><span class="p">;</span> <span class="c">// Safe at runtime now too!</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>So here, as in other places in Dart, the type checker won&rsquo;t get in your way.</p>
 <h2>Wait, what good is it?</h2>
 <p>You couldn&rsquo;t ask for a less intrusive null-tracking system, but it seems a
@@ -200,9 +182,7 @@ what you want <code>null</code> checking for.</p>
 you can implicitly assign from a nullable type to a non-nullable one, but
 what you can&rsquo;t do is implicitly assign from <code>null</code> to a non-nullable type.
 This is a static error:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span></pre>
 <p>That goes a long way towards flushing out uninitialized variable bugs. In
 my experience with Dart, that&rsquo;s one of the most common errors I run into.</p>
 </li>
@@ -213,16 +193,14 @@ annotations in Dart, it will be easy to have tools do data flow analysis and
 report warnings like this:</p>
 </li>
 </ul>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">double</span><span class="p">(</span><span class="t">int</span><span class="o">?</span> <span class="i">i</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="t">double</span><span class="p">(</span><span class="t">int</span><span class="o">?</span> <span class="i">i</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="i">i</span> <span class="o">*</span> <span class="n">2</span><span class="p">;</span> <span class="c">// Warn that we didn&#39;t test i for null first.</span>
 <span class="p">}</span>
 
 <span class="t">double</span><span class="p">(</span><span class="t">int</span><span class="o">?</span> <span class="i">i</span> <span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">i</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">0</span><span class="p">;</span>
   <span class="k">return</span> <span class="i">i</span> <span class="o">*</span> <span class="n">2</span><span class="p">;</span> <span class="c">// OK now.</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <h2>Nullables and generics</h2>
 <p>A key question that comes up with nullables is how they play with generic types.
 I&rsquo;m not a type system expert, so it&rsquo;s entirely possible that I haven&rsquo;t thought
@@ -231,19 +209,15 @@ between nullable and non-nullable types.</p>
 <p>Generics are covariant in Dart. That means that generics also allow subtyping
 between a nullable and non-nullable type argument. In other words, this is
 allowed:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">?&gt;</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">();</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">?&gt;</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">();</span></pre>
 <p>As long as you use your types in a way that makes covariance safe (i.e. you read
 from them and don&rsquo;t write to them) this will work as well for nullable types as
 it does with subclassing.</p>
 <p>The other question is how using a type parameter in an annotation plays with
 nullability. For example:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">SomeClass</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">SomeClass</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="t">T</span><span class="o">?</span> <span class="i">someField</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This is <em>really</em> beyond the edge of my type system fu, but I think the fact that
 nullable types flatten (<code>A??</code> becomes <code>A?</code>) will alleviate some of the nasty
 corner cases this may lead to. I&rsquo;m not sure though, and this is definitely
@@ -341,33 +315,25 @@ type is declared to be <code>V</code>, the value type. It needs to be <code>V?</
 explicitly permit that <code>null</code>.</p>
 <p>Likewise, there are a number of methods that take named optional parameters
 whose types aren&rsquo;t nullable, like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Expect</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Expect</span> <span class="p">{</span>
   <span class="k">static</span> <span class="k">void</span> <span class="i">isFalse</span><span class="p">(</span><span class="i">actual</span><span class="p">,</span> <span class="p">[</span><span class="t">String</span> <span class="i">reason</span> <span class="o">=</span> <span class="k">null</span><span class="p">])</span>
   <span class="c">// more...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Here, that <code>String</code> will need to be made nullable.</p>
 <h3>Semantic changes</h3>
 <p>The more intrusive change is that operations that implicitly create <code>null</code>
 entries in collections might need to be modified. For example, if you do:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">4</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">4</span><span class="p">);</span></pre>
 <p>then you create a list whose four elements are automatically set to <code>null</code>.
 That&rsquo;s a problem here because the element type (<code>int</code>) is non-nullable.</p>
 <p>The safest way to handle this is to change the constructor to let the user
 explicitly provide the value to initialize the new entries with. So instead of
 the above, you could do:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="i">fill</span><span class="p">:</span> <span class="n">1</span><span class="p">);</span>
-<span class="i">print</span><span class="p">(</span><span class="i">list</span><span class="p">);</span> <span class="c">// [1, 1, 1, 1]</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="i">fill</span><span class="p">:</span> <span class="n">1</span><span class="p">);</span>
+<span class="i">print</span><span class="p">(</span><span class="i">list</span><span class="p">);</span> <span class="c">// [1, 1, 1, 1]</span></pre>
 <p>or maybe:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">.</span><span class="i">generate</span><span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="p">(</span><span class="i">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">index</span> <span class="o">*</span> <span class="n">2</span><span class="p">);</span>
-<span class="i">print</span><span class="p">(</span><span class="i">list</span><span class="p">);</span> <span class="c">// [0, 2, 4, 6]</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">.</span><span class="i">generate</span><span class="p">(</span><span class="n">4</span><span class="p">,</span> <span class="p">(</span><span class="i">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">index</span> <span class="o">*</span> <span class="n">2</span><span class="p">);</span>
+<span class="i">print</span><span class="p">(</span><span class="i">list</span><span class="p">);</span> <span class="c">// [0, 2, 4, 6]</span></pre>
 <p>I may have missed something, but I believe <code>List</code> is the only type that needs
 any real API changes like this.</p>
 <h2>Summary</h2>

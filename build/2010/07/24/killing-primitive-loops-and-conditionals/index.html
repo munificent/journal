@@ -58,13 +58,11 @@ constructs. Here&rsquo;s how:</p>
 eventually need two things: to <em>not</em> do something, and to do something <em>more
 than once</em>. <code>if:then:else:</code> calls in Finch handle the former. They look like
 this:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="k">if:</span> <span class="i">rapper</span> <span class="o">=</span> <span class="i">vanilla</span> <span class="i">ice</span> <span class="k">then:</span> <span class="p">{</span>
+<pre class="highlight language-finch"><span class="k">if:</span> <span class="i">rapper</span> <span class="o">=</span> <span class="i">vanilla</span> <span class="i">ice</span> <span class="k">then:</span> <span class="p">{</span>
   <span class="k">writeLine:</span> <span class="s">&quot;Too cold&quot;</span>
 <span class="p">}</span> <span class="k">else:</span> <span class="p">{</span>
   <span class="k">writeLine:</span> <span class="s">&quot;Wack MC&quot;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>If you aren&rsquo;t familiar with Finch, I can translate that into something a little
 more vanilla. What you see there is a single call to an <code>if:then:else:</code>
 function, passing in three arguments. The first is the condition&mdash;the result
@@ -82,10 +80,8 @@ conditional logic needed). The version bound to false objects will always
 evaluate the &ldquo;else&rdquo; argument.</p>
 <p>In Finch, all objects are implicitly false except for the one magic <code>True</code>
 object, so the code looks like this:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="t">Object</span> <span class="i">prototype</span> <span class="p">::</span> <span class="k">ifTrue:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span> <span class="p">{</span> <span class="i">else</span> <span class="i">call</span> <span class="p">}</span>
-<span class="t">True</span> <span class="p">::</span> <span class="k">ifTrue:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span> <span class="p">{</span> <span class="i">then</span> <span class="i">call</span> <span class="p">}</span></code></pre>
-</div>
+<pre class="highlight language-finch"><span class="t">Object</span> <span class="i">prototype</span> <span class="p">::</span> <span class="k">ifTrue:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span> <span class="p">{</span> <span class="i">else</span> <span class="i">call</span> <span class="p">}</span>
+<span class="t">True</span> <span class="p">::</span> <span class="k">ifTrue:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span> <span class="p">{</span> <span class="i">then</span> <span class="i">call</span> <span class="p">}</span></pre>
 <p>The first line defines <code>ifTrue:else:</code> on the prototypical object that all others
 inherit from. All it does is invoke the &ldquo;else&rdquo; block. The second line overrides
 method that for the <code>True</code> global object to instead invoke the &ldquo;then&rdquo; block.</p>
@@ -94,11 +90,9 @@ logic is done with message sends to Boolean objects. So, uh, I really should
 have known this the whole time.) Because I&rsquo;m not crazy about how Smalltalk
 syntax looks for this, we&rsquo;ll go ahead and wrap it in <a href="/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/">a method on Ether</a>
 to make it look a little more normal:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="t">Ether</span> <span class="p">::</span> <span class="k">if:</span> <span class="i">condition</span> <span class="k">then:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span> <span class="p">{</span>
+<pre class="highlight language-finch"><span class="t">Ether</span> <span class="p">::</span> <span class="k">if:</span> <span class="i">condition</span> <span class="k">then:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span> <span class="p">{</span>
     <span class="i">condition</span> <span class="k">ifTrue:</span> <span class="i">then</span> <span class="k">else:</span> <span class="i">else</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>All that does is bounce the call over as a message on the condition object, and
 we&rsquo;ve got <code>if:then:else:</code> working without needing any hard-coded support beyond
 message dispatch. Swell!</p>
@@ -107,26 +101,22 @@ message dispatch. Swell!</p>
 than one time. Everyone who took Scheme in college now has their hand waving
 furiously in the air. Yes, I&rsquo;m going to call on you. Yes, you have the right
 answer. First, here&rsquo;s a while loop:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="k">while:</span> <span class="p">{</span> <span class="i">mother</span> <span class="i">burnedDown?</span> <span class="i">not</span> <span class="p">}</span> <span class="k">do:</span> <span class="p">{</span>
+<pre class="highlight language-finch"><span class="k">while:</span> <span class="p">{</span> <span class="i">mother</span> <span class="i">burnedDown?</span> <span class="i">not</span> <span class="p">}</span> <span class="k">do:</span> <span class="p">{</span>
     <span class="k">writeLine:</span> <span class="s">&quot;Burn, baby, burn&quot;</span>
     <span class="k">writeLine:</span> <span class="s">&quot;Disco inferno&quot;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>If you don&rsquo;t have looping built in, there&rsquo;s only one way for something to happen
 more than once: it has to invoke <em>itself</em> recursively. I&rsquo;ve known about using
 tail recursion for loops for a long time but for some reason it fell off my
 radar. Maybe because Finch didn&rsquo;t get proper <a href="http://en.wikipedia.org/wiki/Tail_call_optimization">tail call optimization</a> until
 recently, or maybe it&rsquo;s all the alcohol.</p>
 <p>Now that Finch <em>does</em> have it, we can use it like so:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="t">Ether</span> <span class="p">::</span> <span class="k">while:</span> <span class="i">condition</span> <span class="k">do:</span> <span class="i">block</span> <span class="p">{</span>
+<pre class="highlight language-finch"><span class="t">Ether</span> <span class="p">::</span> <span class="k">while:</span> <span class="i">condition</span> <span class="k">do:</span> <span class="i">block</span> <span class="p">{</span>
     <span class="k">if:</span> <span class="i">condition</span> <span class="i">call</span> <span class="k">then:</span> <span class="p">{</span>
         <span class="i">block</span> <span class="i">call</span>
         <span class="k">while:</span> <span class="i">condition</span> <span class="k">do:</span> <span class="i">block</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>All it does is check the condition. If <code>True</code>, it evaluates the block and then
 recursively calls itself. The TCO will ensure that it can loop as long as it
 needs like this without worrying about blowing the stack.</p>

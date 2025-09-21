@@ -103,11 +103,9 @@ demands MOBI in some sort of gigantic distributed prank on the entire writing
 community.</p>
 <p>An EPUB file is basically a zip file containing a web site. Seriously. Take your
 static site and run this on it:</p>
-<div class="highlight">
-<pre><code class="language-sh" data-lang="sh">cd my_awesome_site
+<pre class="highlight language-sh">cd my_awesome_site
 zip -X0 my_awesome_site.epub mimetype
-zip -Xur9D my_awesome_site.epub *</code></pre>
-</div>
+zip -Xur9D my_awesome_site.epub *</pre>
 <p>Now you&rsquo;re 90% of the way to having an e-book. It&rsquo;s the other 10% that makes you
 want to claw your eyes out. See, e-books are a lot like web sites&hellip; circa 2004.
 Instead of this fancy HTML5 stuff which is clearly, like, living in the future
@@ -135,8 +133,7 @@ book. Also, there&rsquo;s a separate&mdash;mandatory, of course!&mdash;<code>toc
 containing, you guessed it, an ordered list of the stuff in the book. Not only
 that, each item in the TOC is not just in order but <em>explicitly manually
 numbered</em>:</p>
-<div class="highlight">
-<pre><code class="language-xml" data-lang="xml"><span class="g">&lt;navPoint</span> <span class="f">id</span><span class="o">=</span><span class="s">&quot;copyright&quot;</span> <span class="f">playOrder</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="g">&gt;</span>
+<pre class="highlight language-xml"><span class="g">&lt;navPoint</span> <span class="f">id</span><span class="o">=</span><span class="s">&quot;copyright&quot;</span> <span class="f">playOrder</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="g">&gt;</span>
   <span class="g">&lt;navLabel&gt;&lt;text&gt;</span>Copyright<span class="g">&lt;/text&gt;&lt;/navLabel&gt;</span>
   <span class="g">&lt;content</span> <span class="f">src</span><span class="o">=</span><span class="s">&quot;copyright.html&quot;</span> <span class="g">/&gt;</span>
 <span class="g">&lt;/navPoint&gt;</span>
@@ -149,8 +146,7 @@ numbered</em>:</p>
 <span class="g">&lt;navPoint</span> <span class="f">id</span><span class="o">=</span><span class="s">&quot;dedication&quot;</span> <span class="f">playOrder</span><span class="o">=</span><span class="s">&quot;3&quot;</span><span class="g">&gt;</span>
   <span class="g">&lt;navLabel&gt;&lt;text&gt;</span>Dedication<span class="g">&lt;/text&gt;&lt;/navLabel&gt;</span>
   <span class="g">&lt;content</span> <span class="f">src</span><span class="o">=</span><span class="s">&quot;dedication.html&quot;</span> <span class="g">/&gt;</span>
-<span class="g">&lt;/navPoint&gt;</span></code></pre>
-</div>
+<span class="g">&lt;/navPoint&gt;</span></pre>
 <p>See those little <code>playOrder</code> attributes? It&rsquo;s like double-entry bookkeeping,
 minus the fun and excitement of double-entry bookkeeping.</p>
 <p>But, despite my ranting here, it&rsquo;s not really <em>hard</em>. It&rsquo;s sort of like counting
@@ -349,19 +345,16 @@ InDesign file beyond repair. (Fortunately, help was just a <code>git reset</code
 <p>I cracked open my little Python script and hacked it up to convert the Markdown
 to HTML and then, through an unholy series of regexes, mash that into something
 approximating XML. Stuff like:</p>
-<div class="highlight">
-<pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="i">clean_up_code_xml</span><span class="p">(</span><span class="i">code</span><span class="p">):</span>
+<pre class="highlight language-python"><span class="k">def</span> <span class="i">clean_up_code_xml</span><span class="p">(</span><span class="i">code</span><span class="p">):</span>
   <span class="c"># Ditch most code formatting tags.</span>
   <span class="i">code</span> <span class="o">=</span> <span class="i">re</span><span class="p">.</span><span class="i">sub</span><span class="p">(</span><span class="s">r&#39;&lt;span class=&quot;(k|kt|mi|n|nb|nc|nf)&quot;&gt;([^&lt;]+)&lt;/span&gt;&#39;</span><span class="p">,</span>
                 <span class="s">r&quot;\2&quot;</span><span class="p">,</span> <span class="i">code</span><span class="p">)</span>
 
   <span class="c"># Turn comments into something InDesign can map to a style.</span>
   <span class="i">code</span> <span class="o">=</span> <span class="i">re</span><span class="p">.</span><span class="i">sub</span><span class="p">(</span><span class="s">r&#39;&lt;span class=&quot;(c1|cn)&quot;&gt;([^&lt;]+)&lt;/span&gt;&#39;</span><span class="p">,</span>
-                <span class="s">r&quot;&lt;comment&gt;\2&lt;/comment&gt;&quot;</span><span class="p">,</span> <span class="i">code</span><span class="p">)</span></code></pre>
-</div>
+                <span class="s">r&quot;&lt;comment&gt;\2&lt;/comment&gt;&quot;</span><span class="p">,</span> <span class="i">code</span><span class="p">)</span></pre>
 <p>And:</p>
-<div class="highlight">
-<pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="i">clean_up_xhtml</span><span class="p">(</span><span class="i">html</span><span class="p">):</span>
+<pre class="highlight language-python"><span class="k">def</span> <span class="i">clean_up_xhtml</span><span class="p">(</span><span class="i">html</span><span class="p">):</span>
   <span class="c"># Ditch newlines in the middle of blocks of text. Out of sheer</span>
   <span class="c"># malice, even though they are meaningless in actual XML, InDesign</span>
   <span class="c"># treats them as significant.</span>
@@ -382,8 +375,7 @@ approximating XML. Stuff like:</p>
   <span class="i">html</span> <span class="o">=</span> <span class="i">html</span><span class="p">.</span><span class="i">replace</span><span class="p">(</span><span class="s">&quot;&lt;/aside&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;&lt;/aside&gt;</span><span class="e">\n</span><span class="s">&quot;</span><span class="p">)</span>
   <span class="i">html</span> <span class="o">=</span> <span class="i">html</span><span class="p">.</span><span class="i">replace</span><span class="p">(</span><span class="s">&quot;&lt;/blockquote&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;&lt;/blockquote&gt;</span><span class="e">\n</span><span class="s">&quot;</span><span class="p">)</span>
 
-  <span class="k">return</span> <span class="i">html</span></code></pre>
-</div>
+  <span class="k">return</span> <span class="i">html</span></pre>
 <p>Forgive me Father, for I have sinned. In my defense, I wasn&rsquo;t writing a program
 to convert <em>any</em> HTML to XML. As long as it worked on the 90k words of <em>my</em>
 book, it was Correct&trade; as far as I&rsquo;m concerned. This gave me a folder full

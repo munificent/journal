@@ -53,8 +53,7 @@ languages is that static types add roughly an order of magnitude of complexity,
 so types were one of the first things to go. Like most scripting languages, I
 made mine dynamically typed.</p>
 <p>Here&rsquo;s an example:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">onTick</span><span class="p">()</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">onTick</span><span class="p">()</span>
   <span class="k">var</span> <span class="i">d</span> <span class="o">=</span> <span class="n">0</span>
   <span class="k">if</span> <span class="i">buttonHeld</span><span class="p">(</span><span class="n">2</span><span class="p">)</span> <span class="k">then</span> <span class="i">d</span> <span class="o">=</span> <span class="i">d</span> <span class="o">-</span> <span class="n">1</span> <span class="k">end</span>
   <span class="k">if</span> <span class="i">buttonHeld</span><span class="p">(</span><span class="n">3</span><span class="p">)</span> <span class="k">then</span> <span class="i">d</span> <span class="o">=</span> <span class="i">d</span> <span class="o">+</span> <span class="n">1</span> <span class="k">end</span>
@@ -86,21 +85,18 @@ made mine dynamically typed.</p>
       <span class="i">v</span> <span class="o">=</span> <span class="o">-</span><span class="n">10.0</span>
     <span class="k">end</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Another simplification I made is to eliminate the distinction between statements
 and expressions. As in Ruby, Kotlin, and most functional languages, everything
 is an expression. The previous chained <code>if</code> could be written in a more
 explicitly expression-y style like:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="i">h</span> <span class="o">=</span> <span class="i">h</span> <span class="o">+</span> <span class="k">if</span> <span class="i">d</span> <span class="o">!=</span> <span class="n">0</span> <span class="k">then</span>
+<pre class="highlight language-vgs"><span class="i">h</span> <span class="o">=</span> <span class="i">h</span> <span class="o">+</span> <span class="k">if</span> <span class="i">d</span> <span class="o">!=</span> <span class="n">0</span> <span class="k">then</span>
   <span class="i">d</span>
 <span class="k">else</span> <span class="k">if</span> <span class="i">h</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="k">then</span>
   <span class="o">-</span><span class="n">0.5</span>
 <span class="k">else</span> <span class="k">if</span> <span class="i">h</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="k">then</span>
   <span class="n">0.5</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Unifying statements and expressions means the language doesn&rsquo;t need a separate
 <code>if</code> statement and conditional expression. Also, I don&rsquo;t know, I just like
 expression-oriented languages.</p>
@@ -151,9 +147,7 @@ turns out that having <code>if</code> be an expression while also fully embracin
 imperative style gets a little weird when it comes to type checking.</p>
 <p>I&rsquo;ll walk through a bunch of examples and build up to the type checking rules I
 have settled on (so far, at least). We&rsquo;ll start simple:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="s">&quot;not in love&quot;</span> <span class="k">end</span></code></pre>
-</div>
+<pre class="highlight language-vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="s">&quot;not in love&quot;</span> <span class="k">end</span></pre>
 <p>We need a type for the <code>if</code> expression so that we can infer a type for the
 variable <code>love</code>. In this case, the type is obviously String since both the then
 and else branches evaluate to strings.</p>
@@ -161,9 +155,7 @@ and else branches evaluate to strings.</p>
 of the branches.</strong></p>
 <h2>Different branch types</h2>
 <p>But what if they don&rsquo;t have the same type? What about:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="n">0</span> <span class="k">end</span></code></pre>
-</div>
+<pre class="highlight language-vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="n">0</span> <span class="k">end</span></pre>
 <p>Here, <code>love</code> could end up being initialized to either a <code>String</code> or an <code>Int</code>.
 Now what type do we choose? <a href="https://crystal-lang.org/reference/1.7/syntax_and_semantics/if.html">Crystal&rsquo;s answer</a> is <code>String | Int</code>. Union
 types are cool but definitely too complex for the language I&rsquo;m trying to make.</p>
@@ -192,14 +184,12 @@ error.</strong></p>
 <p>That rule does work: It&rsquo;s basically SML&rsquo;s rule for <code>if</code> expressions. But I want
 my scripting language to feel familiar to users programming in an imperative
 style. Consider:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">daysNotInLove</span> <span class="o">=</span> <span class="n">0</span>
+<pre class="highlight language-vgs"><span class="k">var</span> <span class="i">daysNotInLove</span> <span class="o">=</span> <span class="n">0</span>
 <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;in love&quot;</span><span class="p">)</span>
 <span class="k">else</span>
   <span class="i">daysNotInLove</span> <span class="o">=</span> <span class="n">1</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here, the two branches have different types. The then branch has type String
 because in my language, <code>print()</code> returns its argument. (That makes it handy for
 stuffing some debug printing in the middle of an expression.) The else branch
@@ -224,16 +214,14 @@ the last expression are in a &ldquo;value not used&rdquo; context.</p>
 <li>
 <p>Like other expression-oriented languages, functions in my language
 implicitly return the value that the function body expression evaluates to:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">three</span><span class="p">()</span> <span class="t">Int</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">three</span><span class="p">()</span> <span class="t">Int</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;About to return three...&quot;</span><span class="p">)</span>
   <span class="n">3</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="i">onInit</span><span class="p">()</span>
   <span class="i">print</span><span class="p">(</span><span class="i">three</span><span class="p">())</span> <span class="c"># Prints &quot;About to return three...&quot; then &quot;3&quot;.</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>But if a function has no return type (the same as <code>void</code> or unit in other
 languages), it doesn&rsquo;t return a value. In that case, even the last
 expression in the body is a &ldquo;value not used&rdquo; context.</p>
@@ -277,11 +265,9 @@ successfully wrote some little example programs. It was starting to feel like a
 real typed language!</p>
 <p>I could stop here, but there&rsquo;s one last bit of type checking logic for <code>if</code>
 expressions. I haven&rsquo;t decided if it&rsquo;s worth keeping. Consider:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">def</span> <span class="i">onInit</span><span class="p">()</span>
+<pre class="highlight language-vgs"><span class="k">def</span> <span class="i">onInit</span><span class="p">()</span>
   <span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="k">return</span> <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>When <code>isFriday</code> is true, then this initializes <code>love</code> with the string &ldquo;in love&rdquo;.
 When <code>isFriday</code> is false, then the <code>return</code> exits from the function entirely so
 <code>love</code> never gets initialized at all. So even though these branches don&rsquo;t
@@ -292,9 +278,7 @@ should be fine.</p>
 this. But my default stance is to be as permissive as possible without breaking
 soundness, and this is a corner where I can be.</p>
 <p>The trick is that expressions like <code>break</code>, <code>return</code>, and <code>throw</code> are special. While they are expressions <em>grammatically</em>, they don&rsquo;t actually evaluate to values. If you do:</p>
-<div class="highlight">
-<pre><code class="language-vgs" data-lang="vgs"><span class="k">var</span> <span class="i">x</span> <span class="o">=</span> <span class="k">return</span></code></pre>
-</div>
+<pre class="highlight language-vgs"><span class="k">var</span> <span class="i">x</span> <span class="o">=</span> <span class="k">return</span></pre>
 <p>That <code>x</code> never gets initialized. A <code>return</code> expression always jumps out of the
 surrounding code instead of producing a value. Languages that have expressions
 which can do control flow model this by giving these expressions a special type

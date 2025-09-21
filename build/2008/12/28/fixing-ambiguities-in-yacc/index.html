@@ -50,9 +50,7 @@ grammar rules. First, definitions:</p>
 <h2>Associativity</h2>
 <p>Associativity means that, given a run of the same operator, should it go left to
 right, or right to left? For example:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="o">+</span> <span class="n">3</span></code></pre>
-</div>
+<pre class="highlight language-c"><span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="o">+</span> <span class="n">3</span></pre>
 <p>One of those additions needs to be performed first. Should it be <code>(1 + 2) + 3</code>
 or <code>1 + (2 + 3)</code>? Left-associative operators pick the first, and
 right-associative ones take the other. Most operators you see in math are
@@ -61,9 +59,7 @@ Subtraction, like <code>3 - 2 - 1</code>, is one example where associativity <em
 <h2>Precedence (AKA order of operations)</h2>
 <p>Precedence is the other bugaboo. The question here is, given a few different
 operations, which are performed first? For example:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="o">*</span> <span class="n">3</span></code></pre>
-</div>
+<pre class="highlight language-c"><span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="o">*</span> <span class="n">3</span></pre>
 <p>Should that be <code>(1 + 2) * 3</code>, or <code>1 + (2 * 3)</code>? yacc doesn&rsquo;t know your <a href="http://everything2.com/e2node/Please%2520Excuse%2520My%2520Dear%2520Aunt%2520Sally">Dear
 Aunt Sally</a>, so you have to tell it. I&rsquo;m using arithmetic expressions as
 examples here, but this applies to <em>all</em> facets of expressions and statements:
@@ -80,13 +76,11 @@ should apply <code>1</code> to <code>foo</code> first and then add <code>2</code
 <p>Binary operators are left-associative and all have the same precedence. In other
 words, unlike in arithmetic, <code>+</code> and <code>*</code> have the same order of operations. Here
 are some examples:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="n">123</span><span class="p">;</span>                <span class="c">// An int.</span>
+<pre class="highlight language-c"><span class="n">123</span><span class="p">;</span>                <span class="c">// An int.</span>
 <span class="i">foo</span> <span class="i">bar</span> <span class="n">1</span><span class="p">;</span>          <span class="c">// Pass 1 to bar, pass the result to foo.</span>
 <span class="n">6</span> <span class="o">+</span> <span class="n">2</span> <span class="o">*</span> <span class="n">3</span> <span class="o">/</span> <span class="n">4</span><span class="p">;</span>      <span class="c">// Binary operators (result = 6).</span>
 <span class="i">foo</span> <span class="n">1</span> <span class="o">+</span> <span class="i">bar</span> <span class="n">2</span><span class="p">;</span>      <span class="c">// Mix operators and functions.</span>
-<span class="i">foo</span> <span class="p">(</span><span class="n">1</span> <span class="o">+</span> <span class="i">bar</span> <span class="n">2</span><span class="p">);</span>    <span class="c">// Parentheses for grouping.</span></code></pre>
-</div>
+<span class="i">foo</span> <span class="p">(</span><span class="n">1</span> <span class="o">+</span> <span class="i">bar</span> <span class="n">2</span><span class="p">);</span>    <span class="c">// Parentheses for grouping.</span></pre>
 <p>Pretty simple, but already you can see the trouble spots. In the third example,
 how does the grammar know to make it left-associative? In the fourth, how does
 it know to do the function application before the addition?</p>
@@ -102,16 +96,14 @@ point for our grammar is <code>start:</code>, and we shall proceed&hellip;</p>
 proper precedence and associativity from the bottom up. We&rsquo;ll start with
 integers:</p>
 <h3>Integers</h3>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
     | Primary                       { $1 }
 
 Primary:
-    | INT                           { Int $1 }</code></pre>
-</div>
+    | INT                           { Int $1 }</pre>
 <p>This is a little more complicated than necessary, but it&rsquo;ll make sense later.
 Our entrypoint says we&rsquo;re parsing a single expression terminated with a
 semicolon. An expression in turn can only be one thing (right now): a &ldquo;primary
@@ -119,11 +111,9 @@ expression&rdquo;. A primary expression is just an integer. Magical. We can now 
 <code>123</code>. Break open the champagne bottles.</p>
 <h3>Operators</h3>
 <p>Let&rsquo;s throw operators in:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">Expression:
+<pre class="highlight language-text">Expression:
     | Primary                        { $1 }
-    | Expression OPERATOR Expression { Operator ($1, $2, $3) }</code></pre>
-</div>
+    | Expression OPERATOR Expression { Operator ($1, $2, $3) }</pre>
 <p>Try compiling that and watch a yacc barf on your screen. yacc can handle
 recursive rules pretty well, but that operator one is a doozy. Not only is it
 recursive, but it provides <em>two</em> paths to recurse and no guidance for which one
@@ -136,8 +126,7 @@ that way. But wait, <code>1</code> is also an expression, and <code>+</code> is 
 <p>We fix it by simply specifically ruling out one of those cases. If one side of
 an operator can <em>only</em> be an integer, then half of that ambiguity disappears.
 Behold:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
@@ -145,8 +134,7 @@ Expression:
     | Expression OPERATOR Primary   { Operator ($1, $2, $3) }
 
 Primary:
-    | INT                           { Int $1 }</code></pre>
-</div>
+    | INT                           { Int $1 }</pre>
 <p>Note that the <code>Operator</code> rule now has <code>Primary</code> on the right of the operator
 now. What we&rsquo;ve done is allowed the <code>Operator</code> rule to recurse only on <em>one</em>
 side and force it to cascade down a level on the other. By putting the
@@ -155,17 +143,14 @@ to make operators <em>left</em>-associative. Switch it around to <code>Primary O
 our ambiguity problems.</p>
 <h3>Functions</h3>
 <p>Let&rsquo;s throw functions in. Consider just this:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">Expression:
+<pre class="highlight language-text">Expression:
     | Primary                       { $1 }
-    | FUNCTION Expression           { Function ($1, $2) }</code></pre>
-</div>
+    | FUNCTION Expression           { Function ($1, $2) }</pre>
 <p>Now an expression can either be an integer, or a function applied to an
 expression. Making the function rule recursive lets us handle not only <code>foo 123</code>
 but chained function calls like <code>foo bar 123</code>.</p>
 <p>Pretty good. Now mix it in with our operator rule:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
@@ -174,8 +159,7 @@ Expression:
     | Expression OPERATOR Primary   { Operator ($1, $2, $3) }
 
 Primary:
-    | INT                           { Int $1 }</code></pre>
-</div>
+    | INT                           { Int $1 }</pre>
 <p>yacc vomit covers your screen. Given <code>foo 1 + 2</code>, yacc says, &ldquo;Well <code>foo</code> is a
 function and <code>1 + 2</code> is an expression so I can pick the function rule. But <code>foo 1</code> is an expression and <code>2</code> is a primary, so I could pick the operator rule
 instead. I&rsquo;m feeling queasy!&rdquo; Actually, yacc, like a good party guest, will
@@ -187,8 +171,7 @@ guess at your preferred precedence, but it&rsquo;s unwise to rely on that.</p>
 described the rules as a cascading series from complex to simple? Another way to
 look at those is as <em>explicit order of operations</em>, from last to first. Let&rsquo;s
 split out the rules a bit:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
@@ -203,14 +186,12 @@ Function:
     | FUNCTION Expression           { Function ($1, $2) }
 
 Primary:
-    | INT                           { Int $1 }</code></pre>
-</div>
+    | INT                           { Int $1 }</pre>
 <p>That doesn&rsquo;t actually fix anything for us, yet. The problem is that the
 <code>Expression</code>, <code>Operator</code>, and <code>Function</code> rules all recursively point to each
 other. Our neat cascade is trying to flow uphill. The trick, and the fix for our
 issue, is to simply <em>not allow any rule to reference a rule above it</em>:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
@@ -225,8 +206,7 @@ Function:
     | FUNCTION Function             { Function ($1, $2) }
 
 Primary:
-    | INT                           { Int $1 }</code></pre>
-</div>
+    | INT                           { Int $1 }</pre>
 <p>This is better, but we just broke a bunch of stuff. Since nothing bounces back
 up to <code>Expression</code>, there isn&rsquo;t a way to actually terminate anything with an
 integer anymore. We can no longer parse <code>foo 1</code> or <code>1 + 2</code>. The problem is that
@@ -238,8 +218,7 @@ that would mean a primary expression: an integer.</p>
 next highest level. Thus, anywhere we can use a function, we can also use a
 primary, and anywhere we can use an operator, we can also use a function. Like
 so:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
@@ -254,8 +233,7 @@ Function:
     | Primary                       { $1 }
 
 Primary:
-    | INT                           { Int $1 }</code></pre>
-</div>
+    | INT                           { Int $1 }</pre>
 <p>Congratulations, we&rsquo;ve fixed our precedence problem. Our parser will now
 correctly parse <code>foo 1 / bar 2 + 3</code> as <code>((foo 1) / (bar 2)) + 3</code>. As a nice side
 effect, the order of operations (from last to first) in our language is easily
@@ -265,8 +243,7 @@ a language like C has something like 15 different precedence levels.</p>
 <p>One last thing: with any expression system, users will also want to be able to
 use parentheses to override the default order of operations. This is fixed by
 adding a simple rule at the very end:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">start:
+<pre class="highlight language-text">start:
     | Expression SEMI               { $1 }
 
 Expression:
@@ -282,8 +259,7 @@ Function:
 
 Primary:
     | INT                           { Int $1 }
-    | LPAREN Expression RPAREN      { $2 }</code></pre>
-</div>
+    | LPAREN Expression RPAREN      { $2 }</pre>
 <p>All the way at the highest level of precedence, you can now use <code>()</code> to start
 the cascade back over at the lowest predecence level (<code>Expression</code>). This
 means that from the outside, a pair of parentheses have the highest

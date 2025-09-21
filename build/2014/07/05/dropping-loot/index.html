@@ -44,11 +44,9 @@ monster&rsquo;s level. This bugged me for two reasons:</p>
 <ol>
 <li>
 <p><strong>It felt flavorless and unrealistic.</strong> For example, the description of a novice mage is:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">The Novice mage  (Red &#39;p&#39;)
+<pre class="highlight language-text">The Novice mage  (Red &#39;p&#39;)
 === Num:38  Lev:2  Rar:1  Spd:+0  Hp:6d4  Ac:6  Exp:6
-He is leaving behind a trail of dropped spell components.</code></pre>
-</div>
+He is leaving behind a trail of dropped spell components.</pre>
 <p>But when you hack one to pieces, he&rsquo;s as likely to drop a sword as he is
 anything magical. This makes monsters feel too similar each other: each one
 is basically a spin on the one giant Wheel Of Loot.</p>
@@ -71,8 +69,7 @@ scrolls.</p>
 <p>My first pass at this was to give each monster its own set of drops. I had
 already made monsters data-driven. I came up with my own little text format so
 monsters were defined in text something like:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">dwarf miner
+<pre class="highlight language-text">dwarf miner
     color     = DarkGray
     depth     = 22
     health    = 44
@@ -80,77 +77,64 @@ monsters were defined in text something like:</p>
         hammers = 15t5
     description
         Covered from head to toe is dust and dirt, you can barely
-        make out the form of this weary dwarf.</code></pre>
-</div>
+        make out the form of this weary dwarf.</pre>
 <p>For each monster (or at least, each one that drops loot), I added a &ldquo;drops&rdquo;
 section, like:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">drops
-    hammer (50%)</code></pre>
-</div>
+<pre class="highlight language-text">drops
+    hammer (50%)</pre>
 <p>And, behold, kill a dwarven miner and there&rsquo;s a fifty-fifty chance he&rsquo;ll drop a
 hammer. But dwarves like gems too, right? So I added that in too. Only the
 problem is that there&rsquo;s a bunch of different kinds of gems, so I ended up with
 something like:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">drops
+<pre class="highlight language-text">drops
     hammer (50%)
     amethyst (10%)
     sapphire (7%)
     emerald (4%)
     ruby (3%)
     diamond (2%)
-    blue diamond (1%)</code></pre>
-</div>
+    blue diamond (1%)</pre>
 <p>The game uses the percentages to pick one of the drops. Notice how the better
 gems are rarer? That&rsquo;s fine for a miner, which is a pretty weak dwarf, but a
 dwarf chieftan should tend to drop better gems:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">drops
+<pre class="highlight language-text">drops
     amethyst (3%)
     sapphire (5%)
     emerald (8%)
     ruby (10%)
     diamond (8%)
-    blue diamond (5%)</code></pre>
-</div>
+    blue diamond (5%)</pre>
 <p>Now consider that there&rsquo;s a few different types of hammers too&hellip; Things got
 pretty nasty pretty quickly. It was a huge chore to maintain these giant tuned
 drop tables for each of potentially hundreds of monsters. Ugh.</p>
 <p>The first thing I realized was that there was a lot of overlap between monsters.
 Dwarven miners and dwarven warriors drop the same gems with the same frequency.
 So I made &ldquo;macros&rdquo; in my drop language. I could define:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">(gem)
+<pre class="highlight language-text">(gem)
     hammer (50%)
     amethyst (10%)
     sapphire (7%)
     emerald (4%)
     ruby (3%)
     diamond (2%)
-    blue diamond (1%)</code></pre>
-</div>
+    blue diamond (1%)</pre>
 <p>Then in dwarven miner and warrior, just add:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">drops
-    (gem)</code></pre>
-</div>
+<pre class="highlight language-text">drops
+    (gem)</pre>
 <p>The <code>(gem)</code> would then expand to that little weighted table of gems. That worked
 fine when the probabilities of each gem were the same, but it meant I couldn&rsquo;t
 reuse these tables across dwarves of different <em>difficulty</em>. Stronger dwarves
 drop the same gems but with different probabilities.</p>
 <p>So I came up with a different kind of drop that selects from a bunch of child
 drops based on <em>level</em>. This let me define:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">(gem)
+<pre class="highlight language-text">(gem)
     one near level
         amethyst (23)
         sapphire (38)
         emerald (52)
         ruby (62)
         diamond (87)
-        blue diamond (95)</code></pre>
-</div>
+        blue diamond (95)</pre>
 <p>The &ldquo;one near level&rdquo; part would take the monster&rsquo;s level into account, plus a
 bit of randomness, and pick a child drop from within it. Now I could reuse
 <code>(gem)</code> across a range of different difficulties. Of course, I still had to
@@ -169,13 +153,11 @@ in a sequence with warhammers and mattocks, etc.</p>
 <p>Instead of building some complex general-purpose loot DSL and then implementing
 this logic using that, I just built sequences directly into the loot code. When
 defining a monster (now we&rsquo;re in Dart code), you&rsquo;d list the drops:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">breed</span><span class="p">(</span><span class="s">&quot;goblin peon&quot;</span><span class="p">,</span> <span class="i">lightBrown</span><span class="p">,</span> <span class="n">16</span><span class="p">,</span> <span class="p">[</span>
+<pre class="highlight language-dart"><span class="i">breed</span><span class="p">(</span><span class="s">&quot;goblin peon&quot;</span><span class="p">,</span> <span class="i">lightBrown</span><span class="p">,</span> <span class="n">16</span><span class="p">,</span> <span class="p">[</span>
   <span class="i">attack</span><span class="p">(</span><span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">6</span><span class="p">)</span>
 <span class="p">],</span> <span class="i">drop</span><span class="p">:</span> <span class="p">[</span>
   <span class="i">chanceOf</span><span class="p">(</span><span class="n">10</span><span class="p">,</span> <span class="s">&quot;Spear&quot;</span><span class="p">)</span>
-<span class="p">]);</span></code></pre>
-</div>
+<span class="p">]);</span></pre>
 <p>The &ldquo;Spear&rdquo; means it tends to drop spears. But it also implicitly means it can
 drop other items in the same sequence that spears are in. This lets you express
 both a sequence and how deep into the sequence a monster should tend to drop. To
@@ -202,14 +184,12 @@ relative value. Higher level stuff is better.</p>
 <p>When specifying a drop for a monster, I can specify an item name to drop that
 specific item. But I can also specify the name of part of the path and a level,
 like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">breed</span><span class="p">(</span><span class="s">&quot;goblin peon&quot;</span><span class="p">,</span> <span class="i">lightBrown</span><span class="p">,</span> <span class="n">16</span><span class="p">,</span> <span class="p">[</span>
+<pre class="highlight language-dart"><span class="i">breed</span><span class="p">(</span><span class="s">&quot;goblin peon&quot;</span><span class="p">,</span> <span class="i">lightBrown</span><span class="p">,</span> <span class="n">16</span><span class="p">,</span> <span class="p">[</span>
   <span class="i">attack</span><span class="p">(</span><span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">6</span><span class="p">)</span>
 <span class="p">],</span> <span class="i">drop</span><span class="p">:</span> <span class="p">[</span>
   <span class="i">chanceOf</span><span class="p">(</span><span class="n">10</span><span class="p">,</span> <span class="s">&quot;spear:3&quot;</span><span class="p">),</span>
   <span class="i">chanceOf</span><span class="p">(</span><span class="n">5</span><span class="p">,</span> <span class="s">&quot;healing:2&quot;</span><span class="p">),</span>
-<span class="p">],</span> <span class="i">meander</span><span class="p">:</span> <span class="n">2</span><span class="p">,</span> <span class="i">flags</span><span class="p">:</span> <span class="s">&quot;few open-doors&quot;</span><span class="p">);</span></code></pre>
-</div>
+<span class="p">],</span> <span class="i">meander</span><span class="p">:</span> <span class="n">2</span><span class="p">,</span> <span class="i">flags</span><span class="p">:</span> <span class="s">&quot;few open-doors&quot;</span><span class="p">);</span></pre>
 <p>The <code>"spear:3"</code> means &ldquo;drop something from the &rsquo;spear&rsquo; group around level 3&rdquo;.
 You don&rsquo;t have to specify the entire path since path components are unique. So
 &ldquo;spear&rdquo; is equivalent to &ldquo;equipment/weapon/spear&rdquo;.</p>
@@ -224,26 +204,22 @@ anticipation. At the same time, the probabilities are weighted so that each
 monster still has a unique &ldquo;feel&rdquo; to their drops, and you can seek out monsters
 that are more likely to drop what you want.</p>
 <p>When specifying a drop, you can also directly specify one of the parent groups. For example:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">breed</span><span class="p">(</span><span class="s">&quot;goblin warrior&quot;</span><span class="p">,</span> <span class="i">gray</span><span class="p">,</span> <span class="n">32</span><span class="p">,</span> <span class="p">[</span>
+<pre class="highlight language-dart"><span class="i">breed</span><span class="p">(</span><span class="s">&quot;goblin warrior&quot;</span><span class="p">,</span> <span class="i">gray</span><span class="p">,</span> <span class="n">32</span><span class="p">,</span> <span class="p">[</span>
   <span class="i">attack</span><span class="p">(</span><span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">14</span><span class="p">)</span>
 <span class="p">],</span> <span class="i">drop</span><span class="p">:</span> <span class="p">[</span>
   <span class="i">chanceOf</span><span class="p">(</span><span class="n">20</span><span class="p">,</span> <span class="s">&quot;equipment:6&quot;</span><span class="p">)</span>
-<span class="p">],</span> <span class="i">meander</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="i">flags</span><span class="p">:</span> <span class="s">&quot;protective open-doors&quot;</span><span class="p">);</span></code></pre>
-</div>
+<span class="p">],</span> <span class="i">meander</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="i">flags</span><span class="p">:</span> <span class="s">&quot;protective open-doors&quot;</span><span class="p">);</span></pre>
 <p>Here, the <code>"equipment:6"</code> means a goblin may drop <em>any</em> kind of equipment. This
 makes it really easy to specify monsters that define wide sets of drops. That&rsquo;s
 good for high level boss monsters that can serve up an assortment of loot.</p>
 <p>At the same time, defining the items is pretty simple. You basically just need
 to categorize and assign a level for each item. It looks like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">group</span><span class="p">(</span><span class="i">r</span><span class="s">&quot;</span><span class="e">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="s">&quot;equipment/weapon/spear&quot;</span><span class="p">);</span>
+<pre class="highlight language-dart"><span class="i">group</span><span class="p">(</span><span class="i">r</span><span class="s">&quot;</span><span class="e">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="s">&quot;equipment/weapon/spear&quot;</span><span class="p">);</span>
 <span class="i">weapon</span><span class="p">(</span><span class="s">&quot;Pointed Stick&quot;</span><span class="p">,</span> <span class="n">5</span><span class="p">,</span> <span class="i">brown</span><span class="p">,</span> <span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">7</span><span class="p">);</span>
 <span class="i">weapon</span><span class="p">(</span><span class="s">&quot;Spear&quot;</span><span class="p">,</span> <span class="n">25</span><span class="p">,</span> <span class="i">gray</span><span class="p">,</span> <span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">12</span><span class="p">);</span>
 <span class="i">weapon</span><span class="p">(</span><span class="s">&quot;Angon&quot;</span><span class="p">,</span> <span class="n">35</span><span class="p">,</span> <span class="i">lightGray</span><span class="p">,</span> <span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">16</span><span class="p">);</span>
 <span class="i">weapon</span><span class="p">(</span><span class="s">&quot;Lance&quot;</span><span class="p">,</span> <span class="n">45</span><span class="p">,</span> <span class="i">white</span><span class="p">,</span> <span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">24</span><span class="p">);</span>
-<span class="i">weapon</span><span class="p">(</span><span class="s">&quot;Partisan&quot;</span><span class="p">,</span> <span class="n">55</span><span class="p">,</span> <span class="i">darkGray</span><span class="p">,</span> <span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">36</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">weapon</span><span class="p">(</span><span class="s">&quot;Partisan&quot;</span><span class="p">,</span> <span class="n">55</span><span class="p">,</span> <span class="i">darkGray</span><span class="p">,</span> <span class="s">&quot;stab[s]&quot;</span><span class="p">,</span> <span class="n">36</span><span class="p">);</span></pre>
 <p>(The numbers after the name are their levels.) Once you do that, all of the rest
 of the drop behavior falls out naturally. If I add a new item to an existing
 group, every monster will then start dropping it, with the right probabilities.</p>

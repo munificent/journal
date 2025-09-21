@@ -72,8 +72,7 @@ aren&rsquo;t related to other uses of the term in other languages. I wrote that
 sentence, and I don&rsquo;t even know what the hell that means.</p>
 <p>The <a href="http://daimi.au.dk/~beta/Books/index.html#betabook_download">BETA book</a> is
 a bit&hellip; dense. Or maybe it&rsquo;s just that the syntax is so <em>weird</em>:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">Account:
+<pre class="highlight language-text">Account:
   (# balance: @integer;
     Deposit:
       (# amount: @integer
@@ -88,13 +87,11 @@ a bit&hellip; dense. Or maybe it&rsquo;s just that the syntax is so <em>weird</e
       do balance-amount-&gt;balance
       exit balance
       #);
-  #)</code></pre>
-</div>
+  #)</pre>
 <p>I pride myself on being able to grok syntax on a pretty wide variety of
 languages but I&rsquo;m not even sure what&rsquo;s a <em>comment</em> there. I <em>think</em> if you
 translated that to JavaScript, it would be something like:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">account</span> <span class="o">=</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">var</span> <span class="i">account</span> <span class="o">=</span> <span class="p">{</span>
   <span class="i">balance</span><span class="p">:</span> <span class="i">undefined</span><span class="p">,</span>
 
   <span class="i">deposit</span><span class="p">:</span> <span class="k">function</span><span class="p">(</span><span class="i">amount</span><span class="p">)</span> <span class="p">{</span>
@@ -104,8 +101,7 @@ translated that to JavaScript, it would be something like:</p>
   <span class="i">withdraw</span><span class="p">:</span> <span class="k">function</span><span class="p">(</span><span class="i">amount</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="i">balance</span> <span class="o">-=</span> <span class="i">amount</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">};</span></code></pre>
-</div>
+<span class="p">};</span></pre>
 <p>Like avant garde jazz, this may be genius, but it&rsquo;s so out there and
 unapproachable, it&rsquo;s hard to tell. Fortunately, the Self guys have deciphered
 some of the mystery and left that little nugget in their paper.</p>
@@ -129,8 +125,7 @@ use <code>call-next-method</code>. You get the idea.</p>
 <p>I&rsquo;m using class terminology here, but all of the above applies equally well to
 prototypal languages too, with a couple of names changed.</p>
 <p>Here&rsquo;s an example:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Account</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">Account</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">balance</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
   <span class="t">int</span> <span class="i">deposit</span><span class="p">(</span><span class="t">int</span> <span class="i">amount</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="i">balance</span> <span class="o">+=</span> <span class="i">amount</span><span class="p">;</span>
@@ -143,13 +138,10 @@ prototypal languages too, with a couple of names changed.</p>
     <span class="t">CrappyBank</span><span class="p">.</span><span class="i">mainAccount</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">2</span><span class="p">);</span>
     <span class="k">super</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="i">amount</span> <span class="o">-</span> <span class="n">2</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>So now, if you do something like this:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">Account</span> <span class="i">account</span> <span class="o">=</span> <span class="k">new</span> <span class="t">CrappyBankAccount</span><span class="p">();</span>
-<span class="i">account</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">23</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-java"><span class="t">Account</span> <span class="i">account</span> <span class="o">=</span> <span class="k">new</span> <span class="t">CrappyBankAccount</span><span class="p">();</span>
+<span class="i">account</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">23</span><span class="p">);</span></pre>
 <p>First, it invokes <code>CrappyBankAccount#deposit()</code>. Then, when that calls
 <code>super.deposit()</code>, it chains to the base <code>Account#deposit()</code> method.</p>
 <h2>Who&rsquo;s in charge here?</h2>
@@ -160,8 +152,7 @@ calling it entirely.</p>
 <p>This is great for flexibility, but as an API designer, that can be frustrating.
 When I&rsquo;m making a class that&rsquo;s designed to be subclassed, I often have
 constraints that I want my class to ensure. For example:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -174,8 +165,7 @@ constraints that I want my class to ensure. For example:</p>
     <span class="k">super</span><span class="p">.</span><span class="i">render</span><span class="p">(</span><span class="i">renderer</span><span class="p">);</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Here we&rsquo;re making a game with a base class for a character in the world. It
 provides a default <code>render()</code> method that tells the renderer where to render.
 The subclass overrides it and draws the specific image that&rsquo;s appropriate for
@@ -190,8 +180,7 @@ you did the right thing.</p>
 <h2><code>render()</code> and <code>onRender()</code></h2>
 <p>To solve this, what I (and lots of other people) do is split these into two
 methods, like so:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -206,8 +195,7 @@ methods, like so:</p>
   <span class="k">protected</span> <span class="t">void</span> <span class="i">onRender</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Our public <code>render()</code> method is now designed to <em>not</em> be overridden. (In C++ or
 C# you&rsquo;d make it non-virtual.) It does the setup it needs and calls the
 protected abstract <code>onRender()</code> method. That method <em>is</em> intended to be
@@ -235,8 +223,7 @@ that point.</p>
 like we want in the <code>GameObject</code> example) and then walks down to the subclasses
 at the superclass&rsquo;s whim. In other words, our example with BETA-style overriding
 would look like:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -249,13 +236,11 @@ would look like:</p>
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>If you chain more than two levels of subclasses, BETA scales better because you
 don&rsquo;t need to keep coming up with new names. It has some other neat attributes
 too.</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
   <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">;</span>
 
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
@@ -269,8 +254,7 @@ too.</p>
   <span class="t">void</span> <span class="i">render</span><span class="p">(</span><span class="t">Renderer</span> <span class="i">renderer</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">renderer</span><span class="p">.</span><span class="i">drawImage</span><span class="p">(</span><span class="t">Images</span><span class="p">.</span><span class="i">SCARY_MONSTER</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Here, we&rsquo;ve added a call to <code>restoreState()</code> after the call to <code>inner()</code>. By
 giving control of the dispatch to the base class, it can execute code both
 before <em>and</em> after the derived class code. <code>super()</code> doesn&rsquo;t let you do that.

@@ -42,8 +42,7 @@ apparently <a href="http://cleveralias.blogs.com/thought_spearmints/2004/01/more
 typesafe, but then I don&rsquo;t think that&rsquo;s the problem <a href="http://blogs.msdn.com/brada/">Abrams</a> and company were
 trying to solve anyway.</p>
 <p>Here&rsquo;s an example one:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="a">Flags</span><span class="p">]</span>
+<pre class="highlight language-csharp"><span class="p">[</span><span class="a">Flags</span><span class="p">]</span>
 <span class="k">public</span> <span class="k">enum</span> <span class="t">Fruits</span>
 <span class="p">{</span>
     <span class="i">Apple</span>       <span class="o">=</span> <span class="n">1</span><span class="p">,</span>
@@ -51,38 +50,30 @@ trying to solve anyway.</p>
     <span class="i">Cherry</span>      <span class="o">=</span> <span class="n">4</span><span class="p">,</span>
     <span class="i">Date</span>        <span class="o">=</span> <span class="n">8</span><span class="p">,</span>
     <span class="i">Eggplant</span>    <span class="o">=</span> <span class="n">16</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Nice, clean syntax. The way they solved C++&rsquo;s name collision issues with enum
 values is genius: <code>Fruits.Apple</code>. Clearly these guys are using the old noggin.</p>
 <h2>The annoying bit (argh, a pun)</h2>
 <p>The one thing that <em>does</em> annoy me about flag enums is the syntax to see if a
 given flag (or set of flags) is set:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">if</span> <span class="p">((</span><span class="i">myFruit</span> <span class="o">&amp;</span> <span class="i">Fruits</span><span class="p">.</span><span class="i">Date</span><span class="p">)</span> <span class="o">==</span> <span class="i">Fruits</span><span class="p">.</span><span class="i">Date</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="k">if</span> <span class="p">((</span><span class="i">myFruit</span> <span class="o">&amp;</span> <span class="i">Fruits</span><span class="p">.</span><span class="i">Date</span><span class="p">)</span> <span class="o">==</span> <span class="i">Fruits</span><span class="p">.</span><span class="i">Date</span><span class="p">)</span></pre>
 <p>I&rsquo;m not afraid of bitwise operators, but there&rsquo;s some serious lameness in
 here. Needing to specify the explicit <code>==</code> for type safety and having to use
 the parenthesis because the operator precedence puts <code>==</code> before <code>&amp;</code> first?
 Gross.</p>
 <h2>For every nail there is a hammer</h2>
 <p>Behold the solution:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">FruitsExtensions</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">FruitsExtensions</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">bool</span> <span class="i">IsSet</span><span class="p">(</span><span class="k">this</span> <span class="t">Fruits</span> <span class="i">fruits</span><span class="p">,</span> <span class="t">Fruits</span> <span class="i">flags</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="p">(</span><span class="i">fruits</span> <span class="o">&amp;</span> <span class="i">flags</span><span class="p">)</span> <span class="o">==</span> <span class="i">flags</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>With that, you can just do:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">if</span> <span class="p">(</span><span class="i">myFruit</span><span class="p">.</span><span class="i">IsSet</span><span class="p">(</span><span class="i">Fruits</span><span class="p">.</span><span class="i">Date</span><span class="p">))</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="k">if</span> <span class="p">(</span><span class="i">myFruit</span><span class="p">.</span><span class="i">IsSet</span><span class="p">(</span><span class="i">Fruits</span><span class="p">.</span><span class="i">Date</span><span class="p">))</span></pre>
 <p>Much nicer. For kicks, here&rsquo;s some other useful methods:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">FruitsExtensions</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">FruitsExtensions</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">bool</span> <span class="i">IsSet</span><span class="p">(</span><span class="k">this</span> <span class="t">Fruits</span> <span class="i">fruits</span><span class="p">,</span> <span class="t">Fruits</span> <span class="i">flags</span><span class="p">)</span>
     <span class="p">{</span>
@@ -103,27 +94,23 @@ Gross.</p>
     <span class="p">{</span>
         <span class="k">return</span> <span class="i">fruits</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="i">flags</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Useful, no?</p>
 <h2>Why solve one when you can solve <em>n</em>?</h2>
 <p>So, if you&rsquo;re like me and <a href="https://web.archive.org/web/20120423104722/http://devlicious.com/blogs/christopher_bennage/archive/2007/09/13/my-new-little-friend-enum-lt-t-gt.aspx">this guy</a>, right now you&rsquo;re thinking, &ldquo;This
 just fixes one enum. Can I solve it for all enums?&rdquo; Ideally, you&rsquo;d do something
 like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">EnumExtensions</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">EnumExtensions</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">bool</span> <span class="t">IsSet</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span> <span class="t">T</span> <span class="i">value</span><span class="p">,</span> <span class="t">T</span> <span class="i">flags</span><span class="p">)</span> <span class="k">where</span> <span class="t">T</span> <span class="p">:</span> <span class="t">Enum</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="p">(</span><span class="i">value</span> <span class="o">&amp;</span> <span class="i">flags</span><span class="p">)</span> <span class="o">==</span> <span class="i">flags</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Unfortunately, that doesn&rsquo;t fly. You can&rsquo;t use <code>Enum</code> as a constraint.
 Likewise, there&rsquo;s no way to require a typeparam to implement an operator (like
 <code>&amp;</code> above). You <em>can</em> implement a generic solution for this:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">EnumExtensions</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">EnumExtensions</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">bool</span> <span class="t">IsSet</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span> <span class="t">T</span> <span class="i">value</span><span class="p">,</span> <span class="t">T</span> <span class="i">flags</span><span class="p">)</span>
         <span class="k">where</span> <span class="t">T</span> <span class="p">:</span> <span class="t">struct</span>
@@ -188,8 +175,7 @@ Likewise, there&rsquo;s no way to require a typeparam to implement an operator (
     <span class="p">{</span>
         <span class="k">return</span> <span class="i">op</span><span class="p">((</span><span class="t">T</span><span class="p">)</span><span class="i">value</span><span class="p">,</span> <span class="p">(</span><span class="t">T</span><span class="p">)</span><span class="i">flags</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>&hellip;but, yeah, it&rsquo;s not exactly fun using reflection for this.</p>
   <div class="comments">
     <div id="disqus_thread"></div>

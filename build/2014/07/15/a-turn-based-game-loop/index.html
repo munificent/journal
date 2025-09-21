@@ -92,15 +92,13 @@ after the player does their thing.</p>
 <p>At the core of the game engine is the <a href="http://gameprogrammingpatterns.com/game-loop.html">game loop</a>. Its job is to iterate over
 the actors in the level and tell each to take its turn. In a simple game, it
 would look something like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">gameLoop</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">gameLoop</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">while</span> <span class="p">(</span><span class="i">stillPlaying</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">actor</span> <span class="k">in</span> <span class="i">actors</span><span class="p">)</span> <span class="p">{</span>
       <span class="i">actor</span><span class="p">.</span><span class="i">update</span><span class="p">();</span>
     <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>However, since the engine is decoupled from the user interface, it is driven
 externally. The engine has a main <a href="https://github.com/munificent/hauberk/blob/fe0bdf614d5d00a5235b7a82d9d38c928928d34c/lib/src/engine/game.dart"><code>Game</code></a> class. The UI owns an instance
 of that and tells it to process. The engine only processes one &ldquo;step&rdquo; of
@@ -110,8 +108,7 @@ a follow-up post about how the engine&rsquo;s game loop and the browser event lo
 interact. It&rsquo;s pretty tricky.)</p>
 <p>What this means is that <code>Game</code> needs to track the last actor who took a turn so
 it can pick up where it left off. Something like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Game</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Game</span> <span class="p">{</span>
   <span class="k">final</span> <span class="i">actors</span> <span class="o">=</span> <span class="o">&lt;</span><span class="t">Actor</span><span class="o">&gt;</span><span class="p">[];</span>
   <span class="t">int</span> <span class="i">_currentActor</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
 
@@ -119,8 +116,7 @@ it can pick up where it left off. Something like:</p>
     <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">update</span><span class="p">();</span>
     <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Astute readers like yourself are probably thinking this sounds like a good case
 for a <a href="http://en.wikipedia.org/wiki/Generator_(computer_programming)">generator</a>. Indeed, in the previous C# incarnation of my game, <a href="/2008/11/17/using-an-iterator-as-a-game-loop/">I did
 exactly that</a>. When Dart gets generators, I&rsquo;ll probably use them. In
@@ -145,13 +141,11 @@ words, we&rsquo;ll use the <a href="http://gameprogrammingpatterns.com/command.h
 <em>actions</em>.</p>
 <p>The game loop asks each actor to give it an action, then it tells the action to
 execute <em>itself</em>, like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
   <span class="i">action</span><span class="p">.</span><span class="i">perform</span><span class="p">();</span>
   <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>There are different action classes for each atomic thing an actor in the world
 can do. There is a <a href="https://github.com/munificent/hauberk/blob/53719994a29ba7b750bb78643f8b92d1f5516685/lib/src/engine/action_base.dart#L109"><code>WalkAction</code></a>, <a href="https://github.com/munificent/hauberk/blob/53719994a29ba7b750bb78643f8b92d1f5516685/lib/src/engine/action_base.dart#L154"><code>OpenDoorAction</code></a>,
 <a href="https://github.com/munificent/hauberk/blob/53719994a29ba7b750bb78643f8b92d1f5516685/lib/src/engine/action_base.dart#L192"><code>EatAction</code></a>, etc.</p>
@@ -241,8 +235,7 @@ the browser tell <em>you</em> when an event comes in.</p>
 and wait for the player to push a button. Instead, we let the user interface
 <em>inject</em> input into the game. The input handling code can create an action for
 the hero <em>ex-nihilo</em> and jam it in the engine&rsquo;s piehole, like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">handleInput</span><span class="p">(</span><span class="t">Keyboard</span> <span class="i">keyboard</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">handleInput</span><span class="p">(</span><span class="t">Keyboard</span> <span class="i">keyboard</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">switch</span> <span class="p">(</span><span class="i">keyboard</span><span class="p">.</span><span class="i">lastPressed</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="t">KeyCode</span><span class="p">.</span><span class="t">G</span><span class="p">:</span>
       <span class="i">game</span><span class="p">.</span><span class="i">hero</span><span class="p">.</span><span class="i">setNextAction</span><span class="p">(</span><span class="k">new</span> <span class="t">PickUpAction</span><span class="p">())</span>
@@ -262,13 +255,11 @@ the hero <em>ex-nihilo</em> and jam it in the engine&rsquo;s piehole, like this:
 
 <span class="k">void</span> <span class="i">walk</span><span class="p">(</span><span class="t">Direction</span> <span class="i">dir</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">game</span><span class="p">.</span><span class="i">hero</span><span class="p">.</span><span class="i">setNextAction</span><span class="p">(</span><span class="k">new</span> <span class="t">WalkAction</span><span class="p">(</span><span class="i">dir</span><span class="p">));</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That call to <code>setNextAction()</code> stuffs the given action into a field in the hero.
 When the game loop asks the hero what it wants to do, it barfs the action back
 up:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Hero</span> <span class="k">extends</span> <span class="t">Actor</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Hero</span> <span class="k">extends</span> <span class="t">Actor</span> <span class="p">{</span>
   <span class="t">Action</span> <span class="i">_nextAction</span><span class="p">;</span>
 
   <span class="k">void</span> <span class="i">setNextAction</span><span class="p">(</span><span class="t">Action</span> <span class="i">action</span><span class="p">)</span> <span class="p">{</span>
@@ -283,8 +274,7 @@ up:</p>
   <span class="p">}</span>
 
   <span class="c">// Other heroic stuff...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>(In the actual game, there&rsquo;s actually a level of indirection here to handle
 <a href="https://github.com/munificent/hauberk/blob/11c5ca5d258dfdae20118c7a4dcc82e50ceb67de/lib/src/engine/hero/hero.dart#L301">multi-step behaviors like running</a>, but we&rsquo;ll ignore that here.)</p>
 <p>This keeps the engine from reaching out to the user interface and lets the UI
@@ -294,8 +284,7 @@ input yet.</p>
 <p>To handle that, the loop just checks for the actor failing to cough up an
 action. When that happens, it bails and returns control back to the user
 interface:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
 
   <span class="c">// Don&#39;t advance past the actor if it didn&#39;t take a turn.</span>
@@ -303,8 +292,7 @@ interface:</p>
 
   <span class="i">action</span><span class="p">.</span><span class="i">perform</span><span class="p">();</span>
   <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>If the interface tells the game engine to process but hasn&rsquo;t given instructions
 to the hero, the engine does nothing and bounces control back to the UI. Note
 how <code>setNextAction()</code> can be called at any point in time. This works seamlessly
@@ -347,8 +335,7 @@ engine. In particular, most of them belong in actions. We&rsquo;ll put the solut
 this problem in there too. When an action is processed, we&rsquo;ll let it return a
 value indicating success. If it fails, the game loop considers it to have never
 happened. It&rsquo;s as simple as:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">action</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
 
@@ -358,8 +345,7 @@ happened. It&rsquo;s as simple as:</p>
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="i">success</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
 
   <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This makes the engine more robust: you can throw arbitrary actions at it and it
 will handle them gracefully. It also keeps all of the code for a single
 mechanic, including validation, in one place: in the relevant action. Yay for
@@ -381,8 +367,7 @@ this stuff. I&rsquo;ve got a pretty simple solution too.</p>
 can also respond with an <em>alternate action</em>. It lets the action say, &ldquo;no, you
 really mean this&rdquo;.</p>
 <p>Since the <code>perform()</code> method on <code>Action</code> can return success, failure, or another action, we&rsquo;ll make a little class to wrap that up:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ActionResult</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">ActionResult</span> <span class="p">{</span>
   <span class="k">static</span> <span class="k">const</span> <span class="i">success</span> <span class="o">=</span> <span class="t">ActionResult</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
   <span class="k">static</span> <span class="k">const</span> <span class="i">failure</span> <span class="o">=</span> <span class="t">ActionResult</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
 
@@ -399,14 +384,12 @@ really mean this&rdquo;.</p>
 
   <span class="k">const</span> <span class="t">ActionResult</span><span class="p">.</span><span class="i">alternate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">alternative</span><span class="p">)</span>
   <span class="p">:</span> <span class="i">succeeded</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>When an action is executing, it returns <code>ActionResult.success</code> to say everything
 went fine, <code>ActionResult.failure</code> to say nothing happened, or it can return an
 <code>ActionResult</code> with <code>.alternate</code> pointing to a new action to perform instead.</p>
 <p>The game loop processes that:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">process</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">action</span> <span class="o">=</span> <span class="i">actors</span><span class="p">[</span><span class="i">_currentActor</span><span class="p">].</span><span class="i">getAction</span><span class="p">();</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">action</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
 
@@ -418,8 +401,7 @@ went fine, <code>ActionResult.failure</code> to say nothing happened, or it can 
   <span class="p">}</span>
 
   <span class="i">_currentActor</span> <span class="o">=</span> <span class="p">(</span><span class="i">_currentActor</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">%</span> <span class="i">actors</span><span class="p">.</span><span class="i">length</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>We do this in a loop because an alternate may itself return an alternate, so we
 keep trying until we bottom out on an action that succeeds or fails. This turns
 out to be a handy feature for a number of things in the full game:</p>

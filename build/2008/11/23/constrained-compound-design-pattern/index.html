@@ -72,8 +72,7 @@ to derivers: these methods are here for your use. The abstract sandbox method
 says, &ldquo;here&rsquo;s where you do your work&rdquo;. If you&rsquo;ve minimized global and static
 objects then the limited parameters to the sandbox say, &ldquo;you only really have
 access to the methods in <code>this</code>&rdquo; so just use those. Here&rsquo;s an example:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
 <span class="p">{</span>
     <span class="c">// The sandbox.</span>
     <span class="k">public</span> <span class="k">abstract</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">();</span>
@@ -95,15 +94,13 @@ access to the methods in <code>this</code>&rdquo; so just use those. Here&rsquo;
             <span class="i">DrawLine</span><span class="p">(</span><span class="i">x</span><span class="p">,</span> <span class="n">15</span><span class="p">,</span> <span class="i">x</span><span class="p">,</span> <span class="n">20</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>If you try to go down this path, one limitation you will quickly realize is that
 often the base class itself doesn&rsquo;t have enough contextual information to
 provide those atomic functions. That needs to be passed in, but you don&rsquo;t want
 the sandbox to have it (since it could then poke at it directly). Here&rsquo;s a
 typical way around it:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="t">Widget</span>
 <span class="p">{</span>
     <span class="c">// The external public API.</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">DrawContext</span> <span class="i">context</span><span class="p">)</span>
@@ -126,8 +123,7 @@ typical way around it:</p>
     <span class="k">protected</span> <span class="k">void</span> <span class="i">DrawRect</span><span class="p">(</span><span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">,</span> <span class="t">int</span> <span class="i">w</span><span class="p">,</span> <span class="t">int</span> <span class="i">h</span><span class="p">)</span> <span class="p">{</span> <span class="c">/* */</span> <span class="p">}</span>
 
     <span class="k">private</span> <span class="t">DrawContext</span> <span class="i">mContext</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now <code>DrawString()</code>, etc. have access to the DrawContext, but the derived
 widget itself does not.</p>
 <h2>Atomic operations on a parameter</h2>
@@ -137,8 +133,7 @@ operations as methods available on <code>this</code>, which is then an implicit 
 the sandbox method <code>Draw()</code>. Instead of using <code>this</code> you can always make those
 operations on an explicit parameter. Here&rsquo;s a way to use that to have different
 widgets draw differently without using inheritance:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Widget</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Widget</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="i">Widget</span><span class="p">(</span><span class="t">Action</span><span class="o">&lt;</span><span class="t">DrawOperations</span><span class="o">&gt;</span> <span class="i">drawFunc</span><span class="p">)</span>
     <span class="p">{</span>
@@ -184,8 +179,7 @@ widgets draw differently without using inheritance:</p>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="i">widget</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This has the advantage of letting you later change how a widget draws without
 baking it into the class hierarchy, but may be a bit odd to people with only
 class-based OOP language experience.</p>

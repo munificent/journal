@@ -51,9 +51,7 @@ prototypes, type objects, etc. In dynamically typed languages you&rsquo;ll hear
 <p>Magpie makes this distinction <em>very</em> blurry, but for our purposes what I care
 about is the static definition of a type: it&rsquo;s the stuff that the type checker
 works with. For example, say you create a variable:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="n">123</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="n">123</span></pre>
 <p>The type checker tracks that <code>i</code> is an integer. It does so by associating an
 object&mdash;a <em>thing</em>&mdash;with that name. That object is a type. If you think of
 types as objects that the type checker works with, that leads to the natural
@@ -74,9 +72,7 @@ make sure we don&rsquo;t pass or assign values of the wrong type.</p>
 type has a member with a given name, and, if so, what its type is. This helps us
 ensure we aren&rsquo;t calling unsupported methods or accessing undefined fields on a
 class. For example, if we have a chunk of code like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">list</span> <span class="i">add</span><span class="p">(</span><span class="s">&quot;item&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">list</span> <span class="i">add</span><span class="p">(</span><span class="s">&quot;item&quot;</span><span class="p">)</span></pre>
 <p>The type checker needs to get the type of the <code>list</code> variable and ask it what
 the type of its <code>add</code> member is. If the answer to that is nothing (i.e. it
 doesn&rsquo;t have that member) or not a function that accepts a string, then that
@@ -85,21 +81,17 @@ method call is an error.</p>
 <p>If you have an OOP mindset, you can look at those two operations as defining an
 interface. If you were implementing a type checker in Java, you could define a
 type to be any class that implements:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">interface</span> <span class="t">Type</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">interface</span> <span class="t">Type</span> <span class="p">{</span>
   <span class="t">boolean</span> <span class="i">canAssignFrom</span><span class="p">(</span><span class="t">Type</span> <span class="i">other</span><span class="p">);</span>
   <span class="t">Type</span> <span class="i">getMemberType</span><span class="p">(</span><span class="t">String</span> <span class="i">name</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The concrete classes that represented kinds of types (say &ldquo;Class&rdquo;,
 &ldquo;Interface&rdquo;, &ldquo;Array&rdquo;, etc.) would then implement that interface and you&rsquo;re
 good to go. The Magpie interpreter does exactly that.</p>
 <h2>First-class types</h2>
 <p>It&rsquo;s just that <em>where</em> it does that is kind of unusual. In Magpie, all types are
 first-class, like Ruby or Python. For example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">monkey</span> <span class="o">=</span> <span class="t">Monkey</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bobo&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">monkey</span> <span class="o">=</span> <span class="t">Monkey</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bobo&quot;</span><span class="p">)</span></pre>
 <p>In this code, <code>Monkey</code> is just a global variable whose value is an object
 representing the <code>Monkey</code> class. So classes are first-class objects.</p>
 <p>But there are <em>types</em> that are not <em>classes</em>. For example, &ldquo;array of ints&rdquo; is a
@@ -135,15 +127,13 @@ for validity. For example, consider:</p>
 <pre><code>print((1 + 2) string)
 </code></pre>
 <p>The parser converts that into an <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">AST</a>, a little tree like:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">(print)
+<pre class="highlight language-text">(print)
    |
 (string)
    |
   (+)
   &#47; \
-(1) (2)</code></pre>
-</div>
+(1) (2)</pre>
 <p>The type checker walks that tree from the bottom to top. Something like this:</p>
 <ol>
 <li>
@@ -213,20 +203,17 @@ requires. Where before, methods like <code>canAssignFrom(other)</code> were dyna
 typed, now I could do <code>canAssignFrom(other Type)</code>.</p>
 <p>The end result was, by far, the most mind-crushingly meta thing I&rsquo;ve ever had to
 wade through. Behold:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">interface</span> <span class="t">Type</span>
+<pre class="highlight language-magpie"><span class="k">interface</span> <span class="t">Type</span>
   <span class="i">canAssignFrom</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span>
   <span class="i">getMemberType</span><span class="p">(</span><span class="i">name</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Type</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
   <span class="c">// Some other stuff...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That chunk of Magpie code defines an interface <code>Type</code> that the type classes in
 Magpie must implement. You&rsquo;ll note that it&rsquo;s recursive&mdash;most of its methods
 take arguments of type <code>Type</code>.</p>
 <p>Every class that defines a type in Magpie implements that. Interfaces are a
 type, so <a href="https://github.com/munificent/magpie/blob/b37c7265c689fb150c6463c9538284610dba1a01/base/Interface.mag"><code>Interface</code></a> implements <code>Type</code>, of course:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Interface</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Interface</span>
   <span class="i">canAssignFrom</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span>
     <span class="c">// Check that other type has every member of this one.</span>
     <span class="k">for</span> <span class="i">member</span> <span class="o">=</span> <span class="i">members</span> <span class="k">do</span>
@@ -250,8 +237,7 @@ type, so <a href="https://github.com/munificent/magpie/blob/b37c7265c689fb150c64
   <span class="k">end</span>
 
   <span class="c">// Other stuff...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>So we have a Magpie class, <code>Interface</code> that implements an interface, <code>Type</code>,
 that is in turn an instance of that same <code>Interface</code> class.</p>
 <p>Now that all of the methods in the classes defining the type system have type
@@ -267,19 +253,15 @@ Java, there are value expressions like <code>1 + 2</code> but also type expressi
 no meaningful distinction between expressions and type annotations. Type
 annotations are just regular Magpie expressions, evaluated dynamically during
 type checking. If you have a function like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">parseNumber</span><span class="p">(</span><span class="i">value</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Int</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="i">parseNumber</span><span class="p">(</span><span class="i">value</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Int</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
     <span class="c">// ...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That <code>String</code> is just a regular Magpie expression, as is <code>Int | Nothing</code>. In
 the case of the latter, <code>|</code> is just an operator on the <code>Class</code> class.</p>
 <p>This means that not only is Magpie&rsquo;s type system extensible, even its type
 <em>annotations</em> are. If you wanted to, you could define new operators or functions
 and use them in type annotations:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">what</span><span class="p">(</span><span class="i">arg</span> <span class="i">doSomething</span><span class="p">(</span><span class="t">Very</span> <span class="o">*</span> <span class="t">Strange</span><span class="p">))</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">what</span><span class="p">(</span><span class="i">arg</span> <span class="i">doSomething</span><span class="p">(</span><span class="t">Very</span> <span class="o">*</span> <span class="t">Strange</span><span class="p">))</span></pre>
 <p>I honestly don&rsquo;t know if that&rsquo;s a useful feature, but I do like the idea of not
 having the type system welded into the language. If you like prototypes, or
 algebraic data types, wouldn&rsquo;t it be nice if you could add them to the language

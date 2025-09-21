@@ -81,8 +81,7 @@ operators, infix expressions, statements, flow control, definitions, etc. V8,
 for example, has <a href="https://github.com/v8/v8/blob/main/src/ast/ast.h">40</a> classes to cover everything you can express in
 JavaScript.</p>
 <p>These are relatively simple types. A (greatly!) simplified one looks a bit like:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">BinaryOpExpr</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Expression</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">BinaryOpExpr</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Expression</span> <span class="p">{</span>
   <span class="t">BinaryOpExpr</span><span class="p">(</span><span class="t">Expression</span><span class="o">*</span> <span class="i">left</span><span class="p">,</span> <span class="t">Expression</span><span class="o">*</span> <span class="i">right</span><span class="p">)</span>
   <span class="p">:</span> <span class="i">left</span><span class="p">(</span><span class="i">left</span><span class="p">),</span>
     <span class="i">right</span><span class="p">(</span><span class="i">right</span><span class="p">)</span> <span class="p">{}</span>
@@ -97,8 +96,7 @@ JavaScript.</p>
 <span class="k">private</span><span class="p">:</span>
   <span class="t">Expression</span><span class="o">*</span> <span class="i">left</span><span class="p">;</span>
   <span class="t">Expression</span><span class="o">*</span> <span class="i">right</span><span class="p">;</span>
-<span class="p">};</span></code></pre>
-</div>
+<span class="p">};</span></pre>
 <p>Imagine thirty-something-odd more classes like this and you&rsquo;ve got the right
 idea. There isn&rsquo;t <em>too</em> much we can do in C++ to simplify these definitions
 themselves. Each class is different enough that it&rsquo;s simplest and clearest to
@@ -107,8 +105,7 @@ just write them out.</p>
 these classes. First up is the aforementioned <a href="https://github.com/v8/v8/blob/main/src/ast/ast.h#L2680">visitor</a>. To make it easy for
 the compiler to dispatch to different code based on the different AST classes,
 you typically define a class like:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">AstVisitor</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">AstVisitor</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">:</span>
   <span class="o">~</span><span class="k">virtual</span> <span class="t">AstVisitor</span><span class="p">()</span> <span class="p">{}</span>
 
@@ -121,26 +118,22 @@ you typically define a class like:</p>
   <span class="k">virtual</span> <span class="t">void</span> <span class="i">visitConditionalExpr</span><span class="p">(</span><span class="t">ConditionalExpr</span><span class="o">*</span> <span class="i">expr</span><span class="p">)</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
   <span class="k">virtual</span> <span class="t">void</span> <span class="i">visitIfThenStmt</span><span class="p">(</span><span class="t">IfThenStmt</span><span class="o">*</span> <span class="i">expr</span><span class="p">)</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
   <span class="c">// 30 more of these, you get the idea...</span>
-<span class="p">};</span></code></pre>
-</div>
+<span class="p">};</span></pre>
 <p>That code really <em>is</em> just repetitive boilerplate. There&rsquo;s more. It&rsquo;s useful to
 also have an enum for each AST node type so that we can also <code>switch</code> directly
 on the type of a node without having to go through a visitor for everything.
 Something like:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">enum</span> <span class="t">AstType</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">enum</span> <span class="t">AstType</span> <span class="p">{</span>
   <span class="i">kBoolLiteral</span><span class="p">,</span>
   <span class="i">kNumLiteral</span><span class="p">,</span>
   <span class="i">kStringLiteral</span><span class="p">,</span>
   <span class="i">kUnaryOpExpr</span><span class="p">,</span>
   <span class="i">kBinaryOpExpr</span><span class="p">,</span>
   <span class="c">// again, you get the idea...</span>
-<span class="p">};</span></code></pre>
-</div>
+<span class="p">};</span></pre>
 <p>For debugging, it&rsquo;s handy to be able to get a string representation for an AST
 node&rsquo;s type too:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="t">char</span><span class="o">*</span> <span class="i">typeString</span><span class="p">(</span><span class="t">AstType</span> <span class="i">type</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">const</span> <span class="t">char</span><span class="o">*</span> <span class="i">typeString</span><span class="p">(</span><span class="t">AstType</span> <span class="i">type</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">switch</span> <span class="p">(</span><span class="i">type</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="i">kBoolLiteral</span><span class="p">:</span>  <span class="k">return</span> <span class="s">&quot;BoolLiteral&quot;</span><span class="p">;</span>
     <span class="k">case</span> <span class="i">kIntLiteral</span><span class="p">:</span>   <span class="k">return</span> <span class="s">&quot;IntLiteral&quot;</span><span class="p">;</span>
@@ -149,8 +142,7 @@ node&rsquo;s type too:</p>
     <span class="k">case</span> <span class="i">kBinaryOpExpr</span><span class="p">:</span> <span class="k">return</span> <span class="s">&quot;BinaryOpLiteral&quot;</span><span class="p">;</span>
     <span class="c">// yup...</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>C++&rsquo;s usual abstraction facilities don&rsquo;t help us here&mdash;in all of these cases
 the repetition is in the <em>middle</em> of some type definition or statement. C++ is
 really only designed to let you abstract over entire statements (by making
@@ -165,13 +157,10 @@ all of our problem examples, we want to be able to say &ldquo;for each AST node 
 generate this chunk of code but with the node&rsquo;s class name inserted in a few
 places.&rdquo;</p>
 <p>Let&rsquo;s try doing something like this:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="r">#define DEFINE_VISIT(type)  \
-    virtual void visit##type(type* expr) = 0</span></code></pre>
-</div>
+<pre class="highlight language-cpp"><span class="r">#define DEFINE_VISIT(type)  \
+    virtual void visit##type(type* expr) = 0</span></pre>
 <p>With this, we can simplify our visitor class to:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">AstVisitor</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">AstVisitor</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">:</span>
   <span class="o">~</span><span class="k">virtual</span> <span class="t">AstVisitor</span><span class="p">()</span> <span class="p">{}</span>
 
@@ -184,34 +173,29 @@ places.&rdquo;</p>
   <span class="r">DEFINE_VISIT</span><span class="p">(</span><span class="t">ConditionalExpr</span><span class="p">);</span>
   <span class="r">DEFINE_VISIT</span><span class="p">(</span><span class="t">IfThenStmt</span><span class="p">);</span>
   <span class="c">// 30 more of these, you get the idea...</span>
-<span class="p">};</span></code></pre>
-</div>
+<span class="p">};</span></pre>
 <p>That&rsquo;s a <em>little</em> better, I guess. But not really. This trick doesn&rsquo;t help at
 all with the enum, and only helps a little in <code>typeString()</code>. The problem is
 that it&rsquo;s the &ldquo;for each AST type&rdquo; part of our problem where the repetition
 really is. It&rsquo;s the <em>loop itself</em> we want to abstract over more than the loop
 <em>body</em>.</p>
 <p>What we want is a macro that will <em>itself</em> walk over all of the types, like:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="r">#define AST_NODE_LIST   \
+<pre class="highlight language-cpp"><span class="r">#define AST_NODE_LIST   \
     BoolLiteral         \
     NumLiteral          \
     StringLiteral       \
     UnaryOpExpr         \
-    ...</span></code></pre>
-</div>
+    ...</span></pre>
 <p>But of course, that one doesn&rsquo;t do anything useful. We don&rsquo;t want it to just
 expand to the type names themselves. It needs to do something with them. But
 that something is different for each problem area. We need it to take a
 parameter that is the chunk of code that we generate for each type. Like:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="r">#define AST_NODE_LIST(code) \
+<pre class="highlight language-cpp"><span class="r">#define AST_NODE_LIST(code) \
     code(BoolLiteral)       \
     code(NumLiteral)        \
     code(StringLiteral)     \
     code(UnaryOpExpr)       \
-    ...</span></code></pre>
-</div>
+    ...</span></pre>
 <h2>Macros taking macros&hellip; we must go deeper</h2>
 <p>Now the fun part. When we use that <code>AST_NODE_LIST</code> macro, what is that <code>code</code>
 argument going to be? It needs to be a thing that&rsquo;s available at preprocess
@@ -220,8 +204,7 @@ one answer: a macro.</p>
 <p>Until I saw this in V8, I didn&rsquo;t even know you <em>could</em> pass macros to macros.
 But indeed you can. Using the <code>AST_NODE_LIST</code> macro we just defined, our visitor
 becomes:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">AstVisitor</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">AstVisitor</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">:</span>
   <span class="o">~</span><span class="k">virtual</span> <span class="t">AstVisitor</span><span class="p">()</span> <span class="p">{}</span>
 
@@ -231,25 +214,21 @@ becomes:</p>
   <span class="r">AST_NODE_LIST</span><span class="p">(</span><span class="r">DEFINE_VISIT</span><span class="p">)</span>
 
   <span class="r">#undef DEFINE_VISIT </span><span class="c">// Clean it up since we&#39;re done with it.</span>
-<span class="p">};</span></code></pre>
-</div>
+<span class="p">};</span></pre>
 <p>When <code>AST_NODE_LIST</code> is expanded, it expands to one call to <code>DEFINE_VISIT</code> for
 each of the AST node types. Then <em>those</em> are in turn expanded to define the
 visitor method for that type.</p>
 <p>Likewise, our enum becomes:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="r">#define DEFINE_ENUM_TYPE(type) k##type,</span>
+<pre class="highlight language-cpp"><span class="r">#define DEFINE_ENUM_TYPE(type) k##type,</span>
 
 <span class="k">enum</span> <span class="t">AstType</span> <span class="p">{</span>
   <span class="r">AST_NODE_LIST</span><span class="p">(</span><span class="r">DEFINE_ENUM_TYPE</span><span class="p">)</span>
 <span class="p">};</span>
 
-<span class="r">#undef DEFINE_ENUM_TYPE</span></code></pre>
-</div>
+<span class="r">#undef DEFINE_ENUM_TYPE</span></pre>
 <p>That&rsquo;s the whole thing in its entirety. Finally, the function for converting it
 to a string:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="r">#define DEFINE_TYPE_STRING(type) case k##type: return #type;</span>
+<pre class="highlight language-cpp"><span class="r">#define DEFINE_TYPE_STRING(type) case k##type: return #type;</span>
 
 <span class="k">const</span> <span class="t">char</span><span class="o">*</span> <span class="i">typeString</span><span class="p">(</span><span class="t">AstType</span> <span class="i">type</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">switch</span> <span class="p">(</span><span class="i">type</span><span class="p">)</span> <span class="p">{</span>
@@ -257,8 +236,7 @@ to a string:</p>
   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="r">#undef DEFINE_TYPE_STRING</span></code></pre>
-</div>
+<span class="r">#undef DEFINE_TYPE_STRING</span></pre>
 <p>Note that we&rsquo;re using <a href="https://gcc.gnu.org/onlinedocs/gcc-4.8.5/cpp/Stringification.html">stringification</a> and <a href="https://gcc.gnu.org/onlinedocs/cpp/Concatenation.html">token pasting</a> here to not only
 substitute in the AST node class&rsquo;s name, but also to use it as a string literal,
 or to build a larger identifier (like <code>kBinaryOpExpr</code>) from it.</p>

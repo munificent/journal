@@ -45,16 +45,14 @@ datatypes and new behaviors to an existing system?</em></p>
 that it can work with: Text, Drawings, and Spreadsheets. And we&rsquo;ve got a few
 operations we need to be able to do with a document: draw it to the screen, load
 it, and save it to disc. They form a grid, like so:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">            Text       Drawing   Spreadsheet
+<pre class="highlight language-asciiart">            Text       Drawing   Spreadsheet
         ┌───────────┬───────────┬───────────┐
 draw()  │           │           │           │
         ├───────────┼───────────┼───────────┤
 load()  │           │           │           │
         ├───────────┼───────────┼───────────┤
 save()  │           │           │           │
-        └───────────┴───────────┴───────────┘</code></pre>
-</div>
+        └───────────┴───────────┴───────────┘</pre>
 <p>Each cell in that grid is a chunk of code we&rsquo;ve got to write. We need to draw
 text, load a drawing, save a spreadsheet, etc. All nine combinations are
 functions that need to be implemented or we&rsquo;ll have problems if we&rsquo;re trying to
@@ -81,8 +79,7 @@ questions. For our purposes, we&rsquo;ll only care about three flavors:</p>
 <p>These are the most popular languages on the block today, and include C++, Java,
 and C#. They organize code into classes, and define operations as methods on
 those classes. A Java implementation of the above table looks something like:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">interface</span> <span class="t">Document</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="k">interface</span> <span class="t">Document</span> <span class="p">{</span>
   <span class="t">void</span> <span class="i">draw</span><span class="p">();</span>
   <span class="t">void</span> <span class="i">load</span><span class="p">();</span>
   <span class="t">void</span> <span class="i">save</span><span class="p">();</span>
@@ -104,8 +101,7 @@ those classes. A Java implementation of the above table looks something like:</p
   <span class="k">public</span> <span class="t">void</span> <span class="i">draw</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* Draw spreadsheet... */</span> <span class="p">}</span>
   <span class="k">public</span> <span class="t">void</span> <span class="i">load</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* Load spreadsheet... */</span> <span class="p">}</span>
   <span class="k">public</span> <span class="t">void</span> <span class="i">save</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* Save spreadsheet... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>An object-oriented language answers question 1 by saying that all operations for
 a single type should be lumped together. Everything you can do with a
 spreadsheet&mdash; drawing, loading, and saving&mdash; goes together in the same
@@ -135,8 +131,7 @@ rows.</p>
 emphasis on <em>objects</em> (the columns). Functional languages place emphasis on the
 <em>functions</em> (the rows).</p>
 <p>A Caml implementation of our example looks like:</p>
-<div class="highlight">
-<pre><code class="language-ocaml" data-lang="ocaml"><span class="k">type</span> <span class="i">document</span>
+<pre class="highlight language-ocaml"><span class="k">type</span> <span class="i">document</span>
   <span class="o">=</span> <span class="t">Text</span>
   <span class="o">|</span> <span class="t">Drawing</span>
   <span class="o">|</span> <span class="t">Spreadsheet</span>
@@ -151,8 +146,7 @@ emphasis on <em>objects</em> (the columns). Functional languages place emphasis 
 
 <span class="k">fun</span> <span class="i">save</span> <span class="p">(</span><span class="t">Text</span><span class="p">)</span>        <span class="o">=</span> <span class="c">(* Save text doc... *)</span>
   <span class="o">|</span> <span class="i">save</span> <span class="p">(</span><span class="t">Drawing</span><span class="p">)</span>     <span class="o">=</span> <span class="c">(* Save drawing doc... *)</span>
-  <span class="o">|</span> <span class="i">save</span> <span class="p">(</span><span class="t">Spreadsheet</span><span class="p">)</span> <span class="o">=</span> <span class="c">(* Save spreadsheet... *)</span></code></pre>
-</div>
+  <span class="o">|</span> <span class="i">save</span> <span class="p">(</span><span class="t">Spreadsheet</span><span class="p">)</span> <span class="o">=</span> <span class="c">(* Save spreadsheet... *)</span></pre>
 <p>(At least, I hope that&rsquo;s right. Please let me know what I get wrong.)</p>
 <p>The <code>document</code> interface has become an <a href="http://en.wikipedia.org/wiki/Algebraic_data_type">algebraic datatype</a> with cases for
 the different concrete document types. Each operation is a single function
@@ -200,16 +194,13 @@ forgot something or messed something up.</p>
 <h2>Magpie = open classes + static checking</h2>
 <p>Here&rsquo;s how you accomplish this in Magpie. First, we define an interface that all
 documents will implement:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">interface</span> <span class="t">Document</span>
+<pre class="highlight language-magpie"><span class="k">interface</span> <span class="t">Document</span>
   <span class="i">draw</span><span class="p">()</span>
   <span class="i">load</span><span class="p">()</span>
   <span class="i">save</span><span class="p">()</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Then we create some classes that implement them:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">TextDocument</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">TextDocument</span>
   <span class="i">draw</span><span class="p">()</span> <span class="c">// Draw text doc...</span>
   <span class="i">load</span><span class="p">()</span> <span class="c">// Load text doc...</span>
   <span class="i">save</span><span class="p">()</span> <span class="c">// Save text doc...</span>
@@ -225,8 +216,7 @@ documents will implement:</p>
   <span class="i">draw</span><span class="p">()</span> <span class="c">// Draw spreadsheet...</span>
   <span class="i">load</span><span class="p">()</span> <span class="c">// Load spreadsheet...</span>
   <span class="i">save</span><span class="p">()</span> <span class="c">// Save spreadsheet...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>So far, this looks pretty much like the static OOP solution with a bit less
 boilerplate. The biggest difference is that there&rsquo;s no explicit <code>implements Document</code> on the classes. In Magpie, if a class has all of the methods that an
 interface requires, then it is automatically considered to implement the
@@ -239,20 +229,16 @@ typical static language.</p>
 <p>Here is where it gets interesting. Now we decide we want to add printing
 support. In Magpie, classes and interfaces are open for extension. So we can
 just do:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">extend</span> <span class="k">interface</span> <span class="t">Document</span>
+<pre class="highlight language-magpie"><span class="k">extend</span> <span class="k">interface</span> <span class="t">Document</span>
     <span class="i">print</span><span class="p">()</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>If we try to run the program now, we get type check errors every place we pass a
 concrete document class to something that expects the interface: the classes no
 longer implement <code>Document</code> since they lack the required <code>print()</code> method. To
 patch that up, we implement those:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="t">TextDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print text doc...</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="t">TextDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print text doc...</span>
 <span class="k">def</span> <span class="t">DrawingDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print drawing...</span>
-<span class="k">def</span> <span class="t">SpreadsheetDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print spreadsheet...</span></code></pre>
-</div>
+<span class="k">def</span> <span class="t">SpreadsheetDocument</span> <span class="i">print</span><span class="p">()</span> <span class="c">// Print spreadsheet...</span></pre>
 <p>(<code>def</code> is one of two syntaxes for adding members to a class. It&rsquo;s nice for
 adding a single member to a class. If you&rsquo;re adding a bunch of members to one
 class, you can also do <code>extend class</code> which works like a regular class

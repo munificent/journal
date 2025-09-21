@@ -42,15 +42,12 @@ like to propose a C# feature request: <strong>Extension classes</strong>.</p>
 <h2>What&rsquo;s an extension class?</h2>
 <p>An extension class is a class that adds methods, properties, etc. to another
 class. Given some class <code>Foo</code>:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Foo</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Foo</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>My proposed syntax is:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">int</span> <span class="i">DoubledValue</span>
     <span class="p">{</span>
@@ -61,8 +58,7 @@ class. Given some class <code>Foo</code>:</p>
     <span class="p">{</span>
         <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">(</span><span class="s">&quot;hi.&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The magic bit up there is the <code>this Foo</code>. That basically says, &ldquo;the <code>this</code>
 reference inside this class is actually of this other type <code>Foo</code>&rdquo;. As you can
 see in the implementation of <code>DoubledValue</code>, it&rsquo;s accessing the <code>Value</code>
@@ -81,12 +77,10 @@ only use public members just like outside code. And, of course, <code>FooExtensi
 can&rsquo;t replace any methods in Foo. No open classes.</p>
 <h2>And then?</h2>
 <p>OK, so we&rsquo;ve got properties in the mix, is there anything else we could add?</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">FooExtensions</span> <span class="k">this</span> <span class="t">Foo</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="i">SomeMethod</span><span class="p">()</span> <span class="p">{</span> <span class="c">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>How about static methods and properties? You could say there&rsquo;s no value in doing
 this since you have to access statics through the class name anyway, but I
 disagree.</p>

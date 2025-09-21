@@ -48,8 +48,7 @@ by an external developer (read &ldquo;Microsoft&rdquo;). We&rsquo;ll pick String
 <a href="http://weblogs.asp.net/scottgu/archive/2007/03/13/new-orcas-language-feature-extension-methods.aspx">everyone</a> <a href="http://www.developer.com/net/csharp/article.php/3592216">else</a> <a href="http://msdn2.microsoft.com/en-us/library/bb383977.aspx">does</a>. Let&rsquo;s say you want a
 method to tell if a string contains only letters. Here&rsquo;s how you&rsquo;d normally do
 it:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">StringUtils</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">StringUtils</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">bool</span> <span class="i">IsAlpha</span><span class="p">(</span><span class="t">string</span> <span class="i">text</span><span class="p">)</span>
     <span class="p">{</span>
@@ -59,19 +58,15 @@ it:</p>
         <span class="p">}</span>
         <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That works, but the calling convention is kind of lame:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">bool</span> <span class="i">isAlpha</span> <span class="o">=</span> <span class="i">StringUtils</span><span class="p">.</span><span class="i">IsAlpha</span><span class="p">(</span><span class="i">someString</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="t">bool</span> <span class="i">isAlpha</span> <span class="o">=</span> <span class="i">StringUtils</span><span class="p">.</span><span class="i">IsAlpha</span><span class="p">(</span><span class="i">someString</span><span class="p">);</span></pre>
 <p>Not only is it backwards from normal &ldquo;noun.verb&rdquo; OOP syntax, it&rsquo;s got this
 useless &ldquo;<code>StringUtils</code>&rdquo; in there. Worse, your users have to <em>know</em> that
 <code>StringUtils</code> even exists before they can find the method. <code>IsAlpha</code> is no
 longer an easily discoverable property of all strings. So here&rsquo;s the fancy C#
 3.0 way using an extension method:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">StringUtils</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">StringUtils</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">bool</span> <span class="i">IsAlpha</span><span class="p">(</span><span class="k">this</span> <span class="t">string</span> <span class="i">text</span><span class="p">)</span>
     <span class="p">{</span>
@@ -82,13 +77,10 @@ longer an easily discoverable property of all strings. So here&rsquo;s the fancy
         <span class="p">}</span>
         <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Not much different right? Just add a little <code>this</code> in the declaration. The
 difference is in the calling convention:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">bool</span> <span class="i">isAlpha</span> <span class="o">=</span> <span class="i">someString</span><span class="p">.</span><span class="i">IsAlpha</span><span class="p">();</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="t">bool</span> <span class="i">isAlpha</span> <span class="o">=</span> <span class="i">someString</span><span class="p">.</span><span class="i">IsAlpha</span><span class="p">();</span></pre>
 <p>Much better. So this is about as far as I think most people get with them.
 &ldquo;Extension method&rdquo; = &ldquo;friendlier calling convention&rdquo;. Now, let&rsquo;s see if there
 are any other rabbits we can pull out of this hat.</p>
@@ -99,25 +91,21 @@ refactoring. In many cases, it isn&rsquo;t even <em>possible</em> with single in
 Maybe your classes already have distinct base classes for good reasons.</p>
 <p>Here&rsquo;s what I&rsquo;m talkin&rsquo; about. Let&rsquo;s say you&rsquo;re writing a game and you&rsquo;ve got
 something like this:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">interface</span> <span class="t">IPosition</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">interface</span> <span class="t">IPosition</span>
 <span class="p">{</span>
     <span class="t">float</span> <span class="i">X</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
     <span class="t">float</span> <span class="i">Y</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">public</span> <span class="k">class</span> <span class="t">Monster</span><span class="p">:</span> <span class="t">Actor</span><span class="p">,</span> <span class="t">IPosition</span> <span class="p">{</span> <span class="c">/* implementation... */</span> <span class="p">}</span>
-<span class="k">public</span> <span class="k">class</span> <span class="t">Treasure</span><span class="p">:</span> <span class="t">Item</span><span class="p">,</span> <span class="t">IPosition</span> <span class="p">{</span> <span class="c">/* implementation... */</span> <span class="p">}</span></code></pre>
-</div>
+<span class="k">public</span> <span class="k">class</span> <span class="t">Treasure</span><span class="p">:</span> <span class="t">Item</span><span class="p">,</span> <span class="t">IPosition</span> <span class="p">{</span> <span class="c">/* implementation... */</span> <span class="p">}</span></pre>
 <p>Often, you want to look through a collection of these to find the first one at a
 given position. The normal solution is to just derive your own collection and
 implement it there:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">MonsterCollection</span> <span class="p">:</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">Monster</span><span class="o">&gt;</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">MonsterCollection</span> <span class="p">:</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">Monster</span><span class="o">&gt;</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="t">Monster</span> <span class="i">GetAt</span><span class="p">(</span><span class="t">IPosition</span> <span class="i">pos</span><span class="p">)</span> <span class="p">{</span> <span class="c">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The problem is you&rsquo;ve now got to derive a new collection for every class with a
 position and copy <code>GetAt()</code> in every one. Sure, you could do an abstract
 collection for a collection of things with positions but that doesn&rsquo;t cover
@@ -126,8 +114,7 @@ of monsters?</p>
 <p>Extension methods to the rescue! You can define extension methods <em>on
 interfaces</em>. In fact, you can even define them on <em>generic</em> interfaces. Like
 <code>IEnumerable&lt;T&gt;</code>. Ooh!</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">IPositionExtensions</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">IPositionExtensions</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="t">T</span> <span class="i">GetAt</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span> <span class="t">IEnumerable</span><span class="o">&lt;</span><span class="t">T</span><span class="o">&gt;</span> <span class="i">col</span><span class="p">,</span>
         <span class="t">float</span> <span class="i">x</span><span class="p">,</span> <span class="t">float</span> <span class="i">y</span><span class="p">)</span> <span class="k">where</span> <span class="t">T</span> <span class="p">:</span> <span class="t">IPosition</span>
@@ -138,24 +125,17 @@ interfaces</em>. In fact, you can even define them on <em>generic</em> interface
         <span class="p">}</span>
         <span class="k">return</span> <span class="k">default</span><span class="p">(</span><span class="t">T</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now you can do:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">List</span><span class="o">&lt;</span><span class="t">Monster</span><span class="o">&gt;</span> <span class="i">monsters</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">Monster</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="i">monsters</span><span class="p">.</span><span class="i">GetAt</span><span class="p">(</span><span class="n">1.0f</span><span class="p">,</span> <span class="n">2.0f</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="t">List</span><span class="o">&lt;</span><span class="t">Monster</span><span class="o">&gt;</span> <span class="i">monsters</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">Monster</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="i">monsters</span><span class="p">.</span><span class="i">GetAt</span><span class="p">(</span><span class="n">1.0f</span><span class="p">,</span> <span class="n">2.0f</span><span class="p">);</span></pre>
 <p>Along with:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">Stack</span><span class="o">&lt;</span><span class="t">Treasure</span><span class="o">&gt;</span> <span class="i">treasures</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Stack</span><span class="o">&lt;</span><span class="t">Treasure</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="i">treasures</span><span class="p">.</span><span class="i">GetAt</span><span class="p">(</span><span class="n">1.0f</span><span class="p">,</span> <span class="n">2.0f</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="t">Stack</span><span class="o">&lt;</span><span class="t">Treasure</span><span class="o">&gt;</span> <span class="i">treasures</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Stack</span><span class="o">&lt;</span><span class="t">Treasure</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="i">treasures</span><span class="p">.</span><span class="i">GetAt</span><span class="p">(</span><span class="n">1.0f</span><span class="p">,</span> <span class="n">2.0f</span><span class="p">);</span></pre>
 <p>Heck, even:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">Dictionary</span><span class="o">&lt;</span><span class="t">string</span><span class="p">,</span> <span class="t">Monster</span><span class="o">&gt;</span> <span class="i">monsters</span> <span class="o">=</span>
+<pre class="highlight language-csharp"><span class="t">Dictionary</span><span class="o">&lt;</span><span class="t">string</span><span class="p">,</span> <span class="t">Monster</span><span class="o">&gt;</span> <span class="i">monsters</span> <span class="o">=</span>
     <span class="k">new</span> <span class="t">Dictionary</span><span class="o">&lt;</span><span class="t">string</span><span class="p">,</span> <span class="t">Monster</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="i">monsters</span><span class="p">.</span><span class="i">Values</span><span class="p">.</span><span class="i">GetAt</span><span class="p">(</span><span class="n">1.0f</span><span class="p">,</span> <span class="n">2.0f</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">monsters</span><span class="p">.</span><span class="i">Values</span><span class="p">.</span><span class="i">GetAt</span><span class="p">(</span><span class="n">1.0f</span><span class="p">,</span> <span class="n">2.0f</span><span class="p">);</span></pre>
 <p>This means <strong>you can define methods that say, &ldquo;if this class provides this
 capability, then it also has this capability&rdquo;</strong>. Whoawesome!</p>
 <h2>Make Scott Meyers happy</h2>
@@ -178,13 +158,9 @@ the public interface of the class is a facet of its <em>implementation</em>, jus
 the kind of detail that encapsulation is supposed to <em>hide</em>. But now the
 user is forced to deal with that distinction because sometimes they call (in
 C#):</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">foo</span><span class="p">.</span><span class="i">Bar</span><span class="p">();</span> <span class="c">// needs access to private members</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">foo</span><span class="p">.</span><span class="i">Bar</span><span class="p">();</span> <span class="c">// needs access to private members</span></pre>
 <p>and sometimes it&rsquo;s:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">FooHelper</span><span class="p">.</span><span class="i">Bar</span><span class="p">(</span><span class="i">foo</span><span class="p">);</span> <span class="c">// doesn&#39;t need access to private members</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">FooHelper</span><span class="p">.</span><span class="i">Bar</span><span class="p">(</span><span class="i">foo</span><span class="p">);</span> <span class="c">// doesn&#39;t need access to private members</span></pre>
 </li>
 <li>
 <p>You also <strong>threw away discoverability</strong>. Users expect to find the
@@ -218,8 +194,7 @@ or &ldquo;<a href="http://en.wikipedia.org/wiki/Separation_of_concerns">separati
 engineer worth their <a href="http://en.wikipedia.org/wiki/Salt_%28cryptography%29">salt</a> gets this concept. Smearing UI logic, or printing,
 or serialization, or <em>whatever</em> throughout the rest of your code is dumb.</p>
 <p>For example, let&rsquo;s say we have a monster. (Who wouldn&rsquo;t want a pet monster?)</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">namespace</span> <span class="i">Engine</span>
+<pre class="highlight language-csharp"><span class="k">namespace</span> <span class="i">Engine</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">class</span> <span class="t">Monster</span>
     <span class="p">{</span>
@@ -232,23 +207,19 @@ or serialization, or <em>whatever</em> throughout the rest of your code is dumb.
             <span class="c">// stuff...</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This class defines what a monster <em>is</em> in the abstract data sense. We want to
 isolate it from anything specific to UI or rendering because while <em>right now</em>
 the UI is kicking <a href="http://www.rephial.org">old school</a> <a href="http://angband.oook.cz/screen-show.php?id=1358">ASCII</a>, it may get graphics in the
 future. That change shouldn&rsquo;t affect the engine one bit.</p>
 <p>But our uber-modern ASCII UI needs to know what character to use to draw a given
 monster. Ideally:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">Monster</span> <span class="i">monster</span><span class="p">)</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">Monster</span> <span class="i">monster</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="i">Console</span><span class="p">.</span><span class="i">WriteLine</span><span class="p">(</span><span class="i">monster</span><span class="p">.</span><span class="i">Character</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>We can solve our separation problem like this:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">namespace</span> <span class="i">UI</span>
+<pre class="highlight language-csharp"><span class="k">namespace</span> <span class="i">UI</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="t">MonsterExtensions</span>
     <span class="p">{</span>
@@ -260,8 +231,7 @@ monster. Ideally:</p>
             <span class="k">return</span> <span class="s">&#39;?&#39;</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now code that is using the UI namespace sees <code>GetCharacter()</code> as an intrinsic
 capability of monsters, but code that only uses the engine doesn&rsquo;t. And since we
 can define <code>GetCharacter()</code> in a separate assembly, we can <em>totally</em> separate it

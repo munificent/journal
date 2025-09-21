@@ -235,15 +235,12 @@ article pre {
   background: hsl(200, 30%, 97%);
   margin: 6px 0;
   padding: 6px 12px;
+  font: 13px/18px "Source Code Pro", Courier, monospace;
   color: hsl(200, 25%, 25%);
   overflow: auto;
 }
-article pre code {
-  padding: 0;
-  font: 13px/18px "Source Code Pro", Courier, monospace;
-}
-article pre code.language-asciiart {
-  font: 14px/17px "Source Code Pro", Courier, monospace;
+article pre.language-asciiart {
+  font: 14px/18px "Source Code Pro", Courier, monospace;
 }
 article tt {
   font: 13px/18px "Source Code Pro", Courier, monospace;
@@ -619,8 +616,6 @@ article table tbody tr:nth-child(odd) {
   article pre {
     margin: 0;
     padding: 4px 6px;
-  }
-  article pre code {
     font-size: 12px;
   }
   article blockquote p {

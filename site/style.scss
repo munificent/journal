@@ -322,17 +322,13 @@ article {
     @include box($code-bg);
     margin: 6px 0;
     padding: 6px 12px;
+    font: 13px/18px $mono;
     color: $code-color;
     overflow: auto;
+  }
 
-    code {
-      padding: 0;
-      font: 13px/18px $mono;
-    }
-
-    code.language-asciiart {
-      font: 14px/17px $mono;
-    }
+  pre.language-asciiart {
+    font: 14px/18px $mono;
   }
 
   tt {
@@ -765,10 +761,7 @@ article {
     pre {
       margin: 0;
       padding: 4px 6px;
-
-      code {
-        font-size: 12px;
-      }
+      font-size: 12px;
     }
 
     blockquote {

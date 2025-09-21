@@ -56,22 +56,18 @@ Dart. If you want a more, uh, professional treatment, you can also check out
 <h2>Type annotations are optional</h2>
 <p>At it&rsquo;s heart, Dart is a dynamically typed language, so you can code without any
 annotations:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">sum</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">sum</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
   <span class="k">return</span> <span class="i">result</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Here, you&rsquo;ve said that <code>a</code>, <code>b</code>, and <code>result</code> can be any type at all and that&rsquo;s
 OK. But you can also choose to provide a type annotation in all of the usual
 places&mdash;variable declarations, function parameters, or fields, and return
 types. So this is valid too:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">num</span> <span class="i">sum</span><span class="p">(</span><span class="t">num</span> <span class="i">a</span><span class="p">,</span> <span class="t">num</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="t">num</span> <span class="i">sum</span><span class="p">(</span><span class="t">num</span> <span class="i">a</span><span class="p">,</span> <span class="t">num</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
   <span class="k">return</span> <span class="i">result</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now we&rsquo;ve stated our intent that <code>a</code> and <code>b</code> hold numbers. We&rsquo;ve also said that
 <code>sum()</code> should return a number. Note that we didn&rsquo;t annotate <code>result</code>. It can
 still be anything. Dart lets you mix and match untyped and typed code, so here
@@ -113,27 +109,21 @@ you know, a <em>type checker</em>. You have that too (at least in the VM&mdash;w
 mean when compiled to JS is another interesting story). When you run in checked
 mode, every type annotation gets checked at runtime. It&rsquo;s as if every line of
 code like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span></pre>
 <p>Turns into (more or less, simplifying things a bit) this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">_temp</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">_temp</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
 <span class="k">if</span> <span class="p">(</span><span class="i">_temp</span> <span class="k">is</span><span class="o">!</span> <span class="t">int</span><span class="p">)</span> <span class="k">throw</span> <span class="s">&#39;Type error! Run for your life!&#39;</span><span class="p">;</span>
-<span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">_temp</span><span class="p">;</span></code></pre>
-</div>
+<span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">_temp</span><span class="p">;</span></pre>
 <p>You can think of every type annotation as an <em>expectation</em>: this thing <em>should</em>
 be a number here. In checked mode, the VM will constantly validate your
 expectations and stop if something doesn&rsquo;t hold.</p>
 <p>It&rsquo;s important to note that these checks are done <em>dynamically</em>, at runtime.
 There isn&rsquo;t a separate static type checking pass. For example, if you have code
 like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">if</span> <span class="p">(</span><span class="n">2</span> <span class="o">==</span> <span class="n">3</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">if</span> <span class="p">(</span><span class="n">2</span> <span class="o">==</span> <span class="n">3</span><span class="p">)</span> <span class="p">{</span>
   <span class="c">// Should never get here.</span>
   <span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>You won&rsquo;t see a type error here because execution never actually gets inside the
 <code>if</code> block. You may be rightly wondering why in the hell you&rsquo;d want to wait
 until runtime to find a type error instead of doing it statically. Dart&rsquo;s take
@@ -143,11 +133,9 @@ What Dart does is <em>also</em> give you the option to perform those checks at r
 This is actually how most static languages work too. Very few languages are
 fully statically sound. Most enforce at least some soundness through runtime
 checks. Consider this Java code:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">String</span><span class="p">[]</span> <span class="i">array</span> <span class="o">=</span> <span class="k">new</span> <span class="t">String</span><span class="p">[</span><span class="n">5</span><span class="p">];</span>
+<pre class="highlight language-java"><span class="t">String</span><span class="p">[]</span> <span class="i">array</span> <span class="o">=</span> <span class="k">new</span> <span class="t">String</span><span class="p">[</span><span class="n">5</span><span class="p">];</span>
 <span class="t">Object</span><span class="p">[]</span> <span class="i">untyped</span> <span class="o">=</span> <span class="i">array</span><span class="p">;</span>
-<span class="i">untyped</span><span class="p">[</span><span class="n">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span> <span class="c">// Not a string.</span></code></pre>
-</div>
+<span class="i">untyped</span><span class="p">[</span><span class="n">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">123</span><span class="p">;</span> <span class="c">// Not a string.</span></pre>
 <p>Here we&rsquo;re creating an array of strings. Then we assign it to a variable whose
 type is an array of objects (i.e. anything). Then we try to stuff something that
 isn&rsquo;t a string (but <em>is</em> an object) in it.</p><div class="update">
@@ -160,12 +148,10 @@ your VM, it will do a <em>runtime</em> check every time you set an element in an
 to make sure it&rsquo;s the right type.</p>
 <p>There&rsquo;s another common case where you skirt around the static checker and rely
 on dynamic type tests: casts.</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">void</span> <span class="i">callback</span><span class="p">(</span><span class="t">Object</span> <span class="i">data</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="t">void</span> <span class="i">callback</span><span class="p">(</span><span class="t">Object</span> <span class="i">data</span><span class="p">)</span> <span class="p">{</span>
   <span class="c">// It&#39;s my callback, so I know the data is an int.</span>
   <span class="t">int</span> <span class="i">value</span> <span class="o">=</span> <span class="p">(</span><span class="t">Integer</span><span class="p">)</span> <span class="i">data</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>There are times when you know more than the type system does and you just
 forcibly assert your knowledge. Doing so shouldn&rsquo;t let you just take down the VM
 (unlike in C++ where an improper type cast <em>can</em> set your house on fire), so
@@ -216,20 +202,16 @@ they&rsquo;re already weird because covariant generics are wrong wrong wrong.) I
 been talking about checked mode, but there&rsquo;s another mode: production mode. In
 that mode, the type annotations <em>completely ignored</em>. In other words, Dart lets
 you run this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
+<pre class="highlight language-dart"><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
 <span class="t">bool</span> <span class="i">b</span> <span class="o">=</span> <span class="s">&#39;not a bool either&#39;</span><span class="p">;</span>
 <span class="t">num</span> <span class="i">wtf</span> <span class="o">=</span> <span class="i">i</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
-<span class="i">print</span><span class="p">(</span><span class="i">wtf</span><span class="p">);</span> <span class="c">// &quot;not intnot a bool either&quot;.</span></code></pre>
-</div>
+<span class="i">print</span><span class="p">(</span><span class="i">wtf</span><span class="p">);</span> <span class="c">// &quot;not intnot a bool either&quot;.</span></pre>
 <p>This probably seems a little odd.</p><img alt="Your type errors will blot out the sun! Then we will code in the shade." src="/image/2011/10/daaart.jpeg" class="framed"/>
 <p>Maybe more than a little odd. In production mode, Dart behaves exactly as if it were a dynamically-typed language. Imagine if you decided to write your JavaScript like this (not that anyone would be <a href="https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler">crazy enough to do that</a>):</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="c">/* int */</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
+<pre class="highlight language-javascript"><span class="k">var</span> <span class="c">/* int */</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&#39;not int&#39;</span><span class="p">;</span>
 <span class="k">var</span> <span class="c">/* bool */</span> <span class="i">b</span> <span class="o">=</span> <span class="s">&#39;not a bool either&#39;</span><span class="p">;</span>
 <span class="k">var</span> <span class="c">/* num */</span> <span class="i">wtf</span> <span class="o">=</span> <span class="i">i</span> <span class="o">+</span> <span class="i">b</span><span class="p">;</span>
-<span class="i">print</span><span class="p">(</span><span class="i">wtf</span><span class="p">);</span> <span class="c">// &quot;not intnot a bool either&quot;.</span></code></pre>
-</div>
+<span class="i">print</span><span class="p">(</span><span class="i">wtf</span><span class="p">);</span> <span class="c">// &quot;not intnot a bool either&quot;.</span></pre>
 <p>Unsurprisingly, those comments won&rsquo;t do anything at runtime. That&rsquo;s how Dart runs in production mode.</p>
 <h2>How should you think of this?</h2>
 <p>OK, so what do we have? We have a nice little syntax for jamming type
@@ -245,12 +227,10 @@ referred to them as <em>type assertions</em>.</p>
 <p><strong>Now I get it.</strong></p>
 <p>If you&rsquo;ve done C or C++ programming, you&rsquo;ve probably used <a href="http://en.wikipedia.org/wiki/Assertion_%28computing%29"><code>assert()</code></a>
 or some flavor of it. If not, it looks like this:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">float</span> <span class="i">divide</span><span class="p">(</span><span class="t">float</span> <span class="i">num</span><span class="p">,</span> <span class="t">float</span> <span class="i">denom</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="t">float</span> <span class="i">divide</span><span class="p">(</span><span class="t">float</span> <span class="i">num</span><span class="p">,</span> <span class="t">float</span> <span class="i">denom</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">assert</span><span class="p">(</span><span class="i">denom</span> <span class="o">!=</span> <span class="n">0</span><span class="p">);</span>
   <span class="k">return</span> <span class="i">num</span> <span class="o">/</span> <span class="i">denom</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That <code>assert()</code> call evaluates its argument. If the result is false, then
 <code>assert()</code> aborts the program and starts ringing the alarm bells. Actually,
 that&rsquo;s not entirely true. <em>If you run the program in debug mode</em> and the
@@ -295,11 +275,9 @@ knowledge that a bug in the code itself has manifested.</p>
 </ol>
 <p>So what Dart does is apply that reasoning to the type assertions themselves. You
 really can think of type annotations in Dart as being syntactic sugar for this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">_temp</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">_temp</span> <span class="o">=</span> <span class="i">someFunction</span><span class="p">();</span>
 <span class="k">assert</span><span class="p">(</span><span class="i">_temp</span> <span class="k">is</span> <span class="t">int</span><span class="p">);</span>
-<span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">_temp</span><span class="p">;</span></code></pre>
-</div>
+<span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">_temp</span><span class="p">;</span></pre>
 <p>As a developer, you run in checked mode and Dart gives you much of the benefit
 of a typed language. All those asserts help you enforce API requirements just
 like they do in C++ or other languages. In fact, you could adopt this style in

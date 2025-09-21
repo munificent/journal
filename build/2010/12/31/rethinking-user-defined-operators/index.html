@@ -46,15 +46,11 @@ them:</p>
 <p>The Lisp family simply ditches infix syntax altogether. Functions are always in
 prefix form, and operators are just another kind of valid function name. An
 expression like <code>1 + 2 * 3</code> becomes:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="p">(</span><span class="o">+</span> <span class="n">1</span> <span class="p">(</span><span class="o">*</span> <span class="n">2</span> <span class="n">3</span><span class="p">))</span></code></pre>
-</div>
+<pre class="highlight language-c"><span class="p">(</span><span class="o">+</span> <span class="n">1</span> <span class="p">(</span><span class="o">*</span> <span class="n">2</span> <span class="n">3</span><span class="p">))</span></pre>
 <p>Since most Lisps aren&rsquo;t object-oriented (ignoring CLOS for the moment), these
 functions are basically global and aren&rsquo;t bound to any arguments. Forth works
 about the same way, but in postfix fashion:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="n">2</span> <span class="n">3</span> <span class="o">*</span> <span class="n">1</span> <span class="o">+</span></code></pre>
-</div>
+<pre class="highlight language-c"><span class="n">2</span> <span class="n">3</span> <span class="o">*</span> <span class="n">1</span> <span class="o">+</span></pre>
 <p>Again, operators are just regular functions who happen to have names like comic
 book profanity. This solution is dead simple and quite flexible. You just have
 to give up the ability to write <code>1 + 2</code> the way you&rsquo;ve been writing it since
@@ -114,10 +110,8 @@ Here it is:</p>
 interpreted. I suppose that&rsquo;s fine for some things, but many, if not most,
 operators are conceptually symmetric. It&rsquo;s really weird then that the
 implementation isn&rsquo;t. That leads to weird undesirable behavior. For example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">a</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span> <span class="o">+</span> <span class="n">1</span> <span class="c">// &quot;11&quot;</span>
-<span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="n">1</span> <span class="o">+</span> <span class="s">&quot;1&quot;</span> <span class="c">// Error!</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">a</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span> <span class="o">+</span> <span class="n">1</span> <span class="c">// &quot;11&quot;</span>
+<span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="n">1</span> <span class="o">+</span> <span class="s">&quot;1&quot;</span> <span class="c">// Error!</span></pre>
 <p>String&rsquo;s implementation of <code>+</code> would coerce the right operand to a string.
 Meanwhile, Int&rsquo;s implementation would just bail if the other operand wasn&rsquo;t an
 Int too. I could have made Int&rsquo;s implementation of <code>+</code> coerce <em>itself</em> to a
@@ -135,8 +129,7 @@ and tuples (and Class itself, the class of classes). Since <code>|</code> is jus
 on those classes, they all need to have it.</p>
 <p>Fortunately, classes are open in Magpie, so I can extend all of those classes in
 one place and add that method. Like so:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">extend</span> <span class="k">interface</span> <span class="t">Type</span>
+<pre class="highlight language-magpie"><span class="k">extend</span> <span class="k">interface</span> <span class="t">Type</span>
   <span class="k">def</span> <span class="o">|</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span>
 <span class="k">end</span>
 
@@ -144,8 +137,7 @@ one place and add that method. Like so:</p>
 <span class="k">def</span> <span class="t">FunctionType</span> <span class="o">|</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">other</span><span class="p">)</span>
 <span class="k">def</span> <span class="t">Interface</span> <span class="o">|</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">other</span><span class="p">)</span>
 <span class="k">def</span> <span class="t">OrType</span> <span class="o">|</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">other</span><span class="p">)</span>
-<span class="k">def</span> <span class="t">Tuple</span> <span class="o">|</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">other</span><span class="p">)</span></code></pre>
-</div>
+<span class="k">def</span> <span class="t">Tuple</span> <span class="o">|</span><span class="p">(</span><span class="i">other</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="i">other</span><span class="p">)</span></pre>
 <p>But this is still kind of lame. It&rsquo;s particularly annoying because I have to add
 another row here every time a new class of types is defined. I <em>hate</em> repeating
 myself.</p>
@@ -171,11 +163,9 @@ operator is just a global function with two arguments, there&rsquo;s nothing
 preventing the implementation of that function from just immediately calling a
 method on one of its arguments. I could make <code>+</code> a global function and still get
 the exact same behavior as before just by implementing it like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">+</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">+</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
    <span class="i">left</span> <span class="i">add</span><span class="p">(</span><span class="i">right</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The <code>add</code> replaces our old plus-operator-as-method, and we&rsquo;re back in business.
 But what&rsquo;s great is that I don&rsquo;t <em>have</em> to do this.</p>
 <h3>Central point of control</h3>
@@ -186,24 +176,19 @@ single place in code where you can define the global invariants for the operator
 and that global function can control what responsibility it delegates to its
 operands.</p>
 <p>For example, it we want to ensure <code>==</code> is symmetric, we can just do:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
   <span class="i">left</span> <span class="i">equals</span><span class="p">(</span><span class="i">right</span><span class="p">)</span> <span class="k">and</span> <span class="i">right</span> <span class="i">equals</span><span class="p">(</span><span class="i">left</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Want to make sure its reflexive?</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
   <span class="c">// `same?` tests for identity, i.e. reference equality.</span>
   <span class="k">if</span> <span class="t">Reflect</span> <span class="i">same?</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span> <span class="k">then</span> <span class="k">return</span> <span class="k">true</span>
 
   <span class="i">left</span> <span class="i">equals</span><span class="p">(</span><span class="i">right</span><span class="p">)</span> <span class="k">and</span> <span class="i">right</span> <span class="i">equals</span><span class="p">(</span><span class="i">left</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Ever get tired of having to make sure to check for <code>null</code> before you call
 <code>equals</code> in Java? A clever <code>==</code> in Magpie can handle that for you too:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
   <span class="c">// `same?` tests for identity, i.e. reference equality.</span>
   <span class="k">if</span> <span class="t">Reflect</span> <span class="i">same?</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span> <span class="k">then</span> <span class="k">return</span> <span class="k">true</span>
 
@@ -211,8 +196,7 @@ operands.</p>
   <span class="k">if</span> <span class="i">right</span> <span class="o">==</span> <span class="k">nothing</span> <span class="k">then</span> <span class="k">return</span> <span class="k">false</span>
 
   <span class="i">left</span> <span class="i">equals</span><span class="p">(</span><span class="i">right</span><span class="p">)</span> <span class="k">and</span> <span class="i">right</span> <span class="i">equals</span><span class="p">(</span><span class="i">left</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>(I should point out that Magpie&rsquo;s equivalent to <code>null</code>, <code>nothing</code>, is a valid
 object too, so you could always implement <code>equals</code> on it and then ditch the
 explicit checks here. Either way works.)</p>
@@ -220,8 +204,7 @@ explicit checks here. Either way works.)</p>
 itself at all? One guideline for equality is that two objects should be
 equatable only if they&rsquo;re the exact same class. That presents the opportunity to
 have the class itself do the comparison (i.e. as a static method on the class):</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">==</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
   <span class="c">// Must be same class.</span>
   <span class="k">var</span> <span class="i">leftClass</span> <span class="o">=</span> <span class="t">Reflect</span> <span class="i">getClass</span><span class="p">(</span><span class="i">left</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">rightClass</span> <span class="o">=</span> <span class="t">Reflect</span> <span class="i">getClass</span><span class="p">(</span><span class="i">right</span><span class="p">)</span>
@@ -229,8 +212,7 @@ have the class itself do the comparison (i.e. as a static method on the class):<
 
   <span class="c">// Now let the class itself determine equality.</span>
   <span class="i">leftClass</span> <span class="i">equal?</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>I&rsquo;m still working out what the exact implementation of this should be, but I
 think it&rsquo;s really nice that I can do that figuring in a single place in code.
 And, of course, this addresses my other complaints too:</p>
@@ -243,14 +225,10 @@ you.</p>
 <h3>No more redundancy</h3>
 <p>Now that operators aren&rsquo;t bound to classes, things like the <code>|</code> operator just
 need to be defined in one place:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">|</span><span class="p">(</span><span class="i">left</span> <span class="t">Type</span><span class="p">,</span> <span class="i">right</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">|</span><span class="p">(</span><span class="i">left</span> <span class="t">Type</span><span class="p">,</span> <span class="i">right</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span></pre>
 <p>You know how every single time in every class that overloads <code>==</code> in C++ or C#,
 you have to remember to also overload <code>!=</code> too? Not in Magpie:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="o">!=</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span> <span class="p">(</span><span class="i">left</span> <span class="o">==</span> <span class="i">right</span><span class="p">)</span> <span class="i">not</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="o">!=</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span> <span class="p">(</span><span class="i">left</span> <span class="o">==</span> <span class="i">right</span><span class="p">)</span> <span class="i">not</span></pre>
 <h2>Not all sunshine and roses</h2>
 <p>Alas, nothing is perfect in this world. There&rsquo;s two problems I&rsquo;ve stumbled onto
 with this approach.</p>

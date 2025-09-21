@@ -145,12 +145,10 @@ the entire <code>SDL3.xcframework</code> bundle. Instead, he opens that, goes in
 <p>I removed <code>SDL3.xcframework</code> from my XCode project and dragged <code>SDL3.framework</code>
 into it instead. That gave me something that compiled, but when I tried to run,
 it failed at load time with:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">dyld[15605]: Library not loaded: @rpath&#47;SDL3.framework&#47;Versions&#47;A&#47;SDL3
+<pre class="highlight language-text">dyld[15605]: Library not loaded: @rpath&#47;SDL3.framework&#47;Versions&#47;A&#47;SDL3
 Referenced from: &lt;...&gt; &#47;Users&#47;...
 Reason: tried: &#39;&#47;Users&#47;...&#47;Build&#47;Products&#47;Debug&#47;SDL3.framework&#47;
-Versions&#47;A&#47;SDL3&#39; (no such file)</code></pre>
-</div>
+Versions&#47;A&#47;SDL3&#39; (no such file)</pre>
 <p>In the target settings, I again added the framework (but this time
 <code>SDL3.framework</code> not <code>SDL3.xcframework</code> to &ldquo;Embed frameworks&rdquo;). For reasons
 that are entirely unclear to me, that worked. I hit Command-R and&hellip;</p><figure>
@@ -159,9 +157,7 @@ that are entirely unclear to me, that worked. I hit Command-R and&hellip;</p><fi
 </figure>
 <p>All done, right? Not so fast. I made a tiny tweak to the code and tried to run
 it again. The compile immediately failed with:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">&#39;SDL3&#47;SDL.h&#39; file not found</code></pre>
-</div>
+<pre class="highlight language-text">&#39;SDL3&#47;SDL.h&#39; file not found</pre>
 <p>What? I literally just compiled and ran it. Just to make sure I wasn&rsquo;t crazy,
 I cleaned the build directory and compiled again. That worked! &ldquo;Hello World!&rdquo;
 popped up on screen again.</p>
@@ -169,10 +165,8 @@ popped up on screen again.</p>
 <p>Clean build and then build. Works!</p>
 <p>So I can build <em>once</em> but then something in the build directly causes any
 subsequent compile to fail. The full error is:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">Did not find header &#39;SDL.h&#39; in framework &#39;SDL3&#39; (loaded from
-  &#39;&#47;Users&#47;...&#47;Index.noindex&#47;Build&#47;Products&#47;Debug&#39;)</code></pre>
-</div>
+<pre class="highlight language-text">Did not find header &#39;SDL.h&#39; in framework &#39;SDL3&#39; (loaded from
+  &#39;&#47;Users&#47;...&#47;Index.noindex&#47;Build&#47;Products&#47;Debug&#39;)</pre>
 <p>So what I <em>think</em> is happening is that in the first clean build, it locates the
 framework inside my app&rsquo;s main directory. That framework does have the headers
 so the compiler can find what it needs.</p>

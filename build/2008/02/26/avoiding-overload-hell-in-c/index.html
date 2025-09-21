@@ -64,16 +64,13 @@ each.</p>
 <p>So the normal way to address this is by overloading <code>Write()</code>, <code>Fill()</code>, and
 <code>Draw()</code>. If we go with the vanilla overload solution, we have 27 overloaded
 methods to implement every combination. Using the code looks like this:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">Terminal</span> <span class="i">terminal</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Terminal</span><span class="p">();</span>
+<pre class="highlight language-csharp"><span class="t">Terminal</span> <span class="i">terminal</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Terminal</span><span class="p">();</span>
 
 <span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">.</span><span class="i">Fill</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">);</span>
-<span class="i">terminal</span><span class="p">.</span><span class="i">Draw</span><span class="p">(</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">terminal</span><span class="p">.</span><span class="i">Draw</span><span class="p">(</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">);</span></pre>
 <p>Not bad. But implementing it looks like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Terminal</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Terminal</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Write</span><span class="p">(</span><span class="t">Point</span> <span class="i">pos</span><span class="p">,</span> <span class="t">Color</span> <span class="i">fore</span><span class="p">,</span> <span class="t">Color</span> <span class="i">back</span><span class="p">,</span>
         <span class="t">string</span> <span class="i">text</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
@@ -112,8 +109,7 @@ methods to implement every combination. Using the code looks like this:</p>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">Point</span> <span class="i">pos</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Lame! Worse, if you start adding more options, it goes up combinatorially. 27 is
 just for our <em>toy</em> terminal. For my actual terminal lib, it would take <em>324</em>
 overloaded methods to support every combination. There has to be a better way.</p>
@@ -121,25 +117,20 @@ overloaded methods to support every combination. There has to be a better way.</
 <p>It&rsquo;s true that C# doesn&rsquo;t support default parameters, but it <em>does</em> support
 variable length argument lists. Maybe that&rsquo;s a solution that lets us pass in a
 variety of options without having to overload. Calling it still looks like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">Terminal</span> <span class="i">terminal</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Terminal</span><span class="p">();</span>
+<pre class="highlight language-csharp"><span class="t">Terminal</span> <span class="i">terminal</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Terminal</span><span class="p">();</span>
 
 <span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">.</span><span class="i">Fill</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">);</span>
-<span class="i">terminal</span><span class="p">.</span><span class="i">Draw</span><span class="p">(</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">terminal</span><span class="p">.</span><span class="i">Draw</span><span class="p">(</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">);</span></pre>
 <p>But the class itself just looks like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Terminal</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Terminal</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Write</span><span class="p">(</span><span class="t">string</span> <span class="i">text</span><span class="p">,</span> <span class="k">params</span> <span class="t">object</span><span class="p">[]</span> <span class="i">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Fill</span><span class="p">(</span><span class="k">params</span> <span class="t">object</span><span class="p">[]</span> <span class="i">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="k">params</span> <span class="t">object</span><span class="p">[]</span> <span class="i">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That doesn&rsquo;t look so bad. Except when you try to implement one of the methods:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">void</span> <span class="i">Write</span><span class="p">(</span><span class="t">string</span> <span class="i">text</span><span class="p">,</span> <span class="k">params</span> <span class="t">object</span><span class="p">[]</span> <span class="i">options</span><span class="p">)</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">void</span> <span class="i">Write</span><span class="p">(</span><span class="t">string</span> <span class="i">text</span><span class="p">,</span> <span class="k">params</span> <span class="t">object</span><span class="p">[]</span> <span class="i">options</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="t">Point</span> <span class="i">pos</span> <span class="o">=</span> <span class="i">mCurrentPos</span><span class="p">;</span>
     <span class="t">Color?</span> <span class="i">foreColor</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
@@ -169,48 +160,39 @@ variety of options without having to overload. Calling it still looks like:</p>
     <span class="k">if</span> <span class="p">(</span><span class="i">y</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="i">y</span> <span class="o">=</span> <span class="i">mCurrentY</span><span class="p">;</span>
 
     <span class="c">// write using pos, color, etc.</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That&rsquo;s… just… no. And that doesn&rsquo;t even have any error handling. The following
 is totally valid:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">17</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">White</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Aqua</span><span class="p">,</span>
-    <span class="i">Color</span><span class="p">.</span><span class="i">Beige</span><span class="p">,</span> <span class="s">&quot;wtf?&quot;</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">17</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">White</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Aqua</span><span class="p">,</span>
+    <span class="i">Color</span><span class="p">.</span><span class="i">Beige</span><span class="p">,</span> <span class="s">&quot;wtf?&quot;</span><span class="p">);</span></pre>
 <p>OK, scratch that.</p>
 <h2>Parameter object: strong typing is strong</h2>
 <p>So we know we want strong typing. How about if we bundle all of the parameters
 into a parameter object? This is basically the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo"><code>ProcessStartInfo</code></a>
 solution.</p>
 <p>We define a class something like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">TerminalParams</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">TerminalParams</span>
 <span class="p">{</span>
     <span class="c">// Nullable so that null = default value.</span>
     <span class="k">public</span> <span class="t">Point?</span> <span class="i">Pos</span><span class="p">;</span>
     <span class="k">public</span> <span class="t">Color?</span> <span class="i">Fore</span><span class="p">;</span>
     <span class="k">public</span> <span class="t">Color?</span> <span class="i">Back</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>And our <code>Terminal</code> looks something like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Terminal</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">Terminal</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Write</span><span class="p">(</span><span class="t">TerminalParams</span> <span class="i">paramObj</span><span class="p">,</span> <span class="t">string</span> <span class="i">text</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Fill</span><span class="p">(</span><span class="t">TerminalParams</span> <span class="i">paramObj</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
     <span class="k">public</span> <span class="k">void</span> <span class="i">Draw</span><span class="p">(</span><span class="t">TerminalParams</span> <span class="i">paramObj</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>In C# 3.0 with <a href="http://weblogs.asp.net/scottgu/archive/2007/03/08/new-c-orcas-language-features-automatic-properties-object-initializers-and-collection-initializers.aspx">object initializers</a>, we can call it something like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="t">Terminal</span> <span class="i">terminal</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Terminal</span><span class="p">();</span>
+<pre class="highlight language-csharp"><span class="t">Terminal</span> <span class="i">terminal</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Terminal</span><span class="p">();</span>
 
 <span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="k">new</span> <span class="t">TerminalParams</span><span class="p">(),</span> <span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">.</span><span class="i">Fill</span><span class="p">(</span><span class="k">new</span> <span class="t">TerminalParams</span>
         <span class="p">{</span> <span class="i">Pos</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Point</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">),</span> <span class="i">Fore</span> <span class="o">=</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span> <span class="p">});</span>
 <span class="i">terminal</span><span class="p">.</span><span class="i">Draw</span><span class="p">(</span><span class="k">new</span> <span class="t">TerminalParams</span>
-        <span class="p">{</span> <span class="i">Fore</span> <span class="o">=</span> <span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Back</span> <span class="o">=</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span> <span class="p">});</span></code></pre>
-</div>
+        <span class="p">{</span> <span class="i">Fore</span> <span class="o">=</span> <span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Back</span> <span class="o">=</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span> <span class="p">});</span></pre>
 <p>I won&rsquo;t say that&rsquo;s the greatest thing ever, but it&rsquo;s not too bad. Of course, if
 you&rsquo;re not on 3.0 yet, you&rsquo;re up a creek. All you&rsquo;ve basically accomplished is
 moved your overloads to constructor overloads in <code>TerminalParams</code>. And I still
@@ -218,36 +200,26 @@ think there&rsquo;s a little too much… junk… in those lines of code. The <co
 <h2>Parameter groups</h2>
 <p>Really, the overloaded methods do have the best <em>calling convention</em> so far.
 Let&rsquo;s look at it a little closer:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">);</span></pre>
 <p>While that&rsquo;s an uninterrupted list of parameters, they&rsquo;re conceptually grouped
 like this:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span>    <span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">);</span>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span>    <span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="c">//             ^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^  ^^^^</span>
-<span class="c">//             Position  Color                  Text</span></code></pre>
-</div>
+<span class="c">//             Position  Color                  Text</span></pre>
 <p>How cool would it be if we could actually group the parameters like that in
 the code? Something like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)(</span><span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">)(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)(</span><span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">)(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span></pre>
 <p>C# doesn&rsquo;t have functors, but maybe we&rsquo;re on to something.</p>
 <p><em>Insert several hours of mucking around with properties that return delegates
 that return delegates, etc.</em></p>
 <p>Or… not. But let&rsquo;s not give up yet. Let&rsquo;s try re-arranging things:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">)(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)(</span><span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">)(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)(</span><span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">);</span></pre>
 <p>This is a little better because it puts the method (<code>Write()</code>) next to the one
 parameter it really needs, the string. The problem is that that line, if it
 were possible to write, would execute from left to right. So we would have to
 write before we looked at the parameters.</p>
 <p>Let&rsquo;s do some more shuffling:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)(</span><span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">).</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)(</span><span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">).</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span></pre>
 <p>This looks promising, but we&rsquo;re stuck with the fact that C# doesn&rsquo;t have
 functors. We can&rsquo;t do <code>terminal()</code>. Is there anything that sort of <em>looks</em>
 like <code>()</code>?</p>
@@ -256,17 +228,14 @@ like <code>()</code>?</p>
 level?&rdquo; Astute readers are already thinking it: <em>indexers</em>. Right now, some of
 you may be shuddering in horror at the weirdness we&rsquo;re about to unleash, but
 let&rsquo;s do it anyway. Can we make all of these lines of code work:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">[</span><span class="k">new</span> <span class="t">Point</span><span class="p">(</span><span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">][</span><span class="a">Color.Red</span><span class="p">].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Brown</span><span class="p">].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
-<span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">].</span><span class="i">Draw</span><span class="p">();</span></code></pre>
-</div>
+<span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">].</span><span class="i">Draw</span><span class="p">();</span></pre>
 <p>And can we make them work all at the same time? Not only that, can we make the
 following <em>not</em> work:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="c">// Bad, cannot specify position twice.</span>
+<pre class="highlight language-csharp"><span class="c">// Bad, cannot specify position twice.</span>
 <span class="i">terminal</span><span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">][</span><span class="a">new</span> <span class="i">Point</span><span class="p">(</span><span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 
 <span class="c">// Bad, cannot specify half a position.</span>
@@ -274,12 +243,10 @@ following <em>not</em> work:</p>
 
 <span class="c">// Sorta bad, for consistency would always like</span>
 <span class="c">// to have position before color.</span>
-<span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Brown</span><span class="p">][</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Brown</span><span class="p">][</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span></pre>
 <p>It turns out, we can. The core idea is to define a chain of interfaces that
 inherit from each other.</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">interface</span> <span class="t">ITerminalMethods</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">interface</span> <span class="t">ITerminalMethods</span>
 <span class="p">{</span>
     <span class="k">void</span> <span class="i">Write</span><span class="p">(</span><span class="t">string</span> <span class="i">text</span><span class="p">);</span>
     <span class="k">void</span> <span class="i">Fill</span><span class="p">();</span>
@@ -298,8 +265,7 @@ inherit from each other.</p>
     <span class="t">ITerminalColor</span> <span class="i">this</span><span class="p">[</span><span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">public</span> <span class="k">interface</span> <span class="t">ITerminal</span> <span class="p">:</span> <span class="t">ITerminalPosColor</span> <span class="p">{</span> <span class="p">}</span></code></pre>
-</div>
+<span class="k">public</span> <span class="k">interface</span> <span class="t">ITerminal</span> <span class="p">:</span> <span class="t">ITerminalPosColor</span> <span class="p">{</span> <span class="p">}</span></pre>
 <p>Each one represents one of the parameter types: position, color, etc. The
 innermost one, <code>ITerminalMethods</code>, contains the actual methods, <code>Write()</code>,
 <code>Fill()</code>, etc.</p>
@@ -311,13 +277,11 @@ inherit from each other too, you can also skip a step. You can go from
 <code>ITerminalPosColor</code> straight to <code>ITerminalMethods</code> because <code>ITerminalColor</code>
 interface inherits from it.</p>
 <p>Calling it looks like:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
+<pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">[</span><span class="k">new</span> <span class="t">Point</span><span class="p">(</span><span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">][</span><span class="a">Color.Red</span><span class="p">].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
 <span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Brown</span><span class="p">].</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">);</span>
-<span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">].</span><span class="i">Draw</span><span class="p">();</span></code></pre>
-</div>
+<span class="i">terminal</span><span class="p">[</span><span class="i">Color</span><span class="p">.</span><span class="i">Green</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">].</span><span class="i">Draw</span><span class="p">();</span></pre>
 <p>This is all well and good for <em>defining</em> it, but is it possible to actually
 <em>implement</em> this thing?</p>
 <p>We can do that too. The idea is that the Terminal class really contains two
@@ -327,8 +291,7 @@ let a Terminal create a shallow clone of itself that <em>shares</em> the core st
 but has a <em>copy</em> of the ephemeral state that can be changed. All of the indexers
 create new Terminals that write to the same core terminal data but keep their
 own copy of the position and color. Like so:</p>
-<div class="highlight">
-<pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">TerminalData</span>
+<pre class="highlight language-csharp"><span class="k">public</span> <span class="k">class</span> <span class="t">TerminalData</span>
 <span class="p">{</span>
     <span class="c">// Terminal core state:</span>
     <span class="k">public</span> <span class="t">char</span><span class="p">[]</span> <span class="i">Characters</span><span class="p">;</span>
@@ -392,8 +355,7 @@ own copy of the position and color. Like so:</p>
     <span class="k">private</span> <span class="t">Point</span> <span class="i">mPos</span><span class="p">;</span>
     <span class="k">private</span> <span class="t">Color</span> <span class="i">mFore</span><span class="p">;</span>
     <span class="k">private</span> <span class="t">Color</span> <span class="i">mBack</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <h2>Is it worth doing?</h2>
 <p>So this is how <a href="https://github.com/munificent/malison-dotnet/blob/master/Malison.Core/ITerminal.cs">my little terminal library</a> works, and I&rsquo;ve grown
 pretty fond of it. However, this is a personal project, so my willingness to

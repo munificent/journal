@@ -44,8 +44,7 @@ work. First, Java, a typical static OOP language:</p>
 <h2>The two languages of Java</h2>
 <p>If you look at a Java source file, there are almost two distinct languages mixed
 together. Consider this simple program:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="k">class</span> <span class="t">Hello</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="k">class</span> <span class="t">Hello</span> <span class="p">{</span>
   <span class="k">public</span> <span class="k">static</span> <span class="t">void</span> <span class="i">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="t">Hello</span> <span class="i">hello</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Hello</span><span class="p">();</span>
     <span class="i">hello</span><span class="p">.</span><span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">);</span>
@@ -54,8 +53,7 @@ together. Consider this simple program:</p>
   <span class="k">public</span> <span class="t">void</span> <span class="i">say</span><span class="p">(</span><span class="t">String</span> <span class="i">greeting</span><span class="p">)</span> <span class="p">{</span>
     <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="i">greeting</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>At the top level is the language of <em>definitions</em>. This language owns keywords
 like <code>public</code>, <code>class</code>, and <code>implements</code>. It&rsquo;s used for creating types, methods,
 and fields. It defines the <em>static</em> structure and types of a program.</p>
@@ -76,14 +74,12 @@ program runs.</p>
 <h2>Everything is imperative</h2>
 <p>In contrast, a dynamic language like Python only has a single language: the
 language of statements. Consider this little script:</p>
-<div class="highlight">
-<pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="t">Hello</span><span class="p">:</span>
+<pre class="highlight language-python"><span class="k">class</span> <span class="t">Hello</span><span class="p">:</span>
     <span class="k">def</span> <span class="i">say</span><span class="p">(</span><span class="i">self</span><span class="p">,</span> <span class="i">greeting</span><span class="p">):</span>
         <span class="k">print</span> <span class="i">greeting</span>
 
 <span class="i">hello</span> <span class="o">=</span> <span class="t">Hello</span><span class="p">()</span>
-<span class="i">hello</span><span class="p">.</span><span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">hello</span><span class="p">.</span><span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span></pre>
 <p>It does pretty much the same thing as the Java program, but there&rsquo;s an important
 distinction. Instead of having a special <code>main()</code> method that gets invoked, we
 just put code at the top-level. Unlike Java, you can put regular statements at
@@ -101,20 +97,17 @@ fashion.</p>
 follows in Python&rsquo;s footsteps. There is no special definition/statement
 dichotomy, and classes are created, extended, and modified imperatively at
 runtime. This is a valid Magpie program and runs without any type checking:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Hello</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Hello</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="t">Hello</span> <span class="i">say</span><span class="p">(</span><span class="i">greeting</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">greeting</span><span class="p">)</span>
 
 <span class="k">var</span> <span class="i">hello</span> <span class="o">=</span> <span class="t">Hello</span> <span class="i">new</span>
-<span class="i">hello</span> <span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">hello</span> <span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span></pre>
 <p>If we <em>did</em> want to type check it, only a simple change is needed (in addition
 to actually adding some type annotations, of course): create a <code>main()</code>
 function:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Hello</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Hello</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="t">Hello</span> <span class="i">say</span><span class="p">(</span><span class="i">greeting</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">greeting</span><span class="p">)</span>
@@ -122,8 +115,7 @@ function:</p>
 <span class="k">var</span> <span class="i">main</span><span class="p">()</span>
   <span class="k">var</span> <span class="i">hello</span> <span class="o">=</span> <span class="t">Hello</span> <span class="i">new</span>
   <span class="i">hello</span> <span class="i">say</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This program will now type check that the argument you pass to <code>hello()</code> matches
 the declared type, <code>String</code>. It will do this <em>before</em> <code>main()</code> is called. So the
 general strategy is, if you want to write a dynamic program, put everything at
@@ -164,8 +156,7 @@ unless all of the type checks passed.</p>
 modify classes at any point, and we can execute any imperative code after
 type checking, then what&rsquo;s to prevent us from modifying a class after it&rsquo;s been
 type checked into something that will no longer work? For example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Foo</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Foo</span>
 <span class="k">end</span>
 
 <span class="t">Foo</span> <span class="i">bar</span><span class="p">()</span> <span class="i">print</span> <span class="s">&quot;called bar&quot;</span>
@@ -177,8 +168,7 @@ type checked into something that will no longer work? For example:</p>
   <span class="c">// Now try to call it!</span>
   <span class="k">var</span> <span class="i">foo</span> <span class="o">=</span> <span class="t">Foo</span> <span class="i">new</span>
   <span class="i">foo</span> <span class="i">bar</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>When <code>main()</code> is type checked, <code>Foo</code> has a method called <code>bar</code> so it looks
 fine. But by the time we get to executing it, we&rsquo;ve actually yanked that
 method out and the call will fail. Uh-oh!</p>

@@ -58,15 +58,12 @@ syntax sorta like JS. Curly braces and semicolons. <code>if</code>, <code>while<
 <p>I&rsquo;m picking JS <em>not</em> because that&rsquo;s what this post is about. It&rsquo;s just that it&rsquo;s
 the language you, statistical representation of the average reader, are most
 likely to be able grok. Voilà:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="i">thisIsAFunction</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">function</span> <span class="i">thisIsAFunction</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="s">&quot;It&#39;s awesome&quot;</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Because our strawman is a <em>modern</em> (shitty) language, we also have first-class
 functions. So you can make something like this:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="c">// Return a list containing all of the elements in collection</span>
+<pre class="highlight language-javascript"><span class="c">// Return a list containing all of the elements in collection</span>
 <span class="c">// that match predicate.</span>
 <span class="k">function</span> <span class="i">filter</span><span class="p">(</span><span class="i">collection</span><span class="p">,</span> <span class="i">predicate</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="p">[];</span>
@@ -74,27 +71,22 @@ functions. So you can make something like this:</p>
     <span class="k">if</span> <span class="p">(</span><span class="i">predicate</span><span class="p">(</span><span class="i">collection</span><span class="p">[</span><span class="i">i</span><span class="p">]))</span> <span class="i">result</span><span class="p">.</span><span class="i">push</span><span class="p">(</span><span class="i">collection</span><span class="p">[</span><span class="i">i</span><span class="p">]);</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="i">result</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This is one of those <em>higher-order</em> functions, and, like the name implies, they
 are classy as all get out and super useful. You&rsquo;re probably used to them for
 mucking around with collections, but once you internalize the concept, you start
 using them damn near everywhere.</p>
 <p>Maybe in your testing framework:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="i">describe</span><span class="p">(</span><span class="s">&quot;An apple&quot;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="i">describe</span><span class="p">(</span><span class="s">&quot;An apple&quot;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">it</span><span class="p">(</span><span class="s">&quot;ain&#39;t no orange&quot;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="i">expect</span><span class="p">(</span><span class="s">&quot;Apple&quot;</span><span class="p">).</span><span class="i">not</span><span class="p">.</span><span class="i">toBe</span><span class="p">(</span><span class="s">&quot;Orange&quot;</span><span class="p">);</span>
   <span class="p">});</span>
-<span class="p">});</span></code></pre>
-</div>
+<span class="p">});</span></pre>
 <p>Or when you need to parse some data:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="i">tokens</span><span class="p">.</span><span class="i">match</span><span class="p">(</span><span class="t">Token</span><span class="p">.</span><span class="i">LEFT_BRACKET</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="i">token</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="i">tokens</span><span class="p">.</span><span class="i">match</span><span class="p">(</span><span class="t">Token</span><span class="p">.</span><span class="i">LEFT_BRACKET</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="i">token</span><span class="p">)</span> <span class="p">{</span>
   <span class="c">// Parse a list literal...</span>
   <span class="i">tokens</span><span class="p">.</span><span class="i">consume</span><span class="p">(</span><span class="t">Token</span><span class="p">.</span><span class="i">RIGHT_BRACKET</span><span class="p">);</span>
-<span class="p">});</span></code></pre>
-</div>
+<span class="p">});</span></pre>
 <p>So you go to town and write all sorts of awesome reusable libraries and
 applications passing around functions, calling functions, returning functions.
 Functapalooza.</p>
@@ -104,24 +96,20 @@ feature:</p>
 <p><strong>1. Every function has a color.</strong></p>
 <p>Each function&mdash;anonymous callback or regular named one&mdash;is either red or
 blue. Instead of a single <code>function</code> keyword, there are two:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="blue">blue_function</span> <span class="i">doSomethingAzure</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="blue">blue_function</span> <span class="i">doSomethingAzure</span><span class="p">()</span> <span class="p">{</span>
   <span class="c">// This is a blue function...</span>
 <span class="p">}</span>
 
 <span class="red">red_function</span> <span class="i">doSomethingCarnelian</span><span class="p">()</span> <span class="p">{</span>
   <span class="c">// This is a red function...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>There are <em>no</em> colorless functions in the language. Want to make a function?
 Gotta pick a color. Them&rsquo;s the rules. And, actually, there are a couple more
 rules you have to follow too:</p>
 <p><strong>2. The way you call a function depends on its color.</strong></p>
 <p>Imagine a &ldquo;blue call&rdquo; syntax and a &ldquo;red call&rdquo; syntax. Something like:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="i">doSomethingAzure</span><span class="blue">()blue</span><span class="p">;</span>
-<span class="i">doSomethingCarnelian</span><span class="red">()red</span><span class="p">;</span></code></pre>
-</div>
+<pre class="highlight language-javascript"><span class="i">doSomethingAzure</span><span class="blue">()blue</span><span class="p">;</span>
+<span class="i">doSomethingCarnelian</span><span class="red">()red</span><span class="p">;</span></pre>
 <p>When calling a function, you need to use the call that corresponds to its color.
 If you get it wrong&mdash;call a red function with <code>blue</code> after the parentheses
 or vice versa&mdash;it does something bad. Dredge up some long-forgotten
@@ -130,17 +118,13 @@ your bed. That jumps out of your monitor and sucks out your vitreous humour.</p>
 <p>Annoying rule, right? Oh, and one more:</p>
 <p><strong>3. You can only call a red function from within another red function.</strong></p>
 <p>You <em>can</em> call a blue function from within a red one. This is kosher:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="red">red_function</span> <span class="i">doSomethingCarnelian</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="red">red_function</span> <span class="i">doSomethingCarnelian</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">doSomethingAzure</span><span class="blue">()blue</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>But you can&rsquo;t go the other way. If you try to do this:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="blue">blue_function</span> <span class="i">doSomethingAzure</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="blue">blue_function</span> <span class="i">doSomethingAzure</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">doSomethingCarnelian</span><span class="red">()red</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Well, you&rsquo;re gonna get a visit from old Spidermouth the Night Clown.</p>
 <p>This makes writing higher-order functions like our <code>filter()</code> example trickier.
 We have to pick a color for <em>it</em> and that affects the colors of the functions
@@ -338,15 +322,13 @@ result! Every language that has async IO in its core&mdash;or in the case of JS,
 the browser&rsquo;s event loop&mdash;copes with this in some way.</p>
 <p>Node with its ever-marching-to-the-right callbacks stuffs all of those
 callframes in closures. When you do:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="i">makeSundae</span><span class="p">(</span><span class="i">callback</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">function</span> <span class="i">makeSundae</span><span class="p">(</span><span class="i">callback</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">scoopIceCream</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="i">iceCream</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">warmUpCaramel</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="i">caramel</span><span class="p">)</span> <span class="p">{</span>
       <span class="i">callback</span><span class="p">(</span><span class="i">pourOnIceCream</span><span class="p">(</span><span class="i">iceCream</span><span class="p">,</span> <span class="i">caramel</span><span class="p">));</span>
     <span class="p">});</span>
   <span class="p">});</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Each of those function expressions <em>closes</em> over all of its surrounding
 context. That moves parameters like <code>iceCream</code> and <code>caramel</code> off the callstack
 and onto the heap. When the outer function returns and the callstack is

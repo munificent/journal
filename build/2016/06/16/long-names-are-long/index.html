@@ -86,45 +86,37 @@ available, it rarely takes more than scanning a few lines to tell what type a
 variable has.</p>
 <p>Given that, it&rsquo;s redundant to put the type in the variable&rsquo;s name. We have
 rightfully abandoned <a href="https://en.wikipedia.org/wiki/Hungarian_notation">Hungarian notation</a>. <em>Let it go.</em></p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<pre class="highlight language-dart"><span class="c">// Bad:</span>
 <span class="t">String</span> <span class="i">nameString</span><span class="p">;</span>
 <span class="t">DockableModelessWindow</span> <span class="i">dockableModelessWindow</span><span class="p">;</span>
 
 <span class="c">// Better:</span>
 <span class="t">String</span> <span class="i">name</span><span class="p">;</span>
-<span class="t">DockableModelessWindow</span> <span class="i">window</span><span class="p">;</span></code></pre>
-</div>
+<span class="t">DockableModelessWindow</span> <span class="i">window</span><span class="p">;</span></pre>
 <p>In particular, for collections, it&rsquo;s almost always better to just use a plural
 noun describing the <em>contents</em> instead of a singular noun describing the
 <em>collection</em>. If the reader cares more about what&rsquo;s <em>in</em> the collection, the
 name should reflect that.</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<pre class="highlight language-dart"><span class="c">// Bad:</span>
 <span class="t">List</span><span class="o">&lt;</span><span class="t">DateTime</span><span class="o">&gt;</span> <span class="i">holidayDateList</span><span class="p">;</span>
 <span class="t">Map</span><span class="o">&lt;</span><span class="t">Employee</span><span class="p">,</span> <span class="t">Role</span><span class="o">&gt;</span> <span class="i">employeeRoleHashMap</span><span class="p">;</span>
 
 <span class="c">// Better:</span>
 <span class="t">List</span><span class="o">&lt;</span><span class="t">DateTime</span><span class="o">&gt;</span> <span class="i">holidays</span><span class="p">;</span>
-<span class="t">Map</span><span class="o">&lt;</span><span class="t">Employee</span><span class="p">,</span> <span class="t">Role</span><span class="o">&gt;</span> <span class="i">employeeRoles</span><span class="p">;</span></code></pre>
-</div>
+<span class="t">Map</span><span class="o">&lt;</span><span class="t">Employee</span><span class="p">,</span> <span class="t">Role</span><span class="o">&gt;</span> <span class="i">employeeRoles</span><span class="p">;</span></pre>
 <p>This also applies to method names. The method name doesn&rsquo;t need to describe its
 parameters or their types&mdash;the parameter list does that for you.</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<pre class="highlight language-dart"><span class="c">// Bad:</span>
 <span class="i">mergeTableCells</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">TableCell</span><span class="o">&gt;</span> <span class="i">cells</span><span class="p">)</span>
 <span class="i">sortEventsUsingComparator</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">events</span><span class="p">,</span>
     <span class="t">Comparator</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">comparator</span><span class="p">)</span>
 
 <span class="c">// Better:</span>
 <span class="i">merge</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">TableCell</span><span class="o">&gt;</span> <span class="i">cells</span><span class="p">)</span>
-<span class="i">sort</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">events</span><span class="p">,</span> <span class="t">Comparator</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">comparator</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">sort</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">events</span><span class="p">,</span> <span class="t">Comparator</span><span class="o">&lt;</span><span class="t">Event</span><span class="o">&gt;</span> <span class="i">comparator</span><span class="p">)</span></pre>
 <p>This tends to make callsites read better:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">mergeTableCells</span><span class="p">(</span><span class="i">tableCells</span><span class="p">);</span>
-<span class="i">sortEventsUsingComparator</span><span class="p">(</span><span class="i">events</span><span class="p">,</span> <span class="i">comparator</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">mergeTableCells</span><span class="p">(</span><span class="i">tableCells</span><span class="p">);</span>
+<span class="i">sortEventsUsingComparator</span><span class="p">(</span><span class="i">events</span><span class="p">,</span> <span class="i">comparator</span><span class="p">);</span></pre>
 <p>Is it just me, or is there an echo echo in here here?</p>
 <h3>2. Omit words that don&rsquo;t disambiguate the name</h3>
 <p>Some people tend to cram everything they know about something into its name.
@@ -150,15 +142,13 @@ the object. The definition does that. The name just gets them there.</p>
 </li>
 </ul>
 <p>A &ldquo;no&rdquo; for any of these usually points to an extraneous word.</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<pre class="highlight language-dart"><span class="c">// Bad:</span>
 <span class="i">finalBattleMostDangerousBossMonster</span><span class="p">;</span>
 <span class="i">weaklingFirstEncounterMonster</span><span class="p">;</span>
 
 <span class="c">// Better:</span>
 <span class="i">boss</span><span class="p">;</span>
-<span class="i">firstMonster</span><span class="p">;</span></code></pre>
-</div>
+<span class="i">firstMonster</span><span class="p">;</span></pre>
 <p>Of course, you can go too far. Shortening that first example to <code>bid</code> might be a
 little <em>too</em> vague. But, when in doubt, leave it out. You can always add
 qualifiers later if the name proves to cause a collision or be imprecise but
@@ -170,8 +160,7 @@ everywhere here (despite Bob Nystrom&rsquo;s temptation to aggrandize Bob Nystro
 doing so). Code works the same way. A method or field occurs in the context of a
 class. A variable occurs in the context of a method. Take that context for
 granted and don&rsquo;t repeat it.</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Bad:</span>
+<pre class="highlight language-dart"><span class="c">// Bad:</span>
 <span class="k">class</span> <span class="t">AnnualHolidaySale</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">_annualSaleRebate</span><span class="p">;</span>
   <span class="k">void</span> <span class="i">promoteHolidaySale</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
@@ -181,8 +170,7 @@ granted and don&rsquo;t repeat it.</p>
 <span class="k">class</span> <span class="t">AnnualHolidaySale</span> <span class="p">{</span>
   <span class="t">int</span> <span class="i">_rebate</span><span class="p">;</span>
   <span class="k">void</span> <span class="i">promote</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>In practice, this means that the more deeply nested a name is, the more
 surrounding context it has. That in turn means it usually has a shorter name.
 The effect is that identifiers with shorter scopes have shorter names.</p>
@@ -203,41 +191,31 @@ If so, the word doesn&rsquo;t carry its weight. Vote if off the island.</p>
 <p>To give you a feel for how these rules work in practice, here&rsquo;s an example that
 breaks all of these rules. This contrived example is tragically close to real
 code I&rsquo;ve seen in reviews:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">DeliciousBelgianWaffleObject</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">DeliciousBelgianWaffleObject</span> <span class="p">{</span>
   <span class="k">void</span> <span class="i">garnishDeliciousBelgianWaffleWithStrawberryList</span><span class="p">(</span>
       <span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberryList</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>We know from the type that it takes a list of strawberries (#1), so let&rsquo;s cut
 that out:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">DeliciousBelgianWaffleObject</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">DeliciousBelgianWaffleObject</span> <span class="p">{</span>
     <span class="k">void</span> <span class="i">garnishDeliciousBelgianWaffle</span><span class="p">(</span>
         <span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Unless our program has foul-tasting Belgian waffles, or waffles of other
 nationalities, we can drop those adjectives (#2):</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">WaffleObject</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">WaffleObject</span> <span class="p">{</span>
   <span class="k">void</span> <span class="i">garnishWaffle</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The method is inside a <code>WaffleObject</code>, so we know what it&rsquo;s going to garnish
 (#3):</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">WaffleObject</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">WaffleObject</span> <span class="p">{</span>
   <span class="k">void</span> <span class="i">garnish</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Obviously it&rsquo;s an object. Everything is an object. That&rsquo;s kind of what
 &ldquo;object-oriented&rdquo; means (#4):</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Waffle</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Waffle</span> <span class="p">{</span>
   <span class="k">void</span> <span class="i">garnish</span><span class="p">(</span><span class="t">List</span><span class="o">&lt;</span><span class="t">Strawberry</span><span class="o">&gt;</span> <span class="i">strawberries</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>There, much better.</p>
 <p>I think these are pretty simple guidelines. You may think it&rsquo;s pointless to
 worry about this stuff, but I believe that <a href="/2009/06/05/naming-things-in-code/">naming things</a> is one of the most

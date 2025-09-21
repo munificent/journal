@@ -37,8 +37,7 @@
 <p>I just checked in a small change to <a href="http://finch.stuffwithstuff.com/">Finch</a> that I think makes the language read
 better. There is now <a href="http://en.wikipedia.org/wiki/Syntactic_sugar">syntactic sugar</a> for binding a method to an object.</p>
 <p>When Finch starts up, it runs a &ldquo;<a href="https://github.com/munificent/finch/blob/master/lib/core.fin">core</a>&rdquo; Finch script that builds a bunch of the standard objects and environment. It used to have a lot of code that looked like this:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="t">True</span> <span class="k">addMethod:</span> <span class="s">&quot;not&quot;</span> <span class="k">body:</span> <span class="p">{</span> <span class="t">False</span> <span class="p">}</span>
+<pre class="highlight language-finch"><span class="t">True</span> <span class="k">addMethod:</span> <span class="s">&quot;not&quot;</span> <span class="k">body:</span> <span class="p">{</span> <span class="t">False</span> <span class="p">}</span>
 
 <span class="c">&#39; Define a for-style loop.</span>
 <span class="t">Ether</span> <span class="k">addMethod:</span> <span class="s">&quot;from:to:step:do:&quot;</span> <span class="p">{</span> <span class="p">|</span><span class="i">start</span> <span class="i">end</span> <span class="i">step</span> <span class="i">block</span><span class="p">|</span>
@@ -59,12 +58,10 @@ better. There is now <a href="http://en.wikipedia.org/wiki/Syntactic_sugar">synt
   <span class="i">right</span> <span class="k">each:</span> <span class="p">{|</span><span class="i">e</span><span class="p">|</span> <span class="i">result</span> <span class="k">add:</span> <span class="i">e</span> <span class="p">}</span>
 
   <span class="i">result</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The change is a new &ldquo;bind&rdquo; expression using <code>::</code>. This gets rid of the
 explicit calls to <code>addMethod:body:</code> and replaces them with this:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="t">True</span> <span class="p">::</span> <span class="i">not</span> <span class="p">{</span> <span class="t">False</span> <span class="p">}</span>
+<pre class="highlight language-finch"><span class="t">True</span> <span class="p">::</span> <span class="i">not</span> <span class="p">{</span> <span class="t">False</span> <span class="p">}</span>
 
 <span class="c">&#39; Define a for-style loop.</span>
 <span class="t">Ether</span> <span class="p">::</span> <span class="k">from:</span> <span class="i">start</span> <span class="k">to:</span> <span class="i">end</span> <span class="k">step:</span> <span class="i">step</span> <span class="k">do:</span> <span class="i">block</span> <span class="p">{</span>
@@ -84,8 +81,7 @@ explicit calls to <code>addMethod:body:</code> and replaces them with this:</p>
   <span class="i">right</span> <span class="k">each:</span> <span class="p">{|</span><span class="i">e</span><span class="p">|</span> <span class="i">result</span> <span class="k">add:</span> <span class="i">e</span> <span class="p">}</span>
 
   <span class="i">result</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>It&rsquo;s a little shorter and cleaner, but what I really like is that it lets the
 parser validate your method signature a bit. Where <code>addMethod:body:</code> takes any
 string as a method name, this ensures that your method name is something the

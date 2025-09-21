@@ -59,16 +59,14 @@ design that I think few people wander into and previous explorers don&rsquo;t se
 have left a map so maybe there will be some value in this.</p>
 <h2>What is scope?</h2>
 <p>When you hear &ldquo;scope&rdquo; you probably think something like this:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="p">{</span>
+<pre class="highlight language-c"><span class="p">{</span>
   <span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="n">1</span><span class="p">;</span>
   <span class="p">{</span>
     <span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="n">2</span><span class="p">;</span>
     <span class="i">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="i">a</span><span class="p">);</span>
   <span class="p">}</span>
   <span class="i">printf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="i">a</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The curly braces in C++ define <em>block scopes</em>. When you declare a local
 variable, it goes in the nearest enclosing scope. When the compiler sees a use
 of a variable (here <code>a</code>), it looks in the surrounding scopes to figure out what
@@ -92,11 +90,9 @@ and almost every language works like it these days.</p>
 post, I&rsquo;ll widen the term to talk about any kind of identifier that appears in a
 program. Variables aren&rsquo;t the only place names appear in many languages.
 Consider this bit of JavaScript:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span><span class="p">(</span><span class="i">who</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">function</span><span class="p">(</span><span class="i">who</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">alert</span><span class="p">(</span><span class="i">who</span><span class="p">.</span><span class="i">favoriteColor</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Here we have two names in the program (ignoring <code>alert</code>), <code>who</code> and
 <code>favoriteColor</code>. We need to figure out what they represent in order to run the
 code. <code>who</code> is easy, it&rsquo;s just a lexically scoped variable and we can see that
@@ -118,9 +114,7 @@ lexical scoping and dynamic scoping. Which of these does Magpie have? Just one:
 designed to look (more or less) like one. It doesn&rsquo;t use a dot to separate the
 &ldquo;receiver&rdquo; from the method or property, but it otherwise looks like it <em>would</em>
 have object, method, and static scope:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">list</span> <span class="i">add</span><span class="p">(</span><span class="i">item</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">list</span> <span class="i">add</span><span class="p">(</span><span class="i">item</span><span class="p">)</span></pre>
 <p>When it&rsquo;s compiling that expression, the variables <code>list</code> and <code>item</code> are looked
 up in lexical scope like you expect. But the method <code>add</code> is too. In Magpie,
 methods are not bound to classes. Instead, they are defined separately. If you
@@ -152,8 +146,7 @@ thing given a list, a set, or a map?</p>
 <p>The answer is that all methods in Magpie are <a href="/2011/04/21/multimethods-multiple-inheritance-multiawesome/">multimethods</a>. The <a href="http://magpie-lang.org/multimethods.html">docs</a>
 have the full story, but here&rsquo;s the TL;DR: You can define multiple methods with
 the same name but different argument <a href="http://magpie-lang.org/patterns.html">patterns</a>, like so:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="i">list</span> <span class="k">is</span> <span class="t">List</span><span class="p">)</span> <span class="i">add</span><span class="p">(</span><span class="i">item</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="i">list</span> <span class="k">is</span> <span class="t">List</span><span class="p">)</span> <span class="i">add</span><span class="p">(</span><span class="i">item</span><span class="p">)</span>
     <span class="c">// add stuff to list...</span>
 <span class="k">end</span>
 
@@ -163,8 +156,7 @@ the same name but different argument <a href="http://magpie-lang.org/patterns.ht
 
 <span class="k">def</span> <span class="p">(</span><span class="i">map</span> <span class="k">is</span> <span class="t">Map</span><span class="p">)</span> <span class="i">add</span><span class="p">(</span><span class="i">item</span><span class="p">)</span>
     <span class="c">// add stuff to map...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>In C, this would just be an error because the names collide. In Magpie, it&rsquo;s
 A-OK. What this does is a create a <em>single</em> <code>add()</code> <em>multi</em>method that contains
 those three methods. When you call <code>add()</code>, the interpreter looks at the types
@@ -174,8 +166,7 @@ of the arguments at runtime and picks the right method to call. Instead of using
 <p>That probably all sounds a bit hand-wavey. Let&rsquo;s walk through a concrete example
 and see how all of the moving parts mesh together. First, let&rsquo;s make a module
 that defines a class and some methods for it.</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// sandwich.mag</span>
+<pre class="highlight language-magpie"><span class="c">// sandwich.mag</span>
 <span class="k">defclass</span> <span class="t">Sandwich</span>
   <span class="k">val</span> <span class="i">meat</span>
   <span class="k">val</span> <span class="i">condiment</span>
@@ -187,8 +178,7 @@ that defines a class and some methods for it.</p>
 
 <span class="k">def</span> <span class="p">(</span><span class="i">sandwich</span> <span class="k">is</span> <span class="t">Sandwich</span><span class="p">)</span> <span class="i">toString</span>
   <span class="s">&quot;A tasty &quot;</span> <span class="o">+</span> <span class="i">meat</span> <span class="o">+</span> <span class="s">&quot; and &quot;</span> <span class="o">+</span> <span class="i">condiment</span> <span class="o">+</span> <span class="s">&quot; sandwich&quot;</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>So we have a class <code>Sandwich</code>. The class definition also automatically give us
 getter methods for <code>meat</code> and <code>condiment</code> that return the appropriate fields
 given a <code>Sandwich</code> instance on the left. We also define another method
@@ -196,14 +186,12 @@ given a <code>Sandwich</code> instance on the left. We also define another metho
 have any meat in it. Finally, we add a <code>toString</code> method so you can print
 sandwiches.</p>
 <p>Now let&rsquo;s make another module that uses this one:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// main.mag</span>
+<pre class="highlight language-magpie"><span class="c">// main.mag</span>
 <span class="k">import</span> <span class="i">sandwich</span>
 
 <span class="k">val</span> <span class="i">sandwich</span> <span class="o">=</span> <span class="t">Sandwich</span> <span class="i">new</span><span class="p">(</span><span class="i">meat</span><span class="p">:</span> <span class="s">&quot;ham&quot;</span><span class="p">,</span> <span class="i">condiment</span><span class="p">:</span> <span class="s">&quot;mayo&quot;</span><span class="p">)</span>
 <span class="i">print</span><span class="p">(</span><span class="s">&quot;veggie? &quot;</span> <span class="o">+</span> <span class="i">sandwich</span> <span class="i">isVegetarian</span><span class="p">)</span>
-<span class="i">print</span><span class="p">(</span><span class="i">sandwich</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">print</span><span class="p">(</span><span class="i">sandwich</span><span class="p">)</span></pre>
 <p>Seems pretty simple, right? It turns out that not binding methods to classes
 leads to a couple of subtle but deep problems. (At least they were subtle to
 <em>me</em>. I didn&rsquo;t realize them until I&rsquo;d implemented the intepreter and ran
@@ -215,24 +203,16 @@ current (and perhaps surprising) answer.</p>
 <p>So what happens when we run this example? Let&rsquo;s say for now that methods are
 scoped just like variables, which is how Magpie <em>used</em> to work. We&rsquo;ll walk
 through it a line at a time.</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">import</span> <span class="i">sandwich</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">import</span> <span class="i">sandwich</span></pre>
 <p>This takes all of the top-level variables and methods in <code>sandwich.mag</code> and
 binds them to the same names in <code>main.mag</code>. After that, <code>Sandwich</code>, <code>meat</code>,
 <code>condiment</code>, <code>isVegetarian</code>, and <code>toString</code> are all available for use.</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">val</span> <span class="i">sandwich</span> <span class="o">=</span> <span class="t">Sandwich</span> <span class="i">new</span><span class="p">(</span><span class="i">meat</span><span class="p">:</span> <span class="s">&quot;ham&quot;</span><span class="p">,</span> <span class="i">condiment</span><span class="p">:</span> <span class="s">&quot;mayo&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">val</span> <span class="i">sandwich</span> <span class="o">=</span> <span class="t">Sandwich</span> <span class="i">new</span><span class="p">(</span><span class="i">meat</span><span class="p">:</span> <span class="s">&quot;ham&quot;</span><span class="p">,</span> <span class="i">condiment</span><span class="p">:</span> <span class="s">&quot;mayo&quot;</span><span class="p">)</span></pre>
 <p>This creates a new <code>Sandwich</code> instance and stores it in a variable <code>sandwich</code>.</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">print</span><span class="p">(</span><span class="s">&quot;veggie? &quot;</span> <span class="o">+</span> <span class="i">sandwich</span> <span class="i">isVegetarian</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">print</span><span class="p">(</span><span class="s">&quot;veggie? &quot;</span> <span class="o">+</span> <span class="i">sandwich</span> <span class="i">isVegetarian</span><span class="p">)</span></pre>
 <p>This calls <code>isVegetarian</code>. We&rsquo;ve imported that method, so there&rsquo;s no problem
 here. Now consider the last line:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">print</span><span class="p">(</span><span class="i">sandwich</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">print</span><span class="p">(</span><span class="i">sandwich</span><span class="p">)</span></pre>
 <p><code>print()</code> is a built-in method that takes an object, converts it to a string by
 calling <code>toString</code> on it, and then displays it. &ldquo;Built-in&rdquo; just means it&rsquo;s
 defined in another <code>core</code> module and is automatically imported, so we do indeed
@@ -252,14 +232,12 @@ module that contains it.</p>
 <h2>The first solution: shared multimethod objects</h2>
 <p>My <a href="https://groups.google.com/g/magpie-lang/c/BilLNpvklYQ">fix</a> for this was to change what it means to import a multimethod. In our
 little example, the import graph is like:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">core
+<pre class="highlight language-asciiart">core
  ^^
  │└───┐
  │ sandwich
  │┌───┘
-main</code></pre>
-</div>
+main</pre>
 <p><code>main.mag</code> imports <code>sandwich.mag</code> and they both also (implicitly) import <code>core</code>.
 Core itself contains a <code>toString</code> method with specializations for the atomic
 types like numbers and strings.</p>
@@ -275,8 +253,7 @@ of imports that ultimately traces back to the root in <code>core</code>.</p>
 <h2>The second problem: colliding imports</h2>
 <p>Problem solved, right? Well, not so fast. After I did this, I ran into the next
 issue. Here&rsquo;s another example. We&rsquo;ve got these two modules:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// pal.mag</span>
+<pre class="highlight language-magpie"><span class="c">// pal.mag</span>
 <span class="k">defclass</span> <span class="t">Pal</span>
   <span class="k">val</span> <span class="i">name</span>
 <span class="k">end</span>
@@ -284,12 +261,10 @@ issue. Here&rsquo;s another example. We&rsquo;ve got these two modules:</p>
 <span class="c">// pet.mag</span>
 <span class="k">defclass</span> <span class="t">Pet</span>
   <span class="k">val</span> <span class="i">name</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>They both define classes that have <code>name</code> fields. That means they both
 implicitly create <code>name</code> methods. Then we use them:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// main.mag</span>
+<pre class="highlight language-magpie"><span class="c">// main.mag</span>
 <span class="k">import</span> <span class="t">Pal</span>
 <span class="k">import</span> <span class="t">Pet</span>
 
@@ -298,8 +273,7 @@ implicitly create <code>name</code> methods. Then we use them:</p>
 <span class="k">end</span>
 
 <span class="i">greet</span><span class="p">(</span><span class="t">Pal</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;Fred&quot;</span><span class="p">))</span>
-<span class="i">greet</span><span class="p">(</span><span class="t">Pet</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;Rex&quot;</span><span class="p">))</span></code></pre>
-</div>
+<span class="i">greet</span><span class="p">(</span><span class="t">Pet</span> <span class="i">new</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;Rex&quot;</span><span class="p">))</span></pre>
 <p>The intent here is clear: <code>greet()</code> should be able to print anything that has a
 <code>name</code> getter. What happens when we run this with our current semantics? It
 turns out we don&rsquo;t get very far.</p>
@@ -310,12 +284,10 @@ Then the second import comes along. It defines <code>Pet</code> fine, but there&
 imported into <code>main.mag</code> both from <code>core</code> and <code>sandwich.mag</code>, they were the
 exact same object, so we could just safely ignore it. Here, though, that isn&rsquo;t
 the case. The import graph is like:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">pal  pet
+<pre class="highlight language-asciiart">pal  pet
  ^    ^
  └─┐┌─┘
-  main</code></pre>
-</div>
+  main</pre>
 <p>There is no root module where a single <code>name</code> multimethod is being created.
 Instead, <code>pal.mag</code> and <code>pet.mag</code> both create their own unrelated <code>name</code>
 multimethods. When <code>main.mag</code> tries to import them both, they aren&rsquo;t the same
@@ -323,15 +295,13 @@ object, so they collide.</p>
 <h2>The second (failed) solution: just deal with it</h2>
 <p>My first stab at &ldquo;fixing&rdquo; this was to just declare those semantics are How It
 Should Be. If you have colliding method names, you just rename on import, like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// main.mag</span>
+<pre class="highlight language-magpie"><span class="c">// main.mag</span>
 <span class="k">import</span> <span class="t">Pal</span> <span class="k">with</span>
     <span class="i">name</span> <span class="k">as</span> <span class="i">pal</span><span class="p">.</span><span class="i">name</span>
 <span class="k">end</span>
 <span class="k">import</span> <span class="t">Pet</span> <span class="k">with</span>
     <span class="i">name</span> <span class="k">as</span> <span class="i">pet</span><span class="p">.</span><span class="i">name</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That works, but it&rsquo;s really ugly. I found in practice that method collisions
 were surprisingly common, almost always coming from fields with simple names
 like <code>name</code>. Having to qualify those at every use site sucks:</p>
@@ -368,8 +338,7 @@ sin by even contemplating this. After much gnashing of teeth, I concocted a
 rationalization for why this might not be so bad. Here goes&hellip;</p>
 <p>Consider your favorite conventional OOP language. We&rsquo;ll do Ruby because it looks
 nice here:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Cow</span>
+<pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Cow</span>
   <span class="k">def</span> <span class="i">speak</span><span class="p">()</span>
     <span class="i">puts</span> <span class="s">&quot;moo&quot;</span>
   <span class="k">end</span>
@@ -379,8 +348,7 @@ nice here:</p>
   <span class="k">def</span> <span class="i">speak</span><span class="p">()</span>
     <span class="i">puts</span> <span class="s">&quot;woof&quot;</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>We have two classes that both define <code>speak</code> methods. We don&rsquo;t think of <code>speak</code>
 as being &ldquo;global&rdquo; here because you get to the <code>speak</code> methods <em>through</em> an
 instance of <code>Cow</code> or <code>Dog</code>. Once you do, the method will correctly be associated
@@ -388,8 +356,7 @@ with the right type and do the right thing. You can&rsquo;t call <code>Dog</code
 instance of <code>Cow</code> or some other unrelated type. Likewise, if you don&rsquo;t have a
 dog or a cow, you can&rsquo;t get to <code>speak</code> at all.</p>
 <p>Now consider the Magpie equivalent, and assume that multimethods are globally scoped:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">defclass</span> <span class="t">Cow</span>
+<pre class="highlight language-magpie"><span class="k">defclass</span> <span class="t">Cow</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Cow</span><span class="p">)</span> <span class="i">speak</span>
@@ -401,8 +368,7 @@ dog or a cow, you can&rsquo;t get to <code>speak</code> at all.</p>
 
 <span class="k">def</span> <span class="p">(</span><span class="k">is</span> <span class="t">Dog</span><span class="p">)</span> <span class="i">speak</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;woof&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>How does it compare? Like the Ruby solution, you can&rsquo;t call <code>Cow</code>&rsquo;s <code>speak</code>
 method using a <code>Dog</code> or some other type. If you don&rsquo;t have a dog or a cow, you
 can&rsquo;t get to <code>speak</code> at all.</p>
@@ -420,8 +386,7 @@ also express a bunch of stuff that single-dispatch languages can&rsquo;t.</p>
 <p>Multimethods match on <em>all</em> of their arguments, not just the &ldquo;receiver&rdquo; on the
 left-hand side. Let&rsquo;s go back to our Ruby example. Say we need to serialize Dogs
 and Cows to a stream. Since classes in Ruby are open for extension, we can do:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Dog</span>
+<pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Dog</span>
   <span class="k">def</span> <span class="i">serialize</span><span class="p">(</span><span class="i">stream</span><span class="p">)</span>
     <span class="i">stream</span> <span class="i">write</span><span class="p">(</span><span class="s">&quot;dog&quot;</span><span class="p">)</span>
   <span class="k">end</span>
@@ -431,12 +396,10 @@ and Cows to a stream. Since classes in Ruby are open for extension, we can do:</
   <span class="k">def</span> <span class="i">serialize</span><span class="p">(</span><span class="i">stream</span><span class="p">)</span>
     <span class="i">stream</span> <span class="i">write</span><span class="p">(</span><span class="s">&quot;cow&quot;</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Swell. But then someone else on our team gets tasked with making dogs and cows
 support serializing to XML. If they aren&rsquo;t aware of <em>our</em> monkey-patch and add:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Dog</span>
+<pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Dog</span>
   <span class="k">def</span> <span class="i">serialize</span><span class="p">(</span><span class="i">xmlWriter</span><span class="p">)</span>
     <span class="i">xmlWriter</span> <span class="i">write</span><span class="p">(</span><span class="s">&quot;&lt;dog&gt;&lt;/dog&gt;&quot;</span><span class="p">)</span>
   <span class="k">end</span>
@@ -446,13 +409,11 @@ support serializing to XML. If they aren&rsquo;t aware of <em>our</em> monkey-pa
   <span class="k">def</span> <span class="i">serialize</span><span class="p">(</span><span class="i">xmlWriter</span><span class="p">)</span>
     <span class="i">xmlWriter</span> <span class="i">write</span><span class="p">(</span><span class="s">&quot;&lt;cow&gt;&lt;/cow&gt;&quot;</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Those <code>serialize</code> methods will obliterate the ones for writing to a stream. Or
 maybe the other way around. It depends on whose code gets to run last. Nasty.</p>
 <p>Meanwhile, in Magpie:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="i">dog</span> <span class="k">is</span> <span class="t">Dog</span><span class="p">)</span> <span class="i">write</span><span class="p">(</span><span class="i">stream</span> <span class="k">is</span> <span class="t">Stream</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="i">dog</span> <span class="k">is</span> <span class="t">Dog</span><span class="p">)</span> <span class="i">write</span><span class="p">(</span><span class="i">stream</span> <span class="k">is</span> <span class="t">Stream</span><span class="p">)</span>
   <span class="i">stream</span> <span class="i">write</span><span class="p">(</span><span class="s">&quot;dog&quot;</span><span class="p">)</span>
 <span class="k">end</span>
 
@@ -466,8 +427,7 @@ maybe the other way around. It depends on whose code gets to run last. Nasty.</p
 
 <span class="k">def</span> <span class="p">(</span><span class="i">cow</span> <span class="k">is</span> <span class="t">Cow</span><span class="p">)</span> <span class="i">write</span><span class="p">(</span><span class="i">writer</span> <span class="k">is</span> <span class="t">XmlWriter</span><span class="p">)</span>
   <span class="i">writer</span> <span class="i">write</span><span class="p">(</span><span class="s">&quot;&lt;cow&gt;&lt;/cow&gt;&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here, there is no collision at all. When you call <code>write</code>, the interpreter looks
 at both the left-hand argument (a <code>Cow</code> or a <code>Dog</code>) <em>and</em> the right-hand side (a
 <code>Stream</code> or an <code>XmlWriter</code>) and picks the one perfect method for those types.</p>

@@ -51,19 +51,16 @@ readable to most people.</p>
 review how Smalltalk handles control flow before we get to Finch. If you know
 Smalltalk, feel free to skip this.</p>
 <p>Let&rsquo;s consider a fairly boring chunk of code in a curly brace language:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="k">if</span> <span class="p">(</span><span class="i">numWeasels</span> <span class="o">&gt;</span> <span class="i">numCakes</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="k">if</span> <span class="p">(</span><span class="i">numWeasels</span> <span class="o">&gt;</span> <span class="i">numCakes</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Not enough cakes!&quot;</span><span class="p">);</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="t">int</span> <span class="i">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">i</span> <span class="o">&lt;</span> <span class="i">numWeasels</span><span class="p">;</span> <span class="i">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;A weasel eats a cake!&quot;</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>We&rsquo;ve got three keywords there: <code>if</code>, <code>else</code>, and <code>for</code>. Here&rsquo;s how that code
 would look in Smalltalk:</p>
-<div class="highlight">
-<pre><code class="language-smalltalk" data-lang="smalltalk"><span class="i">numWeasels</span> <span class="o">&gt;</span> <span class="i">numCakes</span> <span class="k">ifTrue:</span> <span class="p">[</span>
+<pre class="highlight language-smalltalk"><span class="i">numWeasels</span> <span class="o">&gt;</span> <span class="i">numCakes</span> <span class="k">ifTrue:</span> <span class="p">[</span>
   <span class="s">&#39;Not enough cakes!&#39;</span> <span class="i">print</span>
 <span class="p">]</span> <span class="k">ifFalse:</span> <span class="p">[</span>
   <span class="i">i</span> <span class="o">:=</span> <span class="n">0</span><span class="p">.</span>
@@ -71,19 +68,16 @@ would look in Smalltalk:</p>
     <span class="s">&#39;A weasel eats a cake!&#39;</span> <span class="i">print</span><span class="p">.</span>
     <span class="i">i</span> <span class="o">:=</span> <span class="i">i</span> <span class="o">+</span> <span class="n">1</span>
   <span class="p">]</span>
-<span class="p">]</span></code></pre>
-</div>
+<span class="p">]</span></pre>
 <p>Whoa, what? First, we&rsquo;ll gloss over the basic stuff we don&rsquo;t care about here:
 <code>.</code> is used to separate statements, <code>:=</code> is for assignment, and the function
 (method) comes after the argument instead of before.</p>
 <p>The control flow part of that code is this:</p>
-<div class="highlight">
-<pre><code class="language-smalltalk" data-lang="smalltalk"><span class="p">...</span> <span class="k">ifTrue:</span> <span class="p">[</span>
+<pre class="highlight language-smalltalk"><span class="p">...</span> <span class="k">ifTrue:</span> <span class="p">[</span>
   <span class="p">...</span>
 <span class="p">]</span> <span class="k">ifFalse:</span> <span class="p">[</span>
   <span class="p">[</span> <span class="p">...</span> <span class="p">]</span> <span class="k">whileTrue:</span> <span class="p">[</span> <span class="p">...</span> <span class="p">]</span>
-<span class="p">]</span></code></pre>
-</div>
+<span class="p">]</span></pre>
 <p>You may think that all we&rsquo;ve done is simple replacement: curlies become square
 brackets, <code>if</code> becomes <code>ifTrue:</code>, etc. Not so fast. <code>ifTrue:</code>, <code>IfFalse:</code>, and
 <code>whileTrue:</code> aren&rsquo;t reserved words in Smalltalk. They aren&rsquo;t special at all, in
@@ -93,22 +87,16 @@ let&rsquo;s do that.</p>
 Boolean condition to check, a block of code to execute if the condition is true
 and (optionally) a block to execute if the condition is false. If you were to
 declare a &ldquo;function&rdquo; for if/then in C, it would look like this:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">void</span> <span class="i">ifThen</span><span class="p">(</span><span class="t">bool</span> <span class="i">condition</span><span class="p">,</span> <span class="t">Code</span> <span class="i">ifTrue</span><span class="p">,</span> <span class="t">Code</span> <span class="i">ifFalse</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-c"><span class="t">void</span> <span class="i">ifThen</span><span class="p">(</span><span class="t">bool</span> <span class="i">condition</span><span class="p">,</span> <span class="t">Code</span> <span class="i">ifTrue</span><span class="p">,</span> <span class="t">Code</span> <span class="i">ifFalse</span><span class="p">);</span></pre>
 <p>The problem, of course, is that Code isn&rsquo;t a type in C: there&rsquo;s no easy way to
 pass around a reference to a chunk of code outside of function pointers.
 Smalltalk doesn&rsquo;t have that problem&mdash;it has <em>blocks</em>. That&rsquo;s what the square
 brackets are doing in the original example. They create a block&mdash;a chunk of
 unevaluated code encapsulated as an object. If you do this:</p>
-<div class="highlight">
-<pre><code class="language-smalltalk" data-lang="smalltalk"><span class="p">[</span> <span class="s">&#39;hi&#39;</span> <span class="i">print</span> <span class="p">]</span></code></pre>
-</div>
+<pre class="highlight language-smalltalk"><span class="p">[</span> <span class="s">&#39;hi&#39;</span> <span class="i">print</span> <span class="p">]</span></pre>
 <p>It doesn&rsquo;t print &ldquo;hi&rdquo;. Instead, it creates an object representing that chunk of
 code. If you then <em>call</em> the block by sending it a <code>value</code> message:</p>
-<div class="highlight">
-<pre><code class="language-smalltalk" data-lang="smalltalk"><span class="p">[</span> <span class="s">&#39;hi&#39;</span> <span class="i">print</span> <span class="p">]</span> <span class="i">value</span></code></pre>
-</div>
+<pre class="highlight language-smalltalk"><span class="p">[</span> <span class="s">&#39;hi&#39;</span> <span class="i">print</span> <span class="p">]</span> <span class="i">value</span></pre>
 <p><em>Then</em> it prints the string. Of course, you don&rsquo;t have to call a block
 immediately, or at all. You can store it in a variable, pass it to another
 function, call it repeatedly, etc.</p>
@@ -133,15 +121,13 @@ create all sorts of control structures and functional idioms like <code>map</cod
 <p>I wanted Finch to have that power but look less funny. (According to my
 definition of &ldquo;funny&rdquo;, of course. Smalltalkers think their language looks
 perfectly normal.) Here&rsquo;s how our example looks in Finch:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="k">if:</span> <span class="i">numWeasels</span> <span class="o">&gt;</span> <span class="i">numCakes</span> <span class="k">then:</span> <span class="p">{</span>
+<pre class="highlight language-finch"><span class="k">if:</span> <span class="i">numWeasels</span> <span class="o">&gt;</span> <span class="i">numCakes</span> <span class="k">then:</span> <span class="p">{</span>
   <span class="k">write:</span> <span class="s">&quot;Not enough cakes!&quot;</span>
 <span class="p">}</span> <span class="k">else:</span> <span class="p">{</span>
   <span class="k">from:</span> <span class="n">1</span> <span class="k">to:</span> <span class="i">numWeasels</span> <span class="k">do:</span> <span class="p">{</span>
     <span class="k">write:</span> <span class="s">&quot;A weasel eats a cake!&quot;</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The first minor change is using curlies to define blocks instead of square
 brackets. The more interesting change is that <code>if:then:else:</code> doesn&rsquo;t seem to
 have a receiver&mdash;an object that the method is acting on.</p>
@@ -172,15 +158,13 @@ in Finch that look just like &ldquo;real&rdquo; ones.</p>
 <p>For example, the <code>from:to:do:</code> block we saw earlier is actually written in
 Finch. It uses <code>while:do:</code> which is the only looping construct explicitly built
 into the interpreter. Its definition is:</p>
-<div class="highlight">
-<pre><code class="language-finch" data-lang="finch"><span class="t">Ether</span> <span class="p">::</span> <span class="k">from:</span> <span class="i">start</span> <span class="k">to:</span> <span class="i">end</span> <span class="k">do:</span> <span class="i">block</span> <span class="p">{</span>
+<pre class="highlight language-finch"><span class="t">Ether</span> <span class="p">::</span> <span class="k">from:</span> <span class="i">start</span> <span class="k">to:</span> <span class="i">end</span> <span class="k">do:</span> <span class="i">block</span> <span class="p">{</span>
   <span class="i">i</span> <span class="o">&lt;-</span> <span class="i">start</span>
   <span class="k">while:</span> <span class="p">{</span> <span class="i">i</span> <span class="o">&lt;=</span> <span class="i">end</span> <span class="p">}</span> <span class="k">do:</span> <span class="p">{</span>
     <span class="i">block</span> <span class="k">call:</span> <span class="i">i</span>
     <span class="i">i</span> <span class="o">&lt;--</span> <span class="i">i</span> <span class="o">+</span> <span class="n">1</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
   <div class="comments">
     <div id="disqus_thread"></div>
     <script type="text/javascript">

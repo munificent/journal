@@ -37,11 +37,9 @@
 <p>You would think iteration, you know <em>looping over stuff</em>, would be a solved
 problem in programming languages. Seriously, here&rsquo;s some <em>FORTRAN</em> code that
 does a loop and would run on a computer fifty years ago:</p>
-<div class="highlight">
-<pre><code class="language-fortran" data-lang="fortran"><span class="k">do</span> <span class="i">i</span><span class="o">=</span><span class="n">1</span><span class="p">,</span><span class="n">10</span>
+<pre class="highlight language-fortran"><span class="k">do</span> <span class="i">i</span><span class="o">=</span><span class="n">1</span><span class="p">,</span><span class="n">10</span>
   <span class="k">print</span> <span class="i">i</span>
-<span class="k">end</span> <span class="k">do</span></code></pre>
-</div>
+<span class="k">end</span> <span class="k">do</span></pre>
 <p>So when I started designing loops in my little language <a href="http://magpie-lang.org/">Magpie</a>, I figured it
 would be pretty straightforward:</p>
 <ol>
@@ -74,21 +72,17 @@ awful for others. They&rsquo;re like Yin and Yang, or maybe Kid and Play.</p>
 C#, Python, PHP, or pretty much any <a href="http://en.wikipedia.org/wiki/Dynamic_dispatch#Single_and_multiple_dispatch">single-dispatch</a> object-oriented
 language, this is you. Your language gives you some <code>for</code> or <code>foreach</code>
 statement, like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">];</span>
-<span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">i</span> <span class="k">in</span> <span class="i">elements</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">i</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">];</span>
+<span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">i</span> <span class="k">in</span> <span class="i">elements</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">i</span><span class="p">);</span></pre>
 <p>(This is <a href="http://www.dart.dev/">Dart</a> if you were wondering.)</p>
 <p>What the compiler sees is a little different. If you squint through the Matrix,
 then a loop like the above is really:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">var</span> <span class="i">elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">];</span>
+<pre class="highlight language-dart"><span class="k">var</span> <span class="i">elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">,</span> <span class="n">5</span><span class="p">];</span>
 <span class="k">var</span> <span class="i">__iterator</span> <span class="o">=</span> <span class="i">elements</span><span class="p">.</span><span class="i">iterator</span><span class="p">();</span>
 <span class="k">while</span> <span class="p">(</span><span class="i">__iterator</span><span class="p">.</span><span class="i">moveNext</span><span class="p">())</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="i">__iterator</span><span class="p">.</span><span class="i">current</span><span class="p">;</span>
   <span class="i">print</span><span class="p">(</span><span class="i">i</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The <code>.iterator()</code>, <code>.moveNext()</code>, and <code>.current</code> calls are the <em>iteration
 protocol</em>. If you want to define your own iterable thing, you create a type that
 supports that protocol. Since a <code>for</code> statement compiles down (or &ldquo;<a href="http://en.wikipedia.org/wiki/Syntactic_sugar">desugars</a>"
@@ -113,15 +107,13 @@ protocol</a>.</p>
 function that returns <code>true</code> if a sequence contains a given item and <code>false</code> if
 it doesn&rsquo;t. I&rsquo;ll use Dart again because I think Dart actually works pretty well
 as an <em>Ur</em>-language that most programmers can grok:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">bool</span> <span class="i">find</span><span class="p">(</span><span class="t">Iterable</span> <span class="i">haystack</span><span class="p">,</span> <span class="t">Object</span> <span class="i">needle</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="t">bool</span> <span class="i">find</span><span class="p">(</span><span class="t">Iterable</span> <span class="i">haystack</span><span class="p">,</span> <span class="t">Object</span> <span class="i">needle</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">item</span> <span class="k">in</span> <span class="i">haystack</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="i">item</span> <span class="o">==</span> <span class="i">needle</span><span class="p">)</span> <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
   <span class="p">}</span>
 
   <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Dead simple. One key property this function has is that it <em>short-circuits</em>: it
 stops iterating as soon as it finds the item. This is not just an optimization,
 but critical when you consider that some sequences (like reading the lines in a
@@ -130,15 +122,12 @@ file) may have side effects. The sequence may even be infinite.</p>
 <p>Let&rsquo;s do something a bit more complex. Let&rsquo;s write a function that takes two
 sequences and returns a sequence that alternates between items in each sequence.
 So if you throw <code>[1, 2, 3]</code> and <code>[7, 8, 9]</code> at it, you get back <code>[1, 7, 2, 8, 3, 9]</code>.</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">Iterable</span> <span class="i">interleave</span><span class="p">(</span><span class="t">Iterable</span> <span class="i">a</span><span class="p">,</span> <span class="t">Iterable</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="t">Iterable</span> <span class="i">interleave</span><span class="p">(</span><span class="t">Iterable</span> <span class="i">a</span><span class="p">,</span> <span class="t">Iterable</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="t">InterleaveIterable</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The function just delegates to an object, because you need some type to hang the
 iterator protocol off of. Here&rsquo;s that type:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">InterleaveIterable</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">InterleaveIterable</span> <span class="p">{</span>
   <span class="t">Iterable</span> <span class="i">a</span><span class="p">;</span>
   <span class="t">Iterable</span> <span class="i">b</span><span class="p">;</span>
   <span class="t">InterleaveIterable</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">a</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="i">b</span><span class="p">);</span>
@@ -146,14 +135,12 @@ iterator protocol off of. Here&rsquo;s that type:</p>
   <span class="t">Iterator</span> <span class="k">get</span> <span class="i">iterator</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="t">InterleaveIterator</span><span class="p">(</span><span class="i">a</span><span class="p">.</span><span class="i">iterator</span><span class="p">(),</span> <span class="i">b</span><span class="p">.</span><span class="i">iterator</span><span class="p">());</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>OK, again just another bit of delegation. This is because most iterator
 protocols separate the &ldquo;thing that can be iterated&rdquo; from the object representing
 the <em>current</em> iteration state. The former is not modified by being iterated
 over, but the latter is. Finally we get to the real code:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">InterleaveIterator</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">InterleaveIterator</span> <span class="p">{</span>
   <span class="t">Iterator</span> <span class="i">a</span><span class="p">;</span>
   <span class="t">Iterator</span> <span class="i">b</span><span class="p">;</span>
   <span class="t">InterleaveIterator</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">a</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="i">b</span><span class="p">);</span>
@@ -170,46 +157,38 @@ over, but the latter is. Finally we get to the real code:</p>
   <span class="p">}</span>
 
   <span class="k">get</span> <span class="i">current</span> <span class="o">=&gt;</span> <span class="i">a</span><span class="p">.</span><span class="i">current</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This is a bit verbose, but it&rsquo;s pretty straightforward. Each time you call
 <code>moveNext()</code>, it reads from one of the iterators and then swaps them. It stops
 as soon as either one is done. Pretty groovy.</p>
 <h3>Kitten-punch example: walking a tree</h3>
 <p>Now let&rsquo;s see the ugly side of this. Let&rsquo;s say we&rsquo;ve got a simple binary tree
 class, like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Tree</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Tree</span> <span class="p">{</span>
   <span class="t">Tree</span> <span class="i">left</span><span class="p">;</span>
   <span class="t">String</span> <span class="i">label</span><span class="p">;</span>
   <span class="t">Tree</span> <span class="i">right</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now say we want to print the tree&rsquo;s labels in order, meaning we print everything
 on the left branch first (recursively), then print the label, then the right.
 The implementation is as simple as the description:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">printTree</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">printTree</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">left</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="i">printTree</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">left</span><span class="p">);</span>
   <span class="i">print</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">label</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">right</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="i">printTree</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">right</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Later, we realize we need to do other stuff on trees in order. Maybe we need to
 convert it to JSON, or just count the number of nodes or something. What&rsquo;d we&rsquo;d
 really like is to be able to <em>iterate</em> over the nodes in order and then do
 whatever we want with each item. So the above function becomes:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">printTree</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">printTree</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">node</span> <span class="k">in</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">print</span><span class="p">(</span><span class="i">node</span><span class="p">.</span><span class="i">label</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>For this to work, <code>Tree</code> has to implement the iterator protocol. What does that
 look like? It&rsquo;s best just to swallow the whole bitter pill at once:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Tree</span> <span class="k">implements</span> <span class="t">Iterable</span><span class="o">&lt;</span><span class="t">Tree</span><span class="o">&gt;</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Tree</span> <span class="k">implements</span> <span class="t">Iterable</span><span class="o">&lt;</span><span class="t">Tree</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="t">Tree</span> <span class="i">left</span><span class="p">;</span>
   <span class="t">String</span> <span class="i">label</span><span class="p">;</span>
   <span class="t">Tree</span> <span class="i">right</span><span class="p">;</span>
@@ -260,8 +239,7 @@ look like? It&rsquo;s best just to swallow the whole bitter pill at once:</p>
   <span class="p">}</span>
 
   <span class="t">Tree</span> <span class="i">current</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Sweet Mother of Turing, what the hell happened here? This exact same behavior
 was a <em>three line</em> recursive function and now it&rsquo;s a fifty line monstrosity.</p>
 <p>I&rsquo;ll get back to exactly what went wrong here but for now let&rsquo;s just agree that
@@ -289,10 +267,8 @@ out of the loop.</p>
 <p>Internal iterators reverse that power dynamic. With an internal iterator, the
 code that generates values decides when to invoke the code that uses that value.
 For example, here&rsquo;s how you print the Beatles in Ruby:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="i">beatles</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;George&#39;</span><span class="p">,</span> <span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="s">&#39;Paul&#39;</span><span class="p">,</span> <span class="s">&#39;Ringo&#39;</span><span class="p">]</span>
-<span class="i">beatles</span><span class="p">.</span><span class="i">each</span> <span class="p">{</span> <span class="o">|</span><span class="i">beatle</span><span class="o">|</span> <span class="i">puts</span> <span class="i">beatle</span> <span class="p">}</span></code></pre>
-</div>
+<pre class="highlight language-ruby"><span class="i">beatles</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;George&#39;</span><span class="p">,</span> <span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="s">&#39;Paul&#39;</span><span class="p">,</span> <span class="s">&#39;Ringo&#39;</span><span class="p">]</span>
+<span class="i">beatles</span><span class="p">.</span><span class="i">each</span> <span class="p">{</span> <span class="o">|</span><span class="i">beatle</span><span class="o">|</span> <span class="i">puts</span> <span class="i">beatle</span> <span class="p">}</span></pre>
 <p>That <code>each</code> method on <code>Array</code> is the iterator. Its job is to walk over each item
 in the array. The <code>{ |beatle| puts beatle }</code> part is the code we want to run for
 each item. The curlies define a <em>block</em> in Ruby: a first-class chunk of code you
@@ -303,8 +279,7 @@ call that block of code for each item, passing in the value.</p>
 <h3>Beautiful example 1: walking a tree</h3>
 <p>Let&rsquo;s see what our ugly external iterator example looks like in Ruby. First, we
 define the tree:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Tree</span>
+<pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Tree</span>
   <span class="i">attr_accessor</span> <span class="p">:</span><span class="i">left</span><span class="p">,</span> <span class="p">:</span><span class="i">label</span><span class="p">,</span> <span class="p">:</span><span class="i">right</span>
 
   <span class="k">def</span> <span class="i">initialize</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">label</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span>
@@ -312,35 +287,28 @@ define the tree:</p>
     <span class="f">@label</span> <span class="o">=</span> <span class="i">label</span>
     <span class="f">@right</span> <span class="o">=</span> <span class="i">right</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>To walk the tree using an internal iterator style, we want this to magically
 work:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="i">tree</span><span class="p">.</span><span class="i">in_order</span> <span class="p">{</span> <span class="o">|</span><span class="i">node</span><span class="o">|</span> <span class="i">puts</span> <span class="i">node</span><span class="p">.</span><span class="i">label</span> <span class="p">}</span></code></pre>
-</div>
+<pre class="highlight language-ruby"><span class="i">tree</span><span class="p">.</span><span class="i">in_order</span> <span class="p">{</span> <span class="o">|</span><span class="i">node</span><span class="o">|</span> <span class="i">puts</span> <span class="i">node</span><span class="p">.</span><span class="i">label</span> <span class="p">}</span></pre>
 <p>Implementing that iterator in Dart (or Java, or C#) was about 50 lines of code.
 Here it is in Ruby:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Tree</span>
+<pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Tree</span>
   <span class="k">def</span> <span class="i">in_order</span><span class="p">(</span><span class="o">&amp;</span><span class="i">code</span><span class="p">)</span>
     <span class="f">@left</span><span class="p">.</span><span class="i">in_order</span> <span class="o">&amp;</span><span class="i">code</span> <span class="k">if</span> <span class="f">@left</span>
     <span class="i">code</span><span class="p">.</span><span class="i">call</span><span class="p">(</span><span class="k">self</span><span class="p">)</span>
     <span class="f">@right</span><span class="p">.</span><span class="i">in_order</span> <span class="o">&amp;</span><span class="i">code</span> <span class="k">if</span> <span class="f">@right</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Yup, that&rsquo;s it. It looks pretty much like the original recursive function,
 because it <em>is</em> just like that function. The only difference is where that Dart
 function was hard-coded to just call <code>print()</code>, this one takes a <em>block</em>&mdash;basically a callback to invoke with each value. In fact, we can implement the
 same thing in any language with anonymous functions. Here&rsquo;s Dart:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">inOrder</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">,</span> <span class="k">void</span> <span class="k">Function</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="i">callback</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">inOrder</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">,</span> <span class="k">void</span> <span class="k">Function</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="i">callback</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">left</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="i">inOrder</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">left</span><span class="p">);</span>
   <span class="i">callback</span><span class="p">(</span><span class="i">tree</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">right</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="i">inOrder</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">right</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>You couldn&rsquo;t do this in Java (&hellip;<a href="http://openjdk.java.net/projects/lambda/">yet</a>), but in most object-oriented
 languages you can passably support internal iterators. It&rsquo;s just not idiomatic
 to do so.</p>
@@ -351,31 +319,25 @@ Let&rsquo;s see how it fares on the others.</p>
 iterable object, sees if it contains some object. By &ldquo;any iterable object&rdquo;, we
 mean &ldquo;has an <code>each</code>&rdquo; method, which is the canonical way to iterate. Something
 like:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="i">contains</span><span class="p">(</span><span class="i">haystack</span><span class="p">,</span> <span class="i">needle</span><span class="p">)</span>
+<pre class="highlight language-ruby"><span class="k">def</span> <span class="i">contains</span><span class="p">(</span><span class="i">haystack</span><span class="p">,</span> <span class="i">needle</span><span class="p">)</span>
   <span class="i">haystack</span><span class="p">.</span><span class="i">each</span> <span class="p">{</span> <span class="o">|</span><span class="i">item</span><span class="o">|</span> <span class="k">return</span> <span class="t">true</span> <span class="k">if</span> <span class="i">item</span> <span class="o">==</span> <span class="i">needle</span> <span class="p">}</span>
   <span class="t">false</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Not bad! So we&rsquo;re two-for-two on internal style. Let&rsquo;s transmogrify this into
 Dart:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">bool</span> <span class="i">contains</span><span class="p">(</span><span class="t">Iterable</span> <span class="i">haystack</span><span class="p">,</span> <span class="i">needle</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="t">bool</span> <span class="i">contains</span><span class="p">(</span><span class="t">Iterable</span> <span class="i">haystack</span><span class="p">,</span> <span class="i">needle</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">haystack</span><span class="p">.</span><span class="i">forEach</span><span class="p">((</span><span class="i">item</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="i">item</span> <span class="o">==</span> <span class="i">needle</span><span class="p">)</span> <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
   <span class="p">});</span>
   <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Still pretty terse! Except there&rsquo;s one problem: <em>it doesn&rsquo;t actually work.</em></p>
 <p>What&rsquo;s the difference? In both examples, there&rsquo;s a little chunk of code: <code>return true</code>. The intent of that code is to cause the <code>contains()</code> method to return
 <code>true</code>. But in the Dart example, that <code>return</code> statement is contained inside a
 lambda, a little anonymous function:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="p">(</span><span class="i">item</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="p">(</span><span class="i">item</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">item</span> <span class="o">==</span> <span class="i">needle</span><span class="p">)</span> <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>So all it does is cause that <em>function</em> to return. So the callback ends and
 returns back to <code>forEach()</code> which then proceeds along its merry way onto the
 next item. In Ruby, that <code>return</code> doesn&rsquo;t return from the <em>block</em> that contains
@@ -412,25 +374,21 @@ structure</em>. Each stack frame&mdash;every function that you&rsquo;re currentl
 like an object. The local variables are the fields in that object. You get
 another bit of extra data for free too: the current execution pointer. The
 callstack keeps track of where you are in your function. For example:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">lameExample</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">lameExample</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;I&#39;m at the top&quot;</span><span class="p">);</span>
   <span class="i">doSomething</span><span class="p">();</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;I&#39;m in the middle&quot;</span><span class="p">);</span>
   <span class="i">doSomething</span><span class="p">();</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Dead last like a chump&quot;</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>We kind of take this for granted, but each time <code>doSomething()</code> returns to this
 <code>lameExample()</code>, execution picks up right where it left off. That&rsquo;s handy.
 Remember our recursive tree traversal:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">printTree</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="i">printTree</span><span class="p">(</span><span class="t">Tree</span> <span class="i">tree</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">left</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="i">printTree</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">left</span><span class="p">);</span>
   <span class="i">print</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">label</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">right</span> <span class="o">!=</span> <span class="k">null</span><span class="p">)</span> <span class="i">printTree</span><span class="p">(</span><span class="i">tree</span><span class="p">.</span><span class="i">right</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>After calling <code>printTree()</code> on the left branch, the program resumed where it
 left off, printed the label, and went to the next branch. Once you throw in
 recursion, you also get the ability to represent a <em>stack</em> of these implicit
@@ -452,16 +410,14 @@ It&rsquo;s a question of who gets to control the callstack. Earlier, I said that
 are two chunks of code involved in iteration: the code generating the values,
 and the code doing stuff with them. In an external iterator, your callstack
 looks like this:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">┌────────────┐
+<pre class="highlight language-asciiart">┌────────────┐
 │ moveNext() │
 ├────────────┤
 │ loop body  │
 └────────────┘
   ...
 
-  main()</code></pre>
-</div>
+  main()</pre>
 <p>The method containing the loop calls <code>moveNext()</code>, which pushes it on top of the
 stack. The <code>moveNext()</code> method can in turn call whatever it wants, so it
 <em>temporarily</em> has free reign on the callstack. But it has to return, unwind, and
@@ -472,19 +428,16 @@ discarded if it was stored in callframes, TreeIterator had to reify it&mdash;sti
 it in that <code>stack</code> of IterateState objects. That way the state is still around
 the next time <code>moveNext()</code> is called.</p>
 <p>With an internal iterator, the stack is like this:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">┌────────────────────────┐
+<pre class="highlight language-asciiart">┌────────────────────────┐
 │ each()                 │
 ├────────────────────────┤
 │ method containing loop │
 └────────────────────────┘
   ...
 
-  main()</code></pre>
-</div>
+  main()</pre>
 <p>Now the iterator is on top. It can build up whatever stack frames it wants, and then, whenever its convenient, invoke the block:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">┌────────────────────────┐
+<pre class="highlight language-asciiart">┌────────────────────────┐
 │ block                  │
 └────────────────────────┘
   stuff...
@@ -495,8 +448,7 @@ the next time <code>moveNext()</code> is called.</p>
 └────────────────────────┘
   ...
 
-  main()</code></pre>
-</div>
+  main()</pre>
 <p>The <em>block</em> now has to return to <code>each()</code> (or whatever <code>each()</code> calls). So the
 iterator can keep whatever state on the callstack it wants, since it&rsquo;s in
 control. But, as you can see, you really need non-local returns for this to work

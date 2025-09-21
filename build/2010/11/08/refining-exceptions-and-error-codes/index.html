@@ -108,17 +108,14 @@ notice them. I&rsquo;m comfortable with the Java and C# model of &ldquo;throw an
 that isn&rsquo;t expected to be caught&rdquo;. Aborting with a stack dump is equally
 effective, and does the same thing in practice.</p>
 <p>For example, a method for accessing an item in a collection could look like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="t">Collection</span> <span class="i">getItemAt</span><span class="p">(</span><span class="i">index</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Item</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="t">Collection</span> <span class="i">getItemAt</span><span class="p">(</span><span class="i">index</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Item</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">index</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="k">or</span> <span class="i">index</span> <span class="o">&gt;</span> <span class="i">count</span> <span class="k">then</span> <span class="t">OutOfBoundsError</span> <span class="i">throw</span><span class="p">()</span>
 
   <span class="c">// Do stuff with index...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That is a bit tedious, though. I&rsquo;d likely refactor that into a separate
 function, like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="t">Int</span> <span class="i">checkBounds</span><span class="p">(</span><span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="t">Int</span> <span class="i">checkBounds</span><span class="p">(</span><span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span><span class="p">)</span>
   <span class="k">if</span> <span class="k">this</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="k">or</span> <span class="k">this</span> <span class="o">&gt;</span> <span class="i">count</span> <span class="k">then</span> <span class="t">OutOfBoundsError</span> <span class="i">throw</span><span class="p">()</span>
 <span class="k">end</span>
 
@@ -126,8 +123,7 @@ function, like:</p>
   <span class="i">index</span> <span class="i">checkBounds</span><span class="p">(</span><span class="i">count</span><span class="p">)</span>
 
   <span class="c">// Do stuff with index...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Not exactly rocket science, but I think it gets the job done. Let&rsquo;s skip runtime
 errors and move on to the other easy one:</p>
 <h3>Handling catastrophic errors</h3>
@@ -137,13 +133,11 @@ wouldn&rsquo;t even be thrown from Magpie code&mdash;they&rsquo;d bubble up from
 the interpreter itself.</p>
 <p>On the off chance that you <em>do</em> want to catch one, you can use a regular catch
 block:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">try</span>
+<pre class="highlight language-magpie"><span class="k">try</span>
   <span class="c">// Allocate a huge array...</span>
 <span class="k">catch</span> <span class="p">(</span><span class="i">err</span> <span class="t">OutOfMemoryError</span><span class="p">)</span>
   <span class="c">// Handle the error...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Familiar territory. If you&rsquo;ve used exceptions a lot, you&rsquo;ve noticed one annoying
 thing with them is that they&rsquo;re syntactically cumbersome. You have to create
 this <code>try</code> block and push everything over a level of indentation. To try to
@@ -151,23 +145,19 @@ simplify that, I&rsquo;m batting around an idea that might be clever, or might j
 really dumb: treat <em>every</em> block as a <code>try</code> block.</p>
 <p>The basic idea is that any block can have <code>catch</code> clauses at the end of it, and
 having them implicitly makes it a <code>try</code> block. That should take code like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">copy</span><span class="p">(</span><span class="i">source</span> <span class="t">String</span><span class="p">,</span> <span class="i">dest</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">copy</span><span class="p">(</span><span class="i">source</span> <span class="t">String</span><span class="p">,</span> <span class="i">dest</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
   <span class="k">try</span>
     <span class="c">// Copy files...</span>
   <span class="k">catch</span> <span class="p">(</span><span class="i">e</span> <span class="t">IOError</span><span class="p">)</span>
     <span class="c">// Handle error...</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>And simplify it to:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">copy</span><span class="p">(</span><span class="i">source</span> <span class="t">String</span><span class="p">,</span> <span class="i">dest</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">copy</span><span class="p">(</span><span class="i">source</span> <span class="t">String</span><span class="p">,</span> <span class="i">dest</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
   <span class="c">// Copy files...</span>
 <span class="k">catch</span> <span class="p">(</span><span class="i">e</span> <span class="t">IOError</span><span class="p">)</span>
   <span class="c">// Handle error...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>I&rsquo;ll have to try it out to see if it causes any problems in the grammar, but my
 hope is it will work OK. I&rsquo;m curious to see if just making exceptions a little
 more terse like this will make them more palatable to people who dislike them.
@@ -179,49 +169,39 @@ easy way to bucket them into &ldquo;common&rdquo; and &ldquo;rare&rdquo;. If we 
 Instead, we need to support both.</p>
 <p>Here&rsquo;s my plan. For our example, we&rsquo;ll consider a simple one: parsing. Let&rsquo;s say
 we have a function to parse strings to Booleans:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">parseBool</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">parseBool</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span>
   <span class="k">match</span> <span class="i">text</span>
   <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="k">true</span>
   <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="k">false</span>
   <span class="k">else</span> <span class="c">// ??? What do we do here?</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This can be called like so:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span></pre>
 <p>Of course, the question is what happens if parsing fails? Since failure may be
 common, we want it to be easy to handle the error case. Unions are a good fit
 for that. We&rsquo;ll change the function to this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">parseBool</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Bool</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">parseBool</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">Bool</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
     <span class="k">match</span> <span class="i">text</span>
     <span class="k">case</span> <span class="s">&quot;true&quot;</span> <span class="k">then</span> <span class="k">true</span>
     <span class="k">case</span> <span class="s">&quot;false&quot;</span> <span class="k">then</span> <span class="k">false</span>
     <span class="k">else</span> <span class="k">nothing</span>
     <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Now it will return a Boolean value if the parse succeeds, or the special
 <a href="http://localhost:8000/2010/08/23/void-null-maybe-and-nothing/"><code>nothing</code></a> value if it fails. Note that this is <em>not</em> like just
 returning <code>null</code>&mdash;the return type of <code>parseBool</code> is different now. That means
 you can&rsquo;t do this anymore:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
-<span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span></pre>
 <p>The <code>not</code> method is a method on Booleans, and <code>b</code> isn&rsquo;t a Boolean, it&rsquo;s a <code>Bool | Nothing</code>. To treat it like a Boolean, you first have to check its type. The
 canonical way to do that in Magpie is using <code>let</code>:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">let</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">let</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span>
   <span class="c">// In here, b is a Bool.</span>
   <span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span> <span class="c">// This is fine</span>
 <span class="k">else</span>
   <span class="c">// Parse failed...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>This is great for cases where parsing is likely to fail. It makes sure you
 always handle the common failure case by giving you a type check error before
 the program is run if you don&rsquo;t check for success first.</p>
@@ -233,50 +213,40 @@ that aren&rsquo;t relevant to your problem. I think we can handle that too.</p>
 <p>We&rsquo;ll just add a simple method to <code>Object</code> that tests to see if its of an
 expected type. If not, it throws, otherwise it returns itself, but statically
 typed to the expected type. Like so:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="t">Object</span> <span class="i">expecting</span><span class="p">[</span><span class="t">T</span><span class="p">]</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="t">Object</span> <span class="i">expecting</span><span class="p">[</span><span class="t">T</span><span class="p">]</span>
   <span class="k">let</span> <span class="i">cast</span> <span class="o">=</span> <span class="k">this</span> <span class="k">as</span><span class="p">[</span><span class="t">T</span><span class="p">]</span> <span class="k">then</span>
     <span class="i">cast</span>
   <span class="k">else</span> <span class="t">UnexpectedTypeError</span> <span class="i">throw</span><span class="p">(</span>
       <span class="s">&quot;Expected type &quot;</span> <span class="o">+</span> <span class="t">T</span> <span class="o">+</span> <span class="s">&quot; but was &quot;</span> <span class="o">+</span> <span class="k">this</span> <span class="i">type</span><span class="p">,</span> <span class="k">this</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Now, if we have a function that returns a union containing an error, we can
 translate that to an exception instead like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// Doesn&#39;t expect a parse error.</span>
+<pre class="highlight language-magpie"><span class="c">// Doesn&#39;t expect a parse error.</span>
 <span class="k">var</span> <span class="i">b</span> <span class="o">=</span> <span class="i">parseBool</span><span class="p">(</span><span class="s">&quot;true&quot;</span><span class="p">)</span> <span class="i">expecting</span><span class="p">[</span><span class="t">Bool</span><span class="p">]</span>
-<span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span> <span class="c">// OK, since b is a Bool.</span></code></pre>
-</div>
+<span class="k">var</span> <span class="i">notB</span> <span class="o">=</span> <span class="i">b</span> <span class="i">not</span> <span class="c">// OK, since b is a Bool.</span></pre>
 <p>Using this, almost all functions that can have runtime errors are implemented by
 returning a union of success and an error code, like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span> <span class="o">|</span> <span class="t">IOError</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">String</span> <span class="o">|</span> <span class="t">IOError</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">pathExists</span><span class="p">(</span><span class="i">path</span><span class="p">)</span> <span class="k">then</span>
     <span class="c">// Return contents of file...</span>
   <span class="k">else</span> <span class="t">IOError</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Could not find &quot;</span> <span class="o">+</span> <span class="i">path</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Then code that uses it can handle the error in place if that makes sense:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">printFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">printFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
     <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span><span class="p">)</span>
     <span class="k">let</span> <span class="i">contents</span> <span class="o">=</span> <span class="i">result</span> <span class="k">as</span><span class="p">[</span><span class="t">String</span><span class="p">]</span> <span class="k">then</span>
         <span class="i">print</span><span class="p">(</span><span class="i">contents</span><span class="p">)</span>
     <span class="k">else</span> <span class="k">let</span> <span class="i">error</span> <span class="o">=</span> <span class="i">result</span> <span class="k">as</span><span class="p">[</span><span class="t">IOError</span><span class="p">]</span> <span class="k">then</span>
         <span class="i">print</span><span class="p">(</span><span class="s">&quot;Error!&quot;</span><span class="p">)</span>
     <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>(Yes, <code>else let</code> is a bit tedious. Better pattern-matching syntax for unions is
 still in the works.) Meanwhile, code that doesn&rsquo;t care to handle the error right
 there can pass the buck:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">printFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">printFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span><span class="p">)</span>
     <span class="k">var</span> <span class="i">contents</span> <span class="o">=</span> <span class="i">readFile</span><span class="p">(</span><span class="i">path</span><span class="p">)</span> <span class="i">expecting</span><span class="p">[</span><span class="t">String</span><span class="p">]</span>
     <span class="i">print</span><span class="p">(</span><span class="i">contents</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Of course, none of this is any real innovation. My goal here is just to round
 off some of the sharp corners of exceptions and return codes and see if I can
 make the process of dealing with errors a bit more flexible and readable.

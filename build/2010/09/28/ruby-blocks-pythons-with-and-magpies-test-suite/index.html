@@ -41,8 +41,7 @@ of ugly and is driven mostly from Java. What I&rsquo;d like is something more li
 language, written in itself.</p>
 <p>RubySpec is built on top of RSpec, a Ruby library that provides a DSL-like API
 for writing tests. Here&rsquo;s what a chunk of spec looks like:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="i">describe</span> <span class="s">&quot;The &#39;and&#39; statement&quot;</span> <span class="k">do</span>
+<pre class="highlight language-ruby"><span class="i">describe</span> <span class="s">&quot;The &#39;and&#39; statement&quot;</span> <span class="k">do</span>
   <span class="i">it</span> <span class="s">&quot;short-circuits evaluation at the first false condition&quot;</span> <span class="k">do</span>
     <span class="i">x</span> <span class="o">=</span> <span class="t">nil</span>
     <span class="t">true</span> <span class="k">and</span> <span class="t">false</span> <span class="k">and</span> <span class="i">x</span> <span class="o">=</span> <span class="n">1</span>
@@ -58,8 +57,7 @@ for writing tests. Here&rsquo;s what a chunk of spec looks like:</p>
     <span class="p">(</span><span class="s">&quot;yes&quot;</span> <span class="k">and</span> <span class="n">1</span><span class="p">).</span><span class="i">should</span> <span class="o">==</span> <span class="n">1</span>
     <span class="p">(</span><span class="n">1</span> <span class="k">and</span> <span class="s">&quot;yes&quot;</span><span class="p">).</span><span class="i">should</span> <span class="o">==</span> <span class="s">&quot;yes&quot;</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>I find that wonderful to read. This is exactly the kind of thing that I think
 gets people excited about Ruby. It relies on two nice features Ruby has: open
 classes, and block arguments.</p>
@@ -71,19 +69,15 @@ lot of calls to <code>.should</code>. That&rsquo;s also a method that&rsquo;s be
 <p>Block arguments are then what get used to create the block structure you see
 where it appears that <code>describe</code> and <code>it</code> are keyword-like. The actual semantics
 are delightfully simple. If you do something like this in Ruby:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="i">blocky</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">)</span> <span class="k">do</span>
+<pre class="highlight language-ruby"><span class="i">blocky</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">)</span> <span class="k">do</span>
   <span class="i">puts</span> <span class="s">&quot;hi&quot;</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The block after <code>do</code> gets wrapped in something like a lambda and passed to the
 method (<code>blocky</code> here) as another (unnamed) argument. That code basically gets
 desugared to:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="i">blocky</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="i">lambda</span> <span class="p">{</span>
+<pre class="highlight language-ruby"><span class="i">blocky</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="i">lambda</span> <span class="p">{</span>
   <span class="i">puts</span> <span class="s">&quot;hi&quot;</span>
-<span class="p">})</span></code></pre>
-</div>
+<span class="p">})</span></pre>
 <p>The method that receives the block can then do stuff before and after it, and
 invoke it by using <code>yield</code>. It&rsquo;s the ability to do stuff before and after that&rsquo;s
 particularly nice. It makes it easy to write context managers or scoped behavior
@@ -93,10 +87,8 @@ user-provided behavior.</p>
 <p>When I thought &ldquo;context manager&rdquo;, that called to mind a <a href="http://www.python.org/dev/peps/pep-0343/">similar feature</a>
 in Python: <code>with</code>. Python&rsquo;s system is a bit more complex and more directly tied
 to scoped behavior. It looks like this:</p>
-<div class="highlight">
-<pre><code class="language-python" data-lang="python"><span class="k">with</span> <span class="i">open</span><span class="p">(</span><span class="s">&#39;somefile.text&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="i">f</span><span class="p">:</span>
-  <span class="i">contents</span> <span class="o">=</span> <span class="i">f</span><span class="p">.</span><span class="i">read</span><span class="p">()</span></code></pre>
-</div>
+<pre class="highlight language-python"><span class="k">with</span> <span class="i">open</span><span class="p">(</span><span class="s">&#39;somefile.text&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="i">f</span><span class="p">:</span>
+  <span class="i">contents</span> <span class="o">=</span> <span class="i">f</span><span class="p">.</span><span class="i">read</span><span class="p">()</span></pre>
 <p>This does a few things in sequence:</p>
 <ol>
 <li>
@@ -125,21 +117,17 @@ so much that it would be overkill to add both. Fortunately, you can implement
 one in terms of the other. Ruby&rsquo;s system is much simpler, so here&rsquo;s <code>with</code>
 implemented using it (minus important exception-handling stuff that I&rsquo;ll ignore
 for now):</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="t">Object</span>
+<pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Object</span>
   <span class="k">def</span> <span class="i">with</span><span class="p">(</span><span class="i">obj</span><span class="p">)</span>
     <span class="i">obj</span><span class="p">.</span><span class="i">__enter__</span>
     <span class="k">yield</span>
     <span class="i">obj</span><span class="p">.</span><span class="i">__exit__</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>With that, you can do:</p>
-<div class="highlight">
-<pre><code class="language-ruby" data-lang="ruby"><span class="i">with</span> <span class="t">File</span><span class="p">.</span><span class="i">open</span><span class="p">(</span><span class="s">&quot;somefile.text&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="i">f</span><span class="o">|</span>
+<pre class="highlight language-ruby"><span class="i">with</span> <span class="t">File</span><span class="p">.</span><span class="i">open</span><span class="p">(</span><span class="s">&quot;somefile.text&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="i">f</span><span class="o">|</span>
   <span class="i">contents</span> <span class="o">=</span> <span class="i">f</span><span class="p">.</span><span class="i">read</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>(Of course, you wouldn&rsquo;t actually do this in Ruby since its built-in <code>File</code>
 class already has a nice method to do just this.)</p>
 <h2>Block arguments in Magpie</h2>
@@ -156,8 +144,7 @@ the method that receives the block invokes it and passes in an argument, that
 will be bound to <code>it</code>.</p>
 <p>With this in place, I can start moving Magpie&rsquo;s test suite to something that
 looks like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">specify</span><span class="p">(</span><span class="s">&quot;An &#39;and&#39; expression&quot;</span><span class="p">)</span> <span class="k">with</span>
+<pre class="highlight language-magpie"><span class="i">specify</span><span class="p">(</span><span class="s">&quot;An &#39;and&#39; expression&quot;</span><span class="p">)</span> <span class="k">with</span>
   <span class="k">it</span> <span class="i">should</span><span class="p">(</span><span class="s">&quot;return the first arg if it is false.&quot;</span><span class="p">)</span> <span class="k">with</span>
     <span class="p">(</span><span class="n">0</span> <span class="k">and</span> <span class="k">false</span><span class="p">)</span> <span class="i">shouldBe</span><span class="p">(</span><span class="n">0</span><span class="p">)</span>
   <span class="k">end</span>
@@ -171,8 +158,7 @@ looks like this:</p>
     <span class="k">false</span> <span class="k">and</span> <span class="p">(</span><span class="i">called</span> <span class="o">=</span> <span class="k">true</span><span class="p">)</span>
     <span class="i">called</span> <span class="i">shouldBe</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here, <code>specify</code> is a global function the test infrastructure provides. It calls
 the block argument and passes in a test runner object that gets bound to <code>it</code>.
 The test runner has a method <code>should</code> that takes a description and the body of a
@@ -182,34 +168,28 @@ failure.</p>
 verify expected values. The end result is, I think, pretty nice looking, and
 doesn&rsquo;t require much language support or monkey patching.</p>
 <p>Here&rsquo;s some other fun stuff it enables:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// Functional idioms:</span>
+<pre class="highlight language-magpie"><span class="c">// Functional idioms:</span>
 <span class="k">var</span> <span class="i">waldo</span> <span class="o">=</span> <span class="i">people</span> <span class="i">find</span> <span class="k">with</span> <span class="k">it</span> <span class="i">name</span> <span class="o">==</span> <span class="s">&quot;waldo&quot;</span>
 <span class="k">var</span> <span class="i">positives</span> <span class="o">=</span> <span class="i">numbers</span> <span class="i">filter</span> <span class="k">with</span> <span class="k">it</span> <span class="o">&gt;</span> <span class="n">0</span>
 
 <span class="c">// Context management:</span>
 <span class="t">File</span> <span class="i">open</span><span class="p">(</span><span class="s">&quot;name.text&quot;</span><span class="p">)</span> <span class="i">use</span> <span class="k">with</span>
   <span class="k">while</span> <span class="k">it</span> <span class="i">eof</span> <span class="i">not</span> <span class="k">do</span> <span class="i">print</span><span class="p">(</span><span class="k">it</span> <span class="i">readLine</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>In the last example, <code>use</code> is a method that can be mixed into a class to call
 setup and teardown methods on the receiver, like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="t">File</span> <span class="i">use</span><span class="p">(</span><span class="i">block</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="t">File</span> <span class="i">use</span><span class="p">(</span><span class="i">block</span><span class="p">)</span>
   <span class="k">this</span> <span class="i">setup</span>
   <span class="i">block</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
   <span class="k">this</span> <span class="i">teardown</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <h2>Multiple arguments</h2>
 <p>Automatically binding the argument to <code>it</code> is nice for a lot of cases, but what
 if you actually want to pass multiple arguments to the block? To enable that,
 I&rsquo;m planning to add an optional parameter list following <code>with</code>. When present,
 the interpreter uses that instead of <code>it</code>:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// Sort by name:</span>
-<span class="i">collection</span> <span class="i">sort</span> <span class="k">with</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="i">a</span> <span class="i">name</span> <span class="i">compareTo</span><span class="p">(</span><span class="i">b</span> <span class="i">name</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="c">// Sort by name:</span>
+<span class="i">collection</span> <span class="i">sort</span> <span class="k">with</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="i">a</span> <span class="i">name</span> <span class="i">compareTo</span><span class="p">(</span><span class="i">b</span> <span class="i">name</span><span class="p">)</span></pre>
 <p>And that&rsquo;s about it. Not too bad for a handful of code, eh? Now I just have to
 rewrite Magpie&rsquo;s entire test suite to use it&hellip;</p>
   <div class="comments">

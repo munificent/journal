@@ -61,30 +61,24 @@ can run into:</p>
 <h3>Is state duplicated or not?</h3>
 <p>Let&rsquo;s say you&rsquo;re making a game. You&rsquo;ve got classes for the things in the world&mdash;monsters, magical items, etc. Lots of things in the world have a position, so
 you make a base class for that:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">Positioned</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">Positioned</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">:</span>
   <span class="t">int</span> <span class="i">x</span><span class="p">;</span>
   <span class="t">int</span> <span class="i">y</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Then you derive classes for items and monsters:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">Item</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Positioned</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">Item</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Positioned</span> <span class="p">{</span>
   <span class="c">// Stuff...</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="t">Monster</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Positioned</span> <span class="p">{</span>
   <span class="c">// Stuff...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Groovy. Then you decide to add a <a href="http://wiki.ffxiclopedia.org/wiki/Treasure_Chest_%28Monster%29">living treasure chest monster</a> to
 attack the unwary:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">ChestMonster</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Monster</span><span class="p">,</span> <span class="k">public</span> <span class="t">Item</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">ChestMonster</span> <span class="p">:</span> <span class="k">public</span> <span class="t">Monster</span><span class="p">,</span> <span class="k">public</span> <span class="t">Item</span> <span class="p">{</span>
   <span class="c">// Stuff...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Pop quiz! Does our ChestMonster have one <code>x</code> field or two? I&rsquo;ve coded a lot of
 C++ and I honestly don&rsquo;t know the answer. Either way it&rsquo;s bad.</p>
 <p>If ChestMonster gets two sets of coordinates, one for each path in the class
@@ -96,12 +90,10 @@ they call the constructor for <code>Positioned</code> from their constructor? Wh
 <p>Now let&rsquo;s expand our previous example. Let&rsquo;s say there&rsquo;s a virtual method in
 Positioned so that a derived class can say whether or not a given position is
 valid. Something like:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">Positioned</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">Positioned</span> <span class="p">{</span>
 <span class="k">protected</span><span class="p">:</span>
   <span class="k">bool</span> <span class="i">canBeAt</span><span class="p">(</span><span class="t">int</span> <span class="i">x</span><span class="p">,</span> <span class="t">int</span> <span class="i">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This way, derived classes can handle things like ghosts that can walk through
 walls or lightweight items that float on water. So Item and Monster both
 override <code>canBeAt()</code>. When we call that on an instance of ChestMonster, which
@@ -146,8 +138,7 @@ about multimethods.</p>
 bit confusing if you come from a single-dispatch (C++, Java, C#, etc.)
 background. Those latter languages do runtime dispatch only on the receiver,
 using the term &ldquo;overriding&rdquo;:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="t">Base</span> <span class="p">{</span>
+<pre class="highlight language-cpp"><span class="k">class</span> <span class="t">Base</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">:</span>
   <span class="k">virtual</span> <span class="t">void</span> <span class="i">method</span><span class="p">()</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;Base!&quot;</span><span class="p">);</span> <span class="p">}</span>
 <span class="p">}</span>
@@ -159,21 +150,18 @@ using the term &ldquo;overriding&rdquo;:</p>
 
 <span class="c">// Later...</span>
 <span class="t">Base</span><span class="o">*</span> <span class="i">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
-<span class="i">obj</span><span class="o">-&gt;</span><span class="i">method</span><span class="p">();</span> <span class="c">// Prints &quot;Derived!&quot;</span></code></pre>
-</div>
+<span class="i">obj</span><span class="o">-&gt;</span><span class="i">method</span><span class="p">();</span> <span class="c">// Prints &quot;Derived!&quot;</span></pre>
 <p>The last line is the key bit. Even though <code>obj</code> is a pointer of type <code>Base</code>, at
 <em>runtime</em> it looks up the actual class of the object being pointed to and finds
 the right method for it.</p>
 <p>This is in contrast with over<em>loading</em> which is statically dispatched in those
 languages. Let&rsquo;s see:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">obj</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;Base!&quot;</span><span class="p">);</span> <span class="p">}</span>
+<pre class="highlight language-cpp"><span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">obj</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;Base!&quot;</span><span class="p">);</span> <span class="p">}</span>
 <span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Derived</span><span class="o">*</span> <span class="i">obj</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;Derived!&quot;</span><span class="p">);</span> <span class="p">}</span>
 
 <span class="c">// Later...</span>
 <span class="t">Base</span><span class="o">*</span> <span class="i">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
-<span class="i">method</span><span class="p">(</span><span class="i">obj</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">method</span><span class="p">(</span><span class="i">obj</span><span class="p">);</span></pre>
 <p>Does this also print <code>"Derived!"</code>? Alas, no. With function arguments, the
 overloaded function is chosen at <em>compile</em> time. Since the compiler only knows
 that <code>obj</code> is of type <code>Base*</code>, it binds the call to the version of
@@ -193,8 +181,7 @@ behavior that only applies to the first argument passed to every method
 <em>runtime</em> types of <em>all</em> arguments are used to select the actual method that
 gets called when given a set of overloads. If C++ supported multiple dispatch,
 and you wrote this:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Base</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;base base&quot;</span><span class="p">);</span> <span class="p">}</span>
+<pre class="highlight language-cpp"><span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Base</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;base base&quot;</span><span class="p">);</span> <span class="p">}</span>
 <span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Derived</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;base derived&quot;</span><span class="p">);</span> <span class="p">}</span>
 <span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Derived</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Base</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;derived base&quot;</span><span class="p">);</span> <span class="p">}</span>
 <span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Derived</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Derived</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;derived derived&quot;</span><span class="p">);</span> <span class="p">}</span>
@@ -202,8 +189,7 @@ and you wrote this:</p>
 <span class="c">// Later...</span>
 <span class="t">Base</span><span class="o">*</span> <span class="i">a</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
 <span class="t">Base</span><span class="o">*</span> <span class="i">b</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
-<span class="i">method</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">method</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span></pre>
 <p>When you ran it, it would print <code>"derived derived"</code> even though the <em>static</em>
 types of <code>a</code> and <code>b</code> are just <code>Base*</code>.</p>
 <h3>What&rsquo;s the problem?</h3>
@@ -216,15 +202,13 @@ and actually gets called?</p>
 <p>In our example here, it&rsquo;s pretty obvious. Derived classes take precedence over
 base ones, so the derived-most overload wins. There are some pathological cases
 that are nasty, though:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Derived</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;base derived&quot;</span><span class="p">);</span> <span class="p">}</span>
+<pre class="highlight language-cpp"><span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Base</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Derived</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;base derived&quot;</span><span class="p">);</span> <span class="p">}</span>
 <span class="t">void</span> <span class="i">method</span><span class="p">(</span><span class="t">Derived</span><span class="o">*</span> <span class="i">a</span><span class="p">,</span> <span class="t">Base</span><span class="o">*</span> <span class="i">b</span><span class="p">)</span> <span class="p">{</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;derived base&quot;</span><span class="p">);</span> <span class="p">}</span>
 
 <span class="c">// Later...</span>
 <span class="t">Base</span><span class="o">*</span> <span class="i">a</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
 <span class="t">Base</span><span class="o">*</span> <span class="i">b</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Derived</span><span class="p">();</span>
-<span class="i">method</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">method</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span></pre>
 <p>Which one should win? There isn&rsquo;t a clear right answer here. I guess every time
 you call that method, the runtime would have to email the original author of the
 code and be all &ldquo;Dude, what did you want this to do?&rdquo;</p>
@@ -242,21 +226,17 @@ multimethods.</p>
 can! When you define a method in a language that supports multimethods, you
 provide a pattern that describes the arguments that method accepts. For example
 (finally switching to Magpie syntax), a method like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">overloaded</span><span class="p">(</span><span class="i">a</span> <span class="k">is</span> <span class="t">Base</span><span class="p">,</span> <span class="i">b</span> <span class="k">is</span> <span class="t">Derived</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">overloaded</span><span class="p">(</span><span class="i">a</span> <span class="k">is</span> <span class="t">Base</span><span class="p">,</span> <span class="i">b</span> <span class="k">is</span> <span class="t">Derived</span><span class="p">)</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;base derived&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Will match a first argument of type <code>Base</code> (or a subclass of it) and a second of
 type <code>Derived</code> (again, or a subclass). They say that this method is
 <em>specialized</em> to those types.</p>
 <p>But it isn&rsquo;t necessary to specialize an argument at all. A type pattern is just
 one kind of pattern. You can also define a method like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">overloaded</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">overloaded</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;who knows?!&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here, <code>a</code> and <code>b</code> aren&rsquo;t specialized to a class at all, which means this method
 matches <em>any</em> pair of arguments. A method that is applicable to an object of any
 class? Sounds an awful lot like what we&rsquo;d want something like <code>toString()</code> or
@@ -271,21 +251,15 @@ sugar I&rsquo;ve added.</p>
 <p>With multimethods, all arguments including the &ldquo;receiver&rdquo; are just regular
 arguments, so there&rsquo;s no special <code>this</code>. That implies just using a normal
 non-object-oriented function call syntax. For example, this in C++:</p>
-<div class="highlight">
-<pre><code class="language-cpp" data-lang="cpp"><span class="i">planner</span><span class="p">.</span><span class="i">getAddressBook</span><span class="p">().</span><span class="i">getPhoneNumbers</span><span class="p">().</span><span class="i">add</span><span class="p">(</span><span class="s">&quot;867-5309&quot;</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-cpp"><span class="i">planner</span><span class="p">.</span><span class="i">getAddressBook</span><span class="p">().</span><span class="i">getPhoneNumbers</span><span class="p">().</span><span class="i">add</span><span class="p">(</span><span class="s">&quot;867-5309&quot;</span><span class="p">);</span></pre>
 <p>Would look something like this in CLOS:</p>
-<div class="highlight">
-<pre><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="i">add</span> <span class="p">(</span><span class="i">get-phone-numbers</span> <span class="p">(</span><span class="i">get-address-book</span> <span class="i">planner</span><span class="p">))</span> <span class="s">&quot;867-5309&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-lisp"><span class="p">(</span><span class="i">add</span> <span class="p">(</span><span class="i">get-phone-numbers</span> <span class="p">(</span><span class="i">get-address-book</span> <span class="i">planner</span><span class="p">))</span> <span class="s">&quot;867-5309&quot;</span><span class="p">)</span></pre>
 <p>Maybe it&rsquo;s just me, but I find that hard to read. My experience is that most
 operations tend to have one argument that <em>is</em> kind of special. Putting that
 argument to the left of the operation makes it easier to read the code from left
 to right. It also gives a hint as to which arguments are likely to be most
 strongly affected by the call. So the above in Magpie would be:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">planner</span> <span class="i">addressBook</span> <span class="i">phoneNumbers</span> <span class="i">add</span><span class="p">(</span><span class="s">&quot;867-5309&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">planner</span> <span class="i">addressBook</span> <span class="i">phoneNumbers</span> <span class="i">add</span><span class="p">(</span><span class="s">&quot;867-5309&quot;</span><span class="p">)</span></pre>
 <p>Semantically, it&rsquo;s pure multiple dispatch. <em>Syntactically</em>, you can specify that
 an argument appears to the left of the method, to the right, or both. A getter,
 like <code>addressBook</code> in <code>planner addressBook</code> is just a method with one argument
@@ -303,8 +277,7 @@ expected types, that generally rules out the ability to overload at all. That&rs
 a shame since lots of methods are nicely defined in terms of optional arguments,
 or arguments of different types.</p>
 <p>For a real world example, consider the magic <code>$()</code> function in <a href="http://jquery.com/">jQuery</a>. It&rsquo;s <a href="http://api.jquery.com/jQuery/">documented like this</a>:</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">$(selector, [context])
+<pre class="highlight language-text">$(selector, [context])
 selector      - A string containing a selector expression.
 context       - A DOM Element, Document, or jQuery to use as
                 context.
@@ -319,20 +292,17 @@ elementArray  - An array containing a set of DOM elements to
 $(jQuery object)
 jQuery object - An existing jQuery object to clone.
 
-$()</code></pre>
-</div>
+$()</pre>
 <p>Those look an awful lot like overloads, which Javascript doesn&rsquo;t support. How do
 they do this? By making <a href="https://github.com/jquery/jquery/blob/15da298f72bf94a95563abc12b8e6fec8c604099/src/core.js#L72-L179">one monolithic function</a> with a slew of
 <code>instanceof</code> checks interspersed throughout it. Eek!</p>
 <p>In Magpie you can just do:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">$</span><span class="p">(</span><span class="i">selector</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="p">...</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">$</span><span class="p">(</span><span class="i">selector</span> <span class="k">is</span> <span class="t">String</span><span class="p">)</span> <span class="p">...</span>
 <span class="k">def</span> <span class="i">$</span><span class="p">(</span><span class="i">selector</span> <span class="k">is</span> <span class="t">String</span><span class="p">,</span> <span class="i">context</span><span class="p">)</span> <span class="p">...</span>
 <span class="k">def</span> <span class="i">$</span><span class="p">(</span><span class="i">element</span> <span class="k">is</span> <span class="t">Element</span><span class="p">)</span> <span class="p">...</span>
 <span class="k">def</span> <span class="i">$</span><span class="p">(</span><span class="i">elementArray</span> <span class="k">is</span> <span class="t">List</span><span class="p">)</span> <span class="p">...</span>
 <span class="k">def</span> <span class="i">$</span><span class="p">(</span><span class="i">object</span> <span class="k">is</span> <span class="t">JQuery</span><span class="p">)</span> <span class="p">...</span>
-<span class="k">def</span> <span class="i">$</span><span class="p">()</span> <span class="p">...</span></code></pre>
-</div>
+<span class="k">def</span> <span class="i">$</span><span class="p">()</span> <span class="p">...</span></pre>
 <p>The language itself then takes care of picking the appropriate method for you
 and doing all of the <code>instanceof</code> checks and variable binding itself. The nice
 thing about that is that it happens atomically. You don&rsquo;t have to worry about
@@ -347,22 +317,18 @@ it</a>.) Multimethods are a big help here.</p>
 remember to also overload <code>!=</code> since that&rsquo;s also a method on the class you&rsquo;re
 overloading it for. In Magpie, a single definition of <code>!=</code> serves to cover all
 cases:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="i">left</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="i">right</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="i">left</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="i">right</span><span class="p">)</span>
     <span class="i">not</span><span class="p">(</span><span class="i">left</span> <span class="o">==</span> <span class="i">right</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Now when you overload <code>==</code>, you get <code>!=</code> for free.</p>
 <p>Another example is <code>+</code>. Magpie uses it for both numeric addition and string
 contenation. Many languages have to build that directly into the language to get
 the overloading to work right. In Magpie, it&rsquo;s just:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="i">left</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="i">right</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span> <span class="p">...</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="i">left</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="i">right</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span> <span class="p">...</span>
 
 <span class="k">def</span> <span class="p">(</span><span class="i">left</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="i">right</span><span class="p">)</span>
     <span class="i">concatenate</span><span class="p">(</span><span class="i">left</span> <span class="i">string</span><span class="p">,</span> <span class="i">right</span> <span class="i">string</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>If both arguments are ints, the first method wins and you get addition.
 Otherwise, it calls the <code>string</code> method on the two arguments and concatenates.</p>
 <h3>Value patterns</h3>
@@ -371,11 +337,9 @@ of any type. There&rsquo;s another flavor of pattern too: <em>value patterns</em
 you define methods that only match on specific argument values. Consider the
 venerable Fibonacci function. With value patterns, you can implement it like
 this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">fib</span><span class="p">(</span><span class="n">0</span><span class="p">)</span> <span class="n">0</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">fib</span><span class="p">(</span><span class="n">0</span><span class="p">)</span> <span class="n">0</span>
 <span class="k">def</span> <span class="i">fib</span><span class="p">(</span><span class="n">1</span><span class="p">)</span> <span class="n">1</span>
-<span class="k">def</span> <span class="i">fib</span><span class="p">(</span><span class="i">n</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span> <span class="i">fib</span><span class="p">(</span><span class="i">n</span> <span class="o">-</span> <span class="n">2</span><span class="p">)</span> <span class="o">+</span> <span class="i">fib</span><span class="p">(</span><span class="i">n</span> <span class="o">-</span> <span class="n">1</span><span class="p">)</span></code></pre>
-</div>
+<span class="k">def</span> <span class="i">fib</span><span class="p">(</span><span class="i">n</span> <span class="k">is</span> <span class="t">Int</span><span class="p">)</span> <span class="i">fib</span><span class="p">(</span><span class="i">n</span> <span class="o">-</span> <span class="n">2</span><span class="p">)</span> <span class="o">+</span> <span class="i">fib</span><span class="p">(</span><span class="i">n</span> <span class="o">-</span> <span class="n">1</span><span class="p">)</span></pre>
 <p>Note that the order these are defined doesn&rsquo;t matter. The linearization
 algorithm takes care of picking the first two methods for those values of <code>n</code>: a
 value pattern always wins over a type pattern.</p>
@@ -383,9 +347,7 @@ value pattern always wins over a type pattern.</p>
 methods. Most object-oriented languages let you define methods that don&rsquo;t work
 on an <em>instance</em> of a class, but instead on the class itself. In C++/C#/Java
 these are called &ldquo;static&rdquo;, for example:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">Integer</span><span class="p">.</span><span class="i">parseInt</span><span class="p">(</span><span class="s">&quot;123&quot;</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-java"><span class="t">Integer</span><span class="p">.</span><span class="i">parseInt</span><span class="p">(</span><span class="s">&quot;123&quot;</span><span class="p">);</span></pre>
 <p>Static object-oriented languages handle this by having built-in special support
 for static methods. In Smalltalk, classes are <a href="http://en.wikipedia.org/wiki/First-class_object">first class</a>. That means a
 class is just another object you can pass around. It handles &ldquo;static&rdquo; methods by
@@ -399,9 +361,7 @@ itself, like <code>Int.parse("123")</code>, it finds that on the <em>meta</em>cl
 meant making a pair of classes for each class and <a href="http://en.wikipedia.org/wiki/File:Smalltalk_80_metaclasses.svg">a fairly confusing metaclass
 hierarchy</a>. With multimethods, that all <a href="https://github.com/munificent/magpie/commit/424b2724af47fffc426c1e432c8fae051ce3a0d1#L6L18">just goes away</a>.
 Instead, a &ldquo;static&rdquo; method is just a method that matches on a class <em>by value</em>:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="o">==</span> <span class="t">Int</span><span class="p">)</span> <span class="i">parse</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span><span class="p">)</span> <span class="p">...</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="o">==</span> <span class="t">Int</span><span class="p">)</span> <span class="i">parse</span><span class="p">(</span><span class="i">text</span> <span class="t">String</span><span class="p">)</span> <span class="p">...</span></pre>
 <p>The <code>(== Int)</code> pattern here means we match on <code>Int</code> by value as opposed to <code>(is Int)</code> which means to match on it by type. With that, I can ditch metaclasses
 completely. Things like constructors simply become multimethods that specialize
 to class values for their left-hand argument.</p>
@@ -413,27 +373,20 @@ ability to effectively add new methods to a class without the horrors of
 monkey-patching.</p>
 <p>My motivation is pretty mundane&mdash;I think method call syntax is the usually the
 most readable, and I care deeply about readability. I prefer this:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="i">list</span><span class="p">.</span><span class="i">reverse</span><span class="p">();</span></code></pre>
-</div>
+<pre class="highlight language-java"><span class="i">list</span><span class="p">.</span><span class="i">reverse</span><span class="p">();</span></pre>
 <p>Over this:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">Collections</span><span class="p">.</span><span class="i">reverse</span><span class="p">(</span><span class="i">list</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-java"><span class="t">Collections</span><span class="p">.</span><span class="i">reverse</span><span class="p">(</span><span class="i">list</span><span class="p">);</span></pre>
 <p>But I want to avoid the chaos of monkey-patching. Multimethods are a neat
 solution to this. With multimethods, the methods aren&rsquo;t directly tied to classes
 at all. You&rsquo;re perfectly free to define a <code>reverse</code> method like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="p">(</span><span class="i">list</span> <span class="k">is</span> <span class="t">List</span><span class="p">)</span> <span class="i">reverse</span><span class="p">()</span> <span class="p">...</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="p">(</span><span class="i">list</span> <span class="k">is</span> <span class="t">List</span><span class="p">)</span> <span class="i">reverse</span><span class="p">()</span> <span class="p">...</span></pre>
 <p>And then you can call <code>reverse()</code> as it if were a native method on Lists.
 Because you aren&rsquo;t cracking open the class itself, this is nice and modular.
 Code that imports the module where you define that will get your <code>reverse()</code>
 method, and modules that don&rsquo;t won&rsquo;t. If they define their own <code>reverse()</code>
 method, there&rsquo;s no collision. You can even access both within the same module by
 renaming when you import:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">import</span> <span class="i">bobs</span><span class="p">.</span><span class="i">list</span><span class="p">.</span><span class="i">methods</span> <span class="k">with</span>
+<pre class="highlight language-magpie"><span class="k">import</span> <span class="i">bobs</span><span class="p">.</span><span class="i">list</span><span class="p">.</span><span class="i">methods</span> <span class="k">with</span>
     <span class="i">reverse</span> <span class="k">as</span> <span class="i">bobs</span><span class="p">.</span><span class="i">reverse</span>
 <span class="k">end</span>
 <span class="k">import</span> <span class="i">your</span><span class="p">.</span><span class="i">list</span><span class="p">.</span><span class="i">methods</span> <span class="k">with</span>
@@ -442,8 +395,7 @@ renaming when you import:</p>
 
 <span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">]</span>
 <span class="i">list</span> <span class="i">bobs</span><span class="p">.</span><span class="i">reverse</span><span class="p">()</span>
-<span class="i">list</span> <span class="i">your</span><span class="p">.</span><span class="i">reverse</span><span class="p">()</span></code></pre>
-</div>
+<span class="i">list</span> <span class="i">your</span><span class="p">.</span><span class="i">reverse</span><span class="p">()</span></pre>
 <p>(Here, the <code>.</code> is just part of the method name. It looks funny at first, but
 hopefully not <em>too</em> funny.)</p>
 <h2>What now?</h2>

@@ -4,7 +4,7 @@
   <title>journal.stuffwithstuff.com</title>
   <link href="http://journal.stuffwithstuff.com/"/>
   <link type="application/atom+xml" rel="self" href="http://journal.stuffwithstuff.com/atom.xml"/>
-  <updated>2025-09-21T05:13:24.285073Z</updated>
+  <updated>2025-09-21T05:28:43.383506Z</updated>
   <id>http://journal.stuffwithstuff.com/</id>
   <author>
     <name>Robert Nystrom</name>
@@ -134,12 +134,10 @@ the entire &lt;code&gt;SDL3.xcframework&lt;/code&gt; bundle. Instead, he opens t
 &lt;p&gt;I removed &lt;code&gt;SDL3.xcframework&lt;/code&gt; from my XCode project and dragged &lt;code&gt;SDL3.framework&lt;/code&gt;
 into it instead. That gave me something that compiled, but when I tried to run,
 it failed at load time with:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;dyld[15605]: Library not loaded: @rpath&amp;#47;SDL3.framework&amp;#47;Versions&amp;#47;A&amp;#47;SDL3
+&lt;pre class=&quot;highlight language-text&quot;&gt;dyld[15605]: Library not loaded: @rpath&amp;#47;SDL3.framework&amp;#47;Versions&amp;#47;A&amp;#47;SDL3
 Referenced from: &amp;lt;...&amp;gt; &amp;#47;Users&amp;#47;...
 Reason: tried: &amp;#39;&amp;#47;Users&amp;#47;...&amp;#47;Build&amp;#47;Products&amp;#47;Debug&amp;#47;SDL3.framework&amp;#47;
-Versions&amp;#47;A&amp;#47;SDL3&amp;#39; (no such file)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+Versions&amp;#47;A&amp;#47;SDL3&amp;#39; (no such file)&lt;/pre&gt;
 &lt;p&gt;In the target settings, I again added the framework (but this time
 &lt;code&gt;SDL3.framework&lt;/code&gt; not &lt;code&gt;SDL3.xcframework&lt;/code&gt; to &amp;ldquo;Embed frameworks&amp;rdquo;). For reasons
 that are entirely unclear to me, that worked. I hit Command-R and&amp;hellip;&lt;/p&gt;&lt;figure&gt;
@@ -148,9 +146,7 @@ that are entirely unclear to me, that worked. I hit Command-R and&amp;hellip;&lt
 &lt;/figure&gt;
 &lt;p&gt;All done, right? Not so fast. I made a tiny tweak to the code and tried to run
 it again. The compile immediately failed with:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;&amp;#39;SDL3&amp;#47;SDL.h&amp;#39; file not found&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-text&quot;&gt;&amp;#39;SDL3&amp;#47;SDL.h&amp;#39; file not found&lt;/pre&gt;
 &lt;p&gt;What? I literally just compiled and ran it. Just to make sure I wasn&amp;rsquo;t crazy,
 I cleaned the build directory and compiled again. That worked! &amp;ldquo;Hello World!&amp;rdquo;
 popped up on screen again.&lt;/p&gt;
@@ -158,10 +154,8 @@ popped up on screen again.&lt;/p&gt;
 &lt;p&gt;Clean build and then build. Works!&lt;/p&gt;
 &lt;p&gt;So I can build &lt;em&gt;once&lt;/em&gt; but then something in the build directly causes any
 subsequent compile to fail. The full error is:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Did not find header &amp;#39;SDL.h&amp;#39; in framework &amp;#39;SDL3&amp;#39; (loaded from
-  &amp;#39;&amp;#47;Users&amp;#47;...&amp;#47;Index.noindex&amp;#47;Build&amp;#47;Products&amp;#47;Debug&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-text&quot;&gt;Did not find header &amp;#39;SDL.h&amp;#39; in framework &amp;#39;SDL3&amp;#39; (loaded from
+  &amp;#39;&amp;#47;Users&amp;#47;...&amp;#47;Index.noindex&amp;#47;Build&amp;#47;Products&amp;#47;Debug&amp;#39;)&lt;/pre&gt;
 &lt;p&gt;So what I &lt;em&gt;think&lt;/em&gt; is happening is that in the first clean build, it locates the
 framework inside my app&amp;rsquo;s main directory. That framework does have the headers
 so the compiler can find what it needs.&lt;/p&gt;
@@ -627,11 +621,9 @@ functions and types you want without worrying about modularity. Then at the top
 of the file, the language gives you some dedicated syntax to list the things
 that should be made visible outside of the module.&lt;/p&gt;
 &lt;p&gt;For example, in Scheme, the syntax for defining a module looks like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-scheme&quot; data-lang=&quot;scheme&quot;&gt;(library library-name
+&lt;pre class=&quot;highlight language-scheme&quot;&gt;(library library-name
   (export list-of-names-to-export...)
-  declarations-in-library...)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+  declarations-in-library...)&lt;/pre&gt;
 &lt;p&gt;SML and its spawn have a notion of a &lt;a href=&quot;https://smlhelp.github.io/book/docs/start/module-syntax&quot;&gt;signature&lt;/a&gt; which is
 declared separately from the module. You could also argue that header files in C
 and C++ are this pattern.&lt;/p&gt;
@@ -649,22 +641,18 @@ the manifest too.&lt;/p&gt;
 &lt;p&gt;I ragged on JavaScript for not having its act together, but I gotta say when
 they did add modules, they came up with a clever blended approach. You can use
 &lt;code&gt;export&lt;/code&gt; as a modifier right on a declaration:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;But you can also use the &lt;code&gt;export&lt;/code&gt; keyword to export a set of declarations that
 are already declared elsewhere:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;pre class=&quot;highlight language-javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
 
 &lt;span class=&quot;c&quot;&gt;// Code...&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Given that modules were added later to the language, I&amp;rsquo;m guessing this makes it
 easier to add modularity to a large existing JS library.&lt;/p&gt;
 &lt;h3&gt;Sigils at the declaration&lt;/h3&gt;
@@ -673,8 +661,7 @@ Niklaus Wirth&amp;rsquo;s magnum opus language &lt;a href=&quot;https://oberon.o
 &lt;p&gt;In Oberon, top-level declarations are private by default and only accessible
 to the containing module. If you want to make a declaration public, you mark
 the declaration with an asterisk:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-oberon&quot; data-lang=&quot;oberon&quot;&gt;&lt;span class=&quot;k&quot;&gt;MODULE&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;pre class=&quot;highlight language-oberon&quot;&gt;&lt;span class=&quot;k&quot;&gt;MODULE&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;IMPORT&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
   &lt;span class=&quot;k&quot;&gt;PROCEDURE&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;SayHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -682,8 +669,7 @@ the declaration with an asterisk:&lt;/p&gt;
     &lt;span class=&quot;i&quot;&gt;Out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello World!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;Out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Ln&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;END&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;SayHello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;END&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;END&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Here, the &lt;code&gt;*&lt;/code&gt; after &lt;code&gt;PROCEDURE SayHello&lt;/code&gt; means that &lt;code&gt;SayHello&lt;/code&gt; is public. Note
 that this marker is only at the declaration. It&amp;rsquo;s not part of the name. At
 callsites, the name is just &lt;code&gt;HelloWorld&lt;/code&gt;.&lt;/p&gt;
@@ -807,32 +793,26 @@ can just make everything public.&lt;/p&gt;
 &lt;p&gt;So there is some appeal. I don&amp;rsquo;t think I can literally take Oberon&amp;rsquo;s syntax
 with &lt;code&gt;*&lt;/code&gt; following the name. My language lets you define operators and it would
 be confusing to have &lt;code&gt;*&lt;/code&gt; right after other punctuation:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;This is declaring a private &lt;code&gt;+&lt;/code&gt; function. It would probably look equally weird
 to have &lt;code&gt;*&lt;/code&gt; after the name in a record declaration:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;That led me to thinking the sigil should be by the declaration keyword. In my
 language, every declaration form does start with a leading keyword (unlike, say,
 C where function declarations don&amp;rsquo;t have one), so it&amp;rsquo;s feasible. Something like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;I don&amp;rsquo;t hate it. But using &lt;code&gt;*&lt;/code&gt; feels weird for &amp;ldquo;private&amp;rdquo;. If anything, it seems
 to emphasize the declaration (which is what it does in Oberon where it means
 &amp;ldquo;public&amp;rdquo;).&lt;/p&gt;
@@ -840,16 +820,14 @@ to emphasize the declaration (which is what it does in Oberon where it means
 &lt;p&gt;That led to my last idea which I can&amp;rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &amp;ldquo;private&amp;rdquo; to some people. So
 maybe use that? It looks like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec_&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec_&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Vec&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;def_&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;sayHi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Hello!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;It looks odd, but I don&amp;rsquo;t &lt;em&gt;hate&lt;/em&gt; it. Or at least I don&amp;rsquo;t hate it any more than
 any novel programming language syntax usually triggers revulsion.&lt;/p&gt;
 &lt;p&gt;However, there&amp;rsquo;s sort of a problem. Underscore is a valid identifier character.
@@ -994,8 +972,7 @@ if two element types are assignable, slices of those two types are not.&lt;/p&gt
 &lt;p&gt;Judging by an endless series of confused people asking questions on
 StackOverflow, that behavior is unintuitive to programmers, both in Go and in
 other languages. Let&amp;rsquo;s say you have this Go program:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;string&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
@@ -1005,22 +982,18 @@ other languages. Let&amp;rsquo;s say you have this Go program:&lt;/p&gt;
 
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Woof!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Here we have a &lt;code&gt;Dog&lt;/code&gt; concrete type, which is assignable to the interface
 &lt;code&gt;Barker&lt;/code&gt;. So this is fine:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;speak&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;speak&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;speak&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Sparky&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Given that, you might expect this to work too:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;speakAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;speakAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
@@ -1029,20 +1002,16 @@ other languages. Let&amp;rsquo;s say you have this Go program:&lt;/p&gt;
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;dogs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Sparky&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Fido&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;speakAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;dogs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;But, no. The type system giveth and the type system taketh away:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;example.go:29:11: cannot use dogs (variable of type []Dog) as
-[]Barker value in argument to speakAll&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-text&quot;&gt;example.go:29:11: cannot use dogs (variable of type []Dog) as
+[]Barker value in argument to speakAll&lt;/pre&gt;
 &lt;p&gt;If the type system didn&amp;rsquo;t yell at you, this program &lt;em&gt;would&lt;/em&gt; be fine at runtime.
 All it does is call &lt;code&gt;Bark()&lt;/code&gt; on every element in the array, and both Sparky and
 Fido do implement that method. So what&amp;rsquo;s the deal? In this case, the program is
 &lt;em&gt;coincidentally&lt;/em&gt; fine because &lt;code&gt;speakAll()&lt;/code&gt; is only reading from the slice. But
 what if we wrote:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Tree&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Tree&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;species&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;string&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
@@ -1052,8 +1021,7 @@ what if we wrote:&lt;/p&gt;
 
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;appendTree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barkers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Tree&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Elm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;There&amp;rsquo;s nothing wrong with this &lt;code&gt;appendTree()&lt;/code&gt; function. It adds a &lt;code&gt;Tree&lt;/code&gt; to
 the given slice. Since &lt;code&gt;Tree&lt;/code&gt; is assignable to &lt;code&gt;Barker&lt;/code&gt;, that&amp;rsquo;s fine. But if
 you were to call this and pass in a &lt;code&gt;[]Dog&lt;/code&gt;, you&amp;rsquo;d end up with an array of dogs
@@ -1079,8 +1047,7 @@ types are themselves assignable, if they are different types, the functions
 aren&amp;rsquo;t assignable.&lt;/p&gt;
 &lt;p&gt;Do we need to be that strict to preserve soundness? Actually, no! Here&amp;rsquo;s an
 example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;returnDog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Rex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
@@ -1092,8 +1059,7 @@ example:&lt;/p&gt;
 
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;useCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;returnDog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;So we have a function, &lt;code&gt;returnDog&lt;/code&gt; that returns a value of type &lt;code&gt;Dog&lt;/code&gt;. We pass a
 reference to that function to &lt;code&gt;useCallback()&lt;/code&gt; whic expects a function that
 returns a &lt;code&gt;Barker&lt;/code&gt;. The &lt;code&gt;Dog&lt;/code&gt; type does implement &lt;code&gt;Barker&lt;/code&gt;. If this program were
@@ -1101,10 +1067,8 @@ run, it would be perfectly safe. And, in fact, there&amp;rsquo;s nothing you cou
 inside &lt;code&gt;useCallback()&lt;/code&gt; that would make passing &lt;code&gt;returnDog&lt;/code&gt; to it violate the
 soundness of the type system.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s sound and semantically kosher in principle&amp;hellip; but Go disallows it:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;.&amp;#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
-func() Barker value in argument to useCallback&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-text&quot;&gt;.&amp;#47;prog.go:49:14: cannot use returnDog (value of type func() Dog) as
+func() Barker value in argument to useCallback&lt;/pre&gt;
 &lt;p&gt;Every other language I know that has subtyping and function types allows this. A
 function type &lt;code&gt;A&lt;/code&gt; is a subtype of another function type &lt;code&gt;B&lt;/code&gt; if the return type
 of &lt;code&gt;A&lt;/code&gt; is a subtype of the return type of &lt;code&gt;B&lt;/code&gt;. So the subtyping relation of the
@@ -1121,8 +1085,7 @@ direction as the outer types? Indeed there are, and they&amp;rsquo;re right ther
 us. Instead of return types, let&amp;rsquo;s look at parameter types. Now let&amp;rsquo;s say we
 only care about functions that accept a single parameter and return nothing.
 Here&amp;rsquo;s an example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;acceptBarker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;acceptBarker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;Bark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
@@ -1132,8 +1095,7 @@ Here&amp;rsquo;s an example:&lt;/p&gt;
 
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;useCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;acceptBarker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Note that the parameter types are flipped compared to the return type example.
 Here, the callback type in &lt;code&gt;useCallback()&lt;/code&gt; takes a more precise type of &lt;code&gt;Dog&lt;/code&gt;.
 The function we pass to it, &lt;code&gt;acceptBarker&lt;/code&gt; has a parameter whose type is
@@ -1277,8 +1239,7 @@ pointer indirection costs.&lt;/p&gt;
 but not a slice of those same structs to a slice of that same interface.&lt;/p&gt;
 &lt;p&gt;If structs and interfaces have entirely different memory representations, how
 does assignability work at all? When you do:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-go&quot;&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;string&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
@@ -1288,8 +1249,7 @@ does assignability work at all? When you do:&lt;/p&gt;
 
 &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;barker&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Barker&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;Dog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Rex&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Shouldn&amp;rsquo;t that just mangle memory when it tries to treat the memory
 representation of a struct as if it were an interface? The answer is of course
 no. When compiling your code, Go knows the type of every variable and every
@@ -1425,16 +1385,14 @@ language history to scavenge forgotten ideas.&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Data that might or might not be present.&lt;/strong&gt; Imagine you have a record for
 storing a street address:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Address&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Address&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;street&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;apartmentNumber&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;city&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;zipCode&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;But some addresses don&amp;rsquo;t have apartment numbers. How do you store the
 apartment number when an address has one but also support its absence?&lt;/p&gt;
 &lt;/li&gt;
@@ -1504,8 +1462,7 @@ accessing the data as the wrong type.&lt;/p&gt;&lt;/li&gt;
 &lt;p&gt;&lt;strong&gt;Subtyping.&lt;/strong&gt; The object-oriented dual to sum types is subtyping: either
 inheritance or interface implementation. In an object-oriented language, we
 could model our weapon example like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;pre class=&quot;highlight language-dart&quot;&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -1518,8 +1475,7 @@ could model our weapon example like:&lt;/p&gt;
   &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
   &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Code that wants to work with weapons generally uses the &lt;code&gt;Weapon&lt;/code&gt; supertype.
 The two subtypes for melee and ranged weapons each store the fields they
 need. If you want to go all the way to an object-oriented style, these
@@ -1592,8 +1548,7 @@ tee.&lt;/p&gt;
 &lt;p&gt;The basic vibe I have for the language is similar to Pascal, C, or BASIC: In
 other words, a classic procedural language. Structures and functions. It looks
 like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
@@ -1611,15 +1566,13 @@ like this:&lt;/p&gt;
     &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You wound the monster.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;What&amp;rsquo;s cool about simple procedural code is that even though I have no idea what
 language you know and you &lt;em&gt;certainly&lt;/em&gt; have never programmed in &lt;em&gt;this&lt;/em&gt; one, I&amp;rsquo;m
 still pretty confident that you understand this code.&lt;/p&gt;
 &lt;h2&gt;With sum types&lt;/h2&gt;
 &lt;p&gt;Let&amp;rsquo;s see how it looks with something like sum types:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;
@@ -1650,8 +1603,7 @@ still pretty confident that you understand this code.&lt;/p&gt;
     &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You wound the monster.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;The sort of weird &lt;code&gt;rec&lt;/code&gt; syntax is defining a sum type, &lt;code&gt;Weapon&lt;/code&gt;, with type
 constructors &lt;code&gt;MeleeWeapon&lt;/code&gt; and &lt;code&gt;RangedWeapon&lt;/code&gt;. I&amp;rsquo;m still noodling on the syntax.&lt;/p&gt;
 &lt;p&gt;Now, the code here works. And it&amp;rsquo;s safe. The compiler and the structure of the
@@ -1680,8 +1632,7 @@ that &lt;em&gt;some&lt;/em&gt; of those fields are only accessible when the reco
 different enumerated states.&lt;/p&gt;
 &lt;p&gt;In C, it&amp;rsquo;s common to wrap an untagged union in a struct along with a tag enum
 indicating which branch of the union is active:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-c&quot;&gt;&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;r&quot;&gt;WEAPON_MELEE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
   &lt;span class=&quot;r&quot;&gt;WEAPON_RANGED&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;WeaponType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -1698,14 +1649,11 @@ indicating which branch of the union is active:&lt;/p&gt;
       &lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;ranged&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Using it looks something like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;pre class=&quot;highlight language-c&quot;&gt;&lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;r&quot;&gt;WEAPON_MELEE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;melee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;melee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;A variant record in Pascal (as I understand it from the half dozen ancient
 slideshows I&amp;rsquo;ve been able to find about it) essentially models that pattern
 directly.&lt;/p&gt;
@@ -1714,13 +1662,11 @@ accessed using the same familiar field access syntax used everywhere else. That
 also means variant-specific fields can be mutable.&lt;/p&gt;
 &lt;p&gt;Of course, the &lt;em&gt;not&lt;/em&gt; cool thing about using that same field syntax is that
 there&amp;rsquo;s nothing preventing you from accessing the &lt;em&gt;wrong&lt;/em&gt; variant field:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;pre class=&quot;highlight language-c&quot;&gt;&lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;r&quot;&gt;WEAPON_MELEE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;melee&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-&lt;span class=&quot;i&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Min range %d&lt;/span&gt;&lt;span class=&quot;e&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;ranged&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// Oops.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;i&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Min range %d&lt;/span&gt;&lt;span class=&quot;e&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;ranged&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// Oops.&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;There is a type tag, but the language doesn&amp;rsquo;t know and doesn&amp;rsquo;t check it. This is
 definitely true in C and I think true in Pascal. (It&amp;rsquo;s always hard to talk about
 Pascal definitively because there&amp;rsquo;s no &amp;ldquo;Pascal&amp;rdquo;, just a huge family of
@@ -1731,19 +1677,16 @@ to reinterpret memory. But that&amp;rsquo;s a solvable problem.&lt;/p&gt;
 &lt;p&gt;Which, finally, brings us to the feature I designed for my language. It&amp;rsquo;s very
 close to variant records in Pascal. The type declaration looks just like the
 sum type example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;The difference is that you don&amp;rsquo;t need to rely on pattern matching to access the
 variant fields. They&amp;rsquo;re just fields:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
       &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
       &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
@@ -1764,8 +1707,7 @@ variant fields. They&amp;rsquo;re just fields:&lt;/p&gt;
     &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You wound the monster.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;health&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;damage&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Of course, you lose the compile-time safety that pattern matching gives you
 where you can&amp;rsquo;t access fields of the wrong type. But we don&amp;rsquo;t need to go all the
 way to C&amp;rsquo;s level of unsafety. Instead, when you access a case-specific field on
@@ -1777,8 +1719,7 @@ type tag when accessing case-specific fields. In return, you get simpler, more
 familiar syntax for working with case-specific fields, including mutable ones.&lt;/p&gt;
 &lt;p&gt;Also, it allows a single record to have a mixture of shared and case-specific
 fields:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;String&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;bonus&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
@@ -1786,8 +1727,7 @@ fields:&lt;/p&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Here, &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;bonus&lt;/code&gt; can be accessed on all &lt;code&gt;Weapon&lt;/code&gt; instances, but the
 other fields are case specific. It sort of combines product and sum types into a
 single construct. I&amp;rsquo;ve found this to be really handy in practice.&lt;/p&gt;
@@ -1798,8 +1738,7 @@ a decent balance between static safety and simplicity.&lt;/p&gt;
 &lt;h2&gt;Update: What about flow typing?&lt;/h2&gt;
 &lt;p&gt;When I first posted this, the most common reply was why not do some sort of flow
 typing? In code like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
       &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
@@ -1808,13 +1747,11 @@ typing? In code like:&lt;/p&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
   &lt;span class=&quot;c&quot;&gt;# ...&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;The compiler could do control flow analysis to determine that the &lt;code&gt;.minRange&lt;/code&gt;
 and &lt;code&gt;.maxRange&lt;/code&gt; calls are guarded by an &lt;code&gt;is RangedWeapon&lt;/code&gt; and thus allow them.
 But if you &lt;em&gt;don&amp;rsquo;t&lt;/em&gt; guard the code with that kind of check, you&amp;rsquo;d get an error:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Error! Can&amp;#39;t access .minRange here.&lt;/span&gt;
      &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1822,8 +1759,7 @@ But if you &lt;em&gt;don&amp;rsquo;t&lt;/em&gt; guard the code with that kind of
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
   &lt;span class=&quot;c&quot;&gt;# ...&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;This is definitely a thing you can do! TypeScript, Kotlin, Flow, Dart, and
 others all support it. The general technique is called &amp;ldquo;control flow analysis&amp;rdquo;
 and the specific feature is called &amp;ldquo;flow typing&amp;rdquo;, &amp;ldquo;smart casts&amp;rdquo;, or &amp;ldquo;type
@@ -1853,8 +1789,7 @@ looks like a type test, but it&amp;rsquo;s really more like an enum case check.&
 having the type checker track an extra &amp;ldquo;known case&amp;rdquo; property for each static
 type and then use that. That might work. But even with that, I worry that it
 would quickly become annoying. Let&amp;rsquo;s say you refactor the above code to:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;RangedWeapon&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;checkRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt;
       &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
     &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;You are out of range.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1866,8 +1801,7 @@ would quickly become annoying. Let&amp;rsquo;s say you refactor the above code t
 
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;checkRange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Bool&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;minRange&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;maxRange&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;That no longer works. Inside &lt;code&gt;checkRange()&lt;/code&gt; the compiles has lost track that
 &lt;code&gt;weapon&lt;/code&gt; is always a &lt;code&gt;RangedWeapon&lt;/code&gt;. You could come up with a way to annotate
 that, but now we&amp;rsquo;re back to subtyping and all the complexity it involves.&lt;/p&gt;
@@ -1908,8 +1842,7 @@ languages is that static types add roughly an order of magnitude of complexity,
 so types were one of the first things to go. Like most scripting languages, I
 made mine dynamically typed.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s an example:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onTick&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onTick&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;buttonHeld&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;buttonHeld&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
@@ -1941,21 +1874,18 @@ made mine dynamically typed.&lt;/p&gt;
       &lt;span class=&quot;i&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;10.0&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Another simplification I made is to eliminate the distinction between statements
 and expressions. As in Ruby, Kotlin, and most functional languages, everything
 is an expression. The previous chained &lt;code&gt;if&lt;/code&gt; could be written in a more
 explicitly expression-y style like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;d&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
   &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;0.5&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;0.5&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Unifying statements and expressions means the language doesn&amp;rsquo;t need a separate
 &lt;code&gt;if&lt;/code&gt; statement and conditional expression. Also, I don&amp;rsquo;t know, I just like
 expression-oriented languages.&lt;/p&gt;
@@ -2006,9 +1936,7 @@ turns out that having &lt;code&gt;if&lt;/code&gt; be an expression while also fu
 imperative style gets a little weird when it comes to type checking.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;ll walk through a bunch of examples and build up to the type checking rules I
 have settled on (so far, at least). We&amp;rsquo;ll start simple:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;not in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;not in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;We need a type for the &lt;code&gt;if&lt;/code&gt; expression so that we can infer a type for the
 variable &lt;code&gt;love&lt;/code&gt;. In this case, the type is obviously String since both the then
 and else branches evaluate to strings.&lt;/p&gt;
@@ -2016,9 +1944,7 @@ and else branches evaluate to strings.&lt;/p&gt;
 of the branches.&lt;/strong&gt;&lt;/p&gt;
 &lt;h2&gt;Different branch types&lt;/h2&gt;
 &lt;p&gt;But what if they don&amp;rsquo;t have the same type? What about:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Here, &lt;code&gt;love&lt;/code&gt; could end up being initialized to either a &lt;code&gt;String&lt;/code&gt; or an &lt;code&gt;Int&lt;/code&gt;.
 Now what type do we choose? &lt;a href=&quot;https://crystal-lang.org/reference/1.7/syntax_and_semantics/if.html&quot;&gt;Crystal&amp;rsquo;s answer&lt;/a&gt; is &lt;code&gt;String | Int&lt;/code&gt;. Union
 types are cool but definitely too complex for the language I&amp;rsquo;m trying to make.&lt;/p&gt;
@@ -2047,14 +1973,12 @@ error.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;That rule does work: It&amp;rsquo;s basically SML&amp;rsquo;s rule for &lt;code&gt;if&lt;/code&gt; expressions. But I want
 my scripting language to feel familiar to users programming in an imperative
 style. Consider:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;daysNotInLove&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;daysNotInLove&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;daysNotInLove&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Here, the two branches have different types. The then branch has type String
 because in my language, &lt;code&gt;print()&lt;/code&gt; returns its argument. (That makes it handy for
 stuffing some debug printing in the middle of an expression.) The else branch
@@ -2079,16 +2003,14 @@ the last expression are in a &amp;ldquo;value not used&amp;rdquo; context.&lt;/p
 &lt;li&gt;
 &lt;p&gt;Like other expression-oriented languages, functions in my language
 implicitly return the value that the function body expression evaluates to:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;three&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;three&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;About to return three...&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;3&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;three&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Prints &amp;quot;About to return three...&amp;quot; then &amp;quot;3&amp;quot;.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;But if a function has no return type (the same as &lt;code&gt;void&lt;/code&gt; or unit in other
 languages), it doesn&amp;rsquo;t return a value. In that case, even the last
 expression in the body is a &amp;ldquo;value not used&amp;rdquo; context.&lt;/p&gt;
@@ -2132,11 +2054,9 @@ successfully wrote some little example programs. It was starting to feel like a
 real typed language!&lt;/p&gt;
 &lt;p&gt;I could stop here, but there&amp;rsquo;s one last bit of type checking logic for &lt;code&gt;if&lt;/code&gt;
 expressions. I haven&amp;rsquo;t decided if it&amp;rsquo;s worth keeping. Consider:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;onInit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;When &lt;code&gt;isFriday&lt;/code&gt; is true, then this initializes &lt;code&gt;love&lt;/code&gt; with the string &amp;ldquo;in love&amp;rdquo;.
 When &lt;code&gt;isFriday&lt;/code&gt; is false, then the &lt;code&gt;return&lt;/code&gt; exits from the function entirely so
 &lt;code&gt;love&lt;/code&gt; never gets initialized at all. So even though these branches don&amp;rsquo;t
@@ -2147,9 +2067,7 @@ should be fine.&lt;/p&gt;
 this. But my default stance is to be as permissive as possible without breaking
 soundness, and this is a corner where I can be.&lt;/p&gt;
 &lt;p&gt;The trick is that expressions like &lt;code&gt;break&lt;/code&gt;, &lt;code&gt;return&lt;/code&gt;, and &lt;code&gt;throw&lt;/code&gt; are special. While they are expressions &lt;em&gt;grammatically&lt;/em&gt;, they don&amp;rsquo;t actually evaluate to values. If you do:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-vgs&quot; data-lang=&quot;vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;That &lt;code&gt;x&lt;/code&gt; never gets initialized. A &lt;code&gt;return&lt;/code&gt; expression always jumps out of the
 surrounding code instead of producing a value. Languages that have expressions
 which can do control flow model this by giving these expressions a special type
@@ -3062,11 +2980,9 @@ to doing anything. It was more a sort of recreational intellectual exercise. If
 I &lt;em&gt;were&lt;/em&gt; to do a book, what would it look like? You know, &lt;em&gt;hypothetically
 speaking&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;The very first note I wrote to myself said:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;high-level goal: a *small* book that builds a complete, efficient
+&lt;pre class=&quot;highlight language-text&quot;&gt;high-level goal: a *small* book that builds a complete, efficient
 interpreter. instead of a wide text about programming language*s*,
-it is a single path through the language space. aim for 60k words.&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+it is a single path through the language space. aim for 60k words.&lt;/pre&gt;
 &lt;p&gt;My first book was about 90,000 words, and I didn&amp;rsquo;t want to hike a trail that
 long again. I also had a meta-goal to make programming languages more
 approachable, and I figured a short text would help. I had this vision of
@@ -3183,26 +3099,22 @@ They&amp;rsquo;re real programs.&lt;/p&gt;
 &lt;p&gt;Meanwhile, the text of the book is &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/tree/master/book&quot;&gt;authored in Markdown&lt;/a&gt;, one file per
 chapter, just like my first book. To include a snippet of code in the book, I
 put a tag in the Markdown like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-md&quot; data-lang=&quot;md&quot;&gt;Which can be any of:
+&lt;pre class=&quot;highlight language-md&quot;&gt;Which can be any of:
 
 ^code is-alpha
 
-Once we&amp;#39;ve found an identifier, we scan the rest of it using:&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+Once we&amp;#39;ve found an identifier, we scan the rest of it using:&lt;/pre&gt;
 &lt;p&gt;Here, the &lt;code&gt;^code&lt;/code&gt; line says &amp;ldquo;look up the snippet named &amp;lsquo;is-alpha&amp;rsquo; and insert it
 here.&amp;rdquo; When the build script generates the HTML for this chapter, it goes off
 and hunts through the code for that snippet. Over in the code, special comments
 delimit snippets. The one included here looks like this:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;c&quot;&gt;//&amp;gt; Scanning on Demand is-alpha&lt;/span&gt;
+&lt;pre class=&quot;highlight language-c&quot;&gt;&lt;span class=&quot;c&quot;&gt;//&amp;gt; Scanning on Demand is-alpha&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isAlpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;a&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;z&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;
          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;A&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;Z&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;
           &lt;span class=&quot;i&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;//&amp;lt; Scanning on Demand is-alpha&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;c&quot;&gt;//&amp;lt; Scanning on Demand is-alpha&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;The &lt;code&gt;//&amp;gt;&lt;/code&gt; line begins the snippet and says what chapter the snippet appears in
 and the name of the snippet. The &lt;code&gt;//&amp;lt;&lt;/code&gt; line ends the snippet. Pretty
 straightforward.&lt;/p&gt;
@@ -3241,8 +3153,7 @@ compiler will like what it sees.&lt;/p&gt;
 &lt;p&gt;So, for any piece of code that later gets replaced&amp;mdash;in other words code that
 is not part of the very final version of each interpreter&amp;mdash;there is a
 different snippet syntax:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;concatenate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-c&quot;&gt;&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;concatenate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;/* Strings concatenate &amp;lt; Garbage Collection concatenate-peek
   ObjString* b = AS_STRING(pop());
   ObjString* a = AS_STRING(pop());
@@ -3257,8 +3168,7 @@ different snippet syntax:&lt;/p&gt;
   &lt;span class=&quot;i&quot;&gt;memcpy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;chars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;chars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;memcpy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;chars&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;chars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;chars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;\0&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;This block comment contains a snippet of code. The header indicates that this
 snippet is named &amp;ldquo;concatenate&amp;rdquo; and first appears in the &amp;ldquo;Strings&amp;rdquo; chapter. Then,
 later, it gets removed when the &amp;ldquo;concatenate-peek&amp;rdquo; snippet in the &amp;ldquo;Garbage
@@ -3268,8 +3178,7 @@ previous two lines.&lt;/p&gt;
 code as it is in the raw source file is still valid. In some places where the
 interpreter gets revised multiple times, the code can get pretty complex. Here
 is the &lt;code&gt;main()&lt;/code&gt; function of the bytecode VM:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;pre class=&quot;highlight language-c&quot;&gt;&lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;t&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;argc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
 &lt;span class=&quot;c&quot;&gt;//&amp;gt; A Virtual Machine main-init-vm&lt;/span&gt;
   &lt;span class=&quot;i&quot;&gt;initVM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
 
@@ -3341,8 +3250,7 @@ is the &lt;code&gt;main()&lt;/code&gt; function of the bytecode VM:&lt;/p&gt;
   freeChunk(&amp;amp;chunk);
 */&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Maintaining this is not super fun. But, thankfully, I have a build and test
 system to tell me when I break something.&lt;/p&gt;
 &lt;h2&gt;Slicing up the interpreters&lt;/h2&gt;

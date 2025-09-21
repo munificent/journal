@@ -103,11 +103,9 @@ within the line length limit. That means adding line breaks (or &ldquo;splits&rd
 formatter calls them), and determining the best place to add those is <a href="https://en.wikipedia.org/wiki/Line_wrap_and_word_wrap#Knuth.27s_algorithm">famously
 hard</a>.</p>
 <p>Check out this guy:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">experimental</span> <span class="o">=</span> <span class="i">document</span><span class="p">.</span><span class="i">querySelectorAll</span><span class="p">(</span><span class="s">&#39;link&#39;</span><span class="p">).</span><span class="i">any</span><span class="p">((</span><span class="i">link</span><span class="p">)</span> <span class="o">=&gt;</span>
+<pre class="highlight language-dart"><span class="i">experimental</span> <span class="o">=</span> <span class="i">document</span><span class="p">.</span><span class="i">querySelectorAll</span><span class="p">(</span><span class="s">&#39;link&#39;</span><span class="p">).</span><span class="i">any</span><span class="p">((</span><span class="i">link</span><span class="p">)</span> <span class="o">=&gt;</span>
     <span class="i">link</span><span class="p">.</span><span class="i">attributes</span><span class="p">[</span><span class="s">&#39;rel&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;import&#39;</span> <span class="o">&amp;&amp;</span>
-        <span class="i">link</span><span class="p">.</span><span class="i">attributes</span><span class="p">[</span><span class="s">&#39;href&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="i">POLYMER_EXPERIMENTAL_HTML</span><span class="p">);</span></code></pre>
-</div>
+        <span class="i">link</span><span class="p">.</span><span class="i">attributes</span><span class="p">[</span><span class="s">&#39;href&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="i">POLYMER_EXPERIMENTAL_HTML</span><span class="p">);</span></pre>
 <p>There are thirteen places where a line break is possible here according to our
 style rules. That&rsquo;s 8,192 different combinations if we brute force them all <a
 id="1" href="#1-note" class="skull">1</a>. The search space we have to cover is
@@ -124,17 +122,14 @@ callbacks and lots of long method chains. Some Dart users really dig a
 functional style and appear to be playing a game where whoever writes the most
 code with the fewest semicolons wins.</p>
 <p>Here&rsquo;s real code from an amateur player:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">_bindAssignablePropsOn</span><span class="p">.</span><span class="i">forEach</span><span class="p">((</span><span class="t">String</span> <span class="i">eventName</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">node</span>
+<pre class="highlight language-dart"><span class="i">_bindAssignablePropsOn</span><span class="p">.</span><span class="i">forEach</span><span class="p">((</span><span class="t">String</span> <span class="i">eventName</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">node</span>
     <span class="p">.</span><span class="i">addEventListener</span><span class="p">(</span><span class="i">eventName</span><span class="p">,</span> <span class="p">(</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">zone</span><span class="p">.</span><span class="i">run</span><span class="p">(</span>
         <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">bindAssignableProps</span><span class="p">.</span><span class="i">forEach</span><span class="p">(</span>
             <span class="p">(</span><span class="i">propAndExp</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">propAndExp</span><span class="p">[</span><span class="n">1</span><span class="p">].</span><span class="i">assign</span><span class="p">(</span>
-                <span class="i">scope</span><span class="p">.</span><span class="i">context</span><span class="p">,</span> <span class="i">jsNode</span><span class="p">[</span><span class="i">propAndExp</span><span class="p">[</span><span class="n">0</span><span class="p">]])))));</span></code></pre>
-</div>
+                <span class="i">scope</span><span class="p">.</span><span class="i">context</span><span class="p">,</span> <span class="i">jsNode</span><span class="p">[</span><span class="i">propAndExp</span><span class="p">[</span><span class="n">0</span><span class="p">]])))));</span></pre>
 <p>Yeah, that&rsquo;s four nested functions. 1,048,576 ways to split that one. Here&rsquo;s one
 of the best that I&rsquo;ve found. This is what a pro player brings to the game:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">return</span> <span class="i">doughnutFryer</span>
+<pre class="highlight language-dart"><span class="k">return</span> <span class="i">doughnutFryer</span>
     <span class="p">.</span><span class="i">start</span><span class="p">()</span>
     <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="i">_frostingGlazer</span><span class="p">.</span><span class="i">start</span><span class="p">())</span>
     <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="t">Future</span><span class="p">.</span><span class="i">wait</span><span class="p">([</span>
@@ -156,8 +151,7 @@ of the best that I&rsquo;ve found. This is what a pro player brings to the game:
     <span class="p">.</span><span class="i">catchError</span><span class="p">(</span><span class="i">cannotGetConveyorBeltRunning</span><span class="p">)</span>
     <span class="p">.</span><span class="i">then</span><span class="p">((</span><span class="i">_</span><span class="p">)</span> <span class="p">{</span>
   <span class="i">_logger</span><span class="p">.</span><span class="i">info</span><span class="p">(</span><span class="s">&quot;Let&#39;s eat!&quot;</span><span class="p">);</span>
-<span class="p">});</span></code></pre>
-</div>
+<span class="p">});</span></pre>
 <p>(The funny names are because this was sanitized from internal code.) That&rsquo;s a
 <em>single</em> statement, all 565 characters of it. There are about 549 <em>billion</em> ways
 we could line break it.</p>
@@ -184,9 +178,7 @@ output. The main objects here are <strong>chunks</strong>, <strong>rules</strong
 <h3>Chunks</h3>
 <p>A <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk.dart">chunk</a> is an atomic unit of formatting. It&rsquo;s a contiguous region of
 characters that we know will not contain any line breaks. Given this code:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">format</span> <span class="c">/* comment */</span> <span class="k">this</span><span class="p">;</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">format</span> <span class="c">/* comment */</span> <span class="k">this</span><span class="p">;</span></pre>
 <p>We break it into these chunks: <code>format</code>, <code>/* comment */</code>, and <code>this;</code>.</p>
 <p>Chunks are similar to a <a href="https://en.wikipedia.org/wiki/Lexical_analysis#Token">token</a> in a conventional compiler, but they tend to
 be, well, <em>chunkier</em>. Often, the text for several tokens ends up in the same
@@ -194,9 +186,7 @@ chunk, like <code>this</code> and <code>;</code> here. If a line break can never
 tokens, they end up in the same chunk <a id="6" href="#6-note"
 class="skull">6</a>.</p>
 <p>Chunks are mostly linear. For example, given an expression like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">some</span><span class="p">(</span><span class="i">nested</span><span class="p">,</span> <span class="i">function</span><span class="p">(</span><span class="i">ca</span> <span class="o">+</span> <span class="i">ll</span><span class="p">))</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">some</span><span class="p">(</span><span class="i">nested</span><span class="p">,</span> <span class="i">function</span><span class="p">(</span><span class="i">ca</span> <span class="o">+</span> <span class="i">ll</span><span class="p">))</span></pre>
 <p>We chunk it to the flat list: <code>some(</code> <code>nested,</code> <code>function(</code> <code>ca +</code> <code>ll))</code>.</p>
 <p>We could treat an entire source file like a single flat sequence of chunks, but
 it would take forever and a day to line break the whole thing <a id="7"
@@ -241,13 +231,10 @@ independent of the others, this gets used for most of the splits in the program.
 in places where we want to more precisely control the configuration of a set of
 splits. For example, the positional argument list in a function list is
 controlled by <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/rule/argument.dart">a single rule</a>. A function call like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span></pre>
 <p>Will have splits after <code>function(</code>, <code>first,</code>, <code>second,</code>, and <code>third)</code>. They are
 all owned by a single rule that only allows the following configurations:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// 0: Don&#39;t split at all.</span>
+<pre class="highlight language-dart"><span class="c">// 0: Don&#39;t split at all.</span>
 <span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span> <span class="i">third</span><span class="p">)</span>
 
 <span class="c">// 1: Split before the first.</span>
@@ -266,24 +253,19 @@ all owned by a single rule that only allows the following configurations:</p>
 <span class="i">function</span><span class="p">(</span>
     <span class="i">first</span><span class="p">,</span>
     <span class="i">second</span><span class="p">,</span>
-    <span class="i">third</span><span class="p">)</span></code></pre>
-</div>
+    <span class="i">third</span><span class="p">)</span></pre>
 <p>Having a single rule for this instead of individual rules for each argument lets
 us prohibit undesired outputs like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span>
+<pre class="highlight language-dart"><span class="i">function</span><span class="p">(</span>
     <span class="i">first</span><span class="p">,</span> <span class="i">second</span><span class="p">,</span>
-    <span class="i">third</span><span class="p">)</span></code></pre>
-</div>
+    <span class="i">third</span><span class="p">)</span></pre>
 <h3>Constraints</h3>
 <p>Grouping a range of splits under a single rule helps us prevent split
 configurations we want to avoid like the previous example, but it&rsquo;s not enough.
 There are more complex constraints we want to enforce like: &ldquo;if a split occurs
 inside a list element, the list should split too&rdquo;. That avoids output like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="p">[</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span> <span class="o">+</span>
-    <span class="i">third</span><span class="p">,</span> <span class="i">fourth</span><span class="p">]</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="p">[</span><span class="i">first</span><span class="p">,</span> <span class="i">second</span> <span class="o">+</span>
+    <span class="i">third</span><span class="p">,</span> <span class="i">fourth</span><span class="p">]</span></pre>
 <p>Here, the list and the <code>+</code> expression have their own rules, but those rules need
 to interact. If the <code>+</code> takes value <code>1</code>, the list rule needs to as well. To
 support this, rules can <em>constrain</em> each other. Any rule can limit the values
@@ -301,9 +283,7 @@ I picture it like a rubber band stretching around them. If a split happens in
 any of those chunks, the span is broken. When that happens, the solution is
 penalized based on the cost of the span.</p>
 <p>Spans can nest arbitrarily deeply. In an expression like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">),</span> <span class="i">second</span><span class="p">(</span><span class="i">c</span><span class="p">,</span> <span class="i">d</span><span class="p">))</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">function</span><span class="p">(</span><span class="i">first</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">),</span> <span class="i">second</span><span class="p">(</span><span class="i">c</span><span class="p">,</span> <span class="i">d</span><span class="p">))</span></pre>
 <p>There will be spans around <code>a, b</code> and <code>c, d</code> to try to keep those argument lists
 from splitting, but also another span around <code>first(a, b), second(c, d)</code> to keep
 the outer argument list from splitting:</p>
@@ -324,10 +304,8 @@ determined.</p>
 <p>There&rsquo;s no rocket science here, but there are a <em>lot</em> of <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L184">hairy</a>
 <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L210">corner</a> <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L283">cases</a>. Comments can appear in weird places. We have
 to handle weird things like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">function</span><span class="p">(</span><span class="i">argument</span><span class="p">,</span> <span class="c">// comment</span>
-    <span class="i">argument</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">function</span><span class="p">(</span><span class="i">argument</span><span class="p">,</span> <span class="c">// comment</span>
+    <span class="i">argument</span><span class="p">)</span></pre>
 <p>Here, we normally would have a split after the first argument owned by an
 argument list rule. But the line comment adheres to the <code>,</code> and has a hard split
 after it, so we need to make sure the argument list rule handles that.</p>
@@ -343,10 +321,8 @@ naïvely is infeasible. Even a small source file contains hundreds of individual
 rules and the set of possible solutions is exponential in the number of rules.</p>
 <p>The first thing we do is <a href="https://github.com/dart-lang/dart_style/blob/3b3277668b2ff0cb7be954c3217c73264454bd7c/lib/src/chunk_builder.dart#L736">divide the chunk list</a> into regions we <em>know</em>
 can&rsquo;t interfere with each other. These are roughly &ldquo;lines&rdquo; of code. So with:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">first</span><span class="p">(</span><span class="i">line</span><span class="p">);</span>
-<span class="i">second</span><span class="p">(</span><span class="i">line</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="i">first</span><span class="p">(</span><span class="i">line</span><span class="p">);</span>
+<span class="i">second</span><span class="p">(</span><span class="i">line</span><span class="p">);</span></pre>
 <p>We know that how we split the first statement has no effect on the second one.
 So we run through the list of chunks and break them into shorter lists whenever
 we hit a hard split that isn&rsquo;t nested inside an expression.</p>
@@ -442,12 +418,10 @@ algorithm will try basically all of them. After all, they&rsquo;re low cost sinc
 don&rsquo;t have many splits.</p>
 <p>We need to avoid wasting time tweaking rules that aren&rsquo;t part of the problem.
 For example, say we&rsquo;re looking at a partial solution like this:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Blog-friendly 40-char line limit:    |</span>
+<pre class="highlight language-dart"><span class="c">// Blog-friendly 40-char line limit:    |</span>
 <span class="i">function</span><span class="p">(</span>
     <span class="i">firstCall</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">,</span> <span class="i">c</span><span class="p">,</span> <span class="i">d</span><span class="p">,</span> <span class="i">e</span><span class="p">,</span> <span class="i">f</span><span class="p">,</span> <span class="i">g</span><span class="p">,</span> <span class="i">h</span><span class="p">),</span>
-    <span class="i">secondCall</span><span class="p">(</span><span class="s">&quot;very long argument string here&quot;</span><span class="p">));</span></code></pre>
-</div>
+    <span class="i">secondCall</span><span class="p">(</span><span class="s">&quot;very long argument string here&quot;</span><span class="p">));</span></pre>
 <p>There are a bunch of ways we can split the arguments to <code>firstCall()</code>, but <em>we
 don&rsquo;t need to</em>. Its line already fits. The only line we need to worry about is
 the <code>secondCall()</code> one.</p>
@@ -466,8 +440,7 @@ cases. The problem is that within large statements, you still run into cases
 where how you format part of the statement is <em>mostly</em> independent of later
 parts.</p>
 <p>Take something like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">// Blog-friendly 40-char line limit:    |</span>
+<pre class="highlight language-dart"><span class="c">// Blog-friendly 40-char line limit:    |</span>
 <span class="k">new</span> <span class="t">Compiler</span><span class="p">(</span>
     <span class="i">assertions</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;checked-mode&#39;</span><span class="p">),</span>
     <span class="i">annotations</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;annotations&#39;</span><span class="p">),</span>
@@ -476,8 +449,7 @@ parts.</p>
     <span class="i">preserve</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;preserve&#39;</span><span class="p">),</span>
     <span class="i">liveAnalysis</span><span class="p">:</span> <span class="i">check</span><span class="p">(</span><span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;live&#39;</span><span class="p">),</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;analysis&#39;</span><span class="p">)),</span>
     <span class="i">multi</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;multi&#39;</span><span class="p">),</span>
-    <span class="i">sourceMap</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;source-map&#39;</span><span class="p">));</span></code></pre>
-</div>
+    <span class="i">sourceMap</span><span class="p">:</span> <span class="i">options</span><span class="p">.</span><span class="i">has</span><span class="p">(</span><span class="s">&#39;source-map&#39;</span><span class="p">));</span></pre>
 <p>Each of those named arguments can be split in a few different ways. And, since
 those are less nested&mdash;which means fewer split spans&mdash;than that nasty
 <code>liveAnalysis:</code> line, <em>it will try every combination of all of them</em> before it
@@ -515,8 +487,7 @@ href="#17-note" class="skull">17</a>.</p>
 <p>Alas, that &ldquo;damn near&rdquo; is significant. There are still a <em>few</em> cases where the
 formatter takes a long time. I&rsquo;ve only ever seen this on machine generated code.
 Stuff like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ResolutionCopier</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">ResolutionCopier</span> <span class="p">{</span>
   <span class="a">@override</span>
   <span class="t">bool</span> <span class="i">visitClassDeclaration</span><span class="p">(</span><span class="t">ClassDeclaration</span> <span class="i">node</span><span class="p">)</span> <span class="p">{</span>
     <span class="t">ClassDeclaration</span> <span class="i">toNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="i">_toNode</span> <span class="k">as</span> <span class="t">ClassDeclaration</span><span class="p">;</span>
@@ -549,8 +520,7 @@ Stuff like:</p>
             <span class="i">node</span><span class="p">.</span><span class="i">rightBracket</span><span class="p">,</span>
             <span class="i">toNode</span><span class="p">.</span><span class="i">rightBracket</span><span class="p">));</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Yeah, welcome to my waking nightmare. Unsurprisingly, code like this bogs down
 the formatter. I want dartfmt to be usable in things like presubmit scripts
 where it will have a ton of weird code thrown at it and it <em>must</em> complete in a
@@ -594,10 +564,8 @@ algorithm the back end wants to use.</p>
 biggest challenges. The formatter initially assumed there would be no newlines
 in some places. Who would expect a newline, say, between the keywords in
 <code>abstract class</code>? Alas, there&rsquo;s nothing preventing a user from doing:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">abstract</span> <span class="c">// Oh, crap. A line comment.</span>
-<span class="k">class</span> <span class="t">Foo</span> <span class="p">{}</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">abstract</span> <span class="c">// Oh, crap. A line comment.</span>
+<span class="k">class</span> <span class="t">Foo</span> <span class="p">{}</span></pre>
 <p>So I had to do a ton of work to make it resilient in the face of comments and
 newlines appearing in all sorts of weird places. There&rsquo;s no single clean
 solution for this, just lots of edge cases and special handling.</p>
@@ -635,11 +603,9 @@ statements) is a place where you could just break the list of chunks in two and
 line split each half independently. From the line splitter&rsquo;s perspective, there
 would be no hard splits.</p>
 <p>Which would work&hellip; except for line comments:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="i">some</span><span class="p">(</span><span class="i">expression</span><span class="p">,</span>
+<pre class="highlight language-dart"><span class="i">some</span><span class="p">(</span><span class="i">expression</span><span class="p">,</span>
    <span class="c">// with a line comment</span>
-   <span class="i">rightInTheMiddleOfIt</span><span class="p">);</span></code></pre>
-</div>
+   <span class="i">rightInTheMiddleOfIt</span><span class="p">);</span></pre>
 <p>This has to be split as a single unit to get the expression nesting and
 indentation correct, but it also contains a mandatory newline after the line
 comment.</p>

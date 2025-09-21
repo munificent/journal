@@ -101,16 +101,14 @@ that 360&deg; problem into 45&deg; pie pieces. One wedge looks like this:</p><fi
 </figure>
 <p>This wedge is called an <a href="https://en.wikipedia.org/wiki/Octant_(plane_geometry)"><em>octant</em></a>, and it&rsquo;s common in 2D algorithms. We
 can paint every tile in that triangle like so:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">row</span> <span class="o">=</span> <span class="n">1</span><span class="p">;</span> <span class="i">row</span> <span class="o">&lt;</span> <span class="i">maxDistance</span><span class="p">;</span> <span class="i">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">row</span> <span class="o">=</span> <span class="n">1</span><span class="p">;</span> <span class="i">row</span> <span class="o">&lt;</span> <span class="i">maxDistance</span><span class="p">;</span> <span class="i">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">col</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">col</span> <span class="o">&lt;=</span> <span class="i">row</span><span class="p">;</span> <span class="i">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">var</span> <span class="i">x</span> <span class="o">=</span> <span class="i">hero</span><span class="p">.</span><span class="i">x</span> <span class="o">+</span> <span class="i">col</span><span class="p">;</span>
     <span class="k">var</span> <span class="i">y</span> <span class="o">=</span> <span class="i">hero</span><span class="p">.</span><span class="i">y</span> <span class="o">-</span> <span class="i">row</span><span class="p">;</span>
 
     <span class="i">paint</span><span class="p">(</span><span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>If we take that wedge and apply some transformations, we can cover the entire
 field around the hero. The above code is most of the way there. If you squint,
 you can see there are two coordinate systems. The <code>row</code> and <code>col</code> variables are
@@ -120,8 +118,7 @@ space&mdash;what you see on screen.</p>
 <code>+</code> and <code>-</code> and <code>row</code> and <code>col</code>, there are eight ways to calculate <code>x</code> and <code>y</code>.
 Each represents a reflection or 90&deg; rotation of the original octant. If we
 enumerate them all, we get:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="t">Vec</span> <span class="i">transformOctant</span><span class="p">(</span><span class="t">int</span> <span class="i">row</span><span class="p">,</span> <span class="t">int</span> <span class="i">col</span><span class="p">,</span> <span class="t">int</span> <span class="i">octant</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="t">Vec</span> <span class="i">transformOctant</span><span class="p">(</span><span class="t">int</span> <span class="i">row</span><span class="p">,</span> <span class="t">int</span> <span class="i">col</span><span class="p">,</span> <span class="t">int</span> <span class="i">octant</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">switch</span> <span class="p">(</span><span class="i">octant</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">0</span><span class="p">:</span> <span class="k">return</span> <span class="t">Vec</span><span class="p">(</span> <span class="i">col</span><span class="p">,</span> <span class="o">-</span><span class="i">row</span><span class="p">);</span>
     <span class="k">case</span> <span class="n">1</span><span class="p">:</span> <span class="k">return</span> <span class="t">Vec</span><span class="p">(</span> <span class="i">row</span><span class="p">,</span> <span class="o">-</span><span class="i">col</span><span class="p">);</span>
@@ -132,8 +129,7 @@ enumerate them all, we get:</p>
     <span class="k">case</span> <span class="n">6</span><span class="p">:</span> <span class="k">return</span> <span class="t">Vec</span><span class="p">(</span><span class="o">-</span><span class="i">row</span><span class="p">,</span> <span class="o">-</span><span class="i">col</span><span class="p">);</span>
     <span class="k">case</span> <span class="n">7</span><span class="p">:</span> <span class="k">return</span> <span class="t">Vec</span><span class="p">(</span><span class="o">-</span><span class="i">col</span><span class="p">,</span> <span class="o">-</span><span class="i">row</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Each case represents a different octant, starting at the top and going clockwise
 around the circle. Painting them all covers the whole view (with a bit of
 innocuous overlap):</p><figure>
@@ -158,8 +154,7 @@ the white line you see next to the slider. It tracks which parts of the row are
 in the shade of opaque tiles on previous rows and which aren&rsquo;t.</p>
 <p>The shadow line is a series of segments, each representing one obscured region
 of the line. We can define it like so:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
   <span class="k">final</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">Shadow</span><span class="o">&gt;</span> <span class="i">_shadows</span> <span class="o">=</span> <span class="p">[];</span>
 <span class="p">}</span>
 
@@ -168,8 +163,7 @@ of the line. We can define it like so:</p>
   <span class="t">num</span> <span class="i">end</span><span class="p">;</span>
 
   <span class="t">Shadow</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="i">start</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="i">end</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The interesting question is, &ldquo;What is the <em>range</em> of <code>start</code> and <code>end</code>?&rdquo; The
 naïve answer is to use tile coordinates. If we&rsquo;re five rows in and the shadow
 line is five tiles long, the segment coordinates would range from 0 to 5.</p>
@@ -192,15 +186,13 @@ in the middle of the shadow. (This isn&rsquo;t strictly true if the tile is stra
 up from the hero, but we can safely ignore that.)</p>
 <p>What we need, then, is to calculate the slopes of those two corners of a tile.
 The math is a kind of fussy, but it&rsquo;s:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="c">/// Creates a [Shadow] that corresponds to the projected</span>
+<pre class="highlight language-dart"><span class="c">/// Creates a [Shadow] that corresponds to the projected</span>
 <span class="c">/// silhouette of the tile at [row], [col].</span>
 <span class="t">Shadow</span> <span class="i">projectTile</span><span class="p">(</span><span class="t">int</span> <span class="i">row</span><span class="p">,</span> <span class="t">int</span> <span class="i">col</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">topLeft</span> <span class="o">=</span> <span class="i">col</span> <span class="o">/</span> <span class="p">(</span><span class="i">row</span> <span class="o">+</span> <span class="n">2</span><span class="p">);</span>
   <span class="k">var</span> <span class="i">bottomRight</span> <span class="o">=</span> <span class="p">(</span><span class="i">col</span> <span class="o">+</span> <span class="n">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="i">row</span> <span class="o">+</span> <span class="n">1</span><span class="p">);</span>
   <span class="k">return</span> <span class="t">Shadow</span><span class="p">(</span><span class="i">topLeft</span><span class="p">,</span> <span class="i">bottomRight</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>This function has two uses. The obvious one is that we call this for each opaque
 tile and add its result to the shadow line. But the projection comes into play
 before that too.</p>
@@ -218,19 +210,16 @@ projection has to be totally covered by the shadow to be hidden. If you want
 something less permissive, this algorithm is easy to tweak.</p>
 <p>Let&rsquo;s code! First, we&rsquo;ll add a method to see if one shadow totally covers
 another:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">Shadow</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">Shadow</span> <span class="p">{</span>
   <span class="c">/// Returns `true` if [other] is completely covered by this shadow.</span>
   <span class="t">bool</span> <span class="i">contains</span><span class="p">(</span><span class="t">Shadow</span> <span class="i">other</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="i">start</span> <span class="o">&lt;=</span> <span class="i">other</span><span class="p">.</span><span class="i">start</span> <span class="o">&amp;&amp;</span> <span class="i">end</span> <span class="o">&gt;=</span> <span class="i">other</span><span class="p">.</span><span class="i">end</span><span class="p">;</span>
   <span class="p">}</span>
 
   <span class="p">...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Then we use that to see if any shadow in the line covers the tile:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
   <span class="t">bool</span> <span class="i">isInShadow</span><span class="p">(</span><span class="t">Shadow</span> <span class="i">projection</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">shadow</span> <span class="k">in</span> <span class="i">_shadows</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="i">shadow</span><span class="p">.</span><span class="i">contains</span><span class="p">(</span><span class="i">projection</span><span class="p">))</span> <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
@@ -240,17 +229,14 @@ another:</p>
   <span class="p">}</span>
 
   <span class="p">...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Using that, we can determine the visibility of every tile in a row. Given a
 ShadowLine in <code>line</code>, and a set of tiles in <code>tiles</code>, it&rsquo;s:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">col</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">col</span> <span class="o">&lt;=</span> <span class="i">row</span><span class="p">;</span> <span class="i">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">col</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">col</span> <span class="o">&lt;=</span> <span class="i">row</span><span class="p">;</span> <span class="i">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">projection</span> <span class="o">=</span> <span class="i">_projectTile</span><span class="p">(</span><span class="i">row</span><span class="p">,</span> <span class="i">col</span><span class="p">);</span>
   <span class="k">var</span> <span class="i">pos</span> <span class="o">=</span> <span class="i">start</span> <span class="o">+</span> <span class="i">transformOctant</span><span class="p">(</span><span class="i">row</span><span class="p">,</span> <span class="i">col</span><span class="p">,</span> <span class="i">octant</span><span class="p">);</span>
   <span class="i">tiles</span><span class="p">[</span><span class="i">pos</span><span class="p">].</span><span class="i">isVisible</span> <span class="o">=</span> <span class="o">!</span><span class="i">line</span><span class="p">.</span><span class="i">isInShadow</span><span class="p">(</span><span class="i">projection</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <h2>Inky pools of shadows</h2>
 <p>We can calculate which tiles are obscured by the shadow line, but that isn&rsquo;t
 very useful since our shadow line is always empty right now. Let&rsquo;s fix that.</p>
@@ -272,54 +258,44 @@ handful of cases:</p>
 <li>
 <p><strong>The shadow is contained within an existing one.</strong> That means the new
 shadow doesn&rsquo;t cover any new territory, so we can discard it.</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">old:    ..[======]..
+<pre class="highlight language-text">old:    ..[======]..
 new:    ....[===]...
         ------------
-result: ..[======]..</code></pre>
-</div>
+result: ..[======]..</pre>
 </li>
 <li>
 <p><strong>The shadow doesn&rsquo;t overlap any other ones.</strong> In this case, we insert it in
 sorted order between the segments that come before and after it.</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">old:    [=].....[==]
+<pre class="highlight language-text">old:    [=].....[==]
 new:    ....[=].....
         ------------
-result: [=].[=].[==]</code></pre>
-</div>
+result: [=].[=].[==]</pre>
 </li>
 <li>
 <p><strong>The shadow overlaps another shadow on its starting edge.</strong> We take the
 previous shadow and grow it to encompass the new shadow&rsquo;s endpoint and
 discard the new one.</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">old:    [===]....[=]
+<pre class="highlight language-text">old:    [===]....[=]
 new:    ...[===]....
         ------------
-result: [======].[=]</code></pre>
-</div>
+result: [======].[=]</pre>
 </li>
 <li>
 <p><strong>The shadow overlaps another shadow on its ending edge.</strong> Do the same
 thing, but in reverse: grow the following shadow to cover the new one.</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">old:    [=]....[===]
+<pre class="highlight language-text">old:    [=]....[===]
 new:    ....[===]...
         ------------
-result: [=].[======]</code></pre>
-</div>
+result: [=].[======]</pre>
 </li>
 <li>
 <p><strong>The shadow overlaps shadows on <em>both</em> ends.</strong> This is the fun one. We take
 the previous shadow and extend it to cover the <em>next</em> shadow&rsquo;s endpoint.
 Then we discard both the new shadow and that next one.</p>
-<div class="highlight">
-<pre><code class="language-text" data-lang="text">old:    ..[=]..[==].
+<pre class="highlight language-text">old:    ..[=]..[==].
 new:    ...[====]...
         ------------
-result: ..[=======].</code></pre>
-</div>
+result: ..[=======].</pre>
 </li>
 </ol>
 <p>The first case doesn&rsquo;t change the list of shadows at all. In the second case,
@@ -329,8 +305,7 @@ the list gets <em>shorter</em>.</p>
 <p>(Pop quiz! Why don&rsquo;t we have to worry about cases where a shadow overlaps more
 than two existing ones?)</p>
 <p>Here&rsquo;s the entire method to add a shadow to the line:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
   <span class="k">void</span> <span class="i">add</span><span class="p">(</span><span class="t">Shadow</span> <span class="i">shadow</span><span class="p">)</span> <span class="p">{</span>
     <span class="c">// Figure out where to slot the new shadow in the list.</span>
     <span class="k">var</span> <span class="i">index</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span>
@@ -374,8 +349,7 @@ than two existing ones?)</p>
   <span class="p">}</span>
 
   <span class="p">...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>OK, so that&rsquo;s kind of hairy, but it&rsquo;s not deep magic, just a bunch of different
 cases to handle. Clever readers are probably wondering why we don&rsquo;t do a binary
 search to find the insertion point. The list is sorted after all. If you want to
@@ -391,8 +365,7 @@ shadow is contained. If it is, we don&rsquo;t bother calling <code>add()</code>.
 shadow line is a single segment from 0 to 1&mdash;in other words, the whole line is
 in shadow&mdash;then we can skip all of the projection calculation, updating, etc.
 Every tile will be hidden after that. Here&rsquo;s how we detect that:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">class</span> <span class="t">ShadowLine</span> <span class="p">{</span>
   <span class="t">bool</span> <span class="k">get</span> <span class="i">isFullShadow</span> <span class="p">{</span>
     <span class="k">return</span> <span class="i">_shadows</span><span class="p">.</span><span class="i">length</span> <span class="o">==</span> <span class="n">1</span> <span class="o">&amp;&amp;</span>
         <span class="i">_shadows</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="i">start</span> <span class="o">==</span> <span class="n">0</span> <span class="o">&amp;&amp;</span>
@@ -400,8 +373,7 @@ Every tile will be hidden after that. Here&rsquo;s how we detect that:</p>
   <span class="p">}</span>
 
   <span class="p">...</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>In practice, this case happens often. Dungeons tend to be small rooms and twisty
 passages, so at some distance from the hero you typically reach a point where
 all tiles are occluded.</p>
@@ -424,8 +396,7 @@ all tiles are occluded.</p>
 <p>Let&rsquo;s stitch the last few pieces together along with a dash of bounds checking.
 Building on top of what we have above, here&rsquo;s the top-level code to update the
 visibility of the whole dungeon:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">void</span> <span class="i">refreshVisibility</span><span class="p">(</span><span class="t">Vec</span> <span class="i">hero</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-dart"><span class="k">void</span> <span class="i">refreshVisibility</span><span class="p">(</span><span class="t">Vec</span> <span class="i">hero</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">octant</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">octant</span> <span class="o">&lt;</span> <span class="n">8</span><span class="p">;</span> <span class="i">octant</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">refreshOctant</span><span class="p">(</span><span class="i">hero</span><span class="p">,</span> <span class="i">octant</span><span class="p">);</span>
   <span class="p">}</span>
@@ -463,8 +434,7 @@ visibility of the whole dungeon:</p>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>And there we have it. It runs very fast in wide open areas since there will be
 few shadow segments and the list is short. Likewise, it runs fast in closed
 areas since the shadow list will also be short&mdash;it will contain a small number

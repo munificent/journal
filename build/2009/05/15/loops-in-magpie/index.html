@@ -85,16 +85,13 @@ collections (i.e. <a href="https://docs.microsoft.com/en-us/dotnet/api/system.co
 wants a new variable for the current item. Also, iterating through multiple
 collections simultaneously should be fairly easy to do. This leads me to adding
 just one new keyword, <code>for</code>:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="k">for</span> <span class="x">&lt;var&gt;</span> <span class="o">&lt;-</span> <span class="x">&lt;generator&gt;</span> <span class="k">do</span>
+<pre class="highlight language-magpie1"><span class="k">for</span> <span class="x">&lt;var&gt;</span> <span class="o">&lt;-</span> <span class="x">&lt;generator&gt;</span> <span class="k">do</span>
     <span class="p">...</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>In addition, multiple <code>for</code> clauses can be provided (but only one <code>do</code>) to
 iterate through multiple collections in parallel. I still need to work out the
 details, but I&rsquo;m thinking that the above code will be syntactic sugar for:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Evaluate the generator expression once.</span>
+<pre class="highlight language-magpie1"><span class="c">// Evaluate the generator expression once.</span>
 <span class="k">def</span> <span class="i">_generator</span> <span class="o">&lt;-</span> <span class="i">Generate</span> <span class="x">&lt;generator&gt;</span>
 
 <span class="c">// Advance to the first item.</span>
@@ -103,11 +100,9 @@ details, but I&rsquo;m thinking that the above code will be syntactic sugar for:
     <span class="k">def</span> <span class="x">&lt;var&gt;</span> <span class="o">&lt;-</span> <span class="i">_generator</span><span class="p">.</span><span class="i">Current</span>
     <span class="p">...</span>
     <span class="i">_generator</span><span class="p">.</span><span class="i">MoveNext</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Using that, the use cases I have can be solved by:</p>
-<div class="highlight">
-<pre><code class="language-magpie1" data-lang="magpie1"><span class="c">// Iterating through a collection.</span>
+<pre class="highlight language-magpie1"><span class="c">// Iterating through a collection.</span>
 <span class="k">for</span> <span class="i">item</span> <span class="o">&lt;-</span> <span class="i">someList</span> <span class="k">do</span>
     <span class="i">Print</span> <span class="i">item</span>
 <span class="k">end</span>
@@ -136,8 +131,7 @@ details, but I&rsquo;m thinking that the above code will be syntactic sugar for:
 <span class="c">// Iterating through a range.</span>
 <span class="k">for</span> <span class="i">i</span> <span class="o">&lt;-</span> <span class="i">Range</span> <span class="p">(</span><span class="n">10</span><span class="p">,</span> <span class="n">30</span><span class="p">)</span>
     <span class="i">Print</span> <span class="i">i</span><span class="p">.</span><span class="i">String</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>In those examples, <code>Reverse</code>, <code>Indexes</code>, <code>Times</code>, and <code>Range</code> can all be simple
 library functions. There&rsquo;s nothing magical about them. This may change when the
 rubber meets the road as I implement it, but it feels about right so far.</p>

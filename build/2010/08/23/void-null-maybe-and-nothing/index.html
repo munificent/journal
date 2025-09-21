@@ -43,28 +43,22 @@ cool, and that&rsquo;s&hellip; <em>nothing</em>.</p>
 when a function <em>always</em> returns nothing, and when it <em>sometimes</em> returns
 nothing. C has the <code>void</code> type for the former. A function that just performs
 some side-effect like printing to the screen is declared to return <code>void</code>, like:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">void</span> <span class="i">sayHi</span><span class="p">()</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="t">void</span> <span class="i">sayHi</span><span class="p">()</span> <span class="p">{</span>
   <span class="i">printf</span><span class="p">(</span><span class="s">&quot;hi!&quot;</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The compiler will check to make sure you don&rsquo;t do something dumb like:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="i">sayHi</span><span class="p">();</span></code></pre>
-</div>
+<pre class="highlight language-c"><span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="i">sayHi</span><span class="p">();</span></pre>
 <p>Failing to return <em>sometimes</em> is a lot trickier. Consider a function that takes
 a path and returns a handle to a file. If there is no file at the given path,
 there&rsquo;s no <code>File</code> it can return so it needs to fail somehow. The way most OOP
 languages like Java and C# handle this is by returning <code>null</code>:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="t">File</span> <span class="i">openFile</span><span class="p">(</span><span class="t">String</span> <span class="i">path</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="t">File</span> <span class="i">openFile</span><span class="p">(</span><span class="t">String</span> <span class="i">path</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="i">isValid</span><span class="p">(</span><span class="i">path</span><span class="p">))</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="t">File</span><span class="p">(</span><span class="i">path</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>For any reference type (like <code>File</code>), a variable can have a valid value, or it
 can be <code>null</code>. In other words, <code>null</code> is this magical value that exists as a
 member of every type. &ldquo;Hey there&rdquo; is a string, and <code>null</code> is a string. <code>new File("foo/bar.txt")</code> is a file, and <code>null</code> is a file.</p>
@@ -103,29 +97,23 @@ occasional failure.</p>
 single value called <code>nothing</code> that represents the absence of a value. If you
 have a function that just has side-effects, that&rsquo;s what it returns implicitly.
 For example, this function returns <code>nothing</code>:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">sayHi</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">sayHi</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">)</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The <code>(-&gt;)</code> is the type signature. In this case, it takes no arguments (there&rsquo;s
 nothing to the left of the arrow) and it returns nothing (there&rsquo;s nothing to the
 right). If we wanted to be more explicit, we could say:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">sayHi</span><span class="p">(</span><span class="o">-&gt;</span> <span class="t">Nothing</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">sayHi</span><span class="p">(</span><span class="o">-&gt;</span> <span class="t">Nothing</span><span class="p">)</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Note how &ldquo;Nothing&rdquo; is capitalized. <code>nothing</code> is the value, <code>Nothing</code> is its
 type. There is only one value of type <code>Nothing</code> and its name is <code>nothing</code>.</p>
 <p>That much is easy. What about <code>openFile()</code>? If I had a billion dollars to blow,
 it would be:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">openFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">File</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">openFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">File</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">path</span> <span class="i">valid?</span> <span class="k">then</span> <span class="t">File</span> <span class="i">new</span><span class="p">(</span><span class="i">path</span><span class="p">)</span>
   <span class="k">else</span> <span class="k">nothing</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>We&rsquo;d let <code>nothing</code> silently masquerade as a file. But <code>nothing</code> isn&rsquo;t a file,
 it&rsquo;s a <code>Nothing</code>. So the above program won&rsquo;t type check. What we need is a way
 to say that <code>openFile()</code> can return a String <em>or nothing</em>.</p>
@@ -133,33 +121,27 @@ to say that <code>openFile()</code> can return a String <em>or nothing</em>.</p>
 <p>I&rsquo;m all about the obvious solution, so I just took that literally. So Magpie has
 <em>or types</em>. (I&rsquo;m guessing there may be other names for them in the literature. I
 know I didn&rsquo;t invent them.) A correct version of <code>openFile()</code> looks like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">openFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">File</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">openFile</span><span class="p">(</span><span class="i">path</span> <span class="t">String</span> <span class="o">-&gt;</span> <span class="t">File</span> <span class="o">|</span> <span class="t">Nothing</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">path</span> <span class="i">valid?</span> <span class="k">then</span> <span class="t">File</span> <span class="i">new</span><span class="p">(</span><span class="i">path</span><span class="p">)</span>
   <span class="k">else</span> <span class="k">nothing</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>My hope is that that&rsquo;s pretty clear and easy to understand: <code>openFile</code> takes a
 string and returns a file or nothing. It reads just like you&rsquo;d say it.</p>
 <h2>But I don&rsquo;t want nothing!</h2>
 <p>There&rsquo;s one last little problem we&rsquo;re left with though. If we&rsquo;re the ones
 <em>calling</em> <code>openFile()</code> now, what do we do with what we got back? If we try this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">myFile</span> <span class="o">=</span> <span class="i">openFile</span><span class="p">(</span><span class="s">&quot;path/to/file.txt&quot;</span><span class="p">)</span>
-<span class="i">myFile</span> <span class="i">read</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">myFile</span> <span class="o">=</span> <span class="i">openFile</span><span class="p">(</span><span class="s">&quot;path/to/file.txt&quot;</span><span class="p">)</span>
+<span class="i">myFile</span> <span class="i">read</span></pre>
 <p>We&rsquo;ll get a compile error on the second line. You can&rsquo;t call <code>read</code> on <code>nothing</code>
 and <code>myFile</code> might be just that. To address that, Magpie has <a href="/2009/12/26/conditional-binding-with-let-in-magpie/">a little thing
 called <code>let</code></a>. It&rsquo;s a lightweight version of full pattern matching (which
 the old C# Magpie has, and the new Java Magpie will at some point) to make this
 exact case easy to work with. It looks like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">let</span> <span class="i">myFile</span> <span class="o">=</span> <span class="i">openFile</span><span class="p">(</span><span class="s">&quot;path/to/file.txt&quot;</span><span class="p">)</span> <span class="k">then</span>
+<pre class="highlight language-magpie"><span class="k">let</span> <span class="i">myFile</span> <span class="o">=</span> <span class="i">openFile</span><span class="p">(</span><span class="s">&quot;path/to/file.txt&quot;</span><span class="p">)</span> <span class="k">then</span>
   <span class="i">myFile</span> <span class="i">read</span>
 <span class="k">else</span>
   <span class="i">print</span><span class="p">(</span><span class="s">&quot;Couldn&#39;t open file!&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>A <code>let</code> combines conditional logic like <code>if</code> with defining a variable. First, it
 evaluates the right-hand expression (<code>openFile(...)</code> in this case). If, and only
 if, that expression doesn&rsquo;t return <code>nothing</code>, it will bind the result to a new

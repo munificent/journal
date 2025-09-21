@@ -42,15 +42,13 @@ the core language is concerned, it doesn&rsquo;t even <em>have</em> operators.</
 <p>Not only can you now define your own infix operators, including specifying
 precedence and associativity, but other large chunks of Magpie syntax are now
 defined at the library level. Take this chunk of (meaningless) code:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">doStuff</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">doStuff</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span>
   <span class="k">if</span> <span class="i">a</span> <span class="k">and</span> <span class="i">b</span> <span class="k">then</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;Both &quot;</span> <span class="o">~</span> <span class="i">a</span> <span class="o">~</span> <span class="s">&quot; and &quot;</span> <span class="o">~</span> <span class="i">b</span> <span class="o">~</span> <span class="s">&quot; are truthy&quot;</span><span class="p">)</span>
   <span class="k">else</span>
     <span class="i">print</span><span class="p">(</span><span class="s">&quot;Their sum is &quot;</span> <span class="o">~</span> <span class="i">a</span> <span class="o">+</span> <span class="i">b</span><span class="p">)</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The operators you see there, <code>+</code> and <code>~</code> (for string concatenation) are both
 <a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/operators.mag">implemented in Magpie</a>. So is the <code>and</code> keyword. (It&rsquo;s <a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/syntax/AndParser.mag">particularly
 interesting</a> because it doesn&rsquo;t become just a regular function call since
@@ -73,8 +71,7 @@ Crafting Interpreters</a></em> about Pratt parsers too.</p>
 </div>
 <p>Here&rsquo;s the Java code that parses expressions in Magpie (which means it parses
 pretty much everything since Magpie doesn&rsquo;t have statements):</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">public</span> <span class="t">Expr</span> <span class="i">parseExpression</span><span class="p">(</span><span class="t">int</span> <span class="i">stickiness</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">public</span> <span class="t">Expr</span> <span class="i">parseExpression</span><span class="p">(</span><span class="t">int</span> <span class="i">stickiness</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">Token</span> <span class="i">token</span> <span class="o">=</span> <span class="i">consume</span><span class="p">();</span>
   <span class="t">PrefixParser</span> <span class="i">prefix</span> <span class="o">=</span> <span class="i">mGrammar</span><span class="p">.</span><span class="i">getPrefixParser</span><span class="p">(</span><span class="i">token</span><span class="p">);</span>
   <span class="t">Expect</span><span class="p">.</span><span class="i">notNull</span><span class="p">(</span><span class="i">prefix</span><span class="p">);</span>
@@ -88,8 +85,7 @@ pretty much everything since Magpie doesn&rsquo;t have statements):</p>
   <span class="p">}</span>
 
   <span class="k">return</span> <span class="i">left</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>That&rsquo;s it, for reals. Precedence, associativity, infix operators, they all get
 handled by that little chunk of code. You may be thinking that <code>mGrammars</code>
 variable hides all the dirty work. That&rsquo;s actually pretty simple too. It&rsquo;s
@@ -98,16 +94,14 @@ and one maps them to infix parsers. So, you give it a <code>+</code> token repre
 plus operator, and it returns a parser object that knows how to parse an
 addition expression. Prefix and infix parsers are just objects that implement
 one of these dead simple interfaces:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">interface</span> <span class="t">PrefixParser</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">interface</span> <span class="t">PrefixParser</span> <span class="p">{</span>
   <span class="t">Expr</span> <span class="i">parse</span><span class="p">(</span><span class="t">MagpieParser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">interface</span> <span class="t">InfixParser</span> <span class="p">{</span>
   <span class="t">Expr</span> <span class="i">parse</span><span class="p">(</span><span class="t">MagpieParser</span> <span class="i">parser</span><span class="p">,</span> <span class="t">Expr</span> <span class="i">left</span><span class="p">,</span> <span class="t">Token</span> <span class="i">token</span><span class="p">);</span>
   <span class="t">int</span> <span class="i">getStickiness</span><span class="p">();</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>I won&rsquo;t go into detail about how these work (I&rsquo;m trying to throw together <a href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/">a
 more complete post about just Pratt parsers</a> later), but the important
 bit is that the grammar being parsed is decoupled from the core parsing code.</p>
@@ -126,8 +120,7 @@ syntax. Lame.</p>
 <p>To fix that, we&rsquo;ll build a shim. What we need is a Java object that implements
 <code>PrefixParser</code> or <code>InfixParser</code> but which actually runs Magpie code to do the
 parsing. I&rsquo;ll pick infix here just &lsquo;cause. It looks like this:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">private</span> <span class="k">static</span> <span class="k">class</span> <span class="t">MagpieInfixParser</span> <span class="k">extends</span> <span class="t">InfixParser</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">private</span> <span class="k">static</span> <span class="k">class</span> <span class="t">MagpieInfixParser</span> <span class="k">extends</span> <span class="t">InfixParser</span> <span class="p">{</span>
   <span class="k">public</span> <span class="t">MagpieInfixParser</span><span class="p">(</span><span class="t">Interpreter</span> <span class="i">interpreter</span><span class="p">,</span> <span class="t">Obj</span> <span class="i">parser</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">mInterpreter</span> <span class="o">=</span> <span class="i">interpreter</span><span class="p">;</span>
     <span class="i">mParser</span> <span class="o">=</span> <span class="i">parser</span><span class="p">;</span>
@@ -156,8 +149,7 @@ parsing. I&rsquo;ll pick infix here just &lsquo;cause. It looks like this:</p>
 
   <span class="k">private</span> <span class="t">Interpreter</span> <span class="i">mInterpreter</span><span class="p">;</span>
   <span class="k">private</span> <span class="t">Obj</span> <span class="i">mParser</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>There are a couple of important bits here. The <code>Obj</code> class is the core class in
 the interpreter that represents a Magpie object. If <code>Object</code> is any object in
 Java land, <code>Obj</code> is any object in Magpie land.</p>
@@ -173,8 +165,7 @@ invokes a <code>parse</code> method on its Magpie-side sister object. It gets th
 back (an expression) and marshalls that back to Java and returns it.</p>
 <h2>The other side of the glass</h2>
 <p>Over in Magpie, it looks like this:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">AndParser</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">AndParser</span>
   <span class="k">def</span> <span class="i">parse</span><span class="p">(</span><span class="i">parser</span> <span class="t">MagpieParser</span><span class="p">,</span> <span class="i">left</span> <span class="t">Expression</span><span class="p">,</span>
         <span class="i">token</span> <span class="t">Token</span> <span class="o">-&gt;</span> <span class="t">Expression</span><span class="p">)</span>
     <span class="c">// Ignore a newline after &quot;and&quot;.</span>
@@ -192,8 +183,7 @@ back (an expression) and marshalls that back to Java and returns it.</p>
   <span class="i">get</span> <span class="i">stickiness</span> <span class="t">Int</span> <span class="o">=</span> <span class="n">30</span>
 <span class="k">end</span>
 
-<span class="t">MagpieParser</span> <span class="i">registerInfixParser</span><span class="p">(</span><span class="s">&quot;and&quot;</span><span class="p">,</span> <span class="t">AndParser</span> <span class="i">new</span><span class="p">())</span></code></pre>
-</div>
+<span class="t">MagpieParser</span> <span class="i">registerInfixParser</span><span class="p">(</span><span class="s">&quot;and&quot;</span><span class="p">,</span> <span class="t">AndParser</span> <span class="i">new</span><span class="p">())</span></pre>
 <p>The Magpie side of the parser is just a class with a <code>parse</code> method. The first
 two lines parse the rest of the expression. (The left-hand side of the operator
 will have already been parsed and gets passed in as <code>left</code>.) Then the last bit
@@ -201,15 +191,11 @@ in curly braces shows another neat feature of Magpie: <a href="https://github.co
 <p>Like the Lisp languages, Magpie lets you treat code as data, and has classes to
 let you build objects that represent bits of code. Doing that manually is kind
 of lame though:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="t">CallExpression</span> <span class="i">new</span><span class="p">(</span><span class="t">MessageExpression</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;+&quot;</span><span class="p">),</span>
+<pre class="highlight language-magpie"><span class="t">CallExpression</span> <span class="i">new</span><span class="p">(</span><span class="t">MessageExpression</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="s">&quot;+&quot;</span><span class="p">),</span>
     <span class="t">TupleExpression</span> <span class="i">new</span><span class="p">(</span><span class="t">List</span> <span class="i">of</span><span class="p">(</span>
-        <span class="t">IntExpression</span> <span class="i">new</span><span class="p">(</span><span class="n">1</span><span class="p">),</span> <span class="t">IntExpression</span> <span class="i">new</span><span class="p">(</span><span class="n">2</span><span class="p">))))</span></code></pre>
-</div>
+        <span class="t">IntExpression</span> <span class="i">new</span><span class="p">(</span><span class="n">1</span><span class="p">),</span> <span class="t">IntExpression</span> <span class="i">new</span><span class="p">(</span><span class="n">2</span><span class="p">))))</span></pre>
 <p>Quotations let you write that out just like it would appear in code:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="p">{</span> <span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="p">}</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="p">{</span> <span class="n">1</span> <span class="o">+</span> <span class="n">2</span> <span class="p">}</span></pre>
 <p>If you surround an expression in curlies, you get an object representing the
 expression back, instead of evaluating it. Inside a quotation, you can unquote
 using a backquote character (<code>`</code>), which is like string interpolation but at
@@ -223,19 +209,15 @@ over to Java. That&rsquo;s where we wrap it in the shim class and toss it into t
 grammar dictionary. Once this parser is all hooked up, when an <code>and</code> is
 encountered, the parser desugars it to a little pattern match that does the
 right thing. In other words, if you type:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">happy</span> <span class="k">and</span> <span class="i">know</span><span class="p">(</span><span class="k">it</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">happy</span> <span class="k">and</span> <span class="i">know</span><span class="p">(</span><span class="k">it</span><span class="p">)</span></pre>
 <p>The parser expands it to:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">do</span>
+<pre class="highlight language-magpie"><span class="k">do</span>
     <span class="k">var</span> <span class="i">temp__</span> <span class="o">=</span> <span class="i">happy</span>
     <span class="k">match</span> <span class="i">temp__</span> <span class="i">true?</span>
         <span class="k">case</span> <span class="k">true</span> <span class="k">then</span> <span class="i">know</span><span class="p">(</span><span class="k">it</span><span class="p">)</span>
         <span class="k">else</span> <span class="i">temp__</span>
     <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>That looks a little weird, but if you think about it, it does the right thing.
 If <code>happy</code> is truthy, it returns <code>know(it)</code>. Otherwise, it short-circuits and
 returns just <code>happy</code>.</p>
@@ -246,43 +228,33 @@ say I want to make a <code>~*</code> operator that repeats a string a given numb
 times. Do I have to write a whole class just to do that?</p>
 <p>The answer is &ldquo;no&rdquo;, of course. If you just want an infix operator that
 desugars to a function call, look no further than:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
   <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="i">to</span><span class="p">(</span><span class="i">count</span><span class="p">)</span> <span class="k">do</span> <span class="i">result</span> <span class="o">=</span> <span class="i">result</span> <span class="o">~</span> <span class="i">left</span>
   <span class="i">result</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Here <code>60</code> defines the precedence level so it knows how to parse our new
 operator if you&rsquo;re crazy enough to mix it in with others without parentheses.
 Now when the parser encounters:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span></pre>
 <p>It transform that to a call to:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="o">~*</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="o">~*</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span></pre>
 <p>You may be wondering where <code>definfix</code> comes from. Why, it&rsquo;s a custom parser
 <a href="https://github.com/munificent/magpie/tree/645781c484667caa876f24f5033a493e3d172dfb/base/syntax/OperatorParser.mag#L36-L53">written in Magpie</a>, of course! Turtles all the way down!</p>
 <h2>OH NOES!</h2>
 <p>I got all of this working and then ran into a real snag. Let&rsquo;s say we have some
 module that defines a new operator:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// In repeat.mag:</span>
+<pre class="highlight language-magpie"><span class="c">// In repeat.mag:</span>
 <span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
   <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="i">to</span><span class="p">(</span><span class="i">count</span><span class="p">)</span> <span class="k">do</span> <span class="i">result</span> <span class="o">=</span> <span class="i">result</span> <span class="o">~</span> <span class="i">left</span>
   <span class="i">result</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Then we want to import it and use it in another one:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="c">// In summon-ghost.mag:</span>
+<pre class="highlight language-magpie"><span class="c">// In summon-ghost.mag:</span>
 <span class="k">import</span><span class="p">(</span><span class="s">&quot;repeat.mag&quot;</span><span class="p">)</span>
 
-<span class="i">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span><span class="p">)</span></pre>
 <p>Do you see the problem? Let&rsquo;s walk through how most interpreters (including
 Magpie) handle this:</p>
 <ol>
@@ -317,15 +289,13 @@ course, but at the top level, it&rsquo;s a list.)</p>
 each expression in a file <em>incrementally</em>. Getting this working was actually
 <a href="https://github.com/munificent/magpie/commit/bffe49291e9709b5bfc960420fcc6f5a4b1614bd">a tiny code change</a> and means you can now extend the syntax <em>and then use
 that extension immediately in the same file</em>. This is perfectly valid:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="i">definfix</span> <span class="o">~*</span> <span class="n">60</span> <span class="p">(</span><span class="i">left</span> <span class="t">String</span><span class="p">,</span> <span class="i">count</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
   <span class="k">var</span> <span class="i">result</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
   <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="i">to</span><span class="p">(</span><span class="i">count</span><span class="p">)</span> <span class="k">do</span> <span class="i">result</span> <span class="o">=</span> <span class="i">result</span> <span class="o">~</span> <span class="i">left</span>
   <span class="i">result</span>
 <span class="k">end</span>
 
-<span class="i">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span><span class="p">)</span></code></pre>
-</div>
+<span class="i">print</span><span class="p">(</span><span class="s">&quot;Beetlejuice &quot;</span> <span class="o">~*</span> <span class="n">3</span><span class="p">)</span></pre>
 <p>The only limitation is that you have to do this at the top-level. Given that
 most languages don&rsquo;t let you do <em>any</em> of this, that doesn&rsquo;t seem like too much
 to give up. In return, we can make the language dramatically more powerful at

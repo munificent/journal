@@ -52,14 +52,12 @@ a while back, but I&rsquo;ll do the super science breakdown here.</p>
 you know it. Here&rsquo;s some examples:</p>
 <h3>Switches</h3>
 <p>Consider the humble <code>switch</code> statement in <a href="http://en.wikipedia.org/wiki/C_(programming_language)">Ye Olde Imperative Language</a>:</p>
-<div class="highlight">
-<pre><code class="language-c" data-lang="c"><span class="k">switch</span> <span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-c"><span class="k">switch</span> <span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">case</span> <span class="n">1</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
   <span class="k">case</span> <span class="n">2</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
   <span class="k">case</span> <span class="n">3</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;third&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
   <span class="k">default</span><span class="p">:</span> <span class="i">printf</span><span class="p">(</span><span class="s">&quot;uh...&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Pretty straightforward. The key bits are, we have a <em>value</em> being tested (here
 just <code>i</code>), a series of <em>clauses</em>, and a <em>default clause</em>. Each clause has a
 <em>body</em> and a thing being compared against, which I&rsquo;ll call the <em>pattern</em>.</p>
@@ -72,8 +70,7 @@ same value.</p>
 <h3>Catches</h3>
 <p>Now let&rsquo;s switch gears and take a look a <code>catch</code> blocks in everyone&rsquo;s favorite
 <a href="http://en.wikipedia.org/wiki/Java_(programming_language)">Big Enterprise Language</a>:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">try</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">try</span> <span class="p">{</span>
   <span class="c">// Do something crazy...</span>
 <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="t">ParseException</span> <span class="i">ex</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="s">&quot;Parse error!&quot;</span><span class="p">);</span>
@@ -81,8 +78,7 @@ same value.</p>
   <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="s">&quot;IO error!&quot;</span><span class="p">);</span>
 <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="t">Exception</span> <span class="i">ex</span><span class="p">)</span> <span class="p">{</span>
   <span class="t">System</span><span class="p">.</span><span class="i">out</span><span class="p">.</span><span class="i">println</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>When an exception gets thrown in the try block, we start working through the
 <code>catch</code> blocks. The key bits here are: we have a <em>value</em> being tested (the
 thrown exception) and a series of <em>clauses</em> (the <code>catch</code> blocks). Each clause
@@ -97,11 +93,9 @@ same.</p>
 the <a href="http://en.wikipedia.org/wiki/Javascript">Hot New Language</a>. The latest Mozilla-specific version that no one
 actually uses (not that I&rsquo;m bitter or anything) introduced a new feature called
 <em>destructuring assignment</em>. It looks like this:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">point</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">];</span>
+<pre class="highlight language-javascript"><span class="k">var</span> <span class="i">point</span> <span class="o">=</span> <span class="p">[</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">];</span>
 <span class="k">var</span> <span class="p">[</span><span class="i">x</span><span class="p">,</span> <span class="i">y</span><span class="p">]</span> <span class="o">=</span> <span class="i">point</span><span class="p">;</span> <span class="c">// Destructure point.</span>
-<span class="i">alert</span><span class="p">(</span><span class="i">x</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="i">y</span><span class="p">);</span></code></pre>
-</div>
+<span class="i">alert</span><span class="p">(</span><span class="i">x</span> <span class="o">+</span> <span class="s">&quot;, &quot;</span> <span class="i">y</span><span class="p">);</span></pre>
 <p>You can probably infer what&rsquo;s going on here. The second line declares two new
 variables, <code>a</code> and <code>b</code> and initializes them by pulling elements out of the array
 that <code>point</code> was initialized with.</p>
@@ -138,12 +132,10 @@ Magpie, those are:</p>
 <p>The simplest pattern is just an expression that evaluates to a value. These are
 like the literals after the <code>case</code> in a <code>switch</code> statement, but Magpie lets you
 use pretty much any expression. These are valid value patterns:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="n">123</span>
+<pre class="highlight language-magpie"><span class="n">123</span>
 <span class="k">true</span>
 <span class="s">&quot;a string&quot;</span>
-<span class="n">3</span> <span class="o">+</span> <span class="n">5</span></code></pre>
-</div>
+<span class="n">3</span> <span class="o">+</span> <span class="n">5</span></pre>
 <p>Testing against a value is simple: it&rsquo;s an equality check. A <code>2</code> pattern matches
 if the value is also <code>2</code>. Magpie does this by just calling the <code>==</code> operator, so
 it&rsquo;s even possible to use your own types here.</p>
@@ -153,9 +145,7 @@ it&rsquo;s even possible to use your own types here.</p>
 composing bigger patterns that do more stuff. A tuple pattern is just like a
 <a href="/2009/05/05/one-and-only-one/">tuple expression</a>: it&rsquo;s a series of patterns separated by commas. For
 example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="n">3</span><span class="p">,</span> <span class="s">&quot;four&quot;</span><span class="p">,</span> <span class="k">false</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="n">3</span><span class="p">,</span> <span class="s">&quot;four&quot;</span><span class="p">,</span> <span class="k">false</span></pre>
 <p>Here we have a tuple of three value patterns. A tuple pattern matches if all of
 its fields match the value&rsquo;s fields. In other words, the interpreter walks
 through the field <em>patterns</em> while walking through the fields of the tuple
@@ -166,9 +156,7 @@ give the patterns of its fields the chance to do so.</p>
 <h3>Record patterns</h3>
 <p>The twin brother to tuple patterns, a record pattern does the same thing, but
 for a named record (or any other type with named members). Here&rsquo;s one:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">x</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="i">y</span><span class="p">:</span> <span class="n">2</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">x</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="i">y</span><span class="p">:</span> <span class="n">2</span></pre>
 <p>That pattern matches any object with an <code>x</code> field whose value is <code>1</code>, and a <code>y</code>
 field whose value is <code>2</code>.</p>
 <h3>Variable patterns</h3>
@@ -176,25 +164,19 @@ field whose value is <code>2</code>.</p>
 departure from ML. A variable pattern has a <em>name</em> and an optional <em>type
 annotation</em>. The name can be <code>_</code> if you don&rsquo;t care to bind a variable. Here are
 some examples:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">_</span>              <span class="c">// No name or type.</span>
+<pre class="highlight language-magpie"><span class="i">_</span>              <span class="c">// No name or type.</span>
 <span class="i">a</span>              <span class="c">// Name but no type.</span>
 <span class="i">position</span> <span class="t">Point</span> <span class="c">// Name and type.</span>
-<span class="i">_</span> <span class="t">Int</span> <span class="o">|</span> <span class="t">String</span> <span class="c">// No name but type.</span></code></pre>
-</div>
+<span class="i">_</span> <span class="t">Int</span> <span class="o">|</span> <span class="t">String</span> <span class="c">// No name but type.</span></pre>
 <p>A variable pattern matches if the <em>type</em> of the value matches the variable
 pattern&rsquo;s type. If the pattern doesn&rsquo;t have a type, the match always succeeds.</p>
 <p>Variable patterns also perform the magic of creating new variables. When a
 variable pattern matches, it creates a new variable with the given name whose
 value is the matched value. When you combine that with tuple and record
 patterns, you get destructuring automagically. If we take this value:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span></pre>
 <p>And match it against this pattern:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span></pre>
 <p>The match will succeed, and <code>n</code> will be <code>"Dan"</code>, <code>a</code> will be <code>"Sam"</code>, and <code>b</code>
 will be <code>"Ed"</code>.</p>
 <h2>Now what?</h2>
@@ -202,93 +184,75 @@ will be <code>"Ed"</code>.</p>
 of places. We&rsquo;ll start with the most obvious one: <code>match</code> expressions&mdash;
 Magpie&rsquo;s souped-up version of <code>switch</code>. Our first example looks like this in
 Magpie:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">match</span> <span class="i">i</span>
+<pre class="highlight language-magpie"><span class="k">match</span> <span class="i">i</span>
     <span class="k">case</span> <span class="n">1</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">2</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">3</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;third&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="i">_</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;uh...&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The semantics are what you expect. It tests each pattern (the bit between <code>case</code>
 and <code>then</code>) in turn. When a pattern matches, it binds any pattern variables in a
 new scope, and executes the expression after <code>then</code> in it. A richer example
 showing all of the fun stuff looks like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">match</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">match</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
   <span class="k">case</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dave&quot;</span> <span class="k">then</span> <span class="s">&quot;don&#39;t care about Dave&#39;s friends&quot;</span>
   <span class="k">case</span> <span class="i">name</span><span class="p">:</span> <span class="i">a</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="k">nothing</span> <span class="k">then</span> <span class="i">a</span> <span class="o">~</span> <span class="s">&quot; has no friends&quot;</span>
   <span class="k">case</span> <span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="k">then</span>
       <span class="i">n</span> <span class="o">~</span> <span class="s">&quot; is pals with &quot;</span> <span class="o">~</span> <span class="i">a</span> <span class="o">~</span> <span class="s">&quot; and &quot;</span> <span class="o">~</span> <span class="i">b</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Pretty handy, but we&rsquo;re just getting started.</p>
 <h3>Catches</h3>
 <p>Since we can also match on type, that gives us all we need to use patterns for
 selecting an appropriate catch clause when an error is thrown. The exception
 example up there becomes:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">do</span>
+<pre class="highlight language-magpie"><span class="k">do</span>
   <span class="c">// Do something crazy...</span>
 <span class="k">catch</span> <span class="i">ex</span> <span class="t">ParseException</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Parse error!&quot;</span><span class="p">)</span>
 <span class="k">catch</span> <span class="i">ex</span> <span class="t">IOException</span>    <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;IO error!&quot;</span><span class="p">)</span>
-<span class="k">catch</span> <span class="i">_</span>                 <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">)</span></code></pre>
-</div>
+<span class="k">catch</span> <span class="i">_</span>                 <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">)</span></pre>
 <h3>Variables</h3>
 <p>Since patterns give us a way to bind variables, do we really need to have a
 separate special case <code>var</code> expression that just creates a single named
 variable? Nope. We can just make it take a single pattern. If the pattern is a
 variable pattern with no type, it degenerates to a regular variable
 declaration like:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&quot;the queen of France&quot;</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="s">&quot;the queen of France&quot;</span></pre>
 <p>But you can also use tuple and record patterns to destructure:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">var</span> <span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="o">=</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">var</span> <span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span> <span class="o">=</span> <span class="i">name</span><span class="p">:</span> <span class="s">&quot;Dan&quot;</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="s">&quot;Ed&quot;</span><span class="p">)</span>
 <span class="i">print</span><span class="p">(</span><span class="i">n</span><span class="p">)</span> <span class="c">// &quot;Dan&quot;</span>
 <span class="i">print</span><span class="p">(</span><span class="i">a</span><span class="p">)</span> <span class="c">// &quot;Sam&quot;</span>
-<span class="i">print</span><span class="p">(</span><span class="i">b</span><span class="p">)</span> <span class="c">// &quot;Ed&quot;</span></code></pre>
-</div>
+<span class="i">print</span><span class="p">(</span><span class="i">b</span><span class="p">)</span> <span class="c">// &quot;Ed&quot;</span></pre>
 <p>So now we&rsquo;ve got destructuring for free. Swell!</p>
 <h3>Function parameters</h3>
 <p>There&rsquo;s one last trick up our sleeve. If you look at the exception example
 there, it looks an awful lot like a function type declaration. That&rsquo;s not a
 coincidence either. We can now just use a pattern to define a function&rsquo;s
 parameter type, like so:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">foo</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="i">n</span> <span class="t">String</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span> <span class="t">String</span><span class="p">,</span> <span class="i">b</span> <span class="t">String</span><span class="p">))</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">foo</span><span class="p">(</span><span class="i">name</span><span class="p">:</span> <span class="i">n</span> <span class="t">String</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span> <span class="t">String</span><span class="p">,</span> <span class="i">b</span> <span class="t">String</span><span class="p">))</span>
   <span class="i">print</span><span class="p">(</span><span class="i">n</span><span class="p">)</span> <span class="c">// &quot;Dan&quot;</span>
   <span class="i">print</span><span class="p">(</span><span class="i">a</span><span class="p">)</span> <span class="c">// &quot;Sam&quot;</span>
   <span class="i">print</span><span class="p">(</span><span class="i">b</span><span class="p">)</span> <span class="c">// &quot;Ed&quot;</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The syntax of variable patterns was designed specifically around this. My goal
 was to make the patterns used for function parameters look familiar to someone
 new to the language while hiding greater flexibility under the surface. I
 think most programmers can figure out what this means:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">sayAge</span><span class="p">(</span><span class="i">name</span> <span class="t">String</span><span class="p">,</span> <span class="i">age</span> <span class="t">Int</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">sayAge</span><span class="p">(</span><span class="i">name</span> <span class="t">String</span><span class="p">,</span> <span class="i">age</span> <span class="t">Int</span><span class="p">)</span>
     <span class="i">print</span><span class="p">(</span><span class="i">name</span> <span class="o">~</span> <span class="s">&quot; is &quot;</span> <span class="o">~</span> <span class="i">age</span> <span class="o">~</span> <span class="s">&quot; years old&quot;</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>without ever realizing the <code>name String, age Int</code> is something special.</p>
 <p>Using patterns for function types also plays really nicely with Magpie&rsquo;s <a href="/2010/08/31/type-checking-a-dynamic-language/">static
 typing</a>. By adding support for evaluating the <em>type</em> of a pattern, we can use
 that to type check a pattern anywhere it appears. For example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">match</span> <span class="s">&quot;not an int&quot;</span>
+<pre class="highlight language-magpie"><span class="k">match</span> <span class="s">&quot;not an int&quot;</span>
   <span class="k">case</span> <span class="n">1</span> <span class="k">then</span> <span class="s">&quot;match a string with an int?&quot;</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>The interpreter can statically tell that this is an error because the pattern
 type doesn&rsquo;t match the value. And using that exact same code, we can also tell
 that this is an error:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">expectInt</span><span class="p">(</span><span class="i">i</span> <span class="t">Int</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">i</span><span class="p">)</span>
-<span class="i">expectInt</span><span class="p">(</span><span class="s">&quot;not an int&quot;</span><span class="p">)</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">expectInt</span><span class="p">(</span><span class="i">i</span> <span class="t">Int</span><span class="p">)</span> <span class="i">print</span><span class="p">(</span><span class="i">i</span><span class="p">)</span>
+<span class="i">expectInt</span><span class="p">(</span><span class="s">&quot;not an int&quot;</span><span class="p">)</span></pre>
 <p>The end result of all of this is that the total amount of code in the
 interpreter has gone <em>down</em>, there are fewer distinct concepts to learn in the
 language, and at the same time I&rsquo;ve added new functionality that wasn&rsquo;t there

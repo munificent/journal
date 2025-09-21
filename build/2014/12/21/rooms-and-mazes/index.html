@@ -337,9 +337,7 @@ got. We only allow a single connector between any two regions so our dungeon
 <em>is</em> a tree and there&rsquo;s only a single path between any two points.</p>
 <p>Fixing that is pretty simple. In step 3, when we cull the unneeded connectors,
 we give them a <em>slight</em> chance of being opened up. Something like:</p>
-<div class="highlight">
-<pre><code class="language-dart" data-lang="dart"><span class="k">if</span> <span class="p">(</span><span class="i">rng</span><span class="p">.</span><span class="i">oneIn</span><span class="p">(</span><span class="n">50</span><span class="p">))</span> <span class="i">_carve</span><span class="p">(</span><span class="i">pos</span><span class="p">,</span> <span class="i">CELL_DOOR</span><span class="p">);</span></code></pre>
-</div>
+<pre class="highlight language-dart"><span class="k">if</span> <span class="p">(</span><span class="i">rng</span><span class="p">.</span><span class="i">oneIn</span><span class="p">(</span><span class="n">50</span><span class="p">))</span> <span class="i">_carve</span><span class="p">(</span><span class="i">pos</span><span class="p">,</span> <span class="i">CELL_DOOR</span><span class="p">);</span></pre>
 <p>This occasionally carves an extra opening between regions. That gives us the
 imperfect loops we want to make the dungeon more fun to play in. Note that this
 is also easily tunable. If we make the chance more likely, we get more densely

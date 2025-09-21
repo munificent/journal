@@ -48,16 +48,14 @@ My problem was something like this:</p>
 can inherit from to build your own controls. Like all good 21st century class
 libraries, it strictly uses single inheritance, because multiple inheritance is
 the devil. Here&rsquo;s a piece of that hierarchy (in full ASCII art glory):</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart">       ┌────────┐
+<pre class="highlight language-asciiart">       ┌────────┐
        │ Widget │
        └────┬───┘
             │
      ┌──────┴──────┐
 ┌────┴─────┐ ┌─────┴─────┐
 │ Hideable │ │ Container │
-└──────────┘ └───────────┘</code></pre>
-</div>
+└──────────┘ └───────────┘</pre>
 <p>Widget is the root class that all widgets eventually inherit from. It has the
 core bits than any widget will need, maybe a name, etc. Hideable adds <code>show()</code>
 and <code>hide()</code> methods for widgets that should be able to toggle their visibility.
@@ -68,8 +66,7 @@ can guess, it has a collection of child widgets (the menu items). And it needs
 to be shown and hidden (since it&rsquo;s a drop-down). You can see the problem. I
 can&rsquo;t inherit from both Hideable and Container.</p>
 <p>One fix is to reorganize the base classes like this:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart"> ┌────────┐
+<pre class="highlight language-asciiart"> ┌────────┐
  │ Widget │
  └────┬───┘
 ┌─────┴─────┐
@@ -77,8 +74,7 @@ can&rsquo;t inherit from both Hideable and Container.</p>
 └─────┬─────┘
 ┌─────┴────┐
 │ Hideable │
-└──────────┘</code></pre>
-</div>
+└──────────┘</pre>
 <p>Now I just inherit from Hideable and I&rsquo;m good. But then tomorrow I need to make
 a new Widget: Tooltip. It can be hidden and shown, but it doesn&rsquo;t need any
 children. It will have to inherit from Hideable, but that implicitly rolls in
@@ -89,8 +85,7 @@ time trying to figure out what and why. Changes to Container have the potential
 to break Tooltip, even though it&rsquo;s getting no benefit from it. Lame!</p>
 <p>The fix for this is to rearrange things again. If some things need Hideable but
 not Container, it should be above it in the hierarchy, like so:</p>
-<div class="highlight">
-<pre><code class="language-asciiart" data-lang="asciiart"> ┌────────┐
+<pre class="highlight language-asciiart"> ┌────────┐
  │ Widget │
  └────┬───┘
 ┌─────┴────┐
@@ -98,8 +93,7 @@ not Container, it should be above it in the hierarchy, like so:</p>
 └─────┬────┘
 ┌─────┴─────┐
 │ Container │
-└───────────┘</code></pre>
-</div>
+└───────────┘</pre>
 <p>Fine and dandy. The day after tomorrow comes and now I&rsquo;m making a new widget
 again: ListBox. It doesn&rsquo;t hide, but it does have children. I&rsquo;m right back where
 I started. There is no solution for this:</p>
@@ -186,8 +180,7 @@ simply assigning some properties.</p>
 <p>So, assuming we can magically make this work, how would it look in JavaScript?</p>
 <p>Here&rsquo;s my goal. I want to be able to define a couple of widget &ldquo;base classes&rdquo;
 like this vanilla JavaScript:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="t">Widget</span><span class="p">(</span><span class="i">name</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">function</span> <span class="t">Widget</span><span class="p">(</span><span class="i">name</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="i">name</span> <span class="o">=</span> <span class="i">name</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -219,21 +212,17 @@ like this vanilla JavaScript:</p>
   <span class="k">for</span> <span class="p">(</span><span class="k">var</span> <span class="i">i</span> <span class="o">=</span> <span class="n">0</span><span class="p">;</span> <span class="i">i</span> <span class="o">&amp;</span><span class="i">lt</span><span class="p">;</span> <span class="k">this</span><span class="p">.</span><span class="i">children</span><span class="p">.</span><span class="i">length</span><span class="p">;</span> <span class="i">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="i">log</span><span class="p">(</span><span class="s">&#39;- &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="i">children</span><span class="p">[</span><span class="i">i</span><span class="p">].</span><span class="i">getName</span><span class="p">());</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>When I create my widget class, I want to inherit from all of those by creating
 parent properties that contain one of each. Since I can&rsquo;t use <code>*</code> in a property
 name in JavaScript, I&rsquo;ll use <code>_p</code>. So my widget&rsquo;s constructor should just be:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="t">MyWidget</span> <span class="o">=</span> <span class="i">magic</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="i">name</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">var</span> <span class="t">MyWidget</span> <span class="o">=</span> <span class="i">magic</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="i">name</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="i">widget_p</span>    <span class="o">=</span> <span class="k">new</span> <span class="t">Widget</span><span class="p">(</span><span class="i">name</span><span class="p">);</span>
   <span class="k">this</span><span class="p">.</span><span class="i">hider_p</span>     <span class="o">=</span> <span class="k">new</span> <span class="t">Hideable</span><span class="p">();</span>
   <span class="k">this</span><span class="p">.</span><span class="i">container_p</span> <span class="o">=</span> <span class="k">new</span> <span class="t">Container</span><span class="p">();</span>
-<span class="p">})</span></code></pre>
-</div>
+<span class="p">})</span></pre>
 <p>Aside from that little <code>magic</code> bit there, this looks like any other JavaScript constructor, but when I <em>use</em> this object, it should support all the methods those parent objects provide. In other words, this should work:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">widget</span> <span class="o">=</span> <span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Abe&#39;</span><span class="p">);</span>
+<pre class="highlight language-javascript"><span class="k">var</span> <span class="i">widget</span> <span class="o">=</span> <span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Abe&#39;</span><span class="p">);</span>
 
 <span class="c">// From Widget:</span>
 <span class="i">log</span><span class="p">(</span><span class="i">widget</span><span class="p">.</span><span class="i">getName</span><span class="p">());</span>
@@ -246,8 +235,7 @@ name in JavaScript, I&rsquo;ll use <code>_p</code>. So my widget&rsquo;s constru
 <span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Ben&#39;</span><span class="p">));</span>
 <span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Cid&#39;</span><span class="p">));</span>
 <span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Dan&#39;</span><span class="p">));</span>
-<span class="i">widget</span><span class="p">.</span><span class="i">listChildren</span><span class="p">();</span></code></pre>
-</div>
+<span class="i">widget</span><span class="p">.</span><span class="i">listChildren</span><span class="p">();</span></pre>
 <p>Unpossible you say? Read on:</p>
 <h2>Behold the power of proxies</h2>
 <p>One of the planned features for <a href="https://en.wikipedia.org/wiki/ECMAScript#ES2015">Harmony</a>, the codename of the next version of
@@ -266,8 +254,7 @@ replace a regular object with a proxy that has a handler that implements our
 inheritance scheme.</p>
 <p>For Self-style parent properties, a very primitive hacked-together handler is
 simply:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="i">createSelfHandler</span><span class="p">(</span><span class="i">obj</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">function</span> <span class="i">createSelfHandler</span><span class="p">(</span><span class="i">obj</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="p">{</span>
     <span class="i">get</span><span class="p">:</span> <span class="k">function</span><span class="p">(</span><span class="i">receiver</span><span class="p">,</span> <span class="i">name</span><span class="p">)</span> <span class="p">{</span>
       <span class="c">// Look in the main object.</span>
@@ -287,20 +274,17 @@ simply:</p>
       <span class="k">return</span> <span class="i">undefined</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">};</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Whenever we create an instance of our MyWidget class, we actually want to get an
 instance of that proxy instead. We do that by proxying the constructor too:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">function</span> <span class="i">magic</span><span class="p">(</span><span class="i">ctor</span><span class="p">)</span> <span class="p">{</span>
+<pre class="highlight language-javascript"><span class="k">function</span> <span class="i">magic</span><span class="p">(</span><span class="i">ctor</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">var</span> <span class="i">callTrap</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="i">args</span><span class="p">)</span> <span class="p">{}</span>
   <span class="k">var</span> <span class="i">constructTrap</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="i">args</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="t">Proxy</span><span class="p">.</span><span class="i">create</span><span class="p">(</span><span class="i">createSelfHandler</span><span class="p">(</span>
         <span class="k">new</span> <span class="i">ctor</span><span class="p">(</span><span class="i">args</span><span class="p">)),</span> <span class="t">Object</span><span class="p">.</span><span class="i">prototype</span><span class="p">);</span>
   <span class="p">};</span>
   <span class="k">return</span> <span class="t">Proxy</span><span class="p">.</span><span class="i">createFunction</span><span class="p">(</span><span class="i">ctor</span><span class="p">,</span> <span class="i">callTrap</span><span class="p">,</span> <span class="i">constructTrap</span><span class="p">);</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Ta-da! Now when we do <code>new MyWidget()</code> we get back a proxy object. When we then
 look up any properties on it, the proxy shunts over to our dispatch function
 that knows how to handle the parent property shenanigans. Self-style multiple
@@ -359,8 +343,7 @@ the same named concept smeared across a bunch of classes?</p>
 MyWidget is constructed, we literally <em>are</em> composing it: the base classes are
 properties on it directly. So why not just use that? Why shouldn&rsquo;t the above
 example simply be:</p>
-<div class="highlight">
-<pre><code class="language-javascript" data-lang="javascript"><span class="k">var</span> <span class="i">widget</span> <span class="o">=</span> <span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Abe&#39;</span><span class="p">);</span>
+<pre class="highlight language-javascript"><span class="k">var</span> <span class="i">widget</span> <span class="o">=</span> <span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Abe&#39;</span><span class="p">);</span>
 
 <span class="c">// From Widget:</span>
 <span class="i">log</span><span class="p">(</span><span class="i">widget</span><span class="p">.</span><span class="i">getWidget</span><span class="p">().</span><span class="i">getName</span><span class="p">());</span>
@@ -369,8 +352,7 @@ example simply be:</p>
 <span class="i">widget</span><span class="p">.</span><span class="i">getHideable</span><span class="p">().</span><span class="i">hide</span><span class="p">();</span>
 
 <span class="c">// From Container:</span>
-<span class="i">widget</span><span class="p">.</span><span class="i">getContainer</span><span class="p">().</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Ben&#39;</span><span class="p">));</span></code></pre>
-</div>
+<span class="i">widget</span><span class="p">.</span><span class="i">getContainer</span><span class="p">().</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Ben&#39;</span><span class="p">));</span></pre>
 <p>Aside from the fact that it&rsquo;s ugly, there&rsquo;s one thing I don&rsquo;t like about that.
 The fact that MyWidget gets <code>hide()</code> from Hideable should be an implementation
 detail. From the caller&rsquo;s perspective, <code>hide()</code> is something a MyWidget can do,

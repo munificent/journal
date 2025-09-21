@@ -52,42 +52,32 @@ prototypes.</p>
 <p>Before we get too far, let&rsquo;s make sure we&rsquo;re all talking about the same thing.
 In Magpie, all objects are instances of a class. The class determines what
 methods an object has. The pseudocode for invoking a method is:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">invoke</span><span class="p">(</span><span class="i">obj</span><span class="p">,</span> <span class="i">methodName</span><span class="p">,</span> <span class="i">arg</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="i">invoke</span><span class="p">(</span><span class="i">obj</span><span class="p">,</span> <span class="i">methodName</span><span class="p">,</span> <span class="i">arg</span><span class="p">)</span>
   <span class="i">classObj</span> <span class="o">=</span> <span class="i">obj</span><span class="p">.</span><span class="i">getClass</span>
   <span class="i">method</span> <span class="o">=</span> <span class="i">classObj</span><span class="p">.</span><span class="i">findMethod</span><span class="p">(</span><span class="i">methodName</span><span class="p">)</span>
   <span class="i">method</span><span class="p">.</span><span class="i">invoke</span><span class="p">(</span><span class="i">obj</span><span class="p">,</span> <span class="i">arg</span><span class="p">)</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>Under the hood then, a class is a bag of methods. Something like:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">ClassObj</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">ClassObj</span> <span class="p">{</span>
   <span class="t">Map</span><span class="o">&lt;</span><span class="t">String</span><span class="p">,</span> <span class="t">Method</span><span class="o">&gt;</span> <span class="i">methods</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>And an object is just a reference to its class (and some data, but we won&rsquo;t
 worry about that here):</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Obj</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">Obj</span> <span class="p">{</span>
   <span class="t">ClassObj</span> <span class="i">theClass</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>However, there are actually <em>two</em> kinds of methods. There are regular instance
 methods, like we&rsquo;ve seen and &ldquo;static&rdquo; or &ldquo;class&rdquo; methods that you invoke
 directly on the class. These include things like constructors (which are like
 Ruby&rsquo;s <a href="http://www.devx.com/enterprise/Article/30917/0/page/3">new</a> methods). For example:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">def</span> <span class="i">foo</span> <span class="o">=</span> <span class="t">Foo</span><span class="p">.</span><span class="i">new</span>   <span class="c">// Call a class method on Foo.</span>
-<span class="i">foo</span><span class="p">.</span><span class="i">toString</span>        <span class="c">// Call an instance method on a Foo.</span></code></pre>
-</div>
+<pre class="highlight language-magpie"><span class="k">def</span> <span class="i">foo</span> <span class="o">=</span> <span class="t">Foo</span><span class="p">.</span><span class="i">new</span>   <span class="c">// Call a class method on Foo.</span>
+<span class="i">foo</span><span class="p">.</span><span class="i">toString</span>        <span class="c">// Call an instance method on a Foo.</span></pre>
 <p>So our class object really needs <em>two</em> dictionaries, one for class and one for
 instance methods:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">ClassObj</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">ClassObj</span> <span class="p">{</span>
   <span class="t">Map</span><span class="o">&lt;</span><span class="t">String</span><span class="p">,</span> <span class="t">Method</span><span class="o">&gt;</span> <span class="i">classMethods</span><span class="p">;</span>
   <span class="t">Map</span><span class="o">&lt;</span><span class="t">String</span><span class="p">,</span> <span class="t">Method</span><span class="o">&gt;</span> <span class="i">instanceMethods</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>It also ends up needing to duplicate the API for using them: separate methods
 for defining a method, looking one up, invoking one, etc. I <a href="http://en.wikipedia.org/wiki/DRY">hate</a>
 redundancy so this rubbed me the wrong way.</p>
@@ -97,22 +87,17 @@ not split that up into two separate objects? One represents the <em>class itself
 and has the static or class methods like constructors. The other represents
 the set of methods you can call on an <em>instance</em> of the class.</p>
 <p>My <code>ClassObj</code> type disappeared, to just be:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Obj</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">Obj</span> <span class="p">{</span>
   <span class="t">Map</span><span class="o">&lt;</span><span class="t">String</span><span class="p">,</span> <span class="t">Method</span><span class="o">&gt;</span> <span class="i">methods</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>The only missing piece was that an instance of some object needed to have a
 reference to the other object that contains its methods, like so:</p>
-<div class="highlight">
-<pre><code class="language-java" data-lang="java"><span class="k">class</span> <span class="t">Obj</span> <span class="p">{</span>
+<pre class="highlight language-java"><span class="k">class</span> <span class="t">Obj</span> <span class="p">{</span>
   <span class="t">Obj</span> <span class="i">parent</span><span class="p">;</span>
   <span class="t">Map</span><span class="o">&lt;</span><span class="t">String</span><span class="p">,</span> <span class="t">Method</span><span class="o">&gt;</span> <span class="i">methods</span><span class="p">;</span>
-<span class="p">}</span></code></pre>
-</div>
+<span class="p">}</span></pre>
 <p>Now our pseudo-code for invoking a method is:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="i">invoke</span><span class="p">(</span><span class="i">obj</span><span class="p">,</span> <span class="i">methodName</span><span class="p">,</span> <span class="i">arg</span><span class="p">)</span>
+<pre class="highlight language-magpie"><span class="i">invoke</span><span class="p">(</span><span class="i">obj</span><span class="p">,</span> <span class="i">methodName</span><span class="p">,</span> <span class="i">arg</span><span class="p">)</span>
   <span class="i">thisObj</span> <span class="o">=</span> <span class="i">obj</span>
   <span class="k">loop</span>
     <span class="i">method</span> <span class="o">=</span> <span class="i">thisObj</span><span class="p">.</span><span class="i">findMethod</span><span class="p">(</span><span class="i">methodName</span><span class="p">)</span>
@@ -123,8 +108,7 @@ reference to the other object that contains its methods, like so:</p>
     <span class="c">// Walk up the parent chain.</span>
     <span class="i">thisObj</span> <span class="o">=</span> <span class="i">obj</span><span class="p">.</span><span class="i">parent</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre>
-</div>
+<span class="k">end</span></pre>
 <p>You&rsquo;ll note that this pseudocode handles <em>both</em> instance and class methods. With
 instance methods, <code>obj</code> will be the class object itself (since classes are
 first-class objects) and it will find the method and immediately invoke it.</p>
@@ -139,16 +123,14 @@ getting rid of duplicate code, I basically stumbled backwards onto the same type
 system that Javascript and <a href="http://finch.stuffwithstuff.com/">Finch</a> use.</p>
 <p>The interesting part is that this is hidden completely from the user. Magpie
 code is still written using classes and instances. If you have this in Magpie:</p>
-<div class="highlight">
-<pre><code class="language-magpie" data-lang="magpie"><span class="k">class</span> <span class="t">Foo</span>
+<pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Foo</span>
   <span class="k">def</span> <span class="i">sayHi</span> <span class="p">()</span> <span class="i">print</span> <span class="s">&quot;hi&quot;</span>
 <span class="k">end</span>
 
 <span class="k">def</span> <span class="i">a</span> <span class="o">=</span> <span class="t">Foo</span><span class="p">.</span><span class="i">new</span>
 <span class="k">def</span> <span class="i">b</span> <span class="o">=</span> <span class="t">Foo</span><span class="p">.</span><span class="i">new</span>
 <span class="i">a</span><span class="p">.</span><span class="i">sayHi</span>
-<span class="i">b</span><span class="p">.</span><span class="i">sayHi</span></code></pre>
-</div>
+<span class="i">b</span><span class="p">.</span><span class="i">sayHi</span></pre>
 <p>At runtime, the interpreter will build this object hierarchy:</p>
 <p><img src="/image/2010/08/prototype-hierarchy.png" alt="Object hierarchy for a class Foo and two instances of it" title="Object Hierarchy" /></p>
 <p>Every box represents an object and is of the same Java class in the interpreter

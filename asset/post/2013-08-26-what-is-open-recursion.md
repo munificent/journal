@@ -1,6 +1,6 @@
 ---
 title: What is "Open Recursion"?
-categories: code language dart
+tags: code language dart
 ---
 
 Someone on StackOverflow stumbled onto the strange term "open recursion" and

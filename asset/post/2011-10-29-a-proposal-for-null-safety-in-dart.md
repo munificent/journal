@@ -1,6 +1,6 @@
 ---
 title: "A Proposal for Null-Safety in Dart"
-categories: code dart language
+tags: code dart language
 ---
 
 <div class="update">

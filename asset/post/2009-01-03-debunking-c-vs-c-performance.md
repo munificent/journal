@@ -1,6 +1,6 @@
 ---
 title: "Debunking C# vs C++ Performance"
-categories: c-sharp code cpp optimization
+tags: c-sharp code cpp optimization
 ---
 
 If you were on [reddit][] today, you probably saw [this article][], damning C#'s

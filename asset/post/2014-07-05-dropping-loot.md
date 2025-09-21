@@ -1,6 +1,6 @@
 ---
 title: "Dropping Loot"
-categories: code game-dev roguelike dart
+tags: code game-dev roguelike dart
 ---
 
 I got started hacking on my own roguelike after spending several years avidly

@@ -1,6 +1,6 @@
 ---
 title: "Pattern Matching in a Dynamic OOP Language"
-categories: code language magpie c js
+tags: code language magpie c js
 ---
 
 Another long weekend and another fun milestone for [Magpie][]. I've finally

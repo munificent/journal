@@ -1,6 +1,6 @@
 ---
 title: "How My Book Launch Went"
-categories: book game-dev design game-patterns
+tags: book game-dev design game-patterns
 ---
 
 Greetings, superfans! When we [last tuned in][blog post], I was just about to

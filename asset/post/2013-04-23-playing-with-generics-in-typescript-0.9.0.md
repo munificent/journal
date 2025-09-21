@@ -1,6 +1,6 @@
 ---
 title: "Playing with Generics in TypeScript 0.9.0"
-categories: code language typescript dart
+tags: code language typescript dart
 ---
 
 <div class="update">

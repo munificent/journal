@@ -1,6 +1,6 @@
 ---
 title: "Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit"
-categories: code finch language
+tags: code finch language
 ---
 
 One of my favorite things about [Lisp][] and [Smalltalk][] is that they don't

@@ -1,6 +1,6 @@
 ---
 title: "What I Learned at the Emerging Languages Camp"
-categories: code language parsing
+tags: code language parsing
 ---
 
 I just got back from the unbelievably awesome Emerging Languages Camp at

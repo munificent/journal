@@ -1,6 +1,6 @@
 ---
 title: "\"Constrained Compound\" Design Pattern"
-categories: c-sharp code design
+tags: c-sharp code design
 ---
 
 I've seen a lot of people argue that inheritance is an anti-feature in a

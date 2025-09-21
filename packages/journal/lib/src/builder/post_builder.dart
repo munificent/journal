@@ -61,13 +61,7 @@ class PostBuilder extends Builder<StringAsset> {
                 title = title.replaceAll('\\"', '"');
               }
 
-            case 'layout':
-              // TODO: Ignore old layout tags. Eventually these should be
-              // removed from the posts.
-              break;
-
-            case 'categories':
-              // TODO: Rename to 'tags'.
+            case 'tags':
               tags = value.split(' ').toList();
               tags.sort();
 

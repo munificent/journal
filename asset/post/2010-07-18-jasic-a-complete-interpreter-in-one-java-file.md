@@ -1,6 +1,6 @@
 ---
 title: "Jasic: A Complete Interpreter in One Java File"
-categories: code jasic language parsing
+tags: code jasic language parsing
 ---
 
 <div class="update">

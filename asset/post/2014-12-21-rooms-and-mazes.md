@@ -1,6 +1,6 @@
 ---
 title: "Rooms and Mazes: A Procedural Dungeon Generator"
-categories: code game-dev roguelike dart
+tags: code game-dev roguelike dart
 ---
 
 <style>

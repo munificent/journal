@@ -1,6 +1,6 @@
 ---
 title: "Zero to 353 Pages: Bringing My Web Book to Print and E-book"
-categories: book game-dev design game-patterns
+tags: book game-dev design game-patterns
 ---
 
 <figure>

@@ -1,6 +1,6 @@
 ---
 title: "What's the Opposite of \"Nullable\"?"
-categories: c-sharp code
+tags: c-sharp code
 ---
 
 I hate [duplicate code][dry]. [Hate it][dry 2] [hate it][dry 3] [hate it][dry

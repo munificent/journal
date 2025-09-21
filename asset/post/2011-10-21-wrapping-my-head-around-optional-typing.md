@@ -1,6 +1,6 @@
 ---
 title: "Wrapping My Head Around Optional Typing"
-categories: code language dart
+tags: code language dart
 ---
 
 <div class="update">

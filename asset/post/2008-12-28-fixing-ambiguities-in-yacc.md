@@ -1,6 +1,6 @@
 ---
 title: "Fixing Ambiguities in Grammars"
-categories: code f-sharp language parsing
+tags: code f-sharp language parsing
 ---
 
 For kicks, I've been writing a little toy programming language using [F#][],

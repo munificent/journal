@@ -1,6 +1,6 @@
 ---
 title: "Rethinking User-Defined Operators"
-categories: code cpp go java language magpie parsing
+tags: code cpp go java language magpie parsing
 ---
 
 I just made a radical change with how [Magpie][] handles infix operators --

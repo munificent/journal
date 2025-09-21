@@ -1,6 +1,6 @@
 ---
 title: "Magpie Wants You!"
-categories: code language magpie oscon
+tags: code language magpie oscon
 ---
 
 <div class="update">

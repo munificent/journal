@@ -1,6 +1,6 @@
 ---
 title: "Crafting \"Crafting Interpreters\""
-categories: book design language personal
+tags: book design language personal
 ---
 
 It took three years and 200,000 words more than I expected, but my second book,

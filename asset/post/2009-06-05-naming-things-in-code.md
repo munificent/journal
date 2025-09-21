@@ -1,6 +1,6 @@
 ---
 title: "Naming Things in Code"
-categories: code language
+tags: code language
 ---
 
 When I'm designing software, I spend a lot of time thinking about names. For me,

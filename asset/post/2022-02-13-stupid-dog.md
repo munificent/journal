@@ -1,6 +1,6 @@
 ---
 title: "Stupid Dog"
-categories: personal
+tags: personal
 ---
 
 It's my 30th birthday, and Megan and I are walking down Duval Street in Key

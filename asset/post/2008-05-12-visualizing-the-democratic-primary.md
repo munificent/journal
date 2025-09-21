@@ -1,6 +1,6 @@
 ---
 title: "Visualizing the Democratic Primary"
-categories: politics visualization
+tags: politics visualization
 ---
 
 Like lots and lots of people, I've been following this year's election very

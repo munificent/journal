@@ -1,6 +1,6 @@
 ---
 title: "Multimethods, Global Scope, and Monkey-Patching"
-categories: code language magpie
+tags: code language magpie
 ---
 
 > What I mean is that if you really want to understand something, the best way

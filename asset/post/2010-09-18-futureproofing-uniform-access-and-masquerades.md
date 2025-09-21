@@ -1,6 +1,6 @@
 ---
 title: "Future-Proofing, Uniform Access, and Masquerades"
-categories: c-sharp code java language magpie
+tags: c-sharp code java language magpie
 ---
 
 Take a look at this Java code:

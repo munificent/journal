@@ -1,6 +1,6 @@
 ---
 title: "Checking Flags in C# Enums"
-categories: c-sharp code
+tags: c-sharp code
 ---
 
 <div class="update">

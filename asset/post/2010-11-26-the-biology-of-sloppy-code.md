@@ -1,6 +1,6 @@
 ---
 title: "The Biology of Sloppy Code"
-categories: code
+tags: code
 ---
 
 I'm watching the [Future of Programming Languages][] panel and a point came up

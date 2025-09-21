@@ -1,6 +1,6 @@
 ---
 title: "Iteration Inside and Out"
-categories: code language magpie ruby dart
+tags: code language magpie ruby dart
 ---
 
 You would think iteration, you know *looping over stuff*, would be a solved

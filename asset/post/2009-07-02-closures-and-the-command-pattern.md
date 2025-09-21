@@ -1,6 +1,6 @@
 ---
 title: "Closures and the Command Pattern"
-categories: c-sharp code design
+tags: c-sharp code design
 ---
 
 Like a lot of object-oriented programmers, I'm a fan of *[Design Patterns][]*.

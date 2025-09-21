@@ -1,6 +1,6 @@
 ---
 title: "\"void\", \"null\", \"Maybe\" and \"nothing\""
-categories: code java language magpie
+tags: code java language magpie
 ---
 
 I'm hard at work on a proof-of-concept for the new [Magpie][]. While I've got

@@ -1,6 +1,6 @@
 ---
 title: Consider Knitting
-categories: art knitting
+tags: art knitting
 ---
 
 Let's say that, like me, you are a person who stares at a computer and writes

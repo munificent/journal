@@ -1,6 +1,6 @@
 ---
 title: "Zero to 95,688: How I wrote Game Programming Patterns"
-categories: book game-dev game-patterns
+tags: book game-dev game-patterns
 ---
 
 <div class="update">

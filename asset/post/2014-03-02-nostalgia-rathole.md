@@ -1,6 +1,6 @@
 ---
 title: "Nostalgia Rathole"
-categories: music ai personal
+tags: music ai personal
 ---
 
 Every couple of years, I change how I get music. It used to be CDs -- actual

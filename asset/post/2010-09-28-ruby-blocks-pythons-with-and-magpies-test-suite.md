@@ -1,6 +1,6 @@
 ---
 title: "Ruby Blocks, Python's "with", and Magpie's Test Suite"
-categories: code language magpie python ruby
+tags: code language magpie python ruby
 ---
 
 Part of moving a language from "tiny hobby project" to "thing that I hope people

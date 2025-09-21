@@ -1,6 +1,6 @@
 ---
 title: "Higher Order Macros in C++"
-categories: code c cpp
+tags: code c cpp
 ---
 
 My hobby project lately has been working on a little [bytecode interpreter][]

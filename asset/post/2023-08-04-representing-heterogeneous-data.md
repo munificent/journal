@@ -1,6 +1,6 @@
 ---
 title: "Representing Heterogeneous Data"
-categories: code language vgs
+tags: code language vgs
 ---
 
 As I mentioned in the [last post][], I'm working on taking my little videogame

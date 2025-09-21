@@ -1,6 +1,6 @@
 ---
 title: "A Turn-Based Game Loop"
-categories: code game-dev roguelike dart
+tags: code game-dev roguelike dart
 ---
 
 <style>

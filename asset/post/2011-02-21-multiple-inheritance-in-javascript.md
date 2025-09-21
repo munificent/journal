@@ -1,6 +1,6 @@
 ---
 title: "Multiple Inheritance in JavaScript"
-categories: code javascript language
+tags: code javascript language
 ---
 
 You know how when you stare at a hot stove you feel this weird compulsion to put

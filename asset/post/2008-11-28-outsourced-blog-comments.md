@@ -1,6 +1,6 @@
 ---
 title: "Outsourced Blog Comments"
-categories: blog
+tags: blog
 ---
 
 <div class="update">

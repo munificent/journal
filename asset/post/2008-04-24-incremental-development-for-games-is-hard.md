@@ -1,6 +1,6 @@
 ---
 title: "Incremental Development for Games (Is Hard)"
-categories: code game-dev
+tags: code game-dev
 ---
 
 For those who don't know, the game industry (or at least my chunk of it) is

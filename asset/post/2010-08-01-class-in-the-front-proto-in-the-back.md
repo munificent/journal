@@ -1,6 +1,6 @@
 ---
 title: "Class in the Front, Proto in the Back"
-categories: code java language magpie
+tags: code java language magpie
 ---
 
 Inspired by what I learned and saw at the Emerging Languages Camp, I've started

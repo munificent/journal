@@ -1,6 +1,6 @@
 ---
 title: "Long Names Are Long"
-categories: code dart
+tags: code dart
 ---
 
 One smart thing Google does is rigorous code reviews. Every change, before you

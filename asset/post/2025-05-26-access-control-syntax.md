@@ -1,6 +1,6 @@
 ---
 title: Access Control Syntax
-categories: code language vgs
+tags: code language vgs
 ---
 
 I'm still tinkering on a [scripting language for my hobby fantasy console

@@ -1,6 +1,6 @@
 ---
 title: "Semicolons are a Shibboleth"
-categories: code dart
+tags: code dart
 ---
 
 For better or worse, anything that Google does attracts a ton of attention. New

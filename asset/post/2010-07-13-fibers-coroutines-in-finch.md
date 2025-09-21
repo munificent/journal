@@ -1,6 +1,6 @@
 ---
 title: "Fibers: Coroutines in Finch"
-categories: code cpp finch game-dev language
+tags: code cpp finch game-dev language
 ---
 
 <div class="update">

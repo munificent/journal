@@ -1,6 +1,6 @@
 ---
 title: "New Syntax for Binding Methods in Finch"
-categories: code
+tags: code
 ---
 
 I just checked in a small change to [Finch][] that I think makes the language read

@@ -20,42 +20,47 @@ class CodePageBuilder extends GroupBuilder<Post> {
     var sorted = posts.values.toList();
     sorted.sort((a, b) => a.url.compareTo(b.url));
 
-    var lines = <String>[];
+    var codePosts = <Map<String, Object>>[];
     for (var post in sorted) {
+      var snippets = <Map<String, Object>>[];
       var inCode = false;
-      var showedTitle = false;
-
+      var snippetLines = <String>[];
+      var language = 'text';
       for (var line in post.contents) {
         if (inCode) {
-          lines.add(line);
+          snippetLines.add(line);
 
           if (line.trim().startsWith('```')) {
-            lines.add('');
+            snippetLines.add('');
             inCode = false;
+            snippets.add({
+              'language': language,
+              'code': renderMarkdown(context, snippetLines)
+            });
+            snippetLines.clear();
           }
         } else {
           if (line.trim().startsWith('```')) {
-            if (!showedTitle) {
-              lines.add('## ${post.url}');
-              lines.add('');
-              showedTitle = true;
-            }
-
-            lines.add(line.trim().substring(3));
-            lines.add('');
-            lines.add(line);
+            language = line.trim().substring(3);
+            if (language.isEmpty) language = 'text';
+            snippetLines.add(line);
             inCode = true;
           }
         }
       }
-    }
 
-    var codeHtml = renderMarkdown(context, lines);
+      if (snippets.isNotEmpty) {
+        codePosts.add({
+          'post': post,
+          'snippets': snippets,
+        });
+      }
+    }
 
     var postTemplate =
         context.input<Template>(Key('betwixt/asset/template/all_code.html'));
-    var html =
-        await renderTemplate(postTemplate, context, data: {'code': codeHtml});
+    var html = await renderTemplate(postTemplate, context,
+        data: {'code_posts': codePosts});
     context.output(key, html);
   }
 }

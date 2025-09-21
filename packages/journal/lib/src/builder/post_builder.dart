@@ -9,6 +9,11 @@ class PostBuilder extends Builder<StringAsset> {
   static final _titlePattern =
       RegExp(r'^asset/post/(\d{4})-(\d\d)-(\d\d)-([a-z0-9-.]+)\.md$');
 
+  final bool _includeTestPages;
+
+  PostBuilder({bool includeTestPages = false})
+      : _includeTestPages = includeTestPages;
+
   /// Match Markdown files in the static directory.
   @override
   bool matches(Key key, StringAsset source) =>
@@ -28,6 +33,10 @@ class PostBuilder extends Builder<StringAsset> {
     var month = int.parse(match[2]!);
     var day = int.parse(match[3]!);
     var titleUri = match[4]!;
+
+    // Any "test" pages for using during development are set to year 3000. Skip
+    // this if we aren't in a debug build.
+    if (year == 3000 && !_includeTestPages) return;
 
     var lines = (await markdownFile.readString()).split('\n');
 

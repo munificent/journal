@@ -16,6 +16,7 @@ import 'package:journal/src/builder/template_page_builder.dart';
 
 Future<void> main(List<String> arguments) async {
   var isServing = arguments.contains('--serve');
+  var isDesignTesting = arguments.contains('--design');
 
   var server = BuildServer(sourceDirectories: [
     'asset',
@@ -23,7 +24,7 @@ Future<void> main(List<String> arguments) async {
   ], builders: [
     StaticFileBuilder(),
     SassBuilder(),
-    PostBuilder(),
+    PostBuilder(includeTestPages: isDesignTesting),
     PostThreadBuilder(),
     TagBuilder(),
     TagSetBuilder(),
@@ -31,8 +32,9 @@ Future<void> main(List<String> arguments) async {
     TemplatePageBuilder(),
     PostPageBuilder(),
     TagPageBuilder(),
-    // For local testing, generate a page with all of the code snippets.
-    if (isServing) CodePageBuilder()
+    // For iterating on the design and syntax highlighting, generate a page
+    // with all of the code snippets.
+    if (isDesignTesting) CodePageBuilder()
   ]);
   await server.initialize();
 

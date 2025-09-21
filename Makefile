@@ -6,6 +6,11 @@ build:
 serve:
 	@ dart packages/journal/bin/build.dart --serve
 
+# Run the server and enable the design testing pages. Use this when iterating
+# on the design of the blog itself.
+design:
+	@ dart packages/journal/bin/build.dart --serve --design
+
 # Run the tests for all of the packages.
 test:
 	@ cd packages/betwixt; dart test

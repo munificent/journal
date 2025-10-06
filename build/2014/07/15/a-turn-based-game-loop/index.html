@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     A Turn-Based Game Loop &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2014/07/05/dropping-loot/"
+         title="Older Post &ldquo;Dropping Loot&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/"
+         title="Newer Post &ldquo;Zero to 353 Pages: Bringing My Web Book to Print and E-book&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2014/07/15/a-turn-based-game-loop/" rel="bookmark"
      title="Permanent Link to A Turn-Based Game Loop">
     A Turn-Based Game Loop
   </a>
 </h1>
-  <a class="older" href="/2014/07/05/dropping-loot/"
-     title="Older Post &ldquo;Dropping Loot&rdquo;">&larr;</a>
-  <a class="newer" href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/"
-     title="Newer Post &ldquo;Zero to 353 Pages: Bringing My Web Book to Print and E-book&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">July 15, 2014</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/game-dev">game-dev</a> <a href="/category/roguelike">roguelike</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2014/07/05/dropping-loot/"
+       title="Older Post &ldquo;Dropping Loot&rdquo;">&lt;</a></span>
+    <a href="/archive">july 15, 2014</a>
+    <span class="thread-narrow"><a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/"
+       title="Newer Post &ldquo;Zero to 353 Pages: Bringing My Web Book to Print and E-book&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+     |
+      <a href="/category/roguelike">roguelike</a>
+      </div>
+</nav>
 <style>
 canvas {
   padding: 6px;
@@ -84,7 +112,7 @@ avatar receives and treating it like just another entity in the game does
 that implicitly.</p>
 </li>
 </ul>
-<h2>Slicing up the game loop</h2>
+<h2 id="slicing-up-the-game-loop"><a href="#slicing-up-the-game-loop">Slicing up the game loop<span class="anchor">#slicing-up-the-game-loop</span></a></h2>
 <p>Hauberk, like most roguelikes, is a <em>turn-based</em> game. Each actor in the game
 makes a move one at a time. When it&rsquo;s the player&rsquo;s turn, all of the monsters
 halt, awkwardly motionless like the world&rsquo;s strangest game of freeze tag, until
@@ -121,7 +149,7 @@ it can pick up where it left off. Something like:</p>
 for a <a href="http://en.wikipedia.org/wiki/Generator_(computer_programming)">generator</a>. Indeed, in the previous C# incarnation of my game, <a href="/2008/11/17/using-an-iterator-as-a-game-loop/">I did
 exactly that</a>. When Dart gets generators, I&rsquo;ll probably use them. In
 the meantime, it&rsquo;s just a bit more verbose.</p>
-<h2>Actions for actors</h2>
+<h2 id="actions-for-actors"><a href="#actions-for-actors">Actions for actors<span class="anchor">#actions-for-actors</span></a></h2>
 <p>We&rsquo;ve got a little resumable game loop now. When each actor&rsquo;s turn comes up, its
 <code>update()</code> is called and the actor does whatever it does. A monster might pick a
 direction to walk. Next, the consequences of that have to be handled. The
@@ -160,7 +188,7 @@ add a bunch more.)</p>
 monsters and heroes alike. (There are some exceptions since heroes have some
 capabilities monsters don&rsquo;t have. Right now, monsters don&rsquo;t have inventory so
 all of the inventory management actions don&rsquo;t apply to them.)</p>
-<h2>Acting at speed</h2>
+<h2 id="acting-at-speed"><a href="#acting-at-speed">Acting at speed<span class="anchor">#acting-at-speed</span></a></h2>
 <p>We&rsquo;ve got a basic loop working now, but our game is a bit <em>too</em> turn-based.
 Every monster and the hero all proceed in lockstep. You move one step, they all
 move one step, kind of like the ancient <a href="http://en.wikipedia.org/wiki/Robots_(BSD_game)">Robots</a> game. You can never outrun or
@@ -212,7 +240,7 @@ bar resets.</p>
 engines update the hero separately from monsters in the main game loop, but that
 makes speed much trickier to handle. By treating the hero as just another actor,
 the hero can be both slower and faster than other monsters automatically.</p>
-<h2>The one special thing about heroes</h2>
+<h2 id="the-one-special-thing-about-heroes"><a href="#the-one-special-thing-about-heroes">The one special thing about heroes<span class="anchor">#the-one-special-thing-about-heroes</span></a></h2>
 <p>Treating the hero as just another actor is mostly swell, but there <em>is</em> one
 thing about heroes that makes them unique&mdash;they&rsquo;re controlled by the player.
 The game loop I showed runs fine as long as actors generate their own actions.
@@ -306,7 +334,7 @@ even be coming over a network and the engine won&rsquo;t care. Groovy.</p>
 more complex than this when you take into account visual effects, but I think
 I&rsquo;ll have to save that for another post. For now, let&rsquo;s keep our attention on
 the pristine confines of the engine.</p>
-<h2>Fat fingers</h2>
+<h2 id="fat-fingers"><a href="#fat-fingers">Fat fingers<span class="anchor">#fat-fingers</span></a></h2>
 <p>We&rsquo;re pretty far along with our game loop now. We&rsquo;ve got it doing the stuff it
 <em>needs</em> to do, so we can start looking at making the game more pleasantly
 usable. Usability means <em>fallibility</em>. People make mistakes, and usability is
@@ -353,7 +381,7 @@ encapsulation!</p>
 <p>Now, try braining yourself against the dungeon&rsquo;s stone boundary:</p><figure>
 <canvas id="safe-fail" tabindex="3">Sorry, you need canvas support for this demo.</canvas>
 </figure>
-<h2>Do what I mean, not what I said</h2>
+<h2 id="do-what-i-mean-not-what-i-said"><a href="#do-what-i-mean-not-what-i-said">Do what I mean, not what I said<span class="anchor">#do-what-i-mean-not-what-i-said</span></a></h2>
 <p>Success/failure handles cases where the action the player picked is totally
 bogus, but sometimes the game can infer out what they were <em>trying</em> to do. For
 example, if you try to make the hero walk into a closed door instead of using
@@ -442,7 +470,7 @@ pressing &ldquo;C&rdquo; when standing next to it.</p>
 <p>The wizard is smart enough to open doors too (sorry, troll and slug, no Mensa
 membership for you) and no changes to the pathfinding AI were needed to enable
 it. He just tries to walk <em>through</em> the door and miraculously succeeds.</p>
-<h2>The end&hellip; <em>or is it?</em></h2>
+<h2 id="the-end-or-is-it"><a href="#the-end-or-is-it">The end&hellip; <em>or is it?</em><span class="anchor">#the-end-or-is-it</span></a></h2>
 <p>Crap, I&rsquo;ve already burned three thousand words of your attention and there&rsquo;s
 still cool stuff to talk about! I&rsquo;m gonna have to split this into a two parter.</p>
 <p>What we have now is a pretty solid (in my opinion, naturally) game loop.
@@ -461,64 +489,38 @@ carve out a few more standalone demos and hack up some prose, I&rsquo;ll show yo
 In the meantime, the code for the game is <a href="https://github.com/munificent/hauberk">here</a>, and the code for
 the demos in this post are <a href="https://github.com/munificent/a-turn-based-game-loop">here</a>.</p>
 <p>If you want to try out the game, you can <a href="http://munificent.github.io/hauberk/">play it here</a>.</p><script type="application/dart" src="/code/2014-07-15-a-turn-based-game-loop/main.dart"></script><script src="/code/2014-07-15-a-turn-based-game-loop/packages/browser/dart.js"></script>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2014/07/15/a-turn-based-game-loop/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

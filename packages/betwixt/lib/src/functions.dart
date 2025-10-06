@@ -10,6 +10,8 @@ final _functions = {
   'format_date': BetwixtFunction(_formatDate, 2, 2),
   'html_entities_to_xml': BetwixtFunction(_htmlEntitiesToXml, 1, 1),
   'take': BetwixtFunction(_take, 2, 2),
+  'to_lower': BetwixtFunction(_toLower, 1, 1),
+  'to_upper': BetwixtFunction(_toUpper, 1, 1),
 };
 
 final _htmlEntityPattern = RegExp('&([a-zA-Z0-9]+);');
@@ -392,6 +394,14 @@ Object? _take(List<Object?> arguments) {
   var iterable = _checkArgument<Iterable<Object?>>(arguments, 'Sequence', 0);
   var count = _checkArgument<int>(arguments, 'Count', 1);
   return iterable.take(count);
+}
+
+Object? _toLower(List<Object?> arguments) {
+  return arguments[0].toString().toLowerCase();
+}
+
+Object? _toUpper(List<Object?> arguments) {
+  return arguments[0].toString().toUpperCase();
 }
 
 /// Check that the argument at [argumentIndex] in [arguments] has type [T].

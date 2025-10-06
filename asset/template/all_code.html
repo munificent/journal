@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
-{{ include "head" with title = "All Code" }}
-<body>
-<div class="column">
-  <article>
-    <header>
-    <h1>All Code</h1>
-    </header>
-<h4><a href="/archive">Archive</a></h4>
+  {{ include "head" with title = "All Code Snippets" }}
+  <body>
+    <main>
+      {{ include "header" with title = "All Code Snippets" }}
+<article>
+<h1>All Code Snippets</h1>
+<nav>&nbsp;</nav>
 {{ for post in code_posts }}
   <h3><a href="{{ post.post.url }}">{{ post.post.title }}</a></h3>
   {{ let language = "unknown" }}
@@ -19,8 +18,8 @@
     {{ snippet.code }}
   {{ end }}
 {{ end }}
-  </article>
-  {{ include "nav" }}
-</div>
-</body>
-</html>
+</article>
+      {{ include "footer" }}
+    </main>
+  </body>
+ </html>

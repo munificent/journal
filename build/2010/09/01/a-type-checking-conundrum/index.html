@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,34 +13,58 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     A Type Checking Conundrum! &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/08/31/type-checking-a-dynamic-language/"
+         title="Older Post &ldquo;Type Checking a Dynamic Language&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/09/18/futureproofing-uniform-access-and-masquerades/"
+         title="Newer Post &ldquo;Future-Proofing, Uniform Access, and Masquerades&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/09/01/a-type-checking-conundrum/" rel="bookmark"
      title="Permanent Link to A Type Checking Conundrum!">
     A Type Checking Conundrum!
   </a>
 </h1>
-  <a class="older" href="/2010/08/31/type-checking-a-dynamic-language/"
-     title="Older Post &ldquo;Type Checking a Dynamic Language&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/09/18/futureproofing-uniform-access-and-masquerades/"
-     title="Newer Post &ldquo;Future-Proofing, Uniform Access, and Masquerades&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">September 01, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/08/31/type-checking-a-dynamic-language/"
+       title="Older Post &ldquo;Type Checking a Dynamic Language&rdquo;">&lt;</a></span>
+    <a href="/archive">september 01, 2010</a>
+    <span class="thread-narrow"><a href="/2010/09/18/futureproofing-uniform-access-and-masquerades/"
+       title="Newer Post &ldquo;Future-Proofing, Uniform Access, and Masquerades&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>Ever since I decided to mesh the worlds of static and dynamic typing together in
 Magpie, I&rsquo;ve been wondering when the gears would really grind together and halt.
 Today is the day. The issue I&rsquo;m running into is one of hidden state, both in
 closures and in objects. Consider this post a plea for assistance or ideas.</p>
-<h2>A quick intro</h2>
+<h2 id="a-quick-intro"><a href="#a-quick-intro">A quick intro<span class="anchor">#a-quick-intro</span></a></h2>
 <p>Just to frame things since you are very likely not at all familiar with
 Magpie, here&rsquo;s the salient features of the language:</p>
 <ul>
@@ -78,7 +104,7 @@ is at the top level, which is run before type checking. If we change it to this:
 <span class="k">end</span></pre>
 <p>Now we correctly get a error that <code>say</code> expects a <code>String</code> and is being passed
 an <code>Int</code>. The interpreter then stops without ever calling <code>main()</code>.</p>
-<h2>Conundrum!</h2>
+<h2 id="conundrum"><a href="#conundrum">Conundrum!<span class="anchor">#conundrum</span></a></h2>
 <p>All that so far is fine and dandy. Now lets consider something a little&hellip;
 softer:</p>
 <pre class="highlight language-magpie"><span class="k">var</span> <span class="i">returnString</span><span class="p">(</span><span class="o">-&gt;</span> <span class="t">String</span><span class="p">)</span>
@@ -112,7 +138,7 @@ type checker didn&rsquo;t notice the error.</p>
 declared outside of a function&rsquo;s scope), but objects can have the exact same
 problem. A method&rsquo;s return type may be based on a field, but that field&rsquo;s type
 could change at any time.</p>
-<h2>Options</h2>
+<h2 id="options"><a href="#options">Options<span class="anchor">#options</span></a></h2>
 <p>So, how should Magpie handle this? Options I can think of are:</p>
 <ol>
 <li>
@@ -139,7 +165,7 @@ vanishes completely. But it feels like a weird thing for a dynamic language
 to do.</p>
 </li>
 </ol>
-<h2>Now what?</h2>
+<h2 id="now-what"><a href="#now-what">Now what?<span class="anchor">#now-what</span></a></h2>
 <p>Not that anyone but me really cares about Magpie, but if you do care enough to
 have a suggestion, I&rsquo;m all ears. I tried scanning through the literature on
 gradual and optional typing, but I didn&rsquo;t see anything that caught my eye. (I
@@ -147,64 +173,38 @@ believe <a href="http://ecee.colorado.edu/~siek/gradualtyping.html">Siek&rsquo;s
 <p>For now, I&rsquo;ll just default to &ldquo;do nothing&rdquo;, but if there&rsquo;s a cleaner solution
 that can help users catch real type errors before their programs run, that would
 be super awesome.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/09/01/a-type-checking-conundrum/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

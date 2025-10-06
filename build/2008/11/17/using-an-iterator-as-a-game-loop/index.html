@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Using an Iterator as a Game Loop &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2008/05/12/visualizing-the-democratic-primary/"
+         title="Older Post &ldquo;Visualizing the Democratic Primary&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2008/11/23/constrained-compound-design-pattern/"
+         title="Newer Post &ldquo;&ldquo;Constrained Compound&rdquo; Design Pattern&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2008/11/17/using-an-iterator-as-a-game-loop/" rel="bookmark"
      title="Permanent Link to Using an Iterator as a Game Loop">
     Using an Iterator as a Game Loop
   </a>
 </h1>
-  <a class="older" href="/2008/05/12/visualizing-the-democratic-primary/"
-     title="Older Post &ldquo;Visualizing the Democratic Primary&rdquo;">&larr;</a>
-  <a class="newer" href="/2008/11/23/constrained-compound-design-pattern/"
-     title="Newer Post &ldquo;&ldquo;Constrained Compound&rdquo; Design Pattern&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">November 17, 2008</a>
-    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/game-dev">game-dev</a> <a href="/category/roguelike">roguelike</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2008/05/12/visualizing-the-democratic-primary/"
+       title="Older Post &ldquo;Visualizing the Democratic Primary&rdquo;">&lt;</a></span>
+    <a href="/archive">november 17, 2008</a>
+    <span class="thread-narrow"><a href="/2008/11/23/constrained-compound-design-pattern/"
+       title="Newer Post &ldquo;&ldquo;Constrained Compound&rdquo; Design Pattern&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c-sharp">c-sharp</a>
+     |
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+     |
+      <a href="/category/roguelike">roguelike</a>
+      </div>
+</nav>
 <p>If you&rsquo;ve ever worked on a game before (and if you code, you probably have, at
 least on your own), you&rsquo;ve seen the venerable <a href="https://dewitters.com/dewitters-gameloop/comment-page-1/">game loop</a>. It&rsquo;s the core loop
 in the executable that iterates as long as the game is running. In GUI apps, an
@@ -51,7 +79,7 @@ indefinitely. A simple game loop looks like this:</p>
 <p>Pretty straightforward, and it&rsquo;s reassuring to think that even the most advanced
 blockbuster game on the market has some code quite similar to this in it
 somewhere.</p>
-<h2>Separating out the UI</h2>
+<h2 id="separating-out-the-ui"><a href="#separating-out-the-ui">Separating out the UI<span class="anchor">#separating-out-the-ui</span></a></h2>
 <p>However, my game project is a <a href="http://rephial.org/">turn-based roguelike</a>. This means
 <code>HandleUserInput()</code> blocks indefinitely until the user has chosen a move. Also,
 I&rsquo;m a design purist, so I want to not have engine code (which is where the game
@@ -70,7 +98,7 @@ about rendering.</p>
     <span class="i">UpdateGameState</span><span class="p">();</span>
 <span class="p">}</span></pre>
 <p>Still pretty dumb. Let&rsquo;s delve into updating the game state.</p>
-<h2>Monsters!</h2>
+<h2 id="monsters"><a href="#monsters">Monsters!<span class="anchor">#monsters</span></a></h2>
 <p>The game has a dungeon with a bunch of monsters and the player-controlled hero.
 Something like:</p>
 <pre class="highlight language-csharp"><span class="k">void</span> <span class="i">UpdateGameState</span><span class="p">()</span>
@@ -123,7 +151,7 @@ until we need user input to continue&rdquo;:</p>
 until we reach the hero who needs a move. But you&rsquo;ll notice we had to create a
 field, <code>mCurrentEntity</code>, where we were just using a local <code>foreach</code> loop before.
 That lets us pick up where we left off the last time we called the function.</p>
-<h2>It gets worse</h2>
+<h2 id="it-gets-worse"><a href="#it-gets-worse">It gets worse<span class="anchor">#it-gets-worse</span></a></h2>
 <p>That isn&rsquo;t so bad, but I also added processing for items (if you lay a burning
 torch on the ground, it needs to process so it can eventually burn out):</p>
 <pre class="highlight language-csharp"><span class="k">void</span> <span class="i">ProcessGame</span><span class="p">()</span>
@@ -173,7 +201,7 @@ moves which are multiple steps and some other shenanigans.</p>
 <p>But, there&rsquo;s hope. Remember when I said, &ldquo;lets up pick up where we left off the
 last time we called it&rdquo;. Those member variables exist basically to get us to
 jump back to the last place we were in the function. Sound familiar?</p>
-<h2>Enter iterators</h2>
+<h2 id="enter-iterators"><a href="#enter-iterators">Enter iterators<span class="anchor">#enter-iterators</span></a></h2>
 <p>Here&rsquo;s an iterator:</p>
 <pre class="highlight language-csharp"><span class="t">IEnumerable</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span> <span class="i">Fibonacci</span><span class="p">()</span>
 <span class="p">{</span>
@@ -217,7 +245,7 @@ game processing into the same thing:</p>
 <span class="p">}</span></pre>
 <p>Much simpler, and we let the language take care of encapsulating the state
 needed to return for us. Less code for us to monkey with.</p>
-<h2>The final bit</h2>
+<h2 id="the-final-bit"><a href="#the-final-bit">The final bit<span class="anchor">#the-final-bit</span></a></h2>
 <p>The only annoying bit left now is that the UI actually needs to call
 <code>ProcessGame()</code> <em>once</em> and then iterate through the returned iterator
 afterwards. To make things nicer, we can let the game handle that so that
@@ -261,64 +289,38 @@ are irrelevant here. It&rsquo;s the <a href="http://en.wikipedia.org/wiki/Side_e
 game state) that matters. In the game, <code>Process()</code> actually does return
 something so that the UI knows whether the game needs user input, or just to
 pause for tick while showing an animation.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2008/11/17/using-an-iterator-as-a-game-loop/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

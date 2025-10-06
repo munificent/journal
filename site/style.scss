@@ -1,93 +1,121 @@
-$serif: 'PT Serif', Georgia, serif;
-$sans:  'Open Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-$mono:  'Source Code Pro', Courier, monospace;
+@use 'sass:color';
 
-$body-text:        16px/24px $serif;
-$body-bg:          hsl(35, 30%, 96%);
-$text-color:       #222;
-$gray:             mix($text-color, #fff, 30%);
-$dark:             mix($text-color, #fff, 50%);
+// Fonts =======================================================================
 
-$link:             hsl(200, 100%, 30%);
-$link-hover:       hsl(200, 100%, 50%);
-$link-light:       hsl(200, 100%, 70%);
+// I only use a couple of font stacks throughout the site to keep things nice
+// and consistent.
 
-$code-bg:          hsl(200, 30%, 97%);
-$code-color:       hsl(200, 25%, 25%);
+$serif: 'Petrona', Georgia, serif;
+$sans:  'Asap', 'Open Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+$mono:  'IBM Plex Mono', Courier, monospace;
 
-$quote-color:      mix($text-color, #fff, 60%);
-$cite-color:       mix($text-color, #fff, 40%);
+// TODO: Use these in more places.
+$col:                     64px;
+$row:                     32px;
 
-$nav-bg:           hsl(35, 30%, 88%);
-$nav-text:         hsl(35, 40%, 40%);
-$nav-title:        hsl(35, 60%, 65%);
-$nav-text-small:   mix($nav-bg, $nav-text, 50%);
-$nav-link:         hsl(35, 70%, 45%);
-$nav-hover:        hsl(35, 80%, 70%);
+// Colors ======================================================================
 
-$comments-bg:      hsl(35, 30%, 92%);
-$comments-color:   hsl(35, 40%, 40%);
+// The various nested elements like code inside a blockquote are hand authored
+// instead of doing a single semi-transparent color for code and allowing it to
+// blend with whatever it's behind because this gives us better control and
+// nicer colors.
 
-$box-bg:           hsl(200, 50%, 97%);
-$box-color:        mix($text-color, $box-bg, 50%);
-
-$update-bg:        hsl(35, 100%, 96%);
-$update-color:     hsl(35, 40%, 50%);
-$update-link:      hsl(35, 90%, 45%);
-$update-hover:     hsl(35, 100%, 30%);
-
-$table-bg:         hsl(35, 30%, 96%);
-$table-color:      mix($table-bg, $text-color, 20%);
-$table-head-color: hsl(35, 30%, 60%);
-$table-alt-bg:     hsl(35, 30%, 99%);
-
-@mixin box($color) {
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  background: $color;
+@function ink($percent) {
+  @return color.mix(hsl(30, 60%, 10%), hsl(40, 10%, 90%), $percent);
 }
 
-// Reset everything:
-
-html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
-acronym, address, cite, code, figure, img, ins, q, s, samp, small, strike,
-sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
-caption, tbody, tfoot, thead, tr, th, td {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+@function ink-dk($percent) {
+  @return color.mix(hsl(210, 20%, 80%), hsl(210, 20%, 10%), $percent);
 }
 
-body {
-  line-height: 1;
-  color: $text-color;
-  background: $body-bg;
-}
+$body-bg-lt:              ink(0%);
+$body-bg-dk:              ink-dk(0%);
+$body-bg:                 light-dark($body-bg-lt, $body-bg-dk);
 
-table {
-  border-spacing: 0;
-}
+$text-color-lt:           ink(100%);
+$text-color-dk:           ink-dk(100%);
+$text-color:              light-dark($text-color-lt, $text-color-dk);
 
-a {
-  text-decoration: none;
-}
+$link-color:              light-dark(ink(80%), ink-dk(70%));
+$link-line:               light-dark(ink(40%), ink-dk(40%));
+$link-hover:              light-dark(hsl(10, 90%, 40%), hsl(340, 70%, 50%));
 
-// Basic layout:
+$line-color:              light-dark(ink(20%), ink-dk(30%));
 
-.column {
-  max-width: 960px;
-  margin: 0 auto;
+$pane-bg-lt:              ink(8%);
+$pane-bg-dk:              ink-dk(10%);
+$pane-bg:                 light-dark($pane-bg-lt, $pane-bg-dk);
 
-  // For grid.
-  position: relative;
+$pane-border:             light-dark(ink(25%), ink-dk(7%));
+$pane-text:               light-dark(ink(80%), ink-dk(60%));
+$pane-code-bg:            light-dark(ink(15%), ink-dk(15%));
+
+$pane-figure-bg:          light-dark(
+                            color.mix($pane-bg-lt, white, 50%),
+                            color.mix($pane-bg-dk, black, 50%),
+                          );
+
+$code-bg-lt:              ink(5%);
+$code-bg-dk:              ink-dk(5%);
+$code-bg:                 light-dark($code-bg-lt, $code-bg-dk);
+
+$code-color-lt:           ink(80%);
+$code-color-dk:           ink-dk(80%);
+$code-color:              light-dark($code-color-lt, $code-color-dk);
+
+$aside-border:            light-dark(ink(20%), ink-dk(20%));
+$aside-color:             light-dark(ink(70%), ink-dk(60%));
+
+$figure-bg-lt:            color.mix($body-bg-lt, white, 50%);
+$figure-bg-dk:            color.mix($body-bg-dk, black, 80%);
+$figure-bg:               light-dark($figure-bg-lt, $figure-bg-dk);
+
+$figure-color:            light-dark(
+                            color.mix($text-color-lt, $figure-bg-lt, 60%),
+                            color.mix($text-color-dk, $figure-bg-dk, 40%),
+                          );
+$figure-code-bg:          light-dark(
+                            color.mix($code-bg-lt, $figure-bg-lt, 60%),
+                            color.mix($code-bg-dk, $figure-bg-dk, 60%),
+                          );
+$figure-code-color:       light-dark(
+                            color.mix($code-color-lt, $figure-bg-lt, 70%),
+                            color.mix($code-color-dk, $figure-bg-dk, 70%),
+                          );
+
+$quote-bg:                $figure-bg;
+$quote-color:             light-dark(ink(80%), ink-dk(80%));
+$quote-code-bg:           light-dark(ink(0%), ink-dk(5%));
+
+$update-bg-lt:            hsl(40, 50%, 87%);
+$update-bg-dk:            hsl(40, 20%, 20%);
+$update-bg:               light-dark($update-bg-lt, $update-bg-dk);
+$update-border:           light-dark(hsl(40, 50%, 75%), hsl(40, 20%, 35%));
+$update-color:            light-dark(hsl(40, 30%, 40%), hsl(40, 20%, 60%));
+$update-link-color-lt:    hsl(40, 70%, 45%);
+$update-link-color-dk:    hsl(40, 60%, 50%);
+$update-link-color:       light-dark($update-link-color-lt, $update-link-color-dk);
+$update-link-line:        light-dark(
+                            color.mix($update-link-color-lt, $update-bg-lt, 50%),
+                            color.mix($update-link-color-dk, $update-bg-dk, 50%),
+                          );
+$update-link-hover:       light-dark(hsl(40, 90%, 40%), hsl(40, 90%, 60%));
+$update-code-bg:          light-dark(hsl(40, 40%, 83%), hsl(40, 20%, 25%));
+$update-code-color:       light-dark(hsl(20, 20%, 50%), hsl(40, 20%, 50%));
+$update-quote-bg:         light-dark(hsl(40, 50%, 92%), hsl(40, 20%, 15%));
+$update-quote-color:      light-dark(hsl(40, 20%, 45%), hsl(40, 10%, 50%));
+$update-quote-code-bg:    light-dark(hsl(40, 40%, 84%), hsl(40, 20%, 20%));
+$update-quote-code-color: light-dark(hsl(40, 20%, 50%), hsl(40, 20%, 50%));
+
+$comments-bg:             light-dark(ink(4%), ink-dk(4%));
+
+// Enable light-dark().
+:root {
+  color-scheme: light dark;
 }
 
 .grid {
-  background: url("/image/grid.png");
+  background: url("/image/grid2.png");
   z-index: 100;
   position: absolute;
   left: 0;
@@ -96,419 +124,588 @@ a {
   height: 100%;
 }
 
-.right {
-  text-align: right;
+// Layout.
+
+body {
+  margin: 0 32px;
+  background-color: $body-bg;
+  color: $text-color;
+  font: 19px/32px $serif;
 }
 
-nav {
-  width: 192px;
+main {
+  max-width: $col * 16;
+  margin: 0 auto;
+  position: relative; // For the grid.
+}
 
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin-top: 48px;
-  padding: 0 48px 24px 48px;
-
-  font: 13px/20px $sans;
-  color: $nav-text;
-
-  img.bob {
-    @include box(#fff);
-    width: 192px;
-    margin: -8px -8px 32px -8px;
-    border: solid 8px #fff;
-    border-radius: 4px;
-  }
-
-  img.rss {
-    vertical-align: middle;
-    padding-bottom: 3px;
-  }
-
-  h2 {
-    margin: 24px 0 4px 0;
-    color: $nav-title;
-    font: normal 13px $sans;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  code {
-    font: 13px $mono;
-  }
-
-  a {
-    color: $nav-link;
-  }
-
-  a:hover {
-    color: $nav-hover;
-  }
-
-  p {
-    margin-bottom: 12px;
-  }
-
-  ul {
-    padding-left: 24px;
-    margin-bottom: 12px;
-  }
-
-  small {
-    font-size: 11px;
-    color: $nav-text-small;
-  }
-
-  .copyright {
-    font-size: 12px;
-    font-style: italic;
-    color: $nav-text-small;
-    text-align: center;
-  }
-
-  .archive {
-    padding-left: 24px;
-    font-style: italic;
-    color: $nav-text-small;
-  }
+header, footer {
+  color: $pane-text;
+  background-color: $pane-bg;
+  font: 15px/24px $mono;
 }
 
 header {
   position: relative;
-  display: table;
-  width: 100%;
-  height: 192px;
-  margin-bottom: 48px;
+  margin: 0;
+  padding: 30px 8px 6px 8px;
 
-  h1 {
-    display: table-cell;
-    vertical-align: middle;
-    font: normal 36px/48px $serif;
+  border-top: 4px solid $pane-border;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 
-    a {
-      color: $text-color;
-    }
-  }
-
-  a.older, a.newer {
+  .about {
     position: absolute;
-    font: normal 26px/40px $sans;
-    background: #fff;
-    border-radius: 40px;
-    padding: 0 12px;
-    bottom: -86px;
-    color: $gray;
-  }
-
-  .older {
-    left: -68px;
-  }
-
-  .newer {
-    right: -68px;
+    right: 8px;
   }
 }
 
-article {
-  padding: 48px;
-  margin-right: 288px;
-  background: #fff;
+footer {
+  position: relative;
+  margin: 32px 0 0 0;
+  padding: 16px;
 
-  h2 {
-    font: normal 24px $serif;
-    padding: 24px 0 12px 0;
-    font-weight: 700;
-
-    code {
-      background: inherit;
-      color: $code-color;
-      font: 24px $mono;
-      font-weight: 700;
-      padding: 0;
-    }
-  }
-
-  h3 {
-    font: italic 19px/24px $serif;
-    padding: 24px 0 12px 0;
-
-    code {
-      background: inherit;
-      color: $code-color;
-      font: italic 19px $mono;
-      padding: 0;
-    }
-  }
-
-  h4 {
-    position: relative;
-    font: 11px $sans;
-    padding: 0 0 4px 0;
-    margin-bottom: 16px;
-
-    color: $gray;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-
-    border-bottom: solid 2px #eee;
-
-    a {
-      color: $gray;
-    }
-
-    .tags {
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      a {
-        margin-left: 5px;
-      }
-    }
-  }
-
-  a {
-    color: $link;
-  }
-
-  a:hover {
-    color: $link-hover;
-  }
-
-  p {
-    font: $body-text;
-    padding: 8px 0;
-
-    // To cancel out list item tweaks.
-    color: $text-color;
-    letter-spacing: 0;
-  }
-
-  p + p {
-    padding-top: 12px;
-  }
-
-  ol, ul {
-    margin-left: 24px;
-  }
-
-  // Smaller list numbers.
-  ol li {
-    font: bold 13px $serif;
-  }
-
-  a, a code {
-    color: $link;
-
-    &:hover {
-      color: $link-hover;
-    }
-  }
-
-  strong code {
-    font-weight: bold;
-  }
+  border-bottom: 4px solid $pane-border;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 
   code {
-    @include box($code-bg);
-    padding: 1px 3px;
-    color: $code-color;
-    font: 15px/18px $mono;
-    white-space: pre;
-  }
-
-  pre {
-    @include box($code-bg);
-    margin: 6px 0;
-    padding: 6px 12px;
-    font: 13px/18px $mono;
-    color: $code-color;
-    overflow: auto;
-  }
-
-  pre.language-asciiart {
-    font: 14px/18px $mono;
-  }
-
-  tt {
-    font: 13px/18px $mono;
-    color: $code-color;
-  }
-
-  blockquote {
-    color: $quote-color;
-    padding: 0 24px;
-
-    p {
-      color: $quote-color;
-      font: italic 18px/26px $serif;
-      padding: 4px 0;
-
-      strong {
-        font-weight: 600;
-      }
-    }
-  }
-
-  hr {
-      border: none;
-      border-top: 1px solid #eee;
-      color: $gray;
-      overflow: visible;
-      text-align: center;
-      padding: 0;
-      margin: 26px 0 8px 0;
-
-    &:after {
-        background: #fff;
-        font-size: 20px;
-        content: '§';
-        padding: 0 4px;
-        position: relative;
-        top: -11px;
-    }
-  }
-
-  .cite {
-    font: italic 13px/24px $sans;
-    color: $cite-color;
-    display: block;
-    text-align: right;
-    margin-top: 0;
-    padding: 0 24px 12px 0;
-
-    &:before {
-      content: '\2014\00A0';
-    }
-  }
-
-  .update {
-    @include box($update-bg);
-    margin: 12px 0;
-    padding: 0 12px;
-    color: $update-color;
-
-    p {
-      font: 14px/24px $sans;
-      color: $update-color;
-    }
-
-    code {
-      background: mix($update-bg, $code-color, 92%);
-      font-size: 13px/22px;
-    }
-
-    a, a code {
-      color: $update-link;
-
-      &:hover {
-        color: $update-hover;
-      }
-    }
-  }
-
-  img {
-    @include box(inherit);
-    display: block;
-    padding: 6px;
-    margin: 6px auto;
-
-    &.framed {
-      background: $box-bg;
-    }
+    background-color: $pane-code-bg;
   }
 
   figure {
-    @include box($box-bg);
-    display: block;
-    box-sizing: border-box;
-    padding: 10px;
-    margin: 10px auto;
-    width: 100%;
+    position: absolute;
+    margin: 0;
+    width: $col * 4 - 32;
+    top: 16px;
+    right: 16px;
+    background-color: $pane-figure-bg;
+  }
 
-    img {
-      border-radius: 0;
-      padding: 0;
-      margin: 0;
-      width: 100%;
-    }
+  a {
+    text-decoration: underline $link-line;
+  }
 
-    // Center tweets.
-    iframe.twitter-tweet {
-      margin-left: auto !important;
-      margin-right: auto !important;
-    }
+  p {
+    margin: 0 $col * 5 24px 0;
+  }
 
-    figcaption, label, input, output {
-      color: $box-color;
-      font: 13px $sans;
-      margin-top: 10px;
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+nav, .post-thread {
+  display: flex;
+  justify-content: space-between;
+
+  height: $row - 13;
+  margin: 0 0 ($row + 10px) 0;
+  padding: 6px 0;
+
+  color: $line-color;
+  border-bottom: solid 1px $line-color;
+  font: 14px/16px $mono;
+}
+
+nav {
+  // By default, don't show the non-sidebar thread links.
+  .thread-narrow { display: none; }
+}
+
+.post-thread {
+  position: absolute;
+  width: $col * 4;
+  top: $row * 9;
+  right: 0;
+}
+
+article {
+  position: relative;
+  width: $col * 11;
+
+  // Scale down to match the serif font's metrics.
+  p code {
+    font-size: 87%;
+    line-height: 24px;
+  }
+}
+
+// Main text styles.
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  // Make sure <code> inside a link doesn't override the link color.
+  code { color: $link-color; }
+}
+
+a:hover {
+  color: $link-hover;
+  text-decoration: underline $link-hover;
+  // Make sure <code> inside a link doesn't override the link color.
+  code { color: $link-hover; }
+}
+
+p {
+  margin: 0;
+
+  // Underlines on links in the body text.
+  a { text-decoration: underline $link-line; }
+}
+
+p + p, aside + p, ul + p, ol + p, p + ul, p + ol {
+  margin-top: 16px;
+}
+
+code {
+  padding: 1px 3px;
+
+  background-color: $code-bg;
+  color: $code-color;
+  border-radius: 3px;
+
+  white-space: pre; // Don't split inside inline code.
+  font-family: $mono;
+}
+
+h1 {
+  margin: 0;
+  padding: 18px 0 14px 0;
+  width: 100%;
+  height: $row * 6;
+  display: table-cell;
+  vertical-align: middle;
+
+  font: 46px/64px $serif;
+}
+
+h2 {
+  margin: 24px 0 8px 0;
+  padding: 11px 0 5px 0;
+  font: 500 28px/48px $sans;
+  .anchor { padding-top: 21px; }
+}
+
+h3 {
+  margin: 32px 0 16px 0;
+  padding: 13px 0 3px 0;
+  font: italic 500 23px/32px $sans;
+  .anchor { padding-top: 11px; }
+}
+
+h2 .anchor, h3 .anchor {
+  position: absolute;
+  left: $col * 12;
+  width: $col * 4;
+  font: 14px/16px $mono;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: $line-color;
+  &:hover {
+    color: $link-hover;
+  }
+}
+
+ol, ul {
+  position: relative;
+  margin: 0 0 0 32px;
+  padding: 0;
+  list-style-type: none;
+}
+
+ol {
+  counter-reset: item;
+}
+
+ol li::before { 
+  content: counter(item) ".";
+  counter-increment: item;
+  position: absolute;
+  left: -32px;
+}
+
+ul li::before {
+  content: "●";
+  position: absolute;
+  left: -32px;
+  font-size: 80%;
+}
+
+li + li {
+  margin-top: 16px;
+}
+
+pre {
+  margin: 10px 0 8px 0;
+  padding: 11px 8px;
+  overflow: auto;
+
+  background-color: $code-bg;
+  color: $code-color;
+  border-radius: 3px;
+
+  font: 15px/24px $mono;
+
+  &.language-asciiart { font: 15px/20px $mono; }
+}
+
+blockquote {
+  position: relative;
+  padding: 17px 16px 12px 16px;
+  margin: 15px 0 20px 16px;
+
+  background: $quote-bg;
+  color: $quote-color;
+  border-radius: 3px;
+
+  font-style: italic;
+
+  &:before {
+    content: '\0000a0';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -16px;
+    top: 24px;
+    border-bottom: 16px solid transparent;
+    border-right: 16px solid $quote-bg;
+  }
+
+  code { background: $quote-code-bg; }
+}
+
+blockquote.cited {
+  margin-left: 0;
+
+  &:before {
+    left: auto;
+    top: auto;
+    bottom: -16px;
+    right: 64px;
+    border-bottom: none;
+    border-right: none;
+    border-left: 16px solid transparent;
+    border-top: 16px solid $quote-bg;
+  }
+}
+
+.cite {
+  text-align: right;
+  font-style: italic;
+
+  // Em dash.
+  &:before { content: '\2014\00A0'; }
+}  
+
+// Update box:
+.update {
+  margin: 19px 0 24px 0;
+  padding: 12px 15px 7px 15px;
+
+  border-radius: 3px;
+  border: solid 1px $update-border;
+  background-color: $update-bg;
+  color: $update-color;
+
+  strong {
+    font-weight: 600;
+  }
+
+  p {
+    font: 17px/32px $sans;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  code {
+    background: $update-code-bg;
+    color: $update-code-color;
+    // Scale back up to match the sans metrics.
+    font-size: 100%;
+  }
+
+  a, a code {
+    color: $update-link-color;
+    text-decoration: underline $update-link-line;
+    &:hover {
+      color: $update-link-hover;
+      text-decoration: underline $update-link-hover;
     }
   }
 
-  .table {
-    @include box($table-bg);
-    padding: 6px;
-    margin: 6px 0;
-  }
+  blockquote {
+    background: $update-quote-bg;
+    color: $update-quote-color;
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    color: $table-color;
-
-    td {
-      font: $body-text;
-      padding: 0 6px;
+    &:before {
+      border-right-color: $update-quote-bg;
+      border-top-color: $update-quote-bg;
     }
 
-    thead {
-      td {
-        color: $table-head-color;
-        font: 13px/24px $sans;
-        font-weight: 600;
-      }
-    }
-
-    tbody tr:nth-child(odd) {
-      background: $table-alt-bg;
+    code {
+      background: $update-quote-code-bg;
+      color: $update-quote-code-color;
     }
   }
 }
 
-.social {
-  padding: 24px 0 36px 0;
+hr {
+  border: none;
+  border-top: 1px solid $line-color;
+  color: $line-color;
+  overflow: visible;
   text-align: center;
+  padding: 0;
+  margin: 29px 0 1px 0;
 
-  a {
-    color: $gray;
+  &:after {
+    background: $body-bg;
+    font-size: 20px;
+    content: '§';
+    padding: 0 4px;
+    position: relative;
+    top: -16px;
+  }
+}
+
+// TODO: Only the ancient "Debunking" post uses a table, so not bothering with
+// particularly nice style for now.
+table {
+  width: 100%;
+  margin: 0 0 16px 0;
+
+  border-radius: 3px;
+  background-color: $code-bg;
+
+  thead {
+    font-weight: bold;
+  }
+
+  td {
     padding: 0 4px;
   }
 }
 
+// Image frames:
+figure {
+  display: block;
+  box-sizing: border-box;
+  margin: 22px 0 26px 0;
+  padding: 16px;
+  width: 100%;
+
+  background-color: $figure-bg;
+  border-radius: 3px;
+  color: $figure-color;
+
+  img {
+    display: block;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  figcaption, label, input, output {
+    margin-top: 14px;
+    font: 16px/24px $sans;
+
+    code {
+      background-color: $figure-code-bg;
+      color: $figure-code-color;
+    }
+  }
+
+  // Sliders are strangely shifted up, so move them down a bit.
+  input[type="range"] {
+    position: relative;
+    top: 5px;
+    margin: 0 8px;
+  }
+
+  &.wide { width: $col * 16; }
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  background: $code-bg;
+}
+
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+// Asides:
+aside {
+  position: absolute;
+  width: $col * 4;
+  right: $col * -5;
+
+  font: 15px/24px $sans;
+
+  &:before {
+    position: absolute;
+    top: 1px;
+    left: -41px;
+    font: 15px $mono;
+    content: '>>';
+    color: $line-color;
+  }
+
+  // Scale code back up to match the sans font.
+  p code { font-size: 100%; }
+
+  // p + p, ul + p, ol + p, p + ul, p + ol {
+  //   margin-top: 24px;
+  // }
+}
+
+aside.bottom:before {
+  top: auto;
+  bottom: 2px;
+}
+
+// Archive page:
+table.archive {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: inherit;
+
+  thead td {
+    padding: 10px 0 0 0;
+    height: $row - 12;
+
+    color: $line-color;
+    border-bottom: solid 1px $line-color;
+    font: 14px/16px $mono;
+  }
+
+  td {
+    margin: 0;
+    padding: 0;
+  }
+
+  tbody tr:hover {
+    background-color: $code-bg;
+  }
+
+  tbody tr:first-child td {
+    padding-top: 43px;
+  }
+
+  td.date, td.tags {
+    font-size: 14px;
+    font-family: $mono;    
+  }
+
+  td.date {
+    width: $col * 2;
+  }
+
+  td.tags {
+    width: $col * 5;
+    padding-left: 16px;
+  }
+
+  tr + tr.year td {
+    padding-top: 16px;
+  }
+}
+
+// Syntax highlighting:
+.highlight {
+  // Punctuation.
+  span.p {
+    color: light-dark(
+      color.mix($body-bg-lt, $code-color-lt, 30%),
+      color.mix($body-bg-dk, $code-color-dk, 30%),
+    );
+  }
+
+  // Number.
+  span.n { color: light-dark(hsl(10, 70%, 55%), hsl(10, 50%, 50%)); }
+
+  // String.
+  span.s { color: light-dark(hsl(30, 100%, 35%), hsl(30, 50%, 50%)); }
+
+  // String escape.
+  span.e { color: light-dark(hsl(40, 80%, 45%), hsl(40, 60%, 45%)); }
+
+  // Field.
+  span.f { color: light-dark(hsl(100, 50%, 40%), hsl(80, 60%, 35%)); }
+
+  // Type name.
+  span.t { color: light-dark(hsl(180, 100%, 25%), hsl(180, 80%, 35%)); }
+
+  // Markup tag.
+  span.g { color: light-dark(hsl(180, 100%, 25%), hsl(180, 80%, 35%)); }
+
+  // Operator.
+  span.o { color: light-dark(hsl(210, 30%, 45%), hsl(210, 35%, 50%)); }
+
+  // Keyword.
+  span.k { color: light-dark(hsl(210, 60%, 45%), hsl(210, 60%, 50%)); }
+
+  // Attribute/annotation.
+  span.a { color: light-dark(hsl(270, 70%, 65%), hsl(280, 70%, 60%)); }
+
+  // Preprocessor.
+  span.r { color: light-dark(hsl(300, 40%, 45%), hsl(290, 35%, 50%)); }
+
+  // Comment.
+  span.c {
+    color: light-dark(
+      color.mix($body-bg-lt, $code-color-lt, 50%),
+      color.mix($body-bg-dk, $code-color-dk, 50%),
+    );
+  }
+
+  // "Blue" functions.
+  span.blue { color: light-dark(hsl(220, 100%, 55%), hsl(220, 80%, 55%)); }
+  // "Red" functions.
+  span.red { color: light-dark(hsl(5, 100%, 45%), hsl(5, 70%, 50%)); }
+
+  // Metasyntax.
+  span.x {
+    font-style: italic;
+    color: light-dark(
+      color.mix($body-bg-lt, $code-color-lt, 30%),
+      color.mix($body-bg-dk, $code-color-dk, 30%),
+    );
+    background-color: light-dark(
+      color.mix($body-bg-lt, $code-color-lt, 95%),
+      color.mix($body-bg-dk, $code-color-dk, 95%),
+    );
+  }
+
+  // Unrecognized syntax. Make it look bad so that I notice.
+  span.u {
+    background-color: hsl(5, 100%, 90%);
+    color: hsl(5, 100%, 35%);
+  }
+}
+
+
 // The comment area:
-
 .comments {
-  margin: 24px -48px -48px -48px;
-  padding: 24px 48px;
+  margin: 48px 0 32px 0;
+  padding: 16px;
 
+  border-radius: 3px;
   background: $comments-bg;
-  color: $comments-color;
-  font: normal 13px $sans;
+  font: normal 15px $sans;
 
-  a.dsq-subscribe-email em, a.dsq-subscribe-rss em {
-    text-decoration: none;
-  }
-
-  a {
-    color: $nav-link;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: $nav-hover;
-  }
+  a.dsq-subscribe-email em, a.dsq-subscribe-rss em { text-decoration: none; }
+  a { color: $link-color; }
+  a:hover { color: $link-hover; }
 }
 
 .dsq-comment-text blockquote {
@@ -536,279 +733,90 @@ article {
   margin-top: 24px;
 }
 
-// Syntax highlighting:
+// Get rid of the sidebar column.
+@media only screen and (max-width: 1088px) {
+  // Make the article full-width.
+  article { width: auto; }
 
-.highlight {
-  span.p { color: mix($code-bg, $code-color, 30%); } // Punctuation.
-  span.n { color: hsl( 10,  70%, 55%); } // Number.
-  span.s { color: hsl( 30, 100%, 40%); } // String.
-  span.e { color: hsl( 40,  80%, 50%); } // String escape.
-  span.f { color: hsl(100,  50%, 40%); } // Field.
-  span.t { color: hsl(180, 100%, 30%); } // Type name.
-  span.g { color: hsl(180, 100%, 30%); } // Markup tag.
-  span.o { color: hsl(200,  40%, 40%); } // Operator.
-  span.k { color: hsl(200, 100%, 40%); } // Keyword.
-  span.a { color: hsl(270,  70%, 65%); } // Attribute/annotation.
-  span.r { color: hsl(300,  50%, 45%); } // Preprocessor.
-  span.c { color: mix($code-bg, $code-color, 50%); } // Comment.
+  // Show the previous/next links in the main column.
+  nav .thread-narrow { display: inline; }
+  .post-thread { display: none; }
 
-  span.blue { color: hsl(220, 100%, 55%); } // "Blue" functions.
-  span.red { color: hsl(5, 100%, 45%); } // "Red" functions.
-
-  // Metasyntax.
-  span.x {
-    font-style: italic;
-    color: mix($code-bg, $code-color, 30%);
-    background-color: mix($code-bg, $code-color, 95%);
-  }
-
-  // Unrecognized syntax. Make it look bad so that I notice.
-  span.u {
-    background-color: hsl(5, 100%, 90%);
-    color: hsl(5, 100%, 35%);
-  }
-}
-
-@media only screen and (max-width: 1008px) {
-  // Move the navigation to the bottom and split it into two columns.
-  header {
-    display: block;
-    height: inherit;
-
-    h1 {
-      display: block;
-    }
-  }
-
-  article {
-    margin: 0 48px;
-    padding-top: 96px;
-  }
-
-  nav {
+  // Show the asides inline.
+  aside {
     position: relative;
-    display: table;
-    margin: 0 48px;
-    padding-top: 48px;
-    width: inherit;
+    width: auto;
+    right: auto;
 
-    background: $nav-bg;
+    margin: 32px 0;
+    color: $aside-color;
+    padding-left: 8px;
+    border-left: solid 4px $aside-border;
+
+    &:before { content: none; }
   }
 
-  .nav-first, .nav-second {
-    display: table-cell;
-    vertical-align: top;
-    width: 50%;
-  }
+  // Hide the header anchor links.
+  h2 .anchor, h3 .anchor { display: none; }
 
-  .nav-first {
-    padding-right: 24px;
-  }
+  figure.wide { width: auto; }
 
-  .nav-second {
-    padding-left: 24px;
-
-    h2 {
-      margin-top: 0;
-    }
-  }
-}
-
-@media only screen and (max-width: 640px) {
-  // Kill the margins.
-  article, nav {
-    margin: 0;
-  }
-
-  // Bring in the older/newer buttons.
-  header {
-    a.older {
-      left: -52px;
-    }
-
-    a.newer {
-      right: -52px;
-    }
-  }
-}
-
-@media only screen and (max-width: 480px) {
-  // Narrower padding.
-  article {
-    padding: 72px 24px 24px 24px;
-  }
-
-  nav {
-    padding: 24px;
-  }
-
-  // TODO: fix.
-  .comments {
-    //display: none;
-    margin: 0 -24px -24px -24px;
-    padding: 24px;
-  }
-
-  // Move older/newer buttons to top corners.
-  header {
-    a.older, a.newer {
-      background: $body-bg;
-      top: -72px;
-      bottom: inherit;
-    }
-
-    a.older {
-      left: -24px;
-      padding: 0 14px 4px 6px;
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    a.newer {
-      right: -24px;
-      padding: 0 6px 4px 14px;
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-
-  nav {
-    display: inherit;
-
-    img.bob {
-      display: block;
-      margin: -8px auto 16px;
-    }
-  }
-
-  .nav-first, .nav-second {
-    display: inherit;
-    width: inherit;
-    padding: 0;
-  }
-
-  .nav-second h2 {
-    margin-top: 24px;
-  }
-
-  .post-box {
-    .date {
-      font-size: 11px;
-      width: 48px;
-    }
-
-    .title {
-      font-size: 14px;
-      line-height: 22px;
-    }
-  }
-
-  // Shrink the text.
-  header {
-    h1 {
-      font-size: 28px;
-      line-height: 36px;
-      code {
-        font-size: 24px;
-      }
-    }
-  }
-
-  article {
-    h2 {
-      font-size: 20px;
-      padding: 20px 0 10px 0;
-
-      code {
-        font-size: 20px;
-      }
-    }
-
-    h3 {
-      font-size: 17px;
-      line-height: 20px;
-      padding: 20px 0 10px 0;
-    }
-
-    h4 {
-      font-size: 10px;
-      margin-bottom: 6px;
-
-      .tags a {
-        margin-left: 2px;
-        letter-spacing: 0;
-      }
-    }
-
-    p {
-      font-size: 14px;
-      line-height: 20px;
-      padding: 6px 0;
-    }
-
-    // Smaller list numbers.
-    ol li {
-      font-size: 11px;
-    }
-
-    code {
-      padding: 1px 3px;
-      font-size: 13px;
-    }
-
-    pre {
-      margin: 0;
-      padding: 4px 6px;
-      font-size: 12px;
-    }
-
-    blockquote {
-      p {
-        font-size: 15px;
-        line-height: 24px;
-      }
-    }
-
-    .cite {
-      font-size: 12px;
-    }
-
-    .update {
-      p {
-        font-size: 12px;
-        line-height: 20px;
-      }
-
-      code {
-        font-size: 12px;
-        line-height: 20px;
-      }
-    }
-
+  // Put the photo of me above the footer text.
+  footer {
+    p { margin: 0 0 24px 0; }
     figure {
-      figcaption, label, input, output {
-        font-size: 11px;
-      }
+      position: relative;
+      display: block;
+      margin-bottom: 24px;
+      top: auto;
+      right: auto;
     }
+  }
+}
 
-    .table {
-      padding: 2px;
-      margin: 4px 0;
+// On small screens, shrink the margins and tighten things up.
+@media only screen and (max-width: 768px) {
+  // Tighten the margins.
+  body {
+    margin: 0 16px;
+  }
+
+  // Get rid of the padding around the header, footer, and comments.
+  header, footer {
+    border-radius: 0;
+  }
+
+  header {
+    margin: 0 -24px;
+    padding: 30px 24px 6px 24px;
+
+    a { display: block; }
+
+    .about {
+      position: relative;
+      right: auto;
     }
+  }
 
-    table {
-      td {
-        font-size: 12px;
-        padding: 0 3px;
-      }
+  footer {
+    margin: 0 -24px;
+    padding: 24px;
+  }
 
-      thead {
-        td {
-          font-size: 12px;
-        }
-      }
+  .comments {
+    margin: 0 -24px;
+    padding: 24px;
+  }
+
+  // Split the date and tags onto separate lines so they don't collide.
+  nav {
+    display: block;
+    height: 51px;
+
+    .date {
+      display: block;
+      padding-bottom: 16px;
     }
+    .tags { display: block; }
   }
 }

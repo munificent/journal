@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,38 +13,70 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Rethinking User-Defined Operators &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/12/14/the-trouble-with-constructors/"
+         title="Older Post &ldquo;The Trouble with Constructors&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/"
+         title="Newer Post &ldquo;Pattern Matching in a Dynamic OOP Language&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/12/31/rethinking-user-defined-operators/" rel="bookmark"
      title="Permanent Link to Rethinking User-Defined Operators">
     Rethinking User-Defined Operators
   </a>
 </h1>
-  <a class="older" href="/2010/12/14/the-trouble-with-constructors/"
-     title="Older Post &ldquo;The Trouble with Constructors&rdquo;">&larr;</a>
-  <a class="newer" href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/"
-     title="Newer Post &ldquo;Pattern Matching in a Dynamic OOP Language&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">December 31, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/cpp">cpp</a> <a href="/category/go">go</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/parsing">parsing</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/12/14/the-trouble-with-constructors/"
+       title="Older Post &ldquo;The Trouble with Constructors&rdquo;">&lt;</a></span>
+    <a href="/archive">december 31, 2010</a>
+    <span class="thread-narrow"><a href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/"
+       title="Newer Post &ldquo;Pattern Matching in a Dynamic OOP Language&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/cpp">cpp</a>
+     |
+      <a href="/category/go">go</a>
+     |
+      <a href="/category/java">java</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+     |
+      <a href="/category/parsing">parsing</a>
+      </div>
+</nav>
 <p>I just made a radical change with how <a href="https://magpie-lang.org/">Magpie</a> handles infix operators&mdash;stuff like <code>+</code> and <code>==</code>. If that kind of programming language minutiae is up
 your alley, read on for how it works now and the reasoning behind it. I don&rsquo;t
 think it&rsquo;s perfect, but I think it&rsquo;s pretty solid. At the least, it&rsquo;s flexible
 enough to let you have something better than <code>equals()</code> in Java.</p>
-<h2>A history lesson</h2>
+<h2 id="a-history-lesson"><a href="#a-history-lesson">A history lesson<span class="anchor">#a-history-lesson</span></a></h2>
 <p>There are a couple of different camps that most languages fall into regarding
 operator syntax and semantics. Just so we&rsquo;re all together, I&rsquo;ll run through
 them:</p>
-<h3>No infix at all</h3>
+<h3 id="no-infix-at-all"><a href="#no-infix-at-all">No infix at all<span class="anchor">#no-infix-at-all</span></a></h3>
 <p>The Lisp family simply ditches infix syntax altogether. Functions are always in
 prefix form, and operators are just another kind of valid function name. An
 expression like <code>1 + 2 * 3</code> becomes:</p>
@@ -55,7 +89,7 @@ about the same way, but in postfix fashion:</p>
 book profanity. This solution is dead simple and quite flexible. You just have
 to give up the ability to write <code>1 + 2</code> the way you&rsquo;ve been writing it since
 grade school.</p>
-<h3>Fixed syntax, fixed semantics</h3>
+<h3 id="fixed-syntax-fixed-semantics"><a href="#fixed-syntax-fixed-semantics">Fixed syntax, fixed semantics<span class="anchor">#fixed-syntax-fixed-semantics</span></a></h3>
 <p>This is a common option, and a fan of people who fear their coworkers. Languages
 like C, Java, and Go have a fixed set of operators baked into the language along
 with fixed predefined semantics. Addition does what the language designers say
@@ -71,7 +105,7 @@ arguments. If you see a minus sign, the arguments must be numbers.</p>
 Java? It&rsquo;s <code>a + b</code>. Want to add two BigDecimals? Better get used to <code>a.add(b)</code>.
 The syntax of the language treats library-defined types as second-class
 citizens.</p>
-<h3>Fixed syntax, extensible semantics</h3>
+<h3 id="fixed-syntax-extensible-semantics"><a href="#fixed-syntax-extensible-semantics">Fixed syntax, extensible semantics<span class="anchor">#fixed-syntax-extensible-semantics</span></a></h3>
 <p>A slightly more flexible approach, and a nice compromise, is what C++ and C# do:
 fix the syntax and grammar, but let users overload the semantics for their own
 types. You get the convenience of &ldquo;normal&rdquo; operator precedence levels and stay
@@ -80,7 +114,7 @@ path.</p>
 <p>At the same time, users get nice syntax for their own types. Your complex number
 library can do <code>a + b</code>. If you&rsquo;ve used a good vector or matrix library in C++,
 you&rsquo;ve seen how much of a boon that can be for readability.</p>
-<h3>Fixed syntax, no fixed operators</h3>
+<h3 id="fixed-syntax-no-fixed-operators"><a href="#fixed-syntax-no-fixed-operators">Fixed syntax, no fixed operators<span class="anchor">#fixed-syntax-no-fixed-operators</span></a></h3>
 <p>And last, but not least, my personal favorite, the Smalltalk approach. Like Lisp
 or Forth, Smalltalk has no built-in operators. <code>+</code> and <code>==</code> are just methods
 like any other whose names happen to be hard to pronounce.</p>
@@ -96,7 +130,7 @@ overload existing ones.</p>
 <p>The semantics are equally simple: an operator is just a method call on the
 left-hand operand. The right-hand operand is passed to it as the argument. In
 other words, <code>a + b</code> in Smalltalk would look like <code>a.+(b)</code> in Java or C++.</p>
-<h2>Magpie: round one</h2>
+<h2 id="magpie-round-one"><a href="#magpie-round-one">Magpie: round one<span class="anchor">#magpie-round-one</span></a></h2>
 <p>If Magpie had a bumper sticker, it would likely read <a href="https://en.wikipedia.org/wiki/Alan_Kay">WWAKD</a>, so I
 initially took the Smalltalk approach. It&rsquo;s workable, keeps the grammar and
 parser nice and small, and fits with Magpie&rsquo;s philosophy of letting users
@@ -105,7 +139,7 @@ express things the way they want.</p>
 they were always a bit&hellip; annoying, but I labored through it. After immersing
 myself in it for a while, I had a pretty good catalog of what I didn&rsquo;t like.
 Here it is:</p>
-<h3>It&rsquo;s asymmetric</h3>
+<h3 id="its-asymmetric"><a href="#its-asymmetric">It&rsquo;s asymmetric<span class="anchor">#its-asymmetric</span></a></h3>
 <p>An expression like <code>a + b</code> always give <code>a</code> control over how the operator is
 interpreted. I suppose that&rsquo;s fine for some things, but many, if not most,
 operators are conceptually symmetric. It&rsquo;s really weird then that the
@@ -118,7 +152,7 @@ Int too. I could have made Int&rsquo;s implementation of <code>+</code> coerce <
 string if the argument was a string, but that&rsquo;s just weird. First, it&rsquo;s
 redundant code. Why should I have that logic in two places? Second, why should
 Int know <em>anything</em> about strings?</p>
-<h3>It&rsquo;s tedious</h3>
+<h3 id="its-tedious"><a href="#its-tedious">It&rsquo;s tedious<span class="anchor">#its-tedious</span></a></h3>
 <p>Magpie&rsquo;s type system is <a href="/2010/10/29/bootstrapping-a-type-system/">implemented in Magpie</a>. This means that operators
 on types are just regular Magpie operators. One common operator is <code>|</code>. It
 creates a <a href="http://en.wikipedia.org/wiki/Union_(computer_science)">union type</a> out of two types. If you have a variable of type
@@ -141,7 +175,7 @@ one place and add that method. Like so:</p>
 <p>But this is still kind of lame. It&rsquo;s particularly annoying because I have to add
 another row here every time a new class of types is defined. I <em>hate</em> repeating
 myself.</p>
-<h3>It passes the buck on its semantics</h3>
+<h3 id="it-passes-the-buck-on-its-semantics"><a href="#it-passes-the-buck-on-its-semantics">It passes the buck on its semantics<span class="anchor">#it-passes-the-buck-on-its-semantics</span></a></h3>
 <p>When I reason about an operator, I tend to assume it has the same semantics
 regardless of its operands. If we&rsquo;re talking <code>==</code> for equality, I sure as hell
 expect it to be symmetric, transitive, and reflexive.</p>
@@ -150,7 +184,7 @@ to enshrine those invariants. It&rsquo;s up to each class implementing that oper
 to play along with the others. A real-world example of how tricky it is to get
 this right is <code>equals()</code> in Java. Implementing that correctly is so hard that
 Josh Bloch had to dedicate a chapter to it in <a href="https://www.oreilly.com/library/view/effective-java/9780134686097/">Effective Java</a>.</p>
-<h2>Magpie: round two</h2>
+<h2 id="magpie-round-two"><a href="#magpie-round-two">Magpie: round two<span class="anchor">#magpie-round-two</span></a></h2>
 <p>Those issues were enough to make me want a different solution. I kept coming
 back to the idea of just making operators be standalone global functions, but
 there&rsquo;s one really nice facet of the Smalltalk solution I didn&rsquo;t want to give
@@ -168,7 +202,7 @@ the exact same behavior as before just by implementing it like:</p>
 <span class="k">end</span></pre>
 <p>The <code>add</code> replaces our old plus-operator-as-method, and we&rsquo;re back in business.
 But what&rsquo;s great is that I don&rsquo;t <em>have</em> to do this.</p>
-<h3>Central point of control</h3>
+<h3 id="central-point-of-control"><a href="#central-point-of-control">Central point of control<span class="anchor">#central-point-of-control</span></a></h3>
 <p>The key idea is that an operator function becomes a central point of control
 that gets first dibs at defining the semantics for that operator. It <em>may</em> just
 call a method on one of its arguments, but it doesn&rsquo;t have to. There&rsquo;s now a
@@ -216,23 +250,23 @@ have the class itself do the comparison (i.e. as a static method on the class):<
 <p>I&rsquo;m still working out what the exact implementation of this should be, but I
 think it&rsquo;s really nice that I can do that figuring in a single place in code.
 And, of course, this addresses my other complaints too:</p>
-<h3>Symmetry</h3>
+<h3 id="symmetry"><a href="#symmetry">Symmetry<span class="anchor">#symmetry</span></a></h3>
 <p>Since an operator is just a function with two arguments, there&rsquo;s nothing special
 about either one. It&rsquo;s symmetric by default. You&rsquo;ll note that all of the
 implementations of <code>==</code> treat both of their arguments identically. If you
 <em>don&rsquo;t</em> want an operator to be symmetric, you can do that too, but it&rsquo;s up to
 you.</p>
-<h3>No more redundancy</h3>
+<h3 id="no-more-redundancy"><a href="#no-more-redundancy">No more redundancy<span class="anchor">#no-more-redundancy</span></a></h3>
 <p>Now that operators aren&rsquo;t bound to classes, things like the <code>|</code> operator just
 need to be defined in one place:</p>
 <pre class="highlight language-magpie"><span class="k">def</span> <span class="o">|</span><span class="p">(</span><span class="i">left</span> <span class="t">Type</span><span class="p">,</span> <span class="i">right</span> <span class="t">Type</span> <span class="o">-&gt;</span> <span class="t">Type</span><span class="p">)</span> <span class="t">OrType</span> <span class="i">combine</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span><span class="p">)</span></pre>
 <p>You know how every single time in every class that overloads <code>==</code> in C++ or C#,
 you have to remember to also overload <code>!=</code> too? Not in Magpie:</p>
 <pre class="highlight language-magpie"><span class="k">def</span> <span class="o">!=</span><span class="p">(</span><span class="i">left</span><span class="p">,</span> <span class="i">right</span> <span class="o">-&gt;</span> <span class="t">Bool</span><span class="p">)</span> <span class="p">(</span><span class="i">left</span> <span class="o">==</span> <span class="i">right</span><span class="p">)</span> <span class="i">not</span></pre>
-<h2>Not all sunshine and roses</h2>
+<h2 id="not-all-sunshine-and-roses"><a href="#not-all-sunshine-and-roses">Not all sunshine and roses<span class="anchor">#not-all-sunshine-and-roses</span></a></h2>
 <p>Alas, nothing is perfect in this world. There&rsquo;s two problems I&rsquo;ve stumbled onto
 with this approach.</p>
-<h3>Name squatting</h3>
+<h3 id="name-squatting"><a href="#name-squatting">Name squatting<span class="anchor">#name-squatting</span></a></h3>
 <p>The first is relatively minor, I think. Because these operators aren&rsquo;t bound to
 a class, they&rsquo;re essentially global now, with all of the negative implications
 of sticking a name in the global namespace. There can only be one implementation
@@ -246,7 +280,7 @@ bottleneck. It just becomes a question of good library design. I&rsquo;ll have t
 how it plays out.</p>
 <p>Because Magpie is pretty flexible, you can always take the nuclear option&mdash;just replace the old definition of the operator with your own. Everything&rsquo;s
 mutable at load time! But let&rsquo;s hope we don&rsquo;t have to go there.</p>
-<h3>Return types</h3>
+<h3 id="return-types"><a href="#return-types">Return types<span class="anchor">#return-types</span></a></h3>
 <p>This is the real annoyance, and is only a problem because Magpie has static
 typing. Because there&rsquo;s only a single function for the operator, it only has a
 single return type. In the old system where operators are methods, <code>+</code> on String
@@ -261,69 +295,43 @@ desired. A <code>++</code> operator that concatenates two lists should return a 
 the right item type. I&rsquo;m still working out Magpie&rsquo;s generics story (which is
 fiendishly hard for a language whose static type system is as unusual as this
 one), but my hunch is that it will help here.</p>
-<h2>Writing the code</h2>
+<h2 id="writing-the-code"><a href="#writing-the-code">Writing the code<span class="anchor">#writing-the-code</span></a></h2>
 <p>Despite those problems, I still think this is a big improvement over the
 Smalltalk (and Scala) solution. I&rsquo;ve got it implemented and working now, and the
 code feels cleaner and simpler, which is always a good sign. Still, there may be
 pitfalls I&rsquo;m not noticing so let me know if you see any.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/12/31/rethinking-user-defined-operators/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

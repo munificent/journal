@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,51 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     What&rsquo;s the Opposite of &ldquo;Nullable&rdquo;? &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2008/03/05/checking-flags-in-c-enums/"
+         title="Older Post &ldquo;Checking Flags in C# Enums&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2008/04/10/a-c-feature-request-extension-classes/"
+         title="Newer Post &ldquo;A C# Feature Request: Extension Classes&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2008/04/08/whats-the-opposite-of-nullable/" rel="bookmark"
      title="Permanent Link to What&rsquo;s the Opposite of &ldquo;Nullable&rdquo;?">
     What&rsquo;s the Opposite of &ldquo;Nullable&rdquo;?
   </a>
 </h1>
-  <a class="older" href="/2008/03/05/checking-flags-in-c-enums/"
-     title="Older Post &ldquo;Checking Flags in C# Enums&rdquo;">&larr;</a>
-  <a class="newer" href="/2008/04/10/a-c-feature-request-extension-classes/"
-     title="Newer Post &ldquo;A C# Feature Request: Extension Classes&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">April 08, 2008</a>
-    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2008/03/05/checking-flags-in-c-enums/"
+       title="Older Post &ldquo;Checking Flags in C# Enums&rdquo;">&lt;</a></span>
+    <a href="/archive">april 08, 2008</a>
+    <span class="thread-narrow"><a href="/2008/04/10/a-c-feature-request-extension-classes/"
+       title="Newer Post &ldquo;A C# Feature Request: Extension Classes&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c-sharp">c-sharp</a>
+     |
+      <a href="/category/code">code</a>
+      </div>
+</nav>
 <p>I hate <a href="http://en.wikipedia.org/wiki/DRY">duplicate code</a>. <a href="http://c2.com/cgi/wiki?DontRepeatYourself">Hate it</a> <a href="http://www.codinghorror.com/blog/archives/000805.html">hate it</a> <a href="http://www.thefrontside.net/blog/repeat_yourself">hate it</a>. At the same time, I <em>do</em> like having my code check its arguments. After a
 while, I noticed that half of the functions I wrote looked like this:</p>
 <pre class="highlight language-csharp"><span class="k">void</span> <span class="i">SomeMethod</span><span class="p">(</span><span class="t">Foo</span> <span class="i">foo</span><span class="p">)</span>
@@ -51,7 +75,7 @@ method body (which may not be available to an API user).</p>
 <p>The <a href="https://docs.microsoft.com/en-us/dotnet/api/system.nullable-1?view=net-5.0"><code>Nullable&lt;T&gt;</code></a> type in the <a href="https://docs.microsoft.com/en-us/dotnet/standard/framework-libraries">BCL</a> (which is automatically
 aliased to it&rsquo;s more familiar <code>?</code>, as in <code>int?</code>) had me wondering. Can I make
 the opposite? A &ldquo;not nullable?&rdquo;</p>
-<h2>NotNull&lt;T&gt;</h2>
+<h2 id="notnullt"><a href="#notnullt">NotNull&lt;T&gt;<span class="anchor">#notnullt</span></a></h2>
 <p>Let&rsquo;s build it a bit at a time. The core not-very-clever idea is just a class
 that wraps a reference. When you construct it, it throws our familiar
 <code>ArgumentNullException</code> if the reference is <code>null</code>:</p>
@@ -109,7 +133,7 @@ providing a conversion the other way too:</p>
 of <code>SomeMethod()</code> will now see in Intellisense that it requires a
 <code>NotNull&lt;Foo&gt;</code>. We&rsquo;ve moved an <em>imperative</em> exception check to a
 <em><a href="http://en.wikipedia.org/wiki/Declarative_programming">declarative</a> property</em> of the argument itself.</p>
-<h2>Caveats</h2>
+<h2 id="caveats"><a href="#caveats">Caveats<span class="anchor">#caveats</span></a></h2>
 <p>I&rsquo;d like to say this is a perfect solution, but alas it&rsquo;s not. There&rsquo;s at
 least one caveat to be aware of. This won&rsquo;t work with interface types. That&rsquo;s
 because value types can implement interfaces too, and you can&rsquo;t compare a
@@ -121,7 +145,7 @@ interface, you have to do:</p>
 <pre class="highlight language-csharp"><span class="i">SomeMethod</span><span class="p">(</span><span class="k">new</span> <span class="t">NotNull</span><span class="p">(</span><span class="i">myInterfaceFoo</span><span class="p">));</span></pre>
 <p>which is kind of lame. But aside from that, you can use interfaces with this.
 Thanks, B-Rad!</p>
-<h2>The whole shebang</h2>
+<h2 id="the-whole-shebang"><a href="#the-whole-shebang">The whole shebang<span class="anchor">#the-whole-shebang</span></a></h2>
 <p>Oh, and here&rsquo;s a prettier version with comments and stuff. Don&rsquo;t say I never
 gave you nothing:</p>
 <pre class="highlight language-csharp"><span class="c">/// &lt;summary&gt;</span>
@@ -247,64 +271,38 @@ gave you nothing:</p>
 
     <span class="k">public</span> <span class="k">class</span> <span class="t">Foo</span> <span class="p">{</span> <span class="p">}</span>
 <span class="p">}</span></pre>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2008/04/08/whats-the-opposite-of-nullable/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2008/04/08/whats-the-opposite-of-nullable/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

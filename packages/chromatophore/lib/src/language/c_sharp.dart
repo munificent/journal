@@ -89,6 +89,7 @@ Language makeCSharpLanguage() {
       [Category.whitespace, Category.punctuation, Category.annotation]);
   // Heuristic: Assume a "[" after a "(", ",", or "]" is an attribute in a
   // parameter list or following another attribute.
+  // TODO: This does the wrong thing on chained index operators.
   language.capture('([,(\\]])($s)(\\[)($dottedIdentifier)', [
     Category.punctuation,
     Category.whitespace,

@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     The Impoliteness of Overriding Methods &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2012/06/12/multimethods-global-scope-and-monkey-patching/"
+         title="Older Post &ldquo;Multimethods, Global Scope, and Monkey-Patching&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2013/01/13/iteration-inside-and-out/"
+         title="Newer Post &ldquo;Iteration Inside and Out&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2012/12/19/the-impoliteness-of-overriding-methods/" rel="bookmark"
      title="Permanent Link to The Impoliteness of Overriding Methods">
     The Impoliteness of Overriding Methods
   </a>
 </h1>
-  <a class="older" href="/2012/06/12/multimethods-global-scope-and-monkey-patching/"
-     title="Older Post &ldquo;Multimethods, Global Scope, and Monkey-Patching&rdquo;">&larr;</a>
-  <a class="newer" href="/2013/01/13/iteration-inside-and-out/"
-     title="Newer Post &ldquo;Iteration Inside and Out&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">December 19, 2012</a>
-    <span class="tags"><a href="/category/beta">beta</a> <a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/oop">oop</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2012/06/12/multimethods-global-scope-and-monkey-patching/"
+       title="Older Post &ldquo;Multimethods, Global Scope, and Monkey-Patching&rdquo;">&lt;</a></span>
+    <a href="/archive">december 19, 2012</a>
+    <span class="thread-narrow"><a href="/2013/01/13/iteration-inside-and-out/"
+       title="Newer Post &ldquo;Iteration Inside and Out&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/beta">beta</a>
+     |
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/oop">oop</a>
+      </div>
+</nav>
 <p>Over the weekend, I was reading one of the shagadelic papers on <a href="http://selflanguage.org">Self</a>,
 <a href="http://selflanguage.org/documentation/published/parents-shared-parts.html">Parents are Shared Parts of Objects: Inheritance and Encapsulation in
 SELF</a>. What can I say, I have a weird idea of fun. If you&rsquo;re interested
@@ -51,7 +79,7 @@ behavior of their superclasses at well-defined points (i.e. at calls to
 </blockquote>
 <p>It took me a while to tease out what this is saying, but once I did, it was like
 a dim little light bulb flickered on in my head.</p>
-<h2>What&rsquo;s BETA?</h2>
+<h2 id="whats-beta"><a href="#whats-beta">What&rsquo;s BETA?<span class="anchor">#whats-beta</span></a></h2>
 <p>Before I get into the lightbulb part, a bit of history. <a href="http://daimi.au.dk/~beta">BETA</a> is a language
 that came out of the &ldquo;Scandinavian School&rdquo; in Denmark, the <a href="http://en.wikipedia.org/wiki/Kristen_Nygaard">same people</a> that
 brought you <a href="http://en.wikipedia.org/wiki/Simula">Simula</a> and kicked off the object-oriented revolution. Alan Kay
@@ -105,7 +133,7 @@ translated that to JavaScript, it would be something like:</p>
 <p>Like avant garde jazz, this may be genius, but it&rsquo;s so out there and
 unapproachable, it&rsquo;s hard to tell. Fortunately, the Self guys have deciphered
 some of the mystery and left that little nugget in their paper.</p>
-<h2>Overriding and <code>super()</code></h2>
+<h2 id="overriding-and-super"><a href="#overriding-and-super">Overriding and <code>super()</code><span class="anchor">#overriding-and-super</span></a></h2>
 <p>Let&rsquo;s cover one last bit of context before I get to the point. If you&rsquo;re using
 any object-oriented language, you&rsquo;re hopefully familiar with overriding methods.
 Details vary between languages, but the two main points are:</p>
@@ -144,7 +172,7 @@ prototypal languages too, with a couple of names changed.</p>
 <span class="i">account</span><span class="p">.</span><span class="i">deposit</span><span class="p">(</span><span class="n">23</span><span class="p">);</span></pre>
 <p>First, it invokes <code>CrappyBankAccount#deposit()</code>. Then, when that calls
 <code>super.deposit()</code>, it chains to the base <code>Account#deposit()</code> method.</p>
-<h2>Who&rsquo;s in charge here?</h2>
+<h2 id="whos-in-charge-here"><a href="#whos-in-charge-here">Who&rsquo;s in charge here?<span class="anchor">#whos-in-charge-here</span></a></h2>
 <p>What this means is that the <em>subclass</em> is in control of the dispatch chain. When
 you override a method in Java, you get to decide if you do stuff before calling
 <code>super</code> or after. You can change the arguments you pass to it, or even skip
@@ -177,7 +205,7 @@ transform won&rsquo;t be set and it&rsquo;ll draw wrong.</p>
 subclass of <code>GameObject</code>, how are you supposed to know that you need to do that?
 You can document it, but it would be better if the base class itself made sure
 you did the right thing.</p>
-<h2><code>render()</code> and <code>onRender()</code></h2>
+<h2 id="render-and-onrender"><a href="#render-and-onrender"><code>render()</code> and <code>onRender()</code><span class="anchor">#render-and-onrender</span></a></h2>
 <p>To solve this, what I (and lots of other people) do is split these into two
 methods, like so:</p>
 <pre class="highlight language-java"><span class="k">class</span> <span class="t">GameObject</span> <span class="p">{</span>
@@ -209,7 +237,7 @@ dispatch order is reversed now. When you call <code>render()</code>, you hit the
 <p>This is almost always how I design classes that I intend to be subclassed. It&rsquo;s
 rare that I override methods in my code that aren&rsquo;t abstract, and I&rsquo;ve been on
 teams with style guides that enforced this pattern.</p>
-<h2>Back to BETA</h2>
+<h2 id="back-to-beta"><a href="#back-to-beta">Back to BETA<span class="anchor">#back-to-beta</span></a></h2>
 <p>Of course, the problem with this is that it <em>is</em> a pattern. You have to make a
 pair of methods, and every time you have another level of subclassing, you need
 a new name. (If there was a subclass of <code>ScaryMonster</code> that wanted to override
@@ -279,64 +307,38 @@ I think right now, the style of a lot of object-oriented code today fits that
 model better.</p>
 <p>Most languages chose a different path than BETA, but this makes me wonder if
 Kristen and company had it right all along.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,28 +13,47 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     journal.stuffwithstuff.com
   </title>
-</head>
-  <body>
-    <div class="column">
-<article>
+
+  <script src="/aside.js"></script>
+</head>  <body>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2025/05/30/consider-knitting/"
+         title="Older Post &ldquo;Consider Knitting&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+</div>
+<article>
 <h1>
   <a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/" rel="bookmark"
      title="Permanent Link to Setting Up an SDL3 Mac App in XCode 16">
     Setting Up an SDL3 Mac App in XCode 16
   </a>
 </h1>
-  <a class="older" href="/2025/05/30/consider-knitting/"
-     title="Older Post &ldquo;Consider Knitting&rdquo;">&larr;</a>
-</header>
-<h4><a href="/archive">July 13, 2025</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/game-dev">game-dev</a> <a href="/category/macos">macos</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2025/05/30/consider-knitting/"
+       title="Older Post &ldquo;Consider Knitting&rdquo;">&lt;</a></span>
+    <a href="/archive">july 13, 2025</a>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+     |
+      <a href="/category/macos">macos</a>
+      </div>
+</nav>
 <p>This is mainly a note for my future self, but making it a blog post in case it
 helps anyone else. This weekend, I decided to try making a little SDL3 app on my
 new M4 MacBook Pro. It took me a few hours to figure out how to get XCode to
@@ -105,7 +126,7 @@ install of SDL3. You can probably delete the <code>main.m</code> file entirely a
 some of the other generated files that XCode put in the new project, but I
 haven&rsquo;t figured that out yet.</p>
 <p>Now here&rsquo;s all the wrong stuff I tried first before I got that working&hellip;</p>
-<h2>Attempt 1: Download a release and use the xcframework</h2>
+<h2 id="attempt-1-download-a-release-and-use-the-xcframework"><a href="#attempt-1-download-a-release-and-use-the-xcframework">Attempt 1: Download a release and use the xcframework<span class="anchor">#attempt-1-download-a-release-and-use-the-xcframework</span></a></h2>
 <p>In XCode, I created a new &ldquo;CLI Command&rdquo; C app. That got me a &ldquo;Hello, world!&rdquo; up
 and running without any problems. Then I copied the contents of <a href="https://github.com/libsdl-org/SDL/blob/main/docs/hello.c">this SDL hello
 example</a> into my source file.</p>
@@ -122,7 +143,7 @@ SDL3 framework, but then balked because it thinks the framework isn&rsquo;t corr
 signed and safe to use. The OS gave me a popup error with &ldquo;SDL3.framework Not
 Opened&rdquo; because &ldquo;macOS cannot verify that this app is free from malware&rdquo;.</p>
 <p>Crap.</p>
-<h2>Attempt 2: Embed the framework</h2>
+<h2 id="attempt-2-embed-the-framework"><a href="#attempt-2-embed-the-framework">Attempt 2: Embed the framework<span class="anchor">#attempt-2-embed-the-framework</span></a></h2>
 <p>Poking around online, some people say this error can be fixed by embedding the
 SDL framework in my app and having XCode sign it when it embeds it. In XCode, in
 the target settings under &ldquo;Build Phases&rdquo;, there is a panel for &ldquo;Embed
@@ -138,7 +159,7 @@ removing the framework from &ldquo;Link Binary with Libraries&rdquo;, checking &
 when installing&rdquo;, and a bunch of other things I don&rsquo;t remember. Nothing worked.
 Either I removed so much that the compiler couldn&rsquo;t find the framework at all,
 or it got the duplicate build file error.</p>
-<h2>Attempt 3: Don&rsquo;t use the entire &ldquo;SDL3.xcframework&rdquo;</h2>
+<h2 id="attempt-3-dont-use-the-entire-sdl3xcframework"><a href="#attempt-3-dont-use-the-entire-sdl3xcframework">Attempt 3: Don&rsquo;t use the entire &ldquo;SDL3.xcframework&rdquo;<span class="anchor">#attempt-3-dont-use-the-entire-sdl3xcframework</span></a></h2>
 <p>I started watching <a href="https://www.youtube.com/watch?v=tRqgh8Xwe1E">this video</a> to see if it could help. He doesn&rsquo;t use
 the entire <code>SDL3.xcframework</code> bundle. Instead, he opens that, goes into
 <code>macos-arm64_x86_64</code> and copies the <code>SDL3.framework</code> framework out of there.</p>
@@ -173,7 +194,7 @@ so the compiler can find what it needs.</p>
 <p>Then after that first build, the compiler starts using the framework that it
 copied into the build directory. But when I look in there, <code>Debug</code> is completely
 empty.</p>
-<h2>Attempt 4: Project-relative DerivedData</h2>
+<h2 id="attempt-4-project-relative-deriveddata"><a href="#attempt-4-project-relative-deriveddata">Attempt 4: Project-relative DerivedData<span class="anchor">#attempt-4-project-relative-deriveddata</span></a></h2>
 <p>I hate when tools stuff built data in random system directories unrelated to
 the project I&rsquo;m working on because those files end up sitting around forever.
 So the next thing I did was go under &ldquo;Project Settings&rdquo; and changed the
@@ -189,7 +210,7 @@ But there is no <code>Headers</code> directory under <code>Versions/A/</code>, n
 itself. But for reasons I don&rsquo;t understand, XCode is trying to use this
 semi-copied version of the framework for subsequent compiles instead of the
 original one in my project&rsquo;s source tree.</p>
-<h2>Attempt 5: Explicit header search path</h2>
+<h2 id="attempt-5-explicit-header-search-path"><a href="#attempt-5-explicit-header-search-path">Attempt 5: Explicit header search path<span class="anchor">#attempt-5-explicit-header-search-path</span></a></h2>
 <p>OK, if XCode can&rsquo;t find the headers because it&rsquo;s looking in the wrong place,
 maybe I can just tell it where to look. Under &ldquo;Search Paths&rdquo;, I added
 <code>lib/SDL3.framework/Headers</code> to &ldquo;Header Search Paths&rdquo;. (I put the framework
@@ -199,7 +220,7 @@ making it recursive. Nope.</p>
 <p>I&rsquo;m guessing the problem here is that the include paths look like <code>SDL3/SDL.h</code>,
 not just <code>SDL.h</code>, so I need to get XCode to understand that the headers are
 inside a framework to resolve the <code>SDL3/</code> part.</p>
-<h2>Attempt 6: Framework search path</h2>
+<h2 id="attempt-6-framework-search-path"><a href="#attempt-6-framework-search-path">Attempt 6: Framework search path<span class="anchor">#attempt-6-framework-search-path</span></a></h2>
 <p>OK, so maybe it&rsquo;s not a header search path. Instead, I tried adding <code>lib/</code> to
 &ldquo;Framework Search Paths&rdquo;. No help. Making it recursive didn&rsquo;t help. Neither
 did <code>lib/SDL3.framework</code>.</p>
@@ -210,7 +231,7 @@ build, so this is my exact issue. And the author apparently found a solution!</p
 helpful.</p>
 <p>I eventually found <a href="https://developer.apple.com/forums/thread/750074">this Apple Developer forum thread</a>, which also
 sounds like my problem.</p>
-<h2>Attempt 7: An App instead of a CLI Command</h2>
+<h2 id="attempt-7-an-app-instead-of-a-cli-command"><a href="#attempt-7-an-app-instead-of-a-cli-command">Attempt 7: An App instead of a CLI Command<span class="anchor">#attempt-7-an-app-instead-of-a-cli-command</span></a></h2>
 <p>The forum thread suggests that the issue may have something to do with creating
 a &ldquo;CLI Command&rdquo; instead of an &ldquo;App&rdquo;. I&rsquo;ve always done the former in XCode
 because that seemed like the simplest way to get a vanilla C/C++ app up and
@@ -237,65 +258,38 @@ system framework path. (I didn&rsquo;t want to do that because ultimately, I wan
 app that users can just run without having to install SDL themselves.)</p>
 <p>So it looks like the failure mode was creating a &ldquo;CLI Command&rdquo; instead of an
 &ldquo;App&rdquo;. How on <em>Earth</em> would I be expected to know that?</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>
-    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
 </html>

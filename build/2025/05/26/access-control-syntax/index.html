@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Access Control Syntax &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2023/10/19/does-go-have-subtyping/"
+         title="Older Post &ldquo;Does Go Have Subtyping?&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2025/05/30/consider-knitting/"
+         title="Newer Post &ldquo;Consider Knitting&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2025/05/26/access-control-syntax/" rel="bookmark"
      title="Permanent Link to Access Control Syntax">
     Access Control Syntax
   </a>
 </h1>
-  <a class="older" href="/2023/10/19/does-go-have-subtyping/"
-     title="Older Post &ldquo;Does Go Have Subtyping?&rdquo;">&larr;</a>
-  <a class="newer" href="/2025/05/30/consider-knitting/"
-     title="Newer Post &ldquo;Consider Knitting&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">May 26, 2025</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/vgs">vgs</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2023/10/19/does-go-have-subtyping/"
+       title="Older Post &ldquo;Does Go Have Subtyping?&rdquo;">&lt;</a></span>
+    <a href="/archive">may 26, 2025</a>
+    <span class="thread-narrow"><a href="/2025/05/30/consider-knitting/"
+       title="Newer Post &ldquo;Consider Knitting&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/vgs">vgs</a>
+      </div>
+</nav>
 <p>I&rsquo;m still tinkering on a <a href="/2023/01/03/type-checking-if-expressions/">scripting language for my hobby fantasy console
 project</a>. I&rsquo;m ashamed to admit this, but up to this point, the language
 had absolutely no notion of modules. Literally every source file is dumped into
@@ -49,7 +75,7 @@ I still don&rsquo;t have that pinned down. Parametric types are hard.</p>
 scoping so now I have to figure modules out. This post is about one little
 syntax design question I ran into: <em>how do you distinguish public and private
 declarations?</em></p>
-<h2>A basic module system</h2>
+<h2 id="a-basic-module-system"><a href="#a-basic-module-system">A basic module system<span class="anchor">#a-basic-module-system</span></a></h2>
 <p>Since my language is a scripting language, my ambitions for the module system
 are pretty minimal. Think more like Python or Dart than Java or C#.</p>
 <p>Every file has its own top-level scope that isn&rsquo;t shared with others. If you
@@ -59,13 +85,13 @@ That makes its top-level declarations available in the importing file.</p>
 internal use and should <em>not</em> be made available when you import it. A module
 should be able to encapsulate parts of its implementation. Thus, I need a way
 for users to indicate which declarations are private and which are public.</p>
-<h2>What other languages do</h2>
+<h2 id="what-other-languages-do"><a href="#what-other-languages-do">What other languages do<span class="anchor">#what-other-languages-do</span></a></h2>
 <p>Every language out there has <em>some</em> kind of module system and an ability to
 control access (though it did take JavaScript about 20 years to get there, bless
 its heart). In some sense, it&rsquo;s a solved problem. But they don&rsquo;t all solve it
 the same way, especially if you dig into some of the more obscure corners of the
 language world. Let&rsquo;s go on a tour&hellip;</p>
-<h3>Modifier keywords</h3>
+<h3 id="modifier-keywords"><a href="#modifier-keywords">Modifier keywords<span class="anchor">#modifier-keywords</span></a></h3>
 <p>The approach you probably already have in mind is modifiers before declarations.
 In Java, C#, PHP and others, that&rsquo;s <code>public</code>, <code>private</code>. Maybe also more
 specific ones like <code>protected</code>, and <code>internal</code>.</p>
@@ -82,7 +108,7 @@ have <code>internal</code> access, which is the default. So I had to write <code
 <p>Rust improves the situation by having a shorter modifier, <code>pub</code>, and picking
 what is arguably the right default for a language designed for Serious
 Programming: private.</p>
-<h3>Modifier sections</h3>
+<h3 id="modifier-sections"><a href="#modifier-sections">Modifier sections<span class="anchor">#modifier-sections</span></a></h3>
 <p>C++ has a strange but perhaps underappreciated spin on modifiers. It has access
 modifier keywords, but they apply to <em>all subsequent declarations</em>. This lets
 you write a keyword once and apply it to a whole bunch of things. That really
@@ -97,7 +123,7 @@ public and members in classes default to private. C++ is <em>weird</em>. Like a 
 built on the back of some Eldritch being whose architecture and plumbing reveals
 the unholy foundation it is mated with.</p>
 <p>For presumably less Eldritch reasons, I believe Ada takes a similar approach.</p>
-<h3>Sigils in the names</h3>
+<h3 id="sigils-in-the-names"><a href="#sigils-in-the-names">Sigils in the names<span class="anchor">#sigils-in-the-names</span></a></h3>
 <p>Modifiers are clear but verbose. If you want something more syntactically
 economical, why not encode the access control directly in the name of the
 declaration itself? That&rsquo;s what Python, Go, and Dart do.</p>
@@ -160,7 +186,7 @@ actually breaking things.</p>
 not use <code>_</code> for privacy. But I have mellowed on that opinion over the years and
 now I&rsquo;m not sure. I don&rsquo;t like how it shows up at every use site, but it <em>is</em>
 terse, which is nice.</p>
-<h3>Export manifests</h3>
+<h3 id="export-manifests"><a href="#export-manifests">Export manifests<span class="anchor">#export-manifests</span></a></h3>
 <p>Modifers put access control at the declaration. Sigils put it at the declaration
 and the use sites. The third major approach puts it at <em>neither</em>.</p>
 <p>Someone will tell me this generalization is wrong but I think most functional
@@ -204,7 +230,7 @@ are already declared elsewhere:</p>
 <span class="p">}</span></pre>
 <p>Given that modules were added later to the language, I&rsquo;m guessing this makes it
 easier to add modularity to a large existing JS library.</p>
-<h3>Sigils at the declaration</h3>
+<h3 id="sigils-at-the-declaration"><a href="#sigils-at-the-declaration">Sigils at the declaration<span class="anchor">#sigils-at-the-declaration</span></a></h3>
 <p>In poking around the annals of language history, I found one last approach in
 Niklaus Wirth&rsquo;s magnum opus language <a href="https://oberon.org/en">Oberon</a>.</p>
 <p>In Oberon, top-level declarations are private by default and only accessible
@@ -227,7 +253,7 @@ Oberon programmer and you see <code>*</code>, you have no idea what it means. Fo
 there are no new Oberon programmers, so this is not a problem in practice.</p>
 <p>This approach has the advantage of only appearing at the declaration. You don&rsquo;t
 have to repeat the sigil every time you use the thing.</p>
-<h2>Any syntax at all?</h2>
+<h2 id="any-syntax-at-all"><a href="#any-syntax-at-all">Any syntax at all?<span class="anchor">#any-syntax-at-all</span></a></h2>
 <p>I&rsquo;m sure there are interesting tweaks and refinements in various languages, but
 I think that mostly covers the approaches in use out there. (If you&rsquo;re aware of
 any others, do tell.) Which approach is the right one for <em>my</em> little scripting
@@ -251,7 +277,7 @@ the light of day for people to make their own hobby games that, realistically,
 also may never see the light of day. If anything, I want to encourage
 (hypothetical) users of my (currently mostly vaporware) language to <em>get things
 done</em>. Access control can get in the way of that.</p>
-<h3>Class modifiers in Dart</h3>
+<h3 id="class-modifiers-in-dart"><a href="#class-modifiers-in-dart">Class modifiers in Dart<span class="anchor">#class-modifiers-in-dart</span></a></h3>
 <p>A few years ago, we added a slew of <a href="https://dart.dev/language/class-modifiers">class modifiers</a> to Dart. These are not
 directly tied to public and private, but in the process of designing those, I
 spent a lot of time talking to users about how they use the language and what
@@ -267,10 +293,10 @@ ecosystem.</p>
 imports them. The authors of most of those are just trying to slap some UI
 together and ship a thing. And for most of those, defaulting to public keeps the
 language out of their way.</p>
-<h2>Syntax for privacy</h2>
+<h2 id="syntax-for-privacy"><a href="#syntax-for-privacy">Syntax for privacy<span class="anchor">#syntax-for-privacy</span></a></h2>
 <p>That all leads me to feel that my scripting language should default to public
 and have a way to opt in to private. How do to that?</p>
-<h3>No export manifests</h3>
+<h3 id="no-export-manifests"><a href="#no-export-manifests">No export manifests<span class="anchor">#no-export-manifests</span></a></h3>
 <p>I know I don&rsquo;t want export manifests. They are much too verbose. Also, there is
 some extra language complexity and error reporting that gets sucked in. Since
 the manifest is separate from the declaration, the compiler has to handle cases
@@ -279,7 +305,7 @@ overloading, which means when exporting a function, you would need to a way to
 specify which of the overloads to export and which to leave private.</p>
 <p>Export manifests are just way more machinery than fits for a scripting language.
 This approach is out.</p>
-<h3>No modifier sections</h3>
+<h3 id="no-modifier-sections"><a href="#no-modifier-sections">No modifier sections<span class="anchor">#no-modifier-sections</span></a></h3>
 <p>The C++ approach is nice in that it&rsquo;s clear while still being pretty terse. You
 only need to write a modifier and can apply it to a bunch of declarations in the
 same scope.</p>
@@ -294,7 +320,7 @@ but that feels like it errs too far in the other direction. It would be really
 confusing to have a thousand line file and not realize that half of it is
 private because some modifier way offscreen above flipped the access control.</p>
 <p>Modifier sections are out.</p>
-<h3>No sigils in identifiers</h3>
+<h3 id="no-sigils-in-identifiers"><a href="#no-sigils-in-identifiers">No sigils in identifiers<span class="anchor">#no-sigils-in-identifiers</span></a></h3>
 <p>Sigils in identifiers do have a sort of terse, scripty feel. No extra keywords.</p>
 <p>I can&rsquo;t do Go&rsquo;s approach because my language already makes identifier leading
 case significant. It supports <a href="https://en.wikipedia.org/wiki/Pattern_matching#Tree_patterns">destructuring pattern matching</a>. Like some
@@ -308,7 +334,7 @@ prefer to not have to mention the sigil at every single use site. After having
 written probably a million lines of Dart code, I know it&rsquo;s not intolerable. But
 it feels like an annoying tax. And for a language I&rsquo;m designing for my own joy,
 I&rsquo;d like to eliminate as many annoyances as possible.</p>
-<h3>Maybe modifiers</h3>
+<h3 id="maybe-modifiers"><a href="#maybe-modifiers">Maybe modifiers<span class="anchor">#maybe-modifiers</span></a></h3>
 <p>That leaves two approaches and is where I&rsquo;m currently at. Approach one is the
 typical solution to use an access control modifier at the declaration.
 Unfortunately, defaulting to public makes this harder. In Rust, <code>pub</code> is a
@@ -322,7 +348,7 @@ abbreviations either. So I&rsquo;m open to taking this path, but I&rsquo;m simpl
 come up with a good keyword for it.</p>
 <p>(A silly goblin part of my brain suggested I use <code>shh</code> to mean &ldquo;private&rdquo;, like
 the declaration is being whispered and can&rsquo;t be heard outside of its module.)</p>
-<h3>Maybe sigils at the declaration</h3>
+<h3 id="maybe-sigils-at-the-declaration"><a href="#maybe-sigils-at-the-declaration">Maybe sigils at the declaration<span class="anchor">#maybe-sigils-at-the-declaration</span></a></h3>
 <p>This leaves Oberon&rsquo;s weird approach. There are several advantages here:</p>
 <ul>
 <li>
@@ -365,7 +391,7 @@ C where function declarations don&rsquo;t have one), so it&rsquo;s feasible. Som
 <p>I don&rsquo;t hate it. But using <code>*</code> feels weird for &ldquo;private&rdquo;. If anything, it seems
 to emphasize the declaration (which is what it does in Oberon where it means
 &ldquo;public&rdquo;).</p>
-<h3>Maybe alternate keywords</h3>
+<h3 id="maybe-alternate-keywords"><a href="#maybe-alternate-keywords">Maybe alternate keywords<span class="anchor">#maybe-alternate-keywords</span></a></h3>
 <p>That led to my last idea which I can&rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &ldquo;private&rdquo; to some people. So
 maybe use that? It looks like:</p>
@@ -392,64 +418,38 @@ ones that are particularly useful for users anyway.</p>
 <p>I keep trying to talk myself out of this approach because it&rsquo;s so unusual but so
 far it seems to be lodged in my head better than any of the alternatives I&rsquo;ve
 considered. What do you think?</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2025/05/26/access-control-syntax/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2025/05/26/access-control-syntax/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

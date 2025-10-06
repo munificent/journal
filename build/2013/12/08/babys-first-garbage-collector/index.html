@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Baby&rsquo;s First Garbage Collector &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2013/08/26/what-is-open-recursion/"
+         title="Older Post &ldquo;What is &ldquo;Open Recursion&rdquo;?&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2014/03/02/nostalgia-rathole/"
+         title="Newer Post &ldquo;Nostalgia Rathole&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2013/12/08/babys-first-garbage-collector/" rel="bookmark"
      title="Permanent Link to Baby&rsquo;s First Garbage Collector">
     Baby&rsquo;s First Garbage Collector
   </a>
 </h1>
-  <a class="older" href="/2013/08/26/what-is-open-recursion/"
-     title="Older Post &ldquo;What is &ldquo;Open Recursion&rdquo;?&rdquo;">&larr;</a>
-  <a class="newer" href="/2014/03/02/nostalgia-rathole/"
-     title="Newer Post &ldquo;Nostalgia Rathole&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">December 08, 2013</a>
-    <span class="tags"><a href="/category/c">c</a> <a href="/category/code">code</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2013/08/26/what-is-open-recursion/"
+       title="Older Post &ldquo;What is &ldquo;Open Recursion&rdquo;?&rdquo;">&lt;</a></span>
+    <a href="/archive">december 08, 2013</a>
+    <span class="thread-narrow"><a href="/2014/03/02/nostalgia-rathole/"
+       title="Newer Post &ldquo;Nostalgia Rathole&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c">c</a>
+     |
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>When I get stressed out and have too much to do, I have this paradoxical
 reaction where I escape from that by coming up with <em>another</em> thing to do.
 Usually it&rsquo;s a tiny self-contained program that I can write and finish.</p>
@@ -48,7 +74,7 @@ basic <a href="https://en.wikipedia.org/wiki/Tracing_garbage_collection#Na%C3%AF
 <p>Garbage collection is considered one of the more shark-infested waters of
 programming, but in this post, I&rsquo;ll give you a nice kiddie pool to paddle around
 in. (There may still be sharks in it, but at least it will be shallower.)</p>
-<h2>Reduce, reuse, recycle</h2>
+<h2 id="reduce-reuse-recycle"><a href="#reduce-reuse-recycle">Reduce, reuse, recycle<span class="anchor">#reduce-reuse-recycle</span></a></h2>
 <p>The basic idea behind garbage collection is that the language (for the most
 part) appears to have access to infinite memory. The developer can just keep
 allocating and allocating and allocating and, as if by magic, never run out.</p>
@@ -78,7 +104,7 @@ get to it through A.</p>
 world that you can get to by starting at a variable and traversing through
 objects. Any object <em>not</em> in that graph of reachable objects is dead to the
 program and its memory is ripe for a reaping.</p>
-<h2>Marking and sweeping</h2>
+<h2 id="marking-and-sweeping"><a href="#marking-and-sweeping">Marking and sweeping<span class="anchor">#marking-and-sweeping</span></a></h2>
 <p>There are a <a href="https://en.wikipedia.org/wiki/Tracing_garbage_collection">bunch of different ways</a> you can implement the process of
 finding and reclaiming all of the unused objects, but the simplest and first
 algorithm ever invented for it is called &ldquo;mark-sweep&rdquo;. It was invented by John
@@ -100,7 +126,7 @@ delete them.</p>
 be the author of a paper cited hundreds of times. The lesson here is that to be
 famous in CS, you don&rsquo;t have to come up with really obscure stuff, you just have
 to come up with obvious stuff <em>first</em>.</p>
-<h2>A pair of objects</h2>
+<h2 id="a-pair-of-objects"><a href="#a-pair-of-objects">A pair of objects<span class="anchor">#a-pair-of-objects</span></a></h2>
 <p>Before we can get to implementing those two steps, let&rsquo;s get a couple of
 preliminaries out of the way. We won&rsquo;t be actually implementing an interpreter
 for a language&mdash;no parser, bytecode, or any of that foolishness&mdash;but we do
@@ -136,7 +162,7 @@ or pair. If your C is rusty, a union is a struct where the fields overlap in
 memory. Since a given object can only be an int <em>or</em> a pair, there&rsquo;s no reason
 to have memory in a single object for all three fields at the same time. A union
 does that. Groovy.</p>
-<h2>A minimal virtual machine</h2>
+<h2 id="a-minimal-virtual-machine"><a href="#a-minimal-virtual-machine">A minimal virtual machine<span class="anchor">#a-minimal-virtual-machine</span></a></h2>
 <p>Now we can use that datatype in a little virtual machine. The VM&rsquo;s role in this
 story is to have a stack that stores the variables that are currently in scope.
 Most language VMs are either stack-based (like the JVM and CLR) or
@@ -193,7 +219,7 @@ create objects. First, a little helper function:</p>
 called those functions, we&rsquo;d have an honest to God language on our hands. And,
 if we had infinite memory, it would even be able to run real programs. Since we
 don&rsquo;t, let&rsquo;s start collecting some garbage.</p>
-<h2>Marky mark</h2>
+<h2 id="marky-mark"><a href="#marky-mark">Marky mark<span class="anchor">#marky-mark</span></a></h2>
 <p>The first phase is <em>marking</em>. We need to walk all of the reachable objects and
 set their mark bit. The first thing we need then is to add a mark bit to
 <code>Object</code>:</p>
@@ -245,7 +271,7 @@ already processed. So the complete <code>mark()</code> function is:</p>
 <span class="p">}</span></pre>
 <p>Now we can call <code>markAll()</code> and it will correctly mark every reachable object in
 memory. We&rsquo;re halfway done!</p>
-<h2>Sweepy sweep</h2>
+<h2 id="sweepy-sweep"><a href="#sweepy-sweep">Sweepy sweep<span class="anchor">#sweepy-sweep</span></a></h2>
 <p>The next phase is to sweep through all of the objects we&rsquo;ve allocated and free
 any of them that aren&rsquo;t marked. But there&rsquo;s a problem here: all of the unmarked
 objects are, by definition, unreachable! <em>We</em> can&rsquo;t get to them!</p>
@@ -370,7 +396,7 @@ max:</p>
 objects left after the collection. The multiplier there lets our heap grow as
 the number of living objects increases. Likewise, it will shrink automatically
 if a bunch of objects end up being freed.</p>
-<h2>Simple</h2>
+<h2 id="simple"><a href="#simple">Simple<span class="anchor">#simple</span></a></h2>
 <p>You made it! If you followed all of this, you&rsquo;ve now got a handle on a simple
 garbage collection algorithm. If you want to see it all together, <a href="https://github.com/munificent/mark-sweep">here&rsquo;s the
 full code</a>. Let me stress here that while this collector is <em>simple</em>, it
@@ -380,64 +406,38 @@ programming languages, optimization is 90% of the effort&mdash;but the core code
 here is a legitimate <em>real</em> GC. It&rsquo;s very similar to the collectors that were in
 Ruby and Lua until recently. You can ship production code that uses something
 exactly like this. Now go build something awesome!</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

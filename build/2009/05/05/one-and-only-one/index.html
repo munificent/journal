@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     One and Only One &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/"
+         title="Older Post &ldquo;Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2009/05/13/ml-style-pattern-matching-in-c/"
+         title="Newer Post &ldquo;ML-Style Pattern Matching in C#&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2009/05/05/one-and-only-one/" rel="bookmark"
      title="Permanent Link to One and Only One">
     One and Only One
   </a>
 </h1>
-  <a class="older" href="/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/"
-     title="Older Post &ldquo;Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)&rdquo;">&larr;</a>
-  <a class="newer" href="/2009/05/13/ml-style-pattern-matching-in-c/"
-     title="Newer Post &ldquo;ML-Style Pattern Matching in C#&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">May 05, 2009</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2009/04/26/stupid-magpie-tricks-or-yes-im-making-a-programming-language-like-everyone-else/"
+       title="Older Post &ldquo;Stupid Magpie Tricks (Or: Yes, I&rsquo;m Making a Programming Language Like Everyone Else)&rdquo;">&lt;</a></span>
+    <a href="/archive">may 05, 2009</a>
+    <span class="thread-narrow"><a href="/2009/05/13/ml-style-pattern-matching-in-c/"
+       title="Newer Post &ldquo;ML-Style Pattern Matching in C#&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>My little language <a href="https://magpie-lang.org/">Magpie</a> has a feature that may at first seem really
 limiting: <em>all functions take exactly one argument and return one value, no
 more, no less.</em> I&rsquo;ll try to explain why I made that choice, and some of the
@@ -54,12 +80,12 @@ its body.</p>
 <pre class="highlight language-magpie1"><span class="i">Square</span> <span class="n">3</span> <span class="c">// Returns 9.</span></pre>
 <p>Unlike C and other languages, function arguments aren&rsquo;t put inside
 parentheses.</p>
-<h2>So what if I want to pass in multiple args?</h2>
+<h2 id="so-what-if-i-want-to-pass-in-multiple-args"><a href="#so-what-if-i-want-to-pass-in-multiple-args">So what if I want to pass in multiple args?<span class="anchor">#so-what-if-i-want-to-pass-in-multiple-args</span></a></h2>
 <p>That&rsquo;s easy. Here&rsquo;s a function to multiply three numbers:</p>
 <pre class="highlight language-magpie1"><span class="i">Mult</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span><span class="p">,</span> <span class="i">c</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="t">Int</span><span class="p">)</span> <span class="i">a</span> <span class="o">*</span> <span class="i">b</span> <span class="o">*</span> <span class="i">c</span></pre>
 <p>You can call it like:</p>
 <pre class="highlight language-magpie1"><span class="i">Mult</span> <span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="n">3</span><span class="p">,</span> <span class="n">4</span><span class="p">)</span> <span class="c">// Returns 24.</span></pre>
-<h2>Hey! I thought you said functions always take one argument!</h2>
+<h2 id="hey-i-thought-you-said-functions-always-take-one-argument"><a href="#hey-i-thought-you-said-functions-always-take-one-argument">Hey! I thought you said functions always take one argument!<span class="anchor">#hey-i-thought-you-said-functions-always-take-one-argument</span></a></h2>
 <p>They do, they do. However, Magpie also supports <a href="http://en.wikipedia.org/wiki/Tuple">tuples</a>. A tuple lets you
 make a single value by combining others together. In Magpie, tuples are created
 using the comma operator:</p>
@@ -70,7 +96,7 @@ It&rsquo;s more for precedence reasons than anything else. The comma is where th
 magic is.)</p>
 <p>So, when you see a call like <code>Mult (2, 3, 4)</code> what you&rsquo;re really seeing is
 calling <code>Mult</code> with a single argument, the tuple <code>(2, 3, 4)</code>.</p>
-<h2>Are you just playing semantics?</h2>
+<h2 id="are-you-just-playing-semantics"><a href="#are-you-just-playing-semantics">Are you just playing semantics?<span class="anchor">#are-you-just-playing-semantics</span></a></h2>
 <p>No, this isn&rsquo;t just a semantic trick. <code>Mult</code> really does take a single value.
 I&rsquo;ll prove it:</p>
 <pre class="highlight language-magpie1"><span class="c">// Create a local variable and assign a tuple to it.</span>
@@ -83,7 +109,7 @@ anything. In fact, this is kind of useful. When you start playing with function
 references (i.e. callbacks), it&rsquo;s really convenient to be able to pass around
 arguments to functions without needing to distinguish between how many arguments
 it takes: it always takes one.</p>
-<h2>Neat trick. What about functions with no arguments?</h2>
+<h2 id="neat-trick-what-about-functions-with-no-arguments"><a href="#neat-trick-what-about-functions-with-no-arguments">Neat trick. What about functions with no arguments?<span class="anchor">#neat-trick-what-about-functions-with-no-arguments</span></a></h2>
 <p>That actually uses tuples too, sort of. You can make a tuple out of any number
 of values, including one and zero. A single value <em>is</em> a one-value tuple (a
 monuple?). But you can also have a tuple with <em>no</em> values, strange as that
@@ -95,11 +121,11 @@ called &ldquo;Unit&rdquo;, and looks like <code>()</code>. So if you had a funct
 <p>That&rsquo;s a bit tedious, though, so in most cases you can omit the <code>()</code> and Magpie
 will infer it:</p>
 <pre class="highlight language-magpie1"><span class="i">SayHi</span> <span class="c">// Prints &quot;hi&quot;.</span></pre>
-<h2>What about returns? I don&rsquo;t see <code>Print</code> returning anything.</h2>
+<h2 id="what-about-returns-i-dont-see-print-returning-anything"><a href="#what-about-returns-i-dont-see-print-returning-anything">What about returns? I don&rsquo;t see <code>Print</code> returning anything.<span class="anchor">#what-about-returns-i-dont-see-print-returning-anything</span></a></h2>
 <p>Sure, it is. Just like Unit can be omitted as an argument, it&rsquo;s also omitted as
 a return. <code>Print</code> returns <code>()</code> every time it&rsquo;s called. Since a function returns
 the result of evaluating its body, that means <code>SayHi</code> also returns <code>()</code>.</p>
-<h2>What&rsquo;s the point?</h2>
+<h2 id="whats-the-point"><a href="#whats-the-point">What&rsquo;s the point?<span class="anchor">#whats-the-point</span></a></h2>
 <p>Unit gives us the ability to make everything in Magpie an expression. Since you
 can return Unit like a value, Magpie doesn&rsquo;t need to make a distinction between
 <em>expressions</em> (which return things) and <em>statements</em> (which don&rsquo;t). This means
@@ -109,71 +135,45 @@ that things like flow control can be regular expressions in Magpie. For example:
 <code>if/then/else</code> is a regular expression and can be used anywhere.</p>
 <p>So having &ldquo;nothing&rdquo; be a returnable value lets us make the language a lot more
 flexible.</p>
-<h2>You still forgot one case&hellip;</h2>
+<h2 id="you-still-forgot-one-case"><a href="#you-still-forgot-one-case">You still forgot one case&hellip;<span class="anchor">#you-still-forgot-one-case</span></a></h2>
 <p>And, of course, this also means you can return <em>multiple</em> values, just like
 you can in Python or Lua:</p>
 <pre class="highlight language-magpie1"><span class="i">Swap</span> <span class="p">(</span><span class="i">a</span> <span class="t">Int</span><span class="p">,</span> <span class="i">b</span> <span class="t">Int</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="t">Int</span><span class="p">,</span> <span class="t">Int</span><span class="p">))</span> <span class="p">(</span><span class="i">b</span><span class="p">,</span> <span class="i">a</span><span class="p">)</span>
 
 <span class="i">Swap</span> <span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span> <span class="c">// returns (2, 1)</span></pre>
 <p>So, in the end, it isn&rsquo;t much of a limitation at all.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2009/05/05/one-and-only-one/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2009/05/05/one-and-only-one/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

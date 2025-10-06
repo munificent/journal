@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,51 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Consider Knitting &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2025/05/26/access-control-syntax/"
+         title="Older Post &ldquo;Access Control Syntax&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
+         title="Newer Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2025/05/30/consider-knitting/" rel="bookmark"
      title="Permanent Link to Consider Knitting">
     Consider Knitting
   </a>
 </h1>
-  <a class="older" href="/2025/05/26/access-control-syntax/"
-     title="Older Post &ldquo;Access Control Syntax&rdquo;">&larr;</a>
-  <a class="newer" href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
-     title="Newer Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">May 30, 2025</a>
-    <span class="tags"><a href="/category/art">art</a> <a href="/category/knitting">knitting</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2025/05/26/access-control-syntax/"
+       title="Older Post &ldquo;Access Control Syntax&rdquo;">&lt;</a></span>
+    <a href="/archive">may 30, 2025</a>
+    <span class="thread-narrow"><a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
+       title="Newer Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/art">art</a>
+     |
+      <a href="/category/knitting">knitting</a>
+      </div>
+</nav>
 <p>Let&rsquo;s say that, like me, you are a person who stares at a computer and writes
 code for a living. As a straight male who grew up in a time where knitting was
 very strongly female coded, it for the most part never occurred to me that
@@ -49,7 +73,7 @@ various <a href="https://en.wikipedia.org/wiki/Fiber_art">fiber arts</a>, includ
 I talk about knitting here because that&rsquo;s the one closest to my heart and I
 strive to speak from the heart. You can make stuff out of string however you
 want. We are all fiber friends.</p>
-<h2>The sense of touch</h2>
+<h2 id="the-sense-of-touch"><a href="#the-sense-of-touch">The sense of touch<span class="anchor">#the-sense-of-touch</span></a></h2>
 <p>I love the aesthetics of programming. Sitting in a cool quiet room, techno
 thumping in my headphones, coffee mug next to me, while a neatly arranged field
 of glowing monospace glyphs stream across my screen. But there&rsquo;s one sense
@@ -90,7 +114,7 @@ needle. Right finger grabs yarn. Right hand pulls the needle back out, a new
 stitch formed and transferred to the other needle. Over and over, like a
 meditation in the body.</p>
 <p>Knitting <em>feels good</em>. It is an intimate, constant reminder that we are a tool-using species with thousands of years of evolution giving us incredible dexterity and the emotional wiring to make us want to use it.</p>
-<h2>An open world game with optimized skill curve</h2>
+<h2 id="an-open-world-game-with-optimized-skill-curve"><a href="#an-open-world-game-with-optimized-skill-curve">An open world game with optimized skill curve<span class="anchor">#an-open-world-game-with-optimized-skill-curve</span></a></h2>
 <p>Of course, you could get much of that same tactile joy by driving to your
 nearest yarn store and wandering around the aisles jamming your fingers into
 every ball and skein of yarn they have. (An activity I certainly <em>also</em> do and
@@ -112,7 +136,7 @@ nothing else.</p>
 designers in the world, and the tools they use to think about game design are
 useful lenses to evaluate just about any kind of human endeavor.</p>
 <p>Two aspects (at least) are relevant to knitting.</p>
-<h3>Linearity</h3>
+<h3 id="linearity"><a href="#linearity">Linearity<span class="anchor">#linearity</span></a></h3>
 <p>A game is &ldquo;linear&rdquo; if there&rsquo;s only one path from beginning to end, one way to
 play. Don&rsquo;t particularly enjoy the desert level? Tough shit, you gotta get
 through it to get to the end. &ldquo;Nonlinear&rdquo; games let players choose among
@@ -129,7 +153,7 @@ colors for you. Is a sweater too big of a commitment? You can make hats forever.
 stitches, knitting very rarely forces you to slog through something you don&rsquo;t
 want to do in order to reach some other goal. Except weaving in ends, I guess,
 which is kind of a chore. But, honestly, it&rsquo;s not that bad.</p>
-<h3>Skill curve</h3>
+<h3 id="skill-curve"><a href="#skill-curve">Skill curve<span class="anchor">#skill-curve</span></a></h3>
 <p>A skill curve is sort of like a learning curve. It&rsquo;s an imaginary graph of how
 much effort it takes to reach greater and more rewarding levels of skill. Some
 skill curves are steep at the beginning and then flatten out once you&rsquo;re over
@@ -169,7 +193,7 @@ while their fingers worked yarn for millions of hours. They had <em>plenty</em> 
 to invent all sorts of crazy ways to tangle yarn up. You could knit full-time
 for the rest of your life and never run out of new things to learn. Knitting
 will never stop rewarding you.</p>
-<h2>Structured but not a game</h2>
+<h2 id="structured-but-not-a-game"><a href="#structured-but-not-a-game">Structured but not a game<span class="anchor">#structured-but-not-a-game</span></a></h2>
 <p>To be clear, I&rsquo;m talking about knitting and videogames <em>as a metaphor</em>. I don&rsquo;t
 think of knitting as a game to win. Like a lot of programmers, I am prone to
 pointing my dumb optimizing brain at random activities and trying to min-max the
@@ -191,7 +215,7 @@ me closer to a beautiful finished object. It provides a reliable serotonin hit
 of &ldquo;I&rsquo;m making progress&rdquo;. But it&rsquo;s not so rigidly structured that it triggers my
 optimizing brain into sucking the joy out of it by turning it into math
 homework.</p>
-<h2>A time and a space</h2>
+<h2 id="a-time-and-a-space"><a href="#a-time-and-a-space">A time and a space<span class="anchor">#a-time-and-a-space</span></a></h2>
 <p>A particularly nice property of knitting is that it is able to provide that
 reliable gratification while accommodating all of the other complexities in my
 life. It takes very little time to make progress knitting. Unlike, say,
@@ -215,7 +239,7 @@ to take your mind off it? Start a lacework or cable knit project and the chart
 and counting won&rsquo;t leave room to think about anything else.</p>
 <p>Whatever logistical or mental capacities you have, there is a knitting project
 that will tuck neatly into it.</p>
-<h2>And then at the end</h2>
+<h2 id="and-then-at-the-end"><a href="#and-then-at-the-end">And then at the end<span class="anchor">#and-then-at-the-end</span></a></h2>
 <p>So far, I&rsquo;ve been talking about knitting as an <em>activity</em>. A personal hobby to
 kill time for your own joy. Kill time it does, but knitting isn&rsquo;t just about
 whiling away the hours. It&rsquo;s not playing solitaire or binging a TV show for the
@@ -240,7 +264,7 @@ acknowledgement that all we really have is time and thus there is no gift more
 precious than spending it on someone.</p>
 <p>Also, once you finish a project, you get to buy more yarn. Because, if I&rsquo;m
 honest, a little consumption feels kinda nice too.</p>
-<h2>OK, I&rsquo;m sold</h2>
+<h2 id="ok-im-sold"><a href="#ok-im-sold">OK, I&rsquo;m sold<span class="anchor">#ok-im-sold</span></a></h2>
 <p>Anyway, this is what knitting means to me. Which, now that I read all this, is a
 lot more than I realized. If that didn&rsquo;t pique your interest, fine. It&rsquo;s not for
 everyone. I do hope you find something out there to spend your time on that
@@ -269,64 +293,38 @@ worsted (i.e. medium) weight acrylic or wool yarn in a color you think is
 pretty, and give it a try. The worst that can happen is you&rsquo;ll waste a few
 bucks. If you&rsquo;re lucky, you might end up making your mother-in-law cry (in a
 good way).</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2025/05/30/consider-knitting/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2025/05/30/consider-knitting/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

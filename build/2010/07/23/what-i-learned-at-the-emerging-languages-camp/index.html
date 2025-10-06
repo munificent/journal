@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     What I Learned at the Emerging Languages Camp &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/07/18/jasic-a-complete-interpreter-in-one-java-file/"
+         title="Older Post &ldquo;Jasic: A Complete Interpreter in One Java File&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/07/24/killing-primitive-loops-and-conditionals/"
+         title="Newer Post &ldquo;Killing Primitive Loops and Conditionals&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/07/23/what-i-learned-at-the-emerging-languages-camp/" rel="bookmark"
      title="Permanent Link to What I Learned at the Emerging Languages Camp">
     What I Learned at the Emerging Languages Camp
   </a>
 </h1>
-  <a class="older" href="/2010/07/18/jasic-a-complete-interpreter-in-one-java-file/"
-     title="Older Post &ldquo;Jasic: A Complete Interpreter in One Java File&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/07/24/killing-primitive-loops-and-conditionals/"
-     title="Newer Post &ldquo;Killing Primitive Loops and Conditionals&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">July 23, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/parsing">parsing</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/07/18/jasic-a-complete-interpreter-in-one-java-file/"
+       title="Older Post &ldquo;Jasic: A Complete Interpreter in One Java File&rdquo;">&lt;</a></span>
+    <a href="/archive">july 23, 2010</a>
+    <span class="thread-narrow"><a href="/2010/07/24/killing-primitive-loops-and-conditionals/"
+       title="Newer Post &ldquo;Killing Primitive Loops and Conditionals&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/parsing">parsing</a>
+      </div>
+</nav>
 <p>I just got back from the unbelievably awesome Emerging Languages Camp at
 <a href="http://www.oscon.com/">OSCON</a>. I wish I could come up with a good way to get across how cool of an
 experience it was. All I can say was that for the first time in a long time, I
@@ -45,7 +71,7 @@ would talk a bit about something good I got from some of the talks. This doesn&r
 mean I agreed with them all (frankly, I found the Go talk myopic), or that
 anyone I omitted here <em>wasn&rsquo;t</em> interesting. I&rsquo;m exhausted this morning, so I
 only have so much steam.</p>
-<h2>Rob Pike (Go)</h2>
+<h2 id="rob-pike-go"><a href="#rob-pike-go">Rob Pike (Go)<span class="anchor">#rob-pike-go</span></a></h2>
 <p>The theme that comes up frequently when I read about <a href="http://golang.org/">Go</a> or hear Rob talk
 about it is this sense of pragmatic feature economy. Any time someone asks, &ldquo;why
 doesn&rsquo;t Go have Foo&rdquo;, his answer tends to be &ldquo;We found in practice that we don&rsquo;t
@@ -56,7 +82,7 @@ competition. If those features don&rsquo;t help real people solve real problems,
 you&rsquo;re wasting your time and making things more complex for them. While I don&rsquo;t
 always agree with the specific choices that the Go designers make, I do agree
 with the &ldquo;let&rsquo;s see if we can get by without them&rdquo; approach that leads to them.</p>
-<h2>Phil Mercurio (Thyrd)</h2>
+<h2 id="phil-mercurio-thyrd"><a href="#phil-mercurio-thyrd">Phil Mercurio (Thyrd)<span class="anchor">#phil-mercurio-thyrd</span></a></h2>
 <p>Phil&rsquo;s talk was one of a few on visual programming. Most of my experience with
 visual languages is that they&rsquo;re either toys or incomprehensible timecube-esque
 crankware.</p>
@@ -68,7 +94,7 @@ thinking, &ldquo;Holy crap, he actually did it.&rdquo;</p>
 triads) and build something out of it that really works. It&rsquo;s <em>really</em> hard to
 pull something like this off, and I think it&rsquo;s cool that&rsquo;s he had the insight
 and tenacity to keep cranking away at it.</p>
-<h2>Alan Eliasen (Frink)</h2>
+<h2 id="alan-eliasen-frink"><a href="#alan-eliasen-frink">Alan Eliasen (Frink)<span class="anchor">#alan-eliasen-frink</span></a></h2>
 <p>Alan stressed that <a href="http://futureboy.homeip.net/frinkdocs/">Frink</a> is a general-purpose language with user-defined
 functions and stuff but its <em>raison d&rsquo;etre</em> is doing arithmetic with units,
 which it does so unbelievably comprehensively that it boggles the mind. From his
@@ -80,7 +106,7 @@ domain, Alan has ended up with a language that&rsquo;s <em>more</em> powerful an
 When asked what their language is good for, many designers would say
 &ldquo;everything&rdquo; which really means &ldquo;nothing&rdquo;. Frink embodies the principle of doing
 one thing and doing it well.</p>
-<h2>Gilad Bracha (Newspeak)</h2>
+<h2 id="gilad-bracha-newspeak"><a href="#gilad-bracha-newspeak">Gilad Bracha (Newspeak)<span class="anchor">#gilad-bracha-newspeak</span></a></h2>
 <p>The camp was an even mix of academics and hackers. A lot of academic talk is
 over my head so the mortarboard team is underrepresented in this post. Gilad&rsquo;s
 talk was in that category: a lot of it was too high-level for my primitive
@@ -91,13 +117,13 @@ classes nest. That simple core is flexible enough to do duty as a module system,
 an abstraction system, a namespace system etc. I love the idea of getting one
 simple concept and letting it fully unfold to cover a bunch of different problem
 solutions.</p>
-<h2>Jeremy Ashkenas (Coffeescript)</h2>
+<h2 id="jeremy-ashkenas-coffeescript"><a href="#jeremy-ashkenas-coffeescript">Jeremy Ashkenas (Coffeescript)<span class="anchor">#jeremy-ashkenas-coffeescript</span></a></h2>
 <p>I totally didn&rsquo;t pay attention to Jeremy&rsquo;s talk because I was busy slapping
 together slides for mine. This sucks because I think <a href="https://coffeescript.org/">Coffeescript</a> is
 fantastic. I love its obsession with aesthetics and clarity. Both the language
 and its documentation are a testament to the philosophy that beautiful is
 usable. I wish more language designers would pay heed to that.</p>
-<h2>Steve Folta (Trylon)</h2>
+<h2 id="steve-folta-trylon"><a href="#steve-folta-trylon">Steve Folta (Trylon)<span class="anchor">#steve-folta-trylon</span></a></h2>
 <p>Steve&rsquo;s talk embodied two ideals that I think are often overlooked. The first
 thing he said when he got up was, &ldquo;Trylon doesn&rsquo;t do anything new.&rdquo; That puts
 <a href="http://github.com/stevefolta/trylon">Trylon</a> in the same space as Python, Ruby, and almost every popular language
@@ -109,7 +135,7 @@ because it&rsquo;s the language that feels the most fun to me.&rdquo; A well-wor
 writing is &ldquo;write for yourself&rdquo;. Trying to make a language that&rsquo;s all things to
 all people is futile and exhausting. I love that Steve just made the language
 that <em>he</em> wanted.</p>
-<h2>Amos Wenger (ooc)</h2>
+<h2 id="amos-wenger-ooc"><a href="#amos-wenger-ooc">Amos Wenger (ooc)<span class="anchor">#amos-wenger-ooc</span></a></h2>
 <p>Any domain has two levels of knowledge: the core ideas for the domain, and the
 <em>cultural</em> wisdom <em>around</em> those ideas. The first tells you how to do stuff. The
 latter often tells you which stuff not to do. Any well-versed programming
@@ -126,64 +152,38 @@ expect he&rsquo;d be a brick-tossing anarchist. One advantage that attitude give
 is that he and the others working on <a href="http://ooc-lang.org/">ooc</a> pour features into the language
 while the rest of us are still sitting around fretting about minutia. I think a
 lot of us could use some of that &ldquo;let&rsquo;s just fucking do it&rdquo; spirit.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/07/23/what-i-learned-at-the-emerging-languages-camp/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

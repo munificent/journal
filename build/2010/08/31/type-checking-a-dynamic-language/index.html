@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,57 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Type Checking a Dynamic Language &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/08/23/void-null-maybe-and-nothing/"
+         title="Older Post &ldquo;&ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo;&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/09/01/a-type-checking-conundrum/"
+         title="Newer Post &ldquo;A Type Checking Conundrum!&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/08/31/type-checking-a-dynamic-language/" rel="bookmark"
      title="Permanent Link to Type Checking a Dynamic Language">
     Type Checking a Dynamic Language
   </a>
 </h1>
-  <a class="older" href="/2010/08/23/void-null-maybe-and-nothing/"
-     title="Older Post &ldquo;&ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo;&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/09/01/a-type-checking-conundrum/"
-     title="Newer Post &ldquo;A Type Checking Conundrum!&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">August 31, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/python">python</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/08/23/void-null-maybe-and-nothing/"
+       title="Older Post &ldquo;&ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo;&rdquo;">&lt;</a></span>
+    <a href="/archive">august 31, 2010</a>
+    <span class="thread-narrow"><a href="/2010/09/01/a-type-checking-conundrum/"
+       title="Newer Post &ldquo;A Type Checking Conundrum!&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/java">java</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+     |
+      <a href="/category/python">python</a>
+      </div>
+</nav>
 <p>If you&rsquo;re going down the strange path of building a language that&rsquo;s half-
 dynamic and half-static, one obvious question you have to answer is, &ldquo;When the
 hell do I do the type checking?&rdquo; The general answer is, of course, &ldquo;after the
@@ -41,7 +71,7 @@ types are defined, but before the program runs.&rdquo; This post talks about wha
 think that means for Magpie.</p>
 <p>To frame the question, lets look at a couple of other languages to see how they
 work. First, Java, a typical static OOP language:</p>
-<h2>The two languages of Java</h2>
+<h2 id="the-two-languages-of-java"><a href="#the-two-languages-of-java">The two languages of Java<span class="anchor">#the-two-languages-of-java</span></a></h2>
 <p>If you look at a Java source file, there are almost two distinct languages mixed
 together. Consider this simple program:</p>
 <pre class="highlight language-java"><span class="k">public</span> <span class="k">class</span> <span class="t">Hello</span> <span class="p">{</span>
@@ -71,7 +101,7 @@ built, it then type checks the method bodies (the statements) against what&rsquo
 declared in that symbol table.</p>
 <p>After that process has successfully completed, bytecode is generated and the
 program runs.</p>
-<h2>Everything is imperative</h2>
+<h2 id="everything-is-imperative"><a href="#everything-is-imperative">Everything is imperative<span class="anchor">#everything-is-imperative</span></a></h2>
 <p>In contrast, a dynamic language like Python only has a single language: the
 language of statements. Consider this little script:</p>
 <pre class="highlight language-python"><span class="k">class</span> <span class="t">Hello</span><span class="p">:</span>
@@ -92,7 +122,7 @@ by executing statements, at any point in the life of a program. Since there&rsqu
 type checking anyway, it makes sense to give the user this freedom, even though
 in practice most classes are created at the top-level in a fairly static
 fashion.</p>
-<h2>The Magpie answer</h2>
+<h2 id="the-magpie-answer"><a href="#the-magpie-answer">The Magpie answer<span class="anchor">#the-magpie-answer</span></a></h2>
 <p>So now we&rsquo;re back to Magpie. Magpie is primarily a dynamic language, so it
 follows in Python&rsquo;s footsteps. There is no special definition/statement
 dichotomy, and classes are created, extended, and modified imperatively at
@@ -122,7 +152,7 @@ general strategy is, if you want to write a dynamic program, put everything at
 the top-level. If you want type checking, put all of your definitions at the
 top-level, and the move the code you want to run after type checking into
 <code>main()</code>.</p>
-<h2>The evaluation model</h2>
+<h2 id="the-evaluation-model"><a href="#the-evaluation-model">The evaluation model<span class="anchor">#the-evaluation-model</span></a></h2>
 <p>More precisely, Magpie&rsquo;s evaluation model is:</p>
 <ol>
 <li>
@@ -151,7 +181,7 @@ functions, or do whatever, safe in the knowledge that we won&rsquo;t get here
 unless all of the type checks passed.</p>
 </li>
 </ol>
-<h2>What happens if you cheat?</h2>
+<h2 id="what-happens-if-you-cheat"><a href="#what-happens-if-you-cheat">What happens if you cheat?<span class="anchor">#what-happens-if-you-cheat</span></a></h2>
 <p>Astute readers at this point have noticed a problem. If we can imperatively
 modify classes at any point, and we can execute any imperative code after
 type checking, then what&rsquo;s to prevent us from modifying a class after it&rsquo;s been
@@ -202,69 +232,43 @@ locked down.</p>
 </ol>
 <p>I&rsquo;m leaning towards the first option because it&rsquo;s simplest and most flexible,
 but I&rsquo;m open to thoughts one way or the other.</p>
-<h2>Thoughts?</h2>
+<h2 id="thoughts"><a href="#thoughts">Thoughts?<span class="anchor">#thoughts</span></a></h2>
 <p>So that&rsquo;s what I came up with. The code that&rsquo;s structured like a dynamic
 language runs dynamically. The code that&rsquo;s called from <code>main()</code> runs after
 type checking like a static language. The implementation is still very rough,
 but it seems to actually kind of work, strangely enough.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/08/31/type-checking-a-dynamic-language/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

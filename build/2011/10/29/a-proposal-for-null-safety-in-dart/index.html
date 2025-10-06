@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     A Proposal for Null-Safety in Dart &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2011/10/21/wrapping-my-head-around-optional-typing/"
+         title="Older Post &ldquo;Wrapping My Head Around Optional Typing&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2012/01/24/higher-order-macros-in-c/"
+         title="Newer Post &ldquo;Higher Order Macros in C++&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2011/10/29/a-proposal-for-null-safety-in-dart/" rel="bookmark"
      title="Permanent Link to A Proposal for Null-Safety in Dart">
     A Proposal for Null-Safety in Dart
   </a>
 </h1>
-  <a class="older" href="/2011/10/21/wrapping-my-head-around-optional-typing/"
-     title="Older Post &ldquo;Wrapping My Head Around Optional Typing&rdquo;">&larr;</a>
-  <a class="newer" href="/2012/01/24/higher-order-macros-in-c/"
-     title="Newer Post &ldquo;Higher Order Macros in C++&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">October 29, 2011</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2011/10/21/wrapping-my-head-around-optional-typing/"
+       title="Older Post &ldquo;Wrapping My Head Around Optional Typing&rdquo;">&lt;</a></span>
+    <a href="/archive">october 29, 2011</a>
+    <span class="thread-narrow"><a href="/2012/01/24/higher-order-macros-in-c/"
+       title="Newer Post &ldquo;Higher Order Macros in C++&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <div class="update">
 <p><em>Update 2021/03/03:</em> With the release of <a href="https://medium.com/dartlang/announcing-dart-2-12-499a6e689c87">Dart 2.12</a>, Dart <a href="https://dart.dev/null-safety">supports sound null safety</a>. Had to wait about ten
 years, but I got it!</p>
@@ -47,7 +73,7 @@ note in it:</p>
 never stopped me before.) So, here&rsquo;s my attempt at an answer. I&rsquo;m posting it
 here on my blog just to clarify that this is <em>my</em> strawman proposal, and not
 something that&rsquo;s got any official Dart or Google stamp of approval on it.</p>
-<h2>The proposal in a nutshell</h2>
+<h2 id="the-proposal-in-a-nutshell"><a href="#the-proposal-in-a-nutshell">The proposal in a nutshell<span class="anchor">#the-proposal-in-a-nutshell</span></a></h2>
 <p>By default, all types are non-nullable. If you declare a variable of type <code>int</code>,
 it is a static error to try to assign <code>null</code> to it. In checked mode, it is a
 dynamic error to assign <code>null</code> to a non-nullable variable.</p>
@@ -58,7 +84,7 @@ languages) not a part of its runtime behavior.</p>
 <p>At runtime, Dart continues to work like a dynamic language where any variable
 may hold a value of any type, including <code>null</code>. &ldquo;Nullability&rdquo; is as optional as
 the rest of Dart&rsquo;s type system.</p>
-<h2>Why default to non-nullable?</h2>
+<h2 id="why-default-to-non-nullable"><a href="#why-default-to-non-nullable">Why default to non-nullable?<span class="anchor">#why-default-to-non-nullable</span></a></h2>
 <p>One of the first decisions a non-null proposal has to make is which is the
 default: nullable or non-nullable? I prefer defaulting to non-null for a couple
 of reasons:</p>
@@ -82,7 +108,7 @@ then that if you&rsquo;ve chosen to go out of your way to say a variable is of
 type <code>Foo</code>, it should really be a <code>Foo</code> and not a <code>Foo</code>-or-<code>null</code>.</p>
 </li>
 </ul>
-<h2>Semantics</h2>
+<h2 id="semantics"><a href="#semantics">Semantics<span class="anchor">#semantics</span></a></h2>
 <p>A nullable type is essentially the <a href="http://en.wikipedia.org/wiki/Type_system#Union_types">union</a> of the original type and the <code>Null</code>
 type. In other words, <code>bool?</code> contains all of the values of the <code>bool</code> type
 (<code>true</code> and <code>false</code>) as well as all of the values of the <code>Null</code> type (<code>null</code>).</p>
@@ -90,7 +116,7 @@ type. In other words, <code>bool?</code> contains all of the values of the <code
 <code>int?</code>. This follows naturally from thinking of it as a union of types.
 <code>true|false|null</code> is an equivalent set to <code>true|false|null|null</code>. The redundant
 <code>null</code>s collapse.</p>
-<h2>Subtyping</h2>
+<h2 id="subtyping"><a href="#subtyping">Subtyping<span class="anchor">#subtyping</span></a></h2>
 <p>A non-null type is a subtype of its nullable type. In other words, you can
 always pass a <code>Foo</code> to something that expects a <code>Foo?</code>.</p>
 <p>Also, the special <code>Null</code> type is a subtype of every nullable type. This means
@@ -116,7 +142,7 @@ initialization lists, and they solve this problem handily. We can fix that
 <p>Since the constructor initializers are run before you can access <code>this</code>, we&rsquo;ve
 ensured that those fields will be initialized before <em>anyone</em> can see them.
 Neat.</p>
-<h2>Working with nullable types</h2>
+<h2 id="working-with-nullable-types"><a href="#working-with-nullable-types">Working with nullable types<span class="anchor">#working-with-nullable-types</span></a></h2>
 <p>One challenge with nullable types is that working with them can be tedious. With
 things like <a href="http://www.standardml.org/Basis/option.html"><code>Maybe</code> in Haskell and <code>option</code> in ML</a>, you have to
 manually unwrap the &ldquo;nullable&rdquo; value to get at the delicious real value hidden
@@ -153,7 +179,7 @@ safe to go from a non-null type to a nullable one:</p>
   <span class="t">int</span> <span class="i">b</span> <span class="o">=</span> <span class="i">a</span><span class="p">;</span> <span class="c">// Safe at runtime now too!</span>
 <span class="p">}</span></pre>
 <p>So here, as in other places in Dart, the type checker won&rsquo;t get in your way.</p>
-<h2>Wait, what good is it?</h2>
+<h2 id="wait-what-good-is-it"><a href="#wait-what-good-is-it">Wait, what good is it?<span class="anchor">#wait-what-good-is-it</span></a></h2>
 <p>You couldn&rsquo;t ask for a less intrusive null-tracking system, but it seems a
 little <em>too</em> unintrusive. Isn&rsquo;t silently assigning from a nullable type to a
 non-nullable one the exact thing we&rsquo;d want the type checker to flag?</p>
@@ -201,7 +227,7 @@ report warnings like this:</p>
   <span class="k">if</span> <span class="p">(</span><span class="i">i</span> <span class="o">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">0</span><span class="p">;</span>
   <span class="k">return</span> <span class="i">i</span> <span class="o">*</span> <span class="n">2</span><span class="p">;</span> <span class="c">// OK now.</span>
 <span class="p">}</span></pre>
-<h2>Nullables and generics</h2>
+<h2 id="nullables-and-generics"><a href="#nullables-and-generics">Nullables and generics<span class="anchor">#nullables-and-generics</span></a></h2>
 <p>A key question that comes up with nullables is how they play with generic types.
 I&rsquo;m not a type system expert, so it&rsquo;s entirely possible that I haven&rsquo;t thought
 this all the way through, but I think it falls out correctly from the subtyping
@@ -222,7 +248,7 @@ nullability. For example:</p>
 nullable types flatten (<code>A??</code> becomes <code>A?</code>) will alleviate some of the nasty
 corner cases this may lead to. I&rsquo;m not sure though, and this is definitely
 something I&rsquo;d like feedback on.</p>
-<h2>Two corner cases</h2>
+<h2 id="two-corner-cases"><a href="#two-corner-cases">Two corner cases<span class="anchor">#two-corner-cases</span></a></h2>
 <p>There are two types in Dart where nullability will work a little strangely:
 <code>Null</code> and <code>Object</code>. The former&rsquo;s behavior is pretty obviously weird. Given that
 a nullable type is the union of some type and <code>Null</code>, there&rsquo;s no dinstinction
@@ -237,12 +263,12 @@ non-nullable <code>Object</code> type isn&rsquo;t needed to avoid type errors.</
 <p>That covers most of the implications of the proposal as far as I can tell. To
 get more concrete, let&rsquo;s see how we&rsquo;d need to modify the spec and libs to
 support it:</p>
-<h2>Spec changes</h2>
+<h2 id="spec-changes"><a href="#spec-changes">Spec changes<span class="anchor">#spec-changes</span></a></h2>
 <p>I definitely don&rsquo;t have the skills Gilad has at specifying these semantics
 precisely, but I&rsquo;ll at least make an honest try. Most of the changes, as you&rsquo;ll
 see, are simplifications. Null shows up as a special case in much of the spec.
 One of the reasons I like this proposal is that it eliminates most of those.</p>
-<h3>Section 10.2</h3>
+<h3 id="section-102"><a href="#section-102">Section 10.2<span class="anchor">#section-102</span></a></h3>
 <p>Change:</p>
 <blockquote>
 <p>The static type of null is ⊥.</p>
@@ -251,7 +277,7 @@ One of the reasons I like this proposal is that it eliminates most of those.</p>
 <blockquote>
 <p>The static type of null is Null.</p>
 </blockquote>
-<h3>Section 10.16 Assignment</h3>
+<h3 id="section-1016-assignment"><a href="#section-1016-assignment">Section 10.16 Assignment<span class="anchor">#section-1016-assignment</span></a></h3>
 <p>In both:</p>
 <blockquote>
 <p>In checked mode, it is a dynamic type error if o is not null and the interface
@@ -263,7 +289,7 @@ induced by the class of o is not a subtype of the actual type (13.8.1) of v.</p>
 induced by the class of o is not a subtype of the static type of C.v.</p>
 </blockquote>
 <p>remove &ldquo;o is not null and&rdquo;.</p>
-<h3>Section 10.13.2 Binding Actuals to Formals</h3>
+<h3 id="section-10132-binding-actuals-to-formals"><a href="#section-10132-binding-actuals-to-formals">Section 10.13.2 Binding Actuals to Formals<span class="anchor">#section-10132-binding-actuals-to-formals</span></a></h3>
 <p>From:</p>
 <blockquote>
 <p>In checked mode, it is a dynamic type error if oi is not null and the actual
@@ -275,7 +301,7 @@ type (13.8.1) of pi is not a supertype of the type of oi,i ∈ 1..m.</p>
 type (13.8.1) of qj is not a supertype of the type of om+j,j ∈ 1..l.</p>
 </blockquote>
 <p>remove &ldquo;om+j is not null and&rdquo;.</p>
-<h3>Section 11.9 Try</h3>
+<h3 id="section-119-try"><a href="#section-119-try">Section 11.9 Try<span class="anchor">#section-119-try</span></a></h3>
 <p>From:</p>
 <blockquote>
 <p>A catch clause catch (T1 p1, T2 p2) s matches an object o if o is null or if
@@ -283,7 +309,7 @@ the type of o is a subtype of T1.&rdquo;</p>
 </blockquote>
 <p>remove &ldquo;o is null or&rdquo;.</p>
 <p>Then we need to add a section:</p>
-<h3>13.9 Nullable Types</h3>
+<h3 id="139-nullable-types"><a href="#139-nullable-types">13.9 Nullable Types<span class="anchor">#139-nullable-types</span></a></h3>
 <blockquote>
 <p>A <em>nullable type</em> is a parameterized type that allows both values of the type
 parameter&rsquo;s type or the singleton value of type <em>Null</em>, <code>null</code>.</p>
@@ -301,11 +327,11 @@ parameter&rsquo;s type or the singleton value of type <em>Null</em>, <code>null<
 giving it an initializer whose static type is assignment compatible with the
 variable&rsquo;s type.</p>
 </blockquote>
-<h2>Core library changes</h2>
+<h2 id="core-library-changes"><a href="#core-library-changes">Core library changes<span class="anchor">#core-library-changes</span></a></h2>
 <p>This proposal implies some modification to the core lib APIs to be null-aware.
 There are two kinds of changes we&rsquo;d need: minor changes to type annotations and
 a few actual semantic changes.</p>
-<h3>Type annotation changes</h3>
+<h3 id="type-annotation-changes"><a href="#type-annotation-changes">Type annotation changes<span class="anchor">#type-annotation-changes</span></a></h3>
 <p>The minor change is that a few type annotations need to be tweaked. Operations
 that are defined to return something &ldquo;or null&rdquo; need to be made explicitly
 nullable.</p>
@@ -320,7 +346,7 @@ whose types aren&rsquo;t nullable, like:</p>
   <span class="c">// more...</span>
 <span class="p">}</span></pre>
 <p>Here, that <code>String</code> will need to be made nullable.</p>
-<h3>Semantic changes</h3>
+<h3 id="semantic-changes"><a href="#semantic-changes">Semantic changes<span class="anchor">#semantic-changes</span></a></h3>
 <p>The more intrusive change is that operations that implicitly create <code>null</code>
 entries in collections might need to be modified. For example, if you do:</p>
 <pre class="highlight language-dart"><span class="k">var</span> <span class="i">list</span> <span class="o">=</span> <span class="k">new</span> <span class="t">List</span><span class="o">&lt;</span><span class="t">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">4</span><span class="p">);</span></pre>
@@ -336,7 +362,7 @@ the above, you could do:</p>
 <span class="i">print</span><span class="p">(</span><span class="i">list</span><span class="p">);</span> <span class="c">// [0, 2, 4, 6]</span></pre>
 <p>I may have missed something, but I believe <code>List</code> is the only type that needs
 any real API changes like this.</p>
-<h2>Summary</h2>
+<h2 id="summary"><a href="#summary">Summary<span class="anchor">#summary</span></a></h2>
 <p>If you made it this far, you deserve a reward. Sadly, the best I can offer is a
 bullet list of what you&rsquo;ve already read:</p>
 <ul>
@@ -382,64 +408,38 @@ values.</p>
 </li>
 </ul>
 <p>Do I have that right? Thoughts?</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2011/10/29/a-proposal-for-null-safety-in-dart/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2011/10/29/a-proposal-for-null-safety-in-dart/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

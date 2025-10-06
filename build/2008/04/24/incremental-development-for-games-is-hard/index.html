@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,51 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Incremental Development for Games (Is Hard) &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2008/04/10/a-c-feature-request-extension-classes/"
+         title="Older Post &ldquo;A C# Feature Request: Extension Classes&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2008/05/12/visualizing-the-democratic-primary/"
+         title="Newer Post &ldquo;Visualizing the Democratic Primary&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2008/04/24/incremental-development-for-games-is-hard/" rel="bookmark"
      title="Permanent Link to Incremental Development for Games (Is Hard)">
     Incremental Development for Games (Is Hard)
   </a>
 </h1>
-  <a class="older" href="/2008/04/10/a-c-feature-request-extension-classes/"
-     title="Older Post &ldquo;A C# Feature Request: Extension Classes&rdquo;">&larr;</a>
-  <a class="newer" href="/2008/05/12/visualizing-the-democratic-primary/"
-     title="Newer Post &ldquo;Visualizing the Democratic Primary&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">April 24, 2008</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/game-dev">game-dev</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2008/04/10/a-c-feature-request-extension-classes/"
+       title="Older Post &ldquo;A C# Feature Request: Extension Classes&rdquo;">&lt;</a></span>
+    <a href="/archive">april 24, 2008</a>
+    <span class="thread-narrow"><a href="/2008/05/12/visualizing-the-democratic-primary/"
+       title="Newer Post &ldquo;Visualizing the Democratic Primary&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+      </div>
+</nav>
 <p>For those who don&rsquo;t know, the game industry (or at least my chunk of it) is
 generally about 10 years behind the rest of the software world. We&rsquo;re still
 leery of crazy ivory tower concepts like &ldquo;memory management&rdquo;, &ldquo;testing&rdquo;, and
@@ -49,7 +73,7 @@ drubbing!</p>
 <a href="http://www.agilegamedevelopment.com/">crossed</a> our Iron Curtain recently is this thing called &ldquo;<a href="http://agilemanifesto.org/">Agile
 Development</a>&rdquo;. I can&rsquo;t say we really know what it means, but it is
 very interesting to us.</p>
-<h2>Games are hard</h2>
+<h2 id="games-are-hard"><a href="#games-are-hard">Games are hard<span class="anchor">#games-are-hard</span></a></h2>
 <p>You see, developing a new game is really hard. On top of the technical reasons
 (pushing the graphics hardware, strict quality control) and the business ones
 (cutthroat competition, <a href="http://news.bbc.co.uk/2/hi/technology/6397527.stm">difficult profitability</a>), there&rsquo;s this other
@@ -70,7 +94,7 @@ seconds.</p>
 and cost of failure keeps going up. Because of this, if a game&rsquo;s going to suck,
 we need to know as soon as possible so we can correct course or <a href="https://en.wikipedia.org/wiki/Category:Cancelled_video_games">pull the
 ejection seat lever</a>.</p>
-<h2>Enter agile development</h2>
+<h2 id="enter-agile-development"><a href="#enter-agile-development">Enter agile development<span class="anchor">#enter-agile-development</span></a></h2>
 <p>Agile development means a lot of things to different people, but the key part I
 want to talk about is the idea of <strong>building a game incrementally through a
 series of small changes</strong>. This idea that a month into the cycle you have a
@@ -85,7 +109,7 @@ budget. Better hope the game is fun!</p>
 <p>With a more agile method, you&rsquo;d be able to play the game early in the cycle with
 a couple of pieces, and then gradually add in more pieces throughout. You&rsquo;ll be
 testing some core mechanics early in and can change things if they don&rsquo;t work.</p>
-<h2>Uh-oh</h2>
+<h2 id="uh-oh"><a href="#uh-oh">Uh-oh<span class="anchor">#uh-oh</span></a></h2>
 <p>Even that tiny example hints at the pitfall ahead: games are all about
 <em>balance</em>. Chess is unplayable with just two kings and some pawns. Without the
 other pieces, it&rsquo;s a fundamentally different game. So now we&rsquo;ve gone from
@@ -97,11 +121,11 @@ justification. Features are fairly isolated from each other and don&rsquo;t comp
 In a game, every feature or capability affects the overall strategy and
 equilibrium. Building a game incrementally is like trying to build a <a href="https://en.wikipedia.org/wiki/Mobile_(sculpture)">hanging
 mobile</a> by hanging it up <em>first</em> and then hanging successive pieces onto it.</p>
-<h2>Solutions?</h2>
+<h2 id="solutions"><a href="#solutions">Solutions?<span class="anchor">#solutions</span></a></h2>
 <p>I suspect this is one of the fundamentally hard parts of designing a new game.
 That sense of &ldquo;everything works in harmony&rdquo; is irreducible to some extent. I&rsquo;ll
 point out a couple of ideas to at least carve at the problem a bit.</p>
-<h3>Separate the core from the peripheral</h3>
+<h3 id="separate-the-core-from-the-peripheral"><a href="#separate-the-core-from-the-peripheral">Separate the core from the peripheral<span class="anchor">#separate-the-core-from-the-peripheral</span></a></h3>
 <p>If we&rsquo;re designing minimal abstract board games, there aren&rsquo;t a lot of
 &ldquo;peripheral&rdquo; features. In computer/video-games it&rsquo;s a bit different. Non-
 interactive set decoration, some UI, extra games modes, etc. all surround the
@@ -110,7 +134,7 @@ incrementally, you can at least do them in one lump and then tack on the
 additional stuff afterwards.</p>
 <p>Be careful here, though. Even seemingly trivial things like UI or <a href="http://en.wikipedia.org/wiki/Particle_system">VFX</a> can
 have a massive impact on the usability of your game.</p>
-<h3>Match pairs</h3>
+<h3 id="match-pairs"><a href="#match-pairs">Match pairs<span class="anchor">#match-pairs</span></a></h3>
 <p>If you&rsquo;re starting with a balanced game and you need to add features while
 keeping it balanced, one obvious solution is to try to add them in opposing
 pairs. For symmetric games like chess, this is fairly simple: implement the same
@@ -119,7 +143,7 @@ piece for both players. For other games, it gets trickier.</p>
 by also adding slowdown and damage for hitting the walls at the same time. For
 an RPG, giving the player a new attack may require also adding monsters that
 resist it.</p>
-<h3>Accept retuning</h3>
+<h3 id="accept-retuning"><a href="#accept-retuning">Accept retuning<span class="anchor">#accept-retuning</span></a></h3>
 <p>Most games, on top of the feature set itself, have a lot of precise tuning of
 numbers that happens to make it fun. Those numbers have to be tuned relative to
 the current feature set. Adding a new feature can essentially detune them. If
@@ -129,71 +153,45 @@ enemy&rsquo;s health. Make the AI smarter and your hero is toast.</p>
 worth accepting that you will need to frequently retune the same values as the
 feature set changes. To some degree, this is &ldquo;throwaway&rdquo; work, but if it gives
 you a better ability to evaluate your game, it may be worth the effort.</p>
-<h3>Reduce innovation</h3>
+<h3 id="reduce-innovation"><a href="#reduce-innovation">Reduce innovation<span class="anchor">#reduce-innovation</span></a></h3>
 <p>Of course, all of the above assumes you&rsquo;re making a game with actually new
 mechanics. If you&rsquo;re making chess on the other hand, it doesn&rsquo;t matter if the
 game sucks with just kings and pawns. You know by the time the rest of the
 pieces are in it will be cool. So the safest option is just to rely on the
 established formula of your game&rsquo;s genre, and save your innovation for
 peripheral features.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2008/04/24/incremental-development-for-games-is-hard/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2008/04/24/incremental-development-for-games-is-hard/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

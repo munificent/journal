@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Type Checking If Expressions &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2022/02/13/stupid-dog/"
+         title="Older Post &ldquo;Stupid Dog&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2023/08/04/representing-heterogeneous-data/"
+         title="Newer Post &ldquo;Representing Heterogeneous Data&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2023/01/03/type-checking-if-expressions/" rel="bookmark"
      title="Permanent Link to Type Checking If Expressions">
     Type Checking If Expressions
   </a>
 </h1>
-  <a class="older" href="/2022/02/13/stupid-dog/"
-     title="Older Post &ldquo;Stupid Dog&rdquo;">&larr;</a>
-  <a class="newer" href="/2023/08/04/representing-heterogeneous-data/"
-     title="Newer Post &ldquo;Representing Heterogeneous Data&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">January 03, 2023</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/vgs">vgs</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2022/02/13/stupid-dog/"
+       title="Older Post &ldquo;Stupid Dog&rdquo;">&lt;</a></span>
+    <a href="/archive">january 03, 2023</a>
+    <span class="thread-narrow"><a href="/2023/08/04/representing-heterogeneous-data/"
+       title="Newer Post &ldquo;Representing Heterogeneous Data&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/vgs">vgs</a>
+      </div>
+</nav>
 <p>I have this hobby project I&rsquo;ve been hacking on for several years. It&rsquo;s a fantasy
 console, very much inspired by the delightful <a href="https://www.lexaloffle.com/pico-8.php">PICO-8</a>. Like PICO-8, my
 console has its own built-in scripting language. Because I&rsquo;m me, I of course
@@ -45,7 +71,7 @@ after that. My dream is a goofy little pixellated IDE where you can get lost in
 your own flow state and just make shit without having to periodically hit
 StackOverflow and then get distracted by the wonders/horrors of the Internet.</p>
 <p>I don&rsquo;t know if I&rsquo;ll ever pull this off or the language will ever see the light of day, but it&rsquo;s a fun therapeutic thing for me to noodle on.</p>
-<h2>A dynamically typed scripting language</h2>
+<h2 id="a-dynamically-typed-scripting-language"><a href="#a-dynamically-typed-scripting-language">A dynamically typed scripting language<span class="anchor">#a-dynamically-typed-scripting-language</span></a></h2>
 <p>To make a language that fits in your head (or at least my head, whose working
 space seems to get smaller every year), I needed to jettison as many feature as
 I could. My experience across a range of hobby and <a href="https://dart.dev/">not-so-hobby</a>
@@ -100,7 +126,7 @@ explicitly expression-y style like:</p>
 <p>Unifying statements and expressions means the language doesn&rsquo;t need a separate
 <code>if</code> statement and conditional expression. Also, I don&rsquo;t know, I just like
 expression-oriented languages.</p>
-<h2>An imperative language</h2>
+<h2 id="an-imperative-language"><a href="#an-imperative-language">An imperative language<span class="anchor">#an-imperative-language</span></a></h2>
 <p>Even though the language is expression-oriented, it&rsquo;s not explicitly
 <em>functional</em>. Functional languages are close to my heart, but this is a game
 scripting language. A game world is basically a big ball of incrementally
@@ -113,7 +139,7 @@ from side effects and imperative control flow. Variables are assignable. Fields
 are settable. There are loops and breaks and early returns. All of those are as
 natural and idiomatic as they are in C++, JavaScript, C#, or any of the other
 languages that the majority of the world&rsquo;s code is written in.</p>
-<h2>Handmade Seattle</h2>
+<h2 id="handmade-seattle"><a href="#handmade-seattle">Handmade Seattle<span class="anchor">#handmade-seattle</span></a></h2>
 <p>Last fall, I attended the wonderful <a href="https://handmade-seattle.com/">Handmade Seattle</a> conference. I had a
 particularly inspiring conversation with <a href="https://wiki.xxiivv.com/site/home.html">Devine Lu Linvega</a> about their
 tiny <a href="https://wiki.xxiivv.com/site/uxn.html">uxn</a> VM. They had this idea to build the smallest possible system and
@@ -137,7 +163,7 @@ way.)</p>
 I&rsquo;ve been sketching out a statically typed variant of my console&rsquo;s scripting
 language. I don&rsquo;t know if it will really come together, but I thought maybe it
 would be fun to write about the exploration.</p>
-<h2>Type checking <code>if</code> expressions</h2>
+<h2 id="type-checking-if-expressions"><a href="#type-checking-if-expressions">Type checking <code>if</code> expressions<span class="anchor">#type-checking-if-expressions</span></a></h2>
 <p>I slapped together a new prototype interpreter for my language. (The main
 implementation is a bytecode VM in C++, which is pretty fast but not exactly
 easy to hack on.) Then I dutifully started adding a type checking pass to it.
@@ -153,7 +179,7 @@ variable <code>love</code>. In this case, the type is obviously String since bot
 and else branches evaluate to strings.</p>
 <p>So the basic rule we&rsquo;ll start with is: <strong>An <code>if</code> expression&rsquo;s type is the type
 of the branches.</strong></p>
-<h2>Different branch types</h2>
+<h2 id="different-branch-types"><a href="#different-branch-types">Different branch types<span class="anchor">#different-branch-types</span></a></h2>
 <p>But what if they don&rsquo;t have the same type? What about:</p>
 <pre class="highlight language-vgs"><span class="k">var</span> <span class="i">love</span> <span class="o">=</span> <span class="k">if</span> <span class="i">isFriday</span> <span class="k">then</span> <span class="s">&quot;in love&quot;</span> <span class="k">else</span> <span class="n">0</span> <span class="k">end</span></pre>
 <p>Here, <code>love</code> could end up being initialized to either a <code>String</code> or an <code>Int</code>.
@@ -180,7 +206,7 @@ different types, then there is no possible type I can infer that contains all of
 their values. The only other response is to make it a type error.</p>
 <p>That&rsquo;s the next rule: <strong>If the branches have different types, it&rsquo;s a compile
 error.</strong></p>
-<h2>Imperative ifs and unused values</h2>
+<h2 id="imperative-ifs-and-unused-values"><a href="#imperative-ifs-and-unused-values">Imperative ifs and unused values<span class="anchor">#imperative-ifs-and-unused-values</span></a></h2>
 <p>That rule does work: It&rsquo;s basically SML&rsquo;s rule for <code>if</code> expressions. But I want
 my scripting language to feel familiar to users programming in an imperative
 style. Consider:</p>
@@ -244,7 +270,7 @@ like Kotlin does something similar. It frames it by saying that when you use an
 roughly the distinction I&rsquo;m making here too: when an <code>if</code> appears in a
 statement-like position where its value is discarded, then the branches can
 disagree.</p>
-<h2>Missing else</h2>
+<h2 id="missing-else"><a href="#missing-else">Missing else<span class="anchor">#missing-else</span></a></h2>
 <p>This rule allows us to support an even more important flavor of <code>if</code> expressions
 that are common in imperative code: those without <code>else</code> clauses. In SML and
 some other functional languages, every <code>if</code> expression <em>must</em> have an <code>else</code>
@@ -258,7 +284,7 @@ statements had <code>else</code> branches.</p>
 isn&rsquo;t used, we can allow omitting <code>else</code> branches those. The next rule is: <strong>An
 <code>if</code> expression can omit the else branch when in a context where its value isn&rsquo;t
 used.</strong></p>
-<h2>Exiting branches</h2>
+<h2 id="exiting-branches"><a href="#exiting-branches">Exiting branches<span class="anchor">#exiting-branches</span></a></h2>
 <p>We&rsquo;re almost there. It&rsquo;s starting to feel like we really are type-checking an
 imperative language, not ML in BASIC&rsquo;s clothing. I coded this up and
 successfully wrote some little example programs. It was starting to feel like a
@@ -290,7 +316,7 @@ the type of the other branch for the <code>if</code> expression&rsquo;s type. Th
 above example to work. In the sample code I&rsquo;ve written so far, it rarely comes
 into play. It&rsquo;s usually more idiomatic to hoist that control flow out of the
 <code>if</code> entirely. But we can type check it easily, so the language lets you do it.</p>
-<h2>The rules altogether</h2>
+<h2 id="the-rules-altogether"><a href="#the-rules-altogether">The rules altogether<span class="anchor">#the-rules-altogether</span></a></h2>
 <p>That&rsquo;s where I&rsquo;m at right now. It took me a few iterations to get to a point
 where all the <code>if</code> expressions I expected to be able to write in my example
 programs actually type checked correctly but it seems pretty stable now. The
@@ -316,64 +342,38 @@ type of the other branch.</p>
 is that type.</p>
 </li>
 </ul>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2023/01/03/type-checking-if-expressions/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2023/01/03/type-checking-if-expressions/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

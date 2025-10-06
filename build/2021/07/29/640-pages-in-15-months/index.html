@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     640 Pages in 15 Months &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2020/04/05/crafting-crafting-interpreters/"
+         title="Older Post &ldquo;Crafting &ldquo;Crafting Interpreters&rdquo;&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2022/02/13/stupid-dog/"
+         title="Newer Post &ldquo;Stupid Dog&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2021/07/29/640-pages-in-15-months/" rel="bookmark"
      title="Permanent Link to 640 Pages in 15 Months">
     640 Pages in 15 Months
   </a>
 </h1>
-  <a class="older" href="/2020/04/05/crafting-crafting-interpreters/"
-     title="Older Post &ldquo;Crafting &ldquo;Crafting Interpreters&rdquo;&rdquo;">&larr;</a>
-  <a class="newer" href="/2022/02/13/stupid-dog/"
-     title="Newer Post &ldquo;Stupid Dog&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">July 29, 2021</a>
-    <span class="tags"><a href="/category/book">book</a> <a href="/category/design">design</a> <a href="/category/language">language</a> <a href="/category/personal">personal</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2020/04/05/crafting-crafting-interpreters/"
+       title="Older Post &ldquo;Crafting &ldquo;Crafting Interpreters&rdquo;&rdquo;">&lt;</a></span>
+    <a href="/archive">july 29, 2021</a>
+    <span class="thread-narrow"><a href="/2022/02/13/stupid-dog/"
+       title="Newer Post &ldquo;Stupid Dog&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/book">book</a>
+     |
+      <a href="/category/design">design</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/personal">personal</a>
+      </div>
+</nav>
 <p>My book <a href="http://craftinginterpreters.com/"><em>Crafting Interpreters</em></a> on programming languages is done. OK, OK.
 I know <a href="/2020/04/05/crafting-crafting-interpreters/">I said it was done like fifteen months ago</a>. But now it&rsquo;s <em>really</em>
 done. And by that I mean, the print, e-book and PDF versions are done. <strong>You can
@@ -49,7 +77,7 @@ fire.</p>
 and show you how pencils or umbrellas are made? I love that stuff, so I thought
 maybe you might like to see what I spent the past year on. You can read this as
 a peek behind the curtain, or maybe a long apology for why it took so long.</p>
-<h2>Where I left off</h2>
+<h2 id="where-i-left-off"><a href="#where-i-left-off">Where I left off<span class="anchor">#where-i-left-off</span></a></h2>
 <p>What I said in my last post was that <em>Crafting Interpreters</em> was <em>finished</em>, and
 by that I meant that I&rsquo;d written all the code, dotted the last sentence, and
 scanned the last illustration. The <em>content</em> of the book was complete. But it
@@ -61,7 +89,7 @@ journey. Once I finished the last chapter and put it online, I took about a
 month-long break. I had been writing <a href="https://github.com/munificent/craftinginterpreters/blob/master/note/log.txt">every single day for almost four
 years</a> and I was <em>fried</em>. Also, in case you don&rsquo;t remember, early 2020 was
 not exactly a Totally Fine Time in World History.</p>
-<h2>A new build system</h2>
+<h2 id="a-new-build-system"><a href="#a-new-build-system">A new build system<span class="anchor">#a-new-build-system</span></a></h2>
 <p>After a few weeks, my desire to have this project completely done returned and I
 eased my way back into working on it. I fixed a whole pile of typos and other
 mistakes that readers <a href="https://github.com/munificent/craftinginterpreters/issues">filed bugs for</a> (thanks!).</p>
@@ -106,7 +134,7 @@ refresh.</figcaption>
 </figure>
 <p>Once I had the new build system outputting nice clean HTML and I&rsquo;d deleted the
 old Python stuff, it was time to get started.</p>
-<h2>Designing the book</h2>
+<h2 id="designing-the-book"><a href="#designing-the-book">Designing the book<span class="anchor">#designing-the-book</span></a></h2>
 <p>Doing a large graphic design project like a book works a lot like web dev or
 game programming where it sort of has two levels. First you set up your
 &ldquo;framework&rdquo; or &ldquo;engine&rdquo;. On the web, this is your web framework and all of your
@@ -136,7 +164,7 @@ or illustrations that they refer to. Some of these can get pretty long.</p>
 it telling you where the code goes in the resulting program.</p>
 </li>
 </ul>
-<h2>How wide?</h2>
+<h2 id="how-wide"><a href="#how-wide">How wide?<span class="anchor">#how-wide</span></a></h2>
 <p>Horizontally, the main text column needs to be wide enough to fit the longest
 line of code. I can use shorter lines and wrap the snippets more, but that makes
 them harder to read. It also makes them vertically taller, which causes its own
@@ -160,7 +188,7 @@ the asides. (Using a narrower font for the asides helped too).</p><figure>
 <img class="framed" src="/image/2021/07/metrics.png">
 <figcaption>Here are the final horizontal metrics.</figcaption>
 </figure>
-<h2>How tall?</h2>
+<h2 id="how-tall"><a href="#how-tall">How tall?<span class="anchor">#how-tall</span></a></h2>
 <p>That left the other dimension. If I were going with a real publisher doing a
 full offset print run, I could pick whatever page size I wanted. But since I&rsquo;m
 self publishing, that would mean paying up front for thousands of copies to be
@@ -181,7 +209,7 @@ a test chapter and just typeset it and tweaked the fonts over and over again.
 Eventually I got a set of fonts and styles I liked, some masters that seemed
 workable, and I was ready to go. The framework was done and now it was time to
 open the content hose.</p>
-<h2>XML, like its 1999</h2>
+<h2 id="xml-like-its-1999"><a href="#xml-like-its-1999">XML, like its 1999<span class="anchor">#xml-like-its-1999</span></a></h2>
 <p>Of course, problem #1 is that there <em>is</em> no content hose. I have to build one.
 InDesign doesn&rsquo;t know what the hell Markdown or my weird ass build system is. I
 sure as hell didn&rsquo;t want to, like, copy every chapter from my browser, paste it
@@ -199,7 +227,7 @@ damn well better have a unique <code>&lt;italics-header&gt;</code> tag for it.</
 system and its Markdown processing, I could write my own <a href="https://github.com/munificent/craftinginterpreters/blob/master/tool/bin/build_xml.dart">custom XML
 exporter</a> that generated <em>exactly</em> the tags that would make InDesign not
 cry and avoid as many InDesign XML import bugs as possible.</p>
-<h2>JavaScript, in <em>my</em> InDesign?</h2>
+<h2 id="javascript-in-my-indesign"><a href="#javascript-in-my-indesign">JavaScript, in <em>my</em> InDesign?<span class="anchor">#javascript-in-my-indesign</span></a></h2>
 <p>Even so, XML import only gets you so far. Specifically, it gets you a &ldquo;story&rdquo; in
 InDesign terms: a single continuous narrative of text that fills the main text
 box and spans multiple pages:</p><figure>
@@ -251,7 +279,7 @@ borders of nearby code snippets</em>.</p><figure>
 <p>I lost hours of my life to this stupid bug. Eventually, I realized that some
 completely random subset of location tags would have to be manually positioned
 because anchoring invariably broke some borders.</p>
-<h2>Editing, again</h2>
+<h2 id="editing-again"><a href="#editing-again">Editing, again<span class="anchor">#editing-again</span></a></h2>
 <p>All of the above took me a good month or so and then it was time to stop
 fiddling around and get to work on the actual content. The first thing I did was
 another editing pass of the entire book, front to back. I had already done three
@@ -260,7 +288,7 @@ that it was done so that I could get a better feel for continuity. It turns out
 I repeated the same dumb jokes a lot. I fixed (most of) those.</p>
 <p>This took five months. There&rsquo;s nothing fun to say about this, it was just a
 chore.</p>
-<h2>Copy editing</h2>
+<h2 id="copy-editing"><a href="#copy-editing">Copy editing<span class="anchor">#copy-editing</span></a></h2>
 <p>Next I hired an actual professional copy editor, <a href="https://karisomerton.com/">Kari Somerton</a>, to go
 through and do the same thing. She was great. Most of the editing world uses
 Microsoft Word and &ldquo;Track Changes&rdquo; to handle the editing process. Like most
@@ -271,7 +299,7 @@ weird completely bespoke build system. She handled it with aplomb and churned
 through the book in no time. She found hundreds and hundreds of mistakes. This
 despite me doing four drafts and readers filing hundreds of issues already.
 Professional copy editors are worth every penny.</p>
-<h2>Typesetting the whole thing</h2>
+<h2 id="typesetting-the-whole-thing"><a href="#typesetting-the-whole-thing">Typesetting the whole thing<span class="anchor">#typesetting-the-whole-thing</span></a></h2>
 <p>Once the words were as good as they were gonna get, it was time to get them onto
 pages. The process went like this:</p>
 <ol>
@@ -320,7 +348,7 @@ at the bottom of pages. It looks terrible and wastes space, like this:</p><figur
 <img class="framed" src="/image/2021/07/typeset.png">
 <figcaption>I thoughtfully left room on the page for your own doodles.</figcaption>
 </figure>
-<h2>Speaking of illustrations&hellip;</h2>
+<h2 id="speaking-of-illustrations"><a href="#speaking-of-illustrations">Speaking of illustrations&hellip;<span class="anchor">#speaking-of-illustrations</span></a></h2>
 <p>At one level, the illustrations were easy. I specifically chose black and white
 pen and ink because it&rsquo;s print friendly. When I first scanned the images as I
 wrote each chapter, I brought them in at glorious 1200 DPI. Here&rsquo;s a crop:</p><figure>
@@ -348,7 +376,7 @@ so that it <em>just</em> fits on the page. Sometimes I&rsquo;d tweak an illustra
 it shorter to fit on a page or taller to eat up some whitespace.</p>
 <p>This was the real challenge of typesetting the book and why it took me two
 months to get through all the chapters.</p>
-<h2>Front matter and back matter</h2>
+<h2 id="front-matter-and-back-matter"><a href="#front-matter-and-back-matter">Front matter and back matter<span class="anchor">#front-matter-and-back-matter</span></a></h2>
 <p>Did you know that there are professional indexers? People whose job it is to
 write indexes for books? They even <a href="https://press.uchicago.edu/ucp/books/book/chicago/I/bo3625262.html">write books</a> about how to write
 indexes. (One would presume that these books have truly superb indexes.)</p>
@@ -367,7 +395,7 @@ acknowledgements. Then I let InDesign generate a table of contents for me.</p>
 <figcaption>Here's what the inside looks like.</figcaption>
 </figure>
 <p>Or, at least, I had the <em>inside</em> of one.</p>
-<h2>Cover design</h2>
+<h2 id="cover-design"><a href="#cover-design">Cover design<span class="anchor">#cover-design</span></a></h2>
 <p>A lot of authors obsess over their cover and envision it the whole time they are
 writing. Despite what the aphorism says, people <em>do</em> judge books by their cover
 and a good one makes a big difference. At least, that&rsquo;s the case over in fiction
@@ -389,7 +417,7 @@ hand-lettered a new title:</p><figure>
 <p>It&rsquo;s a real typeface (Acumin Pro Extra Condensed) but I hand-traced a printout
 to give it some imperfect charm. I picked a color palette to try to give it a
 sort of a mimeographed 1950s scouting manual vibe.</p>
-<h2>Proofreading the proof</h2>
+<h2 id="proofreading-the-proof"><a href="#proofreading-the-proof">Proofreading the proof<span class="anchor">#proofreading-the-proof</span></a></h2>
 <p>Now I really had a book. I uploaded the PDF exports to KDP and ordered a proof
 copy. A week later, a surprisingly heavy box arrived. This was the first moment
 I really understood just how <em>big</em> this book I wrote is. Up until this point, it
@@ -416,7 +444,7 @@ really wanted to see <em>exactly</em> what was happening.</p>
 <p>Did I engineer my way out of this problem? You&rsquo;re <a href="https://github.com/munificent/craftinginterpreters/blob/master/tool/bin/tile_pages.dart">damn right I did</a>. I
 wrote a Dart script that would take a PDF of the book, extract every page, and
 then generate a single huge PNG file with every page tiled across it. It looks
-like this:</p><figure>
+like this:</p><figure class="wide">
   <img class="framed" src="/image/2021/07/pages.png">
 </figure>
 <p>If you zoom in, each page is about this big:</p><figure>
@@ -426,7 +454,7 @@ like this:</p><figure>
 <p>Every time I changed the InDesign files and committed them, I exported a PDF
 for that commit and generated a tile image. Then I wrote a little Photoshop
 action that would take two of those and draw a big red border around any pixels
-that differed. Here is what all of the proofreading changes look like:</p><figure>
+that differed. Here is what all of the proofreading changes look like:</p><figure class="wide">
 <img class="framed" src="/image/2021/07/diff.png">
 </figure>
 <p>And zoomed in:</p><figure>
@@ -438,7 +466,7 @@ of, like, writing an entire textbook on programming languages. But, honestly, I
 think I&rsquo;m most proud of this dumb little script. It was <em>such</em> a relief to be
 able to programmatically verify that, yes, this PDF looks exactly like the last
 one except for the one expected change.</p>
-<h2>Ebooks are also books</h2>
+<h2 id="ebooks-are-also-books"><a href="#ebooks-are-also-books">Ebooks are also books<span class="anchor">#ebooks-are-also-books</span></a></h2>
 <p>Once I incorporated all the proofreading fixes, the print edition was really for
 real totally done. But people also like reading ebooks and Kindle, so I needed
 to make those too.</p>
@@ -447,7 +475,7 @@ antiquated XHTML that EPUB requires as well as all the weird metadata and
 manifest stuff that goes into one. A few command-line invocations later and I
 had Kindle and EPUB e-books. I tested in a bunch of readers and tweaked the CCS
 to try to find a compromise between all of their renderers.</p>
-<h2>Updating the site and launching</h2>
+<h2 id="updating-the-site-and-launching"><a href="#updating-the-site-and-launching">Updating the site and launching<span class="anchor">#updating-the-site-and-launching</span></a></h2>
 <p>At this point&mdash;and now we&rsquo;re talking this past weekend as I write this
 sentence&mdash;I had a folder with all of the final files for every edition of the
 book. All that remained was to update the front page of the book&rsquo;s website to
@@ -461,7 +489,7 @@ have processed the uploads and everything is available, I&rsquo;ll publish this 
 and update the site. I&rsquo;ll write a note for the mailing list and feel nervous
 emailing that many people. If you&rsquo;re reading this, I already did all that and
 the book is really, really done.</p>
-<h2>What next?</h2>
+<h2 id="what-next"><a href="#what-next">What next?<span class="anchor">#what-next</span></a></h2>
 <p>Ever since I finished the last chapter, people have been asking me what I&rsquo;m
 going to do next. I have people I consider close friends now who have never
 known me when I <em>wasn&rsquo;t</em> writing this book.</p>
@@ -487,64 +515,38 @@ I won&rsquo;t decide until I feel like it.</p>
 life.) Until then, I hope you enjoy the book. Despite all the work, I had a lot
 of fun making it, and it was <em>always</em> a joy to hear from readers who liked it.
 It&rsquo;s the only thing that kept me going this long and enabled me to get it done.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2021/07/29/640-pages-in-15-months/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

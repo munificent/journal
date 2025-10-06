@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,34 +13,60 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     &ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo; &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/08/01/class-in-the-front-proto-in-the-back/"
+         title="Older Post &ldquo;Class in the Front, Proto in the Back&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/08/31/type-checking-a-dynamic-language/"
+         title="Newer Post &ldquo;Type Checking a Dynamic Language&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/08/23/void-null-maybe-and-nothing/" rel="bookmark"
      title="Permanent Link to &ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo;">
     &ldquo;void&rdquo;, &ldquo;null&rdquo;, &ldquo;Maybe&rdquo; and &ldquo;nothing&rdquo;
   </a>
 </h1>
-  <a class="older" href="/2010/08/01/class-in-the-front-proto-in-the-back/"
-     title="Older Post &ldquo;Class in the Front, Proto in the Back&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/08/31/type-checking-a-dynamic-language/"
-     title="Newer Post &ldquo;Type Checking a Dynamic Language&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">August 23, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/08/01/class-in-the-front-proto-in-the-back/"
+       title="Older Post &ldquo;Class in the Front, Proto in the Back&rdquo;">&lt;</a></span>
+    <a href="/archive">august 23, 2010</a>
+    <span class="thread-narrow"><a href="/2010/08/31/type-checking-a-dynamic-language/"
+       title="Newer Post &ldquo;Type Checking a Dynamic Language&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/java">java</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>I&rsquo;m hard at work on a proof-of-concept for the new <a href="https://magpie-lang.org/">Magpie</a>. While I&rsquo;ve got
 some more work to do before I can start getting into the really interesting
 parts of the language, I have one piece working now that I think is kind of
 cool, and that&rsquo;s&hellip; <em>nothing</em>.</p>
-<h2>Absence and failure</h2>
+<h2 id="absence-and-failure"><a href="#absence-and-failure">Absence and failure<span class="anchor">#absence-and-failure</span></a></h2>
 <p>Every programming language has to provide a mechanism for two kinds of absence:
 when a function <em>always</em> returns nothing, and when it <em>sometimes</em> returns
 nothing. C has the <code>void</code> type for the former. A function that just performs
@@ -62,7 +90,7 @@ languages like Java and C# handle this is by returning <code>null</code>:</p>
 <p>For any reference type (like <code>File</code>), a variable can have a valid value, or it
 can be <code>null</code>. In other words, <code>null</code> is this magical value that exists as a
 member of every type. &ldquo;Hey there&rdquo; is a string, and <code>null</code> is a string. <code>new File("foo/bar.txt")</code> is a file, and <code>null</code> is a file.</p>
-<h2>Meta-failure</h2>
+<h2 id="meta-failure"><a href="#meta-failure">Meta-failure<span class="anchor">#meta-failure</span></a></h2>
 <p>The real problem with this is that now you&rsquo;ve lost the ability to declare that
 a function <em>won&rsquo;t</em> fail. <em>Any</em> function that returns a reference type can in
 principle return <code>null</code> even though most never do. To be safe, you end up
@@ -71,7 +99,7 @@ of real-world bugs.</p>
 <p>Tony Hoare, the guy who gets the dubious honor of inventing <code>null</code> calls this
 his <a href="http://lambda-the-ultimate.org/node/3186">&ldquo;billion dollar mistake&rdquo;</a>. I don&rsquo;t have a billion dollars, so I
 don&rsquo;t want to make this mistake in Magpie.</p>
-<h2>Maybe another solution</h2>
+<h2 id="maybe-another-solution"><a href="#maybe-another-solution">Maybe another solution<span class="anchor">#maybe-another-solution</span></a></h2>
 <p>Fortunately, other languages don&rsquo;t have this problem. The ML family of
 languages, including Haskell and F#, <em>don&rsquo;t</em> allow <code>null</code> as a value for every
 type. If you have a variable of type Foo, you can sleep soundly at night knowing
@@ -87,7 +115,7 @@ you&rsquo;ve got this option thing now instead of a <code>File</code>. How do yo
 back out? ML languages use something called &ldquo;pattern matching&rdquo;, which is
 basically a pimped out <code>switch</code> statement. I won&rsquo;t go into it here, but it&rsquo;s
 swell.</p>
-<h2>Wasn&rsquo;t I talking about <em>my</em> language?</h2>
+<h2 id="wasnt-i-talking-about-my-language"><a href="#wasnt-i-talking-about-my-language">Wasn&rsquo;t I talking about <em>my</em> language?<span class="anchor">#wasnt-i-talking-about-my-language</span></a></h2>
 <p>Ah, yes. Magpie. Where was I? OK, so which path does Magpie follow? Well…
 neither, actually. So Java and C# use <code>void</code> for functions that never return a
 value and <code>null</code> for functions that might sometimes fail. ML-family languages
@@ -117,7 +145,7 @@ it would be:</p>
 <p>We&rsquo;d let <code>nothing</code> silently masquerade as a file. But <code>nothing</code> isn&rsquo;t a file,
 it&rsquo;s a <code>Nothing</code>. So the above program won&rsquo;t type check. What we need is a way
 to say that <code>openFile()</code> can return a String <em>or nothing</em>.</p>
-<h2>Or some other solution</h2>
+<h2 id="or-some-other-solution"><a href="#or-some-other-solution">Or some other solution<span class="anchor">#or-some-other-solution</span></a></h2>
 <p>I&rsquo;m all about the obvious solution, so I just took that literally. So Magpie has
 <em>or types</em>. (I&rsquo;m guessing there may be other names for them in the literature. I
 know I didn&rsquo;t invent them.) A correct version of <code>openFile()</code> looks like:</p>
@@ -127,7 +155,7 @@ know I didn&rsquo;t invent them.) A correct version of <code>openFile()</code> l
 <span class="k">end</span></pre>
 <p>My hope is that that&rsquo;s pretty clear and easy to understand: <code>openFile</code> takes a
 string and returns a file or nothing. It reads just like you&rsquo;d say it.</p>
-<h2>But I don&rsquo;t want nothing!</h2>
+<h2 id="but-i-dont-want-nothing"><a href="#but-i-dont-want-nothing">But I don&rsquo;t want nothing!<span class="anchor">#but-i-dont-want-nothing</span></a></h2>
 <p>There&rsquo;s one last little problem we&rsquo;re left with though. If we&rsquo;re the ones
 <em>calling</em> <code>openFile()</code> now, what do we do with what we got back? If we try this:</p>
 <pre class="highlight language-magpie"><span class="k">var</span> <span class="i">myFile</span> <span class="o">=</span> <span class="i">openFile</span><span class="p">(</span><span class="s">&quot;path/to/file.txt&quot;</span><span class="p">)</span>
@@ -151,64 +179,38 @@ variable (<code>myFile</code> here), whose type is the type of the expression wi
 and only if it isn&rsquo;t <code>nothing</code>. There&rsquo;s no way to try to call <code>read</code> on
 something that isn&rsquo;t a valid <code>File</code>. We&rsquo;re totally type-safe while still keeping
 things pretty simple and easy to use.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/08/23/void-null-maybe-and-nothing/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

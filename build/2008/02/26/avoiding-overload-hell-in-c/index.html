@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,51 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Avoiding Overload Hell in C# &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2008/02/09/c-extension-methods-not-just-for-breakfast/"
+         title="Older Post &ldquo;C# Extension Methods: Not Just for Breakfast&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2008/03/05/checking-flags-in-c-enums/"
+         title="Newer Post &ldquo;Checking Flags in C# Enums&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2008/02/26/avoiding-overload-hell-in-c/" rel="bookmark"
      title="Permanent Link to Avoiding Overload Hell in C#">
     Avoiding Overload Hell in C#
   </a>
 </h1>
-  <a class="older" href="/2008/02/09/c-extension-methods-not-just-for-breakfast/"
-     title="Older Post &ldquo;C# Extension Methods: Not Just for Breakfast&rdquo;">&larr;</a>
-  <a class="newer" href="/2008/03/05/checking-flags-in-c-enums/"
-     title="Newer Post &ldquo;Checking Flags in C# Enums&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">February 26, 2008</a>
-    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2008/02/09/c-extension-methods-not-just-for-breakfast/"
+       title="Older Post &ldquo;C# Extension Methods: Not Just for Breakfast&rdquo;">&lt;</a></span>
+    <a href="/archive">february 26, 2008</a>
+    <span class="thread-narrow"><a href="/2008/03/05/checking-flags-in-c-enums/"
+       title="Newer Post &ldquo;Checking Flags in C# Enums&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c-sharp">c-sharp</a>
+     |
+      <a href="/category/code">code</a>
+      </div>
+</nav>
 <div class="update">
 <p><em>Update 2021/09/22:</em> C# got support for default parameters in 4.0.</p>
 </div>
@@ -42,7 +66,7 @@ methods. With a lot of options, this can quickly <a href="http://msdn2.microsoft
 it had default parameters, they are pretty limited too. This post talks a bit
 about a couple of other solutions I found to the problem that avoid the
 combinatorial sea of overloads.</p>
-<h2>The problem</h2>
+<h2 id="the-problem"><a href="#the-problem">The problem<span class="anchor">#the-problem</span></a></h2>
 <p>For kicks, I wrote a little <a href="http://en.wikipedia.org/wiki/Curses_(programming_library)">curses</a>-like terminal library in C#. It only
 really has a few core methods: <code>Write()</code> for writing text, <code>Fill()</code> to fill in a
 space, and <code>Draw()</code> to draw lines and boxes using awesome ASCII lines. The
@@ -60,7 +84,7 @@ foreground color, or neither to use the current colors.</p>
 </ol>
 <p>And that&rsquo;s it. Three methods, and two kinds of parameters with three options
 each.</p>
-<h2>Overloads: the vanilla solution</h2>
+<h2 id="overloads-the-vanilla-solution"><a href="#overloads-the-vanilla-solution">Overloads: the vanilla solution<span class="anchor">#overloads-the-vanilla-solution</span></a></h2>
 <p>So the normal way to address this is by overloading <code>Write()</code>, <code>Fill()</code>, and
 <code>Draw()</code>. If we go with the vanilla overload solution, we have 27 overloaded
 methods to implement every combination. Using the code looks like this:</p>
@@ -113,7 +137,7 @@ methods to implement every combination. Using the code looks like this:</p>
 <p>Lame! Worse, if you start adding more options, it goes up combinatorially. 27 is
 just for our <em>toy</em> terminal. For my actual terminal lib, it would take <em>324</em>
 overloaded methods to support every combination. There has to be a better way.</p>
-<h2>Variable argument lists: who needs strong typing anyway?</h2>
+<h2 id="variable-argument-lists-who-needs-strong-typing-anyway"><a href="#variable-argument-lists-who-needs-strong-typing-anyway">Variable argument lists: who needs strong typing anyway?<span class="anchor">#variable-argument-lists-who-needs-strong-typing-anyway</span></a></h2>
 <p>It&rsquo;s true that C# doesn&rsquo;t support default parameters, but it <em>does</em> support
 variable length argument lists. Maybe that&rsquo;s a solution that lets us pass in a
 variety of options without having to overload. Calling it still looks like:</p>
@@ -166,7 +190,7 @@ is totally valid:</p>
 <pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">17</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">White</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Aqua</span><span class="p">,</span>
     <span class="i">Color</span><span class="p">.</span><span class="i">Beige</span><span class="p">,</span> <span class="s">&quot;wtf?&quot;</span><span class="p">);</span></pre>
 <p>OK, scratch that.</p>
-<h2>Parameter object: strong typing is strong</h2>
+<h2 id="parameter-object-strong-typing-is-strong"><a href="#parameter-object-strong-typing-is-strong">Parameter object: strong typing is strong<span class="anchor">#parameter-object-strong-typing-is-strong</span></a></h2>
 <p>So we know we want strong typing. How about if we bundle all of the parameters
 into a parameter object? This is basically the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo"><code>ProcessStartInfo</code></a>
 solution.</p>
@@ -197,7 +221,7 @@ solution.</p>
 you&rsquo;re not on 3.0 yet, you&rsquo;re up a creek. All you&rsquo;ve basically accomplished is
 moved your overloads to constructor overloads in <code>TerminalParams</code>. And I still
 think there&rsquo;s a little too much… junk… in those lines of code. The <code>new TerminalParams {</code> and <code>new Point(...)</code> parts don&rsquo;t really add any value.</p>
-<h2>Parameter groups</h2>
+<h2 id="parameter-groups"><a href="#parameter-groups">Parameter groups<span class="anchor">#parameter-groups</span></a></h2>
 <p>Really, the overloaded methods do have the best <em>calling convention</em> so far.
 Let&rsquo;s look at it a little closer:</p>
 <pre class="highlight language-csharp"><span class="i">terminal</span><span class="p">.</span><span class="i">Write</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Blue</span><span class="p">,</span> <span class="i">Color</span><span class="p">.</span><span class="i">Red</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">);</span></pre>
@@ -223,7 +247,7 @@ write before we looked at the parameters.</p>
 <p>This looks promising, but we&rsquo;re stuck with the fact that C# doesn&rsquo;t have
 functors. We can&rsquo;t do <code>terminal()</code>. Is there anything that sort of <em>looks</em>
 like <code>()</code>?</p>
-<h2>You&rsquo;re using what?!</h2>
+<h2 id="youre-using-what"><a href="#youre-using-what">You&rsquo;re using what?!<span class="anchor">#youre-using-what</span></a></h2>
 <p>So the question is, &ldquo;what kind of grouping construct can we define at the object
 level?&rdquo; Astute readers are already thinking it: <em>indexers</em>. Right now, some of
 you may be shuddering in horror at the weirdness we&rsquo;re about to unleash, but
@@ -356,7 +380,7 @@ own copy of the position and color. Like so:</p>
     <span class="k">private</span> <span class="t">Color</span> <span class="i">mFore</span><span class="p">;</span>
     <span class="k">private</span> <span class="t">Color</span> <span class="i">mBack</span><span class="p">;</span>
 <span class="p">}</span></pre>
-<h2>Is it worth doing?</h2>
+<h2 id="is-it-worth-doing"><a href="#is-it-worth-doing">Is it worth doing?<span class="anchor">#is-it-worth-doing</span></a></h2>
 <p>So this is how <a href="https://github.com/munificent/malison-dotnet/blob/master/Malison.Core/ITerminal.cs">my little terminal library</a> works, and I&rsquo;ve grown
 pretty fond of it. However, this is a personal project, so my willingness to
 deal with very idiomatically strange code is pretty high. (Ask me about
@@ -364,64 +388,38 @@ deal with very idiomatically strange code is pretty high. (Ask me about
 <p>In a production environment, this might be too strange looking for some teams.
 But maybe if it gets popularized enough what was once strange will become
 familiar.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2008/02/26/avoiding-overload-hell-in-c/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2008/02/26/avoiding-overload-hell-in-c/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

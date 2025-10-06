@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,57 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Iteration Inside and Out &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2012/12/19/the-impoliteness-of-overriding-methods/"
+         title="Older Post &ldquo;The Impoliteness of Overriding Methods&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2013/02/24/iteration-inside-and-out-part-2/"
+         title="Newer Post &ldquo;Iteration Inside and Out, Part 2&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2013/01/13/iteration-inside-and-out/" rel="bookmark"
      title="Permanent Link to Iteration Inside and Out">
     Iteration Inside and Out
   </a>
 </h1>
-  <a class="older" href="/2012/12/19/the-impoliteness-of-overriding-methods/"
-     title="Older Post &ldquo;The Impoliteness of Overriding Methods&rdquo;">&larr;</a>
-  <a class="newer" href="/2013/02/24/iteration-inside-and-out-part-2/"
-     title="Newer Post &ldquo;Iteration Inside and Out, Part 2&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">January 13, 2013</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/ruby">ruby</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2012/12/19/the-impoliteness-of-overriding-methods/"
+       title="Older Post &ldquo;The Impoliteness of Overriding Methods&rdquo;">&lt;</a></span>
+    <a href="/archive">january 13, 2013</a>
+    <span class="thread-narrow"><a href="/2013/02/24/iteration-inside-and-out-part-2/"
+       title="Newer Post &ldquo;Iteration Inside and Out, Part 2&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+     |
+      <a href="/category/ruby">ruby</a>
+      </div>
+</nav>
 <p>You would think iteration, you know <em>looping over stuff</em>, would be a solved
 problem in programming languages. Seriously, here&rsquo;s some <em>FORTRAN</em> code that
 does a loop and would run on a computer fifty years ago:</p>
@@ -67,7 +97,7 @@ wild. <a href="http://gafter.blogspot.com/2007/07/internal-versus-external-itera
 &ldquo;internal&rdquo; and &ldquo;external&rdquo; iterators, which sounds pretty fancy. Each of these
 styles is just beautifully elegant for some use cases, and kitten-punchingly
 awful for others. They&rsquo;re like Yin and Yang, or maybe Kid and Play.</p>
-<h2>External iterators: OOPs, I did it again</h2>
+<h2 id="external-iterators-oops-i-did-it-again"><a href="#external-iterators-oops-i-did-it-again">External iterators: OOPs, I did it again<span class="anchor">#external-iterators-oops-i-did-it-again</span></a></h2>
 <p>The first side of the coin is <em>external</em> iterators. If you code in C++, Java,
 C#, Python, PHP, or pretty much any <a href="http://en.wikipedia.org/wiki/Dynamic_dispatch#Single_and_multiple_dispatch">single-dispatch</a> object-oriented
 language, this is you. Your language gives you some <code>for</code> or <code>foreach</code>
@@ -102,7 +132,7 @@ implementing those methods lets your type work seamlessly inside a loop.</p>
 </ul>
 <p>In dynamically typed languages, it&rsquo;s more informal, like Python&rsquo;s <a href="http://docs.python.org/2/library/stdtypes.html#iterator-types">iterator
 protocol</a>.</p>
-<h3>Beautiful example 1: finding an item</h3>
+<h3 id="beautiful-example-1-finding-an-item"><a href="#beautiful-example-1-finding-an-item">Beautiful example 1: finding an item<span class="anchor">#beautiful-example-1-finding-an-item</span></a></h3>
 <p>Here&rsquo;s a simple example where external iterators work well. Let&rsquo;s write a
 function that returns <code>true</code> if a sequence contains a given item and <code>false</code> if
 it doesn&rsquo;t. I&rsquo;ll use Dart again because I think Dart actually works pretty well
@@ -118,7 +148,7 @@ as an <em>Ur</em>-language that most programmers can grok:</p>
 stops iterating as soon as it finds the item. This is not just an optimization,
 but critical when you consider that some sequences (like reading the lines in a
 file) may have side effects. The sequence may even be infinite.</p>
-<h3>Beautiful example 2: interleaving two sequences</h3>
+<h3 id="beautiful-example-2-interleaving-two-sequences"><a href="#beautiful-example-2-interleaving-two-sequences">Beautiful example 2: interleaving two sequences<span class="anchor">#beautiful-example-2-interleaving-two-sequences</span></a></h3>
 <p>Let&rsquo;s do something a bit more complex. Let&rsquo;s write a function that takes two
 sequences and returns a sequence that alternates between items in each sequence.
 So if you throw <code>[1, 2, 3]</code> and <code>[7, 8, 9]</code> at it, you get back <code>[1, 7, 2, 8, 3, 9]</code>.</p>
@@ -161,7 +191,7 @@ over, but the latter is. Finally we get to the real code:</p>
 <p>This is a bit verbose, but it&rsquo;s pretty straightforward. Each time you call
 <code>moveNext()</code>, it reads from one of the iterators and then swaps them. It stops
 as soon as either one is done. Pretty groovy.</p>
-<h3>Kitten-punch example: walking a tree</h3>
+<h3 id="kitten-punch-example-walking-a-tree"><a href="#kitten-punch-example-walking-a-tree">Kitten-punch example: walking a tree<span class="anchor">#kitten-punch-example-walking-a-tree</span></a></h3>
 <p>Now let&rsquo;s see the ugly side of this. Let&rsquo;s say we&rsquo;ve got a simple binary tree
 class, like:</p>
 <pre class="highlight language-dart"><span class="k">class</span> <span class="t">Tree</span> <span class="p">{</span>
@@ -245,7 +275,7 @@ was a <em>three line</em> recursive function and now it&rsquo;s a fifty line mon
 <p>I&rsquo;ll get back to exactly what went wrong here but for now let&rsquo;s just agree that
 this is not a beautiful fun way to abstract over an in-order traversal. For now,
 let&rsquo;s cleanse our palate.</p>
-<h2>Interal iterators: don&rsquo;t call me, I&rsquo;ll call you</h2>
+<h2 id="interal-iterators-dont-call-me-ill-call-you"><a href="#interal-iterators-dont-call-me-ill-call-you">Interal iterators: don&rsquo;t call me, I&rsquo;ll call you<span class="anchor">#interal-iterators-dont-call-me-ill-call-you</span></a></h2>
 <p>Right now, the Rubyists are grinning, the Smalltalkers are furiously waving
 their hands in the air to get the teacher&rsquo;s attention and the Lispers are just
 nodding smugly in the back row (all as usual). Here&rsquo;s what they know that you
@@ -276,7 +306,7 @@ can pass around.</p>
 <p>This Ruby snippet bundles up that <code>puts</code> expression into an object and sends it
 to <code>each</code>. The <code>each</code> method can then iterate through each item in the array and
 call that block of code for each item, passing in the value.</p>
-<h3>Beautiful example 1: walking a tree</h3>
+<h3 id="beautiful-example-1-walking-a-tree"><a href="#beautiful-example-1-walking-a-tree">Beautiful example 1: walking a tree<span class="anchor">#beautiful-example-1-walking-a-tree</span></a></h3>
 <p>Let&rsquo;s see what our ugly external iterator example looks like in Ruby. First, we
 define the tree:</p>
 <pre class="highlight language-ruby"><span class="k">class</span> <span class="t">Tree</span>
@@ -314,7 +344,7 @@ languages you can passably support internal iterators. It&rsquo;s just not idiom
 to do so.</p>
 <p>Internal iteration is definitely beating external style in this tree example.
 Let&rsquo;s see how it fares on the others.</p>
-<h3>Beatiful example 2: finding an item</h3>
+<h3 id="beatiful-example-2-finding-an-item"><a href="#beatiful-example-2-finding-an-item">Beatiful example 2: finding an item<span class="anchor">#beatiful-example-2-finding-an-item</span></a></h3>
 <p>OK, let&rsquo;s say we&rsquo;re using Ruby and we want to write a method that, given any
 iterable object, sees if it contains some object. By &ldquo;any iterable object&rdquo;, we
 mean &ldquo;has an <code>each</code>&rdquo; method, which is the canonical way to iterate. Something
@@ -350,7 +380,7 @@ terminate early like we do here, you really need non-local returns.</p>
 <p>This is a big part of the reason why internal iterators aren&rsquo;t idiomatic in
 other languages. It&rsquo;s really limiting if your <code>each</code> or <code>forEach()</code> function
 can&rsquo;t short-circuit easily.</p>
-<h3>Kitten-punching example: interleaving two sequences</h3>
+<h3 id="kitten-punching-example-interleaving-two-sequences"><a href="#kitten-punching-example-interleaving-two-sequences">Kitten-punching example: interleaving two sequences<span class="anchor">#kitten-punching-example-interleaving-two-sequences</span></a></h3>
 <p>The other example that worked well with external iterators was interleaving two
 sequences together. It was a bit verbose, but it worked just fine and could be
 used with any pair of sequences. Let&rsquo;s translate that to an internal style. This
@@ -365,7 +395,7 @@ threads or continuations. You&rsquo;re up a creek <em>sans</em> paddle.</p>
 iterators. Sure, the tree example was verbose, but at least it was <em>possible</em>.
 (It&rsquo;s also probably why languages that do internal iterators also have
 continuations.)</p>
-<h2>What&rsquo;s the problem?</h2>
+<h2 id="whats-the-problem"><a href="#whats-the-problem">What&rsquo;s the problem?<span class="anchor">#whats-the-problem</span></a></h2>
 <p>It appears we&rsquo;re at a stalemate. External iterators rock for some things,
 internal at others. Why is there no solution that&rsquo;s great at all of them? The
 issue boils down to one thing: <em>the callstack</em>.</p>
@@ -404,7 +434,7 @@ the callstack.</p>
 state</em>. You don&rsquo;t realize how much it&rsquo;s doing for you until you have to write it
 all out by hand. If anyone ever asks me what my favorite data structure is, my
 answer is always <em>the callstack</em>.</p>
-<h2>Who owns the callstack?</h2>
+<h2 id="who-owns-the-callstack"><a href="#who-owns-the-callstack">Who owns the callstack?<span class="anchor">#who-owns-the-callstack</span></a></h2>
 <p>This is the key we need to see why each iteration style sucks for some things.
 It&rsquo;s a question of who gets to control the callstack. Earlier, I said that there
 are two chunks of code involved in iteration: the code generating the values,
@@ -463,64 +493,38 @@ consumer of values needs that power (interleaving two iterators) and external
 ones win.</p>
 <p>Since there&rsquo;s just one callstack, that&rsquo;s the best we can do. <em>&hellip;Or is it?</em></p>
 <p><em>Check out <a href="/2013/02/24/iteration-inside-and-out-part-2/">part two</a> to see what some languages have done to try to deal with this.</em></p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2013/01/13/iteration-inside-and-out/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2013/01/13/iteration-inside-and-out/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

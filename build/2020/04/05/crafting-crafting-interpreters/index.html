@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Crafting &ldquo;Crafting Interpreters&rdquo; &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2018/05/19/40-songs/"
+         title="Older Post &ldquo;40 Songs&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2021/07/29/640-pages-in-15-months/"
+         title="Newer Post &ldquo;640 Pages in 15 Months&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2020/04/05/crafting-crafting-interpreters/" rel="bookmark"
      title="Permanent Link to Crafting &ldquo;Crafting Interpreters&rdquo;">
     Crafting &ldquo;Crafting Interpreters&rdquo;
   </a>
 </h1>
-  <a class="older" href="/2018/05/19/40-songs/"
-     title="Older Post &ldquo;40 Songs&rdquo;">&larr;</a>
-  <a class="newer" href="/2021/07/29/640-pages-in-15-months/"
-     title="Newer Post &ldquo;640 Pages in 15 Months&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">April 05, 2020</a>
-    <span class="tags"><a href="/category/book">book</a> <a href="/category/design">design</a> <a href="/category/language">language</a> <a href="/category/personal">personal</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2018/05/19/40-songs/"
+       title="Older Post &ldquo;40 Songs&rdquo;">&lt;</a></span>
+    <a href="/archive">april 05, 2020</a>
+    <span class="thread-narrow"><a href="/2021/07/29/640-pages-in-15-months/"
+       title="Newer Post &ldquo;640 Pages in 15 Months&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/book">book</a>
+     |
+      <a href="/category/design">design</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/personal">personal</a>
+      </div>
+</nav>
 <p>It took three years and 200,000 words more than I expected, but my second book,
 <em><a href="http://craftinginterpreters.com/">Crafting Interpreters</a></em>, is complete. I finished the third draft of the last
 chapter today, marking the last of around 1,400 days of continuous writing.</p>
@@ -71,7 +99,7 @@ project has <a href="https://www.amazon.com/dp/0990582906">hundreds of five-star
 Korean, Japanese, Chinese, German, and Polish. The book did so much better than
 I expected that I&rsquo;m still not sure how to process it, beyond feeling immense
 gratitude to everyone who read it, bought a copy, or cheered me on.</p>
-<h2>The seed of a book</h2>
+<h2 id="the-seed-of-a-book"><a href="#the-seed-of-a-book">The seed of a book<span class="anchor">#the-seed-of-a-book</span></a></h2>
 <p>Once I finished the print edition of <em>Game Programming Patterns</em>, I took some
 time off. But it didn&rsquo;t take too long for that itch to write about interpreters
 to come back. I knew exactly what I was getting into with writing a book now,
@@ -138,7 +166,7 @@ satisfying period of time. The three parts played off each other in challenging
 ways. Sometimes I would change the language to make one interpreter simpler, but
 find doing so made the other interpreter more complex. Other times I&rsquo;d hit on
 some trick that made everything get smaller and cleaner.</p>
-<h2>Getting back on the horse</h2>
+<h2 id="getting-back-on-the-horse"><a href="#getting-back-on-the-horse">Getting back on the horse<span class="anchor">#getting-back-on-the-horse</span></a></h2>
 <p>I remember the exact moment I committed to writing the book. I was stuck on a
 tricky language design problem: constructor syntax. I knew I wanted classes,
 which meant some way to construct instances. Adding a <code>new</code> keyword felt too
@@ -185,7 +213,7 @@ to do it without any cheating. I wanted a hard guarantee that at the end of each
 chapter, you had a program that you could type in, compile, run, and do
 something with. I knew I wouldn&rsquo;t be able to verify this manually, so it was
 time to create some tools.</p>
-<h2>A bespoke build system</h2>
+<h2 id="a-bespoke-build-system"><a href="#a-bespoke-build-system">A bespoke build system<span class="anchor">#a-bespoke-build-system</span></a></h2>
 <p>I <a href="https://github.com/munificent/game-programming-patterns/tree/master/book">wrote my first book in Markdown</a>. I slapped together <a href="https://github.com/munificent/game-programming-patterns/blob/master/script/format.py">a tiny Python
 script</a> that converts the Markdown to HTML and transcludes the code
 snippets which are stored in separate C++ files. When I started my second book,
@@ -238,7 +266,7 @@ interpreters aren&rsquo;t complete! So I added metadata to track which tests I
 expected to pass by which point in the book. With this in place, I could
 automatically verify that the code that I was showing readers did exactly what I
 expected.</p>
-<h3>More complex snippets</h3>
+<h3 id="more-complex-snippets"><a href="#more-complex-snippets">More complex snippets<span class="anchor">#more-complex-snippets</span></a></h3>
 <p>The snippet markers look pretty straightforward, and in many cases they are. But
 reality tends to get messier and I didn&rsquo;t allow myself to sweep any of that mess
 under nearby rugs. Some changes don&rsquo;t just <em>add</em> code to the interpreter. I try
@@ -353,7 +381,7 @@ is the <code>main()</code> function of the bytecode VM:</p>
 <span class="p">}</span></pre>
 <p>Maintaining this is not super fun. But, thankfully, I have a build and test
 system to tell me when I break something.</p>
-<h2>Slicing up the interpreters</h2>
+<h2 id="slicing-up-the-interpreters"><a href="#slicing-up-the-interpreters">Slicing up the interpreters<span class="anchor">#slicing-up-the-interpreters</span></a></h2>
 <p>So I had a tool that could let me split the interpreters across the chapters.
 If it was possible to break these interpreters into chapters at all, it would
 let me do so. Now I just had to figure out where to carve the seams. This was
@@ -396,7 +424,7 @@ had a reasonably coherent concept and a roughly similar amount of code.</p>
 <p>Before, I felt like I had a language and code that wanted to get out there into
 the world. Now I felt like I had a book. Or, at least, I had all of the <em>code</em>
 for a book.</p>
-<h2>A chapter at a time</h2>
+<h2 id="a-chapter-at-a-time"><a href="#a-chapter-at-a-time">A chapter at a time<span class="anchor">#a-chapter-at-a-time</span></a></h2>
 <p>I wrote my first book one chapter at a time. I drafted, edited, illustrated each
 chapter and put it online before moving to the next one. Serial publishing for
 the digital age. I really loved that process. It helped build an audience for
@@ -420,7 +448,7 @@ In theory, &ldquo;all&rdquo; that remained was writing some text to explain the 
 already written along with some pictures. But, for me at least, English is a
 much more taxing language to write than C or Java. I had all of the difficult
 work ahead of me, and all of the fun was done.</p>
-<h2>Illustrating by hand</h2>
+<h2 id="illustrating-by-hand"><a href="#illustrating-by-hand">Illustrating by hand<span class="anchor">#illustrating-by-hand</span></a></h2>
 <p>Well, not all of the fun. I did still have the illustrations to do. With my last
 book, I hand-drew little sketchy diagrams to show various bits of architecture.
 I wanted even more illustrations for this book to make the concepts less
@@ -518,7 +546,7 @@ paper:</p><figure>
 </figure>
 <p>I went through two full pads of tracing paper, two pads of graph paper, a
 sketch pad, and several pens. I drew 181 illustrations.</p>
-<h2>Writing is suffering</h2>
+<h2 id="writing-is-suffering"><a href="#writing-is-suffering">Writing is suffering<span class="anchor">#writing-is-suffering</span></a></h2>
 <p>I had the code, and I had a process for illustrations. The remaining work was
 just writing all the words and drawing all the pictures. So that&rsquo;s what I did. I
 started at chapter one and started writing. For each chapter, I wrote an outline
@@ -586,7 +614,7 @@ next paragraph or two the entire time. What does it feel like to write an email
 or draw a picture? Writing the book felt like that. I just happened to do it
 over and over again. I feel like a marathon runner who&rsquo;s been watching his feet
 the whole time and didn&rsquo;t even notice when he stumbled over the finish line.</p>
-<h2>Now what?</h2>
+<h2 id="now-what"><a href="#now-what">Now what?<span class="anchor">#now-what</span></a></h2>
 <p><em>Crafting Interpreters</em> is complete now. I had to stop here for a minute and
 look at that sentence. I&rsquo;ve been working on this book every day for around 1,400
 days. I can&rsquo;t <em>wait</em> to take a break. So that&rsquo;s the next step. My plan was to
@@ -609,64 +637,38 @@ I can&rsquo;t wait to hold it in my hands.</p>
 <p>If you&rsquo;d like to hold it in <em>your</em> hands when it comes out, I have <a href="https://mailchi.mp/afd054e73140/robertnystrom">a mailing
 list</a> where I&rsquo;ll let you know when the book is done. In the meantime, I
 think I&rsquo;ve earned some rest.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2020/04/05/crafting-crafting-interpreters/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

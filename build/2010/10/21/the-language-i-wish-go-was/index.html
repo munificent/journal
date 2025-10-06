@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     The Language I Wish Go Was &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/10/01/solving-the-expression-problem/"
+         title="Older Post &ldquo;Solving the Expression Problem&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/10/29/bootstrapping-a-type-system/"
+         title="Newer Post &ldquo;Bootstrapping a Type System&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/10/21/the-language-i-wish-go-was/" rel="bookmark"
      title="Permanent Link to The Language I Wish Go Was">
     The Language I Wish Go Was
   </a>
 </h1>
-  <a class="older" href="/2010/10/01/solving-the-expression-problem/"
-     title="Older Post &ldquo;Solving the Expression Problem&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/10/29/bootstrapping-a-type-system/"
-     title="Newer Post &ldquo;Bootstrapping a Type System&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">October 21, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/go">go</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/10/01/solving-the-expression-problem/"
+       title="Older Post &ldquo;Solving the Expression Problem&rdquo;">&lt;</a></span>
+    <a href="/archive">october 21, 2010</a>
+    <span class="thread-narrow"><a href="/2010/10/29/bootstrapping-a-type-system/"
+       title="Newer Post &ldquo;Bootstrapping a Type System&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/go">go</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>By all rights, I should love <a href="http://golang.org/">Go</a>. I like low-level languages. I&rsquo;m comfortable
 in C and have written memory managers for fun. I hate the boilerplate of Java
 and the compile times of C++. I like closures and garbage collection. I think
@@ -48,12 +74,12 @@ wrong, let me know.</p>
 <p><strong>TL;DR: This post ended up way longer than I expected. Super science summary: I
 wish Go had tuples, unions, constructors, no Nil, exceptions, generics, some
 syntax sugar, and ponies that shoot Cheez Whiz out of their noses.</strong></p>
-<h2>Syntax</h2>
+<h2 id="syntax"><a href="#syntax">Syntax<span class="anchor">#syntax</span></a></h2>
 <p>Go&rsquo;s current syntax is a streamlined version of C, sort of like Danny DeVito
 with elevator shoes. Let&rsquo;s aim a little higher. Smalltalk, Python, and Ruby have
 all given us a slew of good ideas we can learn from to make a language more
 expressive and readable. Here&rsquo;s a few I&rsquo;d really like:</p>
-<h3>Named/keyword arguments</h3>
+<h3 id="namedkeyword-arguments"><a href="#namedkeyword-arguments">Named/keyword arguments<span class="anchor">#namedkeyword-arguments</span></a></h3>
 <p>Positional arguments are great for terseness, and when a function takes
 arguments of different types, errors with them are rare. However, once a
 function starts taking more than two or three arguments or takes arguments of
@@ -74,7 +100,7 @@ though they&rsquo;re all <code>substring</code>, there&rsquo;s no overloading or
 Overloading like this also covers default arguments: simply provide an overload
 with some keywords missing that then forwards to the longer version, passing in
 the missing argument.</p>
-<h3>Block arguments</h3>
+<h3 id="block-arguments"><a href="#block-arguments">Block arguments<span class="anchor">#block-arguments</span></a></h3>
 <p>A lot of behavior comes in pairs: you open a file, then close it. You start a
 transaction, then commit it. You lock, then unlock. In between the pairs, a
 chunk of code is performed. This can be done manually, like:</p>
@@ -107,7 +133,7 @@ function as a subsequent argument. (In other words, it desugars to exactly the
 previous example.) This would, I think, give you a really simple basis for
 defining scoped behavior without having to go down the route of destructors or
 more complicated context management like Python&rsquo;s <code>with</code>.</p>
-<h3>Operator overloading</h3>
+<h3 id="operator-overloading"><a href="#operator-overloading">Operator overloading<span class="anchor">#operator-overloading</span></a></h3>
 <p>I understand this is a religious issue for some people. Apparently, there is a
 cadre of truly evil programmers out there overloading operators to do malicious
 subversive things and good-hearted God-fearing coders are getting harmed by this
@@ -121,11 +147,11 @@ prefer:</p>
 <pre class="highlight language-go"><span class="i">position</span> <span class="p">:</span><span class="o">=</span> <span class="i">origin</span> <span class="o">+</span> <span class="i">offset</span> <span class="o">+</span> <span class="i">orientation</span> <span class="o">*</span> <span class="i">speed</span></pre>
 <p>over:</p>
 <pre class="highlight language-go"><span class="i">position</span> <span class="p">:</span><span class="o">=</span> <span class="i">Add</span><span class="p">(</span><span class="i">Add</span><span class="p">(</span><span class="i">origin</span><span class="p">,</span> <span class="i">offset</span><span class="p">),</span> <span class="i">Multiply</span><span class="p">(</span><span class="i">orientation</span><span class="p">,</span> <span class="i">speed</span><span class="p">))</span></pre>
-<h2>The type system</h2>
+<h2 id="the-type-system"><a href="#the-type-system">The type system<span class="anchor">#the-type-system</span></a></h2>
 <p>Go has two really neat type system features: implicitly implemented interfaces
 and a flat type hierarchy. There are two other simple additions I&rsquo;d dig: tuples
 and unions.</p>
-<h3>Tuples</h3>
+<h3 id="tuples"><a href="#tuples">Tuples<span class="anchor">#tuples</span></a></h3>
 <p>Go already has multiple returns, so the utility of <a href="http://en.wikipedia.org/wiki/Tuple">tuples</a>&mdash;ad-hoc data
 structures for bundling a couple of values together&mdash;is clearly appreciated.
 Making tuples a first-class part of the type system would make multiple returns
@@ -147,7 +173,7 @@ that creates composite values.</p>
 <span class="k">return</span> <span class="i">value</span><span class="p">,</span> <span class="i">err</span>      <span class="c">// Return a tuple.</span></pre>
 <p>Multiple assignment could be used to pull fields out of a tuple:</p>
 <pre class="highlight language-go"><span class="i">x</span><span class="p">,</span> <span class="i">y</span> <span class="p">:</span><span class="o">=</span> <span class="i">point</span></pre>
-<h3>Unions</h3>
+<h3 id="unions"><a href="#unions">Unions<span class="anchor">#unions</span></a></h3>
 <p>Unions are the other compound type made famous by the ML family of languages.
 Where a tuple says &ldquo;this value is an X <em>and</em> a Y&rdquo;, a union says, &ldquo;this value is
 an X <em>or</em> a Y&rdquo;. They&rsquo;re useful anywhere you want to have a value that&rsquo;s one of a
@@ -199,7 +225,7 @@ value at all, and we won&rsquo;t create a variable for it.</p>
 complex initialized object or an error, it&rsquo;s nice not having to build some
 zombie zero-initialized struct that shouldn&rsquo;t be used anyway. This is a good
 segue into the next section&hellip;</p>
-<h2>Initialization</h2>
+<h2 id="initialization"><a href="#initialization">Initialization<span class="anchor">#initialization</span></a></h2>
 <p>A big part of the appeal of static languages is that they can help us avoid
 errors. One common source of errors is improperly initialized values.</p>
 <p>There&rsquo;s two species of initialization bugs that get lumped together. The first
@@ -217,7 +243,7 @@ second. I&rsquo;d like to go further than that. One of the things I love about s
 languages is their ability to ensure at compile time that certain kinds of
 errors are not present. Initialization bugs are a big class of errors we can
 fix. There are a couple of ideas we can learn from other languages to help here.</p>
-<h3>Constructors</h3>
+<h3 id="constructors"><a href="#constructors">Constructors<span class="anchor">#constructors</span></a></h3>
 <p>Constructors are the obvious one. If you want to ensure your objects are in some
 known state, having a function that puts it in that state is a good way to go
 about it. Of course, you can write initialization functions in any language,
@@ -240,7 +266,7 @@ assigned, and also a static error to fail to assign to all fields by the end of
 the method body.</p>
 <p>That&rsquo;s obviously a pretty rough proposal but it&rsquo;s in the shape of something
 that I think would help make for safer code.</p>
-<h3>Eliminating nil</h3>
+<h3 id="eliminating-nil"><a href="#eliminating-nil">Eliminating nil<span class="anchor">#eliminating-nil</span></a></h3>
 <p>Once you have constructors and you can statically ensure that every variable has
 a chance at initialization, you can start to escape one of the <a href="http://lambda-the-ultimate.org/node/3186">most unfortunate
 language misfeatures</a> in wide use today: <code>null</code>. Following in the
@@ -256,7 +282,7 @@ way, you can&rsquo;t create a variable of type <code>*Foo</code> without actuall
 with a pointer to a Foo.</p>
 <p>If we add constructors, we&rsquo;ll have the opportunity to do that initialization,
 and an entire class of painfully common bugs disappears.</p>
-<h2>Error-handling</h2>
+<h2 id="error-handling"><a href="#error-handling">Error-handling<span class="anchor">#error-handling</span></a></h2>
 <p>Go has two strategies for error-handling: return codes and <code>panic</code>. I like
 returning error codes for cases where errors can be expected to happen
 frequently in the course of normal execution&mdash;things like parsing strings or
@@ -291,7 +317,7 @@ by returning an error code in turn or panicking.</p>
 exceptions are the best or worst thing ever, but scant actual elucidation as to
 <em>why</em>. For what it&rsquo;s worth, here&rsquo;s my take. In addition to the aforementioned
 automatic stack-unwinding, there&rsquo;s two other things I like about exceptions:</p>
-<h3>No zombie variables</h3>
+<h3 id="no-zombie-variables"><a href="#no-zombie-variables">No zombie variables<span class="anchor">#no-zombie-variables</span></a></h3>
 <p>My favorite aspect of exceptions is that they can, just by the shape of the
 code, prevent you from doing something incorrect. Consider this:</p>
 <pre class="highlight language-java"><span class="k">try</span> <span class="p">{</span>
@@ -306,7 +332,7 @@ don&rsquo;t have to check an error code. You don&rsquo;t have to check if it&rsq
 you make it to the <code>file.read()</code>, you know you have a valid file. In other
 words, we get to use blocks to limit the scope of variables to only exist when
 it&rsquo;s <em>correct</em> for them to do so.</p>
-<h3>Type safety without coupling</h3>
+<h3 id="type-safety-without-coupling"><a href="#type-safety-without-coupling">Type safety without coupling<span class="anchor">#type-safety-without-coupling</span></a></h3>
 <p>There&rsquo;s another nice feature of exceptions, but it&rsquo;s a bit elaborate to explain.
 Let&rsquo;s say I&rsquo;m passing an object of a type I defined to some third-party library,
 which then calls a method on the object. So the callstack looks something like:</p>
@@ -330,7 +356,7 @@ do a dynamic cast. In other words, we have to give up type safety.</p>
 C++, C#, Java, Python, Ruby, Smalltalk, and most other languages do. It&rsquo;s been
 proven successful, and it&rsquo;s familiar to millions of programmers. It&rsquo;s popular
 for a reason.</p>
-<h2>Generics</h2>
+<h2 id="generics"><a href="#generics">Generics<span class="anchor">#generics</span></a></h2>
 <p>Go may be the only static language created in the past decade that <em>doesn&rsquo;t</em>
 have generics and the lack is a painful omission. Programmers skilled in C++,
 Java, and C# (not to mention the ML family!) have learned that you can write
@@ -359,7 +385,7 @@ and can lean on the fact that Go compiles really fast. By not being bound to C&r
 syntax and antiquated textual <code>#include</code> compilation model, I believe Go could
 get much of the power of templates while still being simpler and less finicky
 than C++.</p>
-<h2>Future-proofing</h2>
+<h2 id="future-proofing"><a href="#future-proofing">Future-proofing<span class="anchor">#future-proofing</span></a></h2>
 <p>Bertrand Meyer coined something he calls the &ldquo;<a href="http://en.wikipedia.org/wiki/Uniform_access_principle">uniform access principle</a>"
 which states:</p>
 <blockquote>
@@ -376,7 +402,7 @@ wrapping <em>everything</em> in an abstraction (in this case getters and setters
 <em>in case</em> you find yourself needing that later. I consider this
 <a href="/2010/09/18/futureproofing-uniform-access-and-masquerades/">future-proofing</a> and I think it&rsquo;s one of the biggest sources of the detested
 boilerplate that led the designers to create Go in the first place.</p>
-<h3>Other kinds of future-proofing</h3>
+<h3 id="other-kinds-of-future-proofing"><a href="#other-kinds-of-future-proofing">Other kinds of future-proofing<span class="anchor">#other-kinds-of-future-proofing</span></a></h3>
 <p>Uniform access talks just about properties but I consider that part of a much
 larger question: &ldquo;Can I replace built-in functionality with a user-defined
 abstraction without having to change each callsite?&rdquo; Wherever the answer is
@@ -451,7 +477,7 @@ organizations, but once Go starts moving to wider enterprise use, I fear we&rsqu
 start seeing &ldquo;best practices&rdquo; like &ldquo;always wrap every field in a getter method&rdquo;
 and &ldquo;always hide constructors behind <code>New__</code>&rdquo; functions and then it&rsquo;s Java all
 over again.</p>
-<h2>Where to go from here</h2>
+<h2 id="where-to-go-from-here"><a href="#where-to-go-from-here">Where to go from here<span class="anchor">#where-to-go-from-here</span></a></h2>
 <p>If you made it this far, I owe you a beer or something. So, where does this long
 piece of armchair language design leave us?</p>
 <p>For you, if the language I&rsquo;ve described sounds like what you want, you may
@@ -469,64 +495,38 @@ control over memory and generics.</p>
 <p>For me, I&rsquo;m gonna get back to working on <a href="https://magpie-lang.org/">my little language</a>.
 Meanwhile, if there&rsquo;s anything here that the Go community is interested in, I&rsquo;m
 more than up for the challenge of actually implementing it.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/10/21/the-language-i-wish-go-was/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/10/21/the-language-i-wish-go-was/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

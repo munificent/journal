@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/06/11/amaranth-an-open-source-roguelike-in-c/"
+         title="Older Post &ldquo;Amaranth, an Open Source Roguelike in C#&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/07/02/new-syntax-for-binding-methods-in-finch/"
+         title="Newer Post &ldquo;New Syntax for Binding Methods in Finch&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/" rel="bookmark"
      title="Permanent Link to Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit">
     Methods on the Ether: Or Creating Your Own Control Structures for Fun and Profit
   </a>
 </h1>
-  <a class="older" href="/2010/06/11/amaranth-an-open-source-roguelike-in-c/"
-     title="Older Post &ldquo;Amaranth, an Open Source Roguelike in C#&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/07/02/new-syntax-for-binding-methods-in-finch/"
-     title="Newer Post &ldquo;New Syntax for Binding Methods in Finch&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">June 25, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/finch">finch</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/06/11/amaranth-an-open-source-roguelike-in-c/"
+       title="Older Post &ldquo;Amaranth, an Open Source Roguelike in C#&rdquo;">&lt;</a></span>
+    <a href="/archive">june 25, 2010</a>
+    <span class="thread-narrow"><a href="/2010/07/02/new-syntax-for-binding-methods-in-finch/"
+       title="Newer Post &ldquo;New Syntax for Binding Methods in Finch&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/finch">finch</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>One of my favorite things about <a href="http://en.wikipedia.org/wiki/Lisp_%28programming_language%29">Lisp</a> and <a href="http://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a> is that they don&rsquo;t
 have special syntax for control structures. Sometimes the most elegant way to
 express a solution to a problem requires a <a href="http://en.wikipedia.org/wiki/Domain-specific_language">unique flow control construct</a>.
@@ -46,7 +72,7 @@ explore a couple of a ideas, I started tinkering on a little interpreted
 language called <a href="https://finch.stuffwithstuff.com/">Finch</a>. Here, I&rsquo;ll try to explain how I addressed the
 build-your-own-control-flow problem while (I hope) keeping the syntax relatively
 readable to most people.</p>
-<h2>A Smalltalk primer</h2>
+<h2 id="a-smalltalk-primer"><a href="#a-smalltalk-primer">A Smalltalk primer<span class="anchor">#a-smalltalk-primer</span></a></h2>
 <p>Finch is inspired directly by Smalltalk (by way of <a href="http://en.wikipedia.org/wiki/Self_%28programming_language%29">Self</a>), so it&rsquo;ll help to
 review how Smalltalk handles control flow before we get to Finch. If you know
 Smalltalk, feel free to skip this.</p>
@@ -117,7 +143,7 @@ arguments and can access variables declared outside of their scopes (i.e. they
 are <a href="http://en.wikipedia.org/wiki/Closure_%28computer_science%29">closures</a>), which means you&rsquo;ve got a very simple syntax that lets you
 create all sorts of control structures and functional idioms like <code>map</code> and
 <code>filter</code>. It just looks funny.</p>
-<h2>Back to Finch</h2>
+<h2 id="back-to-finch"><a href="#back-to-finch">Back to Finch<span class="anchor">#back-to-finch</span></a></h2>
 <p>I wanted Finch to have that power but look less funny. (According to my
 definition of &ldquo;funny&rdquo;, of course. Smalltalkers think their language looks
 perfectly normal.) Here&rsquo;s how our example looks in Finch:</p>
@@ -140,7 +166,7 @@ understand what that condition is for before seeing the expression itself.
 Hence <code>if:</code> comes before <code>numWeasels &gt; numCakes</code>.</p>
 <p>So how do I square that with the fact that Finch is OOP and every method must
 be a message sent to some receiver?</p>
-<h2>Enter the Ether</h2>
+<h2 id="enter-the-ether"><a href="#enter-the-ether">Enter the Ether<span class="anchor">#enter-the-ether</span></a></h2>
 <p>The answer is&hellip; through a little parser trick. If the parser encounters a
 keyword message before it&rsquo;s encountered a receiver to send that message to (i.e.
 it parses <code>foo: bar</code> instead of <code>obj foo: bar</code> as expected), then it
@@ -165,64 +191,38 @@ into the interpreter. Its definition is:</p>
     <span class="i">i</span> <span class="o">&lt;--</span> <span class="i">i</span> <span class="o">+</span> <span class="n">1</span>
   <span class="p">}</span>
 <span class="p">}</span></pre>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/06/25/methods-on-the-ether-or-creating-your-own-control-structures-for-fun-and-profit/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

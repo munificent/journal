@@ -2,8 +2,10 @@
 <html>
   {{ include "head" with title = post.title }}
   <body>
-    <div class="column">
-{{ include "post_page" with post = post }}
-    </div>
+    <main>
+      {{ include "header" with title = post.title }}
+      {{ include "post_content" with post = post }}
+      {{ include "footer" }}
+    </main>
   </body>
-</html>
+ </html>

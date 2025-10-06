@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Magpie Wants You! &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2011/04/21/multimethods-multiple-inheritance-multiawesome/"
+         title="Older Post &ldquo;Multimethods, Multiple Inheritance, Multiawesome!&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2011/09/17/time-for-a-new-blog/"
+         title="Newer Post &ldquo;Time for a New Blog&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2011/06/06/magpie-wants-you/" rel="bookmark"
      title="Permanent Link to Magpie Wants You!">
     Magpie Wants You!
   </a>
 </h1>
-  <a class="older" href="/2011/04/21/multimethods-multiple-inheritance-multiawesome/"
-     title="Older Post &ldquo;Multimethods, Multiple Inheritance, Multiawesome!&rdquo;">&larr;</a>
-  <a class="newer" href="/2011/09/17/time-for-a-new-blog/"
-     title="Newer Post &ldquo;Time for a New Blog&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">June 06, 2011</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a> <a href="/category/oscon">oscon</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2011/04/21/multimethods-multiple-inheritance-multiawesome/"
+       title="Older Post &ldquo;Multimethods, Multiple Inheritance, Multiawesome!&rdquo;">&lt;</a></span>
+    <a href="/archive">june 06, 2011</a>
+    <span class="thread-narrow"><a href="/2011/09/17/time-for-a-new-blog/"
+       title="Newer Post &ldquo;Time for a New Blog&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+     |
+      <a href="/category/oscon">oscon</a>
+      </div>
+</nav>
 <div class="update">
 <p><em>Update 2021/09/12:</em> Magpie is very old and long-dead at this point. I learned a lot from it, but I&rsquo;m no longer maintaining it.
 </p>
@@ -48,7 +76,7 @@ drag anyone else along through that.</p>
 believe Magpie may be at a point where adventurous souls could try to play with
 it. Multimethods were the big missing piece, and I&rsquo;m super excited that they&rsquo;re
 working now. To give you an idea why, here&rsquo;s some fun stuff they enable:</p>
-<h2>Overloading methods</h2>
+<h2 id="overloading-methods"><a href="#overloading-methods">Overloading methods<span class="anchor">#overloading-methods</span></a></h2>
 <p>Magpie is a dynamically typed language (flirtations with optional static typing
 notwithstanding). But in Magpie, every method is a multimethod, which means you
 can overload them.</p>
@@ -78,7 +106,7 @@ right one at runtime based on what you actually pass it.</p>
 <p>And just to clarify, you don&rsquo;t have to define all of these methods in one place
 or even in one module. They can be anywhere you want. In fact, you&rsquo;re free to
 define methods on types you didn&rsquo;t create, which leads us to&hellip;</p>
-<h2>Sane monkey-patching</h2>
+<h2 id="sane-monkey-patching"><a href="#sane-monkey-patching">Sane monkey-patching<span class="anchor">#sane-monkey-patching</span></a></h2>
 <p>One of the most powerful features of Ruby is that you can extend existing
 classes with new methods. This lets you define libraries which make the most of
 Ruby&rsquo;s <code>object.method</code> syntax and can lead to beautifully readable APIs.</p>
@@ -94,7 +122,7 @@ Outside of the scope where you defined it, that method doesn&rsquo;t exist.</p>
 there&rsquo;s no collision, as long as they don&rsquo;t import each other. You can even use
 both of those modules in the same program without collision. You should be free
 to define methods on any classes you like if it makes your code easier to read.</p>
-<h2>Do actual stuff</h2>
+<h2 id="do-actual-stuff"><a href="#do-actual-stuff">Do actual stuff<span class="anchor">#do-actual-stuff</span></a></h2>
 <p>Of course, all of the neat language features in the world are pretty useless if
 the language can&rsquo;t solve actual problems. For almost all of its history, the
 only thing you could actually do with Magpie was print to standard out. I know,
@@ -123,7 +151,7 @@ it, here&rsquo;s a toy asynchronous web server:</p>
     <span class="i">socket</span> <span class="i">close</span><span class="p">()</span>
   <span class="k">end</span>
 <span class="k">end</span></pre>
-<h2>Where you come in</h2>
+<h2 id="where-you-come-in"><a href="#where-you-come-in">Where you come in<span class="anchor">#where-you-come-in</span></a></h2>
 <p>If you&rsquo;ve ever had the desire to help build a programming language and its
 ecosystem, and what you see here looks cool, I&rsquo;d love to have you involved. It
 will be a lot of work, and it&rsquo;s likely that more things are broken than working,
@@ -159,7 +187,7 @@ APIs like IO would be hugely helpful, but scratch whatever itches you.</p>
 <p>That&rsquo;s really about it. You might want to <a href="https://twitter.com/munificentbob">follow me on twitter</a> or
 <a href="https://journal.stuffwithstuff.com">point your RSS reader at my blog</a> too. Beyond that, we&rsquo;ll have to see
 where it goes from here.</p>
-<h2>What comes next</h2>
+<h2 id="what-comes-next"><a href="#what-comes-next">What comes next<span class="anchor">#what-comes-next</span></a></h2>
 <p>Of course, it&rsquo;s entirely possible that no one will sign the charter for this
 little voyage but me, and that&rsquo;s OK. I&rsquo;ll keep hacking on Magpie regardless,
 but for the next few weeks, I&rsquo;ve got something much more fun to focus on:
@@ -176,64 +204,38 @@ just to be safe.</p>
 giving a talk at it!), come see my talk. At the very worst, I promise to give
 you a hug afterwards if you ask nicely. So even if the talk bombs, you get a
 free hug.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2011/06/06/magpie-wants-you/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2011/06/06/magpie-wants-you/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

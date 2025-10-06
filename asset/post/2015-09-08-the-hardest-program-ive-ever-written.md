@@ -4,30 +4,16 @@ tags: dart code
 ---
 
 <style>
-.skull, .skull-note {
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-
-  background: hsl(35, 100%, 96%);
-  color: hsl(35, 40%, 50%);
-
-  padding: 1px;
-}
-
 .skull::before, .skull-note::before {
   content: "\01f480";
-  margin-right: -2px;
+  margin-right: 4px;
 }
 
-a.skull {
-  position: relative;
-  top: -0.4em;
-  font-size: 80%;
-}
-
-a.skull:hover, a.skull-note:hover {
-  color: hsl(35, 100%, 30%);
+.skull, .skull-note {
+  text-decoration: none;
+  border-radius: 3px;
+  background: light-dark(rgb(222.4875, 220.1075, 216.1125), rgb(29.07, 34.425, 39.78));
+  padding: 1px 6px 1px 4px;
 }
 </style>
 
@@ -107,22 +93,22 @@ experimental = document.querySelectorAll('link').any((link) =>
 ```
 
 There are thirteen places where a line break is possible here according to our
-style rules. That's 8,192 different combinations if we brute force them all <a
-id="1" href="#1-note" class="skull">1</a>. The search space we have to cover is
-*exponentially* large, and even ranking different solutions is a subtle problem.
-Is it better to split before the `.any()`? Why or why not?
+style rules. That's 8,192 different combinations if we brute force them <span
+name="skull">all</span> <a id="1" href="#1-note" class="skull">1</a>. The search
+space we have to cover is *exponentially* large, and even ranking different
+solutions is a subtle problem. Is it better to split before the `.any()`? Why or
+why not?
 
-<div class="update">
+<aside name="skull">
 
-<p><strong>What is up with the skulls?</strong></p>
+*What is up with the skulls?* I had two goals with this article: to explain
+how dartfmt works, and to show a realistic picture of how a real programmer
+solves a difficult problem with all of the messiness that entails. Alas, the
+first is more than long enough to try your patience, so I shunted all of the
+dead ends and failed attempts to footnotes. Click the skulls to laugh at my
+misfortune.
 
-<p>I had two goals with this article: to explain how dartfmt works, and to show
-a realistic picture of how a real programmer solves a difficult problem with all
-of the messiness that entails. Alas, the first is more than long enough to try
-your patience, so I shunted all of the dead ends and failed attempts to
-footnotes. Click the skulls to laugh at my misfortune.</p>
-
-</div>
+</aside>
 
 In Dart, we made things harder on ourselves. We have anonymous functions, lots
 of [higher-order functions][iterable], and -- until we added [`async` and

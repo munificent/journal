@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Bootstrapping a Type System &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/10/21/the-language-i-wish-go-was/"
+         title="Older Post &ldquo;The Language I Wish Go Was&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/11/08/refining-exceptions-and-error-codes/"
+         title="Newer Post &ldquo;Refining Exceptions and Error Codes&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/10/29/bootstrapping-a-type-system/" rel="bookmark"
      title="Permanent Link to Bootstrapping a Type System">
     Bootstrapping a Type System
   </a>
 </h1>
-  <a class="older" href="/2010/10/21/the-language-i-wish-go-was/"
-     title="Older Post &ldquo;The Language I Wish Go Was&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/11/08/refining-exceptions-and-error-codes/"
-     title="Newer Post &ldquo;Refining Exceptions and Error Codes&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">October 29, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/10/21/the-language-i-wish-go-was/"
+       title="Older Post &ldquo;The Language I Wish Go Was&rdquo;">&lt;</a></span>
+    <a href="/archive">october 29, 2010</a>
+    <span class="thread-narrow"><a href="/2010/11/08/refining-exceptions-and-error-codes/"
+       title="Newer Post &ldquo;Refining Exceptions and Error Codes&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/java">java</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p><a href="https://magpie-lang.org/">Magpie</a> has reached a strange but neat little milestone on the road from
 &ldquo;weird experiment&rdquo; to &ldquo;real language&rdquo;: the type system is now bootstrapped. I&rsquo;m
 not aware of any other languages where a statement like that is even
@@ -43,7 +71,7 @@ that down.</p>
 better picture of how type systems work in general from this. But, as a warning,
 this ventures into an echelon of programming language nerdery that few care to
 explore. I&rsquo;ll try not to be too boring, but no promises.</p>
-<h2>What is a type?</h2>
+<h2 id="what-is-a-type"><a href="#what-is-a-type">What is a type?<span class="anchor">#what-is-a-type</span></a></h2>
 <p>&ldquo;Type&rdquo; like a lot of other simple words (&ldquo;object&rdquo; anybody?) ends up with a lot
 of fuzzy overlapping definitions in programming: classes, runtime types,
 prototypes, type objects, etc. In dynamically typed languages you&rsquo;ll hear
@@ -57,7 +85,7 @@ object&mdash;a <em>thing</em>&mdash;with that name. That object is a type. If yo
 types as objects that the type checker works with, that leads to the natural
 question of what operations on types we need to support. For Magpie, there are
 two important ones:</p>
-<h3>Assignment compatibility</h3>
+<h3 id="assignment-compatibility"><a href="#assignment-compatibility">Assignment compatibility<span class="anchor">#assignment-compatibility</span></a></h3>
 <p>The first operation is a test for assignment compatibility (i.e. the subtype
 relation). Put plainly, if we have a variable of type <code>A</code>, and we&rsquo;re trying to
 assign to it a value of type <code>B</code>, is that kosher? This sounds like it&rsquo;s limited
@@ -67,7 +95,7 @@ things like, &ldquo;Can I pass an argument of type <code>A</code> to a function 
 expect type <code>B</code>?&rdquo;</p>
 <p>So, with this operation, we can track how types are related to each other, and
 make sure we don&rsquo;t pass or assign values of the wrong type.</p>
-<h3>Member type</h3>
+<h3 id="member-type"><a href="#member-type">Member type<span class="anchor">#member-type</span></a></h3>
 <p>The other operation, which is a little more OOP-specific, is determining if a
 type has a member with a given name, and, if so, what its type is. This helps us
 ensure we aren&rsquo;t calling unsupported methods or accessing undefined fields on a
@@ -77,7 +105,7 @@ class. For example, if we have a chunk of code like:</p>
 the type of its <code>add</code> member is. If the answer to that is nothing (i.e. it
 doesn&rsquo;t have that member) or not a function that accepts a string, then that
 method call is an error.</p>
-<h2>An interface for types</h2>
+<h2 id="an-interface-for-types"><a href="#an-interface-for-types">An interface for types<span class="anchor">#an-interface-for-types</span></a></h2>
 <p>If you have an OOP mindset, you can look at those two operations as defining an
 interface. If you were implementing a type checker in Java, you could define a
 type to be any class that implements:</p>
@@ -88,7 +116,7 @@ type to be any class that implements:</p>
 <p>The concrete classes that represented kinds of types (say &ldquo;Class&rdquo;,
 &ldquo;Interface&rdquo;, &ldquo;Array&rdquo;, etc.) would then implement that interface and you&rsquo;re
 good to go. The Magpie interpreter does exactly that.</p>
-<h2>First-class types</h2>
+<h2 id="first-class-types"><a href="#first-class-types">First-class types<span class="anchor">#first-class-types</span></a></h2>
 <p>It&rsquo;s just that <em>where</em> it does that is kind of unusual. In Magpie, all types are
 first-class, like Ruby or Python. For example:</p>
 <pre class="highlight language-magpie"><span class="k">var</span> <span class="i">monkey</span> <span class="o">=</span> <span class="t">Monkey</span> <span class="i">new</span><span class="p">(</span><span class="s">&quot;Bobo&quot;</span><span class="p">)</span></pre>
@@ -110,7 +138,7 @@ It&rsquo;s also important for type arguments in generics to be <a href="http://s
 <p>Those last two points&mdash;that any type can be a type argument in a generic, and
 that type arguments should be reified&mdash;means that all types really do need to
 be first-class objects in Magpie.</p>
-<h2>Piercing the veil</h2>
+<h2 id="piercing-the-veil"><a href="#piercing-the-veil">Piercing the veil<span class="anchor">#piercing-the-veil</span></a></h2>
 <p>So, going down this path, we find ourselves in a weird place. Over in the Java
 type checking code, we have some <code>Type</code> interface and a bunch of Java classes
 that implement it. The type system is fully fleshed out in Java. Meanwhile, on
@@ -120,7 +148,7 @@ fully implement the type system.</p>
 redundancy, we&rsquo;ll kill one side. Which one? We know we need types to be first
 class in Magpie, so that really only leaves one option: yank the type system out
 of Java.</p>
-<h2>What a type checker does</h2>
+<h2 id="what-a-type-checker-does"><a href="#what-a-type-checker-does">What a type checker does<span class="anchor">#what-a-type-checker-does</span></a></h2>
 <p>A type checker is actually a pretty simple piece of software. It basically walks
 through a chunk of code tracking the types of the operations and checking them
 for validity. For example, consider:</p>
@@ -169,7 +197,7 @@ matches the argument type (<code>String</code>, from <em>7</em>). (It does.)</p>
 <p>And we&rsquo;re done. Steps 3 6, and 8 are where we do <code>getMemberType()</code>. Steps 4 and
 9 are where we use <code>canAssignFrom()</code>. Nothing too crazy. In Magpie, this is
 basically <a href="https://github.com/munificent/magpie/blob/b37c7265c689fb150c6463c9538284610dba1a01/src/com/stuffwithstuff/magpie/interpreter/ExprChecker.java">one file</a>.</p>
-<h2>Re-piercing the veil</h2>
+<h2 id="re-piercing-the-veil"><a href="#re-piercing-the-veil">Re-piercing the veil<span class="anchor">#re-piercing-the-veil</span></a></h2>
 <p>Here&rsquo;s where it gets weird. We need to get this working with first-class types.
 That means that <code>getMemberType</code> and <code>canAssignFrom</code> will be methods written in
 Magpie.</p>
@@ -182,7 +210,7 @@ appropriate method and and passes the result back to the type checker.</p>
 evaluated (methods on the type objects) is generally not the code being type-
 checked (any random piece of Magpie code like <code>1 + 2</code>). Keeping track of which
 context the interpreter is in is a little bit confusing, but it works.</p>
-<h2>Bootstrapping</h2>
+<h2 id="bootstrapping"><a href="#bootstrapping">Bootstrapping<span class="anchor">#bootstrapping</span></a></h2>
 <p>Magpie has worked this way successfully for several months. This is possible
 because at its core, Magpie is dynamic&mdash;it can execute a chunk of Magpie code
 without having done any compilation or type checking on it. So I could write the
@@ -243,7 +271,7 @@ that is in turn an instance of that same <code>Interface</code> class.</p>
 <p>Now that all of the methods in the classes defining the type system have type
 annotations, this means the type checker will check them too. So when a Magpie
 program is type checked, it also type checks the type system itself.</p>
-<h2>One less language</h2>
+<h2 id="one-less-language"><a href="#one-less-language">One less language<span class="anchor">#one-less-language</span></a></h2>
 <p>With all types being actual live Magpie objects, that raises an odd question:
 What is a type annotation? In most languages, there are actually two languages
 mixed together: the language of expressions and the language of types. So, in
@@ -266,7 +294,7 @@ and use them in type annotations:</p>
 having the type system welded into the language. If you like prototypes, or
 algebraic data types, wouldn&rsquo;t it be nice if you could add them to the language
 yourself? Or maybe that&rsquo;s just crazy talk.</p>
-<h2>Why?</h2>
+<h2 id="why"><a href="#why">Why?<span class="anchor">#why</span></a></h2>
 <p>You may be asking why the hell I went so far down the rabbit hole here. I didn&rsquo;t
 intend to, honest. I really don&rsquo;t want Magpie to be some weird esoteric
 language. All I wanted was:</p>
@@ -280,64 +308,38 @@ language. All I wanted was:</p>
 </ol>
 <p>This just seemed like the most straightforward way to pull that off, but if you
 got any better ideas, I&rsquo;m all ears.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/10/29/bootstrapping-a-type-system/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

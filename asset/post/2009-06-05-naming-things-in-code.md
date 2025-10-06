@@ -7,9 +7,11 @@ When I'm designing software, I spend a lot of time thinking about names. For me,
 thinking about names is inseparable from the process of design. To name
 something is to define it.
 
-> In the beginning was the Word, and the Word was with God, and the Word was
-God.
+<blockquote class="cited">
 
+In the beginning was the Word, and the Word was with God, and the Word was God.
+
+</blockquote>
 <p class="cite">The Gospel According to John</p>
 
 One of the ways I know a design has really clicked is when the names feel right.

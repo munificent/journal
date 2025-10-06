@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,38 +13,62 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Multimethods, Global Scope, and Monkey-Patching &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2012/01/24/higher-order-macros-in-c/"
+         title="Older Post &ldquo;Higher Order Macros in C++&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2012/12/19/the-impoliteness-of-overriding-methods/"
+         title="Newer Post &ldquo;The Impoliteness of Overriding Methods&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2012/06/12/multimethods-global-scope-and-monkey-patching/" rel="bookmark"
      title="Permanent Link to Multimethods, Global Scope, and Monkey-Patching">
     Multimethods, Global Scope, and Monkey-Patching
   </a>
 </h1>
-  <a class="older" href="/2012/01/24/higher-order-macros-in-c/"
-     title="Older Post &ldquo;Higher Order Macros in C++&rdquo;">&larr;</a>
-  <a class="newer" href="/2012/12/19/the-impoliteness-of-overriding-methods/"
-     title="Newer Post &ldquo;The Impoliteness of Overriding Methods&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">June 12, 2012</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
-<blockquote>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2012/01/24/higher-order-macros-in-c/"
+       title="Older Post &ldquo;Higher Order Macros in C++&rdquo;">&lt;</a></span>
+    <a href="/archive">june 12, 2012</a>
+    <span class="thread-narrow"><a href="/2012/12/19/the-impoliteness-of-overriding-methods/"
+       title="Newer Post &ldquo;The Impoliteness of Overriding Methods&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
+<blockquote class="cited">
 <p>What I mean is that if you really want to understand something, the best way
 is to try and explain it to someone else. That forces you to sort it out in
 your mind. And the more slow and dim-witted your pupil, the more you have to
 break things down into more and more simple ideas. And that&rsquo;s really the
 essence of programming. By the time you&rsquo;ve sorted out a complicated idea into
 little steps that even a stupid machine can deal with, you&rsquo;ve learned
-something about it yourself.</p>
-</blockquote><p class="cite">Douglas Adams</p>
+something about it yourself.</p></blockquote>
+<p class="cite">Douglas Adams</p>
 <p>I&rsquo;m interested in all kinds of languages, so I&rsquo;d read about <a href="http://c2.com/cgi/wiki?MultiMethods">multimethods</a> and
 generic functions in <a href="https://en.wikipedia.org/wiki/Common_Lisp_Object_System">Common Lisp</a>, <a href="http://clojure.org/multimethods">Clojure</a> and <a href="https://opendylan.org/books/dpg/multi.html">Dylan</a>. Even
 lesser-known languages like <a href="http://www.cs.washington.edu/research/projects/cecil/www/cecil.html">Cecil</a> and <a href="http://nice.sourceforge.net/">Nice</a>. But it wasn&rsquo;t until I
@@ -57,7 +83,7 @@ explanation of how multimethods are scoped in Magpie, but also sort of a
 preliminaries. OK, maybe a <em>lot</em> of preliminaries. This is a corner of language
 design that I think few people wander into and previous explorers don&rsquo;t seem
 have left a map so maybe there will be some value in this.</p>
-<h2>What is scope?</h2>
+<h2 id="what-is-scope"><a href="#what-is-scope">What is scope?<span class="anchor">#what-is-scope</span></a></h2>
 <p>When you hear &ldquo;scope&rdquo; you probably think something like this:</p>
 <pre class="highlight language-c"><span class="p">{</span>
   <span class="t">int</span> <span class="i">a</span> <span class="o">=</span> <span class="n">1</span><span class="p">;</span>
@@ -106,7 +132,7 @@ around with it. When we do <code>.favoriteColor</code> here, it looks for a prop
 lexical scope and object scope. Class-based object-oriented languages often have
 a couple more scopes. Methods are looked up on the <em>class</em> of the receiver, and
 there is usually a separate scope for &ldquo;static&rdquo; methods.</p>
-<h2>What scopes does Magpie have?</h2>
+<h2 id="what-scopes-does-magpie-have"><a href="#what-scopes-does-magpie-have">What scopes does Magpie have?<span class="anchor">#what-scopes-does-magpie-have</span></a></h2>
 <p>OK, so we have block scope, object scope, method scope, static scope. There&rsquo;s
 lexical scoping and dynamic scoping. Which of these does Magpie have? Just one:
 <em>lexical block scope.</em></p>
@@ -133,7 +159,7 @@ variable.</p>
 and each module has its own top-level scope. There is no single global shared
 scope. Instead, each module is its own little island that only sees the names
 that it defines or explicitly imports.</p>
-<h2>What about polymorphism?</h2>
+<h2 id="what-about-polymorphism"><a href="#what-about-polymorphism">What about polymorphism?<span class="anchor">#what-about-polymorphism</span></a></h2>
 <p>&ldquo;Polymorphism&rdquo; in the object-oriented sense means that the same method can do
 different things at runtime given different kinds of objects. &ldquo;Single-dispatch&rdquo;
 OOP languages, which are probably what you&rsquo;re familiar with, achieve this by
@@ -162,7 +188,7 @@ A-OK. What this does is a create a <em>single</em> <code>add()</code> <em>multi<
 those three methods. When you call <code>add()</code>, the interpreter looks at the types
 of the arguments at runtime and picks the right method to call. Instead of using
 <em>scoping</em> for polymorphism, it essentially uses <a href="http://www.haskell.org/tutorial/patterns.html">pattern matching</a>.</p>
-<h2>Time for a snack break</h2>
+<h2 id="time-for-a-snack-break"><a href="#time-for-a-snack-break">Time for a snack break<span class="anchor">#time-for-a-snack-break</span></a></h2>
 <p>That probably all sounds a bit hand-wavey. Let&rsquo;s walk through a concrete example
 and see how all of the moving parts mesh together. First, let&rsquo;s make a module
 that defines a class and some methods for it.</p>
@@ -199,7 +225,7 @@ straight into them.)</p>
 <p>These problems all turn out to be related exactly to the original question of
 this post, how methods are scoped, and solving them is what led to Magpie&rsquo;s
 current (and perhaps surprising) answer.</p>
-<h2>The first problem: &ldquo;overriding&rdquo; methods</h2>
+<h2 id="the-first-problem-overriding-methods"><a href="#the-first-problem-overriding-methods">The first problem: &ldquo;overriding&rdquo; methods<span class="anchor">#the-first-problem-overriding-methods</span></a></h2>
 <p>So what happens when we run this example? Let&rsquo;s say for now that methods are
 scoped just like variables, which is how Magpie <em>used</em> to work. We&rsquo;ll walk
 through it a line at a time.</p>
@@ -229,7 +255,7 @@ unrelated to the one <code>sandwich.mag</code> and <code>main.mag</code> have.</
 <a href="http://en.wikipedia.org/wiki/Method_overriding">overriding</a> in other OOP languages. Any place that is calling <code>toString</code>
 should see that new specialization even if it hasn&rsquo;t directly imported the
 module that contains it.</p>
-<h2>The first solution: shared multimethod objects</h2>
+<h2 id="the-first-solution-shared-multimethod-objects"><a href="#the-first-solution-shared-multimethod-objects">The first solution: shared multimethod objects<span class="anchor">#the-first-solution-shared-multimethod-objects</span></a></h2>
 <p>My <a href="https://groups.google.com/g/magpie-lang/c/BilLNpvklYQ">fix</a> for this was to change what it means to import a multimethod. In our
 little example, the import graph is like:</p>
 <pre class="highlight language-asciiart">core
@@ -250,7 +276,7 @@ those modules have a reference to.</p>
 <p>This works because <code>core</code> is the first module that created it, and our other two
 modules are both importing it. So every place that&rsquo;s using <code>toString</code> has a path
 of imports that ultimately traces back to the root in <code>core</code>.</p>
-<h2>The second problem: colliding imports</h2>
+<h2 id="the-second-problem-colliding-imports"><a href="#the-second-problem-colliding-imports">The second problem: colliding imports<span class="anchor">#the-second-problem-colliding-imports</span></a></h2>
 <p>Problem solved, right? Well, not so fast. After I did this, I ran into the next
 issue. Here&rsquo;s another example. We&rsquo;ve got these two modules:</p>
 <pre class="highlight language-magpie"><span class="c">// pal.mag</span>
@@ -292,7 +318,7 @@ the case. The import graph is like:</p>
 Instead, <code>pal.mag</code> and <code>pet.mag</code> both create their own unrelated <code>name</code>
 multimethods. When <code>main.mag</code> tries to import them both, they aren&rsquo;t the same
 object, so they collide.</p>
-<h2>The second (failed) solution: just deal with it</h2>
+<h2 id="the-second-failed-solution-just-deal-with-it"><a href="#the-second-failed-solution-just-deal-with-it">The second (failed) solution: just deal with it<span class="anchor">#the-second-failed-solution-just-deal-with-it</span></a></h2>
 <p>My first stab at &ldquo;fixing&rdquo; this was to just declare those semantics are How It
 Should Be. If you have colliding method names, you just rename on import, like:</p>
 <pre class="highlight language-magpie"><span class="c">// main.mag</span>
@@ -311,7 +337,7 @@ end</p>
 <p>Worse, it breaks <a href="http://en.wikipedia.org/wiki/Duck_typing">duck typing</a>. Using this scheme, there&rsquo;s no way to create a
 single <code>greet()</code> method that works on both pets and pals since there isn&rsquo;t a
 single <code>name</code> method it can call on both.</p>
-<h2>The third (failed) solution: do something really complex</h2>
+<h2 id="the-third-failed-solution-do-something-really-complex"><a href="#the-third-failed-solution-do-something-really-complex">The third (failed) solution: do something really complex<span class="anchor">#the-third-failed-solution-do-something-really-complex</span></a></h2>
 <p>At first, I tried to fix this by doing some hairy method merging when you
 imported. If you had a method name collision on import, it would create a new
 local multimethod object that contained all of the specializations of both of
@@ -325,7 +351,7 @@ imported a multimethod from. When you defined a new specialization, that would
 get pushed back up to those modules too.</p>
 <p>This did sort of work, but it was complex, felt brittle, and was hard to reason
 about.</p>
-<h2>The fourth solution: go global</h2>
+<h2 id="the-fourth-solution-go-global"><a href="#the-fourth-solution-go-global">The fourth solution: go global<span class="anchor">#the-fourth-solution-go-global</span></a></h2>
 <p>I spent a lot of time thinking about it and finally asked if there was a
 radically simpler answer that would work. One came to mind: <strong>make methods
 <em>globally</em> scoped.</strong></p>
@@ -382,7 +408,7 @@ crack it open and get at the methods.</p>
 in a single dispatch language. Actually, that&rsquo;s only half true. Single-dispatch
 languages only support a <em>subset</em> of what multimethods let you do. Magpie can
 also express a bunch of stuff that single-dispatch languages can&rsquo;t.</p>
-<h2>Better than monkey-patching</h2>
+<h2 id="better-than-monkey-patching"><a href="#better-than-monkey-patching">Better than monkey-patching<span class="anchor">#better-than-monkey-patching</span></a></h2>
 <p>Multimethods match on <em>all</em> of their arguments, not just the &ldquo;receiver&rdquo; on the
 left-hand side. Let&rsquo;s go back to our Ruby example. Say we need to serialize Dogs
 and Cows to a stream. Since classes in Ruby are open for extension, we can do:</p>
@@ -436,64 +462,38 @@ and less chance of collision. The entire argument signature forms a key that&rsq
 used to select the right method. If you don&rsquo;t want people to accidentally hit
 your specific method, just ensure that it requires an argument of a type that&rsquo;s
 hard to get a hold of.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2012/06/12/multimethods-global-scope-and-monkey-patching/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2012/06/12/multimethods-global-scope-and-monkey-patching/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

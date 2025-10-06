@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,36 +13,60 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Multiple Inheritance in JavaScript &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2011/02/13/extending-syntax-from-within-a-language/"
+         title="Older Post &ldquo;Extending Syntax from Within a Language&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
+         title="Newer Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2011/02/21/multiple-inheritance-in-javascript/" rel="bookmark"
      title="Permanent Link to Multiple Inheritance in JavaScript">
     Multiple Inheritance in JavaScript
   </a>
 </h1>
-  <a class="older" href="/2011/02/13/extending-syntax-from-within-a-language/"
-     title="Older Post &ldquo;Extending Syntax from Within a Language&rdquo;">&larr;</a>
-  <a class="newer" href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
-     title="Newer Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">February 21, 2011</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/javascript">javascript</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2011/02/13/extending-syntax-from-within-a-language/"
+       title="Older Post &ldquo;Extending Syntax from Within a Language&rdquo;">&lt;</a></span>
+    <a href="/archive">february 21, 2011</a>
+    <span class="thread-narrow"><a href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
+       title="Newer Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/javascript">javascript</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>You know how when you stare at a hot stove you feel this weird compulsion to put
 your hand on it? The longer you stare, the stronger the pull, even though you
 know you&rsquo;ll just burn the crap out of yourself. I got a similar compulsion a
 couple of days ago: <em>I think I can implement multiple inheritance in
 JavaScript.</em></p>
 <p>I put my hand on the metaphorical burner. It turns out that you <em>can</em>, in Firefox 4 Beta, at least. Never one to shy away from a good hack, I figured I&rsquo;d break it down so you can see how it works. (The whole enchilada is <a href="https://github.com/munificent/multipleinheritance.js">here</a>.) As a nice bonus, you&rsquo;ll get exposed to a potentially really cool feature coming down the pipe in JavaScript, and maybe even change the way you think about multiple inheritance.</p>
-<h2>What&rsquo;s the problem?</h2>
+<h2 id="whats-the-problem"><a href="#whats-the-problem">What&rsquo;s the problem?<span class="anchor">#whats-the-problem</span></a></h2>
 <p>Before I go into how I made this work, let me explain why I was even thinking
 about this. As is often the case, frustration was the mother of this invention.
 My problem was something like this:</p>
@@ -104,7 +130,7 @@ from for my widget and not knowing why I was so frustrated before the above
 finally clicked in my head. It isn&rsquo;t me that&rsquo;s wrong. It isn&rsquo;t the class
 hierarchy of the library I&rsquo;m using. It&rsquo;s the assumption that single inheritance
 is adequate.</p>
-<h2>Prior art</h2>
+<h2 id="prior-art"><a href="#prior-art">Prior art<span class="anchor">#prior-art</span></a></h2>
 <p>Before I run off to my text editor, what about other JS class systems? I&rsquo;m no
 expert on JavaScript libraries, but the ones I&rsquo;ve seen that fake classes and
 inheritance do so by manipulating the prototype chain, and almost all of them
@@ -120,7 +146,7 @@ about JavaScript is that you can extend existing prototypes. I wanted that to
 work even with multiple inheritance. If I add a method to an existing base
 class, every class that inherits from it should get it, even if they were
 defined <em>before</em> I added my new method.</p>
-<h2>The prototypal prototype language</h2>
+<h2 id="the-prototypal-prototype-language"><a href="#the-prototypal-prototype-language">The prototypal prototype language<span class="anchor">#the-prototypal-prototype-language</span></a></h2>
 <p>Given my goals, it still isn&rsquo;t clear what <em>kind</em> of multiple inheritance system
 I want. Should it work <a href="http://www.parashift.com/c++-faq-lite/basics-of-inheritance.html">like C++</a>? Like <a href="http://ruby-doc.com/docs/ProgrammingRuby/html/tut_modules.html">mixins in Ruby</a>? <a href="https://docs.scala-lang.org/tour/traits.html">Traits in
 Scala</a>? Of course, if you think about it, there&rsquo;s really only one
@@ -145,29 +171,29 @@ alphabetical order, and stop as soon as we find the property.</p>
 <p>When we check a parent for a property, it may in turn look at <em>its</em> parents, so
 property lookup is a depth-first search through the parent property graph.</p>
 <p>This is almost trivially simple, but a ton of awesome stuff falls out of it like magic:</p>
-<h3>Single inheritance</h3>
+<h3 id="single-inheritance"><a href="#single-inheritance">Single inheritance<span class="anchor">#single-inheritance</span></a></h3>
 <p>Single inheritance is easy of course: just make an object that only has one
 parent property. JavaScript is basically a degenerate case of Self dispatch
 where the rule for naming a parent property is &ldquo;must be <code>__proto__</code>&rdquo;.</p>
-<h3>Multiple inheritance</h3>
+<h3 id="multiple-inheritance"><a href="#multiple-inheritance">Multiple inheritance<span class="anchor">#multiple-inheritance</span></a></h3>
 <p>And, of course, multiple inheritance is easy. Just have more than one parent
 property. Since objects are completely open bags of properties, you can tack on
 as many as you want.</p>
-<h3>Dynamic inheritance</h3>
+<h3 id="dynamic-inheritance"><a href="#dynamic-inheritance">Dynamic inheritance<span class="anchor">#dynamic-inheritance</span></a></h3>
 <p>Here&rsquo;s where it starts to get interesting. When we&rsquo;re walking the parents
 looking for a property, we look at the <em>value</em> stored in that parent property.
 Like any other property, you can assign a new value to it. That means, <em>at
 runtime</em>, you can change an object&rsquo;s parents. In effect, a live object can
 spontaneously change its class.</p>
 <p>You know that whole <a href="http://en.wikipedia.org/wiki/State_pattern">State design pattern</a> that takes a pile of code to implement in Java? With this, it&rsquo;s just: <code>object.someParent = newState</code>.</p>
-<h3>Controlled resolution order</h3>
+<h3 id="controlled-resolution-order"><a href="#controlled-resolution-order">Controlled resolution order<span class="anchor">#controlled-resolution-order</span></a></h3>
 <p>One of the challenges with multiple inheritance is figuring out what actual
 method gets called when there&rsquo;s a name collision. If MyClass inherits from two
 other classes that both have <code>foo()</code>, which one do I get when I call
 <code>myObject.foo()</code>?</p>
 <p>In Self, you can control that easily&mdash;just name the parent properties so that
 the one you want to take priority comes first alphabetically.</p>
-<h3>Simple constructors</h3>
+<h3 id="simple-constructors"><a href="#simple-constructors">Simple constructors<span class="anchor">#simple-constructors</span></a></h3>
 <p>Another annoying facet of multiple inheritance is object construction. Each of
 your base classes may have its own constructor which needs to get called when
 the derived class is constructed. Languages often have complex special support
@@ -176,7 +202,7 @@ just for this: constructor initialization lists in C++, <code>super()</code> in 
 your members, etc.</p>
 <p>When your &ldquo;base classes&rdquo; are just properties on the object, construction becomes
 simply assigning some properties.</p>
-<h2>Back to our example</h2>
+<h2 id="back-to-our-example"><a href="#back-to-our-example">Back to our example<span class="anchor">#back-to-our-example</span></a></h2>
 <p>So, assuming we can magically make this work, how would it look in JavaScript?</p>
 <p>Here&rsquo;s my goal. I want to be able to define a couple of widget &ldquo;base classes&rdquo;
 like this vanilla JavaScript:</p>
@@ -237,7 +263,7 @@ name in JavaScript, I&rsquo;ll use <code>_p</code>. So my widget&rsquo;s constru
 <span class="i">widget</span><span class="p">.</span><span class="i">addChild</span><span class="p">(</span><span class="k">new</span> <span class="t">MyWidget</span><span class="p">(</span><span class="s">&#39;Dan&#39;</span><span class="p">));</span>
 <span class="i">widget</span><span class="p">.</span><span class="i">listChildren</span><span class="p">();</span></pre>
 <p>Unpossible you say? Read on:</p>
-<h2>Behold the power of proxies</h2>
+<h2 id="behold-the-power-of-proxies"><a href="#behold-the-power-of-proxies">Behold the power of proxies<span class="anchor">#behold-the-power-of-proxies</span></a></h2>
 <p>One of the planned features for <a href="https://en.wikipedia.org/wiki/ECMAScript#ES2015">Harmony</a>, the codename of the next version of
 ECMAScript is support for <a href="https://tvcutsem.github.io/proxies_tutorial">proxies</a>. A proxy, as its name implies, is an
 object that stands in for another. If you have a proxy object <code>jamesBrown</code> and
@@ -289,7 +315,7 @@ instance of that proxy instead. We do that by proxying the constructor too:</p>
 look up any properties on it, the proxy shunts over to our dispatch function
 that knows how to handle the parent property shenanigans. Self-style multiple
 prototypes in the comfort of your very own browser.</p>
-<h2>Is this a good idea?</h2>
+<h2 id="is-this-a-good-idea"><a href="#is-this-a-good-idea">Is this a good idea?<span class="anchor">#is-this-a-good-idea</span></a></h2>
 <p>The short answer is &ldquo;no&rdquo;, of course. This little hack should never ever enter
 the world of real code. I just wanted to see if I could get it to work. Proxies
 are so incredibly powerful that this is just scratching the surface of what you
@@ -303,7 +329,7 @@ I&rsquo;m starting to feel like the answer is &ldquo;yes&rdquo;.</p>
 out of <em>multiple</em> parts gives us the ability to create <code>2^n</code> different
 combinations from just <code>n</code> unique parts. We shouldn&rsquo;t give that power up without
 good reason.</p>
-<h2>But multiple inheritance killed my dog!</h2>
+<h2 id="but-multiple-inheritance-killed-my-dog"><a href="#but-multiple-inheritance-killed-my-dog">But multiple inheritance killed my dog!<span class="anchor">#but-multiple-inheritance-killed-my-dog</span></a></h2>
 <p>Paraphrasing a <a href="http://regex.info/blog/2006-09-15/247">classic quote</a>:</p>
 <blockquote>
 <p>Some people, when confronted with a problem, think &ldquo;I know, I&rsquo;ll use multiple
@@ -338,7 +364,7 @@ bunch of stuff. They can directly inherit those pieces all in one flat list.</p>
 do one small thing and only one thing, odds should be good that they won&rsquo;t have
 any methods that collide. Having name collisions should be a code smell: Why is
 the same named concept smeared across a bunch of classes?</p>
-<h2>So just use composition</h2>
+<h2 id="so-just-use-composition"><a href="#so-just-use-composition">So just use composition<span class="anchor">#so-just-use-composition</span></a></h2>
 <p>What I&rsquo;m describinh sounds a lot more like composition than inheritance. The way
 MyWidget is constructed, we literally <em>are</em> composing it: the base classes are
 properties on it directly. So why not just use that? Why shouldn&rsquo;t the above
@@ -357,7 +383,7 @@ example simply be:</p>
 The fact that MyWidget gets <code>hide()</code> from Hideable should be an implementation
 detail. From the caller&rsquo;s perspective, <code>hide()</code> is something a MyWidget can do,
 it doesn&rsquo;t and shouldn&rsquo;t care <em>how</em> or where that code is defined.</p>
-<h2>Where to next</h2>
+<h2 id="where-to-next"><a href="#where-to-next">Where to next<span class="anchor">#where-to-next</span></a></h2>
 <p>What all of this boils down to is how I&rsquo;d like to be able to code. I want to be
 able to build my classes by composing them out of a flat set of reusable traits.
 I don&rsquo;t want framework designers to spend weeks agonizing over brittle
@@ -371,64 +397,38 @@ collection class inherits. I want to be able to add methods like <code>map()</co
 helper classes</a> like <code>Collections.max(someEnumerable)</code>.</p>
 <p>Less boilerplate, less copy and paste, flatter hierarchies, better
 composability. That&rsquo;s what I&rsquo;m going for.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2011/02/21/multiple-inheritance-in-javascript/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

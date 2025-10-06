@@ -12,7 +12,7 @@ dependencies:
   markdown: ^4.0.0
   minibuild:
     path: ../minibuild # TODO: Make normal dependency.
-  sass: ^1.37.5
+  sass: ^1.93.2
   source_span: any
   typographic_markdown:
     path: ../typographic_markdown # TODO: Make normal dependency.

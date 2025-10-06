@@ -6,8 +6,8 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Sun, 21 Sep 2025 22:50:28 GMT</pubDate>
-    <lastBuildDate>Sun, 21 Sep 2025 22:50:28 GMT</lastBuildDate>
+    <pubDate>Mon, 06 Oct 2025 02:53:26 GMT</pubDate>
+    <lastBuildDate>Mon, 06 Oct 2025 02:53:26 GMT</lastBuildDate>
 
 
     <item>
@@ -88,7 +88,7 @@ install of SDL3. You can probably delete the &lt;code&gt;main.m&lt;/code&gt; fil
 some of the other generated files that XCode put in the new project, but I
 haven&amp;rsquo;t figured that out yet.&lt;/p&gt;
 &lt;p&gt;Now here&amp;rsquo;s all the wrong stuff I tried first before I got that working&amp;hellip;&lt;/p&gt;
-&lt;h2&gt;Attempt 1: Download a release and use the xcframework&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-1-download-a-release-and-use-the-xcframework&quot;&gt;&lt;a href=&quot;#attempt-1-download-a-release-and-use-the-xcframework&quot;&gt;Attempt 1: Download a release and use the xcframework&lt;span class=&quot;anchor&quot;&gt;#attempt-1-download-a-release-and-use-the-xcframework&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;In XCode, I created a new &amp;ldquo;CLI Command&amp;rdquo; C app. That got me a &amp;ldquo;Hello, world!&amp;rdquo; up
 and running without any problems. Then I copied the contents of &lt;a href=&quot;https://github.com/libsdl-org/SDL/blob/main/docs/hello.c&quot;&gt;this SDL hello
 example&lt;/a&gt; into my source file.&lt;/p&gt;
@@ -105,7 +105,7 @@ SDL3 framework, but then balked because it thinks the framework isn&amp;rsquo;t 
 signed and safe to use. The OS gave me a popup error with &amp;ldquo;SDL3.framework Not
 Opened&amp;rdquo; because &amp;ldquo;macOS cannot verify that this app is free from malware&amp;rdquo;.&lt;/p&gt;
 &lt;p&gt;Crap.&lt;/p&gt;
-&lt;h2&gt;Attempt 2: Embed the framework&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-2-embed-the-framework&quot;&gt;&lt;a href=&quot;#attempt-2-embed-the-framework&quot;&gt;Attempt 2: Embed the framework&lt;span class=&quot;anchor&quot;&gt;#attempt-2-embed-the-framework&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Poking around online, some people say this error can be fixed by embedding the
 SDL framework in my app and having XCode sign it when it embeds it. In XCode, in
 the target settings under &amp;ldquo;Build Phases&amp;rdquo;, there is a panel for &amp;ldquo;Embed
@@ -121,7 +121,7 @@ removing the framework from &amp;ldquo;Link Binary with Libraries&amp;rdquo;, ch
 when installing&amp;rdquo;, and a bunch of other things I don&amp;rsquo;t remember. Nothing worked.
 Either I removed so much that the compiler couldn&amp;rsquo;t find the framework at all,
 or it got the duplicate build file error.&lt;/p&gt;
-&lt;h2&gt;Attempt 3: Don&amp;rsquo;t use the entire &amp;ldquo;SDL3.xcframework&amp;rdquo;&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-3-dont-use-the-entire-sdl3xcframework&quot;&gt;&lt;a href=&quot;#attempt-3-dont-use-the-entire-sdl3xcframework&quot;&gt;Attempt 3: Don&amp;rsquo;t use the entire &amp;ldquo;SDL3.xcframework&amp;rdquo;&lt;span class=&quot;anchor&quot;&gt;#attempt-3-dont-use-the-entire-sdl3xcframework&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I started watching &lt;a href=&quot;https://www.youtube.com/watch?v=tRqgh8Xwe1E&quot;&gt;this video&lt;/a&gt; to see if it could help. He doesn&amp;rsquo;t use
 the entire &lt;code&gt;SDL3.xcframework&lt;/code&gt; bundle. Instead, he opens that, goes into
 &lt;code&gt;macos-arm64_x86_64&lt;/code&gt; and copies the &lt;code&gt;SDL3.framework&lt;/code&gt; framework out of there.&lt;/p&gt;
@@ -156,7 +156,7 @@ so the compiler can find what it needs.&lt;/p&gt;
 &lt;p&gt;Then after that first build, the compiler starts using the framework that it
 copied into the build directory. But when I look in there, &lt;code&gt;Debug&lt;/code&gt; is completely
 empty.&lt;/p&gt;
-&lt;h2&gt;Attempt 4: Project-relative DerivedData&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-4-project-relative-deriveddata&quot;&gt;&lt;a href=&quot;#attempt-4-project-relative-deriveddata&quot;&gt;Attempt 4: Project-relative DerivedData&lt;span class=&quot;anchor&quot;&gt;#attempt-4-project-relative-deriveddata&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I hate when tools stuff built data in random system directories unrelated to
 the project I&amp;rsquo;m working on because those files end up sitting around forever.
 So the next thing I did was go under &amp;ldquo;Project Settings&amp;rdquo; and changed the
@@ -172,7 +172,7 @@ But there is no &lt;code&gt;Headers&lt;/code&gt; directory under &lt;code&gt;Ver
 itself. But for reasons I don&amp;rsquo;t understand, XCode is trying to use this
 semi-copied version of the framework for subsequent compiles instead of the
 original one in my project&amp;rsquo;s source tree.&lt;/p&gt;
-&lt;h2&gt;Attempt 5: Explicit header search path&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-5-explicit-header-search-path&quot;&gt;&lt;a href=&quot;#attempt-5-explicit-header-search-path&quot;&gt;Attempt 5: Explicit header search path&lt;span class=&quot;anchor&quot;&gt;#attempt-5-explicit-header-search-path&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;OK, if XCode can&amp;rsquo;t find the headers because it&amp;rsquo;s looking in the wrong place,
 maybe I can just tell it where to look. Under &amp;ldquo;Search Paths&amp;rdquo;, I added
 &lt;code&gt;lib/SDL3.framework/Headers&lt;/code&gt; to &amp;ldquo;Header Search Paths&amp;rdquo;. (I put the framework
@@ -182,7 +182,7 @@ making it recursive. Nope.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m guessing the problem here is that the include paths look like &lt;code&gt;SDL3/SDL.h&lt;/code&gt;,
 not just &lt;code&gt;SDL.h&lt;/code&gt;, so I need to get XCode to understand that the headers are
 inside a framework to resolve the &lt;code&gt;SDL3/&lt;/code&gt; part.&lt;/p&gt;
-&lt;h2&gt;Attempt 6: Framework search path&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-6-framework-search-path&quot;&gt;&lt;a href=&quot;#attempt-6-framework-search-path&quot;&gt;Attempt 6: Framework search path&lt;span class=&quot;anchor&quot;&gt;#attempt-6-framework-search-path&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;OK, so maybe it&amp;rsquo;s not a header search path. Instead, I tried adding &lt;code&gt;lib/&lt;/code&gt; to
 &amp;ldquo;Framework Search Paths&amp;rdquo;. No help. Making it recursive didn&amp;rsquo;t help. Neither
 did &lt;code&gt;lib/SDL3.framework&lt;/code&gt;.&lt;/p&gt;
@@ -193,7 +193,7 @@ build, so this is my exact issue. And the author apparently found a solution!&lt
 helpful.&lt;/p&gt;
 &lt;p&gt;I eventually found &lt;a href=&quot;https://developer.apple.com/forums/thread/750074&quot;&gt;this Apple Developer forum thread&lt;/a&gt;, which also
 sounds like my problem.&lt;/p&gt;
-&lt;h2&gt;Attempt 7: An App instead of a CLI Command&lt;/h2&gt;
+&lt;h2 id=&quot;attempt-7-an-app-instead-of-a-cli-command&quot;&gt;&lt;a href=&quot;#attempt-7-an-app-instead-of-a-cli-command&quot;&gt;Attempt 7: An App instead of a CLI Command&lt;span class=&quot;anchor&quot;&gt;#attempt-7-an-app-instead-of-a-cli-command&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;The forum thread suggests that the issue may have something to do with creating
 a &amp;ldquo;CLI Command&amp;rdquo; instead of an &amp;ldquo;App&amp;rdquo;. I&amp;rsquo;ve always done the former in XCode
 because that seemed like the simplest way to get a vanilla C/C++ app up and
@@ -244,7 +244,7 @@ various &lt;a href=&quot;https://en.wikipedia.org/wiki/Fiber_art&quot;&gt;fiber 
 I talk about knitting here because that&amp;rsquo;s the one closest to my heart and I
 strive to speak from the heart. You can make stuff out of string however you
 want. We are all fiber friends.&lt;/p&gt;
-&lt;h2&gt;The sense of touch&lt;/h2&gt;
+&lt;h2 id=&quot;the-sense-of-touch&quot;&gt;&lt;a href=&quot;#the-sense-of-touch&quot;&gt;The sense of touch&lt;span class=&quot;anchor&quot;&gt;#the-sense-of-touch&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I love the aesthetics of programming. Sitting in a cool quiet room, techno
 thumping in my headphones, coffee mug next to me, while a neatly arranged field
 of glowing monospace glyphs stream across my screen. But there&amp;rsquo;s one sense
@@ -285,7 +285,7 @@ needle. Right finger grabs yarn. Right hand pulls the needle back out, a new
 stitch formed and transferred to the other needle. Over and over, like a
 meditation in the body.&lt;/p&gt;
 &lt;p&gt;Knitting &lt;em&gt;feels good&lt;/em&gt;. It is an intimate, constant reminder that we are a tool-using species with thousands of years of evolution giving us incredible dexterity and the emotional wiring to make us want to use it.&lt;/p&gt;
-&lt;h2&gt;An open world game with optimized skill curve&lt;/h2&gt;
+&lt;h2 id=&quot;an-open-world-game-with-optimized-skill-curve&quot;&gt;&lt;a href=&quot;#an-open-world-game-with-optimized-skill-curve&quot;&gt;An open world game with optimized skill curve&lt;span class=&quot;anchor&quot;&gt;#an-open-world-game-with-optimized-skill-curve&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Of course, you could get much of that same tactile joy by driving to your
 nearest yarn store and wandering around the aisles jamming your fingers into
 every ball and skein of yarn they have. (An activity I certainly &lt;em&gt;also&lt;/em&gt; do and
@@ -307,7 +307,7 @@ nothing else.&lt;/p&gt;
 designers in the world, and the tools they use to think about game design are
 useful lenses to evaluate just about any kind of human endeavor.&lt;/p&gt;
 &lt;p&gt;Two aspects (at least) are relevant to knitting.&lt;/p&gt;
-&lt;h3&gt;Linearity&lt;/h3&gt;
+&lt;h3 id=&quot;linearity&quot;&gt;&lt;a href=&quot;#linearity&quot;&gt;Linearity&lt;span class=&quot;anchor&quot;&gt;#linearity&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;A game is &amp;ldquo;linear&amp;rdquo; if there&amp;rsquo;s only one path from beginning to end, one way to
 play. Don&amp;rsquo;t particularly enjoy the desert level? Tough shit, you gotta get
 through it to get to the end. &amp;ldquo;Nonlinear&amp;rdquo; games let players choose among
@@ -324,7 +324,7 @@ colors for you. Is a sweater too big of a commitment? You can make hats forever.
 stitches, knitting very rarely forces you to slog through something you don&amp;rsquo;t
 want to do in order to reach some other goal. Except weaving in ends, I guess,
 which is kind of a chore. But, honestly, it&amp;rsquo;s not that bad.&lt;/p&gt;
-&lt;h3&gt;Skill curve&lt;/h3&gt;
+&lt;h3 id=&quot;skill-curve&quot;&gt;&lt;a href=&quot;#skill-curve&quot;&gt;Skill curve&lt;span class=&quot;anchor&quot;&gt;#skill-curve&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;A skill curve is sort of like a learning curve. It&amp;rsquo;s an imaginary graph of how
 much effort it takes to reach greater and more rewarding levels of skill. Some
 skill curves are steep at the beginning and then flatten out once you&amp;rsquo;re over
@@ -364,7 +364,7 @@ while their fingers worked yarn for millions of hours. They had &lt;em&gt;plenty
 to invent all sorts of crazy ways to tangle yarn up. You could knit full-time
 for the rest of your life and never run out of new things to learn. Knitting
 will never stop rewarding you.&lt;/p&gt;
-&lt;h2&gt;Structured but not a game&lt;/h2&gt;
+&lt;h2 id=&quot;structured-but-not-a-game&quot;&gt;&lt;a href=&quot;#structured-but-not-a-game&quot;&gt;Structured but not a game&lt;span class=&quot;anchor&quot;&gt;#structured-but-not-a-game&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;To be clear, I&amp;rsquo;m talking about knitting and videogames &lt;em&gt;as a metaphor&lt;/em&gt;. I don&amp;rsquo;t
 think of knitting as a game to win. Like a lot of programmers, I am prone to
 pointing my dumb optimizing brain at random activities and trying to min-max the
@@ -386,7 +386,7 @@ me closer to a beautiful finished object. It provides a reliable serotonin hit
 of &amp;ldquo;I&amp;rsquo;m making progress&amp;rdquo;. But it&amp;rsquo;s not so rigidly structured that it triggers my
 optimizing brain into sucking the joy out of it by turning it into math
 homework.&lt;/p&gt;
-&lt;h2&gt;A time and a space&lt;/h2&gt;
+&lt;h2 id=&quot;a-time-and-a-space&quot;&gt;&lt;a href=&quot;#a-time-and-a-space&quot;&gt;A time and a space&lt;span class=&quot;anchor&quot;&gt;#a-time-and-a-space&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;A particularly nice property of knitting is that it is able to provide that
 reliable gratification while accommodating all of the other complexities in my
 life. It takes very little time to make progress knitting. Unlike, say,
@@ -410,7 +410,7 @@ to take your mind off it? Start a lacework or cable knit project and the chart
 and counting won&amp;rsquo;t leave room to think about anything else.&lt;/p&gt;
 &lt;p&gt;Whatever logistical or mental capacities you have, there is a knitting project
 that will tuck neatly into it.&lt;/p&gt;
-&lt;h2&gt;And then at the end&lt;/h2&gt;
+&lt;h2 id=&quot;and-then-at-the-end&quot;&gt;&lt;a href=&quot;#and-then-at-the-end&quot;&gt;And then at the end&lt;span class=&quot;anchor&quot;&gt;#and-then-at-the-end&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;So far, I&amp;rsquo;ve been talking about knitting as an &lt;em&gt;activity&lt;/em&gt;. A personal hobby to
 kill time for your own joy. Kill time it does, but knitting isn&amp;rsquo;t just about
 whiling away the hours. It&amp;rsquo;s not playing solitaire or binging a TV show for the
@@ -435,7 +435,7 @@ acknowledgement that all we really have is time and thus there is no gift more
 precious than spending it on someone.&lt;/p&gt;
 &lt;p&gt;Also, once you finish a project, you get to buy more yarn. Because, if I&amp;rsquo;m
 honest, a little consumption feels kinda nice too.&lt;/p&gt;
-&lt;h2&gt;OK, I&amp;rsquo;m sold&lt;/h2&gt;
+&lt;h2 id=&quot;ok-im-sold&quot;&gt;&lt;a href=&quot;#ok-im-sold&quot;&gt;OK, I&amp;rsquo;m sold&lt;span class=&quot;anchor&quot;&gt;#ok-im-sold&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Anyway, this is what knitting means to me. Which, now that I read all this, is a
 lot more than I realized. If that didn&amp;rsquo;t pique your interest, fine. It&amp;rsquo;s not for
 everyone. I do hope you find something out there to spend your time on that
@@ -488,7 +488,7 @@ I still don&amp;rsquo;t have that pinned down. Parametric types are hard.&lt;/p&
 scoping so now I have to figure modules out. This post is about one little
 syntax design question I ran into: &lt;em&gt;how do you distinguish public and private
 declarations?&lt;/em&gt;&lt;/p&gt;
-&lt;h2&gt;A basic module system&lt;/h2&gt;
+&lt;h2 id=&quot;a-basic-module-system&quot;&gt;&lt;a href=&quot;#a-basic-module-system&quot;&gt;A basic module system&lt;span class=&quot;anchor&quot;&gt;#a-basic-module-system&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Since my language is a scripting language, my ambitions for the module system
 are pretty minimal. Think more like Python or Dart than Java or C#.&lt;/p&gt;
 &lt;p&gt;Every file has its own top-level scope that isn&amp;rsquo;t shared with others. If you
@@ -498,13 +498,13 @@ That makes its top-level declarations available in the importing file.&lt;/p&gt;
 internal use and should &lt;em&gt;not&lt;/em&gt; be made available when you import it. A module
 should be able to encapsulate parts of its implementation. Thus, I need a way
 for users to indicate which declarations are private and which are public.&lt;/p&gt;
-&lt;h2&gt;What other languages do&lt;/h2&gt;
+&lt;h2 id=&quot;what-other-languages-do&quot;&gt;&lt;a href=&quot;#what-other-languages-do&quot;&gt;What other languages do&lt;span class=&quot;anchor&quot;&gt;#what-other-languages-do&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Every language out there has &lt;em&gt;some&lt;/em&gt; kind of module system and an ability to
 control access (though it did take JavaScript about 20 years to get there, bless
 its heart). In some sense, it&amp;rsquo;s a solved problem. But they don&amp;rsquo;t all solve it
 the same way, especially if you dig into some of the more obscure corners of the
 language world. Let&amp;rsquo;s go on a tour&amp;hellip;&lt;/p&gt;
-&lt;h3&gt;Modifier keywords&lt;/h3&gt;
+&lt;h3 id=&quot;modifier-keywords&quot;&gt;&lt;a href=&quot;#modifier-keywords&quot;&gt;Modifier keywords&lt;span class=&quot;anchor&quot;&gt;#modifier-keywords&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;The approach you probably already have in mind is modifiers before declarations.
 In Java, C#, PHP and others, that&amp;rsquo;s &lt;code&gt;public&lt;/code&gt;, &lt;code&gt;private&lt;/code&gt;. Maybe also more
 specific ones like &lt;code&gt;protected&lt;/code&gt;, and &lt;code&gt;internal&lt;/code&gt;.&lt;/p&gt;
@@ -521,7 +521,7 @@ have &lt;code&gt;internal&lt;/code&gt; access, which is the default. So I had to
 &lt;p&gt;Rust improves the situation by having a shorter modifier, &lt;code&gt;pub&lt;/code&gt;, and picking
 what is arguably the right default for a language designed for Serious
 Programming: private.&lt;/p&gt;
-&lt;h3&gt;Modifier sections&lt;/h3&gt;
+&lt;h3 id=&quot;modifier-sections&quot;&gt;&lt;a href=&quot;#modifier-sections&quot;&gt;Modifier sections&lt;span class=&quot;anchor&quot;&gt;#modifier-sections&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;C++ has a strange but perhaps underappreciated spin on modifiers. It has access
 modifier keywords, but they apply to &lt;em&gt;all subsequent declarations&lt;/em&gt;. This lets
 you write a keyword once and apply it to a whole bunch of things. That really
@@ -536,7 +536,7 @@ public and members in classes default to private. C++ is &lt;em&gt;weird&lt;/em&
 built on the back of some Eldritch being whose architecture and plumbing reveals
 the unholy foundation it is mated with.&lt;/p&gt;
 &lt;p&gt;For presumably less Eldritch reasons, I believe Ada takes a similar approach.&lt;/p&gt;
-&lt;h3&gt;Sigils in the names&lt;/h3&gt;
+&lt;h3 id=&quot;sigils-in-the-names&quot;&gt;&lt;a href=&quot;#sigils-in-the-names&quot;&gt;Sigils in the names&lt;span class=&quot;anchor&quot;&gt;#sigils-in-the-names&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Modifiers are clear but verbose. If you want something more syntactically
 economical, why not encode the access control directly in the name of the
 declaration itself? That&amp;rsquo;s what Python, Go, and Dart do.&lt;/p&gt;
@@ -599,7 +599,7 @@ actually breaking things.&lt;/p&gt;
 not use &lt;code&gt;_&lt;/code&gt; for privacy. But I have mellowed on that opinion over the years and
 now I&amp;rsquo;m not sure. I don&amp;rsquo;t like how it shows up at every use site, but it &lt;em&gt;is&lt;/em&gt;
 terse, which is nice.&lt;/p&gt;
-&lt;h3&gt;Export manifests&lt;/h3&gt;
+&lt;h3 id=&quot;export-manifests&quot;&gt;&lt;a href=&quot;#export-manifests&quot;&gt;Export manifests&lt;span class=&quot;anchor&quot;&gt;#export-manifests&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Modifers put access control at the declaration. Sigils put it at the declaration
 and the use sites. The third major approach puts it at &lt;em&gt;neither&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Someone will tell me this generalization is wrong but I think most functional
@@ -643,7 +643,7 @@ are already declared elsewhere:&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Given that modules were added later to the language, I&amp;rsquo;m guessing this makes it
 easier to add modularity to a large existing JS library.&lt;/p&gt;
-&lt;h3&gt;Sigils at the declaration&lt;/h3&gt;
+&lt;h3 id=&quot;sigils-at-the-declaration&quot;&gt;&lt;a href=&quot;#sigils-at-the-declaration&quot;&gt;Sigils at the declaration&lt;span class=&quot;anchor&quot;&gt;#sigils-at-the-declaration&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;In poking around the annals of language history, I found one last approach in
 Niklaus Wirth&amp;rsquo;s magnum opus language &lt;a href=&quot;https://oberon.org/en&quot;&gt;Oberon&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In Oberon, top-level declarations are private by default and only accessible
@@ -666,7 +666,7 @@ Oberon programmer and you see &lt;code&gt;*&lt;/code&gt;, you have no idea what 
 there are no new Oberon programmers, so this is not a problem in practice.&lt;/p&gt;
 &lt;p&gt;This approach has the advantage of only appearing at the declaration. You don&amp;rsquo;t
 have to repeat the sigil every time you use the thing.&lt;/p&gt;
-&lt;h2&gt;Any syntax at all?&lt;/h2&gt;
+&lt;h2 id=&quot;any-syntax-at-all&quot;&gt;&lt;a href=&quot;#any-syntax-at-all&quot;&gt;Any syntax at all?&lt;span class=&quot;anchor&quot;&gt;#any-syntax-at-all&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;m sure there are interesting tweaks and refinements in various languages, but
 I think that mostly covers the approaches in use out there. (If you&amp;rsquo;re aware of
 any others, do tell.) Which approach is the right one for &lt;em&gt;my&lt;/em&gt; little scripting
@@ -690,7 +690,7 @@ the light of day for people to make their own hobby games that, realistically,
 also may never see the light of day. If anything, I want to encourage
 (hypothetical) users of my (currently mostly vaporware) language to &lt;em&gt;get things
 done&lt;/em&gt;. Access control can get in the way of that.&lt;/p&gt;
-&lt;h3&gt;Class modifiers in Dart&lt;/h3&gt;
+&lt;h3 id=&quot;class-modifiers-in-dart&quot;&gt;&lt;a href=&quot;#class-modifiers-in-dart&quot;&gt;Class modifiers in Dart&lt;span class=&quot;anchor&quot;&gt;#class-modifiers-in-dart&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;A few years ago, we added a slew of &lt;a href=&quot;https://dart.dev/language/class-modifiers&quot;&gt;class modifiers&lt;/a&gt; to Dart. These are not
 directly tied to public and private, but in the process of designing those, I
 spent a lot of time talking to users about how they use the language and what
@@ -706,10 +706,10 @@ ecosystem.&lt;/p&gt;
 imports them. The authors of most of those are just trying to slap some UI
 together and ship a thing. And for most of those, defaulting to public keeps the
 language out of their way.&lt;/p&gt;
-&lt;h2&gt;Syntax for privacy&lt;/h2&gt;
+&lt;h2 id=&quot;syntax-for-privacy&quot;&gt;&lt;a href=&quot;#syntax-for-privacy&quot;&gt;Syntax for privacy&lt;span class=&quot;anchor&quot;&gt;#syntax-for-privacy&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;That all leads me to feel that my scripting language should default to public
 and have a way to opt in to private. How do to that?&lt;/p&gt;
-&lt;h3&gt;No export manifests&lt;/h3&gt;
+&lt;h3 id=&quot;no-export-manifests&quot;&gt;&lt;a href=&quot;#no-export-manifests&quot;&gt;No export manifests&lt;span class=&quot;anchor&quot;&gt;#no-export-manifests&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;I know I don&amp;rsquo;t want export manifests. They are much too verbose. Also, there is
 some extra language complexity and error reporting that gets sucked in. Since
 the manifest is separate from the declaration, the compiler has to handle cases
@@ -718,7 +718,7 @@ overloading, which means when exporting a function, you would need to a way to
 specify which of the overloads to export and which to leave private.&lt;/p&gt;
 &lt;p&gt;Export manifests are just way more machinery than fits for a scripting language.
 This approach is out.&lt;/p&gt;
-&lt;h3&gt;No modifier sections&lt;/h3&gt;
+&lt;h3 id=&quot;no-modifier-sections&quot;&gt;&lt;a href=&quot;#no-modifier-sections&quot;&gt;No modifier sections&lt;span class=&quot;anchor&quot;&gt;#no-modifier-sections&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;The C++ approach is nice in that it&amp;rsquo;s clear while still being pretty terse. You
 only need to write a modifier and can apply it to a bunch of declarations in the
 same scope.&lt;/p&gt;
@@ -733,7 +733,7 @@ but that feels like it errs too far in the other direction. It would be really
 confusing to have a thousand line file and not realize that half of it is
 private because some modifier way offscreen above flipped the access control.&lt;/p&gt;
 &lt;p&gt;Modifier sections are out.&lt;/p&gt;
-&lt;h3&gt;No sigils in identifiers&lt;/h3&gt;
+&lt;h3 id=&quot;no-sigils-in-identifiers&quot;&gt;&lt;a href=&quot;#no-sigils-in-identifiers&quot;&gt;No sigils in identifiers&lt;span class=&quot;anchor&quot;&gt;#no-sigils-in-identifiers&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Sigils in identifiers do have a sort of terse, scripty feel. No extra keywords.&lt;/p&gt;
 &lt;p&gt;I can&amp;rsquo;t do Go&amp;rsquo;s approach because my language already makes identifier leading
 case significant. It supports &lt;a href=&quot;https://en.wikipedia.org/wiki/Pattern_matching#Tree_patterns&quot;&gt;destructuring pattern matching&lt;/a&gt;. Like some
@@ -747,7 +747,7 @@ prefer to not have to mention the sigil at every single use site. After having
 written probably a million lines of Dart code, I know it&amp;rsquo;s not intolerable. But
 it feels like an annoying tax. And for a language I&amp;rsquo;m designing for my own joy,
 I&amp;rsquo;d like to eliminate as many annoyances as possible.&lt;/p&gt;
-&lt;h3&gt;Maybe modifiers&lt;/h3&gt;
+&lt;h3 id=&quot;maybe-modifiers&quot;&gt;&lt;a href=&quot;#maybe-modifiers&quot;&gt;Maybe modifiers&lt;span class=&quot;anchor&quot;&gt;#maybe-modifiers&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;That leaves two approaches and is where I&amp;rsquo;m currently at. Approach one is the
 typical solution to use an access control modifier at the declaration.
 Unfortunately, defaulting to public makes this harder. In Rust, &lt;code&gt;pub&lt;/code&gt; is a
@@ -761,7 +761,7 @@ abbreviations either. So I&amp;rsquo;m open to taking this path, but I&amp;rsquo
 come up with a good keyword for it.&lt;/p&gt;
 &lt;p&gt;(A silly goblin part of my brain suggested I use &lt;code&gt;shh&lt;/code&gt; to mean &amp;ldquo;private&amp;rdquo;, like
 the declaration is being whispered and can&amp;rsquo;t be heard outside of its module.)&lt;/p&gt;
-&lt;h3&gt;Maybe sigils at the declaration&lt;/h3&gt;
+&lt;h3 id=&quot;maybe-sigils-at-the-declaration&quot;&gt;&lt;a href=&quot;#maybe-sigils-at-the-declaration&quot;&gt;Maybe sigils at the declaration&lt;span class=&quot;anchor&quot;&gt;#maybe-sigils-at-the-declaration&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;This leaves Oberon&amp;rsquo;s weird approach. There are several advantages here:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -804,7 +804,7 @@ C where function declarations don&amp;rsquo;t have one), so it&amp;rsquo;s feasi
 &lt;p&gt;I don&amp;rsquo;t hate it. But using &lt;code&gt;*&lt;/code&gt; feels weird for &amp;ldquo;private&amp;rdquo;. If anything, it seems
 to emphasize the declaration (which is what it does in Oberon where it means
 &amp;ldquo;public&amp;rdquo;).&lt;/p&gt;
-&lt;h3&gt;Maybe alternate keywords&lt;/h3&gt;
+&lt;h3 id=&quot;maybe-alternate-keywords&quot;&gt;&lt;a href=&quot;#maybe-alternate-keywords&quot;&gt;Maybe alternate keywords&lt;span class=&quot;anchor&quot;&gt;#maybe-alternate-keywords&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;That led to my last idea which I can&amp;rsquo;t decide if I like or not. Given Python and
 Dart, it seems like underscore vaguely conveys &amp;ldquo;private&amp;rdquo; to some people. So
 maybe use that? It looks like:&lt;/p&gt;
@@ -850,7 +850,7 @@ subtyping, but when you look at interfaces, it does seem to have something
 there really something different going on?&lt;/p&gt;
 &lt;p&gt;This post is the answer to that question as best as I can tell. The short answer
 is that no, Go doesn&amp;rsquo;t have subtyping. But also, yes, it sort of does.&lt;/p&gt;
-&lt;h2&gt;What is subtyping?&lt;/h2&gt;
+&lt;h2 id=&quot;what-is-subtyping&quot;&gt;&lt;a href=&quot;#what-is-subtyping&quot;&gt;What is subtyping?&lt;span class=&quot;anchor&quot;&gt;#what-is-subtyping&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;If you&amp;rsquo;re reading my blog, you probably already know what subtyping is, but
 let&amp;rsquo;s make sure we&amp;rsquo;re all starting from the same place. Subtyping defines a
 &lt;a href=&quot;https://en.wikipedia.org/wiki/Relation_(mathematics)&quot;&gt;&lt;em&gt;relation&lt;/em&gt;&lt;/a&gt; between two types. Given two types A and B, it might be
@@ -871,7 +871,7 @@ where that code is valid?&lt;/p&gt;
 interface of a static system is compile errors, and the most common compile
 error is &amp;ldquo;I expected a value of &lt;em&gt;this&lt;/em&gt; type but you gave me a value of &lt;em&gt;this
 other type&lt;/em&gt;&amp;rdquo;.&lt;/p&gt;
-&lt;h2&gt;Why have subtyping?&lt;/h2&gt;
+&lt;h2 id=&quot;why-have-subtyping&quot;&gt;&lt;a href=&quot;#why-have-subtyping&quot;&gt;Why have subtyping?&lt;span class=&quot;anchor&quot;&gt;#why-have-subtyping&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;You have a context that expects type B and you give it a value of type A. In
 languages without subtyping, that&amp;rsquo;s only OK if A and B are the exact same type.
 In Pascal, if you declare a variable with type &lt;code&gt;integer&lt;/code&gt;, the only thing you can
@@ -890,7 +890,7 @@ method across all types that implement the &lt;code&gt;Iterable&lt;/code&gt; int
 force multiplier for your code.&lt;/p&gt;
 &lt;p&gt;(Of course, that benefit isn&amp;rsquo;t without significant costs in terms of language
 complexity, which is why I&amp;rsquo;m hoping to avoid it.)&lt;/p&gt;
-&lt;h2&gt;Does Go have subtyping?&lt;/h2&gt;
+&lt;h2 id=&quot;does-go-have-subtyping&quot;&gt;&lt;a href=&quot;#does-go-have-subtyping&quot;&gt;Does Go have subtyping?&lt;span class=&quot;anchor&quot;&gt;#does-go-have-subtyping&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;If you search the (extremely well-written!) &lt;a href=&quot;https://go.dev/ref/spec&quot;&gt;Go language spec&lt;/a&gt; for
 &amp;ldquo;subtype&amp;rdquo;, you get zero results. So the answer is a clear &amp;ldquo;no&amp;rdquo; at the textual
 level. However, we needer a deeper hermeneutics.&lt;/p&gt;
@@ -921,7 +921,7 @@ everything except name? Are we just playing semantics? (I mean, we&amp;rsquo;re 
 a programming language, so obviously &lt;em&gt;everything&lt;/em&gt; we do is playing semantics.
 But I mean are we playing semantics with the language spec itself?) To fully
 answer that, we&amp;rsquo;ll need to look at all of the kinds of types in a program.&lt;/p&gt;
-&lt;h2&gt;Composite types and variance&lt;/h2&gt;
+&lt;h2 id=&quot;composite-types-and-variance&quot;&gt;&lt;a href=&quot;#composite-types-and-variance&quot;&gt;Composite types and variance&lt;span class=&quot;anchor&quot;&gt;#composite-types-and-variance&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;If the only types in Go&amp;rsquo;s type system were primitives like numbers, structs, and
 interfaces then I think you&amp;rsquo;d have a good argument that Go does have subtyping,
 just spelled differently. But once you start looking at slice types and function
@@ -943,7 +943,7 @@ that mean that &lt;code&gt;[]E1&lt;/code&gt; is assignable to &lt;code&gt;[]E2&l
 the question like &amp;ldquo;how does assignability of slice types &lt;em&gt;vary with respect to
 their element types&lt;/em&gt;?&amp;rdquo;. There are a few possible answers to a question like
 this.&lt;/p&gt;
-&lt;h3&gt;Variance of slice types&lt;/h3&gt;
+&lt;h3 id=&quot;variance-of-slice-types&quot;&gt;&lt;a href=&quot;#variance-of-slice-types&quot;&gt;Variance of slice types&lt;span class=&quot;anchor&quot;&gt;#variance-of-slice-types&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;For slice types in Go specifically, there are a handful of assignability rules,
 but the only one that applies to slice types is:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -1022,7 +1022,7 @@ And then, because as you can see, it isn&amp;rsquo;t safe to do so, they have to
 wrong type into the array.)&lt;/p&gt;
 &lt;p&gt;So, OK, it makes sense for slice (and array) types to be invariant. What about
 function types?&lt;/p&gt;
-&lt;h3&gt;Variance of function types&lt;/h3&gt;
+&lt;h3 id=&quot;variance-of-function-types&quot;&gt;&lt;a href=&quot;#variance-of-function-types&quot;&gt;Variance of function types&lt;span class=&quot;anchor&quot;&gt;#variance-of-function-types&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;To keep things simple, first we&amp;rsquo;ll consider just functions that don&amp;rsquo;t take any
 parameters and have a single return type. Given two function types like that,
 when are they assignable? Again, the only rule in the Go language spec that
@@ -1104,7 +1104,7 @@ contravariant types, you flip it twice and get back to the original direction.)&
 &lt;p&gt;Contravariant parameter types are sound, but again Go doesn&amp;rsquo;t allow them. Two
 function types are only assignable if their parameter types are &lt;em&gt;exactly the
 same&lt;/em&gt;.&lt;/p&gt;
-&lt;h2&gt;Invariance in Go&lt;/h2&gt;
+&lt;h2 id=&quot;invariance-in-go&quot;&gt;&lt;a href=&quot;#invariance-in-go&quot;&gt;Invariance in Go&lt;span class=&quot;anchor&quot;&gt;#invariance-in-go&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;In every language I know with subtyping, function types are &lt;a href=&quot;https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Function_types&quot;&gt;covariant in their
 return types and contravariant in their parameter types&lt;/a&gt;. But in
 Go, function types are invariant.&lt;/p&gt;
@@ -1128,7 +1128,7 @@ the exact opposite of an ivory tower language designed for proofs and
 publications. The goal of the language is to let real users ship real
 applications. And, importantly, be able to ship &lt;em&gt;fast&lt;/em&gt; applications and &lt;em&gt;reason
 about the performance of their code&lt;/em&gt;.&lt;/p&gt;
-&lt;h2&gt;Representing values&lt;/h2&gt;
+&lt;h2 id=&quot;representing-values&quot;&gt;&lt;a href=&quot;#representing-values&quot;&gt;Representing values&lt;span class=&quot;anchor&quot;&gt;#representing-values&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Up to this point, we&amp;rsquo;ve only been concerned with how types flow through the type
 checker at compile time. But&amp;mdash;assuming there are no compile errors&amp;mdash;the
 compiler eventually excretes some machine code which gets executed at runtime.
@@ -1160,7 +1160,7 @@ object always requires a pointer indirection which can be slow due
 to &lt;a href=&quot;https://gameprogrammingpatterns.com/data-locality.html&quot;&gt;poor locality and cache misses&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3&gt;Struct types&lt;/h3&gt;
+&lt;h3 id=&quot;struct-types&quot;&gt;&lt;a href=&quot;#struct-types&quot;&gt;Struct types&lt;span class=&quot;anchor&quot;&gt;#struct-types&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Those are unnacceptable costs for a systems language like Go. When you &lt;em&gt;want&lt;/em&gt;
 runtime polymorphism, of course, you have to pay for it somehow. But if you&amp;rsquo;re
 just storing data in memory, Go doesn&amp;rsquo;t want to make you pay for something you
@@ -1181,7 +1181,7 @@ around the heap and chews on bigger data insects every time it does. That makes
 memory access more cache friendly and also lightens the load on the garbage
 collector since there are fewer individual allocations to traverse.&lt;/p&gt;
 &lt;p&gt;(Java does something similar for primitive types, as does C# for struct types.)&lt;/p&gt;
-&lt;h3&gt;Interface types&lt;/h3&gt;
+&lt;h3 id=&quot;interface-types&quot;&gt;&lt;a href=&quot;#interface-types&quot;&gt;Interface types&lt;span class=&quot;anchor&quot;&gt;#interface-types&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;So structs are fast, great. But Go does feature runtime polymorphism in the form
 of interfaces. How does interface method dispatch work if a value is stored
 directly inline with no extra data to track its runtime type or method
@@ -1219,7 +1219,7 @@ each use site. That leads to some additional complexity for the user: they
 always have to think &amp;ldquo;should I use an interface, pointer, or struct type here?&amp;rdquo;,
 but it gives them more fine-grained control over how they spend memory and
 pointer indirection costs.&lt;/p&gt;
-&lt;h2&gt;Implicit conversions&lt;/h2&gt;
+&lt;h2 id=&quot;implicit-conversions&quot;&gt;&lt;a href=&quot;#implicit-conversions&quot;&gt;Implicit conversions&lt;span class=&quot;anchor&quot;&gt;#implicit-conversions&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;re close to understanding why Go lets you assign a struct to an interface
 but not a slice of those same structs to a slice of that same interface.&lt;/p&gt;
 &lt;p&gt;If structs and interfaces have entirely different memory representations, how
@@ -1271,7 +1271,7 @@ explosions.&lt;/p&gt;
 &lt;p&gt;This is why languages that do support subtyping and variance almost always have
 a uniform memory representation for all objects that participate in the subtype
 hierarchy.&lt;/p&gt;
-&lt;h2&gt;Does Go have subtyping?&lt;/h2&gt;
+&lt;h2 id=&quot;does-go-have-subtyping-2&quot;&gt;&lt;a href=&quot;#does-go-have-subtyping&quot;&gt;Does Go have subtyping?&lt;span class=&quot;anchor&quot;&gt;#does-go-have-subtyping&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;If you make it this far, congratulations. This ended up being a much deeper dive
 than I expected. I learned a lot exploring this corner of the language space and
 I hope you learned something too.&lt;/p&gt;
@@ -1360,7 +1360,7 @@ those goals are in opposition and the most familiar solution to a problem is
 kind of a mess.&lt;/p&gt;
 &lt;p&gt;So, I&amp;rsquo;m also exploring novel approaches and delving deeper into programming
 language history to scavenge forgotten ideas.&lt;/p&gt;
-&lt;h2&gt;The heterogeneous data problem&lt;/h2&gt;
+&lt;h2 id=&quot;the-heterogeneous-data-problem&quot;&gt;&lt;a href=&quot;#the-heterogeneous-data-problem&quot;&gt;The heterogeneous data problem&lt;span class=&quot;anchor&quot;&gt;#the-heterogeneous-data-problem&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;One problem every language has to solve is giving users a way to represent
 &lt;em&gt;heterogeneous data&lt;/em&gt;. By that, I mean:&lt;/p&gt;
 &lt;ul&gt;
@@ -1397,7 +1397,7 @@ time, only one of the fields has a value and the others are all absent. If
 you&amp;rsquo;ve ever found yourself building a struct or class and writing a comment that
 says &amp;ldquo;If this field is blah then this other field will be null.&amp;rdquo; then you&amp;rsquo;ve
 taken this path (and probably felt a little gross doing it).&lt;/p&gt;
-&lt;h2&gt;What other languages do&lt;/h2&gt;
+&lt;h2 id=&quot;what-other-languages-do&quot;&gt;&lt;a href=&quot;#what-other-languages-do&quot;&gt;What other languages do&lt;span class=&quot;anchor&quot;&gt;#what-other-languages-do&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I don&amp;rsquo;t know if broad language tours are your thing, but so much of my job
 working on &lt;a href=&quot;https://dart.dev&quot;&gt;Dart&lt;/a&gt; involves researching how other languages solve a problem that
 I can&amp;rsquo;t help myself anymore.&lt;/p&gt;
@@ -1492,7 +1492,7 @@ has and also explicitly supports subtyping.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;Newer, bigger multi-paradigm languages like C# and Swift tend to take just about
 all of the approaches.&lt;/p&gt;
-&lt;h2&gt;Whither for my little language?&lt;/h2&gt;
+&lt;h2 id=&quot;whither-for-my-little-language&quot;&gt;&lt;a href=&quot;#whither-for-my-little-language&quot;&gt;Whither for my little language?&lt;span class=&quot;anchor&quot;&gt;#whither-for-my-little-language&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;OK, so what&amp;rsquo;s the right approach for my aspirationally simple and elegant
 statically typed game scripting language?&lt;/p&gt;
 &lt;p&gt;I quite like object-oriented programming in general, but subtyping adds a &lt;em&gt;lot&lt;/em&gt;
@@ -1515,7 +1515,7 @@ just &lt;em&gt;cool.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;And, in fact, I went ahead and implemented a protype of sum types and pattern
 matching and destructuring in my language. It worked. It was&amp;hellip; just OK. To
 explain why requires a little context&lt;/p&gt;
-&lt;h2&gt;An imperative, procedural language&lt;/h2&gt;
+&lt;h2 id=&quot;an-imperative-procedural-language&quot;&gt;&lt;a href=&quot;#an-imperative-procedural-language&quot;&gt;An imperative, procedural language&lt;span class=&quot;anchor&quot;&gt;#an-imperative-procedural-language&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;My language is unabashedly imperative. I &lt;em&gt;like&lt;/em&gt; imperative programming,
 especially for scripting little games. Games are giant balls of mutable state.
 I&amp;rsquo;ve watched my kids and many others learn to program, and imperatively
@@ -1552,7 +1552,7 @@ like this:&lt;/p&gt;
 &lt;p&gt;What&amp;rsquo;s cool about simple procedural code is that even though I have no idea what
 language you know and you &lt;em&gt;certainly&lt;/em&gt; have never programmed in &lt;em&gt;this&lt;/em&gt; one, I&amp;rsquo;m
 still pretty confident that you understand this code.&lt;/p&gt;
-&lt;h2&gt;With sum types&lt;/h2&gt;
+&lt;h2 id=&quot;with-sum-types&quot;&gt;&lt;a href=&quot;#with-sum-types&quot;&gt;With sum types&lt;span class=&quot;anchor&quot;&gt;#with-sum-types&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Let&amp;rsquo;s see how it looks with something like sum types:&lt;/p&gt;
 &lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;rec&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;MeleeWeapon&lt;/span&gt;
@@ -1604,7 +1604,7 @@ state on a value, depending on whether the field is case-specific or not.&lt;/p&
 using pattern matching. SML eschews mutability in general and then works around
 it by allowing you to define explicit mutable ref types. But that&amp;rsquo;s definitely
 not how my language rolls.&lt;/p&gt;
-&lt;h2&gt;Variant records&lt;/h2&gt;
+&lt;h2 id=&quot;variant-records&quot;&gt;&lt;a href=&quot;#variant-records&quot;&gt;Variant records&lt;span class=&quot;anchor&quot;&gt;#variant-records&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;There is &lt;em&gt;one&lt;/em&gt; other approach to heterogeneous data that I found that I didn&amp;rsquo;t
 put in the list up there because, as far as I can tell, it&amp;rsquo;s basically a dead
 end in the evolutionary history of programming languages.&lt;/p&gt;
@@ -1655,7 +1655,7 @@ Pascal definitively because there&amp;rsquo;s no &amp;ldquo;Pascal&amp;rdquo;, j
 loosely-related Pascal-ish languages.)&lt;/p&gt;
 &lt;p&gt;In a memory safe language like mine, I definitely don&amp;rsquo;t want users to be able
 to reinterpret memory. But that&amp;rsquo;s a solvable problem.&lt;/p&gt;
-&lt;h2&gt;Record cases&lt;/h2&gt;
+&lt;h2 id=&quot;record-cases&quot;&gt;&lt;a href=&quot;#record-cases&quot;&gt;Record cases&lt;span class=&quot;anchor&quot;&gt;#record-cases&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Which, finally, brings us to the feature I designed for my language. It&amp;rsquo;s very
 close to variant records in Pascal. The type declaration looks just like the
 sum type example:&lt;/p&gt;
@@ -1717,7 +1717,7 @@ single construct. I&amp;rsquo;ve found this to be really handy in practice.&lt;/
 (admittedly small) amount of example code I&amp;rsquo;ve written using it so far, it seems
 to feel pretty nice. For a small game scripting language, I think it may strike
 a decent balance between static safety and simplicity.&lt;/p&gt;
-&lt;h2&gt;Update: What about flow typing?&lt;/h2&gt;
+&lt;h2 id=&quot;update-what-about-flow-typing&quot;&gt;&lt;a href=&quot;#update-what-about-flow-typing&quot;&gt;Update: What about flow typing?&lt;span class=&quot;anchor&quot;&gt;#update-what-about-flow-typing&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;When I first posted this, the most common reply was why not do some sort of flow
 typing? In code like:&lt;/p&gt;
 &lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;attack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;i&quot;&gt;weapon&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Weapon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;monster&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Monster&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;distance&lt;/span&gt; &lt;span class=&quot;t&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -1813,7 +1813,7 @@ after that. My dream is a goofy little pixellated IDE where you can get lost in
 your own flow state and just make shit without having to periodically hit
 StackOverflow and then get distracted by the wonders/horrors of the Internet.&lt;/p&gt;
 &lt;p&gt;I don&amp;rsquo;t know if I&amp;rsquo;ll ever pull this off or the language will ever see the light of day, but it&amp;rsquo;s a fun therapeutic thing for me to noodle on.&lt;/p&gt;
-&lt;h2&gt;A dynamically typed scripting language&lt;/h2&gt;
+&lt;h2 id=&quot;a-dynamically-typed-scripting-language&quot;&gt;&lt;a href=&quot;#a-dynamically-typed-scripting-language&quot;&gt;A dynamically typed scripting language&lt;span class=&quot;anchor&quot;&gt;#a-dynamically-typed-scripting-language&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;To make a language that fits in your head (or at least my head, whose working
 space seems to get smaller every year), I needed to jettison as many feature as
 I could. My experience across a range of hobby and &lt;a href=&quot;https://dart.dev/&quot;&gt;not-so-hobby&lt;/a&gt;
@@ -1868,7 +1868,7 @@ explicitly expression-y style like:&lt;/p&gt;
 &lt;p&gt;Unifying statements and expressions means the language doesn&amp;rsquo;t need a separate
 &lt;code&gt;if&lt;/code&gt; statement and conditional expression. Also, I don&amp;rsquo;t know, I just like
 expression-oriented languages.&lt;/p&gt;
-&lt;h2&gt;An imperative language&lt;/h2&gt;
+&lt;h2 id=&quot;an-imperative-language&quot;&gt;&lt;a href=&quot;#an-imperative-language&quot;&gt;An imperative language&lt;span class=&quot;anchor&quot;&gt;#an-imperative-language&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Even though the language is expression-oriented, it&amp;rsquo;s not explicitly
 &lt;em&gt;functional&lt;/em&gt;. Functional languages are close to my heart, but this is a game
 scripting language. A game world is basically a big ball of incrementally
@@ -1881,7 +1881,7 @@ from side effects and imperative control flow. Variables are assignable. Fields
 are settable. There are loops and breaks and early returns. All of those are as
 natural and idiomatic as they are in C++, JavaScript, C#, or any of the other
 languages that the majority of the world&amp;rsquo;s code is written in.&lt;/p&gt;
-&lt;h2&gt;Handmade Seattle&lt;/h2&gt;
+&lt;h2 id=&quot;handmade-seattle&quot;&gt;&lt;a href=&quot;#handmade-seattle&quot;&gt;Handmade Seattle&lt;span class=&quot;anchor&quot;&gt;#handmade-seattle&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Last fall, I attended the wonderful &lt;a href=&quot;https://handmade-seattle.com/&quot;&gt;Handmade Seattle&lt;/a&gt; conference. I had a
 particularly inspiring conversation with &lt;a href=&quot;https://wiki.xxiivv.com/site/home.html&quot;&gt;Devine Lu Linvega&lt;/a&gt; about their
 tiny &lt;a href=&quot;https://wiki.xxiivv.com/site/uxn.html&quot;&gt;uxn&lt;/a&gt; VM. They had this idea to build the smallest possible system and
@@ -1905,7 +1905,7 @@ way.)&lt;/p&gt;
 I&amp;rsquo;ve been sketching out a statically typed variant of my console&amp;rsquo;s scripting
 language. I don&amp;rsquo;t know if it will really come together, but I thought maybe it
 would be fun to write about the exploration.&lt;/p&gt;
-&lt;h2&gt;Type checking &lt;code&gt;if&lt;/code&gt; expressions&lt;/h2&gt;
+&lt;h2 id=&quot;type-checking-if-expressions&quot;&gt;&lt;a href=&quot;#type-checking-if-expressions&quot;&gt;Type checking &lt;code&gt;if&lt;/code&gt; expressions&lt;span class=&quot;anchor&quot;&gt;#type-checking-if-expressions&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I slapped together a new prototype interpreter for my language. (The main
 implementation is a bytecode VM in C++, which is pretty fast but not exactly
 easy to hack on.) Then I dutifully started adding a type checking pass to it.
@@ -1921,7 +1921,7 @@ variable &lt;code&gt;love&lt;/code&gt;. In this case, the type is obviously Stri
 and else branches evaluate to strings.&lt;/p&gt;
 &lt;p&gt;So the basic rule we&amp;rsquo;ll start with is: &lt;strong&gt;An &lt;code&gt;if&lt;/code&gt; expression&amp;rsquo;s type is the type
 of the branches.&lt;/strong&gt;&lt;/p&gt;
-&lt;h2&gt;Different branch types&lt;/h2&gt;
+&lt;h2 id=&quot;different-branch-types&quot;&gt;&lt;a href=&quot;#different-branch-types&quot;&gt;Different branch types&lt;span class=&quot;anchor&quot;&gt;#different-branch-types&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;But what if they don&amp;rsquo;t have the same type? What about:&lt;/p&gt;
 &lt;pre class=&quot;highlight language-vgs&quot;&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;love&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;i&quot;&gt;isFriday&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;in love&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Here, &lt;code&gt;love&lt;/code&gt; could end up being initialized to either a &lt;code&gt;String&lt;/code&gt; or an &lt;code&gt;Int&lt;/code&gt;.
@@ -1948,7 +1948,7 @@ different types, then there is no possible type I can infer that contains all of
 their values. The only other response is to make it a type error.&lt;/p&gt;
 &lt;p&gt;That&amp;rsquo;s the next rule: &lt;strong&gt;If the branches have different types, it&amp;rsquo;s a compile
 error.&lt;/strong&gt;&lt;/p&gt;
-&lt;h2&gt;Imperative ifs and unused values&lt;/h2&gt;
+&lt;h2 id=&quot;imperative-ifs-and-unused-values&quot;&gt;&lt;a href=&quot;#imperative-ifs-and-unused-values&quot;&gt;Imperative ifs and unused values&lt;span class=&quot;anchor&quot;&gt;#imperative-ifs-and-unused-values&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;That rule does work: It&amp;rsquo;s basically SML&amp;rsquo;s rule for &lt;code&gt;if&lt;/code&gt; expressions. But I want
 my scripting language to feel familiar to users programming in an imperative
 style. Consider:&lt;/p&gt;
@@ -2012,7 +2012,7 @@ like Kotlin does something similar. It frames it by saying that when you use an
 roughly the distinction I&amp;rsquo;m making here too: when an &lt;code&gt;if&lt;/code&gt; appears in a
 statement-like position where its value is discarded, then the branches can
 disagree.&lt;/p&gt;
-&lt;h2&gt;Missing else&lt;/h2&gt;
+&lt;h2 id=&quot;missing-else&quot;&gt;&lt;a href=&quot;#missing-else&quot;&gt;Missing else&lt;span class=&quot;anchor&quot;&gt;#missing-else&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;This rule allows us to support an even more important flavor of &lt;code&gt;if&lt;/code&gt; expressions
 that are common in imperative code: those without &lt;code&gt;else&lt;/code&gt; clauses. In SML and
 some other functional languages, every &lt;code&gt;if&lt;/code&gt; expression &lt;em&gt;must&lt;/em&gt; have an &lt;code&gt;else&lt;/code&gt;
@@ -2026,7 +2026,7 @@ statements had &lt;code&gt;else&lt;/code&gt; branches.&lt;/p&gt;
 isn&amp;rsquo;t used, we can allow omitting &lt;code&gt;else&lt;/code&gt; branches those. The next rule is: &lt;strong&gt;An
 &lt;code&gt;if&lt;/code&gt; expression can omit the else branch when in a context where its value isn&amp;rsquo;t
 used.&lt;/strong&gt;&lt;/p&gt;
-&lt;h2&gt;Exiting branches&lt;/h2&gt;
+&lt;h2 id=&quot;exiting-branches&quot;&gt;&lt;a href=&quot;#exiting-branches&quot;&gt;Exiting branches&lt;span class=&quot;anchor&quot;&gt;#exiting-branches&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;re almost there. It&amp;rsquo;s starting to feel like we really are type-checking an
 imperative language, not ML in BASIC&amp;rsquo;s clothing. I coded this up and
 successfully wrote some little example programs. It was starting to feel like a
@@ -2058,7 +2058,7 @@ the type of the other branch for the &lt;code&gt;if&lt;/code&gt; expression&amp;
 above example to work. In the sample code I&amp;rsquo;ve written so far, it rarely comes
 into play. It&amp;rsquo;s usually more idiomatic to hoist that control flow out of the
 &lt;code&gt;if&lt;/code&gt; entirely. But we can type check it easily, so the language lets you do it.&lt;/p&gt;
-&lt;h2&gt;The rules altogether&lt;/h2&gt;
+&lt;h2 id=&quot;the-rules-altogether&quot;&gt;&lt;a href=&quot;#the-rules-altogether&quot;&gt;The rules altogether&lt;span class=&quot;anchor&quot;&gt;#the-rules-altogether&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;That&amp;rsquo;s where I&amp;rsquo;m at right now. It took me a few iterations to get to a point
 where all the &lt;code&gt;if&lt;/code&gt; expressions I expected to be able to write in my example
 programs actually type checked correctly but it seems pretty stable now. The
@@ -2457,7 +2457,7 @@ fire.&lt;/p&gt;
 and show you how pencils or umbrellas are made? I love that stuff, so I thought
 maybe you might like to see what I spent the past year on. You can read this as
 a peek behind the curtain, or maybe a long apology for why it took so long.&lt;/p&gt;
-&lt;h2&gt;Where I left off&lt;/h2&gt;
+&lt;h2 id=&quot;where-i-left-off&quot;&gt;&lt;a href=&quot;#where-i-left-off&quot;&gt;Where I left off&lt;span class=&quot;anchor&quot;&gt;#where-i-left-off&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;What I said in my last post was that &lt;em&gt;Crafting Interpreters&lt;/em&gt; was &lt;em&gt;finished&lt;/em&gt;, and
 by that I meant that I&amp;rsquo;d written all the code, dotted the last sentence, and
 scanned the last illustration. The &lt;em&gt;content&lt;/em&gt; of the book was complete. But it
@@ -2469,7 +2469,7 @@ journey. Once I finished the last chapter and put it online, I took about a
 month-long break. I had been writing &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/blob/master/note/log.txt&quot;&gt;every single day for almost four
 years&lt;/a&gt; and I was &lt;em&gt;fried&lt;/em&gt;. Also, in case you don&amp;rsquo;t remember, early 2020 was
 not exactly a Totally Fine Time in World History.&lt;/p&gt;
-&lt;h2&gt;A new build system&lt;/h2&gt;
+&lt;h2 id=&quot;a-new-build-system&quot;&gt;&lt;a href=&quot;#a-new-build-system&quot;&gt;A new build system&lt;span class=&quot;anchor&quot;&gt;#a-new-build-system&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;After a few weeks, my desire to have this project completely done returned and I
 eased my way back into working on it. I fixed a whole pile of typos and other
 mistakes that readers &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/issues&quot;&gt;filed bugs for&lt;/a&gt; (thanks!).&lt;/p&gt;
@@ -2514,7 +2514,7 @@ refresh.&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;Once I had the new build system outputting nice clean HTML and I&amp;rsquo;d deleted the
 old Python stuff, it was time to get started.&lt;/p&gt;
-&lt;h2&gt;Designing the book&lt;/h2&gt;
+&lt;h2 id=&quot;designing-the-book&quot;&gt;&lt;a href=&quot;#designing-the-book&quot;&gt;Designing the book&lt;span class=&quot;anchor&quot;&gt;#designing-the-book&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Doing a large graphic design project like a book works a lot like web dev or
 game programming where it sort of has two levels. First you set up your
 &amp;ldquo;framework&amp;rdquo; or &amp;ldquo;engine&amp;rdquo;. On the web, this is your web framework and all of your
@@ -2544,7 +2544,7 @@ or illustrations that they refer to. Some of these can get pretty long.&lt;/p&gt
 it telling you where the code goes in the resulting program.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;How wide?&lt;/h2&gt;
+&lt;h2 id=&quot;how-wide&quot;&gt;&lt;a href=&quot;#how-wide&quot;&gt;How wide?&lt;span class=&quot;anchor&quot;&gt;#how-wide&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Horizontally, the main text column needs to be wide enough to fit the longest
 line of code. I can use shorter lines and wrap the snippets more, but that makes
 them harder to read. It also makes them vertically taller, which causes its own
@@ -2568,7 +2568,7 @@ the asides. (Using a narrower font for the asides helped too).&lt;/p&gt;&lt;figu
 &lt;img class=&quot;framed&quot; src=&quot;/image/2021/07/metrics.png&quot;&gt;
 &lt;figcaption&gt;Here are the final horizontal metrics.&lt;/figcaption&gt;
 &lt;/figure&gt;
-&lt;h2&gt;How tall?&lt;/h2&gt;
+&lt;h2 id=&quot;how-tall&quot;&gt;&lt;a href=&quot;#how-tall&quot;&gt;How tall?&lt;span class=&quot;anchor&quot;&gt;#how-tall&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;That left the other dimension. If I were going with a real publisher doing a
 full offset print run, I could pick whatever page size I wanted. But since I&amp;rsquo;m
 self publishing, that would mean paying up front for thousands of copies to be
@@ -2589,7 +2589,7 @@ a test chapter and just typeset it and tweaked the fonts over and over again.
 Eventually I got a set of fonts and styles I liked, some masters that seemed
 workable, and I was ready to go. The framework was done and now it was time to
 open the content hose.&lt;/p&gt;
-&lt;h2&gt;XML, like its 1999&lt;/h2&gt;
+&lt;h2 id=&quot;xml-like-its-1999&quot;&gt;&lt;a href=&quot;#xml-like-its-1999&quot;&gt;XML, like its 1999&lt;span class=&quot;anchor&quot;&gt;#xml-like-its-1999&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Of course, problem #1 is that there &lt;em&gt;is&lt;/em&gt; no content hose. I have to build one.
 InDesign doesn&amp;rsquo;t know what the hell Markdown or my weird ass build system is. I
 sure as hell didn&amp;rsquo;t want to, like, copy every chapter from my browser, paste it
@@ -2607,7 +2607,7 @@ damn well better have a unique &lt;code&gt;&amp;lt;italics-header&amp;gt;&lt;/co
 system and its Markdown processing, I could write my own &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/blob/master/tool/bin/build_xml.dart&quot;&gt;custom XML
 exporter&lt;/a&gt; that generated &lt;em&gt;exactly&lt;/em&gt; the tags that would make InDesign not
 cry and avoid as many InDesign XML import bugs as possible.&lt;/p&gt;
-&lt;h2&gt;JavaScript, in &lt;em&gt;my&lt;/em&gt; InDesign?&lt;/h2&gt;
+&lt;h2 id=&quot;javascript-in-my-indesign&quot;&gt;&lt;a href=&quot;#javascript-in-my-indesign&quot;&gt;JavaScript, in &lt;em&gt;my&lt;/em&gt; InDesign?&lt;span class=&quot;anchor&quot;&gt;#javascript-in-my-indesign&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Even so, XML import only gets you so far. Specifically, it gets you a &amp;ldquo;story&amp;rdquo; in
 InDesign terms: a single continuous narrative of text that fills the main text
 box and spans multiple pages:&lt;/p&gt;&lt;figure&gt;
@@ -2659,7 +2659,7 @@ borders of nearby code snippets&lt;/em&gt;.&lt;/p&gt;&lt;figure&gt;
 &lt;p&gt;I lost hours of my life to this stupid bug. Eventually, I realized that some
 completely random subset of location tags would have to be manually positioned
 because anchoring invariably broke some borders.&lt;/p&gt;
-&lt;h2&gt;Editing, again&lt;/h2&gt;
+&lt;h2 id=&quot;editing-again&quot;&gt;&lt;a href=&quot;#editing-again&quot;&gt;Editing, again&lt;span class=&quot;anchor&quot;&gt;#editing-again&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;All of the above took me a good month or so and then it was time to stop
 fiddling around and get to work on the actual content. The first thing I did was
 another editing pass of the entire book, front to back. I had already done three
@@ -2668,7 +2668,7 @@ that it was done so that I could get a better feel for continuity. It turns out
 I repeated the same dumb jokes a lot. I fixed (most of) those.&lt;/p&gt;
 &lt;p&gt;This took five months. There&amp;rsquo;s nothing fun to say about this, it was just a
 chore.&lt;/p&gt;
-&lt;h2&gt;Copy editing&lt;/h2&gt;
+&lt;h2 id=&quot;copy-editing&quot;&gt;&lt;a href=&quot;#copy-editing&quot;&gt;Copy editing&lt;span class=&quot;anchor&quot;&gt;#copy-editing&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Next I hired an actual professional copy editor, &lt;a href=&quot;https://karisomerton.com/&quot;&gt;Kari Somerton&lt;/a&gt;, to go
 through and do the same thing. She was great. Most of the editing world uses
 Microsoft Word and &amp;ldquo;Track Changes&amp;rdquo; to handle the editing process. Like most
@@ -2679,7 +2679,7 @@ weird completely bespoke build system. She handled it with aplomb and churned
 through the book in no time. She found hundreds and hundreds of mistakes. This
 despite me doing four drafts and readers filing hundreds of issues already.
 Professional copy editors are worth every penny.&lt;/p&gt;
-&lt;h2&gt;Typesetting the whole thing&lt;/h2&gt;
+&lt;h2 id=&quot;typesetting-the-whole-thing&quot;&gt;&lt;a href=&quot;#typesetting-the-whole-thing&quot;&gt;Typesetting the whole thing&lt;span class=&quot;anchor&quot;&gt;#typesetting-the-whole-thing&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Once the words were as good as they were gonna get, it was time to get them onto
 pages. The process went like this:&lt;/p&gt;
 &lt;ol&gt;
@@ -2728,7 +2728,7 @@ at the bottom of pages. It looks terrible and wastes space, like this:&lt;/p&gt;
 &lt;img class=&quot;framed&quot; src=&quot;/image/2021/07/typeset.png&quot;&gt;
 &lt;figcaption&gt;I thoughtfully left room on the page for your own doodles.&lt;/figcaption&gt;
 &lt;/figure&gt;
-&lt;h2&gt;Speaking of illustrations&amp;hellip;&lt;/h2&gt;
+&lt;h2 id=&quot;speaking-of-illustrations&quot;&gt;&lt;a href=&quot;#speaking-of-illustrations&quot;&gt;Speaking of illustrations&amp;hellip;&lt;span class=&quot;anchor&quot;&gt;#speaking-of-illustrations&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;At one level, the illustrations were easy. I specifically chose black and white
 pen and ink because it&amp;rsquo;s print friendly. When I first scanned the images as I
 wrote each chapter, I brought them in at glorious 1200 DPI. Here&amp;rsquo;s a crop:&lt;/p&gt;&lt;figure&gt;
@@ -2756,7 +2756,7 @@ so that it &lt;em&gt;just&lt;/em&gt; fits on the page. Sometimes I&amp;rsquo;d t
 it shorter to fit on a page or taller to eat up some whitespace.&lt;/p&gt;
 &lt;p&gt;This was the real challenge of typesetting the book and why it took me two
 months to get through all the chapters.&lt;/p&gt;
-&lt;h2&gt;Front matter and back matter&lt;/h2&gt;
+&lt;h2 id=&quot;front-matter-and-back-matter&quot;&gt;&lt;a href=&quot;#front-matter-and-back-matter&quot;&gt;Front matter and back matter&lt;span class=&quot;anchor&quot;&gt;#front-matter-and-back-matter&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Did you know that there are professional indexers? People whose job it is to
 write indexes for books? They even &lt;a href=&quot;https://press.uchicago.edu/ucp/books/book/chicago/I/bo3625262.html&quot;&gt;write books&lt;/a&gt; about how to write
 indexes. (One would presume that these books have truly superb indexes.)&lt;/p&gt;
@@ -2775,7 +2775,7 @@ acknowledgements. Then I let InDesign generate a table of contents for me.&lt;/p
 &lt;figcaption&gt;Here&#39;s what the inside looks like.&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;Or, at least, I had the &lt;em&gt;inside&lt;/em&gt; of one.&lt;/p&gt;
-&lt;h2&gt;Cover design&lt;/h2&gt;
+&lt;h2 id=&quot;cover-design&quot;&gt;&lt;a href=&quot;#cover-design&quot;&gt;Cover design&lt;span class=&quot;anchor&quot;&gt;#cover-design&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;A lot of authors obsess over their cover and envision it the whole time they are
 writing. Despite what the aphorism says, people &lt;em&gt;do&lt;/em&gt; judge books by their cover
 and a good one makes a big difference. At least, that&amp;rsquo;s the case over in fiction
@@ -2797,7 +2797,7 @@ hand-lettered a new title:&lt;/p&gt;&lt;figure&gt;
 &lt;p&gt;It&amp;rsquo;s a real typeface (Acumin Pro Extra Condensed) but I hand-traced a printout
 to give it some imperfect charm. I picked a color palette to try to give it a
 sort of a mimeographed 1950s scouting manual vibe.&lt;/p&gt;
-&lt;h2&gt;Proofreading the proof&lt;/h2&gt;
+&lt;h2 id=&quot;proofreading-the-proof&quot;&gt;&lt;a href=&quot;#proofreading-the-proof&quot;&gt;Proofreading the proof&lt;span class=&quot;anchor&quot;&gt;#proofreading-the-proof&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Now I really had a book. I uploaded the PDF exports to KDP and ordered a proof
 copy. A week later, a surprisingly heavy box arrived. This was the first moment
 I really understood just how &lt;em&gt;big&lt;/em&gt; this book I wrote is. Up until this point, it
@@ -2824,7 +2824,7 @@ really wanted to see &lt;em&gt;exactly&lt;/em&gt; what was happening.&lt;/p&gt;
 &lt;p&gt;Did I engineer my way out of this problem? You&amp;rsquo;re &lt;a href=&quot;https://github.com/munificent/craftinginterpreters/blob/master/tool/bin/tile_pages.dart&quot;&gt;damn right I did&lt;/a&gt;. I
 wrote a Dart script that would take a PDF of the book, extract every page, and
 then generate a single huge PNG file with every page tiled across it. It looks
-like this:&lt;/p&gt;&lt;figure&gt;
+like this:&lt;/p&gt;&lt;figure class=&quot;wide&quot;&gt;
   &lt;img class=&quot;framed&quot; src=&quot;/image/2021/07/pages.png&quot;&gt;
 &lt;/figure&gt;
 &lt;p&gt;If you zoom in, each page is about this big:&lt;/p&gt;&lt;figure&gt;
@@ -2834,7 +2834,7 @@ like this:&lt;/p&gt;&lt;figure&gt;
 &lt;p&gt;Every time I changed the InDesign files and committed them, I exported a PDF
 for that commit and generated a tile image. Then I wrote a little Photoshop
 action that would take two of those and draw a big red border around any pixels
-that differed. Here is what all of the proofreading changes look like:&lt;/p&gt;&lt;figure&gt;
+that differed. Here is what all of the proofreading changes look like:&lt;/p&gt;&lt;figure class=&quot;wide&quot;&gt;
 &lt;img class=&quot;framed&quot; src=&quot;/image/2021/07/diff.png&quot;&gt;
 &lt;/figure&gt;
 &lt;p&gt;And zoomed in:&lt;/p&gt;&lt;figure&gt;
@@ -2846,7 +2846,7 @@ of, like, writing an entire textbook on programming languages. But, honestly, I
 think I&amp;rsquo;m most proud of this dumb little script. It was &lt;em&gt;such&lt;/em&gt; a relief to be
 able to programmatically verify that, yes, this PDF looks exactly like the last
 one except for the one expected change.&lt;/p&gt;
-&lt;h2&gt;Ebooks are also books&lt;/h2&gt;
+&lt;h2 id=&quot;ebooks-are-also-books&quot;&gt;&lt;a href=&quot;#ebooks-are-also-books&quot;&gt;Ebooks are also books&lt;span class=&quot;anchor&quot;&gt;#ebooks-are-also-books&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Once I incorporated all the proofreading fixes, the print edition was really for
 real totally done. But people also like reading ebooks and Kindle, so I needed
 to make those too.&lt;/p&gt;
@@ -2855,7 +2855,7 @@ antiquated XHTML that EPUB requires as well as all the weird metadata and
 manifest stuff that goes into one. A few command-line invocations later and I
 had Kindle and EPUB e-books. I tested in a bunch of readers and tweaked the CCS
 to try to find a compromise between all of their renderers.&lt;/p&gt;
-&lt;h2&gt;Updating the site and launching&lt;/h2&gt;
+&lt;h2 id=&quot;updating-the-site-and-launching&quot;&gt;&lt;a href=&quot;#updating-the-site-and-launching&quot;&gt;Updating the site and launching&lt;span class=&quot;anchor&quot;&gt;#updating-the-site-and-launching&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;At this point&amp;mdash;and now we&amp;rsquo;re talking this past weekend as I write this
 sentence&amp;mdash;I had a folder with all of the final files for every edition of the
 book. All that remained was to update the front page of the book&amp;rsquo;s website to
@@ -2869,7 +2869,7 @@ have processed the uploads and everything is available, I&amp;rsquo;ll publish t
 and update the site. I&amp;rsquo;ll write a note for the mailing list and feel nervous
 emailing that many people. If you&amp;rsquo;re reading this, I already did all that and
 the book is really, really done.&lt;/p&gt;
-&lt;h2&gt;What next?&lt;/h2&gt;
+&lt;h2 id=&quot;what-next&quot;&gt;&lt;a href=&quot;#what-next&quot;&gt;What next?&lt;span class=&quot;anchor&quot;&gt;#what-next&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Ever since I finished the last chapter, people have been asking me what I&amp;rsquo;m
 going to do next. I have people I consider close friends now who have never
 known me when I &lt;em&gt;wasn&amp;rsquo;t&lt;/em&gt; writing this book.&lt;/p&gt;
@@ -2941,7 +2941,7 @@ project has &lt;a href=&quot;https://www.amazon.com/dp/0990582906&quot;&gt;hundr
 Korean, Japanese, Chinese, German, and Polish. The book did so much better than
 I expected that I&amp;rsquo;m still not sure how to process it, beyond feeling immense
 gratitude to everyone who read it, bought a copy, or cheered me on.&lt;/p&gt;
-&lt;h2&gt;The seed of a book&lt;/h2&gt;
+&lt;h2 id=&quot;the-seed-of-a-book&quot;&gt;&lt;a href=&quot;#the-seed-of-a-book&quot;&gt;The seed of a book&lt;span class=&quot;anchor&quot;&gt;#the-seed-of-a-book&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Once I finished the print edition of &lt;em&gt;Game Programming Patterns&lt;/em&gt;, I took some
 time off. But it didn&amp;rsquo;t take too long for that itch to write about interpreters
 to come back. I knew exactly what I was getting into with writing a book now,
@@ -3008,7 +3008,7 @@ satisfying period of time. The three parts played off each other in challenging
 ways. Sometimes I would change the language to make one interpreter simpler, but
 find doing so made the other interpreter more complex. Other times I&amp;rsquo;d hit on
 some trick that made everything get smaller and cleaner.&lt;/p&gt;
-&lt;h2&gt;Getting back on the horse&lt;/h2&gt;
+&lt;h2 id=&quot;getting-back-on-the-horse&quot;&gt;&lt;a href=&quot;#getting-back-on-the-horse&quot;&gt;Getting back on the horse&lt;span class=&quot;anchor&quot;&gt;#getting-back-on-the-horse&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I remember the exact moment I committed to writing the book. I was stuck on a
 tricky language design problem: constructor syntax. I knew I wanted classes,
 which meant some way to construct instances. Adding a &lt;code&gt;new&lt;/code&gt; keyword felt too
@@ -3055,7 +3055,7 @@ to do it without any cheating. I wanted a hard guarantee that at the end of each
 chapter, you had a program that you could type in, compile, run, and do
 something with. I knew I wouldn&amp;rsquo;t be able to verify this manually, so it was
 time to create some tools.&lt;/p&gt;
-&lt;h2&gt;A bespoke build system&lt;/h2&gt;
+&lt;h2 id=&quot;a-bespoke-build-system&quot;&gt;&lt;a href=&quot;#a-bespoke-build-system&quot;&gt;A bespoke build system&lt;span class=&quot;anchor&quot;&gt;#a-bespoke-build-system&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I &lt;a href=&quot;https://github.com/munificent/game-programming-patterns/tree/master/book&quot;&gt;wrote my first book in Markdown&lt;/a&gt;. I slapped together &lt;a href=&quot;https://github.com/munificent/game-programming-patterns/blob/master/script/format.py&quot;&gt;a tiny Python
 script&lt;/a&gt; that converts the Markdown to HTML and transcludes the code
 snippets which are stored in separate C++ files. When I started my second book,
@@ -3108,7 +3108,7 @@ interpreters aren&amp;rsquo;t complete! So I added metadata to track which tests
 expected to pass by which point in the book. With this in place, I could
 automatically verify that the code that I was showing readers did exactly what I
 expected.&lt;/p&gt;
-&lt;h3&gt;More complex snippets&lt;/h3&gt;
+&lt;h3 id=&quot;more-complex-snippets&quot;&gt;&lt;a href=&quot;#more-complex-snippets&quot;&gt;More complex snippets&lt;span class=&quot;anchor&quot;&gt;#more-complex-snippets&lt;/span&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;The snippet markers look pretty straightforward, and in many cases they are. But
 reality tends to get messier and I didn&amp;rsquo;t allow myself to sweep any of that mess
 under nearby rugs. Some changes don&amp;rsquo;t just &lt;em&gt;add&lt;/em&gt; code to the interpreter. I try
@@ -3223,7 +3223,7 @@ is the &lt;code&gt;main()&lt;/code&gt; function of the bytecode VM:&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;
 &lt;p&gt;Maintaining this is not super fun. But, thankfully, I have a build and test
 system to tell me when I break something.&lt;/p&gt;
-&lt;h2&gt;Slicing up the interpreters&lt;/h2&gt;
+&lt;h2 id=&quot;slicing-up-the-interpreters&quot;&gt;&lt;a href=&quot;#slicing-up-the-interpreters&quot;&gt;Slicing up the interpreters&lt;span class=&quot;anchor&quot;&gt;#slicing-up-the-interpreters&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;So I had a tool that could let me split the interpreters across the chapters.
 If it was possible to break these interpreters into chapters at all, it would
 let me do so. Now I just had to figure out where to carve the seams. This was
@@ -3266,7 +3266,7 @@ had a reasonably coherent concept and a roughly similar amount of code.&lt;/p&gt
 &lt;p&gt;Before, I felt like I had a language and code that wanted to get out there into
 the world. Now I felt like I had a book. Or, at least, I had all of the &lt;em&gt;code&lt;/em&gt;
 for a book.&lt;/p&gt;
-&lt;h2&gt;A chapter at a time&lt;/h2&gt;
+&lt;h2 id=&quot;a-chapter-at-a-time&quot;&gt;&lt;a href=&quot;#a-chapter-at-a-time&quot;&gt;A chapter at a time&lt;span class=&quot;anchor&quot;&gt;#a-chapter-at-a-time&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I wrote my first book one chapter at a time. I drafted, edited, illustrated each
 chapter and put it online before moving to the next one. Serial publishing for
 the digital age. I really loved that process. It helped build an audience for
@@ -3290,7 +3290,7 @@ In theory, &amp;ldquo;all&amp;rdquo; that remained was writing some text to expl
 already written along with some pictures. But, for me at least, English is a
 much more taxing language to write than C or Java. I had all of the difficult
 work ahead of me, and all of the fun was done.&lt;/p&gt;
-&lt;h2&gt;Illustrating by hand&lt;/h2&gt;
+&lt;h2 id=&quot;illustrating-by-hand&quot;&gt;&lt;a href=&quot;#illustrating-by-hand&quot;&gt;Illustrating by hand&lt;span class=&quot;anchor&quot;&gt;#illustrating-by-hand&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Well, not all of the fun. I did still have the illustrations to do. With my last
 book, I hand-drew little sketchy diagrams to show various bits of architecture.
 I wanted even more illustrations for this book to make the concepts less
@@ -3388,7 +3388,7 @@ paper:&lt;/p&gt;&lt;figure&gt;
 &lt;/figure&gt;
 &lt;p&gt;I went through two full pads of tracing paper, two pads of graph paper, a
 sketch pad, and several pens. I drew 181 illustrations.&lt;/p&gt;
-&lt;h2&gt;Writing is suffering&lt;/h2&gt;
+&lt;h2 id=&quot;writing-is-suffering&quot;&gt;&lt;a href=&quot;#writing-is-suffering&quot;&gt;Writing is suffering&lt;span class=&quot;anchor&quot;&gt;#writing-is-suffering&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I had the code, and I had a process for illustrations. The remaining work was
 just writing all the words and drawing all the pictures. So that&amp;rsquo;s what I did. I
 started at chapter one and started writing. For each chapter, I wrote an outline
@@ -3456,7 +3456,7 @@ next paragraph or two the entire time. What does it feel like to write an email
 or draw a picture? Writing the book felt like that. I just happened to do it
 over and over again. I feel like a marathon runner who&amp;rsquo;s been watching his feet
 the whole time and didn&amp;rsquo;t even notice when he stumbled over the finish line.&lt;/p&gt;
-&lt;h2&gt;Now what?&lt;/h2&gt;
+&lt;h2 id=&quot;now-what&quot;&gt;&lt;a href=&quot;#now-what&quot;&gt;Now what?&lt;span class=&quot;anchor&quot;&gt;#now-what&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;em&gt;Crafting Interpreters&lt;/em&gt; is complete now. I had to stop here for a minute and
 look at that sentence. I&amp;rsquo;ve been working on this book every day for around 1,400
 days. I can&amp;rsquo;t &lt;em&gt;wait&lt;/em&gt; to take a break. So that&amp;rsquo;s the next step. My plan was to

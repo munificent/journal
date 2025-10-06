@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     What the Hero Sees: Field-of-View for Roguelikes &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2015/02/01/what-color-is-your-function/"
+         title="Older Post &ldquo;What Color is Your Function?&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2015/09/08/the-hardest-program-ive-ever-written/"
+         title="Newer Post &ldquo;The Hardest Program I&rsquo;ve Ever Written&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2015/09/07/what-the-hero-sees/" rel="bookmark"
      title="Permanent Link to What the Hero Sees: Field-of-View for Roguelikes">
     What the Hero Sees: Field-of-View for Roguelikes
   </a>
 </h1>
-  <a class="older" href="/2015/02/01/what-color-is-your-function/"
-     title="Older Post &ldquo;What Color is Your Function?&rdquo;">&larr;</a>
-  <a class="newer" href="/2015/09/08/the-hardest-program-ive-ever-written/"
-     title="Newer Post &ldquo;The Hardest Program I&rsquo;ve Ever Written&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">September 07, 2015</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/game">game</a> <a href="/category/roguelike">roguelike</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2015/02/01/what-color-is-your-function/"
+       title="Older Post &ldquo;What Color is Your Function?&rdquo;">&lt;</a></span>
+    <a href="/archive">september 07, 2015</a>
+    <span class="thread-narrow"><a href="/2015/09/08/the-hardest-program-ive-ever-written/"
+       title="Newer Post &ldquo;The Hardest Program I&rsquo;ve Ever Written&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/game">game</a>
+     |
+      <a href="/category/roguelike">roguelike</a>
+      </div>
+</nav>
 <style>
 canvas {
   display: inline-block;
@@ -68,7 +94,7 @@ number of ways to do it</a>. Many of the posts linked there talk about &ldquo;li
 and &ldquo;shadow&rdquo; as well, but they calculate the same thing as visilibity. In both
 cases, we&rsquo;re trying to find the set of tiles that can be reached by rays
 emanating from some point source. I&rsquo;ll use both terms interchangeably.</p>
-<h2>Brute force line-of-sight?</h2>
+<h2 id="brute-force-line-of-sight"><a href="#brute-force-line-of-sight">Brute force line-of-sight?<span class="anchor">#brute-force-line-of-sight</span></a></h2>
 <p>The simplest solution is to repurpose your line-of-sight code. You already need
 code to determine if there is an open line from one point to another on the map.
 You use that to tell if things like arrows and fireballs reach their target or
@@ -91,7 +117,7 @@ something more efficient?</p>
 in fact, a lot of others have already done so. But, one lazy sunny Saturday
 morning in 2006, I didn&rsquo;t see any I liked and wanted to come up with one that
 made more sense to me.</p>
-<h2>Pieces of eight</h2>
+<h2 id="pieces-of-eight"><a href="#pieces-of-eight">Pieces of eight<span class="anchor">#pieces-of-eight</span></a></h2>
 <p>If you have the mind of a programmer, the first thing you do when presented with
 a problem is to break it into multiple (hopefully) smaller problems. Our goal is
 to calculate the entire field of view surrounding the hero, but we can slice
@@ -139,7 +165,7 @@ innocuous overlap):</p><figure>
 <p>From here on out, we only have deal with a single triangle&rsquo;s worth of <code>row</code> and
 <code>col</code>, and we can cover the entire field of view just by running the same code
 eight times, once for each octant.</p>
-<h2>A Line of Shadows</h2>
+<h2 id="a-line-of-shadows"><a href="#a-line-of-shadows">A Line of Shadows<span class="anchor">#a-line-of-shadows</span></a></h2>
 <p>Another way to simplify a problem is solve its negation, and that&rsquo;s what this
 algorithm does. Instead of calculating which tiles are visible, it figures out
 which are hidden, which puts it in a family of algorithms that do &ldquo;shadow
@@ -175,7 +201,7 @@ range from 0 (the short vertical edge of the octant) to 1 (the diagonal edge).
 Slopes are distance-independent. This is what the black line in the demo above
 shows. As you click to add and remove walls, you can see new shadows appear, but
 the black lines don&rsquo;t move or grow as you sweep the row up and down.</p>
-<h2>Projecting a tile</h2>
+<h2 id="projecting-a-tile"><a href="#projecting-a-tile">Projecting a tile<span class="anchor">#projecting-a-tile</span></a></h2>
 <p>The tricky part is calculating those slopes given some tile in the octant. There
 are a couple of corner cases to consider. Literally. A tile is a square, and the
 shadow it projects goes from one corner of the square to another.</p>
@@ -237,7 +263,7 @@ ShadowLine in <code>line</code>, and a set of tiles in <code>tiles</code>, it&rs
   <span class="k">var</span> <span class="i">pos</span> <span class="o">=</span> <span class="i">start</span> <span class="o">+</span> <span class="i">transformOctant</span><span class="p">(</span><span class="i">row</span><span class="p">,</span> <span class="i">col</span><span class="p">,</span> <span class="i">octant</span><span class="p">);</span>
   <span class="i">tiles</span><span class="p">[</span><span class="i">pos</span><span class="p">].</span><span class="i">isVisible</span> <span class="o">=</span> <span class="o">!</span><span class="i">line</span><span class="p">.</span><span class="i">isInShadow</span><span class="p">(</span><span class="i">projection</span><span class="p">);</span>
 <span class="p">}</span></pre>
-<h2>Inky pools of shadows</h2>
+<h2 id="inky-pools-of-shadows"><a href="#inky-pools-of-shadows">Inky pools of shadows<span class="anchor">#inky-pools-of-shadows</span></a></h2>
 <p>We can calculate which tiles are obscured by the shadow line, but that isn&rsquo;t
 very useful since our shadow line is always empty right now. Let&rsquo;s fix that.</p>
 <p>As we trace the row, each time we hit an opaque tile, we add it to the shadow
@@ -377,7 +403,7 @@ Every tile will be hidden after that. Here&rsquo;s how we detect that:</p>
 <p>In practice, this case happens often. Dungeons tend to be small rooms and twisty
 passages, so at some distance from the hero you typically reach a point where
 all tiles are occluded.</p>
-<h2>Putting it all together</h2>
+<h2 id="putting-it-all-together"><a href="#putting-it-all-together">Putting it all together<span class="anchor">#putting-it-all-together</span></a></h2>
 <p>OK, so we have code to:</p>
 <ol>
 <li>
@@ -446,64 +472,38 @@ never shown up as a performance bottleneck when I&rsquo;ve profiled the game. Th
 good enough for me, and I hope this will be helpful for you too.</p>
 <p>If you want to see all of the code for these demos, it&rsquo;s <a href="https://github.com/munificent/fov">here</a>. Or, in
 the context of <a href="https://github.com/munificent/hauberk">my game</a> <a href="https://github.com/munificent/hauberk/blob/afb52670ab0650aff97cb112d752a6b49f8593a4/lib/src/engine/stage/fov.dart">here</a>.</p><script type="application/dart" src="/code/2015-09-07-what-the-hero-sees/main.dart"></script><script src="/code/2015-09-07-what-the-hero-sees/packages/browser/dart.js"></script>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2015/09/07/what-the-hero-sees/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

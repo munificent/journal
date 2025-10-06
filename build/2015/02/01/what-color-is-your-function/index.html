@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,59 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     What Color is Your Function? &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2014/12/21/rooms-and-mazes/"
+         title="Older Post &ldquo;Rooms and Mazes: A Procedural Dungeon Generator&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2015/09/07/what-the-hero-sees/"
+         title="Newer Post &ldquo;What the Hero Sees: Field-of-View for Roguelikes&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark"
      title="Permanent Link to What Color is Your Function?">
     What Color is Your Function?
   </a>
 </h1>
-  <a class="older" href="/2014/12/21/rooms-and-mazes/"
-     title="Older Post &ldquo;Rooms and Mazes: A Procedural Dungeon Generator&rdquo;">&larr;</a>
-  <a class="newer" href="/2015/09/07/what-the-hero-sees/"
-     title="Newer Post &ldquo;What the Hero Sees: Field-of-View for Roguelikes&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">February 01, 2015</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/go">go</a> <a href="/category/javascript">javascript</a> <a href="/category/language">language</a> <a href="/category/lua">lua</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2014/12/21/rooms-and-mazes/"
+       title="Older Post &ldquo;Rooms and Mazes: A Procedural Dungeon Generator&rdquo;">&lt;</a></span>
+    <a href="/archive">february 01, 2015</a>
+    <span class="thread-narrow"><a href="/2015/09/07/what-the-hero-sees/"
+       title="Newer Post &ldquo;What the Hero Sees: Field-of-View for Roguelikes&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/go">go</a>
+     |
+      <a href="/category/javascript">javascript</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/lua">lua</a>
+      </div>
+</nav>
 <p>I don&rsquo;t know about you, but nothing gets me going in the morning quite like a
 good old fashioned programming language rant. It stirs the blood to see someone
 skewer one of those <a href="http://www.paulgraham.com/avg.html">&ldquo;blub&rdquo;</a> languages the plebians use, muddling through
@@ -50,7 +82,7 @@ possibly delicate sensibilities, instead, I&rsquo;ll rant about a language I jus
 up. A strawman whose sole purpose is to be set aflame.</p>
 <p>I know, this seems pointless right? Trust me, by the end, we&rsquo;ll see whose face
 (or faces!) have been painted on his straw noggin.</p>
-<h2>A new language</h2>
+<h2 id="a-new-language"><a href="#a-new-language">A new language<span class="anchor">#a-new-language</span></a></h2>
 <p>Learning an entire new (crappy) language just for a blog post is a tall order,
 so let&rsquo;s say it&rsquo;s mostly similar to one you and I already know. We&rsquo;ll say it has
 syntax sorta like JS. Curly braces and semicolons. <code>if</code>, <code>while</code>, etc. The
@@ -90,7 +122,7 @@ using them damn near everywhere.</p>
 <p>So you go to town and write all sorts of awesome reusable libraries and
 applications passing around functions, calling functions, returning functions.
 Functapalooza.</p>
-<h2>What color is your function?</h2>
+<h2 id="what-color-is-your-function"><a href="#what-color-is-your-function">What color is your function?<span class="anchor">#what-color-is-your-function</span></a></h2>
 <p>Except wait. Here&rsquo;s where our language gets screwy. It has this one peculiar
 feature:</p>
 <p><strong>1. Every function has a color.</strong></p>
@@ -150,7 +182,7 @@ language designers are sadists, don&rsquo;t we?&mdash;jabbed one final thorn in 
 <p>There are some functions built in to the platform, functions that we <em>need</em> to
 use, that we are unable to write ourselves, that only come in red. At this
 point, a reasonable person might think the language hates us.</p>
-<h2>It&rsquo;s functional programming&rsquo;s fault!</h2>
+<h2 id="its-functional-programmings-fault"><a href="#its-functional-programmings-fault">It&rsquo;s functional programming&rsquo;s fault!<span class="anchor">#its-functional-programmings-fault</span></a></h2>
 <p>You might be thinking that the problem here is we&rsquo;re trying to use higher-order
 functions. If we just stop flouncing around in all of that functional frippery
 and write normal blue collar first-order functions like God intended, we&rsquo;d
@@ -175,7 +207,7 @@ nasty red-only core library functions?</p>
 Then you&rsquo;ll have to turn the function that calls <em>it</em> red. Ugh. No matter what,
 you&rsquo;ll have to think about color constantly. It will be the sand in your
 swimsuit on the beach vacation of development.</p>
-<h2>A colorful allegory</h2>
+<h2 id="a-colorful-allegory"><a href="#a-colorful-allegory">A colorful allegory<span class="anchor">#a-colorful-allegory</span></a></h2>
 <p>Of course, I&rsquo;m not really talking about color here, am I? It&rsquo;s an allegory, a
 literary trick. The Sneetches isn&rsquo;t about stars on bellies, it&rsquo;s about race. By
 now, you may have an inkling of what color actually represents. If not, here&rsquo;s
@@ -214,7 +246,7 @@ doing asynchronous programming</a>, they&rsquo;re trying to cope at the library
 level with a problem that the language foisted onto them.</p><div class="update">
 <p><em>Update 2021/12/03:</em> 15,118 async libraries as of today.</p>
 </div>
-<h2>I promise the future is better</h2>
+<h2 id="i-promise-the-future-is-better"><a href="#i-promise-the-future-is-better">I promise the future is better<span class="anchor">#i-promise-the-future-is-better</span></a></h2>
 <p>People in the Node community have realized that callbacks are a pain for a long
 time, and have looked around for solutions. One technique that gets a bunch of
 people excited is <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"><em>promises</em></a>, which you may also know by their
@@ -241,7 +273,7 @@ or futures, its face looks an awful lot like the one on my strawman.</p>
 <p>(Yes, that means even <a href="http://dartlang.org">Dart</a>, the language I work on. That&rsquo;s why I&rsquo;m so
 excited some of the team are <a href="https://github.com/dart-lang/fletch">experimenting with other concurrency
 models</a>.)</p>
-<h2>I&rsquo;m awaiting a solution</h2>
+<h2 id="im-awaiting-a-solution"><a href="#im-awaiting-a-solution">I&rsquo;m awaiting a solution<span class="anchor">#im-awaiting-a-solution</span></a></h2>
 <p>C# programmers are probably feeling pretty smug right now (a condition they&rsquo;ve
 increasingly fallen prey to as Hejlsberg and company have piled sweet feature
 after sweet feature into the language). In C#, you can use <a href="https://msdn.microsoft.com/en-us/library/hh191443.aspx">the <code>await</code>
@@ -285,7 +317,7 @@ of the week. But we&rsquo;re lying to ourselves if we think all of our troubles 
 gone. As soon as you start trying to write higher-order functions, or reuse
 code, you&rsquo;re right back to realizing color is still there, bleeding all over
 your codebase.</p>
-<h2>What language <em>isn&rsquo;t</em> colored?</h2>
+<h2 id="what-language-isnt-colored"><a href="#what-language-isnt-colored">What language <em>isn&rsquo;t</em> colored?<span class="anchor">#what-language-isnt-colored</span></a></h2>
 <p>So JS, Dart, C#, and Python have this problem. CoffeeScript and most other
 languages that compile to JS do too (which is why Dart inherited it). I <em>think</em>
 even ClojureScript has this issue even though they&rsquo;ve tried really hard to push
@@ -305,7 +337,7 @@ system threads. Goroutines in Go, coroutines in Lua, and fibers in Ruby are
 perfectly adequate.</p>
 <p>(That&rsquo;s why C# has that little caveat. You can avoid the pain of async in C# by
 using threads.)</p>
-<h2>Remembrance of operations past</h2>
+<h2 id="remembrance-of-operations-past"><a href="#remembrance-of-operations-past">Remembrance of operations past<span class="anchor">#remembrance-of-operations-past</span></a></h2>
 <p>The fundamental problem is &ldquo;How do you pick up where you left off when an
 operation completes&rdquo;? You&rsquo;ve built up some big callstack and then you call some
 IO operation. For performance, that operation uses the operating system&rsquo;s
@@ -346,7 +378,7 @@ pretending to be compiler backends. Where did we go wrong?</p>
 you&rsquo;ve used them, you know you&rsquo;re still hand-creating giant piles of function
 literals. You&rsquo;re just passing them to <code>.then()</code> instead of to the asynchronous
 function itself.</p>
-<h2>Awaiting a generated solution</h2>
+<h2 id="awaiting-a-generated-solution"><a href="#awaiting-a-generated-solution">Awaiting a generated solution<span class="anchor">#awaiting-a-generated-solution</span></a></h2>
 <p>Async-await <em>does</em> help. If you peel back your compiler&rsquo;s skull and see what
 it&rsquo;s doing when it hits an <code>await</code> call you&rsquo;d see it actually doing the
 CPS-transform. That&rsquo;s <em>why</em> you need to use <code>await</code> in C#: it&rsquo;s a clue to the
@@ -372,7 +404,7 @@ to unwind the <em>whole</em> stack.</p>
 <p>This is where the &ldquo;red functions can only be called by red functions&rdquo; rule
 comes from. You have to closurify the entire callstack all the way back to
 <code>main()</code> or the event handler.</p>
-<h2>Reified callstacks</h2>
+<h2 id="reified-callstacks"><a href="#reified-callstacks">Reified callstacks<span class="anchor">#reified-callstacks</span></a></h2>
 <p>But if you have threads (green- or OS-level), you don&rsquo;t need to do that. You
 can just suspend the entire thread and hop straight back to the OS or event
 loop <em>without having to return from all of those functions</em>.</p>
@@ -393,64 +425,38 @@ eliminated.</p>
 awesome its concurrency story is because it has asynchronous APIs, now you&rsquo;ll
 know why I start grinding my teeth. Because it means you&rsquo;re right back to red
 functions and blue ones.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

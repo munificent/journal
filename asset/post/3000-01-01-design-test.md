@@ -1,5 +1,6 @@
 ---
 title: Design Test
+tags: design
 ---
 
 This is a temporary post to test all of the CSS for the design. It contains at
@@ -43,6 +44,14 @@ If you are iterating on the syntax highlighting for various languages, check out
 A paragraph of text.
 
 ### Heading H3 with "Quotes" and `code` inside
+
+A paragraph of text. Next is a horizontal rule.
+
+## A very long H2 heading to see how it looks when wrapped to two lines
+
+A paragraph of text.
+
+### A very long H3 heading to see how it looks when wrapped to two lines
 
 A paragraph of text. Next is a horizontal rule.
 
@@ -165,12 +174,18 @@ There are a couple of kinds of box-delimited content.
 >     * And one post that quotes a language spec.
 >
 >         * Ends up with a three-level deep list in a blockquote.
+>
+>         * Another item to make sure Markdown wraps the list items in
+>           paragraphs.
 
 Some blockquotes have an author attached to them, like this:
 
-> People put all sorts of words in my mouth that I never said. They should cut
-> that shit out.
+<blockquote class="cited">
 
+People put all sorts of words in my mouth that I never said. They should cut
+that out.
+
+</blockquote>
 <p class="cite">Abraham Lincoln</p>
 
 There are also update boxes:
@@ -188,6 +203,17 @@ Update boxes can have multiple paragraphs and inline styles like *emphasis*,
 > styles like *emphasis* and **strong**.
 >
 > And of course it can be multiple paragraphs.
+
+Another paragraph.
+
+<blockquote class="cited">
+
+Just to cover our bases, make sure a cited blockquote in an update is formatted
+right too.
+
+</blockquote>
+
+<p class="cite">Some Author</p>
 
 </div>
 

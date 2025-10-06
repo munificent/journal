@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     What is &ldquo;Open Recursion&rdquo;? &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2013/07/18/javascript-isnt-scheme/"
+         title="Older Post &ldquo;JavaScript Isn&rsquo;t Scheme&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2013/12/08/babys-first-garbage-collector/"
+         title="Newer Post &ldquo;Baby&rsquo;s First Garbage Collector&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2013/08/26/what-is-open-recursion/" rel="bookmark"
      title="Permanent Link to What is &ldquo;Open Recursion&rdquo;?">
     What is &ldquo;Open Recursion&rdquo;?
   </a>
 </h1>
-  <a class="older" href="/2013/07/18/javascript-isnt-scheme/"
-     title="Older Post &ldquo;JavaScript Isn&rsquo;t Scheme&rdquo;">&larr;</a>
-  <a class="newer" href="/2013/12/08/babys-first-garbage-collector/"
-     title="Newer Post &ldquo;Baby&rsquo;s First Garbage Collector&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">August 26, 2013</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2013/07/18/javascript-isnt-scheme/"
+       title="Older Post &ldquo;JavaScript Isn&rsquo;t Scheme&rdquo;">&lt;</a></span>
+    <a href="/archive">august 26, 2013</a>
+    <span class="thread-narrow"><a href="/2013/12/08/babys-first-garbage-collector/"
+       title="Newer Post &ldquo;Baby&rsquo;s First Garbage Collector&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>Someone on StackOverflow stumbled onto the strange term &ldquo;open recursion&rdquo; and
 <a href="http://stackoverflow.com/questions/17803621/why-is-it-called-open-or-closed-recursion">asked what it meant</a>. Since most of the other answers to this online are
 pretty opaque, I started writing an answer. But then I accidentally wrote a blog
@@ -58,7 +84,7 @@ but no actual classes or methods.</p>
 <p>Now the question is, if you were to only have maps of functions, what would you
 be missing compared to &ldquo;real&rdquo; objects? Pierce&rsquo;s answer is &ldquo;open recursion&rdquo;.
 We&rsquo;ll break that down into the two words, last one first:</p>
-<h2>&ldquo;Recursion&rdquo;</h2>
+<h2 id="recursion"><a href="#recursion">&ldquo;Recursion&rdquo;<span class="anchor">#recursion</span></a></h2>
 <p>Say you want to make an &ldquo;object&rdquo; that represents a counter. It exposes three
 operations:  <code>increment()</code>, <code>get()</code>, and <code>set()</code>. You could make such an object
 in our Dart subset like this:</p>
@@ -136,7 +162,7 @@ stands for &ldquo;recursive&rdquo;). In C, you use <a href="http://en.wikipedia.
 recursive so that they can see each other&rsquo;s <em>names</em>.</strong> It <em>doesn&rsquo;t</em> mean that
 they actually have to call each other at runtime and <em>be</em> recursive. Just that
 their names are in scope so that they <em>could</em> do that.</p>
-<h2>&ldquo;Open&rdquo;</h2>
+<h2 id="open"><a href="#open">&ldquo;Open&rdquo;<span class="anchor">#open</span></a></h2>
 <p>We can fake mutually recursive definitions in our mini-Dart by using function
 expressions and reassigning variables like this:</p>
 <pre class="highlight language-dart"><span class="i">makeCounter</span><span class="p">()</span> <span class="p">{</span>
@@ -274,7 +300,7 @@ other words, they were all closures and called each other by closing over each
 other&rsquo;s variables. By passing in the receiver explicitly, we&rsquo;ve cracked open
 that closure and let the derived object get in so the base methods can see it.
 Hence: &ldquo;open&rdquo;.</p>
-<h2>Recap</h2>
+<h2 id="recap"><a href="#recap">Recap<span class="anchor">#recap</span></a></h2>
 <p>So, if you compare a real object-oriented language to a simpler language with
 just structures and functions, the differences are:</p>
 <ol>
@@ -290,64 +316,38 @@ are <em>open</em> to overridden methods.</p>
 </li>
 </ol>
 <p>Thus: <em>open recursion</em>.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2013/08/26/what-is-open-recursion/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

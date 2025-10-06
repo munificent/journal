@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,36 +13,56 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Rooms and Mazes: A Procedural Dungeon Generator &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2014/11/20/how-my-book-launch-went/"
+         title="Older Post &ldquo;How My Book Launch Went&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2015/02/01/what-color-is-your-function/"
+         title="Newer Post &ldquo;What Color is Your Function?&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2014/12/21/rooms-and-mazes/" rel="bookmark"
      title="Permanent Link to Rooms and Mazes: A Procedural Dungeon Generator">
     Rooms and Mazes: A Procedural Dungeon Generator
   </a>
 </h1>
-  <a class="older" href="/2014/11/20/how-my-book-launch-went/"
-     title="Older Post &ldquo;How My Book Launch Went&rdquo;">&larr;</a>
-  <a class="newer" href="/2015/02/01/what-color-is-your-function/"
-     title="Newer Post &ldquo;What Color is Your Function?&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">December 21, 2014</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/game-dev">game-dev</a> <a href="/category/roguelike">roguelike</a></span>
-</h4>
-<style>
-canvas {
-  background: #222;
-  display: inline-block;
-  max-width: 100%;
-}
-</style>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2014/11/20/how-my-book-launch-went/"
+       title="Older Post &ldquo;How My Book Launch Went&rdquo;">&lt;</a></span>
+    <a href="/archive">december 21, 2014</a>
+    <span class="thread-narrow"><a href="/2015/02/01/what-color-is-your-function/"
+       title="Newer Post &ldquo;What Color is Your Function?&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+     |
+      <a href="/category/roguelike">roguelike</a>
+      </div>
+</nav>
+<!-- TODO: Now that the canvas is bigger, up the resolution. -->
 <p>Several months ago I promised a follow-up to my previous blog post about
 <a href="/2014/07/15/a-turn-based-game-loop/">turn-based game loops</a> in <a href="https://github.com/munificent/hauberk">my roguelike</a>. Then I got
 completely sidetracked by <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/">self-publishing</a> <a href="/2014/11/20/how-my-book-launch-went/">my book</a>, <a href="http://gameprogrammingpatterns.com/"><em>Game
@@ -50,7 +72,7 @@ hanging.</p>
 here to&hellip; keep you hanging. Alas, you are at the mercy of my wandering
 attention span! Instead of game loops, today we&rsquo;re going to talk about possibly
 the most fun and challenging part of making a roguelike: generating dungeons!</p>
-<p>Go ahead and click the little box below to see what we end up with:</p><figure>
+<p>Go ahead and click the little box below to see what we end up with:</p><figure class="wide">
 <canvas id="enchilada" width="570" height="390">Sorry, you need canvas
 support for this demo.</canvas>
 <figcaption>Click it again to restart it.</figcaption>
@@ -64,7 +86,7 @@ connected and the screen was filled with a complete, perfect maze.</p>
 square of the maze could be reached from any other&mdash;and yet it seemed to be
 chaotic&mdash;it carved at random and every maze was different. This was enough to
 blow my ten-year-old mind. It still kind of does today.</p>
-<h2>What&rsquo;s in a dungeon?</h2>
+<h2 id="whats-in-a-dungeon"><a href="#whats-in-a-dungeon">What&rsquo;s in a dungeon?<span class="anchor">#whats-in-a-dungeon</span></a></h2>
 <p>Procedural generation&mdash;having the game build stuff randomly instead of using
 hand-authored content&mdash;is amazing when it works well. You get a ton of
 replayability because the game is different every time. As the person
@@ -146,7 +168,7 @@ I can tweak so I can make a number of areas that share the same code but
 have their own feel.</p>
 </li>
 </ul>
-<h2>A room with a view</h2>
+<h2 id="a-room-with-a-view"><a href="#a-room-with-a-view">A room with a view<span class="anchor">#a-room-with-a-view</span></a></h2>
 <p>I&rsquo;ve been working on this game pretty much forever (it&rsquo;s gone through four
 different implementation languages!) and I&rsquo;ve tried a number of different
 dungeon generators. My main source of inspiration is a game called <a href="http://rephial.org/">Angband</a>.
@@ -169,13 +191,15 @@ previously placed one. To avoid a possible infinite loop, instead of trying
 until a certain number of rooms are successfully <em>placed</em>, I do a fixed number
 of <em>attempts</em> to place rooms. Failure becomes more common as the dungeon gets
 fuller&mdash;after all, you can only fit so many rooms in a given area&mdash;but
-tuning this gives you some control over room density, like so:</p><figure>
+tuning this gives you some control over room density, like so:</p><figure class="wide">
 <canvas id="rooms" width="570" height="390">Sorry, you need canvas support for this demo.</canvas>
+<figcaption>
 <label for="attempts">Attempts:</label>
 <input type="range" id="attempts" min="10" value="200" max="1000">
 <output for="attempts" id="attempts-output">200</output>
+</figcaption>
 </figure>
-<h2>A dark and twisty passageway</h2>
+<h2 id="a-dark-and-twisty-passageway"><a href="#a-dark-and-twisty-passageway">A dark and twisty passageway<span class="anchor">#a-dark-and-twisty-passageway</span></a></h2>
 <p>Most of the dungeon generators I&rsquo;ve written start with this. The hard part, by
 far, is making good passageways to connect them. That&rsquo;s really what this post is
 about&mdash;a neat way to solve that problem.</p>
@@ -229,12 +253,14 @@ placed.</p>
 <p>Of course, if you do that starting with a perfect maze and run to completion,
 you&rsquo;ll erase the whole maze! A perfect maze has no loops so <em>everything</em> is a
 dead end if you follow passages long enough. Jamis&rsquo; solution is to not erase
-<em>all</em> of the dead ends, just some. It stops after a while. Something like this:</p><figure>
+<em>all</em> of the dead ends, just some. It stops after a while. Something like this:</p><figure class="wide">
 <canvas id="dead-ends" width="570" height="390">Sorry, you need canvas
 support for this demo.</canvas>
+<figcaption>
 <label for="dead-end-open">Corridors to leave:</label>
 <input type="range" id="dead-end-open" min="1" value="1000" max="3000">
 <output for="dead-end-open" id="dead-end-open-output">1000</output>
+</figcaption>
 </figure>
 <p>Once you do that, you can start placing rooms. The process Jamis uses for this
 is interesting. He picks a room size and then tries to place it on every single
@@ -243,7 +269,7 @@ discarded. The remaining positions are &ldquo;ranked&rdquo; where rooms that are
 passageways are better. It then picks the best position and places the room
 there, and puts some doors between the room and the passage.</p>
 <p>Rinse, lather, repeat and you&rsquo;ve got yourself a dungeon.</p>
-<h2>Rooms <em>then</em> mazes</h2>
+<h2 id="rooms-then-mazes"><a href="#rooms-then-mazes">Rooms <em>then</em> mazes<span class="anchor">#rooms-then-mazes</span></a></h2>
 <p>I went ahead and coded this up exactly as described. It went OK, but I found
 that the process of placing rooms was pretty slow. It works well for dungeons of
 the small size you do for a tabletop role-playing game, but not so much at the
@@ -263,7 +289,7 @@ If you let it carve into existing passages, you&rsquo;d get loops.</p>
 shaped areas that surround the rooms. In other words, a maze generator is a
 randomized <a href="http://en.wikipedia.org/wiki/Flood_fill">flood fill</a> algorithm. Run this on every solid region between the
 rooms and we&rsquo;re left with the entire dungeon packed full of disconnected rooms
-and mazes.</p><figure>
+and mazes.</p><figure class="wide">
   <canvas id="maze-fill" width="570" height="390">
       Sorry, you need canvas support for this demo.
   </canvas>
@@ -271,7 +297,7 @@ and mazes.</p><figure>
     Each color here represents a different region of connected tiles.
   </figcaption>
 </figure>
-<h2>Looking for a connection</h2>
+<h2 id="looking-for-a-connection"><a href="#looking-for-a-connection">Looking for a connection<span class="anchor">#looking-for-a-connection</span></a></h2>
 <p>All that remains is to stitch those back together into a single continuous
 dungeon. Fortunately, that&rsquo;s pretty easy to do. The room generator chooses odd
 sizes and positions for rooms so they are aligned with the mazes. Those in turn
@@ -287,7 +313,7 @@ only a single tile away from its neighbors.</p>
 <p>Adjacent to two regions of different colors.</p>
 </li>
 </ol>
-<p>Here they are highlighted:</p><figure>
+<p>Here they are highlighted:</p><figure class="wide">
 <canvas id="connectors" width="570" height="390">
 Sorry, you need canvas support for this demo.
 </canvas>
@@ -342,7 +368,7 @@ we give them a <em>slight</em> chance of being opened up. Something like:</p>
 imperfect loops we want to make the dungeon more fun to play in. Note that this
 is also easily tunable. If we make the chance more likely, we get more densely
 connected dungeons.</p>
-<h2>Uncarving</h2>
+<h2 id="uncarving"><a href="#uncarving">Uncarving<span class="anchor">#uncarving</span></a></h2>
 <p>If we stop here, we&rsquo;ll get dungeons that are packed chock full of maze
 corridors, most of which are dead ends. That has a certain sadistic appeal, but
 isn&rsquo;t exactly what I&rsquo;m going for. The last remaining step is the &ldquo;sparseness&rdquo;
@@ -351,7 +377,7 @@ pass described earlier.</p>
 of the dead ends in the maze. When we do that, the mazes are reduced to just the
 winding set of passageways needed to connect the rooms to each other. Every
 corridor is guaranteed to go somewhere interesting.</p>
-<h2>What we ended up with</h2>
+<h2 id="what-we-ended-up-with"><a href="#what-we-ended-up-with">What we ended up with<span class="anchor">#what-we-ended-up-with</span></a></h2>
 <p>In summary:</p>
 <ol>
 <li>
@@ -380,69 +406,43 @@ browser</a>. The code for these demos is <a href="https://github.com/munificent/
 gnarly. Making them animated adds a lot of complexity. Instead, <a href="https://github.com/munificent/hauberk/blob/db360d9efa714efb6d937c31953ef849c7394a39/lib/src/content/dungeon.dart">here</a> is
 the much cleaner implementation my game uses.</p>
 <p>As a bonus for making it this far, here&rsquo;s a super dense giant dungeon. I find it
-hypnotic:</p><figure>
+hypnotic:</p><figure class="wide">
 <canvas id="giant" width="570" height="390">
 Sorry, you need canvas support for this demo.
 </canvas>
 </figure><script type="application/dart" src="/code/2014-12-21-rooms-and-mazes/main.dart"></script><script src="/code/2014-12-21-rooms-and-mazes/packages/browser/dart.js"></script>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

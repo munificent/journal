@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Does Go Have Subtyping? &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2023/08/04/representing-heterogeneous-data/"
+         title="Older Post &ldquo;Representing Heterogeneous Data&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2025/05/26/access-control-syntax/"
+         title="Newer Post &ldquo;Access Control Syntax&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2023/10/19/does-go-have-subtyping/" rel="bookmark"
      title="Permanent Link to Does Go Have Subtyping?">
     Does Go Have Subtyping?
   </a>
 </h1>
-  <a class="older" href="/2023/08/04/representing-heterogeneous-data/"
-     title="Older Post &ldquo;Representing Heterogeneous Data&rdquo;">&larr;</a>
-  <a class="newer" href="/2025/05/26/access-control-syntax/"
-     title="Newer Post &ldquo;Access Control Syntax&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">October 19, 2023</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/go">go</a> <a href="/category/language">language</a> <a href="/category/vgs">vgs</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2023/08/04/representing-heterogeneous-data/"
+       title="Older Post &ldquo;Representing Heterogeneous Data&rdquo;">&lt;</a></span>
+    <a href="/archive">october 19, 2023</a>
+    <span class="thread-narrow"><a href="/2025/05/26/access-control-syntax/"
+       title="Newer Post &ldquo;Access Control Syntax&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/go">go</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/vgs">vgs</a>
+      </div>
+</nav>
 <p>I&rsquo;ve been <a href="/2023/01/03/type-checking-if-expressions/">noodling on a static type system</a> for my current hobby
 language. To try to keep the language as simple as possible, I&rsquo;m trying to see
 if I can live without subtyping. Since most of my programming experience is in
@@ -44,7 +72,7 @@ subtyping, but when you look at interfaces, it does seem to have something
 there really something different going on?</p>
 <p>This post is the answer to that question as best as I can tell. The short answer
 is that no, Go doesn&rsquo;t have subtyping. But also, yes, it sort of does.</p>
-<h2>What is subtyping?</h2>
+<h2 id="what-is-subtyping"><a href="#what-is-subtyping">What is subtyping?<span class="anchor">#what-is-subtyping</span></a></h2>
 <p>If you&rsquo;re reading my blog, you probably already know what subtyping is, but
 let&rsquo;s make sure we&rsquo;re all starting from the same place. Subtyping defines a
 <a href="https://en.wikipedia.org/wiki/Relation_(mathematics)"><em>relation</em></a> between two types. Given two types A and B, it might be
@@ -65,7 +93,7 @@ where that code is valid?</p>
 interface of a static system is compile errors, and the most common compile
 error is &ldquo;I expected a value of <em>this</em> type but you gave me a value of <em>this
 other type</em>&rdquo;.</p>
-<h2>Why have subtyping?</h2>
+<h2 id="why-have-subtyping"><a href="#why-have-subtyping">Why have subtyping?<span class="anchor">#why-have-subtyping</span></a></h2>
 <p>You have a context that expects type B and you give it a value of type A. In
 languages without subtyping, that&rsquo;s only OK if A and B are the exact same type.
 In Pascal, if you declare a variable with type <code>integer</code>, the only thing you can
@@ -84,7 +112,7 @@ method across all types that implement the <code>Iterable</code> interface. Subt
 force multiplier for your code.</p>
 <p>(Of course, that benefit isn&rsquo;t without significant costs in terms of language
 complexity, which is why I&rsquo;m hoping to avoid it.)</p>
-<h2>Does Go have subtyping?</h2>
+<h2 id="does-go-have-subtyping"><a href="#does-go-have-subtyping">Does Go have subtyping?<span class="anchor">#does-go-have-subtyping</span></a></h2>
 <p>If you search the (extremely well-written!) <a href="https://go.dev/ref/spec">Go language spec</a> for
 &ldquo;subtype&rdquo;, you get zero results. So the answer is a clear &ldquo;no&rdquo; at the textual
 level. However, we needer a deeper hermeneutics.</p>
@@ -115,7 +143,7 @@ everything except name? Are we just playing semantics? (I mean, we&rsquo;re desi
 a programming language, so obviously <em>everything</em> we do is playing semantics.
 But I mean are we playing semantics with the language spec itself?) To fully
 answer that, we&rsquo;ll need to look at all of the kinds of types in a program.</p>
-<h2>Composite types and variance</h2>
+<h2 id="composite-types-and-variance"><a href="#composite-types-and-variance">Composite types and variance<span class="anchor">#composite-types-and-variance</span></a></h2>
 <p>If the only types in Go&rsquo;s type system were primitives like numbers, structs, and
 interfaces then I think you&rsquo;d have a good argument that Go does have subtyping,
 just spelled differently. But once you start looking at slice types and function
@@ -137,7 +165,7 @@ that mean that <code>[]E1</code> is assignable to <code>[]E2</code>? Does the as
 the question like &ldquo;how does assignability of slice types <em>vary with respect to
 their element types</em>?&rdquo;. There are a few possible answers to a question like
 this.</p>
-<h3>Variance of slice types</h3>
+<h3 id="variance-of-slice-types"><a href="#variance-of-slice-types">Variance of slice types<span class="anchor">#variance-of-slice-types</span></a></h3>
 <p>For slice types in Go specifically, there are a handful of assignability rules,
 but the only one that applies to slice types is:</p>
 <blockquote>
@@ -216,7 +244,7 @@ And then, because as you can see, it isn&rsquo;t safe to do so, they have to add
 wrong type into the array.)</p>
 <p>So, OK, it makes sense for slice (and array) types to be invariant. What about
 function types?</p>
-<h3>Variance of function types</h3>
+<h3 id="variance-of-function-types"><a href="#variance-of-function-types">Variance of function types<span class="anchor">#variance-of-function-types</span></a></h3>
 <p>To keep things simple, first we&rsquo;ll consider just functions that don&rsquo;t take any
 parameters and have a single return type. Given two function types like that,
 when are they assignable? Again, the only rule in the Go language spec that
@@ -298,7 +326,7 @@ contravariant types, you flip it twice and get back to the original direction.)<
 <p>Contravariant parameter types are sound, but again Go doesn&rsquo;t allow them. Two
 function types are only assignable if their parameter types are <em>exactly the
 same</em>.</p>
-<h2>Invariance in Go</h2>
+<h2 id="invariance-in-go"><a href="#invariance-in-go">Invariance in Go<span class="anchor">#invariance-in-go</span></a></h2>
 <p>In every language I know with subtyping, function types are <a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Function_types">covariant in their
 return types and contravariant in their parameter types</a>. But in
 Go, function types are invariant.</p>
@@ -322,7 +350,7 @@ the exact opposite of an ivory tower language designed for proofs and
 publications. The goal of the language is to let real users ship real
 applications. And, importantly, be able to ship <em>fast</em> applications and <em>reason
 about the performance of their code</em>.</p>
-<h2>Representing values</h2>
+<h2 id="representing-values"><a href="#representing-values">Representing values<span class="anchor">#representing-values</span></a></h2>
 <p>Up to this point, we&rsquo;ve only been concerned with how types flow through the type
 checker at compile time. But&mdash;assuming there are no compile errors&mdash;the
 compiler eventually excretes some machine code which gets executed at runtime.
@@ -354,7 +382,7 @@ object always requires a pointer indirection which can be slow due
 to <a href="https://gameprogrammingpatterns.com/data-locality.html">poor locality and cache misses</a>.</p>
 </li>
 </ol>
-<h3>Struct types</h3>
+<h3 id="struct-types"><a href="#struct-types">Struct types<span class="anchor">#struct-types</span></a></h3>
 <p>Those are unnacceptable costs for a systems language like Go. When you <em>want</em>
 runtime polymorphism, of course, you have to pay for it somehow. But if you&rsquo;re
 just storing data in memory, Go doesn&rsquo;t want to make you pay for something you
@@ -375,7 +403,7 @@ around the heap and chews on bigger data insects every time it does. That makes
 memory access more cache friendly and also lightens the load on the garbage
 collector since there are fewer individual allocations to traverse.</p>
 <p>(Java does something similar for primitive types, as does C# for struct types.)</p>
-<h3>Interface types</h3>
+<h3 id="interface-types"><a href="#interface-types">Interface types<span class="anchor">#interface-types</span></a></h3>
 <p>So structs are fast, great. But Go does feature runtime polymorphism in the form
 of interfaces. How does interface method dispatch work if a value is stored
 directly inline with no extra data to track its runtime type or method
@@ -413,7 +441,7 @@ each use site. That leads to some additional complexity for the user: they
 always have to think &ldquo;should I use an interface, pointer, or struct type here?&rdquo;,
 but it gives them more fine-grained control over how they spend memory and
 pointer indirection costs.</p>
-<h2>Implicit conversions</h2>
+<h2 id="implicit-conversions"><a href="#implicit-conversions">Implicit conversions<span class="anchor">#implicit-conversions</span></a></h2>
 <p>We&rsquo;re close to understanding why Go lets you assign a struct to an interface
 but not a slice of those same structs to a slice of that same interface.</p>
 <p>If structs and interfaces have entirely different memory representations, how
@@ -465,7 +493,7 @@ explosions.</p>
 <p>This is why languages that do support subtyping and variance almost always have
 a uniform memory representation for all objects that participate in the subtype
 hierarchy.</p>
-<h2>Does Go have subtyping?</h2>
+<h2 id="does-go-have-subtyping-2"><a href="#does-go-have-subtyping">Does Go have subtyping?<span class="anchor">#does-go-have-subtyping</span></a></h2>
 <p>If you make it this far, congratulations. This ended up being a much deeper dive
 than I expected. I learned a lot exploring this corner of the language space and
 I hope you learned something too.</p>
@@ -538,64 +566,38 @@ sacrifices variance but keeps polymorphism at the individual value level. That
 married with implicit conversions enables non-uniform representation. Of the
 three, variance is probably the least valuable for users, so I think that&rsquo;s a
 pretty smart trade-off.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2023/10/19/does-go-have-subtyping/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2023/10/19/does-go-have-subtyping/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

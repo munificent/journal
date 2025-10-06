@@ -57,7 +57,7 @@ to hold the physical book in my hands, so until that was done, I was afraid to
 take even single day's break.
 
 <figure>
-  <iframe width="560" height="315" src="//www.youtube.com/embed/sb7uzrKnAGA" frameborder="0" allowfullscreen></iframe>
+  <iframe width="704" height="396" src="//www.youtube.com/embed/sb7uzrKnAGA" frameborder="0" allowfullscreen></iframe>
   <figcaption>I did break the chain on <em>one</em> day. It was my birthday in
   Kauai. I spent the morning playing on the beach with my kids, the afternoon
   snorkeling with sea turtles, the evening grilling burgers for my friends, and

@@ -1,0 +1,23 @@
+{{ if year }}
+<tr class="year">
+{{ else }}
+<tr>
+{{ end }}
+  <td class="date">
+    {{ if year }}
+      {{ year }}
+    {{ else }}
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    {{ end }}
+    {{ format_date(post.date, "MMM dd") }}
+  </td>
+  <td>
+    <a href="/{{ post.url }}/" rel="bookmark"
+     title="Permanent Link to {{ escape(post.title) }}">{{ post.title }}</a>
+  </td>
+  <td class="tags">
+  {{ for tag in post.tags }}
+    <a href="/category/{{ tag }}">{{ tag }}</a>
+  {{ end }}
+  </td>
+</tr>

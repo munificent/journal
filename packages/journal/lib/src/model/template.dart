@@ -11,11 +11,7 @@ import 'tag_set.dart';
 late final _buildDate = DateTime.now();
 
 Future<String> renderTemplate(Template template, BuildContext context,
-    {Key? postKey,
-    Post? post,
-    Tag? tag,
-    String? tagTitle,
-    Map<String, Object?>? data}) async {
+    {Key? postKey, Post? post, Tag? tag, Map<String, Object?>? data}) async {
   Object? getProperty(String property) {
     switch (property) {
       case 'build_date':
@@ -55,8 +51,6 @@ Future<String> renderTemplate(Template template, BuildContext context,
       case 'tag_posts':
         if (tag == null) return null;
         return tag.posts.map((key) => context.input<Post>(key)).toList();
-      case 'tag_title':
-        return tagTitle;
       default:
         if (data != null && data.containsKey(property)) {
           return data[property];

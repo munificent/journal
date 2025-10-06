@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,63 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Iteration Inside and Out, Part 2 &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2013/01/13/iteration-inside-and-out/"
+         title="Older Post &ldquo;Iteration Inside and Out&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2013/04/17/well-done/"
+         title="Newer Post &ldquo;Well Done: A Sentinel Value&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2013/02/24/iteration-inside-and-out-part-2/" rel="bookmark"
      title="Permanent Link to Iteration Inside and Out, Part 2">
     Iteration Inside and Out, Part 2
   </a>
 </h1>
-  <a class="older" href="/2013/01/13/iteration-inside-and-out/"
-     title="Older Post &ldquo;Iteration Inside and Out&rdquo;">&larr;</a>
-  <a class="newer" href="/2013/04/17/well-done/"
-     title="Newer Post &ldquo;Well Done: A Sentinel Value&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">February 24, 2013</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/go">go</a> <a href="/category/language">language</a> <a href="/category/lua">lua</a> <a href="/category/magpie">magpie</a> <a href="/category/python">python</a> <a href="/category/ruby">ruby</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2013/01/13/iteration-inside-and-out/"
+       title="Older Post &ldquo;Iteration Inside and Out&rdquo;">&lt;</a></span>
+    <a href="/archive">february 24, 2013</a>
+    <span class="thread-narrow"><a href="/2013/04/17/well-done/"
+       title="Newer Post &ldquo;Well Done: A Sentinel Value&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/dart">dart</a>
+     |
+      <a href="/category/go">go</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/lua">lua</a>
+     |
+      <a href="/category/magpie">magpie</a>
+     |
+      <a href="/category/python">python</a>
+     |
+      <a href="/category/ruby">ruby</a>
+      </div>
+</nav>
 <p><em>You&rsquo;ll probably want to read <a href="/2013/01/13/iteration-inside-and-out/">part one</a> first unless you&rsquo;re feeling brave.</em></p>
 <p>In our last episode, we learned that iteration involves two chunks of code: one
 generating values, and one consuming them. During a loop, these two chunks take
@@ -53,7 +89,7 @@ over the nodes.</p>
 <p>Now we&rsquo;ll see some techniques to deal with each style&rsquo;s shortcomings. The basic
 idea is <a href="http://en.wikipedia.org/wiki/Reification_(computer_science)"><em>reification</em></a>. If you&rsquo;ve got some data on the callstack that
 you want to hang onto, you need to find a place to store it.</p>
-<h2>Iterators and generators</h2>
+<h2 id="iterators-and-generators"><a href="#iterators-and-generators">Iterators and generators<span class="anchor">#iterators-and-generators</span></a></h2>
 <p>Say we want to define a method that concatenates two sequences. We don&rsquo;t want to
 actually create a data structure that contains the elements of both, we just
 want to return an iterator that walks the first sequence and then the second
@@ -178,7 +214,7 @@ these &ldquo;<a href="http://www.python.org/dev/peps/pep-0255/">generators</a>&r
 of JavaScript will have <a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">something similar</a>. The language that invented
 generators and the <code>yield</code> keyword was Barbara Liskov&rsquo;s <a href="http://en.wikipedia.org/wiki/CLU_(programming_language)">CLU</a>, immortalized
 forever in <a href="http://en.wikipedia.org/wiki/List_of_Tron_characters#CLU">Tron</a>. (I&rsquo;m not making that up.)</p>
-<h3>Deep yields</h3>
+<h3 id="deep-yields"><a href="#deep-yields">Deep yields<span class="anchor">#deep-yields</span></a></h3>
 <p>There&rsquo;s a limitation here, though. You can only yield from the method itself.
 Let&rsquo;s say (for whatever reason) we wanted to organize our C# code like:</p>
 <pre class="highlight language-csharp"><span class="t">IEnumerable</span> <span class="i">Concat</span><span class="p">(</span><span class="t">IEnumerable</span> <span class="i">a</span><span class="p">,</span> <span class="t">IEnumerable</span> <span class="i">b</span><span class="p">)</span>
@@ -221,7 +257,7 @@ at each level. Something like:</p>
 methods <em>and</em> in <code>Concat()</code> itself? We&rsquo;re explicitly making <em>every</em> level of the
 callstack an iterator. That makes sure every call frame gets reified like we
 need. Can we do better?</p>
-<h2>Python 3.3: delegating generators</h2>
+<h2 id="python-33-delegating-generators"><a href="#python-33-delegating-generators">Python 3.3: delegating generators<span class="anchor">#python-33-delegating-generators</span></a></h2>
 <p>The above example can be translated to Python like so:</p>
 <pre class="highlight language-python"><span class="k">def</span> <span class="i">concat</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">):</span>
   <span class="k">for</span> <span class="i">item</span> <span class="k">in</span> <span class="i">walkFirst</span><span class="p">(</span><span class="i">a</span><span class="p">):</span> <span class="k">yield</span> <span class="i">item</span>
@@ -254,7 +290,7 @@ wants to yield or not, so the higher-order function doesn&rsquo;t know if <em>it
 to yield. You may end up having to implement that function twice, once for each
 style.</p>
 <p>So <code>yield from</code> is only a tiny improvement. Can we do better?</p>
-<h2>Ruby: enumerables, enumerators, and fibers</h2>
+<h2 id="ruby-enumerables-enumerators-and-fibers"><a href="#ruby-enumerables-enumerators-and-fibers">Ruby: enumerables, enumerators, and fibers<span class="anchor">#ruby-enumerables-enumerators-and-fibers</span></a></h2>
 <p>If you ever find yourself in a game of &ldquo;which language has a better feature than
 X&rdquo;, Ruby is usually a safe play. Matz has culled an impressive array of features
 from Smalltalk and Lisp. (And let&rsquo;s not forget Perl, the ugly duckling paddling
@@ -353,7 +389,7 @@ to <code>next</code>.</p>
 </ol>
 <p>There must be some kind of data structure that represents an entire callstack.
 It doesn&rsquo;t reify a stack <em>frame</em> like generators, it reifies the whole <em>stack.</em></p>
-<h2>A fiber by any other name</h2>
+<h2 id="a-fiber-by-any-other-name"><a href="#a-fiber-by-any-other-name">A fiber by any other name<span class="anchor">#a-fiber-by-any-other-name</span></a></h2>
 <p>This mystery data structure is what Ruby calls a <em>fiber</em>. Its sort of like a
 thread in that it represents an in-progress computation. It has a callstack,
 local variables, etc. Unlike a &ldquo;real&rdquo; thread, though, it doesn&rsquo;t involve the OS,
@@ -397,7 +433,7 @@ StackOverflow answer</a>) is:</p>
                            <span class="c"># resume the fiber.</span>
   <span class="k">end</span>
 <span class="k">end</span></pre>
-<h2>Iteration or concurrency?</h2>
+<h2 id="iteration-or-concurrency"><a href="#iteration-or-concurrency">Iteration or concurrency?<span class="anchor">#iteration-or-concurrency</span></a></h2>
 <p>I started this two-parter with a question about how you can make iteration
 beautiful and easy to work with. This leads us to wanting both internal and
 external iteration, and the ability to go from one to the other. The piece
@@ -412,7 +448,7 @@ about concurrency. You&rsquo;ve got two &ldquo;threads&rdquo; of behavior: one t
 values and one that&rsquo;s consuming them. You need to run these two threads together
 and coordinate them. That <em>is</em> concurrency. We&rsquo;re just so used to it, that we
 don&rsquo;t think of it that way.</p>
-<h2>Wait, what about Magpie?</h2>
+<h2 id="wait-what-about-magpie"><a href="#wait-what-about-magpie">Wait, what about Magpie?<span class="anchor">#wait-what-about-magpie</span></a></h2>
 <p>I screwed myself over here. The secret agenda of this pair of posts was to trick
 you into reading about <em>my</em> language by promising to teach you something about
 other languages you may actually use in real life.</p>
@@ -420,64 +456,38 @@ other languages you may actually use in real life.</p>
 yet. Alas, I&rsquo;m already 5,000 words in and I&rsquo;ve surely exhausted your patience. I
 guess Magpie will have to wait for a later post. Trust me, though. It&rsquo;s
 <em>awesome</em>. Promise.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2013/02/24/iteration-inside-and-out-part-2/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2013/02/24/iteration-inside-and-out-part-2/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

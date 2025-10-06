@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     The Trouble with Constructors &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/11/26/the-biology-of-sloppy-code/"
+         title="Older Post &ldquo;The Biology of Sloppy Code&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/12/31/rethinking-user-defined-operators/"
+         title="Newer Post &ldquo;Rethinking User-Defined Operators&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/12/14/the-trouble-with-constructors/" rel="bookmark"
      title="Permanent Link to The Trouble with Constructors">
     The Trouble with Constructors
   </a>
 </h1>
-  <a class="older" href="/2010/11/26/the-biology-of-sloppy-code/"
-     title="Older Post &ldquo;The Biology of Sloppy Code&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/12/31/rethinking-user-defined-operators/"
-     title="Newer Post &ldquo;Rethinking User-Defined Operators&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">December 14, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/11/26/the-biology-of-sloppy-code/"
+       title="Older Post &ldquo;The Biology of Sloppy Code&rdquo;">&lt;</a></span>
+    <a href="/archive">december 14, 2010</a>
+    <span class="thread-narrow"><a href="/2010/12/31/rethinking-user-defined-operators/"
+       title="Newer Post &ldquo;Rethinking User-Defined Operators&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>Every fledgling programming language exists somewhere on the continuum between
 &ldquo;scratchings in a notebook&rdquo; and &ldquo;making Java nervous&rdquo;. Right now, Magpie is
 farther to the right than total vaporware, but it&rsquo;s not yet at the point where I
@@ -50,7 +76,7 @@ some feedback.</p>
 constructing instances of classes is a bit&hellip; uh&hellip; odd. I&rsquo;ll explain
 <a href="http://www.imdb.com/title/tt0209144/">Memento</a>-style, starting with the end and working backwards to see how I got
 there. By the end (or is it the beginning?) it should hopefully make sense.</p>
-<h2>Making an object</h2>
+<h2 id="making-an-object"><a href="#making-an-object">Making an object<span class="anchor">#making-an-object</span></a></h2>
 <p>To see where we end up, here&rsquo;s a simple class in Magpie:</p>
 <pre class="highlight language-magpie"><span class="k">class</span> <span class="t">Point</span>
   <span class="k">var</span> <span class="i">x</span> <span class="t">Int</span>
@@ -77,7 +103,7 @@ all of the required fields of the class?</p>
 as simply:</p>
 <pre class="highlight language-magpie"><span class="k">def</span> <span class="i">new</span><span class="p">(</span><span class="i">arg</span><span class="p">)</span> <span class="i">construct</span><span class="p">(</span><span class="i">arg</span><span class="p">)</span></pre>
 <p>OK, so what&rsquo;s <code>construct</code>?</p>
-<h2>Raw constructors</h2>
+<h2 id="raw-constructors"><a href="#raw-constructors">Raw constructors<span class="anchor">#raw-constructors</span></a></h2>
 <p>Raw constructors are the real way that instances of a named class are created
 in Magpie. Each class automatically gets a shared <code>construct</code> method. That
 method (like <code>new</code>) takes a record with fields for all of the fields of the
@@ -85,7 +111,7 @@ class. It then builds an instance of the class and copies those field values
 over.</p>
 <p>So raw constructors are the real way that instances of a class are allocated in
 Magpie. So what is <code>new</code> for then?</p>
-<h2>A time to initialize</h2>
+<h2 id="a-time-to-initialize"><a href="#a-time-to-initialize">A time to initialize<span class="anchor">#a-time-to-initialize</span></a></h2>
 <p>Calling <code>construct</code> is the primitive way to create an instance, but many (most?)
 classes need to perform some initialization when an instance is created. Or
 maybe they&rsquo;ll calculate the values of some of the fields instead of just taking
@@ -113,7 +139,7 @@ Magpie gives you a default one that forwards to <code>construct</code>. If you l
 realize you need to do more initialization than just a straight call to
 <code>construct</code>, you can replace <code>new</code> without having to change every place you&rsquo;re
 creating an object.</p>
-<h2>OK, but why?</h2>
+<h2 id="ok-but-why"><a href="#ok-but-why">OK, but why?<span class="anchor">#ok-but-why</span></a></h2>
 <p>That seems pretty strange. Why on Earth would I design things this way instead
 of just using normal constructors like most other languages?</p>
 <p>Let&rsquo;s imagine that Magpie <em>did</em> have normal constructors (which it did until a
@@ -177,7 +203,7 @@ a real chore for any (purely hypothetical at this point) Magpie user to have to
 know. In order to understand the weird type errors you can get in a constructor,
 you have to fully understand all of this flow analysis I just described.</p>
 <p>I&rsquo;m trying to keep Magpie as simple as I can, and this is definitely not it.</p>
-<h2>Why don&rsquo;t other languages have this problem?</h2>
+<h2 id="why-dont-other-languages-have-this-problem"><a href="#why-dont-other-languages-have-this-problem">Why don&rsquo;t other languages have this problem?<span class="anchor">#why-dont-other-languages-have-this-problem</span></a></h2>
 <p>Here is where we get to the real motivation that leads to all of this. Java and
 C# don&rsquo;t have this issue with their constructors. It&rsquo;s perfectly valid to do
 this in Java:</p>
@@ -228,7 +254,7 @@ it even worse than Magpie since <em>everything</em> is immutable and it&rsquo;s 
 <a href="http://www.haskell.org/haskellwiki/Tying_the_Knot">surprisingly tricky</a> to solve it.</p>
 <p>What may be the biggest drawback, though, is that it&rsquo;s unusual. Unfamiliarity is
 its own steep cost, especially in a fledgling language.</p>
-<h2>Rewind</h2>
+<h2 id="rewind"><a href="#rewind">Rewind<span class="anchor">#rewind</span></a></h2>
 <p>So, going from cause to effect, it&rsquo;s:</p>
 <ol>
 <li>
@@ -249,64 +275,38 @@ method that you can swap out to do what you want.</p>
 </ol>
 <p>The reasoning seemed pretty sound to me, but I&rsquo;m always eager to hear what
 others think about it.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/12/14/the-trouble-with-constructors/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

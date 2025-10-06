@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
-  {{ include "head" with title = tag_title }}
+  {{ let title = "Stuff I Wrote About " + tag_title }}
+  {{ include "head" with title = title }}
   <body>
-    <div class="column">
-      <article>
-<header>
-<h1>{{ tag_title }}</h1>
-</header>
-{{ include "post_list" with posts = tag_posts }}
-</article>
-{{ include "nav" }}
+    <main>
+      {{ include "header" with title = title }}
+      <h1>{{ title }}</h1>
+      {{ include "post_list" with posts = tag_posts }}
+      {{ include "footer" }}
     </div>
-  </body>
+  </main>
 </html>

@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     &ldquo;Constrained Compound&rdquo; Design Pattern &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2008/11/17/using-an-iterator-as-a-game-loop/"
+         title="Older Post &ldquo;Using an Iterator as a Game Loop&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2008/11/28/outsourced-blog-comments/"
+         title="Newer Post &ldquo;Outsourced Blog Comments&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2008/11/23/constrained-compound-design-pattern/" rel="bookmark"
      title="Permanent Link to &ldquo;Constrained Compound&rdquo; Design Pattern">
     &ldquo;Constrained Compound&rdquo; Design Pattern
   </a>
 </h1>
-  <a class="older" href="/2008/11/17/using-an-iterator-as-a-game-loop/"
-     title="Older Post &ldquo;Using an Iterator as a Game Loop&rdquo;">&larr;</a>
-  <a class="newer" href="/2008/11/28/outsourced-blog-comments/"
-     title="Newer Post &ldquo;Outsourced Blog Comments&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">November 23, 2008</a>
-    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/design">design</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2008/11/17/using-an-iterator-as-a-game-loop/"
+       title="Older Post &ldquo;Using an Iterator as a Game Loop&rdquo;">&lt;</a></span>
+    <a href="/archive">november 23, 2008</a>
+    <span class="thread-narrow"><a href="/2008/11/28/outsourced-blog-comments/"
+       title="Newer Post &ldquo;Outsourced Blog Comments&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c-sharp">c-sharp</a>
+     |
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/design">design</a>
+      </div>
+</nav>
 <p>I&rsquo;ve seen a lot of people argue that inheritance is an anti-feature in a
 language and that it&rsquo;s never necessary. That rubs me the wrong way because I use
 inheritance pretty frequently in a recurring pattern, and I think it works well.
@@ -63,7 +89,7 @@ use to implement the function.</p>
 </blockquote>
 <p>There&rsquo;s two ways I&rsquo;ve found myself providing this kind of system, one of which
 uses inheritance, one of which does not.</p>
-<h2>Operations as protected methods</h2>
+<h2 id="operations-as-protected-methods"><a href="#operations-as-protected-methods">Operations as protected methods<span class="anchor">#operations-as-protected-methods</span></a></h2>
 <p>The most frequent way I use the pattern is by defining a base class with a
 number of protected methods and a single abstract one. The protected methods are
 the atomic operations, and the abstract one is the sandbox where they&rsquo;re used.
@@ -126,7 +152,7 @@ typical way around it:</p>
 <span class="p">}</span></pre>
 <p>Now <code>DrawString()</code>, etc. have access to the DrawContext, but the derived
 widget itself does not.</p>
-<h2>Atomic operations on a parameter</h2>
+<h2 id="atomic-operations-on-a-parameter"><a href="#atomic-operations-on-a-parameter">Atomic operations on a parameter<span class="anchor">#atomic-operations-on-a-parameter</span></a></h2>
 <p>If you&rsquo;re not a fan of OOP or inheritance, here&rsquo;s another way to do the pattern.
 If you notice above, what we&rsquo;re basically doing is providing all of the atomic
 operations as methods available on <code>this</code>, which is then an implicit argument to
@@ -183,7 +209,7 @@ widgets draw differently without using inheritance:</p>
 <p>This has the advantage of letting you later change how a widget draws without
 baking it into the class hierarchy, but may be a bit odd to people with only
 class-based OOP language experience.</p>
-<h2>A note on patterns</h2>
+<h2 id="a-note-on-patterns"><a href="#a-note-on-patterns">A note on patterns<span class="anchor">#a-note-on-patterns</span></a></h2>
 <p>There&rsquo;s a lot of hype that surrounds the idea of <a href="http://en.wikipedia.org/wiki/Design_pattern_(computer_science)">design patterns</a>. When <a href="http://en.wikipedia.org/wiki/Design_Patterns">the
 book</a> first came out, C++ people who were struggling to understand OOP
 swarmed to it like it contained revelation from on high. After a while, people
@@ -201,64 +227,38 @@ door). If you read the Constrained Compound pattern above and thought, &ldquo;Oh
 I&rsquo;ve done something similar a bunch of times,&rdquo; then <em>good</em>. That familiarity
 means it&rsquo;s a good solution because a lot of people have used it and is worth
 adding to the language. Now it has a name.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2008/11/23/constrained-compound-design-pattern/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

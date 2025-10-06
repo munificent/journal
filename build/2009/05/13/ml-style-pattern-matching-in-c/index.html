@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     ML-Style Pattern Matching in C# &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2009/05/05/one-and-only-one/"
+         title="Older Post &ldquo;One and Only One&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2009/05/15/loops-in-magpie/"
+         title="Newer Post &ldquo;Loops in Magpie&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2009/05/13/ml-style-pattern-matching-in-c/" rel="bookmark"
      title="Permanent Link to ML-Style Pattern Matching in C#">
     ML-Style Pattern Matching in C#
   </a>
 </h1>
-  <a class="older" href="/2009/05/05/one-and-only-one/"
-     title="Older Post &ldquo;One and Only One&rdquo;">&larr;</a>
-  <a class="newer" href="/2009/05/15/loops-in-magpie/"
-     title="Newer Post &ldquo;Loops in Magpie&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">May 13, 2009</a>
-    <span class="tags"><a href="/category/c-sharp">c-sharp</a> <a href="/category/code">code</a> <a href="/category/f-sharp">f-sharp</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2009/05/05/one-and-only-one/"
+       title="Older Post &ldquo;One and Only One&rdquo;">&lt;</a></span>
+    <a href="/archive">may 13, 2009</a>
+    <span class="thread-narrow"><a href="/2009/05/15/loops-in-magpie/"
+       title="Newer Post &ldquo;Loops in Magpie&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c-sharp">c-sharp</a>
+     |
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/f-sharp">f-sharp</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>There&rsquo;s nothing like travelling abroad to make you see your home country with
 new eyes. While your first fascination with everything new and different in the
 foreign land may enventually be replaced by homesickness, you always want to
@@ -67,7 +95,7 @@ first time it finds a match. The <code>_</code> bit on the last line is equivale
 stuff, but pattern matching can do so much more. Before I can explain <em>that</em>,
 though, we&rsquo;ll need to take a little side trip to see another F# feature:
 <a href="http://en.wikipedia.org/wiki/Variant_record">discriminated unions</a>.</p>
-<h2>Discriminated unions</h2>
+<h2 id="discriminated-unions"><a href="#discriminated-unions">Discriminated unions<span class="anchor">#discriminated-unions</span></a></h2>
 <p>Where C# has enums, F# has discriminated unions. The main difference between the
 two is that each value in the union can have additional data fields. Imagine you
 want to enumerate the different kinds of <a href="http://en.wikipedia.org/wiki/Image_macro">image macros</a>:</p>
@@ -104,7 +132,7 @@ to a discriminated union and accomplish the exact same thing:</p>
 <p>The <code>of string</code> says that when you make a Lolcat ImageMacro (and <em>only</em> a
 Lolcat) that you must also provide a caption. Likewise, the <code>of int</code> says that a
 Lolrus needs a number of buckets.</p>
-<h2>Pattern matching discriminated unions</h2>
+<h2 id="pattern-matching-discriminated-unions"><a href="#pattern-matching-discriminated-unions">Pattern matching discriminated unions<span class="anchor">#pattern-matching-discriminated-unions</span></a></h2>
 <p>These two features, pattern matching and discriminated unions, go together in F#
 like gondolas and striped shirts. Each is much less awesome without the other.
 Now let&rsquo;s get back to pattern matching and see something it can do that a
@@ -118,7 +146,7 @@ want to print it out:</p>
 <p>Now <em>that&rsquo;s</em> pretty nice. Not only does it switch on what kind of image macro
 it is, it also pulls out the data associated with each one (&ldquo;destructures&rdquo; in
 the local parlance). This would definitely be nice to have in C#.</p>
-<h2>A little souvenir: <code>Pattern.Match</code></h2>
+<h2 id="a-little-souvenir-patternmatch"><a href="#a-little-souvenir-patternmatch">A little souvenir: <code>Pattern.Match</code><span class="anchor">#a-little-souvenir-patternmatch</span></a></h2>
 <p>So can we bring discriminated union pattern matching back to C#? Since C#
 doesn&rsquo;t have discriminated unions, we&rsquo;ll have to make it work with the little
 inheritance tree up there. Here&rsquo;s what I got:</p>
@@ -130,7 +158,7 @@ inheritance tree up there. Here&rsquo;s what I got:</p>
 <p>A little strange, but not <em>too</em> bad. Looks kind of like a <code>switch/case</code> but
 switches based on type. For <code>Lolcat</code> and <code>Lolrus</code>, we pull out the caption and
 number of buckets. How does this work? Let&rsquo;s build it from the bottom up.</p>
-<h2>The <code>Case()</code> method</h2>
+<h2 id="the-case-method"><a href="#the-case-method">The <code>Case()</code> method<span class="anchor">#the-case-method</span></a></h2>
 <p>A single case in our pattern matcher needs to specify three things: the type
 being selected (Lolcat, Lolrus, etc.), the field(s) to pull out (if any), and
 the action to perform when the case is successfully matched. Let&rsquo;s start with
@@ -154,7 +182,7 @@ handy lambda notation. For the ORlyOwl, it&rsquo;s:</p>
 anonymous delegates) is that they can access variables defined in the outside
 scope. This lets our <code>Case</code> clauses do everything a regular <code>case</code> can do in a
 vanilla <code>switch/case</code>.</p>
-<h3>Chaining cases using a fluent interface</h3>
+<h3 id="chaining-cases-using-a-fluent-interface"><a href="#chaining-cases-using-a-fluent-interface">Chaining cases using a fluent interface<span class="anchor">#chaining-cases-using-a-fluent-interface</span></a></h3>
 <p>What we have so far is simple, but it only lets us select a single case. To be
 able to chain multiple cases together, we&rsquo;re going to use something the hip
 kids are calling a &ldquo;fluent interface&rdquo;. The basic idea is to make methods
@@ -165,7 +193,7 @@ return <code>this</code> so that you can call multiple methods on the same objec
     <span class="k">if</span> <span class="p">(</span><span class="i">mValue</span> <span class="k">is</span> <span class="t">TCase</span><span class="p">)</span> <span class="i">action</span><span class="p">();</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
 <span class="p">}</span></pre>
-<h3>Preventing multiple matches</h3>
+<h3 id="preventing-multiple-matches"><a href="#preventing-multiple-matches">Preventing multiple matches<span class="anchor">#preventing-multiple-matches</span></a></h3>
 <p>There&rsquo;s a problem here. A pattern should only match the <em>first</em> successful case.
 If we just allow arbitrary chaining, it would be possible to have multiple
 matches. Here&rsquo;s a solution:</p>
@@ -189,7 +217,7 @@ actually matches:</p>
         <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span></pre>
-<h3>Extracting fields</h3>
+<h3 id="extracting-fields"><a href="#extracting-fields">Extracting fields<span class="anchor">#extracting-fields</span></a></h3>
 <p>So far, we&rsquo;re up to being able to do this:</p>
 <pre class="highlight language-csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolcat</span><span class="o">&gt;</span> <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;?&#39;&quot;</span><span class="p">)).</span>
@@ -241,7 +269,7 @@ in our macro classes:</p>
 <p>I&rsquo;m using explicit interface implementation here, because users only really
 care about using <code>GetArg()</code> when they&rsquo;re doing pattern matching. Otherwise,
 there&rsquo;s no reason to make it a visible part of the class&rsquo;s interface.</p>
-<h2>The <code>Pattern</code> class</h2>
+<h2 id="the-pattern-class"><a href="#the-pattern-class">The <code>Pattern</code> class<span class="anchor">#the-pattern-class</span></a></h2>
 <p>We&rsquo;ve built back almost up the to the top. The last little bit left is the
 simplest:</p>
 <pre class="highlight language-csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">)</span></pre>
@@ -263,21 +291,21 @@ something like matching discriminated unions working in C#:</p>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolcat</span><span class="p">,</span> <span class="t">string</span><span class="o">&gt;</span><span class="p">(</span><span class="i">c</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Lolcat says &#39;&quot;</span> <span class="o">+</span> <span class="i">c</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolrus</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span>   <span class="p">(</span><span class="i">b</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="o">+</span> <span class="i">b</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">ORlyOwl</span><span class="o">&gt;</span>       <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;O RLY?&quot;</span><span class="p">));</span></pre>
-<h2>But wait, that&rsquo;s not all!</h2>
+<h2 id="but-wait-thats-not-all"><a href="#but-wait-thats-not-all">But wait, that&rsquo;s not all!<span class="anchor">#but-wait-thats-not-all</span></a></h2>
 <p>This is only the beginning of what we can do with our little matching class.
 Here are a few other things the full code lets you do:</p>
-<h3>Extracting multiple fields</h3>
+<h3 id="extracting-multiple-fields"><a href="#extracting-multiple-fields">Extracting multiple fields<span class="anchor">#extracting-multiple-fields</span></a></h3>
 <p>In the example above, we only pull a single field out of a given case. F#
 supports multiple fields as well, as does the Matcher class (up to four):</p>
 <pre class="highlight language-csharp"><span class="t">Case</span><span class="o">&lt;</span><span class="t">Loldog</span><span class="p">,</span> <span class="t">string</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="p">((</span><span class="i">caption</span><span class="p">,</span> <span class="i">dogs</span><span class="p">)</span> <span class="o">=&gt;</span>
     <span class="i">Print</span><span class="p">(</span><span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="i">caption</span> <span class="o">+</span> <span class="s">&quot;&#39;, says &quot;</span> <span class="o">+</span> <span class="i">dogs</span> <span class="o">+</span> <span class="s">&quot; hotdogs&quot;</span><span class="p">)).</span></pre>
-<h3>A default case</h3>
+<h3 id="a-default-case"><a href="#a-default-case">A default case<span class="anchor">#a-default-case</span></a></h3>
 <p>It&rsquo;s also useful to have a <code>default</code>-like case that will always succeed if no
 other case matches:</p>
 <pre class="highlight language-csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="i">image</span><span class="p">).</span>
     <span class="t">Case</span><span class="o">&lt;</span><span class="t">Lolrus</span><span class="p">,</span> <span class="t">int</span><span class="o">&gt;</span> <span class="p">(</span><span class="i">b</span>  <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;I has &quot;</span> <span class="o">+</span> <span class="i">buckets</span> <span class="o">+</span> <span class="s">&quot; buckets&quot;</span><span class="p">)).</span>
     <span class="i">Default</span>           <span class="p">(()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">));</span></pre>
-<h3>Equality matching</h3>
+<h3 id="equality-matching"><a href="#equality-matching">Equality matching<span class="anchor">#equality-matching</span></a></h3>
 <p>Another way to match values is if they are equal. We can do this generically
 since <code>Equals()</code> is part of the .NET framework.</p>
 <pre class="highlight language-csharp"><span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">).</span>
@@ -285,7 +313,7 @@ since <code>Equals()</code> is part of the .NET framework.</p>
     <span class="i">Case</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;should match&quot;</span><span class="p">));</span></pre>
 <p>The example here uses strings, but this works with any type as long as it
 implements <code>Equals()</code> correctly.</p>
-<h3>Matching on any predicate</h3>
+<h3 id="matching-on-any-predicate"><a href="#matching-on-any-predicate">Matching on any predicate<span class="anchor">#matching-on-any-predicate</span></a></h3>
 <p>As you can see, there are a bunch of different ways users may want to match
 data, and it&rsquo;s futile to try to bake all of them into the class. The most
 obvious solution then is to simply let users pass in an arbitrary predicate (a
@@ -296,7 +324,7 @@ on that:</p>
     <span class="i">Case</span><span class="p">(</span><span class="i">value</span> <span class="o">=&gt;</span> <span class="i">value</span> <span class="o">&gt;</span> <span class="n">100</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="i">Print</span><span class="p">(</span><span class="s">&quot;greater than 100&quot;</span><span class="p">));</span></pre>
 <p>You&rsquo;ll note that in the final code below, all of the other matching types are
 built on top of this.</p>
-<h3>Returning a value</h3>
+<h3 id="returning-a-value"><a href="#returning-a-value">Returning a value<span class="anchor">#returning-a-value</span></a></h3>
 <p>F#, unlike C#, treats everything as an expression, even flow control
 statements like <code>if/then</code> and <code>match</code>. This means a match can return a result:</p>
 <pre class="highlight language-fsharp"><span class="c">// F#:</span>
@@ -315,7 +343,7 @@ statements like <code>if/then</code> and <code>match</code>. This means a match 
 <pre class="highlight language-csharp"><span class="t">bool</span> <span class="i">isTwo</span> <span class="o">=</span> <span class="i">Pattern</span><span class="p">.</span><span class="i">Match</span><span class="o">&lt;</span><span class="t">int</span><span class="p">,</span> <span class="t">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">2</span><span class="p">).</span>
                  <span class="i">Case</span><span class="p">(</span><span class="n">2</span><span class="p">,</span>  <span class="k">true</span><span class="p">).</span>
                  <span class="i">Default</span><span class="p">(</span> <span class="k">false</span><span class="p">);</span></pre>
-<h2>Conclusion</h2>
+<h2 id="conclusion"><a href="#conclusion">Conclusion<span class="anchor">#conclusion</span></a></h2>
 <p>They say you never know your home until you travel abroad. I&rsquo;ve been enjoying F#
 a lot, but C# still feels more comfortable to me. However, it&rsquo;s always useful to
 see how other languages solve problems, and see what new techniques can be
@@ -324,64 +352,38 @@ C# as it is in F#, I think it&rsquo;s a useful tool in its own right.</p><div cl
 <p><em>Update 2021/10/05:</em> Moved it to <a href="https://github.com/munificent/pattern_matching">GitHub</a>.</p>
 </div>
 <p>If you&rsquo;d like to play with it, <a href="https://github.com/munificent/pattern_matching">I&rsquo;ve put it up on GitHub</a>. Have fun!</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2009/05/13/ml-style-pattern-matching-in-c/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

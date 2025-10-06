@@ -16,6 +16,7 @@ const _customTagTitles = {
   "game-dev": "Game Development",
   "js": "JavaScript",
   "language": "Programming Languages",
+  "macos": "MacOS",
   "oop": "OOP",
   "oscon": "OSCON",
   "personal": "Myself",
@@ -38,10 +39,8 @@ class TagPageBuilder extends Builder<Tag> {
         .map((word) => word[0].toUpperCase() + word.substring(1))
         .join(' ');
 
-    var title = 'Stuff I Wrote About $tagName';
-
-    var html =
-        await renderTemplate(template, context, tag: tag, tagTitle: title);
+    var html = await renderTemplate(template, context,
+        tag: tag, data: {'tag_title': tagName});
     // TODO: Also output at "tag" path. (Keep "category" for backwards
     // compatibility.)
     var pageKey = Key.join('build', 'category', key.basename, 'index.html');

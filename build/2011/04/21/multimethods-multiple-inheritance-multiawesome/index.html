@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,59 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Multimethods, Multiple Inheritance, Multiawesome! &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
+         title="Older Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2011/06/06/magpie-wants-you/"
+         title="Newer Post &ldquo;Magpie Wants You!&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2011/04/21/multimethods-multiple-inheritance-multiawesome/" rel="bookmark"
      title="Permanent Link to Multimethods, Multiple Inheritance, Multiawesome!">
     Multimethods, Multiple Inheritance, Multiawesome!
   </a>
 </h1>
-  <a class="older" href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
-     title="Older Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">&larr;</a>
-  <a class="newer" href="/2011/06/06/magpie-wants-you/"
-     title="Newer Post &ldquo;Magpie Wants You!&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">April 21, 2011</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/cpp">cpp</a> <a href="/category/java">java</a> <a href="/category/js">js</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2011/03/19/pratt-parsers-expression-parsing-made-easy/"
+       title="Older Post &ldquo;Pratt Parsers: Expression Parsing Made Easy&rdquo;">&lt;</a></span>
+    <a href="/archive">april 21, 2011</a>
+    <span class="thread-narrow"><a href="/2011/06/06/magpie-wants-you/"
+       title="Newer Post &ldquo;Magpie Wants You!&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/cpp">cpp</a>
+     |
+      <a href="/category/java">java</a>
+     |
+      <a href="/category/js">js</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>The luxury of having <a href="https://magpie-lang.org/">a programming language with zero users</a> is that I
 can make <a href="https://github.com/munificent/magpie/commit/e509e13fd74ba252faf00288196769412cf7811c">radical changes</a> to it with impunity. Over the past month,
 I&rsquo;ve done just that. I&rsquo;ve been thinking about both multimethods and multiple
@@ -46,7 +78,7 @@ more typical <a href="http://c2.com/cgi/wiki?SingleDispatch">single-dispatch</a>
 it&rsquo;s now much closer to <a href="http://en.wikipedia.org/wiki/Common_Lisp_Object_System">CLOS</a>.</p>
 <p>This is a fundamental change to the language: every time you call a method, you&rsquo;re going through totally different machinery to figure out what code gets executed. What I&rsquo;m really excited about is that I feel like the language is more powerful now and yet simpler.</p>
 <p>Since not a lot of people know anything about multimethods (and I&rsquo;m still learning!), and most people these days think multiple inheritance is in the same category as punching children and littering, I thought it might be worth running through how and why I added them. If I can, I&rsquo;ll show you some fun stuff that gets a lot easier when you have them.</p>
-<h2>What&rsquo;s multiple inheritance?</h2>
+<h2 id="whats-multiple-inheritance"><a href="#whats-multiple-inheritance">What&rsquo;s multiple inheritance?<span class="anchor">#whats-multiple-inheritance</span></a></h2>
 <p>If you&rsquo;ve played with C++, you&rsquo;re at least passingly familiar with multiple inheritance. It&rsquo;s exactly like it sounds: a class can inherit from multiple base classes. All of the methods and properties on the base classes are available on the new derived one.</p>
 <p>This is strictly more expressive than single inheritance. Single inheritance
 gets you pretty far, but I find it leads to deeper inheritance chains, more
@@ -54,11 +86,11 @@ redundancy, and more brittleness. With multiple inheritance, you&rsquo;re free t
 split classes into small chunks of well-defined behavior and then recompose them
 at will. <a href="/2011/02/21/multiple-inheritance-in-javascript">This post</a>, I hope, gives you a good idea of what I have in mind
 here.</p>
-<h2>What&rsquo;s the problem?</h2>
+<h2 id="whats-the-problem"><a href="#whats-the-problem">What&rsquo;s the problem?<span class="anchor">#whats-the-problem</span></a></h2>
 <p>It&rsquo;s not all rosy though, as anyone whose sliced their hand open on the <a href="http://en.wikipedia.org/wiki/Deadly_Diamond_of_Death">deadly
 diamond of death</a> can tell you. Here are a couple of problems that you
 can run into:</p>
-<h3>Is state duplicated or not?</h3>
+<h3 id="is-state-duplicated-or-not"><a href="#is-state-duplicated-or-not">Is state duplicated or not?<span class="anchor">#is-state-duplicated-or-not</span></a></h3>
 <p>Let&rsquo;s say you&rsquo;re making a game. You&rsquo;ve got classes for the things in the world&mdash;monsters, magical items, etc. Lots of things in the world have a position, so
 you make a base class for that:</p>
 <pre class="highlight language-cpp"><span class="k">class</span> <span class="t">Positioned</span> <span class="p">{</span>
@@ -86,7 +118,7 @@ hierarchy, then how do you know which one you&rsquo;re getting when you access <
 an instance of ChestMonster? If it just gets one <code>x</code>, what happens if the
 constructors for <code>Item</code> and <code>Monster</code> try to pass different values for it when
 they call the constructor for <code>Positioned</code> from their constructor? Who wins?</p>
-<h3>Which override wins?</h3>
+<h3 id="which-override-wins"><a href="#which-override-wins">Which override wins?<span class="anchor">#which-override-wins</span></a></h3>
 <p>Now let&rsquo;s expand our previous example. Let&rsquo;s say there&rsquo;s a virtual method in
 Positioned so that a derived class can say whether or not a given position is
 valid. Something like:</p>
@@ -100,7 +132,7 @@ override <code>canBeAt()</code>. When we call that on an instance of ChestMonste
 one wins?</p>
 <p>There probably <em>is</em> an answer here, but even if it&rsquo;s unambiguous to the
 language, it&rsquo;s confusing for the user.</p>
-<h3>Other problems&hellip;</h3>
+<h3 id="other-problems"><a href="#other-problems">Other problems&hellip;<span class="anchor">#other-problems</span></a></h3>
 <p>There are other annoyances too. Multiple inheritance means you need syntax for
 calling all of your base class constructors, which is more complex than Java&rsquo;s
 simple <code>super(...)</code>.</p>
@@ -111,7 +143,7 @@ multiple inheritance. The <a href="https://en.wikipedia.org/wiki/C3_linearizatio
 JavaScript only allow single inheritance. Other languages deal with this by
 providing limited forms of multiple inheritance. Ruby has mixins. Scala has
 traits.</p>
-<h2>A solution?</h2>
+<h2 id="a-solution"><a href="#a-solution">A solution?<span class="anchor">#a-solution</span></a></h2>
 <p>After reading a bunch, I convinced myself that almost all of the problems with
 multiple inheritance come from <em>multiple paths to the same base class.</em>
 Duplicate state, ambiguous overrides, and even C3&rsquo;s complexity have a lot to do
@@ -120,7 +152,7 @@ with inheriting the same class twice. Why not just disallow that?</p>
 error to inherit from the same class twice either directly or indirectly. In
 other words, the family tree leading to a given class must always be a <em>tree</em>
 and never a graph. No deadly diamond. Problem solved!</p>
-<h3>The root of the problem</h3>
+<h3 id="the-root-of-the-problem"><a href="#the-root-of-the-problem">The root of the problem<span class="anchor">#the-root-of-the-problem</span></a></h3>
 <p>Well, not quite. You see most object-oriented languages have a root class&mdash;the
 <a href="http://en.wikipedia.org/wiki/Top_type">top type</a> for you type system folks&mdash;usually called something like
 &ldquo;Object&rdquo;. This is the class that all classes without an explicit superclass
@@ -132,7 +164,7 @@ There are some operations that are valid on pretty much everything. Think
 place to hang methods like that.</p>
 <p>I got stuck on this issue for months. In the meantime, I started learning more
 about multimethods.</p>
-<h2>Multi-what?</h2>
+<h2 id="multi-what"><a href="#multi-what">Multi-what?<span class="anchor">#multi-what</span></a></h2>
 <p>Multimethods, like <a href="http://en.wikipedia.org/wiki/Pattern_matching">pattern matching</a>, are a language puzzle to me. They are <em>so awesome</em> and yet so <em>few</em> languages support them. People are finally starting to catch on to pattern matching, but the set of languages that support multimethods can still fit in your hand: Common Lisp, through <a href="http://en.wikipedia.org/wiki/Common_Lisp_Object_System">CLOS</a>, <a href="http://www.opendylan.org/">Dylan</a> (mostly dead but maybe being resurrected now?), and the still nascent <a href="https://github.com/briantrice/slate-language">Slate</a> language.</p>
 <p>If you&rsquo;ve never heard of multimethods, the basic idea is pretty simple though a
 bit confusing if you come from a single-dispatch (C++, Java, C#, etc.)
@@ -167,7 +199,7 @@ overloaded function is chosen at <em>compile</em> time. Since the compiler only 
 that <code>obj</code> is of type <code>Base*</code>, it binds the call to the version of
 <code>overloaded()</code> that expects that. At runtime, the actual class of the object
 that <code>obj</code> points to is ignored.</p>
-<h3>The receiver argument</h3>
+<h3 id="the-receiver-argument"><a href="#the-receiver-argument">The receiver argument<span class="anchor">#the-receiver-argument</span></a></h3>
 <p>When we see a chunk of code like <code>collection.add("item")</code>, we tend to think of
 <code>collection</code> and <code>"item"</code> as being fundamentally different from each other. But
 really, they&rsquo;re just two arguments being passed to <code>add()</code>. It&rsquo;s just that one
@@ -192,7 +224,7 @@ and you wrote this:</p>
 <span class="i">method</span><span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">);</span></pre>
 <p>When you ran it, it would print <code>"derived derived"</code> even though the <em>static</em>
 types of <code>a</code> and <code>b</code> are just <code>Base*</code>.</p>
-<h3>What&rsquo;s the problem?</h3>
+<h3 id="whats-the-problem-2"><a href="#whats-the-problem">What&rsquo;s the problem?<span class="anchor">#whats-the-problem</span></a></h3>
 <p>I&rsquo;ll give a stronger sales pitch for multiple dispatch later, but I hope you can
 see already that multiple dispatch is more general and more expressive than
 single dispatch. But it isn&rsquo;t easy.</p>
@@ -215,7 +247,7 @@ code and be all &ldquo;Dude, what did you want this to do?&rdquo;</p>
 <p>But ignoring pathological cases, linearization is still tricky, which a perusal
 of the C3 algorithm should convince you of. Take a look at some of the
 <a href="http://www.python.org/download/releases/2.3/mro/">explanatory examples that Python uses</a> and report back to me.</p>
-<h2>You scratch my back, I&rsquo;ll scratch yours</h2>
+<h2 id="you-scratch-my-back-ill-scratch-yours"><a href="#you-scratch-my-back-ill-scratch-yours">You scratch my back, I&rsquo;ll scratch yours<span class="anchor">#you-scratch-my-back-ill-scratch-yours</span></a></h2>
 <p>If you look at that Python page, you&rsquo;ll notice that most of the pathological
 examples have something in common: <em>multiple paths to the same base class.</em> The
 original problem with multiple inheritance is back!</p>
@@ -243,7 +275,7 @@ class? Sounds an awful lot like what we&rsquo;d want something like <code>toStri
 <code>getHashCode()</code> to work on.</p>
 <p>Problem solved. We don&rsquo;t need a root class. We just use unspecialized methods
 instead.</p>
-<h2>The core of a language</h2>
+<h2 id="the-core-of-a-language"><a href="#the-core-of-a-language">The core of a language<span class="anchor">#the-core-of-a-language</span></a></h2>
 <p>This is the new core of Magpie. Classes can inherit from multiple base classes,
 as long as there is no overlap, and all methods are defined outside of the class
 as multimethods. This is very close to how CLOS works. But there&rsquo;s a little
@@ -267,11 +299,11 @@ that appears to the left. A method call like <code>add</code> in <code>phoneNumb
 <code>print("hi")</code> just has an argument to the right.</p>
 <p>I&rsquo;m still poking at the syntax, but so far I really like it. You get flexibility
 over how your code reads but the uniform semantics of multiple dispatch.</p>
-<h2>The sales pitch</h2>
+<h2 id="the-sales-pitch"><a href="#the-sales-pitch">The sales pitch<span class="anchor">#the-sales-pitch</span></a></h2>
 <p>If you&rsquo;ve made it this far, I&rsquo;ll try to reward you. Through all of this, I
 haven&rsquo;t really shown what&rsquo;s cool about multimethods. Why go through all this
 trouble? Here&rsquo;s why&hellip;</p>
-<h3>Overloading in a dynamic language</h3>
+<h3 id="overloading-in-a-dynamic-language"><a href="#overloading-in-a-dynamic-language">Overloading in a dynamic language<span class="anchor">#overloading-in-a-dynamic-language</span></a></h3>
 <p>Since most dynamic languages don&rsquo;t have any concept of annotating a method&rsquo;s
 expected types, that generally rules out the ability to overload at all. That&rsquo;s
 a shame since lots of methods are nicely defined in terms of optional arguments,
@@ -309,7 +341,7 @@ thing about that is that it happens atomically. You don&rsquo;t have to worry ab
 bugs where you <em>think</em> <code>selector</code> is a string, but you forgot the <code>instanceof</code>
 check. If it picks the first method up there, you know for certain <code>selector</code>
 will be a string.</p>
-<h3>Binary operators</h3>
+<h3 id="binary-operators"><a href="#binary-operators">Binary operators<span class="anchor">#binary-operators</span></a></h3>
 <p>Magpie doesn&rsquo;t have built-in operators, so you&rsquo;re free to define your own and
 overload existing ones. (But, for the love of God, please don&rsquo;t go <a href="http://jim-mcbeath.blogspot.com/2008/12/scala-operator-cheat-sheet.html">all Scala on
 it</a>.) Multimethods are a big help here.</p>
@@ -331,7 +363,7 @@ the overloading to work right. In Magpie, it&rsquo;s just:</p>
 <span class="k">end</span></pre>
 <p>If both arguments are ints, the first method wins and you get addition.
 Otherwise, it calls the <code>string</code> method on the two arguments and concatenates.</p>
-<h3>Value patterns</h3>
+<h3 id="value-patterns"><a href="#value-patterns">Value patterns<span class="anchor">#value-patterns</span></a></h3>
 <p>We&rsquo;ve covered methods that specialize on types and ones that allow an argument
 of any type. There&rsquo;s another flavor of pattern too: <em>value patterns</em>. Those let
 you define methods that only match on specific argument values. Consider the
@@ -365,7 +397,7 @@ Instead, a &ldquo;static&rdquo; method is just a method that matches on a class 
 <p>The <code>(== Int)</code> pattern here means we match on <code>Int</code> by value as opposed to <code>(is Int)</code> which means to match on it by type. With that, I can ditch metaclasses
 completely. Things like constructors simply become multimethods that specialize
 to class values for their left-hand argument.</p>
-<h3>Safely extensible classes</h3>
+<h3 id="safely-extensible-classes"><a href="#safely-extensible-classes">Safely extensible classes<span class="anchor">#safely-extensible-classes</span></a></h3>
 <p>Finally, we get to the last bit, the real reason I wanted to add multimethods in
 the first place. Before I started working on Magpie, I spent most of my time in
 C#. One of my favorite features is <a href="/2008/02/09/c-extension-methods-not-just-for-breakfast/">extension methods</a>. They give you the
@@ -398,7 +430,7 @@ renaming when you import:</p>
 <span class="i">list</span> <span class="i">your</span><span class="p">.</span><span class="i">reverse</span><span class="p">()</span></pre>
 <p>(Here, the <code>.</code> is just part of the method name. It looks funny at first, but
 hopefully not <em>too</em> funny.)</p>
-<h2>What now?</h2>
+<h2 id="what-now"><a href="#what-now">What now?<span class="anchor">#what-now</span></a></h2>
 <p>I&rsquo;m still ironing out the kinks with all of this, but so far it looks pretty
 promising. It&rsquo;s nice to be able to define methods on whatever types you want,
 and I find multiple inheritance to be a refreshingly effective way to reuse code
@@ -425,64 +457,38 @@ that a method won&rsquo;t get an unexpected argument.</p>
 for defining it at the library level!) going too, but it&rsquo;s refreshing not having
 to deal with it for a while. One thing I&rsquo;ve learned in the past year is that
 designing a type system is about ten times harder than designing a language.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2011/04/21/multimethods-multiple-inheritance-multiawesome/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2011/04/21/multimethods-multiple-inheritance-multiawesome/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

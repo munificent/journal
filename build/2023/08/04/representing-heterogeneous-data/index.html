@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Representing Heterogeneous Data &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2023/01/03/type-checking-if-expressions/"
+         title="Older Post &ldquo;Type Checking If Expressions&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2023/10/19/does-go-have-subtyping/"
+         title="Newer Post &ldquo;Does Go Have Subtyping?&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2023/08/04/representing-heterogeneous-data/" rel="bookmark"
      title="Permanent Link to Representing Heterogeneous Data">
     Representing Heterogeneous Data
   </a>
 </h1>
-  <a class="older" href="/2023/01/03/type-checking-if-expressions/"
-     title="Older Post &ldquo;Type Checking If Expressions&rdquo;">&larr;</a>
-  <a class="newer" href="/2023/10/19/does-go-have-subtyping/"
-     title="Newer Post &ldquo;Does Go Have Subtyping?&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">August 04, 2023</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a> <a href="/category/vgs">vgs</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2023/01/03/type-checking-if-expressions/"
+       title="Older Post &ldquo;Type Checking If Expressions&rdquo;">&lt;</a></span>
+    <a href="/archive">august 04, 2023</a>
+    <span class="thread-narrow"><a href="/2023/10/19/does-go-have-subtyping/"
+       title="Newer Post &ldquo;Does Go Have Subtyping?&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/vgs">vgs</a>
+      </div>
+</nav>
 <p>As I mentioned in the <a href="/2023/01/03/type-checking-if-expressions/">last post</a>, I&rsquo;m working on taking my little videogame
 scripting language and turning it into a statically typed one. As much as
 possible, I&rsquo;m trying to make the language simple and familiar. But sometimes
@@ -41,7 +67,7 @@ those goals are in opposition and the most familiar solution to a problem is
 kind of a mess.</p>
 <p>So, I&rsquo;m also exploring novel approaches and delving deeper into programming
 language history to scavenge forgotten ideas.</p>
-<h2>The heterogeneous data problem</h2>
+<h2 id="the-heterogeneous-data-problem"><a href="#the-heterogeneous-data-problem">The heterogeneous data problem<span class="anchor">#the-heterogeneous-data-problem</span></a></h2>
 <p>One problem every language has to solve is giving users a way to represent
 <em>heterogeneous data</em>. By that, I mean:</p>
 <ul>
@@ -78,7 +104,7 @@ time, only one of the fields has a value and the others are all absent. If
 you&rsquo;ve ever found yourself building a struct or class and writing a comment that
 says &ldquo;If this field is blah then this other field will be null.&rdquo; then you&rsquo;ve
 taken this path (and probably felt a little gross doing it).</p>
-<h2>What other languages do</h2>
+<h2 id="what-other-languages-do"><a href="#what-other-languages-do">What other languages do<span class="anchor">#what-other-languages-do</span></a></h2>
 <p>I don&rsquo;t know if broad language tours are your thing, but so much of my job
 working on <a href="https://dart.dev">Dart</a> involves researching how other languages solve a problem that
 I can&rsquo;t help myself anymore.</p>
@@ -173,7 +199,7 @@ has and also explicitly supports subtyping.</p>
 </ul>
 <p>Newer, bigger multi-paradigm languages like C# and Swift tend to take just about
 all of the approaches.</p>
-<h2>Whither for my little language?</h2>
+<h2 id="whither-for-my-little-language"><a href="#whither-for-my-little-language">Whither for my little language?<span class="anchor">#whither-for-my-little-language</span></a></h2>
 <p>OK, so what&rsquo;s the right approach for my aspirationally simple and elegant
 statically typed game scripting language?</p>
 <p>I quite like object-oriented programming in general, but subtyping adds a <em>lot</em>
@@ -196,7 +222,7 @@ just <em>cool.</em></p>
 <p>And, in fact, I went ahead and implemented a protype of sum types and pattern
 matching and destructuring in my language. It worked. It was&hellip; just OK. To
 explain why requires a little context</p>
-<h2>An imperative, procedural language</h2>
+<h2 id="an-imperative-procedural-language"><a href="#an-imperative-procedural-language">An imperative, procedural language<span class="anchor">#an-imperative-procedural-language</span></a></h2>
 <p>My language is unabashedly imperative. I <em>like</em> imperative programming,
 especially for scripting little games. Games are giant balls of mutable state.
 I&rsquo;ve watched my kids and many others learn to program, and imperatively
@@ -233,7 +259,7 @@ like this:</p>
 <p>What&rsquo;s cool about simple procedural code is that even though I have no idea what
 language you know and you <em>certainly</em> have never programmed in <em>this</em> one, I&rsquo;m
 still pretty confident that you understand this code.</p>
-<h2>With sum types</h2>
+<h2 id="with-sum-types"><a href="#with-sum-types">With sum types<span class="anchor">#with-sum-types</span></a></h2>
 <p>Let&rsquo;s see how it looks with something like sum types:</p>
 <pre class="highlight language-vgs"><span class="k">rec</span> <span class="t">Weapon</span>
 <span class="k">case</span> <span class="t">MeleeWeapon</span>
@@ -285,7 +311,7 @@ state on a value, depending on whether the field is case-specific or not.</p>
 using pattern matching. SML eschews mutability in general and then works around
 it by allowing you to define explicit mutable ref types. But that&rsquo;s definitely
 not how my language rolls.</p>
-<h2>Variant records</h2>
+<h2 id="variant-records"><a href="#variant-records">Variant records<span class="anchor">#variant-records</span></a></h2>
 <p>There is <em>one</em> other approach to heterogeneous data that I found that I didn&rsquo;t
 put in the list up there because, as far as I can tell, it&rsquo;s basically a dead
 end in the evolutionary history of programming languages.</p>
@@ -336,7 +362,7 @@ Pascal definitively because there&rsquo;s no &ldquo;Pascal&rdquo;, just a huge f
 loosely-related Pascal-ish languages.)</p>
 <p>In a memory safe language like mine, I definitely don&rsquo;t want users to be able
 to reinterpret memory. But that&rsquo;s a solvable problem.</p>
-<h2>Record cases</h2>
+<h2 id="record-cases"><a href="#record-cases">Record cases<span class="anchor">#record-cases</span></a></h2>
 <p>Which, finally, brings us to the feature I designed for my language. It&rsquo;s very
 close to variant records in Pascal. The type declaration looks just like the
 sum type example:</p>
@@ -398,7 +424,7 @@ single construct. I&rsquo;ve found this to be really handy in practice.</p>
 (admittedly small) amount of example code I&rsquo;ve written using it so far, it seems
 to feel pretty nice. For a small game scripting language, I think it may strike
 a decent balance between static safety and simplicity.</p>
-<h2>Update: What about flow typing?</h2>
+<h2 id="update-what-about-flow-typing"><a href="#update-what-about-flow-typing">Update: What about flow typing?<span class="anchor">#update-what-about-flow-typing</span></a></h2>
 <p>When I first posted this, the most common reply was why not do some sort of flow
 typing? In code like:</p>
 <pre class="highlight language-vgs"><span class="k">def</span> <span class="i">attack</span><span class="p">(</span><span class="i">weapon</span> <span class="t">Weapon</span><span class="p">,</span> <span class="i">monster</span> <span class="t">Monster</span><span class="p">,</span> <span class="i">distance</span> <span class="t">Int</span><span class="p">)</span>
@@ -474,64 +500,38 @@ than I want to take on.</p>
 <p>I&rsquo;d be more inclined to do sum types and destructuring, even though it feels a
 little weird in an imperative language, then do this kind of complex control
 flow analysis.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2023/08/04/representing-heterogeneous-data/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2023/08/04/representing-heterogeneous-data/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

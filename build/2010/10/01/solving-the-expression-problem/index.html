@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Solving the Expression Problem &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/09/28/ruby-blocks-pythons-with-and-magpies-test-suite/"
+         title="Older Post &ldquo;Ruby Blocks, Python&rsquo;s &ldquo;with&rdquo;, and Magpie&rsquo;s Test Suite&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/10/21/the-language-i-wish-go-was/"
+         title="Newer Post &ldquo;The Language I Wish Go Was&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/10/01/solving-the-expression-problem/" rel="bookmark"
      title="Permanent Link to Solving the Expression Problem">
     Solving the Expression Problem
   </a>
 </h1>
-  <a class="older" href="/2010/09/28/ruby-blocks-pythons-with-and-magpies-test-suite/"
-     title="Older Post &ldquo;Ruby Blocks, Python&rsquo;s &ldquo;with&rdquo;, and Magpie&rsquo;s Test Suite&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/10/21/the-language-i-wish-go-was/"
-     title="Newer Post &ldquo;The Language I Wish Go Was&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">October 01, 2010</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/java">java</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/09/28/ruby-blocks-pythons-with-and-magpies-test-suite/"
+       title="Older Post &ldquo;Ruby Blocks, Python&rsquo;s &ldquo;with&rdquo;, and Magpie&rsquo;s Test Suite&rdquo;">&lt;</a></span>
+    <a href="/archive">october 01, 2010</a>
+    <span class="thread-narrow"><a href="/2010/10/21/the-language-i-wish-go-was/"
+       title="Newer Post &ldquo;The Language I Wish Go Was&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/java">java</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>I started working on Magpie out of frustration with a lot of the languages I
 used. One of the key itches I wanted to scratch is something called the
 <a href="http://lambda-the-ultimate.org/node/2232">expression problem</a>. The original formulation of it isn&rsquo;t very helpful to
@@ -75,7 +103,7 @@ deal with documents generically.</p>
 <p>The way you&rsquo;ll answer those is strongly influenced by your choice of language.
 In many ways language paradigms differ exactly in how they answer just those
 questions. For our purposes, we&rsquo;ll only care about three flavors:</p>
-<h2>Statically typed object-oriented languages</h2>
+<h2 id="statically-typed-object-oriented-languages"><a href="#statically-typed-object-oriented-languages">Statically typed object-oriented languages<span class="anchor">#statically-typed-object-oriented-languages</span></a></h2>
 <p>These are the most popular languages on the block today, and include C++, Java,
 and C#. They organize code into classes, and define operations as methods on
 those classes. A Java implementation of the above table looks something like:</p>
@@ -122,7 +150,7 @@ this, but they&rsquo;re complex and awkward (I&rsquo;m looking at you, <a href="
 <p>But at least question 4 is easy. The compiler tells us if we don&rsquo;t fully
 implement an interface, so if we declare that a class implements <code>Document</code> then
 we can be sure that all of the cells in the grid are covered.</p>
-<h2>Statically typed functional languages</h2>
+<h2 id="statically-typed-functional-languages"><a href="#statically-typed-functional-languages">Statically typed functional languages<span class="anchor">#statically-typed-functional-languages</span></a></h2>
 <p>Let&rsquo;s see how the other half lives. Languages in the ML family like Haskell and
 F# tend to divide things up differently. Where an object-oriented language
 breaks the grid along column boundaries, a functional language breaks it into
@@ -165,7 +193,7 @@ defined in code we don&rsquo;t control, we&rsquo;re hosed again.</p>
 if one of these functions doesn&rsquo;t match a document type. So there&rsquo;s no net win
 between the two, we&rsquo;ve just changed how we slice the same cake. Let&rsquo;s look at a
 third option:</p>
-<h2>Dynamically typed languages</h2>
+<h2 id="dynamically-typed-languages"><a href="#dynamically-typed-languages">Dynamically typed languages<span class="anchor">#dynamically-typed-languages</span></a></h2>
 <p>Way on the other side of town are dynamic languages like Python, Ruby and
 Javascript (and their non-OOP progenitors like Scheme, but I&rsquo;ll focus on OOP
 ones here because that&rsquo;s what I&rsquo;m most familiar with). They&rsquo;re super flexible
@@ -191,7 +219,7 @@ of the file where its defined. I want to group some code by row (operation) and
 other code by column (type), each where it makes the most sense.</p>
 <p>And once all that&rsquo;s done, I want the language to be smart enough to tell if I
 forgot something or messed something up.</p>
-<h2>Magpie = open classes + static checking</h2>
+<h2 id="magpie-open-classes-static-checking"><a href="#magpie-open-classes-static-checking">Magpie = open classes + static checking<span class="anchor">#magpie-open-classes-static-checking</span></a></h2>
 <p>Here&rsquo;s how you accomplish this in Magpie. First, we define an interface that all
 documents will implement:</p>
 <pre class="highlight language-magpie"><span class="k">interface</span> <span class="t">Document</span>
@@ -225,7 +253,7 @@ interface.</p>
 expected, the interpreter checks to make sure that the class implements it. Note
 that it does this <em>statically</em>, before <code>main()</code> has ever been called, like a
 typical static language.</p>
-<h2>Extending a class</h2>
+<h2 id="extending-a-class"><a href="#extending-a-class">Extending a class<span class="anchor">#extending-a-class</span></a></h2>
 <p>Here is where it gets interesting. Now we decide we want to add printing
 support. In Magpie, classes and interfaces are open for extension. So we can
 just do:</p>
@@ -273,64 +301,38 @@ have the operation are used in places that expect a <code>Document</code>.</p>
 </ol>
 <p>When you&rsquo;re defining things, you get the flexibility of a dynamic language.
 Before it runs, though, you get the safety of a static language.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/10/01/solving-the-expression-problem/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/10/01/solving-the-expression-problem/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

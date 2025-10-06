@@ -42,13 +42,16 @@ this passage in the Old Testament:
 
 [shibboleth]: http://en.wikipedia.org/wiki/Shibboleth
 
-> Gilead then cut Ephraim off from the fords of the Jordan, and whenever
-> Ephraimite fugitives said, 'Let me cross,' the men of Gilead would ask, 'Are
-> you an Ephraimite?' If he said, 'No,' they then said, 'Very well, say
-> "Shibboleth" (שבלת).' If anyone said, "Sibboleth" (סבלת), because he could not
-> pronounce it, then they would seize him and kill him by the fords of the
-> Jordan. Forty-two thousand Ephraimites fell on this occasion.
+<blockquote class="cited">
 
+Gilead then cut Ephraim off from the fords of the Jordan, and whenever
+Ephraimite fugitives said, 'Let me cross,' the men of Gilead would ask, 'Are you
+an Ephraimite?' If he said, 'No,' they then said, 'Very well, say "Shibboleth"
+(שבלת).' If anyone said, "Sibboleth" (סבלת), because he could not pronounce it,
+then they would seize him and kill him by the fords of the Jordan. Forty-two
+thousand Ephraimites fell on this occasion.
+
+</blockquote>
 <p class="cite">Judges 12:5-6, NJB</p>
 
 ## The two camps

@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,57 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Pattern Matching in a Dynamic OOP Language &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/12/31/rethinking-user-defined-operators/"
+         title="Older Post &ldquo;Rethinking User-Defined Operators&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2011/02/13/extending-syntax-from-within-a-language/"
+         title="Newer Post &ldquo;Extending Syntax from Within a Language&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2011/01/16/pattern-matching-in-a-dynamic-oop-language/" rel="bookmark"
      title="Permanent Link to Pattern Matching in a Dynamic OOP Language">
     Pattern Matching in a Dynamic OOP Language
   </a>
 </h1>
-  <a class="older" href="/2010/12/31/rethinking-user-defined-operators/"
-     title="Older Post &ldquo;Rethinking User-Defined Operators&rdquo;">&larr;</a>
-  <a class="newer" href="/2011/02/13/extending-syntax-from-within-a-language/"
-     title="Newer Post &ldquo;Extending Syntax from Within a Language&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">January 16, 2011</a>
-    <span class="tags"><a href="/category/c">c</a> <a href="/category/code">code</a> <a href="/category/js">js</a> <a href="/category/language">language</a> <a href="/category/magpie">magpie</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/12/31/rethinking-user-defined-operators/"
+       title="Older Post &ldquo;Rethinking User-Defined Operators&rdquo;">&lt;</a></span>
+    <a href="/archive">january 16, 2011</a>
+    <span class="thread-narrow"><a href="/2011/02/13/extending-syntax-from-within-a-language/"
+       title="Newer Post &ldquo;Extending Syntax from Within a Language&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/c">c</a>
+     |
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/js">js</a>
+     |
+      <a href="/category/language">language</a>
+     |
+      <a href="/category/magpie">magpie</a>
+      </div>
+</nav>
 <p>Another long weekend and another fun milestone for <a href="https://magpie-lang.org/">Magpie</a>. I&rsquo;ve finally
 managed to pull off something that I&rsquo;ve wanted to support for a long time: <em>real
 destructuring pattern matching</em>. Even more awesome, it uses patterns not just in
@@ -43,14 +73,14 @@ variable declarations, and function type declarations.</p>
 the language&rsquo;s semantics. There are fewer things for a user to learn, and if I
 make that one concept more powerful, the effect is magnified across more of the
 language. But I&rsquo;m getting ahead of myself here.</p>
-<h2>Pattern what?</h2>
+<h2 id="pattern-what"><a href="#pattern-what">Pattern what?<span class="anchor">#pattern-what</span></a></h2>
 <p>If you&rsquo;ve never ventured into the realm of static functional languages, it&rsquo;s
 entirely likely you&rsquo;ve never heard of <a href="http://en.wikipedia.org/wiki/Pattern_matching">pattern matching</a>, or if you have, it
 was describing something else. I wrote <a href="/2009/05/13/ml-style-pattern-matching-in-c/">a really long introduction to it</a>
 a while back, but I&rsquo;ll do the super science breakdown here.</p>
 <p>What I think you&rsquo;ll find is that you <em>do</em> know what it is, you just don&rsquo;t know
 you know it. Here&rsquo;s some examples:</p>
-<h3>Switches</h3>
+<h3 id="switches"><a href="#switches">Switches<span class="anchor">#switches</span></a></h3>
 <p>Consider the humble <code>switch</code> statement in <a href="http://en.wikipedia.org/wiki/C_(programming_language)">Ye Olde Imperative Language</a>:</p>
 <pre class="highlight language-c"><span class="k">switch</span> <span class="p">(</span><span class="i">i</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">case</span> <span class="n">1</span><span class="p">:</span>  <span class="i">printf</span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
@@ -67,7 +97,7 @@ expression, then we walk down the clauses. For each one, we see if the pattern
 fallthrough here). &ldquo;Match&rdquo; is a pretty fuzzy term. In the context of a <code>switch</code>
 statement in C, all it means is equivalence. Two values match if they&rsquo;re the
 same value.</p>
-<h3>Catches</h3>
+<h3 id="catches"><a href="#catches">Catches<span class="anchor">#catches</span></a></h3>
 <p>Now let&rsquo;s switch gears and take a look a <code>catch</code> blocks in everyone&rsquo;s favorite
 <a href="http://en.wikipedia.org/wiki/Java_(programming_language)">Big Enterprise Language</a>:</p>
 <pre class="highlight language-java"><span class="k">try</span> <span class="p">{</span>
@@ -88,7 +118,7 @@ call the <em>pattern</em>.</p>
 handling and <code>switch</code> statements is that <code>catch</code> clauses match on the
 exception&rsquo;s <em>type</em> instead of its value. All of the other machinery is the
 same.</p>
-<h3>Destructuring</h3>
+<h3 id="destructuring"><a href="#destructuring">Destructuring<span class="anchor">#destructuring</span></a></h3>
 <p>Last example, and a different one from the previous two. Let&rsquo;s take a look at
 the <a href="http://en.wikipedia.org/wiki/Javascript">Hot New Language</a>. The latest Mozilla-specific version that no one
 actually uses (not that I&rsquo;m bitter or anything) introduced a new feature called
@@ -107,7 +137,7 @@ the pattern to <em>test</em> the value, we use it to <em>pull data out of it</em
 after all. The exception-handling code does something very similar. When it
 finds a matching <code>catch</code> block, it does bind the caught exception to a new
 variable&mdash;the one declared in the <code>catch</code> block&rsquo;s type signature.</p>
-<h2>Patterns in Magpie</h2>
+<h2 id="patterns-in-magpie"><a href="#patterns-in-magpie">Patterns in Magpie<span class="anchor">#patterns-in-magpie</span></a></h2>
 <p>There are some other details, but what you&rsquo;ve just seen covers 90% of the
 awesomeness that is pattern-matching in the ML family of languages. The only
 problem is that in the languages we&rsquo;ve looked at, those features are all split
@@ -128,7 +158,7 @@ language. A pattern needs to support a couple of operations:</p>
 <p>Just like how expressions in the language work, we&rsquo;ll define a couple of core
 types of patterns, and then let users compose them to their heart&rsquo;s content. In
 Magpie, those are:</p>
-<h3>Value patterns</h3>
+<h3 id="value-patterns"><a href="#value-patterns">Value patterns<span class="anchor">#value-patterns</span></a></h3>
 <p>The simplest pattern is just an expression that evaluates to a value. These are
 like the literals after the <code>case</code> in a <code>switch</code> statement, but Magpie lets you
 use pretty much any expression. These are valid value patterns:</p>
@@ -140,7 +170,7 @@ use pretty much any expression. These are valid value patterns:</p>
 if the value is also <code>2</code>. Magpie does this by just calling the <code>==</code> operator, so
 it&rsquo;s even possible to use your own types here.</p>
 <p>Value patterns don&rsquo;t bind any new variables, so that bit&rsquo;s easy too.</p>
-<h3>Tuple patterns</h3>
+<h3 id="tuple-patterns"><a href="#tuple-patterns">Tuple patterns<span class="anchor">#tuple-patterns</span></a></h3>
 <p>This is one of two patterns that has subpatterns. With this, you can start
 composing bigger patterns that do more stuff. A tuple pattern is just like a
 <a href="/2009/05/05/one-and-only-one/">tuple expression</a>: it&rsquo;s a series of patterns separated by commas. For
@@ -153,13 +183,13 @@ through the field <em>patterns</em> while walking through the fields of the tupl
 use.</p>
 <p>A tuple pattern by itself doesn&rsquo;t bind any variables, but it does recursively
 give the patterns of its fields the chance to do so.</p>
-<h3>Record patterns</h3>
+<h3 id="record-patterns"><a href="#record-patterns">Record patterns<span class="anchor">#record-patterns</span></a></h3>
 <p>The twin brother to tuple patterns, a record pattern does the same thing, but
 for a named record (or any other type with named members). Here&rsquo;s one:</p>
 <pre class="highlight language-magpie"><span class="i">x</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="i">y</span><span class="p">:</span> <span class="n">2</span></pre>
 <p>That pattern matches any object with an <code>x</code> field whose value is <code>1</code>, and a <code>y</code>
 field whose value is <code>2</code>.</p>
-<h3>Variable patterns</h3>
+<h3 id="variable-patterns"><a href="#variable-patterns">Variable patterns<span class="anchor">#variable-patterns</span></a></h3>
 <p>Finally, the most important pattern, and the one where Magpie makes the greatest
 departure from ML. A variable pattern has a <em>name</em> and an optional <em>type
 annotation</em>. The name can be <code>_</code> if you don&rsquo;t care to bind a variable. Here are
@@ -179,7 +209,7 @@ patterns, you get destructuring automagically. If we take this value:</p>
 <pre class="highlight language-magpie"><span class="i">name</span><span class="p">:</span> <span class="i">n</span><span class="p">,</span> <span class="i">pals</span><span class="p">:</span> <span class="p">(</span><span class="i">a</span><span class="p">,</span> <span class="i">b</span><span class="p">)</span></pre>
 <p>The match will succeed, and <code>n</code> will be <code>"Dan"</code>, <code>a</code> will be <code>"Sam"</code>, and <code>b</code>
 will be <code>"Ed"</code>.</p>
-<h2>Now what?</h2>
+<h2 id="now-what"><a href="#now-what">Now what?<span class="anchor">#now-what</span></a></h2>
 <p>Now we&rsquo;ve got these pattern things, where can we use them? It turns out, lots
 of places. We&rsquo;ll start with the most obvious one: <code>match</code> expressions&mdash;
 Magpie&rsquo;s souped-up version of <code>switch</code>. Our first example looks like this in
@@ -202,7 +232,7 @@ showing all of the fun stuff looks like:</p>
   <span class="k">end</span>
 <span class="k">end</span></pre>
 <p>Pretty handy, but we&rsquo;re just getting started.</p>
-<h3>Catches</h3>
+<h3 id="catches-2"><a href="#catches">Catches<span class="anchor">#catches</span></a></h3>
 <p>Since we can also match on type, that gives us all we need to use patterns for
 selecting an appropriate catch clause when an error is thrown. The exception
 example up there becomes:</p>
@@ -211,7 +241,7 @@ example up there becomes:</p>
 <span class="k">catch</span> <span class="i">ex</span> <span class="t">ParseException</span> <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Parse error!&quot;</span><span class="p">)</span>
 <span class="k">catch</span> <span class="i">ex</span> <span class="t">IOException</span>    <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;IO error!&quot;</span><span class="p">)</span>
 <span class="k">catch</span> <span class="i">_</span>                 <span class="k">then</span> <span class="i">print</span><span class="p">(</span><span class="s">&quot;Uh-oh!&quot;</span><span class="p">)</span></pre>
-<h3>Variables</h3>
+<h3 id="variables"><a href="#variables">Variables<span class="anchor">#variables</span></a></h3>
 <p>Since patterns give us a way to bind variables, do we really need to have a
 separate special case <code>var</code> expression that just creates a single named
 variable? Nope. We can just make it take a single pattern. If the pattern is a
@@ -224,7 +254,7 @@ declaration like:</p>
 <span class="i">print</span><span class="p">(</span><span class="i">a</span><span class="p">)</span> <span class="c">// &quot;Sam&quot;</span>
 <span class="i">print</span><span class="p">(</span><span class="i">b</span><span class="p">)</span> <span class="c">// &quot;Ed&quot;</span></pre>
 <p>So now we&rsquo;ve got destructuring for free. Swell!</p>
-<h3>Function parameters</h3>
+<h3 id="function-parameters"><a href="#function-parameters">Function parameters<span class="anchor">#function-parameters</span></a></h3>
 <p>There&rsquo;s one last trick up our sleeve. If you look at the exception example
 there, it looks an awful lot like a function type declaration. That&rsquo;s not a
 coincidence either. We can now just use a pattern to define a function&rsquo;s
@@ -258,64 +288,38 @@ interpreter has gone <em>down</em>, there are fewer distinct concepts to learn i
 language, and at the same time I&rsquo;ve added new functionality that wasn&rsquo;t there
 before. Or, in the words of the immortal John &ldquo;Hannibal&rdquo; Smith, &ldquo;I love it when
 a plan comes together.&rdquo;</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2011/01/16/pattern-matching-in-a-dynamic-oop-language/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

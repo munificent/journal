@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,36 +13,56 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     The Biology of Sloppy Code &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2010/11/08/refining-exceptions-and-error-codes/"
+         title="Older Post &ldquo;Refining Exceptions and Error Codes&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2010/12/14/the-trouble-with-constructors/"
+         title="Newer Post &ldquo;The Trouble with Constructors&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2010/11/26/the-biology-of-sloppy-code/" rel="bookmark"
      title="Permanent Link to The Biology of Sloppy Code">
     The Biology of Sloppy Code
   </a>
 </h1>
-  <a class="older" href="/2010/11/08/refining-exceptions-and-error-codes/"
-     title="Older Post &ldquo;Refining Exceptions and Error Codes&rdquo;">&larr;</a>
-  <a class="newer" href="/2010/12/14/the-trouble-with-constructors/"
-     title="Newer Post &ldquo;The Trouble with Constructors&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">November 26, 2010</a>
-    <span class="tags"><a href="/category/code">code</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2010/11/08/refining-exceptions-and-error-codes/"
+       title="Older Post &ldquo;Refining Exceptions and Error Codes&rdquo;">&lt;</a></span>
+    <a href="/archive">november 26, 2010</a>
+    <span class="thread-narrow"><a href="/2010/12/14/the-trouble-with-constructors/"
+       title="Newer Post &ldquo;The Trouble with Constructors&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+      </div>
+</nav>
 <p>I&rsquo;m watching the <a href="http://www.infoq.com/presentations/Future-of-Programming-Languages">Future of Programming Languages</a> panel and a point came up
 that really resonated with me. To the question, &ldquo;What is the next big trend in
 programming?&rdquo;, Guy Steele said, &ldquo;Maybe it&rsquo;s sloppy programming.&rdquo;</p>
 <p>It&rsquo;s hard not to recoil from that and either deny it, or at least wish it
 weren&rsquo;t true. I believe it is true. I think it&rsquo;s inevitable, and, unlike
 probably most of my peers, I don&rsquo;t think it&rsquo;s a bad thing.</p>
-<h2>What does &ldquo;sloppy&rdquo; mean?</h2>
+<h2 id="what-does-sloppy-mean"><a href="#what-does-sloppy-mean">What does &ldquo;sloppy&rdquo; mean?<span class="anchor">#what-does-sloppy-mean</span></a></h2>
 <p>Let me clarify what I mean by &ldquo;sloppy&rdquo;. You probably have an intuition, and it&rsquo;s
 probably right, but I&rsquo;ll throw out some examples:</p>
 <ul>
@@ -82,7 +104,7 @@ they can interoperate directly, you&rsquo;re doing sloppy programming.</p>
 <p>If I wrote that list right and you&rsquo;re not in academia, odds are you answered
 &ldquo;yes&rdquo; to at least one of those. These days, we&rsquo;re all sloppy programmers at
 least a little bit.</p>
-<h2>The super science breakdown</h2>
+<h2 id="the-super-science-breakdown"><a href="#the-super-science-breakdown">The super science breakdown<span class="anchor">#the-super-science-breakdown</span></a></h2>
 <p>What I&rsquo;m going to describe here will sound like an analogy, but I think it&rsquo;s
 much closer to being literally true. I believe programming is working its way
 through the physical sciences.</p>
@@ -94,7 +116,7 @@ chemist, subatomic particles just <em>are</em> and they study how they interact 
 chemicals. To a biologist, the organic chemicals just <em>are</em>, and they study how
 they interact to form living organisms. Each science is an aggregation of a more
 primitive one.</p>
-<h2>The digital universe</h2>
+<h2 id="the-digital-universe"><a href="#the-digital-universe">The digital universe<span class="anchor">#the-digital-universe</span></a></h2>
 <p>Stepping back from the real world, let&rsquo;s look at the electronic one. The core
 idea behind digital computers is that they&rsquo;re <em>discrete</em>: instead of working
 with complex, continuous analog signals, they quantize and decimate that down to
@@ -105,7 +127,7 @@ rate.</p>
 <p>You can look at this as restarting the complexity progression. We start at the
 complexity of chemistry and, using a bunch of <a href="https://en.wikipedia.org/wiki/Logic_gate">clever engineering</a>, we
 build a virtual world of data simpler than even basic physics.</p>
-<h3>Programmer-physicists</h3>
+<h3 id="programmer-physicists"><a href="#programmer-physicists">Programmer-physicists<span class="anchor">#programmer-physicists</span></a></h3>
 <p>The first programmers were essentially physicists moments after the Big Bang,
 studying an artificial cosmos. At the time, the universe was so simple that all
 they had to work with were the program equivalents of quarks&mdash;ones and zeroes.
@@ -115,7 +137,7 @@ first principles. Lots of building things <a href="http://www.youtube.com/watch?
 artificial universe got more complex. Given the computational particles that our
 forebears created (numeric representations, data structures, basic algorithms,
 etc.) we started building more complex systems.</p>
-<h3>Coder-chemists</h3>
+<h3 id="coder-chemists"><a href="#coder-chemists">Coder-chemists<span class="anchor">#coder-chemists</span></a></h3>
 <p>In the early 70s, people started talking about the <a href="http://en.wikipedia.org/wiki/Software_crisis">software crisis</a>. It
 became harder and harder to handle the complexity that the expanding software
 universe could sustain. Up to now, computers were so simple that you could write
@@ -137,7 +159,7 @@ stopped asking if the software was right in some Platonic ideal sense and
 started tracking the <em>rate</em> of defects. We went from &ldquo;purity&rdquo; in the
 mathematical sense (it either is or isn&rsquo;t) to &ldquo;purity&rdquo; in the chemical sense
 (&ldquo;how pure is this compound?&rdquo;).</p>
-<h3>Engineer-entomologists</h3>
+<h3 id="engineer-entomologists"><a href="#engineer-entomologists">Engineer-entomologists<span class="anchor">#engineer-entomologists</span></a></h3>
 <p>In the past decade, I think we&rsquo;ve started stumbling through the next transition:
 biology. Software, of course, isn&rsquo;t anywhere near as complex as a living thing
 yet. But it&rsquo;s starting to reach a level of complexity, <em>especially</em> on the web
@@ -164,7 +186,7 @@ interact with it, and even communicate with it, but only in its language.</p>
 disparate data formats, now it&rsquo;s a common part of the job. A good chunk of code
 running on servers right now exists just to translate the grunts of one software
 animal to the chirps that another understands.</p>
-<h2>Why the long face?</h2>
+<h2 id="why-the-long-face"><a href="#why-the-long-face">Why the long face?<span class="anchor">#why-the-long-face</span></a></h2>
 <p>As I see it, that&rsquo;s what&rsquo;s going on in the software world. What&rsquo;s fascinating to
 me is how much emotion and morality allegedly rational programmers imbue that
 transition with. Really, there&rsquo;s no intrinsic rightness or wrongness about any
@@ -201,7 +223,7 @@ spectrum. <a href="http://en.wikipedia.org/wiki/David_Heinemeier_Hansson">DHH</a
 bought a house in Italy for <em><a href="http://www.autoblog.com/2010/09/07/pagani-zonda-hh-commissioner-revealed-as-30-year-old-chicago-sof/">his car</a></em>. If you spent your formative years
 painstakingly learning how to carve code one bit at a time and are now finding
 yourself becoming outdated, that can&rsquo;t feel good.</p>
-<h2>It&rsquo;s OK</h2>
+<h2 id="its-ok"><a href="#its-ok">It&rsquo;s OK<span class="anchor">#its-ok</span></a></h2>
 <p>I happen to be right at the chemist level: I think in OOP. I&rsquo;ve done a bit of
 assembly but it just seems tedious to me. At the same time, Javascript and Ruby,
 try as I might, just don&rsquo;t feel like programming. There aren&rsquo;t even <em>types</em>
@@ -216,64 +238,38 @@ simply <em>expanding</em>.</p>
 software universe is getting bigger and it can accomodate scientists of all
 persuasions. And instead of thinking that programming is getting sloppier, I
 tell myself it&rsquo;s getting more <em>organic</em>.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2010/11/26/the-biology-of-sloppy-code/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2010/11/26/the-biology-of-sloppy-code/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

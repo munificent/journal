@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,55 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Zero to 353 Pages: Bringing My Web Book to Print and E-book &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2014/07/15/a-turn-based-game-loop/"
+         title="Older Post &ldquo;A Turn-Based Game Loop&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2014/11/20/how-my-book-launch-went/"
+         title="Newer Post &ldquo;How My Book Launch Went&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/" rel="bookmark"
      title="Permanent Link to Zero to 353 Pages: Bringing My Web Book to Print and E-book">
     Zero to 353 Pages: Bringing My Web Book to Print and E-book
   </a>
 </h1>
-  <a class="older" href="/2014/07/15/a-turn-based-game-loop/"
-     title="Older Post &ldquo;A Turn-Based Game Loop&rdquo;">&larr;</a>
-  <a class="newer" href="/2014/11/20/how-my-book-launch-went/"
-     title="Newer Post &ldquo;How My Book Launch Went&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">November 03, 2014</a>
-    <span class="tags"><a href="/category/book">book</a> <a href="/category/design">design</a> <a href="/category/game-dev">game-dev</a> <a href="/category/game-patterns">game-patterns</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2014/07/15/a-turn-based-game-loop/"
+       title="Older Post &ldquo;A Turn-Based Game Loop&rdquo;">&lt;</a></span>
+    <a href="/archive">november 03, 2014</a>
+    <span class="thread-narrow"><a href="/2014/11/20/how-my-book-launch-went/"
+       title="Newer Post &ldquo;How My Book Launch Went&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/book">book</a>
+     |
+      <a href="/category/design">design</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+     |
+      <a href="/category/game-patterns">game-patterns</a>
+      </div>
+</nav>
 <figure>
   <a href="http://gameprogrammingpatterns.com/"><img class="framed" src="/image/2014/11/book.jpg"></a>
   <figcaption>Look what I made!</figcaption>
@@ -55,7 +83,7 @@ mountain&mdash;all of the <em>stuff</em> required to turn a web site into a book
 Remember on Mr. Rogers Neighborhood where they would take a trip to a factory to
 see how cute little piglets are turned into hotdogs or something charming like
 that? This is like that, but marginally less incarnadine.</p>
-<h2>Where it starts</h2>
+<h2 id="where-it-starts"><a href="#where-it-starts">Where it starts<span class="anchor">#where-it-starts</span></a></h2>
 <p>On April 22nd, I finished the third draft of the last chapter of the book. The
 next day, I uploaded it and modestly told a few friends. And by that, I mean I
 <a href="https://twitter.com/munificentbob/status/458811197966409728">milked it</a> for <a href="https://plus.google.com/100798142896685420545/posts/HJ3J368V6Mp">all it was worth</a> on all <a href="http://www.reddit.com/r/programming/comments/23qnnc/i_finished_writing_my_free_book_on_game/">the social
@@ -68,7 +96,7 @@ anything bigger than breakfast.</p>
 <p>By this point, I was actually superstitious about breaking it. I really wanted
 to hold the physical book in my hands, so until that was done, I was afraid to
 take even single day&rsquo;s break.</p><figure>
-<iframe width="560" height="315" src="//www.youtube.com/embed/sb7uzrKnAGA" frameborder="0" allowfullscreen></iframe>
+<iframe width="704" height="396" src="//www.youtube.com/embed/sb7uzrKnAGA" frameborder="0" allowfullscreen></iframe>
 <figcaption>I did break the chain on <em>one</em> day. It was my birthday in
 Kauai. I spent the morning playing on the beach with my kids, the afternoon
 snorkeling with sea turtles, the evening grilling burgers for my friends, and
@@ -89,7 +117,7 @@ to do a pass over it.</p>
 mistakes that I managed to miss. If you ever write book, I <em>highly</em> recommend
 this step. You&rsquo;ll be astonished at how much you miss that a good editor will
 find.</p>
-<h2>E-books, ugh</h2>
+<h2 id="e-books-ugh"><a href="#e-books-ugh">E-books, ugh<span class="anchor">#e-books-ugh</span></a></h2>
 <p>I&rsquo;m going to mix up the chronology here and talk about the e-book version first.
 In reality, I interleaved working on this and the print version and going back
 and forth over chapters with my copyeditor, Lauren. The e-book stuff is less
@@ -160,7 +188,7 @@ MOBI for you. Behold:</p><figure>
 <p>If you ignore the fact that it took about a hundred iterations to please the
 <a href="http://validator.idpf.org/">EPUB validator</a> Gods, this was straightforward. Now, let&rsquo;s talk about the fun
 stuff!</p>
-<h2>My dirty little secret</h2>
+<h2 id="my-dirty-little-secret"><a href="#my-dirty-little-secret">My dirty little secret<span class="anchor">#my-dirty-little-secret</span></a></h2>
 <p>Warning: Seriously ardent exposition on design lies ahead. The rest of this post
 will be like watching two of your best friends who after years of awkward sexual
 tension finally hook up and now aren&rsquo;t so much blasting you with public displays
@@ -185,7 +213,7 @@ metastasized and took over pretty much the whole light show upstairs.</p>
 that visual, but, man, sometimes I really miss design. Thus the vow: if I could
 complete this giant ball of logical thought, I would reward myself by fully
 giving into my artistic side.</p>
-<h2>You mean I get to pick a page size?</h2>
+<h2 id="you-mean-i-get-to-pick-a-page-size"><a href="#you-mean-i-get-to-pick-a-page-size">You mean I get to pick a page size?<span class="anchor">#you-mean-i-get-to-pick-a-page-size</span></a></h2>
 <p>Of the design stuff I <em>have</em> done in the past, almost all of it has been for the
 web. There&rsquo;s a lot to like about web design, but it&rsquo;s sort of like body
 painting. No matter how steady you are with your airbrush, there&rsquo;s an inherit
@@ -203,7 +231,7 @@ sizes</a> you can pick from.</p>
 measured those suckers. I wanted my book to be like a real programming book, so
 I measured their dimensions, margins, line height, font size, the works. I took
 some averages, settled on 7.5&quot; &times; 9.25&quot; and that was that.</p>
-<h2>Fonts, fonts, fonts</h2>
+<h2 id="fonts-fonts-fonts"><a href="#fonts-fonts-fonts">Fonts, fonts, fonts<span class="anchor">#fonts-fonts-fonts</span></a></h2>
 <p>Now that I knew how big my canvas was, it was time to start painting it. And,
 for a book, that means fonts. Sweet, delicious, heavenly fonts.</p>
 <p>As a web designer, I was used to&mdash;paraphrasing Henry Ford here&mdash;having any
@@ -271,7 +299,7 @@ understand.</figcaption>
 <p>God, just look at it there. And wait until you see the <em>ligatures</em>. It&rsquo;s enough
 to make a girl swoon.</p>
 <p>I had assembled my army, now it was time to draw battlelines.</p>
-<h2>So many grids</h2>
+<h2 id="so-many-grids"><a href="#so-many-grids">So many grids<span class="anchor">#so-many-grids</span></a></h2>
 <p>Some people fantasize about building <a href="https://www.youtube.com/watch?v=PGRgXWsL-_Y">roller coasters in their
 backyards</a> or <a href="https://www.youtube.com/watch?v=OmX1V6_gukY">being smothered in pugs</a>. I&rsquo;ve always dreamt of
 designing using an honest-to-God <a href="http://www.amazon.com/Systems-Graphic-Systeme-Visuele-Gestaltung/dp/3721201450">grid system</a>.</p>
@@ -328,7 +356,7 @@ prose.</figcaption>
 <p>I set up a running footer, and designed the section and chapter headers. Not
 gonna lie, I was pretty pleased with myself. There may have been some
 celebratory drinking.</p>
-<h2>Oh no, XML again?</h2>
+<h2 id="oh-no-xml-again"><a href="#oh-no-xml-again">Oh no, XML again?<span class="anchor">#oh-no-xml-again</span></a></h2>
 <p>Once I had my grid and fonts, all that was left to do was typeset the whole
 book. That meant bringing in all of the text. I couldn&rsquo;t just copy and paste the
 web pages into InDesign. I&rsquo;d already carefully authored (in Markdown) emphasis,
@@ -381,7 +409,7 @@ to convert <em>any</em> HTML to XML. As long as it worked on the 90k words of <e
 book, it was Correct&trade; as far as I&rsquo;m concerned. This gave me a folder full
 of more-or-less XML files, one for each chapter. All that was left was to
 typeset them.</p>
-<h2>I&rsquo;m a designer!</h2>
+<h2 id="im-a-designer"><a href="#im-a-designer">I&rsquo;m a designer!<span class="anchor">#im-a-designer</span></a></h2>
 <p>Starting at chapter one, <a href="http://gameprogrammingpatterns.com/introduction.html">the introduction</a>, I imported its XML into
 InDesign. Then the work started. Each aside had to be pulled out of the main
 body text, restyled, and put into the sidebar. I only wanted leading indentation
@@ -441,7 +469,7 @@ span pages.</p>
 <p>It was tedious, challenging work. I started on June 19th. Working every single
 day, I reached the end of the last chapter <a href="https://github.com/munificent/game-programming-patterns/blob/60a4f3ebf49d7c24aa8ffc3100d48d0e2486039f/note/log.txt#L39-L92">exactly two months later</a>.
 There was more drinking.</p>
-<h2>Baby got back (matter)</h2>
+<h2 id="baby-got-back-matter"><a href="#baby-got-back-matter">Baby got back (matter)<span class="anchor">#baby-got-back-matter</span></a></h2>
 <p>So, the print edition was done, right? Nope! Real books aren&rsquo;t just a pile of
 chapters. They&rsquo;ve got a copyright page, title page, table of contents, and all
 sorts of stuff like that. The bits of those that come before the meat of the
@@ -474,7 +502,7 @@ You can create cross references in InDesign and it will automatically track the
 referenced section and keep the page number up to date. I found every place
 where there was a link in the web version and manually created a
 cross-reference.</p>
-<h2>Getting my grubby paws on it</h2>
+<h2 id="getting-my-grubby-paws-on-it"><a href="#getting-my-grubby-paws-on-it">Getting my grubby paws on it<span class="anchor">#getting-my-grubby-paws-on-it</span></a></h2>
 <p>Phew! Book production is a lot of work! But this was finally nearing the end! I
 printed the whole book, all three-hundred-plus pages of it on my laser printer.
 It was heavy! I made a big heavy thing all by myself. Full of words!</p>
@@ -489,7 +517,7 @@ minor formatting bugs, then I exported a PDF. (Brief interlude where I zoom in
 1000% and drool over Sina Nova again.) I uploaded it to CreateSpace. Oh boy oh
 boy oh boy.</p>
 <p>Oh, crap. I&rsquo;m not done yet. I forgot the cover!</p>
-<h2>Cover me, I&rsquo;m going in!</h2>
+<h2 id="cover-me-im-going-in"><a href="#cover-me-im-going-in">Cover me, I&rsquo;m going in!<span class="anchor">#cover-me-im-going-in</span></a></h2>
 <p>If you go by self-publishing blogs, designing a cover is the hardest, most
 important, most agonized over, most terribly done part of book writing. For
 every blog post telling you how important it is to not screw it up, there are a
@@ -517,7 +545,7 @@ to find a composition for the text that I liked. You can see the evolution here:
 <figcaption>In chronological order.</figcaption>
 </figure>
 <p>Hopefully, you don&rsquo;t hate the final one too much.</p>
-<h2>My esteemed publisher</h2>
+<h2 id="my-esteemed-publisher"><a href="#my-esteemed-publisher">My esteemed publisher<span class="anchor">#my-esteemed-publisher</span></a></h2>
 <p>Oh, I left out one piece of the puzzle! Look on the bottom right corner of those
 mocks. See that? Here, look closer:</p><figure>
 <img class="framed" src="/image/2014/11/gb.jpg">
@@ -565,7 +593,7 @@ match)&mdash;before finally settling on just a plain space.</p><figure>
 names&mdash;Ginny and Benny&mdash;and classed them up. As the CEO and CFO of the
 Genever Benning empire, they are skilled executives, though a bit prone to
 farting in board meetings.</p>
-<h2>Upload it, already!</h2>
+<h2 id="upload-it-already"><a href="#upload-it-already">Upload it, already!<span class="anchor">#upload-it-already</span></a></h2>
 <p>OK, so we&rsquo;ve got typeset chapters, front matter, back matter, a cover, ISBN
 numbers, a camera-ready PDF. All systems are go go go! I uploaded everything to
 CreateSpace, waited for their &ldquo;manual&rdquo; review process to complete and ordered a
@@ -587,7 +615,7 @@ CreateSpace&rsquo;s guidelines, my layout was bad. The text was too small. The t
 margin too short. Worst of all, the inner margin was too narrow, making it hard
 to read text near the spine.</p>
 <p><em>Merde.</em></p>
-<h2>OK, let&rsquo;s do it all again</h2>
+<h2 id="ok-lets-do-it-all-again"><a href="#ok-lets-do-it-all-again">OK, let&rsquo;s do it all again<span class="anchor">#ok-lets-do-it-all-again</span></a></h2>
 <p>As you surely realize by now, changing any of the metrics of the book is a huge
 undertaking. Sure, you can just edit the master and all of the pages update. But
 that in turn affects how the text wraps, which then totally undoes all of my
@@ -636,7 +664,7 @@ I did <em>another</em> proof-reading pass on the actual proof:</p><figure>
 mistakes lurking in there, and thinking about them <em>kills</em> me. But, at some
 point, the value of getting the damn thing in people&rsquo;s hands outweighs the value
 of trying to keep making it better.</p>
-<h2>Kicking it out the door</h2>
+<h2 id="kicking-it-out-the-door"><a href="#kicking-it-out-the-door">Kicking it out the door<span class="anchor">#kicking-it-out-the-door</span></a></h2>
 <p>The print edition was done, and I made a slew of final changes to the e-book
 versions&mdash;mainly getting the cover in and working. Finally, only three things
 were left to do:</p>
@@ -687,64 +715,38 @@ some ways, legitimize it in my mind. And that&rsquo;s entirely outside of my con
 now.</p>
 <p>I feel like I&rsquo;m walking on stage, alone, squinting through the footlights to see
 if there&rsquo;s anyone in the audience.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2014/11/03/bringing-my-web-book-to-print-and-ebook/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2014/11/03/bringing-my-web-book-to-print-and-ebook/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

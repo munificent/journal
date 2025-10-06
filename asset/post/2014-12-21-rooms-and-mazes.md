@@ -3,13 +3,7 @@ title: "Rooms and Mazes: A Procedural Dungeon Generator"
 tags: code game-dev roguelike dart
 ---
 
-<style>
-canvas {
-  background: #222;
-  display: inline-block;
-  max-width: 100%;
-}
-</style>
+<!-- TODO: Now that the canvas is bigger, up the resolution. -->
 
 Several months ago I promised a follow-up to my previous blog post about
 [turn-based game loops][game loop] in [my roguelike][hauberk]. Then I got
@@ -30,7 +24,7 @@ the most fun and challenging part of making a roguelike: generating dungeons!
 
 Go ahead and click the little box below to see what we end up with:
 
-<figure>
+<figure class="wide">
   <canvas id="enchilada" width="570" height="390">Sorry, you need canvas
   support for this demo.</canvas>
   <figcaption>Click it again to restart it.</figcaption>
@@ -159,11 +153,13 @@ of *attempts* to place rooms. Failure becomes more common as the dungeon gets
 fuller&mdash;after all, you can only fit so many rooms in a given area&mdash;but
 tuning this gives you some control over room density, like so:
 
-<figure>
+<figure class="wide">
   <canvas id="rooms" width="570" height="390">Sorry, you need canvas support for this demo.</canvas>
-  <label for="attempts">Attempts:</label>
-  <input type="range" id="attempts" min="10" value="200" max="1000">
-  <output for="attempts" id="attempts-output">200</output>
+  <figcaption>
+    <label for="attempts">Attempts:</label>
+    <input type="range" id="attempts" min="10" value="200" max="1000">
+    <output for="attempts" id="attempts-output">200</output>
+  </figcaption>
 </figure>
 
 ## A dark and twisty passageway
@@ -234,12 +230,14 @@ you'll erase the whole maze! A perfect maze has no loops so *everything* is a
 dead end if you follow passages long enough. Jamis' solution is to not erase
 *all* of the dead ends, just some. It stops after a while. Something like this:
 
-<figure>
+<figure class="wide">
   <canvas id="dead-ends" width="570" height="390">Sorry, you need canvas
   support for this demo.</canvas>
-  <label for="dead-end-open">Corridors to leave:</label>
-  <input type="range" id="dead-end-open" min="1" value="1000" max="3000">
-  <output for="dead-end-open" id="dead-end-open-output">1000</output>
+  <figcaption>
+    <label for="dead-end-open">Corridors to leave:</label>
+    <input type="range" id="dead-end-open" min="1" value="1000" max="3000">
+    <output for="dead-end-open" id="dead-end-open-output">1000</output>
+  </figcaption>
 </figure>
 
 Once you do that, you can start placing rooms. The process Jamis uses for this
@@ -280,7 +278,7 @@ and mazes.
 
 [flood fill]: http://en.wikipedia.org/wiki/Flood_fill
 
-<figure>
+<figure class="wide">
   <canvas id="maze-fill" width="570" height="390">
       Sorry, you need canvas support for this demo.
   </canvas>
@@ -306,7 +304,7 @@ After filling in the rooms and mazes, we find all of those possible
 
 Here they are highlighted:
 
-<figure>
+<figure class="wide">
   <canvas id="connectors" width="570" height="390">
       Sorry, you need canvas support for this demo.
   </canvas>
@@ -413,7 +411,7 @@ the much cleaner implementation my game uses.
 As a bonus for making it this far, here's a super dense giant dungeon. I find it
 hypnotic:
 
-<figure>
+<figure class="wide">
   <canvas id="giant" width="570" height="390">
       Sorry, you need canvas support for this demo.
   </canvas>

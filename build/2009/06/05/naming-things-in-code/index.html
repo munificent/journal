@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,36 +13,56 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Naming Things in Code &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2009/05/15/loops-in-magpie/"
+         title="Older Post &ldquo;Loops in Magpie&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2009/07/02/closures-and-the-command-pattern/"
+         title="Newer Post &ldquo;Closures and the Command Pattern&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2009/06/05/naming-things-in-code/" rel="bookmark"
      title="Permanent Link to Naming Things in Code">
     Naming Things in Code
   </a>
 </h1>
-  <a class="older" href="/2009/05/15/loops-in-magpie/"
-     title="Older Post &ldquo;Loops in Magpie&rdquo;">&larr;</a>
-  <a class="newer" href="/2009/07/02/closures-and-the-command-pattern/"
-     title="Newer Post &ldquo;Closures and the Command Pattern&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">June 05, 2009</a>
-    <span class="tags"><a href="/category/code">code</a> <a href="/category/language">language</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2009/05/15/loops-in-magpie/"
+       title="Older Post &ldquo;Loops in Magpie&rdquo;">&lt;</a></span>
+    <a href="/archive">june 05, 2009</a>
+    <span class="thread-narrow"><a href="/2009/07/02/closures-and-the-command-pattern/"
+       title="Newer Post &ldquo;Closures and the Command Pattern&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/code">code</a>
+     |
+      <a href="/category/language">language</a>
+      </div>
+</nav>
 <p>When I&rsquo;m designing software, I spend a lot of time thinking about names. For me,
 thinking about names is inseparable from the process of design. To name
-something is to define it.</p>
-<blockquote>
-<p>In the beginning was the Word, and the Word was with God, and the Word was
-God.</p>
-</blockquote><p class="cite">The Gospel According to John</p>
+something is to define it.</p><blockquote class="cited">
+<p>In the beginning was the Word, and the Word was with God, and the Word was God.</p></blockquote>
+<p class="cite">The Gospel According to John</p>
 <p>One of the ways I know a design has really clicked is when the names feel right.
 It may take some time for this to happen (I rename things a <em>lot</em> when I&rsquo;m first
 putting them down in code), but that&rsquo;s OK. Good design doesn&rsquo;t happen fast.</p>
@@ -48,18 +70,18 @@ putting them down in code), but that&rsquo;s OK. Good design doesn&rsquo;t happe
 experience that crappy names do <em>prevent</em> one. With that in mind, here&rsquo;s the
 guidelines I try to follow when naming things. The examples here are in C++, but
 work more or less for any object-oriented language.</p>
-<h2>Types (classes, interfaces, structs)</h2>
-<h3>The name should be a noun phrase.</h3>
+<h2 id="types-classes-interfaces-structs"><a href="#types-classes-interfaces-structs">Types (classes, interfaces, structs)<span class="anchor">#types-classes-interfaces-structs</span></a></h2>
+<h3 id="the-name-should-be-a-noun-phrase"><a href="#the-name-should-be-a-noun-phrase">The name should be a noun phrase.<span class="anchor">#the-name-should-be-a-noun-phrase</span></a></h3>
 <pre class="highlight language-text">Bad:  Happy
 Good: Happiness</pre>
-<h3>Do not use namespace-like prefixes.</h3>
+<h3 id="do-not-use-namespace-like-prefixes"><a href="#do-not-use-namespace-like-prefixes">Do not use namespace-like prefixes.<span class="anchor">#do-not-use-namespace-like-prefixes</span></a></h3>
 <p>That&rsquo;s what namespaces are for.</p>
 <pre class="highlight language-text">Bad:  SystemOnlineMessage
 Good: System::Online::Message</pre>
-<h3>Use just enough adjectives to be clear.</h3>
+<h3 id="use-just-enough-adjectives-to-be-clear"><a href="#use-just-enough-adjectives-to-be-clear">Use just enough adjectives to be clear.<span class="anchor">#use-just-enough-adjectives-to-be-clear</span></a></h3>
 <pre class="highlight language-text">Bad:  IAbstractFactoryPatternBase
 Good: IFactory</pre>
-<h3>Do not use &ldquo;Manager&rdquo; or &ldquo;Helper&rdquo; or other null words in a type name.</h3>
+<h3 id="do-not-use-manager-or-helper-or-other-null-words-in-a-type-name"><a href="#do-not-use-manager-or-helper-or-other-null-words-in-a-type-name">Do not use &ldquo;Manager&rdquo; or &ldquo;Helper&rdquo; or other null words in a type name.<span class="anchor">#do-not-use-manager-or-helper-or-other-null-words-in-a-type-name</span></a></h3>
 <p>If you need to add &ldquo;Manager&rdquo; of &ldquo;Helper&rdquo; to a type name, the type is either
 poorly named or poorly designed. Likely the latter. Types should manage and help
 themselves.</p>
@@ -67,53 +89,53 @@ themselves.</p>
       XmlHelper
 Good: Connection
       XmlDocument, XmlNode, etc.</pre>
-<h3>If a class doesn&rsquo;t represent something concrete, consider a metaphor.</h3>
+<h3 id="if-a-class-doesnt-represent-something-concrete-consider-a-metaphor"><a href="#if-a-class-doesnt-represent-something-concrete-consider-a-metaphor">If a class doesn&rsquo;t represent something concrete, consider a metaphor.<span class="anchor">#if-a-class-doesnt-represent-something-concrete-consider-a-metaphor</span></a></h3>
 <pre class="highlight language-text">Bad:  IncomingMessageQueue
       CharacterArray
       SpatialOrganizer
 Good: Mailbox
       String
       Map</pre>
-<h3>If you use a metaphor, use it consistently.</h3>
+<h3 id="if-you-use-a-metaphor-use-it-consistently"><a href="#if-you-use-a-metaphor-use-it-consistently">If you use a metaphor, use it consistently.<span class="anchor">#if-you-use-a-metaphor-use-it-consistently</span></a></h3>
 <pre class="highlight language-text">Bad:  Mailbox, DestinationID
 Good: Mailbox, Address</pre>
-<h2>Functions (methods, procedures)</h2>
-<h3>Be terse.</h3>
+<h2 id="functions-methods-procedures"><a href="#functions-methods-procedures">Functions (methods, procedures)<span class="anchor">#functions-methods-procedures</span></a></h2>
+<h3 id="be-terse"><a href="#be-terse">Be terse.<span class="anchor">#be-terse</span></a></h3>
 <pre class="highlight language-text">Bad:  list.GetNumberOfItems();
 Good: list.Count();</pre>
-<h3>Don&rsquo;t be too terse.</h3>
+<h3 id="dont-be-too-terse"><a href="#dont-be-too-terse">Don&rsquo;t be too terse.<span class="anchor">#dont-be-too-terse</span></a></h3>
 <pre class="highlight language-text">Bad:  list.Verify();
 Good: list.ContainsNull();</pre>
-<h3>Avd abbrvtn.</h3>
+<h3 id="avd-abbrvtn"><a href="#avd-abbrvtn">Avd abbrvtn.<span class="anchor">#avd-abbrvtn</span></a></h3>
 <pre class="highlight language-text">Bad:  list.Srt();
 Good: list.Sort();</pre>
-<h3>Name functions that do things using verbs.</h3>
+<h3 id="name-functions-that-do-things-using-verbs"><a href="#name-functions-that-do-things-using-verbs">Name functions that do things using verbs.<span class="anchor">#name-functions-that-do-things-using-verbs</span></a></h3>
 <pre class="highlight language-text">Bad:  obj.RefCount();
 Good: list.Clear();
       list.Sort();
       obj.AddReference();</pre>
-<h3>Name functions that return a Boolean (i.e. predicates) like questions.</h3>
+<h3 id="name-functions-that-return-a-boolean-ie-predicates-like-questions"><a href="#name-functions-that-return-a-boolean-ie-predicates-like-questions">Name functions that return a Boolean (i.e. predicates) like questions.<span class="anchor">#name-functions-that-return-a-boolean-ie-predicates-like-questions</span></a></h3>
 <pre class="highlight language-text">Bad:  list.Empty();
 Good: list.IsEmpty();
       list.Contains(item);</pre>
-<h3>Name functions that return a value and don&rsquo;t change state using nouns.</h3>
+<h3 id="name-functions-that-return-a-value-and-dont-change-state-using-nouns"><a href="#name-functions-that-return-a-value-and-dont-change-state-using-nouns">Name functions that return a value and don&rsquo;t change state using nouns.<span class="anchor">#name-functions-that-return-a-value-and-dont-change-state-using-nouns</span></a></h3>
 <pre class="highlight language-text">Bad:  list.GetCount();
 Good: list.Count();</pre>
 <p>(In C#, you&rsquo;d actually use properties for this.)</p>
-<h3>Don&rsquo;t make the name redundant with an argument.</h3>
+<h3 id="dont-make-the-name-redundant-with-an-argument"><a href="#dont-make-the-name-redundant-with-an-argument">Don&rsquo;t make the name redundant with an argument.<span class="anchor">#dont-make-the-name-redundant-with-an-argument</span></a></h3>
 <pre class="highlight language-text">Bad:  list.AddItem(item);
       handler.ReceiveMessage(msg);
 Good: list.Add(item);
       handler.Receive(msg);</pre>
-<h3>Don&rsquo;t make the name redundant with the receiver.</h3>
+<h3 id="dont-make-the-name-redundant-with-the-receiver"><a href="#dont-make-the-name-redundant-with-the-receiver">Don&rsquo;t make the name redundant with the receiver.<span class="anchor">#dont-make-the-name-redundant-with-the-receiver</span></a></h3>
 <pre class="highlight language-text">Bad:  list.AddToList(item);
 Good: list.Add(item);</pre>
-<h3>Only describe the return in the name if there are identical functions that return different types.</h3>
+<h3 id="only-describe-the-return-in-the-name-if-there-are-identical-functions-that-return-different-types"><a href="#only-describe-the-return-in-the-name-if-there-are-identical-functions-that-return-different-types">Only describe the return in the name if there are identical functions that return different types.<span class="anchor">#only-describe-the-return-in-the-name-if-there-are-identical-functions-that-return-different-types</span></a></h3>
 <pre class="highlight language-text">Bad:  list.GetCountInt();
 Good: list.GetCount();
       message.GetIntValue();
       message.GetFloatValue();</pre>
-<h3>Don&rsquo;t use &ldquo;and&rdquo; or &ldquo;or&rdquo; in a function name.</h3>
+<h3 id="dont-use-and-or-or-in-a-function-name"><a href="#dont-use-and-or-or-in-a-function-name">Don&rsquo;t use &ldquo;and&rdquo; or &ldquo;or&rdquo; in a function name.<span class="anchor">#dont-use-and-or-or-in-a-function-name</span></a></h3>
 <p>If you&rsquo;re using a conjunction in the name, the function is likely doing too
 much. Break it into smaller pieces and name accordingly. If you want to ensure
 this is an atomic operation, consider creating a name for that entire operation,
@@ -121,7 +143,7 @@ or possibly a class that encapsulates it.</p>
 <pre class="highlight language-text">Bad:  mail.VerifyAddressAndSendStatus();
 Good: mail.VerifyAddress();
       mail.SendStatus();</pre>
-<h2>Does it matter?</h2>
+<h2 id="does-it-matter"><a href="#does-it-matter">Does it matter?<span class="anchor">#does-it-matter</span></a></h2>
 <p>Yes, I firmly believe it does. A module with well-named parts quickly teaches
 you what it does. By reading only a fraction of the code, you&rsquo;ll quickly build a
 complete mental model of the whole system. If it calls something a &ldquo;Mailbox&rdquo;
@@ -144,64 +166,38 @@ critical piece to make it complete.</p>
 that I&rsquo;m <em>not</em> doing it well is when the names don&rsquo;t come easy. When I design
 now, I try to pay attention to that. Once I&rsquo;m happy with the names, I&rsquo;m usually
 happy with the design.</p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2009/06/05/naming-things-in-code/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2009/06/05/naming-things-in-code/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

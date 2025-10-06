@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro|PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Tell mobile browsers we're optimized for them and they don't need to
        crop the viewport. -->
@@ -11,29 +13,53 @@
   <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
   <link rel="stylesheet" href="/style.css" type="text/css" />
 
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
   <title>
     Zero to 95,688: How I wrote Game Programming Patterns &ndash; journal.stuffwithstuff.com
   </title>
+
+  <script src="/aside.js"></script>
 </head>  <body>
-    <div class="column">
-<article>
+    <main>
 <header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2014/03/02/nostalgia-rathole/"
+         title="Older Post &ldquo;Nostalgia Rathole&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+    <div>
+      <a href="/2014/07/05/dropping-loot/"
+         title="Newer Post &ldquo;Dropping Loot&rdquo;">next &gt;</a>
+    </div>
+</div>
+<article>
 <h1>
   <a href="/2014/04/22/zero-to-95688-how-i-wrote-game-programming-patterns/" rel="bookmark"
      title="Permanent Link to Zero to 95,688: How I wrote Game Programming Patterns">
     Zero to 95,688: How I wrote Game Programming Patterns
   </a>
 </h1>
-  <a class="older" href="/2014/03/02/nostalgia-rathole/"
-     title="Older Post &ldquo;Nostalgia Rathole&rdquo;">&larr;</a>
-  <a class="newer" href="/2014/07/05/dropping-loot/"
-     title="Newer Post &ldquo;Dropping Loot&rdquo;">&rarr;</a>
-</header>
-<h4><a href="/archive">April 22, 2014</a>
-    <span class="tags"><a href="/category/book">book</a> <a href="/category/game-dev">game-dev</a> <a href="/category/game-patterns">game-patterns</a></span>
-</h4>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2014/03/02/nostalgia-rathole/"
+       title="Older Post &ldquo;Nostalgia Rathole&rdquo;">&lt;</a></span>
+    <a href="/archive">april 22, 2014</a>
+    <span class="thread-narrow"><a href="/2014/07/05/dropping-loot/"
+       title="Newer Post &ldquo;Dropping Loot&rdquo;">&gt;</a></span>
+  </div>
+  <div class="tags">
+      <a href="/category/book">book</a>
+     |
+      <a href="/category/game-dev">game-dev</a>
+     |
+      <a href="/category/game-patterns">game-patterns</a>
+      </div>
+</nav>
 <div class="update">
 <p><em>Update 2014/04/28:</em> In case you missed the link, the web site for my
   book is <a href="http://gameprogrammingpatterns.com">gameprogrammingpatterns.com</a>.</p>
@@ -51,7 +77,7 @@ and a lifetime ago.</p><figure>
 own personal story, but what the hell. It&rsquo;s not like I have anything better to
 do! I get some vicarious pleasure (mixed with heaps of envy) when I read about
 other people finishing their books, so I&rsquo;ll try to add to the canon.</p>
-<h2>The Call to Adventure</h2>
+<h2 id="the-call-to-adventure"><a href="#the-call-to-adventure">The Call to Adventure<span class="anchor">#the-call-to-adventure</span></a></h2>
 <p>Like most stories, it starts with the hero having something bad happen to him.
 (Did I just call myself the hero? Seriously? God, this is already going to my
 head.)</p>
@@ -108,7 +134,7 @@ new job.</p><figure>
 </figure>
 <p>I felt like the book could be our ticket out west. So I needed to figure out
 every psychological trick I could play on myself to actually get it done.</p>
-<h3>The structure</h3>
+<h3 id="the-structure"><a href="#the-structure">The structure<span class="anchor">#the-structure</span></a></h3>
 <p>If blog posts were the only thing I could finish, why not take a cue from that?
 <em>Design Patterns</em> is a stack of mostly unconnected chapters. I could organize my
 book the same way. Then instead of writing a whole monolithic book, it would
@@ -118,14 +144,14 @@ anthology.</p>
 organization. I could do the same thing, so I didn&rsquo;t need to come up with a
 unique outline and narrative for each chapter. They&rsquo;d just be recipes with
 different ingredients and instructions.</p>
-<h3>The workflow</h3>
+<h3 id="the-workflow"><a href="#the-workflow">The workflow<span class="anchor">#the-workflow</span></a></h3>
 <p>I&rsquo;m an inveterate tinkerer and I knew if I didn&rsquo;t put the kibosh on that, I&rsquo;d
 spend all day futzing with CSS or some other stupid thing that wasn&rsquo;t writing.
 So I spent a day or two putting together <a href="https://github.com/munificent/game-programming-patterns/blob/master/script/format.py">a minimal script</a> that would
 take a file of Markdown for each chapter and convert it to HTML. Once I got it
 working, I swore to myself that I wouldn&rsquo;t monkey with it (much).</p>
 <p>Now I couldn&rsquo;t get distracted by design, style, editors, or anything. Just me, Sublime, and a handful of markdown syntax.</p>
-<h3>The shame</h3>
+<h3 id="the-shame"><a href="#the-shame">The shame<span class="anchor">#the-shame</span></a></h3>
 <p>One thing I&rsquo;d heard was that telling your friends and family that you intend to
 do something is a good way to keep yourself honest. So I totally made myself
 look like an ass and told everyone, &ldquo;Hey, I&rsquo;m gonna write a book. Because I&rsquo;m so
@@ -135,7 +161,7 @@ exactly like that, but I&rsquo;m pretty sure that&rsquo;s how it came across.</p
 <figcaption>After working at EA for seven years, they give you seven weeks
 off. I used some for my honeymoon and then started writing.</figcaption>
 </figure>
-<h3>The incentive</h3>
+<h3 id="the-incentive"><a href="#the-incentive">The incentive<span class="anchor">#the-incentive</span></a></h3>
 <p>I&rsquo;d been blogging for a year or so and one thing I&rsquo;d learned is that the
 possibility of a good Reddit discussion about my writing was <em>incredibly</em>
 effective at getting me to complete something and put it out there. So I planned
@@ -144,7 +170,7 @@ book to be done.</p><figure>
 <img class="framed" src="/image/2014/04/reddit.png">
 <figcaption>One of the first chapters posted.</figcaption>
 </figure>
-<h2>Crossing the Threshold</h2>
+<h2 id="crossing-the-threshold"><a href="#crossing-the-threshold">Crossing the Threshold<span class="anchor">#crossing-the-threshold</span></a></h2>
 <p>I rolled this all by my wife and, unbelievably, she agreed to it. Even though it
 meant she&rsquo;d have to spend even more time taking care of our infant daughter
 while I wrote. Even though she knew I&rsquo;d never finished much of anything before.</p>
@@ -184,7 +210,7 @@ chapters done. Unfortunately (but unsurprisingly and understandably) my
 publisher was a little hesitant to have me put them all online, so I didn&rsquo;t get
 that jolt of dopamine every time someone on the Internet acknowledged my
 existence.</p>
-<h2>The Ordeal</h2>
+<h2 id="the-ordeal"><a href="#the-ordeal">The Ordeal<span class="anchor">#the-ordeal</span></a></h2>
 <p>I thought I was back on track but then something funny happened. It turned out I
 didn&rsquo;t need to pad my résumé after all. I got a new job. Outside of the game
 industry and in the city we were desperately hoping to move to.</p>
@@ -206,7 +232,7 @@ written. Every now and then I would get a long, wonderful email from someone
 telling me how a chapter really helped some abstract concept click in their mind
 and how they couldn&rsquo;t wait for the next chapter. Good God, their enthusiasm made
 me feel terrible.</p>
-<h2>Resurrection and Rebirth</h2>
+<h2 id="resurrection-and-rebirth"><a href="#resurrection-and-rebirth">Resurrection and Rebirth<span class="anchor">#resurrection-and-rebirth</span></a></h2>
 <p>About a year ago, I had an unpleasant realization: as I got farther and farther
 from my days as a professional game developer, my expertise was getting out of
 date. <em>I was losing the ability to finish the book.</em></p>
@@ -226,14 +252,14 @@ weird desire not to break the chain made me drag myself off my ass and at least
 write <em>something</em>, and once those 178 words were done, I was that much closer to
 the end. The next day, I did 889 words. The day after that, I finished the first
 draft of the chapter.</p>
-<h2>Interlude: How a Chapter is Made!</h2>
+<h2 id="interlude-how-a-chapter-is-made"><a href="#interlude-how-a-chapter-is-made">Interlude: How a Chapter is Made!<span class="anchor">#interlude-how-a-chapter-is-made</span></a></h2>
 <p>I got so wrapped up in my own little narcissistic narrative I forgot to tell you
 anything useful about the actual mechanics of how I write! Since I decided to
 post chapters online as I completed them, I knew I couldn&rsquo;t just do a first
 draft of the whole book before revising anything. Trust me, <em>no one</em> wants to
 read a first draft. Instead, I treat each chapter like a little standalone piece
 of writing. I do it like this:</p>
-<h3>1. Outline the chapter</h3>
+<h3 id="1-outline-the-chapter"><a href="#1-outline-the-chapter">1. Outline the chapter<span class="anchor">#1-outline-the-chapter</span></a></h3>
 <p>Most of the chapters have the same top level structure, but within those
 headings, I do a pretty detailed outline of what points I want to cover and how
 they flow together. By the end, I have basically all of the material for the
@@ -252,7 +278,7 @@ say, said really poorly.</p>
   - this can work for simple games (minesweeper, solitaire)</pre>
 <p>I don&rsquo;t think those bullet points or indentation even mean anything. It&rsquo;s just
 word salad.</p>
-<h3>2. Write the code</h3>
+<h3 id="2-write-the-code"><a href="#2-write-the-code">2. Write the code<span class="anchor">#2-write-the-code</span></a></h3>
 <p>The outline will hint at the example code so I know what blocks of code need to
 be written. Then I come back and write the actual code. Sometimes I&rsquo;ll
 interleave this with writing the text, other times I&rsquo;ll do all of the code up
@@ -279,7 +305,7 @@ the *class* of the prototype, it clones its *state* too...</pre>
   <span class="i">use</span><span class="p">(</span><span class="i">ghostSpawner</span><span class="p">);</span>
 <span class="p">}</span></pre>
 <p>It stitches in those two lines of code and we&rsquo;re good!</p>
-<h3>3. Write the first draft</h3>
+<h3 id="3-write-the-first-draft"><a href="#3-write-the-first-draft">3. Write the first draft<span class="anchor">#3-write-the-first-draft</span></a></h3>
 <p>I <em>hate</em> first drafts. I hate the blank page. I do a detailed outline up front
 to try to make this easier. And then I rush through this as quick as I can to
 get it over with. Even so, this part takes the longest and I usually only get
@@ -287,7 +313,7 @@ about 500 words a day on it.</p>
 <p>I try to silence my internal critic during this phase so I can keep making
 forward progress. I rely heavily on later revisions. Knowing I will edit later
 gives me the freedom to <em>not</em> edit now.</p>
-<h3>4. Do the second draft</h3>
+<h3 id="4-do-the-second-draft"><a href="#4-do-the-second-draft">4. Do the second draft<span class="anchor">#4-do-the-second-draft</span></a></h3>
 <p>As soon as the first draft is done, I circle back and do the second. This
 involves fixing all of the mistakes, bad grammar, and poor flow of the first
 draft. Sometimes, there&rsquo;s major surgery here when I decide something I crammed
@@ -305,7 +331,7 @@ the final piece. I can get about 1,000 words of this done a day.</p>
 satisfying as refactoring messy code. It&rsquo;s less stressful because I feel like
 anything I do now just makes it better but the chapter is safely <em>complete</em>
 regardless. There&rsquo;s no more scary blank page, so editing is just pure goodness.</p>
-<h3>5. Do the third draft</h3>
+<h3 id="5-do-the-third-draft"><a href="#5-do-the-third-draft">5. Do the third draft<span class="anchor">#5-do-the-third-draft</span></a></h3>
 <p>This is the home stretch. At this point, the chapter is almost in its final
 form. For this last pass, what I&rsquo;m looking for is mistakes and rhythm.</p>
 <p>I read the entire chapter <em>out loud</em>. I can&rsquo;t stress enough how helpful it is.
@@ -314,7 +340,7 @@ it through your lips you&rsquo;ll find all of the wrinkles. This fixes awkward
 repetition and bad cadence. When the prose <em>reads</em> naturally and easily, that&rsquo;s
 not because it was easy and natural to <em>write</em>. It&rsquo;s because I edited the hell
 out of it.</p>
-<h3>6. Illustrations</h3>
+<h3 id="6-illustrations"><a href="#6-illustrations">6. Illustrations<span class="anchor">#6-illustrations</span></a></h3>
 <p>The last thing I do is draw a few illustrations for the chapter. I think visuals
 are <em>hugely</em> important for making abstract concepts concrete in the user&rsquo;s mind.</p>
 <p>I spent a lot of time trying to figure out how I wanted to illustrate the book.
@@ -331,12 +357,12 @@ Tufte</a>-quality diagrams.</p><figure>
   <img class="framed" src="/image/2014/04/illustrations.jpg">
   <figcaption>Some of the 66 hand-drawn illustrations.</figcaption>
 </figure>
-<h3>7. Publish and fix bugs</h3>
+<h3 id="7-publish-and-fix-bugs"><a href="#7-publish-and-fix-bugs">7. Publish and fix bugs<span class="anchor">#7-publish-and-fix-bugs</span></a></h3>
 <p>At this point, I think the chapter is done. I put it online and tell the world,
 and immediately they point out a bunch of glaringly obvious bugs that somehow
 survived several rounds of editing. I fix those, and <em>now</em> the chapter is mostly
 solid.</p>
-<h2>The Long Road</h2>
+<h2 id="the-long-road"><a href="#the-long-road">The Long Road<span class="anchor">#the-long-road</span></a></h2>
 <p>OK, where were we? I started logging each day&rsquo;s work in <a href="https://github.com/munificent/game-programming-patterns/blob/master/note/log.txt">a little text
 file</a>. Less than two weeks later, the chapter was done:</p>
 <pre class="highlight language-text">2013-06-18 - Finish third draft of Game Loop
@@ -387,7 +413,7 @@ Instead, I did what comic strip artists do: I banked some days. For two days
 leading up to the trip, I wrote two sessions a day. Then I wrote early in the
 morning before leaving, so I only ended up skipping one day. I basically loaned
 myself the time, with interest.</p>
-<h2>Refusal of the Return</h2>
+<h2 id="refusal-of-the-return"><a href="#refusal-of-the-return">Refusal of the Return<span class="anchor">#refusal-of-the-return</span></a></h2>
 <p>Once I started putting chapters online again, people started noticing. I got
 that feedback and encouragement that I thrive on and I was delighted to have
 stuff to talk about on Reddit again.</p>
@@ -449,7 +475,7 @@ the book&rsquo;s site saying the book was a work-in-progress and to sign up if y
 want to know when chapters come out. As of this morning, I have a little over
 3,000 subscribers, which is probably more reach than a &ldquo;real&rdquo; publisher would
 have given me.</p>
-<h2>Finishing the Damn Thing</h2>
+<h2 id="finishing-the-damn-thing"><a href="#finishing-the-damn-thing">Finishing the Damn Thing<span class="anchor">#finishing-the-damn-thing</span></a></h2>
 <p>Once I had that decided and squared away, all that was left was to write the
 rest of the chapters. So I wrote. And wrote. And wrote. Every single day. I
 wrote while my wife gave the kids a bath. I wrote at five in the morning before
@@ -470,64 +496,38 @@ the manuscript was complete.</p>
 <p>I&rsquo;ve wanted to be able to claim that I&rsquo;ve written a book for so long that it
 feels weird to finally be on the other side of the finish line. I wrote a book.
 Not &ldquo;want to write&rdquo;. Not &ldquo;will write&rdquo;. Not even &ldquo;am writing&rdquo;. <em>Wrote.</em></p>
-  <div class="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'journal-stuffwithstuff';
-        var disqus_url = "https://journal.stuffwithstuff.com/2014/04/22/zero-to-95688-how-i-wrote-game-programming-patterns/";
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2014/04/22/zero-to-95688-how-i-wrote-game-programming-patterns/";
 
-        (function() {
-            var dsq = document.createElement('script');
-            dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
 </article>
-<nav>
-  <div class="nav-first">
-    <a href="/"><img src="/image/dogshot_square.jpg" class="bob"></a>
-    <p>Hi! I'm <strong>Bob Nystrom</strong>, the one on the left. I wrote <a href="https://gameprogrammingpatterns.com/"><strong>Game Programming Patterns</strong></a> and <a href="https://craftinginterpreters.com"><strong>Crafting Interpreters</strong></a>.</p>
-    <p>I make electronic music under the name <a href="https://tinywir.es/"><strong>Tiny Wires</strong></a>.</p>
-    <p>You can follow me on Mastodon at <a href="https://mastodon.social/@munificent"><code>@munificent</code></a> or email me at <code>robert</code> at this site.</p>
-  </div>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
   <div class="nav-second">
-    <h2>Tags</h2>
-    <ul>
-      <li><a href="/category/blog">blog</a></li>
-      <li><a href="/category/book">book</a></li>
-      <li><a href="/category/c">c</a></li>
-      <li><a href="/category/c-sharp">c-sharp</a></li>
-      <li><a href="/category/code">code</a></li>
-      <li><a href="/category/cpp">cpp</a></li>
-      <li><a href="/category/dart">dart</a></li>
-      <li><a href="/category/design">design</a></li>
-      <li><a href="/category/f-sharp">f-sharp</a></li>
-      <li><a href="/category/finch">finch</a></li>
-      <li><a href="/category/game-dev">game-dev</a></li>
-      <li><a href="/category/game-patterns">game-patterns</a></li>
-      <li><a href="/category/go">go</a></li>
-      <li><a href="/category/java">java</a></li>
-      <li><a href="/category/javascript">javascript</a></li>
-      <li><a href="/category/js">js</a></li>
-      <li><a href="/category/language">language</a></li>
-      <li><a href="/category/lua">lua</a></li>
-      <li><a href="/category/magpie">magpie</a></li>
-      <li><a href="/category/music">music</a></li>
-      <li><a href="/category/parsing">parsing</a></li>
-      <li><a href="/category/personal">personal</a></li>
-      <li><a href="/category/python">python</a></li>
-      <li><a href="/category/roguelike">roguelike</a></li>
-      <li><a href="/category/ruby">ruby</a></li>
-      <li><a href="/category/vgs">vgs</a></li>
-    </ul>
-    <p class="archive"><a href="/archive">All articles&hellip;</a></p>
-<p>This blog is built using a bespoke static site generator. The source repo
-is <a href="https://github.com/munificent/journal">here</a>.</p>
-<p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
   </div>
-</nav>    </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
   </body>
-</html>
+ </html>

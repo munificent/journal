@@ -1,6 +1,6 @@
 ---
 title: "Amaranth, an Open Source Roguelike in C#"
-tags: c-sharp code game-dev roguelike
+tags: c-sharp game-dev roguelike
 ---
 
 <div class="update">

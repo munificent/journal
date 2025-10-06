@@ -1,6 +1,6 @@
 ---
 title: "Avoiding Overload Hell in C#"
-tags: c-sharp code
+tags: c-sharp
 ---
 
 <div class="update">

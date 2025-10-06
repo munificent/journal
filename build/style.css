@@ -4,7 +4,7 @@
 }
 
 .grid {
-  background: url("/image/grid2.png");
+  background: url("/image/grid.png");
   z-index: 100;
   position: absolute;
   left: 0;
@@ -416,10 +416,12 @@ table.archive {
   width: 100%;
   border-collapse: collapse;
   background-color: inherit;
+  table-layout: fixed;
+  line-height: 31px;
 }
 table.archive thead td {
   padding: 10px 0 0 0;
-  height: 20px;
+  height: 21px;
   color: light-dark(rgb(193.8, 189.38, 183.6), rgb(72.42, 79.05, 85.68));
   border-bottom: solid 1px light-dark(rgb(193.8, 189.38, 183.6), rgb(72.42, 79.05, 85.68));
   font: 14px/16px "IBM Plex Mono", Courier, monospace;
@@ -428,25 +430,33 @@ table.archive td {
   margin: 0;
   padding: 0;
 }
-table.archive tbody tr:hover {
-  background-color: light-dark(rgb(222.4875, 220.1075, 216.1125), rgb(29.07, 34.425, 39.78));
+table.archive tbody tr {
+  border-bottom: solid 1px light-dark(rgb(193.8, 189.38, 183.6), rgb(72.42, 79.05, 85.68));
 }
 table.archive tbody tr:first-child td {
-  padding-top: 43px;
+  padding-top: 11px;
 }
 table.archive td.date, table.archive td.tags {
   font-size: 14px;
   font-family: "IBM Plex Mono", Courier, monospace;
 }
 table.archive td.date {
-  width: 128px;
+  width: 105px;
+}
+table.archive td.title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 table.archive td.tags {
   width: 320px;
-  padding-left: 16px;
+  padding-left: 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
-table.archive tr + tr.year td {
-  padding-top: 16px;
+table.archive tbody td.date {
+  color: light-dark(rgb(193.8, 189.38, 183.6), rgb(72.42, 79.05, 85.68));
 }
 
 .highlight span.p {
@@ -521,24 +531,6 @@ table.archive tr + tr.year td {
 .dsq-comment-text blockquote {
   padding-left: 16px;
   color: #777;
-}
-
-.post-box {
-  display: table;
-}
-.post-box .date {
-  display: table-cell;
-  font: 13px "Asap", "Open Sans", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-  width: 96px;
-}
-.post-box .title {
-  display: table-cell;
-  padding: 0;
-  font: 15px/24px "Petrona", Georgia, serif;
-}
-
-.post-box + h4 {
-  margin-top: 24px;
 }
 
 @media only screen and (max-width: 1088px) {
@@ -616,5 +608,8 @@ table.archive tr + tr.year td {
   }
   nav .tags {
     display: block;
+  }
+  td.tags {
+    display: none;
   }
 }

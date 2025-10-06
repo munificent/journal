@@ -1,6 +1,6 @@
 ---
 title: "Type Checking If Expressions"
-tags: code language vgs
+tags: language vgs
 ---
 
 I have this hobby project I've been hacking on for several years. It's a fantasy

@@ -1,6 +1,6 @@
 ---
 title: "Multimethods, Multiple Inheritance, Multiawesome!"
-tags: code cpp java js language magpie
+tags: cpp java js language magpie
 ---
 
 The luxury of having [a programming language with zero users][magpie] is that I

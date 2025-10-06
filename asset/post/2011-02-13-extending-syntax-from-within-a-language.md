@@ -1,6 +1,6 @@
 ---
 title: "Extending Syntax from Within a Language"
-tags: code java language magpie parsing
+tags: java language magpie parsing
 ---
 
 A [big goal][] with my little language [Magpie][] is to do as much as possible

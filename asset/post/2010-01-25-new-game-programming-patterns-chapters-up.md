@@ -1,6 +1,6 @@
 ---
 title: "New Game Programming Patterns Chapters Up!"
-tags: code cpp game-patterns
+tags: cpp game-patterns
 ---
 
 I've finally gotten a chance to get some new chapters online for *[Game

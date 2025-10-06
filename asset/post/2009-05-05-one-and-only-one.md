@@ -1,6 +1,6 @@
 ---
 title: "One and Only One"
-tags: code language magpie
+tags: language magpie
 ---
 
 My little language [Magpie][] has a feature that may at first seem really

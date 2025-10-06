@@ -1,6 +1,6 @@
 ---
 title: "New Chapter Up: Component"
-tags: code cpp game-dev game-patterns
+tags: cpp game-dev game-patterns
 ---
 
 I've got another chapter of [the book][gpp] online: [Component][]. I think it's

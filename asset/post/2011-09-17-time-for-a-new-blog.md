@@ -1,9 +1,12 @@
 ---
 title: "Time for a New Blog"
-tags: blog
+tags: blog design
 ---
 
-I finally got tired enough of dealing with WordPress's admin interface and writing posts in HTML to do something about it, and I've redone this here blog. Now it's all [blogofile][]. I can edit in [markdown][] and preview locally. All of my content is backed up just by pushing it to [github][].
+I finally got tired enough of dealing with WordPress's admin interface and
+writing posts in HTML to do something about it, and I've redone this here blog.
+Now it's all [blogofile][]. I can edit in [markdown][] and preview locally. All
+of my content is backed up just by pushing it to [github][].
 
 [blogofile]: http://www.blogofile.com
 [markdown]: http://daringfireball.net/projects/markdown/
@@ -13,9 +16,14 @@ It also got a facelift in the process.
 
 ## The new design
 
-The old design was based around a 500 pixel column with 14 pixel text. As resolutions have grown, that started to look tiny. Now it's 640 pixels wide using a 16 pixel body font. Like the old site, the new one is designed to rigidly adhere to a baseline grid. This time, the grid is 24 pixels tall.
+The old design was based around a 500 pixel column with 14 pixel text. As
+resolutions have grown, that started to look tiny. Now it's 640 pixels wide
+using a 16 pixel body font. Like the old site, the new one is designed to
+rigidly adhere to a baseline grid. This time, the grid is 24 pixels tall.
 
-I'm using the [Google Font API][fonts] to go beyond the half dozen safe webfonts, but just barely. Titles are using [Varela Round][], but should fallback to Georgia and look OK if it's missing.
+I'm using the [Google Font API][fonts] to go beyond the half dozen safe
+webfonts, but just barely. Titles are using [Varela Round][], but should
+fallback to Georgia and look OK if it's missing.
 
 [fonts]: https://fonts.google.com/
 [varela round]: https://fonts.google.com/specimen/Varela+Round

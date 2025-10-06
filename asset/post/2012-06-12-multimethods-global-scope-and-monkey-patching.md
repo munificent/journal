@@ -1,6 +1,6 @@
 ---
 title: "Multimethods, Global Scope, and Monkey-Patching"
-tags: code language magpie
+tags: language magpie
 ---
 
 <blockquote class="cited">

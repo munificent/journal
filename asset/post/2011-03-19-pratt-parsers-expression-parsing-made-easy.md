@@ -1,6 +1,6 @@
 ---
 title: "Pratt Parsers: Expression Parsing Made Easy"
-tags: code java js language magpie parsing
+tags: java js language magpie parsing
 ---
 
 Every now and then, I stumble onto some algorithm or idea that's so clever and

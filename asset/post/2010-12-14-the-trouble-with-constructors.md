@@ -1,6 +1,6 @@
 ---
 title: "The Trouble with Constructors"
-tags: code language magpie
+tags: language magpie
 ---
 
 Every fledgling programming language exists somewhere on the continuum between

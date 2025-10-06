@@ -1,6 +1,6 @@
 ---
 title: "A C# Feature Request: Extension Classes"
-tags: c-sharp code
+tags: c-sharp
 ---
 
 As you [may have noticed][ext], I'm a big fan of [extension methods][] in C#

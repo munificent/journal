@@ -1,6 +1,6 @@
 ---
 title: "Type Checking a Dynamic Language"
-tags: code java language magpie python
+tags: java language magpie python
 ---
 
 If you're going down the strange path of building a language that's half-

@@ -1,6 +1,6 @@
 ---
 title: "The Impoliteness of Overriding Methods"
-tags: code language beta oop
+tags: language beta oop
 ---
 
 Over the weekend, I was reading one of the shagadelic papers on [Self][],

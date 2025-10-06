@@ -1,6 +1,6 @@
 ---
 title: "Using an Iterator as a Game Loop"
-tags: c-sharp code game-dev roguelike
+tags: c-sharp game-dev roguelike
 ---
 
 If you've ever worked on a game before (and if you code, you probably have, at

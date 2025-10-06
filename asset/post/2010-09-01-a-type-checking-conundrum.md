@@ -1,6 +1,6 @@
 ---
 title: "A Type Checking Conundrum!"
-tags: code language magpie
+tags: language magpie
 ---
 
 Ever since I decided to mesh the worlds of static and dynamic typing together in

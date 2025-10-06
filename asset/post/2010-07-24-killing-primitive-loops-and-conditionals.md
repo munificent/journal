@@ -1,6 +1,6 @@
 ---
 title: "Killing Primitive Loops and Conditionals"
-tags: code finch language
+tags: finch language
 ---
 
 The challenge I had giving my talk on [Finch][] at the Emerging Languages Camp

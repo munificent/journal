@@ -1,6 +1,6 @@
 ---
 title: Setting Up an SDL3 Mac App in XCode 16
-tags: game-dev code macos
+tags: game-dev macos
 ---
 
 This is mainly a note for my future self, but making it a blog post in case it

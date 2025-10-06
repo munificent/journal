@@ -1,6 +1,6 @@
 ---
 title: "ML-Style Pattern Matching in C#"
-tags: c-sharp code f-sharp language
+tags: c-sharp f-sharp language
 ---
 
 There's nothing like travelling abroad to make you see your home country with

@@ -1,6 +1,6 @@
 ---
 title: "The Hardest Program I've Ever Written"
-tags: dart code
+tags: dart
 ---
 
 <style>

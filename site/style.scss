@@ -115,7 +115,7 @@ $comments-bg:             light-dark(ink(4%), ink-dk(4%));
 }
 
 .grid {
-  background: url("/image/grid2.png");
+  background: url("/image/grid.png");
   z-index: 100;
   position: absolute;
   left: 0;
@@ -578,10 +578,12 @@ table.archive {
   width: 100%;
   border-collapse: collapse;
   background-color: inherit;
+  table-layout: fixed;
+  line-height: $row - 1;
 
   thead td {
     padding: 10px 0 0 0;
-    height: $row - 12;
+    height: $row - 11;
 
     color: $line-color;
     border-bottom: solid 1px $line-color;
@@ -593,31 +595,44 @@ table.archive {
     padding: 0;
   }
 
-  tbody tr:hover {
-    background-color: $code-bg;
+  tbody tr {
+    border-bottom: solid 1px $line-color;
   }
 
   tbody tr:first-child td {
-    padding-top: 43px;
+    padding-top: 11px;
   }
 
   td.date, td.tags {
     font-size: 14px;
-    font-family: $mono;    
+    font-family: $mono;
   }
 
   td.date {
-    width: $col * 2;
+    width: 105px;
+  }
+
+  td.title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   td.tags {
     width: $col * 5;
-    padding-left: 16px;
+    padding-left: 8px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
-  tr + tr.year td {
-    padding-top: 16px;
+  tbody td.date {
+    color: $line-color;
   }
+
+  // tr + tr.year td {
+  //   padding-top: 16px;
+  // }
 }
 
 // Syntax highlighting:
@@ -713,26 +728,6 @@ table.archive {
   color: #777;
 }
 
-.post-box {
-  display: table;
-
-  .date {
-    display: table-cell;
-    font: 13px $sans;
-    width: 96px;
-  }
-
-  .title {
-    display: table-cell;
-    padding: 0;
-    font: 15px/24px $serif;
-  }
-}
-
-.post-box + h4 {
-  margin-top: 24px;
-}
-
 // Get rid of the sidebar column.
 @media only screen and (max-width: 1088px) {
   // Make the article full-width.
@@ -818,5 +813,10 @@ table.archive {
       padding-bottom: 16px;
     }
     .tags { display: block; }
+  }
+
+  // Hide the tags column on archive pages.
+  td.tags {
+    display: none;
   }
 }

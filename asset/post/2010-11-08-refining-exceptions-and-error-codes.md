@@ -1,6 +1,6 @@
 ---
 title: "Refining Exceptions and Error Codes"
-tags: code language magpie
+tags: language magpie
 ---
 
 I've been thinking a lot about error-handling in [Magpie][], and I wanted to

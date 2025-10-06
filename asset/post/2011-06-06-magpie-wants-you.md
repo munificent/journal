@@ -1,11 +1,13 @@
 ---
 title: "Magpie Wants You!"
-tags: code language magpie oscon
+tags: language magpie oscon
 ---
 
 <div class="update">
-<p><em>Update 2021/09/12:</em> Magpie is very old and long-dead at this point. I learned a lot from it, but I&rsquo;m no longer maintaining it.
-</p>
+
+*Update 2021/09/12:* Magpie is very old and long-dead at this point. I learned a
+lot from it, but I'm no longer maintaining it.
+
 </div>
 
 I've been very fortunate to get lots of feedback and encouragement so far while

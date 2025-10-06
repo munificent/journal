@@ -1,6 +1,6 @@
 ---
 title: "What the Hero Sees: Field-of-View for Roguelikes"
-tags: code game roguelike
+tags: game-dev roguelike
 ---
 
 <style>

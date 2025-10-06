@@ -1,6 +1,6 @@
 ---
 title: "C# Extension Methods: Not Just for Breakfast"
-tags: c-sharp code
+tags: c-sharp
 ---
 
 When I first started reading about C# 3.0, one of the new features that caught

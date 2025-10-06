@@ -1,6 +1,6 @@
 ---
 title: "The Language I Wish Go Was"
-tags: code go language
+tags: go language
 ---
 
 By all rights, I should love [Go][]. I like low-level languages. I'm comfortable

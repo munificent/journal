@@ -1,10 +1,15 @@
 ---
 title: "Wrapping My Head Around Optional Typing"
-tags: code language dart
+tags: language dart
 ---
 
 <div class="update">
-<p><em>Update 2018/02/22:</em> With the release of <a href="https://medium.com/dartlang/announcing-dart-2-80ba01f43b6">Dart 2.0</a>, Dart <a href="https://dart.dev/dart-2">removed optional types</a> in favor of a full static type system with inference.</p>
+
+*Update 2018/02/22:* With the release of [Dart
+2.0](https://medium.com/dartlang/announcing-dart-2-80ba01f43b6), Dart [removed
+optional types](https://dart.dev/dart-2) in favor of a full static type system
+with inference.
+
 </div>
 
 One of the really cool parts about being involved with [Dart][] is that I get a

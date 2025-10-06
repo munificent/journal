@@ -1,6 +1,6 @@
 ---
 title: "What Color is Your Function?"
-tags: code language dart lua go javascript
+tags: language dart lua go javascript
 ---
 
 I don't know about you, but nothing gets me going in the morning quite like a

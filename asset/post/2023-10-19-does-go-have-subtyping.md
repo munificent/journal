@@ -1,6 +1,6 @@
 ---
 title: "Does Go Have Subtyping?"
-tags: code go language vgs
+tags: go language vgs
 ---
 
 I've been [noodling on a static type system][hobby] for my current hobby

@@ -1,6 +1,6 @@
 ---
 title: "JavaScript Isn't Scheme"
-tags: code language js scheme
+tags: language js scheme
 ---
 
 It seems like I can't spend five minutes on reddit these days without someone

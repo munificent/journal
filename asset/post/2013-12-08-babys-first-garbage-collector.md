@@ -1,6 +1,6 @@
 ---
 title: "Baby's First Garbage Collector"
-tags: code c language
+tags: c language
 ---
 
 When I get stressed out and have too much to do, I have this paradoxical

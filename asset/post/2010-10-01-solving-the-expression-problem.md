@@ -1,6 +1,6 @@
 ---
 title: "Solving the Expression Problem"
-tags: code java language magpie
+tags: java language magpie
 ---
 
 I started working on Magpie out of frustration with a lot of the languages I

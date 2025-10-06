@@ -1,11 +1,15 @@
 ---
 title: "A Proposal for Null-Safety in Dart"
-tags: code dart language
+tags: dart language
 ---
 
 <div class="update">
-<p><em>Update 2021/03/03:</em> With the release of <a href="https://medium.com/dartlang/announcing-dart-2-12-499a6e689c87">Dart 2.12</a>, Dart <a href="https://dart.dev/null-safety">supports sound null safety</a>. Had to wait about ten
-years, but I got it!</p>
+
+*Update 2021/03/03:* With the release of [Dart
+2.12](https://medium.com/dartlang/announcing-dart-2-12-499a6e689c87), Dart
+[supports sound null safety](https://dart.dev/null-safety). Had to wait about
+ten years, but I got it!
+
 </div>
 
 Page 75 of the current (0.04) draft of [the Dart language spec][spec] has this

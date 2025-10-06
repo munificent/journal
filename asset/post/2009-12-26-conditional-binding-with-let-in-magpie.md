@@ -1,6 +1,6 @@
 ---
 title: "Conditional Binding with \"let\" in Magpie"
-tags: code language magpie
+tags: language magpie
 ---
 
 Magpie, as an imperative language, has the usual control flow structures you

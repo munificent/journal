@@ -3,8 +3,6 @@ title: "Rooms and Mazes: A Procedural Dungeon Generator"
 tags: game-dev roguelike dart
 ---
 
-<!-- TODO: Now that the canvas is bigger, up the resolution. -->
-
 Several months ago I promised a follow-up to my previous blog post about
 [turn-based game loops][game loop] in [my roguelike][hauberk]. Then I got
 completely sidetracked by [self-publishing][book 1] [my book][book 2], [*Game
@@ -37,9 +35,9 @@ family's Apple IIe. It filled the screen with a grid of green squares, then
 incrementally cut holes in the walls. Eventually, every square of the grid was
 connected and the screen was filled with a complete, perfect maze.
 
-My little home computer could create something that had deep structure -- every
-square of the maze could be reached from any other -- and yet it seemed to be
-chaotic -- it carved at random and every maze was different. This was enough to
+My little home computer could create something that had deep structure. Every
+square of the maze could be reached from any other. And yet it seemed to be
+chaotic: it carved at random and every maze was different. This was enough to
 blow my ten-year-old mind. It still kind of does today.
 
 ## What's in a dungeon?
@@ -75,8 +73,9 @@ It must balance a number of technical and aesthetic constraints. For mine, I foc
 
     This is vital because if player has to complete a quest like "find the magic
     chalice" or "kill the cockatrice", it's pretty cruel if the dungeon drops
-    that in some walled-off room the player can't get to. It also avoids wasting
-    time generating and populating areas the player can never see.
+    that goal in some walled-off room the player can't get to. A fully-connected
+    dungeon also avoids wasting time generating and populating areas the player
+    can never see.
 
 *   Further, I want dungeons to **not be perfect.** "Perfect" in the context of
     mazes and graphs (which are synonymous) means there is *only one* path
@@ -154,17 +153,19 @@ fuller&mdash;after all, you can only fit so many rooms in a given area&mdash;but
 tuning this gives you some control over room density, like so:
 
 <figure class="wide">
-  <canvas id="rooms" width="570" height="390">Sorry, you need canvas support for this demo.</canvas>
+  <canvas id="rooms">
+      Sorry, you need canvas support for this demo.
+  </canvas>
   <figcaption>
-    <label for="attempts">Attempts:</label>
-    <input type="range" id="attempts" min="10" value="200" max="1000">
-    <output for="attempts" id="attempts-output">200</output>
+  <label for="attempts">Attempts:</label>
+  <input type="range" id="attempts" min="1" value="20" max="1000">
+  <output for="attempts" id="attempts-output">20</output>
   </figcaption>
 </figure>
 
 ## A dark and twisty passageway
 
-Most of the dungeon generators I've written start with this. The hard part, by
+Most of the dungeon generators I've written start with this. The harder part, by
 far, is making good passageways to connect them. That's really what this post is
 about -- a neat way to solve that problem.
 
@@ -231,12 +232,13 @@ dead end if you follow passages long enough. Jamis' solution is to not erase
 *all* of the dead ends, just some. It stops after a while. Something like this:
 
 <figure class="wide">
-  <canvas id="dead-ends" width="570" height="390">Sorry, you need canvas
-  support for this demo.</canvas>
+  <canvas id="dead-ends">
+      Sorry, you need canvas support for this demo.
+  </canvas>
   <figcaption>
-    <label for="dead-end-open">Corridors to leave:</label>
-    <input type="range" id="dead-end-open" min="1" value="1000" max="3000">
-    <output for="dead-end-open" id="dead-end-open-output">1000</output>
+  <label for="dead-end-remove">Dead ends to remove:</label>
+  <input type="range" id="dead-end-remove" min="1" value="1000" max="2400">
+  <output for="dead-end-remove" id="dead-end-remove-output">1000</output>
   </figcaption>
 </figure>
 
@@ -279,7 +281,7 @@ and mazes.
 [flood fill]: http://en.wikipedia.org/wiki/Flood_fill
 
 <figure class="wide">
-  <canvas id="maze-fill" width="570" height="390">
+  <canvas id="maze-fill">
       Sorry, you need canvas support for this demo.
   </canvas>
   <figcaption>
@@ -287,13 +289,18 @@ and mazes.
   </figcaption>
 </figure>
 
+Often, a single large maze ends up filling all of the interstitial areas between
+the rooms. But if you look carefully (and maybe click a few times to generate
+new ones), you'll see a few smaller disconnected mazes of different colors
+filling in odd corners of the map.
+
 ## Looking for a connection
 
-All that remains is to stitch those back together into a single continuous
-dungeon. Fortunately, that's pretty easy to do. The room generator chooses odd
-sizes and positions for rooms so they are aligned with the mazes. Those in turn
-fill in all of the unused area, so we're assured that each unconnected region is
-only a single tile away from its neighbors.
+All that remains is to stitch the rooms and the mazes between them back together
+into a single continuous dungeon. Fortunately, that's pretty easy to do. The
+room generator chooses odd sizes and positions for rooms so they are aligned
+with the mazes. Those in turn fill in all of the unused area, so we're assured
+that each unconnected region is only a single tile away from its neighbors.
 
 After filling in the rooms and mazes, we find all of those possible
 *connectors*. These are tiles that are:
@@ -305,7 +312,7 @@ After filling in the rooms and mazes, we find all of those possible
 Here they are highlighted:
 
 <figure class="wide">
-  <canvas id="connectors" width="570" height="390">
+  <canvas id="connectors">
       Sorry, you need canvas support for this demo.
   </canvas>
 </figure>
@@ -354,16 +361,10 @@ got. We only allow a single connector between any two regions so our dungeon
 *is* a tree and there's only a single path between any two points.
 
 Fixing that is pretty simple. In step 3, when we cull the unneeded connectors,
-we give them a *slight* chance of being opened up. Something like:
-
-```dart
-if (rng.oneIn(50)) _carve(pos, CELL_DOOR);
-```
-
-This occasionally carves an extra opening between regions. That gives us the
-imperfect loops we want to make the dungeon more fun to play in. Note that this
-is also easily tunable. If we make the chance more likely, we get more densely
-connected dungeons.
+we give them a *slight* chance of being opened up even though they no longer
+connect disconnected regions. That gives us the imperfect loops we want to make
+the dungeon more fun to play in. Note that this is also easily tunable. If we
+make the chance more likely, we get more densely connected dungeons.
 
 ## Uncarving
 
@@ -412,10 +413,27 @@ As a bonus for making it this far, here's a super dense giant dungeon. I find it
 hypnotic:
 
 <figure class="wide">
-  <canvas id="giant" width="570" height="390">
+  <canvas id="giant">
       Sorry, you need canvas support for this demo.
   </canvas>
+  <figcaption>
+    
+  <label for="giant-rooms">Rooms:</label>
+  <input type="range" id="giant-rooms" min="1" value="1000" max="10000">
+  <output for="giant-rooms" id="giant-rooms-output">1000</output>
+
+  <label for="giant-room-size">Max room size:</label>
+  <input type="range" id="giant-room-size" min="5" value="10" max="40">
+  <output for="giant-room-size" id="giant-room-size-output">10</output>
+
+  <label for="giant-wiggle">Wiggle:</label>
+  <input type="range" id="giant-wiggle" min="0" value="50" max="100">
+  <output for="giant-wiggle" id="giant-wiggle-output">50</output>
+
+  <label for="giant-speed">Speed:</label>
+  <input type="range" id="giant-speed" min="1" value="10" max="100">
+  <output for="giant-speed" id="giant-speed-output">10</output>
+  </figcaption>
 </figure>
 
-<script type="application/dart" src="/code/2014-12-21-rooms-and-mazes/main.dart"></script>
-<script src="/code/2014-12-21-rooms-and-mazes/packages/browser/dart.js"></script>
+<script src="/code/2014-12-21-rooms-and-mazes/main.dart.js"></script>

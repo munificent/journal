@@ -72,7 +72,6 @@
       <a href="/category/roguelike">roguelike</a>
       </div>
 </nav>
-<!-- TODO: Now that the canvas is bigger, up the resolution. -->
 <p>Several months ago I promised a follow-up to my previous blog post about
 <a href="/2014/07/15/a-turn-based-game-loop/">turn-based game loops</a> in <a href="https://github.com/munificent/hauberk">my roguelike</a>. Then I got
 completely sidetracked by <a href="/2014/11/03/bringing-my-web-book-to-print-and-ebook/">self-publishing</a> <a href="/2014/11/20/how-my-book-launch-went/">my book</a>, <a href="http://gameprogrammingpatterns.com/"><em>Game
@@ -92,9 +91,9 @@ support for this demo.</canvas>
 family&rsquo;s Apple IIe. It filled the screen with a grid of green squares, then
 incrementally cut holes in the walls. Eventually, every square of the grid was
 connected and the screen was filled with a complete, perfect maze.</p>
-<p>My little home computer could create something that had deep structure&mdash;every
-square of the maze could be reached from any other&mdash;and yet it seemed to be
-chaotic&mdash;it carved at random and every maze was different. This was enough to
+<p>My little home computer could create something that had deep structure. Every
+square of the maze could be reached from any other. And yet it seemed to be
+chaotic: it carved at random and every maze was different. This was enough to
 blow my ten-year-old mind. It still kind of does today.</p>
 <h2 id="whats-in-a-dungeon"><a href="#whats-in-a-dungeon">What&rsquo;s in a dungeon?<span class="anchor">#whats-in-a-dungeon</span></a></h2>
 <p>Procedural generation&mdash;having the game build stuff randomly instead of using
@@ -126,8 +125,9 @@ Apple, that means from any point in the dungeon, there is a way&mdash;possibly
 circuitous&mdash;to any other point.</p>
 <p>This is vital because if player has to complete a quest like &ldquo;find the magic
 chalice&rdquo; or &ldquo;kill the cockatrice&rdquo;, it&rsquo;s pretty cruel if the dungeon drops
-that in some walled-off room the player can&rsquo;t get to. It also avoids wasting
-time generating and populating areas the player can never see.</p>
+that goal in some walled-off room the player can&rsquo;t get to. A fully-connected
+dungeon also avoids wasting time generating and populating areas the player
+can never see.</p>
 </li>
 <li>
 <p>Further, I want dungeons to <strong>not be perfect.</strong> &ldquo;Perfect&rdquo; in the context of
@@ -202,15 +202,17 @@ until a certain number of rooms are successfully <em>placed</em>, I do a fixed n
 of <em>attempts</em> to place rooms. Failure becomes more common as the dungeon gets
 fuller&mdash;after all, you can only fit so many rooms in a given area&mdash;but
 tuning this gives you some control over room density, like so:</p><figure class="wide">
-<canvas id="rooms" width="570" height="390">Sorry, you need canvas support for this demo.</canvas>
+<canvas id="rooms">
+Sorry, you need canvas support for this demo.
+</canvas>
 <figcaption>
 <label for="attempts">Attempts:</label>
-<input type="range" id="attempts" min="10" value="200" max="1000">
-<output for="attempts" id="attempts-output">200</output>
+<input type="range" id="attempts" min="1" value="20" max="1000">
+<output for="attempts" id="attempts-output">20</output>
 </figcaption>
 </figure>
 <h2 id="a-dark-and-twisty-passageway"><a href="#a-dark-and-twisty-passageway">A dark and twisty passageway<span class="anchor">#a-dark-and-twisty-passageway</span></a></h2>
-<p>Most of the dungeon generators I&rsquo;ve written start with this. The hard part, by
+<p>Most of the dungeon generators I&rsquo;ve written start with this. The harder part, by
 far, is making good passageways to connect them. That&rsquo;s really what this post is
 about&mdash;a neat way to solve that problem.</p>
 <p>Angband&rsquo;s solution is brute force but surprisingly effective. It picks a pair of
@@ -264,12 +266,13 @@ placed.</p>
 you&rsquo;ll erase the whole maze! A perfect maze has no loops so <em>everything</em> is a
 dead end if you follow passages long enough. Jamis&rsquo; solution is to not erase
 <em>all</em> of the dead ends, just some. It stops after a while. Something like this:</p><figure class="wide">
-<canvas id="dead-ends" width="570" height="390">Sorry, you need canvas
-support for this demo.</canvas>
+<canvas id="dead-ends">
+Sorry, you need canvas support for this demo.
+</canvas>
 <figcaption>
-<label for="dead-end-open">Corridors to leave:</label>
-<input type="range" id="dead-end-open" min="1" value="1000" max="3000">
-<output for="dead-end-open" id="dead-end-open-output">1000</output>
+<label for="dead-end-remove">Dead ends to remove:</label>
+<input type="range" id="dead-end-remove" min="1" value="1000" max="2400">
+<output for="dead-end-remove" id="dead-end-remove-output">1000</output>
 </figcaption>
 </figure>
 <p>Once you do that, you can start placing rooms. The process Jamis uses for this
@@ -300,19 +303,23 @@ shaped areas that surround the rooms. In other words, a maze generator is a
 randomized <a href="http://en.wikipedia.org/wiki/Flood_fill">flood fill</a> algorithm. Run this on every solid region between the
 rooms and we&rsquo;re left with the entire dungeon packed full of disconnected rooms
 and mazes.</p><figure class="wide">
-  <canvas id="maze-fill" width="570" height="390">
+  <canvas id="maze-fill">
       Sorry, you need canvas support for this demo.
   </canvas>
   <figcaption>
     Each color here represents a different region of connected tiles.
   </figcaption>
 </figure>
+<p>Often, a single large maze ends up filling all of the interstitial areas between
+the rooms. But if you look carefully (and maybe click a few times to generate
+new ones), you&rsquo;ll see a few smaller disconnected mazes of different colors
+filling in odd corners of the map.</p>
 <h2 id="looking-for-a-connection"><a href="#looking-for-a-connection">Looking for a connection<span class="anchor">#looking-for-a-connection</span></a></h2>
-<p>All that remains is to stitch those back together into a single continuous
-dungeon. Fortunately, that&rsquo;s pretty easy to do. The room generator chooses odd
-sizes and positions for rooms so they are aligned with the mazes. Those in turn
-fill in all of the unused area, so we&rsquo;re assured that each unconnected region is
-only a single tile away from its neighbors.</p>
+<p>All that remains is to stitch the rooms and the mazes between them back together
+into a single continuous dungeon. Fortunately, that&rsquo;s pretty easy to do. The
+room generator chooses odd sizes and positions for rooms so they are aligned
+with the mazes. Those in turn fill in all of the unused area, so we&rsquo;re assured
+that each unconnected region is only a single tile away from its neighbors.</p>
 <p>After filling in the rooms and mazes, we find all of those possible
 <em>connectors</em>. These are tiles that are:</p>
 <ol>
@@ -324,7 +331,7 @@ only a single tile away from its neighbors.</p>
 </li>
 </ol>
 <p>Here they are highlighted:</p><figure class="wide">
-<canvas id="connectors" width="570" height="390">
+<canvas id="connectors">
 Sorry, you need canvas support for this demo.
 </canvas>
 </figure>
@@ -372,12 +379,10 @@ gameplay. But, since this creates a spanning tree, that&rsquo;s exactly what we&
 got. We only allow a single connector between any two regions so our dungeon
 <em>is</em> a tree and there&rsquo;s only a single path between any two points.</p>
 <p>Fixing that is pretty simple. In step 3, when we cull the unneeded connectors,
-we give them a <em>slight</em> chance of being opened up. Something like:</p>
-<pre class="highlight language-dart"><span class="k">if</span> <span class="p">(</span><span class="i">rng</span><span class="p">.</span><span class="i">oneIn</span><span class="p">(</span><span class="n">50</span><span class="p">))</span> <span class="i">_carve</span><span class="p">(</span><span class="i">pos</span><span class="p">,</span> <span class="i">CELL_DOOR</span><span class="p">);</span></pre>
-<p>This occasionally carves an extra opening between regions. That gives us the
-imperfect loops we want to make the dungeon more fun to play in. Note that this
-is also easily tunable. If we make the chance more likely, we get more densely
-connected dungeons.</p>
+we give them a <em>slight</em> chance of being opened up even though they no longer
+connect disconnected regions. That gives us the imperfect loops we want to make
+the dungeon more fun to play in. Note that this is also easily tunable. If we
+make the chance more likely, we get more densely connected dungeons.</p>
 <h2 id="uncarving"><a href="#uncarving">Uncarving<span class="anchor">#uncarving</span></a></h2>
 <p>If we stop here, we&rsquo;ll get dungeons that are packed chock full of maze
 corridors, most of which are dead ends. That has a certain sadistic appeal, but
@@ -417,10 +422,23 @@ gnarly. Making them animated adds a lot of complexity. Instead, <a href="https:/
 the much cleaner implementation my game uses.</p>
 <p>As a bonus for making it this far, here&rsquo;s a super dense giant dungeon. I find it
 hypnotic:</p><figure class="wide">
-<canvas id="giant" width="570" height="390">
+<canvas id="giant">
 Sorry, you need canvas support for this demo.
 </canvas>
-</figure><script type="application/dart" src="/code/2014-12-21-rooms-and-mazes/main.dart"></script><script src="/code/2014-12-21-rooms-and-mazes/packages/browser/dart.js"></script>
+<figcaption>
+<p><label for="giant-rooms">Rooms:</label>
+<input type="range" id="giant-rooms" min="1" value="1000" max="10000">
+<output for="giant-rooms" id="giant-rooms-output">1000</output></p>
+<p><label for="giant-room-size">Max room size:</label>
+<input type="range" id="giant-room-size" min="5" value="10" max="40">
+<output for="giant-room-size" id="giant-room-size-output">10</output></p>
+<p><label for="giant-wiggle">Wiggle:</label>
+<input type="range" id="giant-wiggle" min="0" value="50" max="100">
+<output for="giant-wiggle" id="giant-wiggle-output">50</output></p>
+<p><label for="giant-speed">Speed:</label>
+<input type="range" id="giant-speed" min="1" value="10" max="100">
+<output for="giant-speed" id="giant-speed-output">10</output></p></figcaption>
+</figure><script src="/code/2014-12-21-rooms-and-mazes/main.dart.js"></script>
 <div class="comments">
   <div id="disqus_thread"></div>
   <script type="text/javascript">

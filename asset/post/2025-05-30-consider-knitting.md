@@ -5,15 +5,38 @@ tags: art knitting
 
 Let's say that, like me, you are a person who stares at a computer and writes
 code for a living. As a straight male who grew up in a time where knitting was
-very strongly female coded, it for the most part never occurred to me that
-knitting was a thing I could do and might enjoy. Regardless of your demographic
-categories and background, it's possible that you have also not really
-considered knitting.
+very strongly female coded, it for the most part <span
+name="stitch">never</span> occurred to me that knitting was a thing I could do
+and might enjoy. Regardless of your demographic categories and background, it's
+possible that you have also not really considered knitting.
+
+<aside name="stitch">
+
+In retrospect, this is pretty dumb. I *did* learn to cross-stitch when I was a
+kid and spent many hours doing that. I was mostly raised by my mom, so I
+learned a lot of crafty stuff.
+
+I also tried to learn how to crochet from my Grandmother a few times. But some
+combination of her being a mean old lady and me being left-handed made that not
+really work out.
+
+I made a friend in my twenties who was and is an avid knitter. I certainly
+admired her skills, but didn't think to ask her to teach me.
+
+</aside>
 
 This article exists to get you to do so. Specifically, I'll try to convince you,
 one software person to another, why it might be a good fit for your life and
 brain. This is a pitch for knitting, but -- for better or worse -- an extremely
 nerdily argued one.
+
+<figure>
+  <img class="framed" src="/image/2025/05/frog-and-toad.jpg">
+  <figcaption>Frog and Toad, from
+    <a href="https://www.frogandcast.com/frog-and-toad-home">this delighful
+    pattern</a>. I made these as Christmas presents for my daughters.
+  </figcaption>
+</figure>
 
 Before I start, note that when I say "knitting", you can read that as any of the
 various [fiber arts][], including crochet, weaving, macramé, cross-stitch, etc.
@@ -28,18 +51,20 @@ want. We are all fiber friends.
 I love the aesthetics of programming. Sitting in a cool quiet room, techno
 thumping in my headphones, coffee mug next to me, while a neatly arranged field
 of glowing monospace glyphs stream across my screen. But there's one sense
-unmentioned in that sentence: touch. The sense we devote more neurons to than
-any other is curiously underutilized while pumping out code.
+unmentioned in that sentence: touch.
 
-It's no surprise that some programmers [fetishize][keys 1] [keyboards][keys 2]. It's just about the only part of programming that has any physical sensation *at all*.
+The sense we devote more neurons to than any other is curiously underutilized
+while pumping out code. It's no surprise that some programmers [fetishize][keys
+1] [keyboards][keys 2]. It's just about the only part of programming that has
+any physical sensation *at all*.
 
 [keys 1]: https://www.reddit.com/r/CustomKeyboards/
 [keys 2]: https://www.reddit.com/r/MechanicalKeyboards/
 
 I got into knitting a few years after the pandemic. While I have a variety of
-hobbies, most are still staring at a screen and maybe [pushing some buttons and
-turning knobs][tiny wires]. When I wasn't doing those, I was staring at a screen
-for work, or staring at a screen for [not-work][good screen].
+hobbies, most still involve staring at a screen and maybe [pushing some buttons
+and turning knobs][tiny wires]. When I wasn't doing those, I was staring at a
+screen for work, or staring at a screen for [not-work][good screen].
 
 [tiny wires]: https://tinywir.es/
 [good screen]: https://www.reddit.com/r/memes/comments/f6omv0/enjoying_some_good_screen_now/
@@ -55,6 +80,21 @@ was frustrating and annoying. But once I had the basics down, it was like a a
 deep sigh felt in my hands. Knitting is *so* touch-centered. Skilled knitters
 can knit without looking at their hands at all -- touch alone is sufficient.
 
+<figure name="scarf">
+  <img class="framed" src="/image/2025/05/scarf.jpg">
+  <figcaption>Starting to work on a <a href="https://www.purlsoho.com/create/2020/02/07/slanting-stripes-scarf/">slanting stripes scarf</a> for myself.</figcaption>
+</figure>
+
+<aside name="scarf">
+
+I wish you could reach into this photo and feel how unbelievably soft and
+squishy this scarf is. Wearing it feels like giving myself a warm gentle hug.
+
+If I ever become a billionaire, I'm going to build an indoor swimming pool and
+fill it with Malabrigo Rios yarn.
+
+</aside>
+
 There are so many different kinds of yarn to work with and they all feel
 different. Cotton is tough and firm, like twine. Wool is soft and springy,
 forgiving as you pull stitches open to work them. Superwash wool is smooth and
@@ -65,11 +105,29 @@ performing delicate surgery. Squishy chunky wool spreads your fingers wide and
 works so quickly it's like fabric is spooling out of your hands on its own
 accord.
 
+<figure>
+  <img class="framed" src="/image/2025/05/megan-hat.jpg">
+  <figcaption>The wool for this hat is a mixture of alpaca and sheep's wool. It's soft, fuzzy, and just the tiniest bit scratchy.</figcaption>
+</figure>
+
 Even needles each have their own personality. Stiff grippy bamboo with its dull
 clack. Less worrisome to use because stitches don't slide off as easily, but
 harder work to push against the friction. Polished stainless steel where the
-stitches just fly off the needles -- good when you are done with those stitches
-but not so much otherwise.
+stitches fly off the needles -- good when you are done with those stitches but
+not so much otherwise.
+
+<figure name="dpn">
+  <img class="framed" src="/image/2025/05/frog-start.jpg">
+  <figcaption>An inauspicious start for our friend Toad.</figcaption>
+</figure>
+
+<aside name="dpn">
+
+I knitted Frog and Toad using lacquered wood size 2 double-pointed needles. It's
+hard to get a sense of scale from this photo, but they're six inches long.
+Like very fancy cocktail toothpicks.
+
+</aside>
 
 Once you've worked a few thousand stitches into your muscle memory, you can
 watch your fingers form stitches almost of their own accord, hypnotically. Right
@@ -104,9 +162,10 @@ you can play without, you know, accidentally deleting money out of your bank
 account. Because of that, it's a pure user experience. All experience and
 nothing else.
 
-Therefore, skilled game designers are possibly the best user experience
-designers in the world, and the tools they use to think about game design are
-useful lenses to evaluate just about any kind of human endeavor.
+Game designers have to make a user experience so good that you don't care that
+you aren't actually accomplishing anything at all with it. That makes the tools
+they use to think about gameplay experiences useful lenses to evaluate just
+about any kind of human endeavor.
 
 Two aspects (at least) are relevant to knitting.
 
@@ -125,6 +184,24 @@ Fine, you don't ever have to go through a "sock making phase" to graduate into
 what you really want to make. Find stranded colorwork too fiddly? There's
 intarsia or just buy a ball of self-striping yarn and let the yarn change
 colors for you. Is a sweater too big of a commitment? You can make hats forever.
+
+<figure name="hats">
+  <img class="framed" src="/image/2025/05/hats.jpg">
+  <figcaption>I've made a lot of hats. They're quick projects, only take a
+  single skein of yarn, and almost always fit the wearer.</figcaption>
+</figure>
+
+<aside name="hats">
+
+The yarn for these hats was a gift from my father and stepmother. I returned the
+favor by turning some of the yarn into these two hats and giving them back. This
+was my first time doing stranded colorwork. That means you are holding two yarns
+at the same time and switching between them frequently. Holding both yarns and
+the project and the two needles feels overwhelming, but once you get the hang of
+it, it's very satisfying being able to switch between the colors at each stitch.
+Like making analog pixel art.
+
+</aside>
 
 Once you get past the very basics of getting loops on the needles and making
 stitches, knitting very rarely forces you to slog through something you don't
@@ -157,6 +234,13 @@ way to cast stitches onto the needles, make knit and purl stitches, and then
 cast off to finish the work. With just those, you can make scarves and
 dishclothes. You are a knitter.
 
+<figure>
+  <img class="framed" src="/image/2025/05/toad-trunks.jpg">
+  <figcaption>Working on a swimsuit for Toad. The legs are stockinette stitch,
+    just simple knit stitches over and over, switching colors every few rows.
+  </figcaption>
+</figure>
+
 Then the world is your oyster. There are [thousands of patterns out
 there][ravelry], each listing the techniques required. You can pick ones well
 inside your comfort zone and grow your skills slowly. Or you can challenge
@@ -166,6 +250,11 @@ long-tail cast on, increases and decreases, cables, etc. So many fun different
 ways to form stitches. Each is one bite-sized lesson and no matter how many or
 few you want to chew on at a time, there is a project out there that will
 satisfy your appetite.
+
+<figure>
+  <img class="framed" src="/image/2025/05/holding-hands.jpg">
+  <figcaption>I learned how to do a picot bind-off to make these tiny frog fingers.</figcaption>
+</figure>
 
 [ravelry]: https://www.ravelry.com/
 
@@ -181,6 +270,22 @@ to invent all sorts of crazy ways to tangle yarn up. You could knit full-time
 for the rest of your life and never run out of new things to learn. Knitting
 will never stop rewarding you.
 
+<figure name="chicken">
+  <img class="framed" src="/image/2025/05/chicken.jpg">
+  <figcaption>This pattern taught me short rows, wrap-and-turns, and cable cast-ons.
+  </figcaption>
+</figure>
+
+<aside name="chicken">
+
+Stuffed animals are typically made using crochet which more
+easily handles complex organic shapes, but there are some patterns for
+knitted ones too, like the famous [Emotional Support Chicken] giving you the side-eye here.
+
+[emotional support chicken]: https://www.ravelry.com/patterns/library/emotional-support-chicken
+
+</aside>
+
 ## Structured but not a game
 
 To be clear, I'm talking about knitting and videogames *as a metaphor*. I don't
@@ -189,17 +294,24 @@ pointing my dumb optimizing brain at random activities and trying to min-max the
 shit out of it. Ask my wife how many ways to make coffee I have tried to find
 the optimal effort/reward ratio.
 
-When I knit, I do try to knit efficiently. I mean, if I've gotta make 10,000
-stitches to finish a single scarf, it pays to put some thought into the process.
-At the same time, knitting isn't just a pointless exercise to scratch my
-gamification itch. It is a real artform, and I am making real objects.
+When I knit, I do try to knit efficiently. If it takes 10,000 stitches to finish
+a single scarf, it behooves one to put some thought into the process. At the
+same time, knitting isn't just a pointless exercise to scratch my gamification
+itch. It is a real artform, and I am making real objects.
+
+<figure>
+  <img class="framed" src="/image/2025/05/bob-scarf.jpg">
+  <figcaption>Thousands of stitches, spooled out from time into space.</figcaption>
+</figure>
 
 For me, knitting strikes a good balance between structure and unstructure. I
-like making music and when it goes well, it's very rewarding. But sometimes I
-sit down and every melody that comes out sounds like a knock-off NES game (and
-not in that cool chiptune way). Or I'll spend an entire evening working on the
-drum mixing and at the end I can't tell if I made things better or worse. It's
-*too* unstructured.
+[like making music][tiny wires] and when it goes well, it's very rewarding. But
+sometimes I sit down and every melody that comes out sounds like a knock-off NES
+game (and not in that cool chiptune way). Or I'll spend an entire evening
+working on the drum mixing and at the end I can't tell if I made things better
+or worse. It's *too* unstructured.
+
+[tiny wires]: https://tinywir.es/
 
 When I sit down to knit, I might make a mistake that needs unwinding and fixing.
 But for the most part, I can be confident that an hour spent knitting will get
@@ -217,18 +329,29 @@ painting, there's almost no set up at the beginning of a session or clean up at
 the end. When I pick up the kids from school, I can get ten minutes of knitting
 in while I wait for the bell.
 
+<figure>
+  <img class="framed" src="/image/2025/05/in-car.jpg">
+  <figcaption>Working on a blanket square while I wait for the kids.</figcaption>
+</figure>
+
 Nor does it take up much space. A zip-loc bag with a ball of yarn and two
 needles is basically all you need, which is always in my backpack when I get on
-an airplane now.
+an <span name="flight">airplane</span> now.
+
+<aside name="flight">
 
 Conveniently, the TSA [specifically allows knitting needles on flights][tsa].
-(The fact that the TSA is explicitly fine with you bringing a satchel full of
-foot-long sharpened metal spikes onto a plane as long as its accompanied by some
-string really says something about it as security theatre.) Note that this only
-applies to domestic flights in the US. Other countries have their own rules,
-though I haven't had any trouble bringing knitting to Denmark or Costa Rica.
+Note that this only applies to domestic flights in the US. Other countries have
+their own rules, though I haven't had any trouble bringing knitting to Denmark
+or Costa Rica.
 
 [tsa]: https://www.tsa.gov/travel/security-screening/whatcanibring/items/knitting-needles
+
+The fact that the TSA is explicitly fine with you bringing a satchel full of
+foot-long sharpened metal spikes onto a plane as long as its accompanied by some
+string really says something about how meaningless these security rules are.
+
+</aside>
 
 Knitting expands and contracts around not just physical space, but headspace
 too. Had a long day and want something mindless to help you unwind? Slap
@@ -238,6 +361,11 @@ to take your mind off it? Start a lacework or cable knit project and the chart
 and counting won't leave room to think about anything else.
 
 [scarf]: https://www.ravelry.com/projects/munificent/slanting-stripes-scarf
+
+<figure>
+  <img class="framed" src="/image/2025/05/chocolate-shop.jpg">
+  <figcaption>Working on a little dishcloth while sipping hot cocoa.</figcaption>
+</figure>
 
 Whatever logistical or mental capacities you have, there is a knitting project
 that will tuck neatly into it.
@@ -259,6 +387,11 @@ I can't say it's a great scarf. Kinda cheap acrylic yarn. Not really her color.
 4x4 rib was about all I could handle complexity-wise at the time, and it means
 the scarf tends to bunch up on itself. But when she opened the package on
 Christmas and saw it, her eyes teared up. Mine are tearing up now writing this.
+
+<figure>
+  <img class="framed" src="/image/2025/05/mimi-scarf.jpg">
+  <figcaption>The scarf.</figcaption>
+</figure>
 
 Because regardless of how good the object itself is, it is an inarguable
 testament to the fact that I chose to spend dozens of quiet hours making stitch
@@ -289,10 +422,27 @@ to convey in book form. You kind of need to watch someone's hands. Learning from
 someone in person is best, but if you don't have that, YouTube is a pretty good
 substitute.
 
-Keep in mind that everyone's hands are different! There are many ways (a
-handful, heh heh) to hold the needles and form stitches because our anatomy and
-the texture of our skin varies so much. Watch a few videos and don't worry if
-what works for them doesn't work for you. Eventually, you'll find one that does.
+Keep in mind that everyone's <span name="hands">hands</span> are different!
+There are many ways (a handful, heh heh) to hold the needles and form stitches
+because our anatomy and the texture of our skin varies so much. Watch a few
+videos and don't worry if what works for them doesn't work for you. Eventually,
+you'll find one that does.
+
+<aside name="hands">
+
+I knit "Continental style". That means I hold the working yarn with my left hand
+and make stitches with my right. In English style knitting, the right hand both
+holds the yarn and makes stitches. That works well if all of your coordination
+is in that hand. But as a lefty, I find Continental takes better advantage of
+the dexterity in both of my hands.
+
+Even though I'm left-handed, I knit the same way a right-handed person does. I
+don't mirror patterns or make stitches from left to right. If you are sinistral
+as well, I recommend still learning right-handed. It doesn't make that much of a
+difference in terms of dexterity, and it's much easier if you don't have to try
+to mentally mirror every pattern, instruction, and video you watch.
+
+</aside>
 
 Expect to be challenged and frustrated at first. There's a lot to going on all
 at once: controlling the tension of the working yarn, keeping the stitches from

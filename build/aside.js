@@ -15,7 +15,7 @@ function refreshAsides() {
       return;
     }
 
-    const span = document.querySelector("span[name='" + name + "']");
+    const span = document.querySelector("[name='" + name + "']");
     if (span == null) {
       window.console.log("No span for aside '" + name + "'");
       return;

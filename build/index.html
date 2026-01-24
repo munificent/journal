@@ -38,8 +38,8 @@
 </header>
 <div class="post-thread">
     <div>
-      <a href="/2025/05/30/consider-knitting/"
-         title="Older Post &ldquo;Consider Knitting&rdquo;">&lt; prev</a>
+      <a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
+         title="Older Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">&lt; prev</a>
     </div>
   <div>
     <a href="/archive">archive</a>
@@ -47,232 +47,301 @@
 </div>
 <article>
 <h1>
-  <a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/" rel="bookmark"
-     title="Permanent Link to Setting Up an SDL3 Mac App in XCode 16">
-    Setting Up an SDL3 Mac App in XCode 16
+  <a href="/2026/01/24/the-value-of-things/" rel="bookmark"
+     title="Permanent Link to The Value of Things">
+    The Value of Things
   </a>
 </h1>
 <nav>
   <div class="date">
-    <span class="thread-narrow"><a href="/2025/05/30/consider-knitting/"
-       title="Older Post &ldquo;Consider Knitting&rdquo;">&lt;</a></span>
-    <a href="/archive">july 13, 2025</a>
+    <span class="thread-narrow"><a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
+       title="Older Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">&lt;</a></span>
+    <a href="/archive">january 24, 2026</a>
   </div>
   <div class="tags">
-      <a href="/category/game-dev">game-dev</a>
+      <a href="/category/ai">ai</a>
      |
-      <a href="/category/macos">macos</a>
+      <a href="/category/psychology">psychology</a>
       </div>
 </nav>
-<p>This is mainly a note for my future self, but making it a blog post in case it
-helps anyone else. This weekend, I decided to try making a little SDL3 app on my
-new M4 MacBook Pro. It took me a few hours to figure out how to get XCode to
-play nice with the SDL3 framework given MacOS&rsquo;s paranoia around unsigned code
-and malware.</p>
-<p>Here&rsquo;s the summary for anyone whose Google searching takes them here. The
-instructions are fairly similar to <a href="https://wiki.libsdl.org/SDL3/README-macos#setting-up-a-new-project-by-hand">the SDL3 README for MacOS</a>:</p>
-<ol>
-<li>
-<p>Start up XCode. Choose &ldquo;File &gt; New &gt; Project&hellip;&rdquo;.</p>
-</li>
-<li>
-<p>Select &ldquo;macOS&rdquo;, then under &ldquo;Application&rdquo; choose &ldquo;App&rdquo;. <em>This step is
-important. Choosing &ldquo;Command Line Tool&rdquo; will <strong>not</strong> work.</em> Click &ldquo;Next&rdquo;.</p>
-</li>
-<li>
-<p>Give your app a name. For &ldquo;Interface&rdquo;, choose &ldquo;XIB&rdquo;. For &ldquo;Language&rdquo;, choose
-&ldquo;Objective-C&rdquo;. Click &ldquo;Next&rdquo;. Choose a place to save your project.</p>
-</li>
-</ol>
-<p>Now you have a vanilla &ldquo;Hello World&rdquo; Mac app. The next step is integrating SDL:</p>
-<ol>
-<li>
-<p>Download <a href="https://github.com/libsdl-org/SDL/releases">a release</a> of SDL. As I&rsquo;m writing this, the latest is
-3.2.16. Download the corresponding <code>.dmg</code> file. Open it in Finder.</p>
-</li>
-<li>
-<p>Open <code>SDL3.xcframework/macos-arm64_x86_64</code> and copy <code>SDL3.framework</code> from
-there to somewhere in your XCode project&rsquo;s source tree. (I made a <code>lib</code>
-folder and put it there in mine.)</p>
-</li>
-<li>
-<p>In XCode, in the file explorer on the left, click the top project icon to
-open the settings for it. In the main panel on the right, click the icon
-for your app target under &ldquo;Targets&rdquo; to open the target settings.</p>
-</li>
-<li>
-<p>Under &ldquo;Frameworks, Libraries, and Embedded Content&rdquo;, click the &ldquo;+&rdquo; to add a
-new framework. In the popup that appears, click &ldquo;Add Other&hellip; &gt; Add
-Files&hellip;&rdquo;. Navigate to wherever you copied &ldquo;SDL3.framework&rdquo; and choose it.</p>
-</li>
-</ol>
-<p>Then let&rsquo;s use SDL and verify everything is working.</p>
-<ol>
-<li>
-<p>In <code>main.m</code>, comment out the entire <code>main()</code> function.</p>
-</li>
-<li>
-<p>Make a new <code>main.c</code> file and copy the contents of <a href="https://github.com/libsdl-org/SDL/blob/main/docs/hello.c">hello.c</a> from
-the SDL docs into it.</p>
-</li>
-<li>
-<p>Compile and run.</p>
-</li>
-</ol>
-<p>If that all works, you should see a delightful pixelated &ldquo;Hello World!&rdquo; fill
-your screen. Press any key to quit.</p>
-<p>Let&rsquo;s make sure the full iteration loop works. (Read below to see why I feel
-the need to verify this.):</p>
-<ol>
-<li>
-<p>In <code>main.c</code> inside <code>SDL_AppIterate()</code>, change the message string.</p>
-</li>
-<li>
-<p>Hit Command-R to run. You should see your updated message on screen.</p>
-</li>
-</ol>
-<p>There you go, you now have a working shell of a Mac app with using a local
-install of SDL3. You can probably delete the <code>main.m</code> file entirely and maybe
-some of the other generated files that XCode put in the new project, but I
-haven&rsquo;t figured that out yet.</p>
-<p>Now here&rsquo;s all the wrong stuff I tried first before I got that working&hellip;</p>
-<h2 id="attempt-1-download-a-release-and-use-the-xcframework"><a href="#attempt-1-download-a-release-and-use-the-xcframework">Attempt 1: Download a release and use the xcframework<span class="anchor">#attempt-1-download-a-release-and-use-the-xcframework</span></a></h2>
-<p>In XCode, I created a new &ldquo;CLI Command&rdquo; C app. That got me a &ldquo;Hello, world!&rdquo; up
-and running without any problems. Then I copied the contents of <a href="https://github.com/libsdl-org/SDL/blob/main/docs/hello.c">this SDL hello
-example</a> into my source file.</p>
-<p>As expected, that failed to compile because it couldn&rsquo;t find <code>SDL3/SDL.h</code>. So
-next is getting SDL linked in.</p>
-<p>The first thing I did was download <a href="https://github.com/libsdl-org/SDL/releases/tag/release-3.2.16">the 3.2.16 stable release
-installer</a>. I downloaded the DMG file and opened that. Then following
-the instructions, I dragged the entire <code>SDL3.xcframework</code> directory into the
-XCode project.</p>
-<p>That correctly added a reference to the Framework and got XCode to a point where
-it could resolve the include and compile the program. Great.</p>
-<p>But when I ran it, it failed at startup. The OS tried to dynamically load the
-SDL3 framework, but then balked because it thinks the framework isn&rsquo;t correctly
-signed and safe to use. The OS gave me a popup error with &ldquo;SDL3.framework Not
-Opened&rdquo; because &ldquo;macOS cannot verify that this app is free from malware&rdquo;.</p>
-<p>Crap.</p>
-<h2 id="attempt-2-embed-the-framework"><a href="#attempt-2-embed-the-framework">Attempt 2: Embed the framework<span class="anchor">#attempt-2-embed-the-framework</span></a></h2>
-<p>Poking around online, some people say this error can be fixed by embedding the
-SDL framework in my app and having XCode sign it when it embeds it. In XCode, in
-the target settings under &ldquo;Build Phases&rdquo;, there is a panel for &ldquo;Embed
-Frameworks&rdquo;. I dragged <code>SDL3.xcframework</code> under there and checked &ldquo;Code Sign On
-Copy&rdquo;.</p>
-<p>Alas, when I tried to compile, now I got a build error. It complained that two
-tasks in the build were trying to produce the same file. I&rsquo;ve lost the exact
-error message but it looked like one of the tasks was a simple file copy and the
-other was a &ldquo;ProcessXCFramework&rdquo; invocation. I&rsquo;m guessing the latter is the task
-that signs and embeds the framework.</p>
-<p>I tried basically every combination of build settings to try to fix this:
-removing the framework from &ldquo;Link Binary with Libraries&rdquo;, checking &ldquo;Copy only
-when installing&rdquo;, and a bunch of other things I don&rsquo;t remember. Nothing worked.
-Either I removed so much that the compiler couldn&rsquo;t find the framework at all,
-or it got the duplicate build file error.</p>
-<h2 id="attempt-3-dont-use-the-entire-sdl3xcframework"><a href="#attempt-3-dont-use-the-entire-sdl3xcframework">Attempt 3: Don&rsquo;t use the entire &ldquo;SDL3.xcframework&rdquo;<span class="anchor">#attempt-3-dont-use-the-entire-sdl3xcframework</span></a></h2>
-<p>I started watching <a href="https://www.youtube.com/watch?v=tRqgh8Xwe1E">this video</a> to see if it could help. He doesn&rsquo;t use
-the entire <code>SDL3.xcframework</code> bundle. Instead, he opens that, goes into
-<code>macos-arm64_x86_64</code> and copies the <code>SDL3.framework</code> framework out of there.</p>
-<p>I removed <code>SDL3.xcframework</code> from my XCode project and dragged <code>SDL3.framework</code>
-into it instead. That gave me something that compiled, but when I tried to run,
-it failed at load time with:</p>
-<pre class="highlight language-text">dyld[15605]: Library not loaded: @rpath&#47;SDL3.framework&#47;Versions&#47;A&#47;SDL3
-Referenced from: &lt;...&gt; &#47;Users&#47;...
-Reason: tried: &#39;&#47;Users&#47;...&#47;Build&#47;Products&#47;Debug&#47;SDL3.framework&#47;
-Versions&#47;A&#47;SDL3&#39; (no such file)</pre>
-<p>In the target settings, I again added the framework (but this time
-<code>SDL3.framework</code> not <code>SDL3.xcframework</code> to &ldquo;Embed frameworks&rdquo;). For reasons
-that are entirely unclear to me, that worked. I hit Command-R and&hellip;</p><figure>
-<img class="framed" src="/image/2025/07/hello.gif">
-<figcaption>Hallelujah.</figcaption>
-</figure>
-<p>All done, right? Not so fast. I made a tiny tweak to the code and tried to run
-it again. The compile immediately failed with:</p>
-<pre class="highlight language-text">&#39;SDL3&#47;SDL.h&#39; file not found</pre>
-<p>What? I literally just compiled and ran it. Just to make sure I wasn&rsquo;t crazy,
-I cleaned the build directory and compiled again. That worked! &ldquo;Hello World!&rdquo;
-popped up on screen again.</p>
-<p>Build again&hellip; same error.</p>
-<p>Clean build and then build. Works!</p>
-<p>So I can build <em>once</em> but then something in the build directly causes any
-subsequent compile to fail. The full error is:</p>
-<pre class="highlight language-text">Did not find header &#39;SDL.h&#39; in framework &#39;SDL3&#39; (loaded from
-  &#39;&#47;Users&#47;...&#47;Index.noindex&#47;Build&#47;Products&#47;Debug&#39;)</pre>
-<p>So what I <em>think</em> is happening is that in the first clean build, it locates the
-framework inside my app&rsquo;s main directory. That framework does have the headers
-so the compiler can find what it needs.</p>
-<p>Then after that first build, the compiler starts using the framework that it
-copied into the build directory. But when I look in there, <code>Debug</code> is completely
-empty.</p>
-<h2 id="attempt-4-project-relative-deriveddata"><a href="#attempt-4-project-relative-deriveddata">Attempt 4: Project-relative DerivedData<span class="anchor">#attempt-4-project-relative-deriveddata</span></a></h2>
-<p>I hate when tools stuff built data in random system directories unrelated to
-the project I&rsquo;m working on because those files end up sitting around forever.
-So the next thing I did was go under &ldquo;Project Settings&rdquo; and changed the
-&ldquo;Derived Data&rdquo; to be &ldquo;Project-relative Location&rdquo;.</p>
-<p>I cleaned and built successfully. But, again, if I made a trivial code change
-and tried to build again, it failed. This time, though, there was actually
-something in <code>DerivedData/my_app/Build/Products/Debug/</code>.</p>
-<p>I can see an <code>SDL3.framework</code> directory under there. It contains
-<code>Versions/A/SDL3</code> (and some other stuff). So the library is there as expected.
-But there is no <code>Headers</code> directory under <code>Versions/A/</code>, nor is there a
-<code>Headers</code> symlink in <code>SDL3.framework</code> pointing to it.</p>
-<p>In theory, that&rsquo;s fine. In the compiled app, all that&rsquo;s needed is the library
-itself. But for reasons I don&rsquo;t understand, XCode is trying to use this
-semi-copied version of the framework for subsequent compiles instead of the
-original one in my project&rsquo;s source tree.</p>
-<h2 id="attempt-5-explicit-header-search-path"><a href="#attempt-5-explicit-header-search-path">Attempt 5: Explicit header search path<span class="anchor">#attempt-5-explicit-header-search-path</span></a></h2>
-<p>OK, if XCode can&rsquo;t find the headers because it&rsquo;s looking in the wrong place,
-maybe I can just tell it where to look. Under &ldquo;Search Paths&rdquo;, I added
-<code>lib/SDL3.framework/Headers</code> to &ldquo;Header Search Paths&rdquo;. (I put the framework
-under <code>lib</code> in my project tree, hence the <code>lib/</code> part.) Didn&rsquo;t help. Tried
-making it recursive. Nope.</p>
-<p>Maybe just <code>lib/SDL3.framework</code>? No.</p>
-<p>I&rsquo;m guessing the problem here is that the include paths look like <code>SDL3/SDL.h</code>,
-not just <code>SDL.h</code>, so I need to get XCode to understand that the headers are
-inside a framework to resolve the <code>SDL3/</code> part.</p>
-<h2 id="attempt-6-framework-search-path"><a href="#attempt-6-framework-search-path">Attempt 6: Framework search path<span class="anchor">#attempt-6-framework-search-path</span></a></h2>
-<p>OK, so maybe it&rsquo;s not a header search path. Instead, I tried adding <code>lib/</code> to
-&ldquo;Framework Search Paths&rdquo;. No help. Making it recursive didn&rsquo;t help. Neither
-did <code>lib/SDL3.framework</code>.</p>
-<p>I do a bunch of Googling and eventually stumble onto <a href="https://stackoverflow.com/questions/63630876/xcode-cant-find-the-header-path-after-build/63668035">this old StackOverflow
-post</a>. He specifically mentions only getting the error after the first
-build, so this is my exact issue. And the author apparently found a solution!</p>
-<p>&hellip;which they described only as &ldquo;It works know after certain changes!&rdquo;. So
-helpful.</p>
-<p>I eventually found <a href="https://developer.apple.com/forums/thread/750074">this Apple Developer forum thread</a>, which also
-sounds like my problem.</p>
-<h2 id="attempt-7-an-app-instead-of-a-cli-command"><a href="#attempt-7-an-app-instead-of-a-cli-command">Attempt 7: An App instead of a CLI Command<span class="anchor">#attempt-7-an-app-instead-of-a-cli-command</span></a></h2>
-<p>The forum thread suggests that the issue may have something to do with creating
-a &ldquo;CLI Command&rdquo; instead of an &ldquo;App&rdquo;. I&rsquo;ve always done the former in XCode
-because that seemed like the simplest way to get a vanilla C/C++ app up and
-running. In older versions of XCode/macOS, it worked fine. But maybe it doesn&rsquo;t
-play nice with frameworks in later versions?</p>
-<p>I trash the entire XCode project and create a new one. This time I choose &ldquo;App&rdquo;
-instead of &ldquo;CLI Command&rdquo;. I set the language to &ldquo;Objective-C&rdquo; (because that&rsquo;s
-the &ldquo;closest&rdquo; to C, I guess&mdash;I&rsquo;m winging it here). I set &ldquo;Interface&rdquo; to &ldquo;XIB&rdquo;
-based on <a href="https://wiki.libsdl.org/SDL3/README-macos">this README</a>.</p>
-<p>I run it and get an empty window, the &ldquo;Hello World&rdquo; of GUI apps. OK.</p>
-<p>I copy <code>SDL3.framework</code> out of <code>SDL3.xcframework/macos-arm64_x86-x64</code> into
-<code>lib/</code> in my new app&rsquo;s source tree. Then in XCode, in the &ldquo;General&rdquo; tab of the
-main target, under &ldquo;Frameworks, Libraries, and Embedded Content&rdquo;, I click the
-&ldquo;+&rdquo;. From there I choose &ldquo;Add Other&hellip;&rdquo;, &ldquo;Add Files&hellip;&rdquo;, and add
-<code>lib/SDL3.framework</code>.</p>
-<p>I admit to feeling a moment of anticipation. Will this actually work?</p>
-<p>I make a new <code>.c</code> file and paste in the <code>hello.c</code> SDL3 example code. I comment
-out <code>main()</code> in the <code>main.m</code> that XCode generated. Compile and&hellip; it runs! I&rsquo;ve
-got an SDL3 &ldquo;Hello World!&rdquo; on screen again.</p>
-<p>Now the real test&hellip; can I make a change and build again?</p>
-<p>Yes! It works! <em>Finally!</em></p>
-<p>As far as I can tell, I am up and running now. I didn&rsquo;t have to add SDL3 to my
-system framework path. (I didn&rsquo;t want to do that because ultimately, I want an
-app that users can just run without having to install SDL themselves.)</p>
-<p>So it looks like the failure mode was creating a &ldquo;CLI Command&rdquo; instead of an
-&ldquo;App&rdquo;. How on <em>Earth</em> would I be expected to know that?</p>
+<p>One of the reasons I write is to help me organize my own mind. I have a
+compulsive need to <em>figure things out</em> and I&rsquo;ll lay awake at night shuffling
+sentences around in my head until it hangs together. Then I just have to try to
+get it all down in Markdown before I dissolves back into chaos.</p>
+<p>Like a lot of people these days, I am losing a lot of sleep over <span
+name="generative">LLMs</span> and generative AI. I mean that literally. I&rsquo;ve had
+nights where I tossed and turned worrying about whether AI is going to destroy a
+career I love or wreck modern society until the sun comes up.</p><aside name="generative">
+<p>For brevity&rsquo;s sake, I&rsquo;ll use &ldquo;AI&rdquo; here mostly to mean &ldquo;generative AI&rdquo;. The stuff
+that LLMs and products like ChatGPT do. I think it&rsquo;s useful to distinguish that
+from other uses of machine learning like categorization and labeling. But here,
+all I care about is the generative stuff.</p></aside>
+<p>I keep hoping I&rsquo;ll sort it out in my head enough to reach some inner peace. I&rsquo;m
+not saying I will literally figure it out, like, for <em>the world</em>. But I keep
+hoping I can at least figure out my own relationship with AI.</p>
+<p>I&rsquo;m still not there, but I was able to pull one thread out of the tangled
+discourse around AI and get it to make sense in my head. I hope it will help you
+too. Or maybe this is all nonsense and you&rsquo;ll point out the myriad ways in which
+I&rsquo;m wrong. That&rsquo;s a possibility, but I&rsquo;m trying to be more courageous in my
+writing, so here I am.</p>
+<p>Anyway. Generative AI is about using machine learning to produce digital things.
+For AI to be a <span name="net">net good</span> for the world, at the very
+least, the things it produces must have value. But what does it mean for a thing
+to have &ldquo;value&rdquo;?</p><aside name="net" class="bottom">
+<p>I say &ldquo;at the very least&rdquo; here because even if AI produces valuable things, it
+can still be a <em>net</em> bad. Societal effects and other externalities matter! But I
+haven&rsquo;t untangled any of that stuff in my head yet, so I&rsquo;ll ignore that here.</p></aside>
+<h2 id="utility"><a href="#utility">Utility<span class="anchor">#utility</span></a></h2>
+<p>The obvious answer is that a thing has value if it&rsquo;s useful. If it solves some
+material problem in the world or at least creates some joy, that&rsquo;s value. In
+the UX world, they call this <span name="utility">&ldquo;utility&rdquo;</span>: the thing a thing actually does.</p><aside name="utility">
+<p>In UX, &ldquo;utility&rdquo; is used to distinguish from &ldquo;usability&rdquo;&mdash;how <em>easy</em> it is to
+do the thing.</p></aside>
+<p>An apple has utility. You can eat it and it will give you some calories, some
+hydration, a little fiber. If it&rsquo;s not an oxymoronically named red delicious, it
+might even bring you some delight. Material objects have a natural sort of
+utility from their physicality, but digital objects can have utility too.</p>
+<p>A while back, I took an interest in audio programming. I read a lot of articles
+online to learn some of the math and algorithms behind digital signal
+processing. That information is useful. Before I read those articles, I couldn&rsquo;t
+program an <a href="https://en.wikipedia.org/wiki/Frequency_modulation_synthesis">FM synth</a>. Now I can. That utility is just as real whether I got
+it from reading a classic article written by Julius O. Smith III, or from asking
+<span name="correct">ChatGPT</span>.</p><aside name="correct">
+<p>There is a whole separate question about whether generative AI even <em>can</em>
+reliably produce good information. For this article, I&rsquo;m presuming a
+<a href="https://en.wikipedia.org/wiki/Straw_man#Steelmanning">steelman</a> AI. Presume that we have the best version of generative AI that
+does do what it&rsquo;s supposed to. Even then, how should we think about using it?</p></aside>
+<p>In both the physical and digital worlds, utility really does matter. One
+possible anthropological definition of &ldquo;technology&rdquo; is <em>anything</em> that enables
+humans to more efficiently generate utility. It&rsquo;s central to human progress.</p>
+<p>The reason I can go to a store and buy a bag of apples is because thousands of
+years of agriculture technology development means humans can very efficiently
+produce and transport food. And, you know, we need food to live. Food is cool.</p>
+<p>My career as a programming language designer is only possible because of all of
+the material I found online to learn how compilers and languages work. Hobbies
+like knitting, <a href="https://tinywir.es/">making music</a>, and cooking are deeply important to me. They&rsquo;re
+possible in large part from learning through YouTube videos. Those articles and
+videos are <em>useful</em>.</p>
+<p>Here&rsquo;s a concrete example of generative AI&rsquo;s impact on utility. I got curious
+about how AI is affecting software jobs outside of my weird tech company bubble
+so I started poking around job listing sites. I stumbled onto a software
+engineer position working for the Washington Department of Ecology. The listing
+says:</p>
+<blockquote>
+<p>We&rsquo;re looking for two journey-level developers who care about clean
+architecture, thrive in Agile teams, and see modern tooling&mdash;including
+AI-assisted development&mdash;as a way to work smarter, not riskier. You&rsquo;ll
+collaborate with product, architecture, security, and platform engineering
+partners to design secure, accessible, scalable applications that replace
+decades of legacy complexity.</p>
+<p>&hellip;</p>
+<p>Use AI-Assisted Tools Responsibly and Effectively</p>
+<ul>
+<li>Leverage AI tools for boilerplate, test generation, and safe refactoring.</li>
+<li>Validate AI-generated code for accuracy, security, and maintainability — no
+blind trust, no shortcuts.</li>
+<li>Share best practices with teammates adopting new AI workflows.</li>
+</ul>
+</blockquote>
+<p>It&rsquo;s hard for me to imagine a better morally justified use of AI for software
+development. This is a government office whose charter is to &ldquo;protect and
+sustain healthy land, air, water, and climate in harmony with a strong economy&rdquo;.
+They are literally working to make the world better for nature and humans.</p>
+<p>But as a government department, they are also really limited in their resources.
+If AI can make those two software engineers more productive, it can take the
+same tax dollars as input and produce a healthier world as output. That&rsquo;s hard
+to argue against.</p>
+<h2 id="meaning"><a href="#meaning">Meaning<span class="anchor">#meaning</span></a></h2>
+<p>When people really excited about AI and productivity, I think utility is what
+they have in mind. But utility is not the only kind of value a thing can have.</p>
+<p>A couple of years ago, I <a href="/2025/05/30/consider-knitting/">hand-knitted a scarf for my mother-in-law</a>. The
+scarf does have utility. It&rsquo;s a rectangle of fabric that keeps her neck warm.
+The Olympic Peninsula is a lovely corner of the country, but it&rsquo;s often a chilly
+one. A scarf made out of wet tissue paper would not have the same utility.</p>
+<p>I could have just gone to the store and bought her a scarf. Were I the kind of
+robotic rational actor who thinks only about maximizing their utility function
+when not sipping pour-overs in some culty rationalist commune outside of SF,
+then I would know that the optimal strategy is to use my software engineer
+skills to maximally turn my labor into cash and then use that cash to buy a
+scarf.</p>
+<p>The scarf I hand-made took dozens of hours to make. At even a modest West Coast
+software engineer salary, that number of hours would buy an extremely nice
+scarf. Maybe not <a href="https://nimble-needles.com/wool-and-tools/vicuna-wool-knitting-with-the-most-expensive-fiber-in-the-world/">vicuña</a>, but at least cashmere. Had I dropped a few hundred
+bucks on a scarf, would it have more value? Realistically, it would be a better
+scarf. Softer material, finer stitches. Certainly more <span
+name="fashion">fashionable</span>.</p><aside name="fashion">
+<p>Fashion is social signalling. Social signals have utility and value too.</p></aside>
+<p>You and I know the answer is &ldquo;no&rdquo;. As any parent who lovingly clips their kid&rsquo;s
+objectively terrible art to the fridge knows, the value of a made thing is not
+entirely based on its merits. The value of that scarf is not because it&rsquo;s a
+great scarf. It&rsquo;s because I chose to spend an irreplaceable fraction of my life
+making it. It&rsquo;s a symbol of how much I care about her.</p>
+<p>In short, it has <em>meaning</em>. Meaning doesn&rsquo;t make an object more useful. It&rsquo;s not
+even transferrable. If my mother-in-law gave the scarf to you, its meaning would
+evaporate.</p>
+<p>But I bet that if you think about the objects that have the most value to you,
+your S-tier will be populated by things that excel mostly in meaning, not
+utility. The things that you would grab before running out of a burning house
+are the things with sentimental, not functional value.</p>
+<h2 id="source-of-meaning"><a href="#source-of-meaning">Source of meaning<span class="anchor">#source-of-meaning</span></a></h2>
+<p>You kind of know the answer intuitively, but I&rsquo;m trying to be clear in my
+thinking, so when I talk about objects having meaning&hellip; where does it come
+from? Why do some objects have more meaning than others?</p>
+<p>I&rsquo;ve spent hundreds of hours knitting over the past couple of years, mostly
+making things for friends and family. I&rsquo;ve thought about this question a lot.
+I suspect that it really all comes down to spending time in service of another.</p>
+<p>Humans are sentient actors with agency and entire cognitive universes in our
+heads. But we are also animals made of meat and bones, and that flesh doesn&rsquo;t
+last forever. Every one of us has a finite amount of <em>things we will ever do.</em>
+&ldquo;Spend time&rdquo; is one of those stock phrases that has been sucked dry of semantic
+flavor over the years, but there really is a meaningful metaphor there. When you
+choose to use some of your time making a thing for someone, you don&rsquo;t get that
+time back. It is <em>spent</em>.</p>
+<p><span name="matter">Choosing</span> to spend a fraction of our most precious
+resource for someone else is the strongest signal we can send that that person
+matters to us.</p><aside name="matter" class="bottom">
+<p>If we want to put our philospher hat on and play <a href="https://en.wikipedia.org/wiki/Five_whys">five whys</a>, we might wonder
+<em>why</em> someone spending time on us is a thing we value. Why does someone burning
+their life&rsquo;s candle warm our heart?</p>
+<p>I believe it&rsquo;s because we&rsquo;ve evolved to be a social species and we&rsquo;re hard-wired
+to feel good when we think the tribe wants and values us.</p></aside>
+<p>I&rsquo;m in my late 40s. I hope I still have a lot of living left to do, but the odds
+are very good that I&rsquo;m past the mid-point of my lifespan. An increasing fraction
+of conversations with my friends revolve around our various medical
+tribulations. I can feel the finiteness of life in my <span
+name="bone">bones</span>, quite literally. When I think about what I want to do
+with my remaining allotment of life, the answer that resonates is taking care of
+and making things for the people I love.</p><aside name="bone">
+<p>Post-traumatic osteoarthritis sucks.</p></aside>
+<h2 id="generating-meaning"><a href="#generating-meaning">Generating meaning<span class="anchor">#generating-meaning</span></a></h2>
+<p>Generative AI, when wielded deftly, can be an amazing tool for creating things
+with utility faster and more easily than you ever could before. But it can&rsquo;t
+generate meaning. The giant matrix of floating point numbers in a rack of GPUs
+in some data center <a href="https://www.reddit.com/r/MyBoyfriendIsAI/comments/1lixkb7/ai_relationships_are_not_healthy_my_story_lessons/">does not love you</a>.</p>
+<p>Another story: When my brother and I were growing up, we were really into
+movies. We made short videos (hilariously bad), learned how to do special
+effects make-up (actually tolerably good), and all sorts of stuff like that. We
+dreamed about growing up and becoming another pair of Hollywood brothers like
+the Zuckers or Coens.</p>
+<p>Many years later, as a birthday present, I wrote my brother a screenplay for a
+short horror film about a mythological siren. I toiled on it every night after
+the kids went to bed for weeks. It&rsquo;s one of my favorite gifts.</p>
+<p>I don&rsquo;t know if we&rsquo;ll ever get a chance to shoot it. We live on opposite sides
+of the country and he can&rsquo;t handle the gloom of Seattle any more than I can
+handle the politics of the South. It&rsquo;s likely this screenplay has zero utility.
+But it still has a ton of meaning because I sweated every single word in that
+stack of <a href="https://blog.quoteunquoteapps.com/standard-screenplay-format-the-writers-guide/">12-point Courier pages</a>.</p>
+<p>Today, with the help of <span name="stranger">ChatGPT</span>, I could probably
+put together a feature-length screenplay in a tenth of the time. It might even
+be an objectively better screenplay for a better movie. But <em>because</em> I made the
+screenplay in a tenth of the time thanks to ChatGPT&rsquo;s help, it would hold only a
+tenth of the meaning for my brother. If my hypothesis that meaning comes from
+time sacrifice is true, then by making us more productive, AI eliminates
+meaning.</p><aside name="stranger">
+<p>I mean, if it&rsquo;s <a href="https://www.reddit.com/r/StrangerThings/comments/1qas2q6/the_duffers_were_seen_opening_3_chatgpt_tabs/">good enough for the Duffer brothers</a>&mdash;another great
+pair of filmaking bros&mdash;who am I to judge?</p></aside>
+<h2 id="both-kinds-of-value"><a href="#both-kinds-of-value">Both kinds of value<span class="anchor">#both-kinds-of-value</span></a></h2>
+<p>Most objects, digital or material, have a mixture of both kinds of meaning. My
+favorite <span name="rice">gifts</span> to give or receive are those rare ones
+that are both thoughtful <em>and</em> useful.</p><aside name="rice">
+<p>Many years ago, I had a friend over for dinner. The next time I saw him, he
+handed me a rice cooker. It wasn&rsquo;t a particularly expensive one or anything, but
+he saw that the direction my cooking hobby was going and knew I would get a lot
+of use out of it. We&rsquo;ve used that thing a hundred times since.</p></aside>
+<p>An object carries with it the weight of time that was put into making it and has
+a certain heft from you can get out of it. I think of AI as a tool that can
+transmute that former kind of value into the latter. It drains some of the
+meaning out, but in return lets you make more things with utility for the same
+effort.</p>
+<p>There is nothing unique to AI about this. Any tool that increases efficiency has
+the same property. They make little <a href="https://www.michaels.com/product/knit-quick-knitting-machine-by-loops-threads-10480859">knitting machines</a> that make rows of
+stitches as easily as turning a crank. I could have made a scarf for my
+mother-in-law using that in a fraction of the time.</p>
+<p>Efficiency&mdash;the multiplier that determines how much effort is required to make
+an object&mdash;works sort of like a slider that lets us choose the ratio of
+utility and meaning the resulting thing has. Generative AI, assuming the claims
+are true, has the capability to radically move that slider.</p>
+<p>It can produce huge values of stuff with real utility. But that exact same ease
+implies that it&rsquo;s all basically devoid of a sense of personal meaning.</p>
+<h2 id="two-tangents"><a href="#two-tangents">Two tangents<span class="anchor">#two-tangents</span></a></h2>
+<p>I don&rsquo;t want to take the idea that efficiency is a slider between
+meaningful-but-scarce and meaningless-plenty too far. It&rsquo;s a rough model. There
+are at least two problems with it:</p>
+<p>First, it suggests that you can make an object infinitely meaningful by just
+making the process arbitrarily hard. I could have knitted that scarf using two
+leftover take-out Chinese bamboo chopsticks. In the dark. One-handed. That would
+certainly have required a greater sacrifice of time (and sanity) on my part. But
+there&rsquo;s obviously a point of diminishing returns where people value the effort
+we put into making things but less so when we elect to be masochists.</p>
+<p>Also, when making things, we often derive personal joy from the process itself.
+Yes, I did sacrifice time to knit a scarf but&hellip; I <em>like</em> knitting. It wasn&rsquo;t
+an entirely miserable toil or something. I got to play with yarn.</p>
+<p>The high level point is just that the more we automate the process of making a
+thing, the less of ourselves we put into it. And an object with less of
+ourselves in it is often valued less by the person who receives it. That&rsquo;s all
+I&rsquo;m saying.</p>
+<h2 id="what-kind-of-value-do-you-want"><a href="#what-kind-of-value-do-you-want">What kind of value do you want?<span class="anchor">#what-kind-of-value-do-you-want</span></a></h2>
+<p>The tools we use to make things and the resulting productivity gives us a lever
+to control how much we prioritize getting a useful object out fast versus
+getting an object suffused with meaning. That suggests a way to decide when we
+should and shouldn&rsquo;t use AI.</p>
+<p>If you just need a thing that does a thing, then its utility is what matters. I
+want the Washington Department of Ecology to use my very limited tax dollars as
+effectively as they can to keep the Pacific Northwest the enchanting natural
+marvel that it is. If they can do that better using AI, then by all means they
+should do so.</p>
+<p>If you want to make a thing that has some emotional resonance or some connection
+to other people&mdash;whether that be a loved one, an audience, or humanity as a
+whole&mdash;then you don&rsquo;t want to suck out any of its meaning.</p>
+<p>I listen to a lot of electronic music while I work. In some sense, it is
+<span name="furniture">&ldquo;utility music&rdquo;</span>. I just want a vibe to help me
+tune out the world and focus. I can&rsquo;t even handle lyrics while I&rsquo;m programming or
+writing.</p><aside name="furniture">
+<p>Erik Satie, the OG of ambient, described his compositions as <a href="https://en.wikipedia.org/wiki/Furniture_music">&ldquo;furniture
+music&rdquo;</a>. He described it in explicitly utilitarian terms:</p>
+<blockquote>
+<p>I think of it as melodious, softening the noises of the knives and forks at
+dinner, not dominating them, not imposing itself. It would fill up those heavy
+silences that sometime fall between friends dining together. It would spare
+them the trouble of paying attention to their own banal remarks. And at the
+same time it would neutralize the street noises which so indiscreetly enter
+into the play of conversation. To make such music would be to respond to a
+need.</p>
+</blockquote></aside>
+<p>I have to admit that the genres I listen to are the ones most amenable to being
+automatically generated by machines. I literally do listen to <a href="https://www.youtube.com/watch?v=RsW4z57yqis">generative
+ambient</a> which has been a little corner of the music world since well before
+&ldquo;generative&rdquo; glommed onto the word &ldquo;AI&rdquo;.</p>
+<p>Even so, I still find my listening experience more gratifying when the music was
+made by someone who actually gave a shit about it. Even though the relationship
+between artist and listener is vague and indirect, that connection matters to
+me. I know that when I make music, the thing that helps me push through all of
+the many frustrations of producing is the hope&mdash;however tentative&mdash;that at
+the end the end of it all, one day someone might put on a track of mine and find
+their day improved by it being the temporary soundtrack to their life.</p>
+<p>Those moments of connection between artist and audience are what I live for as a
+creative person. For those, I can&rsquo;t see generative AI as anything but harmful.</p>
+<h2 id="sometimes-yes-and-sometimes-no"><a href="#sometimes-yes-and-sometimes-no">Sometimes yes and sometimes no<span class="anchor">#sometimes-yes-and-sometimes-no</span></a></h2>
+<p>Thinking about the things I make and consume and the kinds of value they contain
+helps me sort out some of my extremely conflicted feelings around AI.</p>
+<p>I want to emphasize that I&rsquo;m only looking at this from the perspective of a
+single person&rsquo;s individual use of AI. The societal effects and externalities of
+AI are just as if not more important. But I haven&rsquo;t sorted out my feelings
+around that to have any idea what to say here. Maybe I never will.</p>
+<p>But I can set that aside and imagine a world where I can run a generative AI
+completely locally on my machine. A world where I was the only person on Earth
+who had an AI. In that timeline, there would be almost no externalities to
+consider. <em>Even then,</em> I still want to be mindful of the consequences of using
+AI to help me make.</p>
+<p>In my own uses, I aim to focus on the places where I think it can improve the
+efficiency of making utilitarian goods. And when I&rsquo;m making something where the
+human connection and meaning are important, I will try to put as much of myself
+into it as I can.</p>
 <div class="comments">
   <div id="disqus_thread"></div>
   <script type="text/javascript">
       var disqus_shortname = 'journal-stuffwithstuff';
-      var disqus_url = "https://journal.stuffwithstuff.com/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/";
+      var disqus_url = "https://journal.stuffwithstuff.com/2026/01/24/the-value-of-things/";
 
       (function() {
           var dsq = document.createElement('script');

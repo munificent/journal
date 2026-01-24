@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,600&family=Petrona:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!-- Tell mobile browsers we're optimized for them and they don't need to
+       crop the viewport. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss.xml" />
+  <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="/atom.xml" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/style.css" type="text/css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <title>
+    The Value of Things &ndash; journal.stuffwithstuff.com
+  </title>
+
+  <script src="/aside.js"></script>
+</head>  <body>
+    <main>
+<header>
+  <a href="/">journal.stuffwithstuff.com</a>
+  <a class="about" href="#footer">↓ about me</a>
+</header>
+<div class="post-thread">
+    <div>
+      <a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
+         title="Older Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">&lt; prev</a>
+    </div>
+  <div>
+    <a href="/archive">archive</a>
+  </div>
+</div>
+<article>
+<h1>
+  <a href="/2026/01/24/the-value-of-things/" rel="bookmark"
+     title="Permanent Link to The Value of Things">
+    The Value of Things
+  </a>
+</h1>
+<nav>
+  <div class="date">
+    <span class="thread-narrow"><a href="/2025/07/13/setting-up-an-sdl3-mac-app-in-xcode-16/"
+       title="Older Post &ldquo;Setting Up an SDL3 Mac App in XCode 16&rdquo;">&lt;</a></span>
+    <a href="/archive">january 24, 2026</a>
+  </div>
+  <div class="tags">
+      <a href="/category/ai">ai</a>
+     |
+      <a href="/category/psychology">psychology</a>
+      </div>
+</nav>
+<p>One of the reasons I write is to help me organize my own mind. I have a
+compulsive need to <em>figure things out</em> and I&rsquo;ll lay awake at night shuffling
+sentences around in my head until it hangs together. Then I just have to try to
+get it all down in Markdown before I dissolves back into chaos.</p>
+<p>Like a lot of people these days, I am losing a lot of sleep over <span
+name="generative">LLMs</span> and generative AI. I mean that literally. I&rsquo;ve had
+nights where I tossed and turned worrying about whether AI is going to destroy a
+career I love or wreck modern society until the sun comes up.</p><aside name="generative">
+<p>For brevity&rsquo;s sake, I&rsquo;ll use &ldquo;AI&rdquo; here mostly to mean &ldquo;generative AI&rdquo;. The stuff
+that LLMs and products like ChatGPT do. I think it&rsquo;s useful to distinguish that
+from other uses of machine learning like categorization and labeling. But here,
+all I care about is the generative stuff.</p></aside>
+<p>I keep hoping I&rsquo;ll sort it out in my head enough to reach some inner peace. I&rsquo;m
+not saying I will literally figure it out, like, for <em>the world</em>. But I keep
+hoping I can at least figure out my own relationship with AI.</p>
+<p>I&rsquo;m still not there, but I was able to pull one thread out of the tangled
+discourse around AI and get it to make sense in my head. I hope it will help you
+too. Or maybe this is all nonsense and you&rsquo;ll point out the myriad ways in which
+I&rsquo;m wrong. That&rsquo;s a possibility, but I&rsquo;m trying to be more courageous in my
+writing, so here I am.</p>
+<p>Anyway. Generative AI is about using machine learning to produce digital things.
+For AI to be a <span name="net">net good</span> for the world, at the very
+least, the things it produces must have value. But what does it mean for a thing
+to have &ldquo;value&rdquo;?</p><aside name="net" class="bottom">
+<p>I say &ldquo;at the very least&rdquo; here because even if AI produces valuable things, it
+can still be a <em>net</em> bad. Societal effects and other externalities matter! But I
+haven&rsquo;t untangled any of that stuff in my head yet, so I&rsquo;ll ignore that here.</p></aside>
+<h2 id="utility"><a href="#utility">Utility<span class="anchor">#utility</span></a></h2>
+<p>The obvious answer is that a thing has value if it&rsquo;s useful. If it solves some
+material problem in the world or at least creates some joy, that&rsquo;s value. In
+the UX world, they call this <span name="utility">&ldquo;utility&rdquo;</span>: the thing a thing actually does.</p><aside name="utility">
+<p>In UX, &ldquo;utility&rdquo; is used to distinguish from &ldquo;usability&rdquo;&mdash;how <em>easy</em> it is to
+do the thing.</p></aside>
+<p>An apple has utility. You can eat it and it will give you some calories, some
+hydration, a little fiber. If it&rsquo;s not an oxymoronically named red delicious, it
+might even bring you some delight. Material objects have a natural sort of
+utility from their physicality, but digital objects can have utility too.</p>
+<p>A while back, I took an interest in audio programming. I read a lot of articles
+online to learn some of the math and algorithms behind digital signal
+processing. That information is useful. Before I read those articles, I couldn&rsquo;t
+program an <a href="https://en.wikipedia.org/wiki/Frequency_modulation_synthesis">FM synth</a>. Now I can. That utility is just as real whether I got
+it from reading a classic article written by Julius O. Smith III, or from asking
+<span name="correct">ChatGPT</span>.</p><aside name="correct">
+<p>There is a whole separate question about whether generative AI even <em>can</em>
+reliably produce good information. For this article, I&rsquo;m presuming a
+<a href="https://en.wikipedia.org/wiki/Straw_man#Steelmanning">steelman</a> AI. Presume that we have the best version of generative AI that
+does do what it&rsquo;s supposed to. Even then, how should we think about using it?</p></aside>
+<p>In both the physical and digital worlds, utility really does matter. One
+possible anthropological definition of &ldquo;technology&rdquo; is <em>anything</em> that enables
+humans to more efficiently generate utility. It&rsquo;s central to human progress.</p>
+<p>The reason I can go to a store and buy a bag of apples is because thousands of
+years of agriculture technology development means humans can very efficiently
+produce and transport food. And, you know, we need food to live. Food is cool.</p>
+<p>My career as a programming language designer is only possible because of all of
+the material I found online to learn how compilers and languages work. Hobbies
+like knitting, <a href="https://tinywir.es/">making music</a>, and cooking are deeply important to me. They&rsquo;re
+possible in large part from learning through YouTube videos. Those articles and
+videos are <em>useful</em>.</p>
+<p>Here&rsquo;s a concrete example of generative AI&rsquo;s impact on utility. I got curious
+about how AI is affecting software jobs outside of my weird tech company bubble
+so I started poking around job listing sites. I stumbled onto a software
+engineer position working for the Washington Department of Ecology. The listing
+says:</p>
+<blockquote>
+<p>We&rsquo;re looking for two journey-level developers who care about clean
+architecture, thrive in Agile teams, and see modern tooling&mdash;including
+AI-assisted development&mdash;as a way to work smarter, not riskier. You&rsquo;ll
+collaborate with product, architecture, security, and platform engineering
+partners to design secure, accessible, scalable applications that replace
+decades of legacy complexity.</p>
+<p>&hellip;</p>
+<p>Use AI-Assisted Tools Responsibly and Effectively</p>
+<ul>
+<li>Leverage AI tools for boilerplate, test generation, and safe refactoring.</li>
+<li>Validate AI-generated code for accuracy, security, and maintainability — no
+blind trust, no shortcuts.</li>
+<li>Share best practices with teammates adopting new AI workflows.</li>
+</ul>
+</blockquote>
+<p>It&rsquo;s hard for me to imagine a better morally justified use of AI for software
+development. This is a government office whose charter is to &ldquo;protect and
+sustain healthy land, air, water, and climate in harmony with a strong economy&rdquo;.
+They are literally working to make the world better for nature and humans.</p>
+<p>But as a government department, they are also really limited in their resources.
+If AI can make those two software engineers more productive, it can take the
+same tax dollars as input and produce a healthier world as output. That&rsquo;s hard
+to argue against.</p>
+<h2 id="meaning"><a href="#meaning">Meaning<span class="anchor">#meaning</span></a></h2>
+<p>When people really excited about AI and productivity, I think utility is what
+they have in mind. But utility is not the only kind of value a thing can have.</p>
+<p>A couple of years ago, I <a href="/2025/05/30/consider-knitting/">hand-knitted a scarf for my mother-in-law</a>. The
+scarf does have utility. It&rsquo;s a rectangle of fabric that keeps her neck warm.
+The Olympic Peninsula is a lovely corner of the country, but it&rsquo;s often a chilly
+one. A scarf made out of wet tissue paper would not have the same utility.</p>
+<p>I could have just gone to the store and bought her a scarf. Were I the kind of
+robotic rational actor who thinks only about maximizing their utility function
+when not sipping pour-overs in some culty rationalist commune outside of SF,
+then I would know that the optimal strategy is to use my software engineer
+skills to maximally turn my labor into cash and then use that cash to buy a
+scarf.</p>
+<p>The scarf I hand-made took dozens of hours to make. At even a modest West Coast
+software engineer salary, that number of hours would buy an extremely nice
+scarf. Maybe not <a href="https://nimble-needles.com/wool-and-tools/vicuna-wool-knitting-with-the-most-expensive-fiber-in-the-world/">vicuña</a>, but at least cashmere. Had I dropped a few hundred
+bucks on a scarf, would it have more value? Realistically, it would be a better
+scarf. Softer material, finer stitches. Certainly more <span
+name="fashion">fashionable</span>.</p><aside name="fashion">
+<p>Fashion is social signalling. Social signals have utility and value too.</p></aside>
+<p>You and I know the answer is &ldquo;no&rdquo;. As any parent who lovingly clips their kid&rsquo;s
+objectively terrible art to the fridge knows, the value of a made thing is not
+entirely based on its merits. The value of that scarf is not because it&rsquo;s a
+great scarf. It&rsquo;s because I chose to spend an irreplaceable fraction of my life
+making it. It&rsquo;s a symbol of how much I care about her.</p>
+<p>In short, it has <em>meaning</em>. Meaning doesn&rsquo;t make an object more useful. It&rsquo;s not
+even transferrable. If my mother-in-law gave the scarf to you, its meaning would
+evaporate.</p>
+<p>But I bet that if you think about the objects that have the most value to you,
+your S-tier will be populated by things that excel mostly in meaning, not
+utility. The things that you would grab before running out of a burning house
+are the things with sentimental, not functional value.</p>
+<h2 id="source-of-meaning"><a href="#source-of-meaning">Source of meaning<span class="anchor">#source-of-meaning</span></a></h2>
+<p>You kind of know the answer intuitively, but I&rsquo;m trying to be clear in my
+thinking, so when I talk about objects having meaning&hellip; where does it come
+from? Why do some objects have more meaning than others?</p>
+<p>I&rsquo;ve spent hundreds of hours knitting over the past couple of years, mostly
+making things for friends and family. I&rsquo;ve thought about this question a lot.
+I suspect that it really all comes down to spending time in service of another.</p>
+<p>Humans are sentient actors with agency and entire cognitive universes in our
+heads. But we are also animals made of meat and bones, and that flesh doesn&rsquo;t
+last forever. Every one of us has a finite amount of <em>things we will ever do.</em>
+&ldquo;Spend time&rdquo; is one of those stock phrases that has been sucked dry of semantic
+flavor over the years, but there really is a meaningful metaphor there. When you
+choose to use some of your time making a thing for someone, you don&rsquo;t get that
+time back. It is <em>spent</em>.</p>
+<p><span name="matter">Choosing</span> to spend a fraction of our most precious
+resource for someone else is the strongest signal we can send that that person
+matters to us.</p><aside name="matter" class="bottom">
+<p>If we want to put our philospher hat on and play <a href="https://en.wikipedia.org/wiki/Five_whys">five whys</a>, we might wonder
+<em>why</em> someone spending time on us is a thing we value. Why does someone burning
+their life&rsquo;s candle warm our heart?</p>
+<p>I believe it&rsquo;s because we&rsquo;ve evolved to be a social species and we&rsquo;re hard-wired
+to feel good when we think the tribe wants and values us.</p></aside>
+<p>I&rsquo;m in my late 40s. I hope I still have a lot of living left to do, but the odds
+are very good that I&rsquo;m past the mid-point of my lifespan. An increasing fraction
+of conversations with my friends revolve around our various medical
+tribulations. I can feel the finiteness of life in my <span
+name="bone">bones</span>, quite literally. When I think about what I want to do
+with my remaining allotment of life, the answer that resonates is taking care of
+and making things for the people I love.</p><aside name="bone">
+<p>Post-traumatic osteoarthritis sucks.</p></aside>
+<h2 id="generating-meaning"><a href="#generating-meaning">Generating meaning<span class="anchor">#generating-meaning</span></a></h2>
+<p>Generative AI, when wielded deftly, can be an amazing tool for creating things
+with utility faster and more easily than you ever could before. But it can&rsquo;t
+generate meaning. The giant matrix of floating point numbers in a rack of GPUs
+in some data center <a href="https://www.reddit.com/r/MyBoyfriendIsAI/comments/1lixkb7/ai_relationships_are_not_healthy_my_story_lessons/">does not love you</a>.</p>
+<p>Another story: When my brother and I were growing up, we were really into
+movies. We made short videos (hilariously bad), learned how to do special
+effects make-up (actually tolerably good), and all sorts of stuff like that. We
+dreamed about growing up and becoming another pair of Hollywood brothers like
+the Zuckers or Coens.</p>
+<p>Many years later, as a birthday present, I wrote my brother a screenplay for a
+short horror film about a mythological siren. I toiled on it every night after
+the kids went to bed for weeks. It&rsquo;s one of my favorite gifts.</p>
+<p>I don&rsquo;t know if we&rsquo;ll ever get a chance to shoot it. We live on opposite sides
+of the country and he can&rsquo;t handle the gloom of Seattle any more than I can
+handle the politics of the South. It&rsquo;s likely this screenplay has zero utility.
+But it still has a ton of meaning because I sweated every single word in that
+stack of <a href="https://blog.quoteunquoteapps.com/standard-screenplay-format-the-writers-guide/">12-point Courier pages</a>.</p>
+<p>Today, with the help of <span name="stranger">ChatGPT</span>, I could probably
+put together a feature-length screenplay in a tenth of the time. It might even
+be an objectively better screenplay for a better movie. But <em>because</em> I made the
+screenplay in a tenth of the time thanks to ChatGPT&rsquo;s help, it would hold only a
+tenth of the meaning for my brother. If my hypothesis that meaning comes from
+time sacrifice is true, then by making us more productive, AI eliminates
+meaning.</p><aside name="stranger">
+<p>I mean, if it&rsquo;s <a href="https://www.reddit.com/r/StrangerThings/comments/1qas2q6/the_duffers_were_seen_opening_3_chatgpt_tabs/">good enough for the Duffer brothers</a>&mdash;another great
+pair of filmaking bros&mdash;who am I to judge?</p></aside>
+<h2 id="both-kinds-of-value"><a href="#both-kinds-of-value">Both kinds of value<span class="anchor">#both-kinds-of-value</span></a></h2>
+<p>Most objects, digital or material, have a mixture of both kinds of meaning. My
+favorite <span name="rice">gifts</span> to give or receive are those rare ones
+that are both thoughtful <em>and</em> useful.</p><aside name="rice">
+<p>Many years ago, I had a friend over for dinner. The next time I saw him, he
+handed me a rice cooker. It wasn&rsquo;t a particularly expensive one or anything, but
+he saw that the direction my cooking hobby was going and knew I would get a lot
+of use out of it. We&rsquo;ve used that thing a hundred times since.</p></aside>
+<p>An object carries with it the weight of time that was put into making it and has
+a certain heft from you can get out of it. I think of AI as a tool that can
+transmute that former kind of value into the latter. It drains some of the
+meaning out, but in return lets you make more things with utility for the same
+effort.</p>
+<p>There is nothing unique to AI about this. Any tool that increases efficiency has
+the same property. They make little <a href="https://www.michaels.com/product/knit-quick-knitting-machine-by-loops-threads-10480859">knitting machines</a> that make rows of
+stitches as easily as turning a crank. I could have made a scarf for my
+mother-in-law using that in a fraction of the time.</p>
+<p>Efficiency&mdash;the multiplier that determines how much effort is required to make
+an object&mdash;works sort of like a slider that lets us choose the ratio of
+utility and meaning the resulting thing has. Generative AI, assuming the claims
+are true, has the capability to radically move that slider.</p>
+<p>It can produce huge values of stuff with real utility. But that exact same ease
+implies that it&rsquo;s all basically devoid of a sense of personal meaning.</p>
+<h2 id="two-tangents"><a href="#two-tangents">Two tangents<span class="anchor">#two-tangents</span></a></h2>
+<p>I don&rsquo;t want to take the idea that efficiency is a slider between
+meaningful-but-scarce and meaningless-plenty too far. It&rsquo;s a rough model. There
+are at least two problems with it:</p>
+<p>First, it suggests that you can make an object infinitely meaningful by just
+making the process arbitrarily hard. I could have knitted that scarf using two
+leftover take-out Chinese bamboo chopsticks. In the dark. One-handed. That would
+certainly have required a greater sacrifice of time (and sanity) on my part. But
+there&rsquo;s obviously a point of diminishing returns where people value the effort
+we put into making things but less so when we elect to be masochists.</p>
+<p>Also, when making things, we often derive personal joy from the process itself.
+Yes, I did sacrifice time to knit a scarf but&hellip; I <em>like</em> knitting. It wasn&rsquo;t
+an entirely miserable toil or something. I got to play with yarn.</p>
+<p>The high level point is just that the more we automate the process of making a
+thing, the less of ourselves we put into it. And an object with less of
+ourselves in it is often valued less by the person who receives it. That&rsquo;s all
+I&rsquo;m saying.</p>
+<h2 id="what-kind-of-value-do-you-want"><a href="#what-kind-of-value-do-you-want">What kind of value do you want?<span class="anchor">#what-kind-of-value-do-you-want</span></a></h2>
+<p>The tools we use to make things and the resulting productivity gives us a lever
+to control how much we prioritize getting a useful object out fast versus
+getting an object suffused with meaning. That suggests a way to decide when we
+should and shouldn&rsquo;t use AI.</p>
+<p>If you just need a thing that does a thing, then its utility is what matters. I
+want the Washington Department of Ecology to use my very limited tax dollars as
+effectively as they can to keep the Pacific Northwest the enchanting natural
+marvel that it is. If they can do that better using AI, then by all means they
+should do so.</p>
+<p>If you want to make a thing that has some emotional resonance or some connection
+to other people&mdash;whether that be a loved one, an audience, or humanity as a
+whole&mdash;then you don&rsquo;t want to suck out any of its meaning.</p>
+<p>I listen to a lot of electronic music while I work. In some sense, it is
+<span name="furniture">&ldquo;utility music&rdquo;</span>. I just want a vibe to help me
+tune out the world and focus. I can&rsquo;t even handle lyrics while I&rsquo;m programming or
+writing.</p><aside name="furniture">
+<p>Erik Satie, the OG of ambient, described his compositions as <a href="https://en.wikipedia.org/wiki/Furniture_music">&ldquo;furniture
+music&rdquo;</a>. He described it in explicitly utilitarian terms:</p>
+<blockquote>
+<p>I think of it as melodious, softening the noises of the knives and forks at
+dinner, not dominating them, not imposing itself. It would fill up those heavy
+silences that sometime fall between friends dining together. It would spare
+them the trouble of paying attention to their own banal remarks. And at the
+same time it would neutralize the street noises which so indiscreetly enter
+into the play of conversation. To make such music would be to respond to a
+need.</p>
+</blockquote></aside>
+<p>I have to admit that the genres I listen to are the ones most amenable to being
+automatically generated by machines. I literally do listen to <a href="https://www.youtube.com/watch?v=RsW4z57yqis">generative
+ambient</a> which has been a little corner of the music world since well before
+&ldquo;generative&rdquo; glommed onto the word &ldquo;AI&rdquo;.</p>
+<p>Even so, I still find my listening experience more gratifying when the music was
+made by someone who actually gave a shit about it. Even though the relationship
+between artist and listener is vague and indirect, that connection matters to
+me. I know that when I make music, the thing that helps me push through all of
+the many frustrations of producing is the hope&mdash;however tentative&mdash;that at
+the end the end of it all, one day someone might put on a track of mine and find
+their day improved by it being the temporary soundtrack to their life.</p>
+<p>Those moments of connection between artist and audience are what I live for as a
+creative person. For those, I can&rsquo;t see generative AI as anything but harmful.</p>
+<h2 id="sometimes-yes-and-sometimes-no"><a href="#sometimes-yes-and-sometimes-no">Sometimes yes and sometimes no<span class="anchor">#sometimes-yes-and-sometimes-no</span></a></h2>
+<p>Thinking about the things I make and consume and the kinds of value they contain
+helps me sort out some of my extremely conflicted feelings around AI.</p>
+<p>I want to emphasize that I&rsquo;m only looking at this from the perspective of a
+single person&rsquo;s individual use of AI. The societal effects and externalities of
+AI are just as if not more important. But I haven&rsquo;t sorted out my feelings
+around that to have any idea what to say here. Maybe I never will.</p>
+<p>But I can set that aside and imagine a world where I can run a generative AI
+completely locally on my machine. A world where I was the only person on Earth
+who had an AI. In that timeline, there would be almost no externalities to
+consider. <em>Even then,</em> I still want to be mindful of the consequences of using
+AI to help me make.</p>
+<p>In my own uses, I aim to focus on the places where I think it can improve the
+efficiency of making utilitarian goods. And when I&rsquo;m making something where the
+human connection and meaning are important, I will try to put as much of myself
+into it as I can.</p>
+<div class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'journal-stuffwithstuff';
+      var disqus_url = "https://journal.stuffwithstuff.com/2026/01/24/the-value-of-things/";
+
+      (function() {
+          var dsq = document.createElement('script');
+          dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</article>
+<footer id="footer">
+  <figure>
+  <a href="/"><img src="/image/dogshot_square.jpg"></a>
+  </figure>
+  <p>Hi! I'm Bob Nystrom. (I'm the one with glasses, not the
+    <a href="/2022/02/13/stupid-dog/">dog</a>.) I wrote <a href="https://gameprogrammingpatterns.com/">Game Programming Patterns</a> and
+    <a href="https://craftinginterpreters.com">Crafting Interpreters</a>. I
+    make electronic music under the name
+    <a href="https://tinywir.es/">Tiny Wires</a>.</p>
+  <p>I'm on <a href="https://mastodon.social/@munificent">Mastodon</a> and <a href="https://bsky.app/profile/stuffwithstuff.com">Bluesky</a>, or you can email me at <code>robert</code> at this site.</p>
+  <p>I built this blog using a bespoke static site generator and wrote every single word myself. The source repo
+  is <a href="https://github.com/munificent/journal">here</a>.</p>
+  <div class="nav-second">
+  </div>
+  <p class="copyright">&copy; 2008-2025 Bob Nystrom</p>
+</footer>
+    </main>
+  </body>
+ </html>

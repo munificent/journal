@@ -6,9 +6,291 @@
     <atom:link href="http://journal.stuffwithstuff.com/rss.xml" rel="self" type="application/rss+xml" />
     <description>Programming, languages, compilers, games, etc.</description>
     <language>en-us</language>
-    <pubDate>Fri, 23 Jan 2026 15:57:06 GMT</pubDate>
-    <lastBuildDate>Fri, 23 Jan 2026 15:57:06 GMT</lastBuildDate>
+    <pubDate>Sat, 24 Jan 2026 21:21:10 GMT</pubDate>
+    <lastBuildDate>Sat, 24 Jan 2026 21:21:10 GMT</lastBuildDate>
 
+
+    <item>
+      <title>The Value of Things</title>
+      <link>http://journal.stuffwithstuff.com/2026/01/24/the-value-of-things/</link>
+      <pubDate>Sat, 24 Jan 2026 08:00:00 GMT</pubDate>
+      <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
+      <guid>http://journal.stuffwithstuff.com/2026/01/24/the-value-of-things</guid>
+      <description>&lt;p&gt;One of the reasons I write is to help me organize my own mind. I have a
+compulsive need to &lt;em&gt;figure things out&lt;/em&gt; and I&amp;rsquo;ll lay awake at night shuffling
+sentences around in my head until it hangs together. Then I just have to try to
+get it all down in Markdown before I dissolves back into chaos.&lt;/p&gt;
+&lt;p&gt;Like a lot of people these days, I am losing a lot of sleep over &lt;span
+name=&quot;generative&quot;&gt;LLMs&lt;/span&gt; and generative AI. I mean that literally. I&amp;rsquo;ve had
+nights where I tossed and turned worrying about whether AI is going to destroy a
+career I love or wreck modern society until the sun comes up.&lt;/p&gt;&lt;aside name=&quot;generative&quot;&gt;
+&lt;p&gt;For brevity&amp;rsquo;s sake, I&amp;rsquo;ll use &amp;ldquo;AI&amp;rdquo; here mostly to mean &amp;ldquo;generative AI&amp;rdquo;. The stuff
+that LLMs and products like ChatGPT do. I think it&amp;rsquo;s useful to distinguish that
+from other uses of machine learning like categorization and labeling. But here,
+all I care about is the generative stuff.&lt;/p&gt;&lt;/aside&gt;
+&lt;p&gt;I keep hoping I&amp;rsquo;ll sort it out in my head enough to reach some inner peace. I&amp;rsquo;m
+not saying I will literally figure it out, like, for &lt;em&gt;the world&lt;/em&gt;. But I keep
+hoping I can at least figure out my own relationship with AI.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m still not there, but I was able to pull one thread out of the tangled
+discourse around AI and get it to make sense in my head. I hope it will help you
+too. Or maybe this is all nonsense and you&amp;rsquo;ll point out the myriad ways in which
+I&amp;rsquo;m wrong. That&amp;rsquo;s a possibility, but I&amp;rsquo;m trying to be more courageous in my
+writing, so here I am.&lt;/p&gt;
+&lt;p&gt;Anyway. Generative AI is about using machine learning to produce digital things.
+For AI to be a &lt;span name=&quot;net&quot;&gt;net good&lt;/span&gt; for the world, at the very
+least, the things it produces must have value. But what does it mean for a thing
+to have &amp;ldquo;value&amp;rdquo;?&lt;/p&gt;&lt;aside name=&quot;net&quot; class=&quot;bottom&quot;&gt;
+&lt;p&gt;I say &amp;ldquo;at the very least&amp;rdquo; here because even if AI produces valuable things, it
+can still be a &lt;em&gt;net&lt;/em&gt; bad. Societal effects and other externalities matter! But I
+haven&amp;rsquo;t untangled any of that stuff in my head yet, so I&amp;rsquo;ll ignore that here.&lt;/p&gt;&lt;/aside&gt;
+&lt;h2 id=&quot;utility&quot;&gt;&lt;a href=&quot;#utility&quot;&gt;Utility&lt;span class=&quot;anchor&quot;&gt;#utility&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The obvious answer is that a thing has value if it&amp;rsquo;s useful. If it solves some
+material problem in the world or at least creates some joy, that&amp;rsquo;s value. In
+the UX world, they call this &lt;span name=&quot;utility&quot;&gt;&amp;ldquo;utility&amp;rdquo;&lt;/span&gt;: the thing a thing actually does.&lt;/p&gt;&lt;aside name=&quot;utility&quot;&gt;
+&lt;p&gt;In UX, &amp;ldquo;utility&amp;rdquo; is used to distinguish from &amp;ldquo;usability&amp;rdquo;&amp;mdash;how &lt;em&gt;easy&lt;/em&gt; it is to
+do the thing.&lt;/p&gt;&lt;/aside&gt;
+&lt;p&gt;An apple has utility. You can eat it and it will give you some calories, some
+hydration, a little fiber. If it&amp;rsquo;s not an oxymoronically named red delicious, it
+might even bring you some delight. Material objects have a natural sort of
+utility from their physicality, but digital objects can have utility too.&lt;/p&gt;
+&lt;p&gt;A while back, I took an interest in audio programming. I read a lot of articles
+online to learn some of the math and algorithms behind digital signal
+processing. That information is useful. Before I read those articles, I couldn&amp;rsquo;t
+program an &lt;a href=&quot;https://en.wikipedia.org/wiki/Frequency_modulation_synthesis&quot;&gt;FM synth&lt;/a&gt;. Now I can. That utility is just as real whether I got
+it from reading a classic article written by Julius O. Smith III, or from asking
+&lt;span name=&quot;correct&quot;&gt;ChatGPT&lt;/span&gt;.&lt;/p&gt;&lt;aside name=&quot;correct&quot;&gt;
+&lt;p&gt;There is a whole separate question about whether generative AI even &lt;em&gt;can&lt;/em&gt;
+reliably produce good information. For this article, I&amp;rsquo;m presuming a
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Straw_man#Steelmanning&quot;&gt;steelman&lt;/a&gt; AI. Presume that we have the best version of generative AI that
+does do what it&amp;rsquo;s supposed to. Even then, how should we think about using it?&lt;/p&gt;&lt;/aside&gt;
+&lt;p&gt;In both the physical and digital worlds, utility really does matter. One
+possible anthropological definition of &amp;ldquo;technology&amp;rdquo; is &lt;em&gt;anything&lt;/em&gt; that enables
+humans to more efficiently generate utility. It&amp;rsquo;s central to human progress.&lt;/p&gt;
+&lt;p&gt;The reason I can go to a store and buy a bag of apples is because thousands of
+years of agriculture technology development means humans can very efficiently
+produce and transport food. And, you know, we need food to live. Food is cool.&lt;/p&gt;
+&lt;p&gt;My career as a programming language designer is only possible because of all of
+the material I found online to learn how compilers and languages work. Hobbies
+like knitting, &lt;a href=&quot;https://tinywir.es/&quot;&gt;making music&lt;/a&gt;, and cooking are deeply important to me. They&amp;rsquo;re
+possible in large part from learning through YouTube videos. Those articles and
+videos are &lt;em&gt;useful&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s a concrete example of generative AI&amp;rsquo;s impact on utility. I got curious
+about how AI is affecting software jobs outside of my weird tech company bubble
+so I started poking around job listing sites. I stumbled onto a software
+engineer position working for the Washington Department of Ecology. The listing
+says:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We&amp;rsquo;re looking for two journey-level developers who care about clean
+architecture, thrive in Agile teams, and see modern tooling&amp;mdash;including
+AI-assisted development&amp;mdash;as a way to work smarter, not riskier. You&amp;rsquo;ll
+collaborate with product, architecture, security, and platform engineering
+partners to design secure, accessible, scalable applications that replace
+decades of legacy complexity.&lt;/p&gt;
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Use AI-Assisted Tools Responsibly and Effectively&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Leverage AI tools for boilerplate, test generation, and safe refactoring.&lt;/li&gt;
+&lt;li&gt;Validate AI-generated code for accuracy, security, and maintainability — no
+blind trust, no shortcuts.&lt;/li&gt;
+&lt;li&gt;Share best practices with teammates adopting new AI workflows.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It&amp;rsquo;s hard for me to imagine a better morally justified use of AI for software
+development. This is a government office whose charter is to &amp;ldquo;protect and
+sustain healthy land, air, water, and climate in harmony with a strong economy&amp;rdquo;.
+They are literally working to make the world better for nature and humans.&lt;/p&gt;
+&lt;p&gt;But as a government department, they are also really limited in their resources.
+If AI can make those two software engineers more productive, it can take the
+same tax dollars as input and produce a healthier world as output. That&amp;rsquo;s hard
+to argue against.&lt;/p&gt;
+&lt;h2 id=&quot;meaning&quot;&gt;&lt;a href=&quot;#meaning&quot;&gt;Meaning&lt;span class=&quot;anchor&quot;&gt;#meaning&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;When people really excited about AI and productivity, I think utility is what
+they have in mind. But utility is not the only kind of value a thing can have.&lt;/p&gt;
+&lt;p&gt;A couple of years ago, I &lt;a href=&quot;/2025/05/30/consider-knitting/&quot;&gt;hand-knitted a scarf for my mother-in-law&lt;/a&gt;. The
+scarf does have utility. It&amp;rsquo;s a rectangle of fabric that keeps her neck warm.
+The Olympic Peninsula is a lovely corner of the country, but it&amp;rsquo;s often a chilly
+one. A scarf made out of wet tissue paper would not have the same utility.&lt;/p&gt;
+&lt;p&gt;I could have just gone to the store and bought her a scarf. Were I the kind of
+robotic rational actor who thinks only about maximizing their utility function
+when not sipping pour-overs in some culty rationalist commune outside of SF,
+then I would know that the optimal strategy is to use my software engineer
+skills to maximally turn my labor into cash and then use that cash to buy a
+scarf.&lt;/p&gt;
+&lt;p&gt;The scarf I hand-made took dozens of hours to make. At even a modest West Coast
+software engineer salary, that number of hours would buy an extremely nice
+scarf. Maybe not &lt;a href=&quot;https://nimble-needles.com/wool-and-tools/vicuna-wool-knitting-with-the-most-expensive-fiber-in-the-world/&quot;&gt;vicuña&lt;/a&gt;, but at least cashmere. Had I dropped a few hundred
+bucks on a scarf, would it have more value? Realistically, it would be a better
+scarf. Softer material, finer stitches. Certainly more &lt;span
+name=&quot;fashion&quot;&gt;fashionable&lt;/span&gt;.&lt;/p&gt;&lt;aside name=&quot;fashion&quot;&gt;
+&lt;p&gt;Fashion is social signalling. Social signals have utility and value too.&lt;/p&gt;&lt;/aside&gt;
+&lt;p&gt;You and I know the answer is &amp;ldquo;no&amp;rdquo;. As any parent who lovingly clips their kid&amp;rsquo;s
+objectively terrible art to the fridge knows, the value of a made thing is not
+entirely based on its merits. The value of that scarf is not because it&amp;rsquo;s a
+great scarf. It&amp;rsquo;s because I chose to spend an irreplaceable fraction of my life
+making it. It&amp;rsquo;s a symbol of how much I care about her.&lt;/p&gt;
+&lt;p&gt;In short, it has &lt;em&gt;meaning&lt;/em&gt;. Meaning doesn&amp;rsquo;t make an object more useful. It&amp;rsquo;s not
+even transferrable. If my mother-in-law gave the scarf to you, its meaning would
+evaporate.&lt;/p&gt;
+&lt;p&gt;But I bet that if you think about the objects that have the most value to you,
+your S-tier will be populated by things that excel mostly in meaning, not
+utility. The things that you would grab before running out of a burning house
+are the things with sentimental, not functional value.&lt;/p&gt;
+&lt;h2 id=&quot;source-of-meaning&quot;&gt;&lt;a href=&quot;#source-of-meaning&quot;&gt;Source of meaning&lt;span class=&quot;anchor&quot;&gt;#source-of-meaning&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;You kind of know the answer intuitively, but I&amp;rsquo;m trying to be clear in my
+thinking, so when I talk about objects having meaning&amp;hellip; where does it come
+from? Why do some objects have more meaning than others?&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve spent hundreds of hours knitting over the past couple of years, mostly
+making things for friends and family. I&amp;rsquo;ve thought about this question a lot.
+I suspect that it really all comes down to spending time in service of another.&lt;/p&gt;
+&lt;p&gt;Humans are sentient actors with agency and entire cognitive universes in our
+heads. But we are also animals made of meat and bones, and that flesh doesn&amp;rsquo;t
+last forever. Every one of us has a finite amount of &lt;em&gt;things we will ever do.&lt;/em&gt;
+&amp;ldquo;Spend time&amp;rdquo; is one of those stock phrases that has been sucked dry of semantic
+flavor over the years, but there really is a meaningful metaphor there. When you
+choose to use some of your time making a thing for someone, you don&amp;rsquo;t get that
+time back. It is &lt;em&gt;spent&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span name=&quot;matter&quot;&gt;Choosing&lt;/span&gt; to spend a fraction of our most precious
+resource for someone else is the strongest signal we can send that that person
+matters to us.&lt;/p&gt;&lt;aside name=&quot;matter&quot; class=&quot;bottom&quot;&gt;
+&lt;p&gt;If we want to put our philospher hat on and play &lt;a href=&quot;https://en.wikipedia.org/wiki/Five_whys&quot;&gt;five whys&lt;/a&gt;, we might wonder
+&lt;em&gt;why&lt;/em&gt; someone spending time on us is a thing we value. Why does someone burning
+their life&amp;rsquo;s candle warm our heart?&lt;/p&gt;
+&lt;p&gt;I believe it&amp;rsquo;s because we&amp;rsquo;ve evolved to be a social species and we&amp;rsquo;re hard-wired
+to feel good when we think the tribe wants and values us.&lt;/p&gt;&lt;/aside&gt;
+&lt;p&gt;I&amp;rsquo;m in my late 40s. I hope I still have a lot of living left to do, but the odds
+are very good that I&amp;rsquo;m past the mid-point of my lifespan. An increasing fraction
+of conversations with my friends revolve around our various medical
+tribulations. I can feel the finiteness of life in my &lt;span
+name=&quot;bone&quot;&gt;bones&lt;/span&gt;, quite literally. When I think about what I want to do
+with my remaining allotment of life, the answer that resonates is taking care of
+and making things for the people I love.&lt;/p&gt;&lt;aside name=&quot;bone&quot;&gt;
+&lt;p&gt;Post-traumatic osteoarthritis sucks.&lt;/p&gt;&lt;/aside&gt;
+&lt;h2 id=&quot;generating-meaning&quot;&gt;&lt;a href=&quot;#generating-meaning&quot;&gt;Generating meaning&lt;span class=&quot;anchor&quot;&gt;#generating-meaning&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Generative AI, when wielded deftly, can be an amazing tool for creating things
+with utility faster and more easily than you ever could before. But it can&amp;rsquo;t
+generate meaning. The giant matrix of floating point numbers in a rack of GPUs
+in some data center &lt;a href=&quot;https://www.reddit.com/r/MyBoyfriendIsAI/comments/1lixkb7/ai_relationships_are_not_healthy_my_story_lessons/&quot;&gt;does not love you&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Another story: When my brother and I were growing up, we were really into
+movies. We made short videos (hilariously bad), learned how to do special
+effects make-up (actually tolerably good), and all sorts of stuff like that. We
+dreamed about growing up and becoming another pair of Hollywood brothers like
+the Zuckers or Coens.&lt;/p&gt;
+&lt;p&gt;Many years later, as a birthday present, I wrote my brother a screenplay for a
+short horror film about a mythological siren. I toiled on it every night after
+the kids went to bed for weeks. It&amp;rsquo;s one of my favorite gifts.&lt;/p&gt;
+&lt;p&gt;I don&amp;rsquo;t know if we&amp;rsquo;ll ever get a chance to shoot it. We live on opposite sides
+of the country and he can&amp;rsquo;t handle the gloom of Seattle any more than I can
+handle the politics of the South. It&amp;rsquo;s likely this screenplay has zero utility.
+But it still has a ton of meaning because I sweated every single word in that
+stack of &lt;a href=&quot;https://blog.quoteunquoteapps.com/standard-screenplay-format-the-writers-guide/&quot;&gt;12-point Courier pages&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Today, with the help of &lt;span name=&quot;stranger&quot;&gt;ChatGPT&lt;/span&gt;, I could probably
+put together a feature-length screenplay in a tenth of the time. It might even
+be an objectively better screenplay for a better movie. But &lt;em&gt;because&lt;/em&gt; I made the
+screenplay in a tenth of the time thanks to ChatGPT&amp;rsquo;s help, it would hold only a
+tenth of the meaning for my brother. If my hypothesis that meaning comes from
+time sacrifice is true, then by making us more productive, AI eliminates
+meaning.&lt;/p&gt;&lt;aside name=&quot;stranger&quot;&gt;
+&lt;p&gt;I mean, if it&amp;rsquo;s &lt;a href=&quot;https://www.reddit.com/r/StrangerThings/comments/1qas2q6/the_duffers_were_seen_opening_3_chatgpt_tabs/&quot;&gt;good enough for the Duffer brothers&lt;/a&gt;&amp;mdash;another great
+pair of filmaking bros&amp;mdash;who am I to judge?&lt;/p&gt;&lt;/aside&gt;
+&lt;h2 id=&quot;both-kinds-of-value&quot;&gt;&lt;a href=&quot;#both-kinds-of-value&quot;&gt;Both kinds of value&lt;span class=&quot;anchor&quot;&gt;#both-kinds-of-value&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Most objects, digital or material, have a mixture of both kinds of meaning. My
+favorite &lt;span name=&quot;rice&quot;&gt;gifts&lt;/span&gt; to give or receive are those rare ones
+that are both thoughtful &lt;em&gt;and&lt;/em&gt; useful.&lt;/p&gt;&lt;aside name=&quot;rice&quot;&gt;
+&lt;p&gt;Many years ago, I had a friend over for dinner. The next time I saw him, he
+handed me a rice cooker. It wasn&amp;rsquo;t a particularly expensive one or anything, but
+he saw that the direction my cooking hobby was going and knew I would get a lot
+of use out of it. We&amp;rsquo;ve used that thing a hundred times since.&lt;/p&gt;&lt;/aside&gt;
+&lt;p&gt;An object carries with it the weight of time that was put into making it and has
+a certain heft from you can get out of it. I think of AI as a tool that can
+transmute that former kind of value into the latter. It drains some of the
+meaning out, but in return lets you make more things with utility for the same
+effort.&lt;/p&gt;
+&lt;p&gt;There is nothing unique to AI about this. Any tool that increases efficiency has
+the same property. They make little &lt;a href=&quot;https://www.michaels.com/product/knit-quick-knitting-machine-by-loops-threads-10480859&quot;&gt;knitting machines&lt;/a&gt; that make rows of
+stitches as easily as turning a crank. I could have made a scarf for my
+mother-in-law using that in a fraction of the time.&lt;/p&gt;
+&lt;p&gt;Efficiency&amp;mdash;the multiplier that determines how much effort is required to make
+an object&amp;mdash;works sort of like a slider that lets us choose the ratio of
+utility and meaning the resulting thing has. Generative AI, assuming the claims
+are true, has the capability to radically move that slider.&lt;/p&gt;
+&lt;p&gt;It can produce huge values of stuff with real utility. But that exact same ease
+implies that it&amp;rsquo;s all basically devoid of a sense of personal meaning.&lt;/p&gt;
+&lt;h2 id=&quot;two-tangents&quot;&gt;&lt;a href=&quot;#two-tangents&quot;&gt;Two tangents&lt;span class=&quot;anchor&quot;&gt;#two-tangents&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;I don&amp;rsquo;t want to take the idea that efficiency is a slider between
+meaningful-but-scarce and meaningless-plenty too far. It&amp;rsquo;s a rough model. There
+are at least two problems with it:&lt;/p&gt;
+&lt;p&gt;First, it suggests that you can make an object infinitely meaningful by just
+making the process arbitrarily hard. I could have knitted that scarf using two
+leftover take-out Chinese bamboo chopsticks. In the dark. One-handed. That would
+certainly have required a greater sacrifice of time (and sanity) on my part. But
+there&amp;rsquo;s obviously a point of diminishing returns where people value the effort
+we put into making things but less so when we elect to be masochists.&lt;/p&gt;
+&lt;p&gt;Also, when making things, we often derive personal joy from the process itself.
+Yes, I did sacrifice time to knit a scarf but&amp;hellip; I &lt;em&gt;like&lt;/em&gt; knitting. It wasn&amp;rsquo;t
+an entirely miserable toil or something. I got to play with yarn.&lt;/p&gt;
+&lt;p&gt;The high level point is just that the more we automate the process of making a
+thing, the less of ourselves we put into it. And an object with less of
+ourselves in it is often valued less by the person who receives it. That&amp;rsquo;s all
+I&amp;rsquo;m saying.&lt;/p&gt;
+&lt;h2 id=&quot;what-kind-of-value-do-you-want&quot;&gt;&lt;a href=&quot;#what-kind-of-value-do-you-want&quot;&gt;What kind of value do you want?&lt;span class=&quot;anchor&quot;&gt;#what-kind-of-value-do-you-want&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The tools we use to make things and the resulting productivity gives us a lever
+to control how much we prioritize getting a useful object out fast versus
+getting an object suffused with meaning. That suggests a way to decide when we
+should and shouldn&amp;rsquo;t use AI.&lt;/p&gt;
+&lt;p&gt;If you just need a thing that does a thing, then its utility is what matters. I
+want the Washington Department of Ecology to use my very limited tax dollars as
+effectively as they can to keep the Pacific Northwest the enchanting natural
+marvel that it is. If they can do that better using AI, then by all means they
+should do so.&lt;/p&gt;
+&lt;p&gt;If you want to make a thing that has some emotional resonance or some connection
+to other people&amp;mdash;whether that be a loved one, an audience, or humanity as a
+whole&amp;mdash;then you don&amp;rsquo;t want to suck out any of its meaning.&lt;/p&gt;
+&lt;p&gt;I listen to a lot of electronic music while I work. In some sense, it is
+&lt;span name=&quot;furniture&quot;&gt;&amp;ldquo;utility music&amp;rdquo;&lt;/span&gt;. I just want a vibe to help me
+tune out the world and focus. I can&amp;rsquo;t even handle lyrics while I&amp;rsquo;m programming or
+writing.&lt;/p&gt;&lt;aside name=&quot;furniture&quot;&gt;
+&lt;p&gt;Erik Satie, the OG of ambient, described his compositions as &lt;a href=&quot;https://en.wikipedia.org/wiki/Furniture_music&quot;&gt;&amp;ldquo;furniture
+music&amp;rdquo;&lt;/a&gt;. He described it in explicitly utilitarian terms:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I think of it as melodious, softening the noises of the knives and forks at
+dinner, not dominating them, not imposing itself. It would fill up those heavy
+silences that sometime fall between friends dining together. It would spare
+them the trouble of paying attention to their own banal remarks. And at the
+same time it would neutralize the street noises which so indiscreetly enter
+into the play of conversation. To make such music would be to respond to a
+need.&lt;/p&gt;
+&lt;/blockquote&gt;&lt;/aside&gt;
+&lt;p&gt;I have to admit that the genres I listen to are the ones most amenable to being
+automatically generated by machines. I literally do listen to &lt;a href=&quot;https://www.youtube.com/watch?v=RsW4z57yqis&quot;&gt;generative
+ambient&lt;/a&gt; which has been a little corner of the music world since well before
+&amp;ldquo;generative&amp;rdquo; glommed onto the word &amp;ldquo;AI&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;Even so, I still find my listening experience more gratifying when the music was
+made by someone who actually gave a shit about it. Even though the relationship
+between artist and listener is vague and indirect, that connection matters to
+me. I know that when I make music, the thing that helps me push through all of
+the many frustrations of producing is the hope&amp;mdash;however tentative&amp;mdash;that at
+the end the end of it all, one day someone might put on a track of mine and find
+their day improved by it being the temporary soundtrack to their life.&lt;/p&gt;
+&lt;p&gt;Those moments of connection between artist and audience are what I live for as a
+creative person. For those, I can&amp;rsquo;t see generative AI as anything but harmful.&lt;/p&gt;
+&lt;h2 id=&quot;sometimes-yes-and-sometimes-no&quot;&gt;&lt;a href=&quot;#sometimes-yes-and-sometimes-no&quot;&gt;Sometimes yes and sometimes no&lt;span class=&quot;anchor&quot;&gt;#sometimes-yes-and-sometimes-no&lt;/span&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Thinking about the things I make and consume and the kinds of value they contain
+helps me sort out some of my extremely conflicted feelings around AI.&lt;/p&gt;
+&lt;p&gt;I want to emphasize that I&amp;rsquo;m only looking at this from the perspective of a
+single person&amp;rsquo;s individual use of AI. The societal effects and externalities of
+AI are just as if not more important. But I haven&amp;rsquo;t sorted out my feelings
+around that to have any idea what to say here. Maybe I never will.&lt;/p&gt;
+&lt;p&gt;But I can set that aside and imagine a world where I can run a generative AI
+completely locally on my machine. A world where I was the only person on Earth
+who had an AI. In that timeline, there would be almost no externalities to
+consider. &lt;em&gt;Even then,&lt;/em&gt; I still want to be mindful of the consequences of using
+AI to help me make.&lt;/p&gt;
+&lt;p&gt;In my own uses, I aim to focus on the places where I think it can improve the
+efficiency of making utilitarian goods. And when I&amp;rsquo;m making something where the
+human connection and meaning are important, I will try to put as much of myself
+into it as I can.&lt;/p&gt;
+</description>
+    </item>
 
     <item>
       <title>Setting Up an SDL3 Mac App in XCode 16</title>
@@ -3561,380 +3843,6 @@ I can&amp;rsquo;t wait to hold it in my hands.&lt;/p&gt;
 &lt;p&gt;If you&amp;rsquo;d like to hold it in &lt;em&gt;your&lt;/em&gt; hands when it comes out, I have &lt;a href=&quot;https://mailchi.mp/afd054e73140/robertnystrom&quot;&gt;a mailing
 list&lt;/a&gt; where I&amp;rsquo;ll let you know when the book is done. In the meantime, I
 think I&amp;rsquo;ve earned some rest.&lt;/p&gt;
-</description>
-    </item>
-
-    <item>
-      <title>40 Songs</title>
-      <link>http://journal.stuffwithstuff.com/2018/05/19/40-songs/</link>
-      <pubDate>Sat, 19 May 2018 07:00:00 GMT</pubDate>
-      <author>robert@stuffwithstuff.com (Robert Nystrom)</author>
-      <guid>http://journal.stuffwithstuff.com/2018/05/19/40-songs</guid>
-      <description>&lt;p&gt;I turned 40 today. Well, actually, as I&amp;rsquo;m writing this, I&amp;rsquo;m not yet 40. And,
-unless you happen to be reading this on the very day I post it, it&amp;rsquo;s no longer
-my birthday. Chronology in text is weird.&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;m not gonna lie. This number is hitting me hard. Intellectually, I get that
-the fact that it&amp;rsquo;s a round number is merely an artifact of our base ten numeral
-system, which is in turn an arbitrary quirk of the evolutionary history that led
-to us having ten fingers. I get it.&lt;/p&gt;
-&lt;p&gt;But what it really feels like is the midpoint. As a male in the US, 40 isn&amp;rsquo;t
-that far from the halfway point of average life expectancy. I have more memories
-accrued than new experiences to anticipate. In the great hallway of life, there
-are more doors behind me than ahead, which makes the regret of those unopened
-ones all the more acute.&lt;/p&gt;
-&lt;p&gt;I was talking about all this with my sister-in-law a few months ago. Her
-milestone is coming soon too. She plans to celebrate by writing a list of her
-top forty favorite songs. I&amp;rsquo;ll be damned if I don&amp;rsquo;t love a good list, so here&amp;rsquo;s
-mine.&lt;/p&gt;
-&lt;p&gt;It&amp;rsquo;s in chronological order &lt;em&gt;of my personal relationship to the song&lt;/em&gt;. The song
-appears when it entered my life. The luxury of this being my list is that I get
-to scramble time as it suits me.&lt;/p&gt;
-&lt;p&gt;40 is a pretty long list of songs. Heck, some days it feels like a long list of
-years. So we&amp;rsquo;re going to need some speed, and what better way to get moving
-then&amp;hellip;&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Vppbdf-qtGU&quot;&gt;&amp;ldquo;La Grange&amp;rdquo;&lt;/a&gt; - ZZ Top&lt;/h2&gt;
-&lt;p&gt;As you&amp;rsquo;ll find out, I live for a good build-up, and there is none better than
-this. A couple of sticks on the edge of the snare and a palm-muted riff and
-&lt;em&gt;holy crap what just happened to my pulse&lt;/em&gt;. ZZ Top is possibly the &lt;em&gt;tightest&lt;/em&gt;
-band that ever lived. Every punchy ghost hit on the snare is so locked into the
-guitar and bass that it must have been played by a single giant six-armed demon.&lt;/p&gt;
-&lt;p&gt;If your car is on fumes, wheezing out its last few yards, threatening to leave
-you stranded in the desert, crank this song up and I promise you you&amp;rsquo;ll get
-another mile or two out of the tank.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=qeMFqkcPYcg&quot;&gt;&amp;ldquo;Sweet Dreams (Are Made of This)&amp;rdquo;&lt;/a&gt; - Eurythmics&lt;/h2&gt;
-&lt;p&gt;This is the first song that I distinctly remember hearing for the first time.
-Picture tiny me standing in front of a TV, staring mouth agape at Annie Lennox&amp;rsquo;s
-bright red hair and that weird-ass video, wondering what the hell was going on
-and why I liked it so much.&lt;/p&gt;
-&lt;p&gt;I sometimes wonder if imprinting on this song at such a young age twisted my
-brain. Lord knows I love a synth bassline and a four on the floor kick to an
-unhealthy degree. That thing I have for short hair on women must have come from
-somewhere.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=yRYFKcMa_Ek&quot;&gt;&amp;ldquo;Maneater&amp;rdquo;&lt;/a&gt; - Daryl Hall &amp;amp; John Oates&lt;/h2&gt;
-&lt;p&gt;I&amp;rsquo;m just old enough to remember roller rinks. My older brother and I would go,
-and I have vivid memories of how &lt;em&gt;cool&lt;/em&gt; it felt to be in that dark, cavernous
-room, surrounded by pulsing sound.&lt;/p&gt;
-&lt;p&gt;&amp;ldquo;Maneater&amp;rdquo; is one of the songs I remember from there. (&amp;ldquo;Mickey&amp;rdquo; is another.) It
-ticks almost every checkbox for what I still love in a song: tons of reverb,
-high string pads, machine-precision drums, rhythmic bassline locked to a minor
-chord progression. I know I should hear 80s cheese when I listen to it today,
-but it still sounds just as spacious and moody today as it did then.&lt;/p&gt;
-&lt;p&gt;What I also remember is strapping on my skates every time and never &lt;em&gt;once&lt;/em&gt;
-having the courage to venture off the carpet onto the rink. It took me thirty
-years and a friend&amp;rsquo;s skating party to face that fear and finally get out there.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=0R6WIbx8ysE&quot;&gt;&amp;ldquo;Send Me an Angel&amp;rdquo;&lt;/a&gt; - Real Life&lt;/h2&gt;
-&lt;p&gt;Alright, I gotta speed this up if we&amp;rsquo;re going to get through all forty in a
-reasonable amount of time. There is a special place in the dark&amp;mdash;of course
-it&amp;rsquo;s dark&amp;mdash;corner of my soul for sad synthpop. I don&amp;rsquo;t know what it is, but
-slap some maudlin lyrics on top of a dance beat and I&amp;rsquo;m all over it. Fast + sad
-is my jam.&lt;/p&gt;
-&lt;p&gt;The whole genre pushes my buttons, but &amp;ldquo;Send Me an Angel&amp;rdquo; stands out because:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;David Sterry really goes for it lyrically. It&amp;rsquo;s hard to top &amp;ldquo;if a girl walks
-up and carves her name in my heart, I&amp;rsquo;ll turn and run away&amp;rdquo; for abject
-pathos.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;That little synth choir melody is six notes of absolute perfection.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Decades later, I was at a show for a friend of a friend&amp;rsquo;s band. The singer said
-they were going to do a weird cover and if anyone knew the song, to shout out
-the name of the band. He played the first three notes of that melody and it was
-like the heavens opened above, presumably so angels could watch me yelling &amp;ldquo;Real
-Life!&amp;rdquo; over and over at the top of my lungs like an idiot.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=m0AKJMGxwpE&quot;&gt;&amp;ldquo;Enjoy the Silence&amp;rdquo;&lt;/a&gt; - Depeche Mode&lt;/h2&gt;
-&lt;p&gt;Speaking of synthpop songs with aching melodies. I&amp;rsquo;ve listened to Depeche Mode
-so much over the years that they are all over my memories. But the best, the
-one I&amp;rsquo;ve shared with literally no one until now&amp;hellip;&lt;/p&gt;
-&lt;p&gt;My best friend in elementary school had an older sister. My friend and I were
-two total nerds (still are), but his sister was &lt;em&gt;so cool&lt;/em&gt;&amp;mdash;serious and
-artistic. Exhibit A: giant Depeche Mode posters on her wall. Exhibit B: a
-complete and utter disinterest in interacting with us for even a second. At that
-age, that was about all it took for a crush to blossom.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Cv6tuzHUuuk&quot;&gt;&amp;ldquo;Walk Like an Egyptian&amp;rdquo;&lt;/a&gt; - Bangles&lt;/h2&gt;
-&lt;p&gt;At some point in my childhood, I informed my parents that I liked music and
-desired the ability to listen to it in my bedroom. My Dad, being the music snob
-he is, solved that problem by buying young me an honest-to-God record player. No
-cassette tapes in this household, young man!&lt;/p&gt;
-&lt;p&gt;One of the first records I got was &amp;ldquo;Different Light&amp;rdquo; by the Bangles. I spent a
-lot of time listening to the bassline in this song, gazing at the photos on the
-cover, and having thoughts about Susanna Hoffs I wasn&amp;rsquo;t quite old enough to
-process yet.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://youtu.be/vsQrKZcYtqg?t=6&quot;&gt;&amp;ldquo;Istanbul (Not Constantinople)&quot;&lt;/a&gt; - They Might Be Giants&lt;/h2&gt;
-&lt;p&gt;Look, I don&amp;rsquo;t know what happened. I&amp;rsquo;ll blame it on incredible middle school
-awkwardness, but I went through a phase where I, I shit you not, listened to
-&lt;em&gt;nothing&lt;/em&gt; but TMBG. For like two years. I still know all of the lyrics to every
-single song on &amp;ldquo;Flood&amp;rdquo;, &amp;ldquo;Lincoln&amp;rdquo;, &amp;ldquo;Apollo 18&amp;rdquo;, and &amp;ldquo;John Henry&amp;rdquo;.&lt;/p&gt;
-&lt;p&gt;They aren&amp;rsquo;t my thing very much these days, but the lyrics are still up there in
-the wetware should a particularly odd karaoke night have need of them.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=EbI0cMyyw_M&quot;&gt;&amp;ldquo;Run Through the Jungle&amp;rdquo;&lt;/a&gt; - CCR&lt;/h2&gt;
-&lt;p&gt;I mentioned intros, right? This is another of the greats. I think most people
-like the happy-dumb CCR hits, but for me I want the ones that remind me that the
-US was goin&amp;rsquo; through some &lt;em&gt;shit&lt;/em&gt; when those songs came out. This tops that list.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=9muzyOd4Lh8&quot;&gt;&amp;ldquo;Nights in White Satin&amp;rdquo;&lt;/a&gt; - Moody Blues&lt;/h2&gt;
-&lt;p&gt;One of the things I truly lament about my generation and the generations to
-follow is our acute self-awareness. Ironic detachment of the 90s followed by
-&lt;a href=&quot;https://en.wikipedia.org/wiki/New_Sincerity&quot;&gt;ironic &lt;em&gt;attachment&lt;/em&gt;&lt;/a&gt; left us
-basically unable to produce art without constantly obsessing about what the art
-says about the artist.&lt;/p&gt;
-&lt;p&gt;Can you imagine &lt;em&gt;anyone&lt;/em&gt; today sitting down to record a rock album with an
-orchestra, and then slapping a &lt;em&gt;poem&lt;/em&gt; on the end? And doing it with complete,
-heartfelt, unironic sincerity? It&amp;rsquo;s an ability that seems to be completely lost.&lt;/p&gt;
-&lt;p&gt;Thankfully, this song embedded itself in my subconscious before that cultural
-shift happened. I love every single bit of this song, completely, totally.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=I_izvAbhExY&quot;&gt;&amp;ldquo;Stayin&amp;rsquo; Alive&amp;rdquo;&lt;/a&gt; - The Bee-Gees&lt;/h2&gt;
-&lt;p&gt;Speaking of things I love un-ironically. For a nerdy white dude, I have spent a
-surprisingly large amount of time shaking my ass on various dancefloors across
-the United States. Not with any particular &lt;em&gt;skill&lt;/em&gt; mind you, but with
-great enthusiasm.&lt;/p&gt;
-&lt;p&gt;I like basically any kind of dance music, and disco is certainly on that list.
-The genre is a distillation of everything that makes a song danceworthy, with
-everything unnecessary filtered out. Picking one disco song is hard, and picking
-one played by white guys is a borderline travesty, but I&amp;rsquo;d be lying if I said I
-didn&amp;rsquo;t know every single cymbal crash in this song and had my arm thrust, finger
-extended, for each.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=gzoEK545j64&quot;&gt;&amp;ldquo;Groove is in the Heart&amp;rdquo;&lt;/a&gt; - Deee-Lite&lt;/h2&gt;
-&lt;p&gt;Bootsy&amp;rsquo;s bassline. That beat. If this don&amp;rsquo;t get your booty movin&amp;rsquo;, your booty
-must be dead.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=1lWJXDG2i0A&quot;&gt;&amp;ldquo;Free Fallin&amp;rsquo;&quot;&lt;/a&gt; - Tom Petty&lt;/h2&gt;
-&lt;p&gt;Thomas Earl Petty is another one like Depeche Mode where it&amp;rsquo;s hard to know where
-to slot him in. His music is a constant companion in my life. Narrowing his
-presence on this list down to a single song was hard enough. &amp;ldquo;You Wreck Me&amp;rdquo;,
-&amp;ldquo;Learning to Fly&amp;rdquo;, &amp;ldquo;American Girl&amp;rdquo;, &amp;ldquo;Breakdown&amp;rdquo; are all strong contenders.&lt;/p&gt;
-&lt;p&gt;I picked this one because it spans what I think of as the two sides of Petty&amp;mdash;the straightforward timeless American rock, and the bittersweet character
-studies.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hwZNL7QVJjE&quot;&gt;&amp;ldquo;Stand By Me&amp;rdquo;&lt;/a&gt; - Ben E. King&lt;/h2&gt;
-&lt;p&gt;A high school friend got a cheap acoustic guitar and I eventually got my hands
-on it. Tinkering around, I figured out the bassline to &amp;ldquo;Stand By Me&amp;rdquo;, playing
-that guitar like a bass, upside down. (I&amp;rsquo;m left-handed and it was strung
-right-handed.) This was the first bassline I ever learned.&lt;/p&gt;
-&lt;p&gt;Did you know King never intended to record this? He wrote it for the Drifters
-and only reluctantly recorded it himself when he had some extra time in the
-studio. Listen to that vocal performance. Can you imagine being so good that you
-can just toss something like that out there?&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=CC5ca6Hsb2Q&quot;&gt;&amp;ldquo;Children&amp;rdquo;&lt;/a&gt; - Robert Miles&lt;/h2&gt;
-&lt;p&gt;Apparently, there was a whole house and techno scene going on in the world.
-Maybe if I&amp;rsquo;d been a kid in Chicago or Detroit, I would have noticed. But none of
-that made its way to southern Louisiana until this instrumental, piano-driven
-electronica song improbably came down from space and landed on commercial radio.&lt;/p&gt;
-&lt;p&gt;The first time I heard this song was a &lt;em&gt;revelation&lt;/em&gt;. I didn&amp;rsquo;t even know music
-like this existed. I loved everything about it, the rigid tempo, heartbeat kick,
-offset bass, heart-stirring melody. I couldn&amp;rsquo;t get enough.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=brZ_WBEzw6E&quot;&gt;&amp;ldquo;Dark + Long (Dark Train)&quot;&lt;/a&gt; - Underworld&lt;/h2&gt;
-&lt;p&gt;Right around this time, I met a guy at work who wore these weird pants &lt;a href=&quot;https://www.google.com/search?q=jnco&amp;client=firefox-b-1-ab&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=0ahUKEwim2dT2j4zbAhVOyWMKHfZZDaMQ_AUICigB&amp;biw=1166&amp;bih=803&quot;&gt;with
-huge legs&lt;/a&gt;. What was that about? He told my brother and I he was a &amp;ldquo;raver&amp;rdquo;
-and there was this music called &amp;ldquo;techno&amp;rdquo; and you could hear it at these things
-called &amp;ldquo;raves&amp;rdquo;.&lt;/p&gt;
-&lt;p&gt;In one sitting, he gave us a rundown of artists that kept my ears full for
-several years. The band that I forged the strongest bond with is Underworld. I
-rushed out and got the &amp;ldquo;Pearl&amp;rsquo;s Girl&amp;rdquo; EP, then later &amp;ldquo;Dubnobasswithmyheadman&amp;rdquo;
-and &amp;ldquo;Second Toughest in the Infants&amp;rdquo;. Eventually, I had almost everything they
-ever recorded.&lt;/p&gt;
-&lt;p&gt;I met some of my closest college friends by bonding over Underworld. We once
-drove 900 miles from Baton Rouge to Chicago, non-stop, because that was the
-closest place to us that Underworld was playing during the &amp;ldquo;Beaucoup Fish&amp;rdquo; tour.
-Still one of the best shows I ever saw.&lt;/p&gt;
-&lt;p&gt;Picking a single Underworld song is hard. Picking this particular song is
-frustrating because for most, it&amp;rsquo;s associated with Trainspotting. But that&amp;rsquo;s not
-what I think when I hear this. To me, it&amp;rsquo;s driving home from raves at the State
-Palace Theatre in New Orleans as the sun comes up in our rearview mirror.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=bV-hSgL1R74&quot;&gt;&amp;ldquo;Halcyon + On + On&amp;rdquo;&lt;/a&gt; - Orbital&lt;/h2&gt;
-&lt;p&gt;A lot of techno at the 90s was, well, kind of dumb. Maybe a good beat to dance
-to, but it didn&amp;rsquo;t leave you thinking or feeling much of anything. Aphex Twin
-took care of the &amp;ldquo;thinking&amp;rdquo; part. Orbital took care of feeling. They showed that
-music made with computers could have as much heart as anything else.&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;m not the kind of person to fret about what song I want played at my funeral,
-but if I had to pick, this might be it.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=WQYsGWh_vpE&quot;&gt;&amp;ldquo;Roads&amp;rdquo;&lt;/a&gt; - Portishead&lt;/h2&gt;
-&lt;p&gt;Oh, the tremolo on the Rhodes, mirroring Beth Gibbons&amp;rsquo; vibrato. Those ghost hits
-on the snare. The strings. &lt;em&gt;That bassline.&lt;/em&gt; Every ounce of this is flawless.&lt;/p&gt;
-&lt;p&gt;Like most people at the time, I got into trip-hop. Some of it doesn&amp;rsquo;t hold up,
-but some of it, like this, I seem to respond to more and more the older I get.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=tSRYvYN1ayw&quot;&gt;&amp;ldquo;Gorecki&amp;rdquo;&lt;/a&gt; - Lamb&lt;/h2&gt;
-&lt;p&gt;Around this time, I was working at an Internet start-up during the first dotcom
-bubble. Amazon had just started selling CDs and they had this new &amp;ldquo;Customers who
-bought this also bought&amp;rdquo; thing. Today, we are inundated with machine learning
-that knows every single connection between ever human artifact every produced.
-It&amp;rsquo;s hard to remember what the world was before recommendation engines.&lt;/p&gt;
-&lt;p&gt;But there was a time where if you liked some song, you might be totally unable
-to find other stuff like it, &lt;em&gt;even if that other stuff existed.&lt;/em&gt; If you were
-lucky, the guy at the music store knew stuff. That was literally it.&lt;/p&gt;
-&lt;p&gt;So when I typed in the one trip-hop band I knew into the search box at
-&lt;a href=&quot;http://www.amazon.com&quot;&gt;www.amazon.com&lt;/a&gt;, and then saw a list of other bands I might also like, and other
-bands linked to from &lt;em&gt;them&lt;/em&gt;, and so on, it was like the gates to Paradise had
-opened up.&lt;/p&gt;
-&lt;p&gt;I ordered a stack of CDs, the largest music purchase of my life. They showed up
-a week later. I took them home, put Lamb&amp;rsquo;s debut album in, and put on my
-headphones. The first time this song came on, I was moved nearly to tears.&lt;/p&gt;
-&lt;p&gt;Granted, I was going through some girlfriend stuff at the time, so tears weren&amp;rsquo;t
-as far away as usual, but it&amp;rsquo;s still the most profoundly emotional listening
-experience of my life.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=U4U19zwFENs&quot;&gt;&amp;ldquo;La Femme d&amp;rsquo;Argent&amp;rdquo;&lt;/a&gt; - Air&lt;/h2&gt;
-&lt;p&gt;One day, the roommate of the girl that caused the aforementioned troubles put in
-a CD in her car stereo. She said, &amp;ldquo;You like electronic stuff, you might like
-this.&amp;rdquo; I was totally flummoxed by what came on. It sounded like it had been
-recorded in the 70s. Was it even &amp;ldquo;electronic&amp;rdquo; music? She insisted it had come
-out recently. I&amp;rsquo;d never heard anything like it. It was, and still is,
-magnificent. An album that stands outside of time and genre.&lt;/p&gt;
-&lt;p&gt;Much much later, it occurred to me that I had dated the wrong roommate.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Ci_LIavsEhQ&quot;&gt;&amp;ldquo;Kathy&amp;rsquo;s Song&amp;rdquo;&lt;/a&gt; - Apoptygma Berzerk&lt;/h2&gt;
-&lt;p&gt;I love this song first because it reminds me of discovering a whole new genre of
-music (synthpop and EBM), a circle of friends (&amp;ldquo;the Baton Rouge goth community&amp;rdquo;
-as my friend used to say) and a new bar (The Spanish Moon) all at the same time.&lt;/p&gt;
-&lt;p&gt;Going to that bar led to throwing parties with the same people and music, which
-led to me DJing at our house, which eventually led to me DJing at the Spanish
-Moon, which was a huge step for me to get past some of my crippling shyness.&lt;/p&gt;
-&lt;p&gt;I love this song second because my sister-in-law&amp;rsquo;s name is &amp;ldquo;Cathy&amp;rdquo;, and I played
-this at her wedding on the day that I got to officially call her family.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=hpji_vmCUVU&quot;&gt;&amp;ldquo;Remember (Mood II Swing Mix)&amp;rdquo;&lt;/a&gt; - BT&lt;/h2&gt;
-&lt;p&gt;There are a number of BT songs that could be on this list, but I picked this
-remix because it&amp;rsquo;s the track I&amp;rsquo;ve listened to the most over the years. &amp;ldquo;Flaming
-June&amp;rdquo; and &amp;ldquo;Poseidon&amp;rdquo; are up there too.&lt;/p&gt;
-&lt;p&gt;But, also, because every time I hear that little fuzz effect come in at :15, I
-can still perfectly picture the owner of The Spanish Moon sprinting across the
-dancefloor towards the DJ booth, panic in his eyes, because he thought I&amp;rsquo;d blown
-his sound system.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=sbnujaAbD2A&quot;&gt;&amp;ldquo;Autumn Tactics&amp;rdquo;&lt;/a&gt; - Chicane&lt;/h2&gt;
-&lt;p&gt;That couple year span when &amp;ldquo;progressive house&amp;rdquo; was the thing brought a lot of
-great artists to my attention. Of all of them, I probably sunk more time into
-Chicane&amp;rsquo;s first two albums than anything else. This isn&amp;rsquo;t really a house track&amp;mdash;I don&amp;rsquo;t know how to categorize it, honestly&amp;mdash;and maybe that&amp;rsquo;s why it&amp;rsquo;s
-held up so well for me. I&amp;rsquo;ve been listening to it for close to twenty years, and
-I still haven&amp;rsquo;t tired of it.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=B4px0qQrG5E&quot;&gt;&amp;ldquo;Poor Leno&amp;rdquo;&lt;/a&gt; - Röyksopp&lt;/h2&gt;
-&lt;p&gt;We&amp;rsquo;re getting closer to the modern era, witnessed by the fact that I stumbled
-onto this song from a &lt;em&gt;video&lt;/em&gt; on the &lt;em&gt;Internet&lt;/em&gt;. This song led to me buying
-turntables. I was going to clubs listening to house all the time, but most of
-the DJs were playing stripped down tribal or tech house that sounded soulless
-and empty to me. I didn&amp;rsquo;t necessarily need a full set of lyrics, but I at least
-wanted a chord progression.&lt;/p&gt;
-&lt;p&gt;I realized that if I ever wanted to hear this track or others like it on a
-dancefloor, I was going to have to make it happen myself. I filled up my online
-shopping cart at Turntable Lab. A few weeks later some very large, very heavy
-boxes showed up at work, and I was off learning how to beatmatch.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=omJQVvKVQCk&quot;&gt;&amp;ldquo;Tracey In My Room&amp;rdquo;&lt;/a&gt; - EBTG vs Soul Vision&lt;/h2&gt;
-&lt;p&gt;This song is a two-fer. Tracy Thorn from Everything but the Girl is one of my
-favorite vocalists. When Ben Watt took EBTG in a decidedly electronic direction
-with &amp;ldquo;Walking Wounded&amp;rdquo; and then &amp;ldquo;Temperamental&amp;rdquo;, I was right there with him.&lt;/p&gt;
-&lt;p&gt;But around this time was also when I started to get fully into house music, the
-more heartfelt the better. This record, a mash-up of a house song and the vocals
-from &amp;ldquo;Wrong&amp;rdquo; merges those two better than it has any right to.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=5ViItcZyYBw&quot;&gt;&amp;ldquo;Unspoken&amp;rdquo;&lt;/a&gt; - Four Tet&lt;/h2&gt;
-&lt;p&gt;In my twenties, my friends and I used to hit &lt;a href=&quot;http://parkavecds.com/&quot;&gt;Park Ave.
-CDs&lt;/a&gt; every Tuesday when new music came out. This album
-was at a listening station on an end cap. When the first song came on, it was as
-if the lights in the building gradually dimmed, leaving nothing but sound.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=mMh-Y2IWJZc&quot;&gt;&amp;ldquo;Back of my Hand&amp;rdquo;&lt;/a&gt; - Gemma Hayes&lt;/h2&gt;
-&lt;p&gt;We went to this record store so often that the employees would hook us up with
-samplers and other merch. This song was on one. It&amp;rsquo;s not my usual genre and I
-can&amp;rsquo;t say I&amp;rsquo;ve listened to much else by her. But the production on this song
-pushes it out of generic singer-songwriter and into something really interesting
-to me.&lt;/p&gt;
-&lt;p&gt;I love the contrast between the folksy guitar&amp;mdash;twelve-string? double-tracked?&amp;mdash;and that that tinny mechanical drum loop. When the fully-EQed beat and organ
-drops, my heart goes a-flutter.&lt;/p&gt;
-&lt;p&gt;I had this song as my alarm clock for several years. It was a gentle way to wake
-up and the end result was the lyrics embedding themselves in my subconscious.
-Years later, my kids started asking me to sing them bedtime songs. This was one
-of the few whose words I remembered and whose melody fit within my not-so-wide
-vocal range.&lt;/p&gt;
-&lt;p&gt;Listening brings back peaceful mornings sipping coffee in Orlando, and gentle
-nights in Washington stroking my daughters&amp;rsquo; hair as they fall asleep. It&amp;rsquo;s hard
-to imagine a better pair of bookends.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=0wrsZog8qXg&quot;&gt;&amp;ldquo;Such Great Heights&amp;rdquo;&lt;/a&gt; - Postal Service&lt;/h2&gt;
-&lt;p&gt;The drag about being into electronic music in Orlando back then was, well, the
-other people into it. Instead of the fun rave scene of New Orleans where kids
-were down to Earth and just wanted a good time, Orlando was a &lt;em&gt;club&lt;/em&gt; scene&amp;mdash;overdressed bros and over-made-up woman desperately trying to impress each other
-while trying not to look desperate.&lt;/p&gt;
-&lt;p&gt;Indie dance music and Orlando&amp;rsquo;s Independent Bar (called &amp;ldquo;Barbarella&amp;rdquo; at the
-time) saved me from that. The indie night there remains the absolute best
-dancefloor, and the most fun crowd I&amp;rsquo;ve ever experienced. Like clockwork, every
-Friday night ended with a packed, sweaty, grinning mass of euphoric people.&lt;/p&gt;
-&lt;p&gt;There are a number of songs I could pick to be the anthem for that time in my
-life, but this one also happens to mark a great point in a relationship (before
-the relationship went no-so-great).&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=SPlQpGeTbIE&quot;&gt;&amp;ldquo;Move Your Feet&amp;rdquo;&lt;/a&gt; - Junior Senior&lt;/h2&gt;
-&lt;p&gt;One of the few things I love as much as dance music is pixel art, so this song&amp;rsquo;s
-video pushes all of the buttons on the 747 control panel of my heart.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Gs069dndIYk&quot;&gt;&amp;ldquo;September&amp;rdquo;&lt;/a&gt; - Earth, Wind, and Fire&lt;/h2&gt;
-&lt;p&gt;I expected more soul music to make this list, but somehow it didn&amp;rsquo;t. It would
-have been a real shame to omit this gem. Thursdays were soul night at I-Bar and
-I can&amp;rsquo;t hear this song without picturing my friend Amy cutting up the
-dancefloor.&lt;/p&gt;
-&lt;p&gt;This song gets twice my love because I also used to spin the fantastic &lt;a href=&quot;https://www.youtube.com/watch?v=wn5Q37qOiiA&quot;&gt;Phats &amp;amp;
-Small house remix&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=g6jhpaX7fNQ&quot;&gt;&amp;ldquo;Under the Milky Way&amp;rdquo;&lt;/a&gt; - The Church&lt;/h2&gt;
-&lt;p&gt;You know those songs that reside in a primordial part of your brain? I can&amp;rsquo;t
-recall ever &lt;em&gt;not&lt;/em&gt; knowing this song. I&amp;rsquo;m wired towards the low end of the
-frequency spectrum. I play bass, and tend to focus on the bass and rhythm side
-of songs. That extends to vocals. I can&amp;rsquo;t do histrionic screechy singers.
-Nothing sets my soul at ease quite like a soft baritone.&lt;/p&gt;
-&lt;p&gt;This is another song I used to sing to my kids as they fell asleep.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=2q9_ZEtuTR8&quot;&gt;&amp;ldquo;Maybe Tomorrow&amp;rdquo;&lt;/a&gt; - Stereophonics&lt;/h2&gt;
-&lt;p&gt;The beginning of the video for this song is a dirty lie. This song wasn&amp;rsquo;t
-crafted by imperfect human hands. It was plucked, flawless, from some sonic vein
-deep within the Earth.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=BiPLOmTp6IA&quot;&gt;&amp;ldquo;Stop&amp;rdquo;&lt;/a&gt; - Black Rebel Motorcycle Club&lt;/h2&gt;
-&lt;p&gt;Hanging out at Independent Bar opened one of the most fulfilling chapters of my
-life. It was there that I met my friend Mikey, which led to us starting a band.
-Playing music with others was a transcendent experience&amp;mdash;to hear four people
-produce one single harmonious sound. To give birth to something better than we
-could have made on our own. Being on stage is a bonus. Just to play is the
-thing.&lt;/p&gt;
-&lt;p&gt;My bandmates introduced me to a lot of great rock, including BRMC. I used to
-listen to this track on the way to shows and by the time I got to the gig, that
-bassline had me feeling like I could walk through a brick wall.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=MYYG1lAUntM&quot;&gt;&amp;ldquo;Baby in Two&amp;rdquo;&lt;/a&gt; - Pernice Brothers&lt;/h2&gt;
-&lt;p&gt;My drummer Shannon introduced me to Pernice Brothers. Our band days are over, we
-live about three thousand miles apart, but he will always be my drummer and I
-will always be his bassist. There&amp;rsquo;s a special kind of love that forms only
-between two halves of a rhythm section and this album is the soundtrack to mine.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=S28tILqie1o&quot;&gt;&amp;ldquo;Cupid&amp;rdquo;&lt;/a&gt; - Sam Cooke&lt;/h2&gt;
-&lt;p&gt;God, did they know how to record back then. Take one of the world&amp;rsquo;s greatest
-voices. Add beautiful, authentic reverb, and just enough tape saturation, and
-you get a sound so rich I can practically taste it.&lt;/p&gt;
-&lt;p&gt;But the technical merits are an aside. The real reason this is here is because
-it marks the time when I met my wife. This song is inseparable from her,
-from &lt;em&gt;us&lt;/em&gt;.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=L5dUsZ4Djd0&quot;&gt;&amp;ldquo;Blue Ridge Mountains&amp;rdquo;&lt;/a&gt; - Fleet Foxes&lt;/h2&gt;
-&lt;p&gt;By this time, I was burned out from eight years in the game industry. Tired of
-the heat and &lt;em&gt;sameness&lt;/em&gt; Florida&amp;mdash;every month indistinguishable from the
-previous, the days an unending blur of sunlight.&lt;/p&gt;
-&lt;p&gt;My wife and I discovered the Pacific Northwest on a work trip. We played this
-album non-stop during our honeymoon on the Olympic Peninsula, and by the end we
-were ready to uproot and move. Back in Florida, during the months it took for me
-to find work in Seattle, this record was a constant reminder of the promise
-awaiting us out west.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=NDHY1D0tKRA&quot;&gt;&amp;ldquo;I Will Follow You Into the Dark&amp;rdquo;&lt;/a&gt; - Death Cab for Cutie&lt;/h2&gt;
-&lt;p&gt;There is a Seattle city ordinance that you must like Ben Gibbard.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=3mUfOs-CTCw&quot;&gt;&amp;ldquo;Shooting Stars&amp;rdquo;&lt;/a&gt; - Bag Raiders&lt;/h2&gt;
-&lt;p&gt;My love of disco and house naturally turned into a love of nu-disco. I don&amp;rsquo;t
-know what&amp;rsquo;s going on in Australia, but there&amp;rsquo;s a whole pile of bands out of
-Sydney and Melbourne that sound like they took everything I love about the 70s
-and 80s, mashed it all together, and somehow made it sound fresh again.&lt;/p&gt;
-&lt;p&gt;One of the joys of being a Dad is playing music with my kids. I get to choose
-the songs that will form their subconscious musical memory. They love this
-album, perhaps largely because I used to pick them up and dance with them in the
-kitchen every time we played it. I hope when they are much older and hear this,
-they still think of me.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=7HPMK9Uxq3I&quot;&gt;&amp;ldquo;Elevate&amp;rdquo;&lt;/a&gt; - St. Lucia&lt;/h2&gt;
-&lt;p&gt;Like I said, the 80s is new again. I won&amp;rsquo;t lie. Listening to music that apes a
-genre that I still remember the first time it came around makes me feel pretty
-old. That weird cringe I get when I see fashion come full circle and the young
-folk start wearing stuff I still have jammed in the back of my closet.&lt;/p&gt;
-&lt;p&gt;I try to ignore that twinge because, honestly, St. Lucia is fantastic. This
-isn&amp;rsquo;t some ironic winking aping of the past (looking at you The Darkness and
-Steel Panther). St. Lucia is a gushing love letter to everything great about
-beachy 80s pop. It&amp;rsquo;s mai tais, sand between your toes, coconut sunscreen.
-Endless summer and eternal youth.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=ImKY6TZEyrI&quot;&gt;&amp;ldquo;Fade Into You&amp;rdquo;&lt;/a&gt; - Mazzy Star&lt;/h2&gt;
-&lt;p&gt;We&amp;rsquo;re nearing the end of the list, nearly through forty years of living and
-listening. It&amp;rsquo;s been a long drive down a winding road, and the sun will be up
-soon.&lt;/p&gt;
-&lt;h2&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=xzQvGz6_fvA&quot;&gt;&amp;ldquo;I&amp;rsquo;m on Fire&amp;rdquo;&lt;/a&gt; - Bruce Springsteen&lt;/h2&gt;
-&lt;p&gt;Forty feels like all my younger selves are lost, receded far into the past. Yet,
-at the same time, they still burn vibrantly alive inside, refusing to be
-forgotten.&lt;/p&gt;
 </description>
     </item>
 

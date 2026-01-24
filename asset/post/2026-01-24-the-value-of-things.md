@@ -59,7 +59,7 @@ do the thing.
 </aside>
 
 An apple has utility. You can eat it and it will give you some calories, some
-hydration, a little fiber. If it's not an oxymoronically named red delicious, it
+hydration, a little fiber. If it's not an oxymoronically named Red Delicious, it
 might even bring you some delight. Material objects have a natural sort of
 utility from their physicality, but digital objects can have utility too.
 
@@ -95,11 +95,11 @@ My career as a programming language designer is only possible because of all of
 the material I found online to learn how compilers and languages work. Hobbies
 like knitting, [making music], and cooking are deeply important to me. They're
 possible in large part from learning through YouTube videos. Those articles and
-videos are *useful*.
+videos were truly useful to me.
 
 [making music]: https://tinywir.es/
 
-Here's a concrete example of generative AI's impact on utility. I got curious
+Generative AI can help improve this. Here's a concrete example: I got curious
 about how AI is affecting software jobs outside of my weird tech company bubble
 so I started poking around job listing sites. I stumbled onto a software
 engineer position working for the Washington Department of Ecology. The listing
@@ -133,8 +133,8 @@ to argue against.
 
 ## Meaning
 
-When people really excited about AI and productivity, I think utility is what
-they have in mind. But utility is not the only kind of value a thing can have.
+When people get excited about AI and productivity, I think utility is what they
+have in mind. But utility is not the only kind of value a thing can have.
 
 A couple of years ago, I [hand-knitted a scarf for my mother-in-law][knit]. The
 scarf does have utility. It's a rectangle of fabric that keeps her neck warm.
@@ -167,9 +167,9 @@ Fashion is social signalling. Social signals have utility and value too.
 
 You and I know the answer is "no". As any parent who lovingly clips their kid's
 objectively terrible art to the fridge knows, the value of a made thing is not
-entirely based on its merits. The value of that scarf is not because it's a
-great scarf. It's because I chose to spend an irreplaceable fraction of my life
-making it. It's a symbol of how much I care about her.
+entirely based on its merits. That scarf has value not because it's a great
+scarf but because I chose to spend an irreplaceable fraction of my life making
+it. It's a symbol of how much I care about her.
 
 In short, it has *meaning*. Meaning doesn't make an object more useful. It's not
 even transferrable. If my mother-in-law gave the scarf to you, its meaning would
@@ -183,20 +183,20 @@ are the things with sentimental, not functional value.
 ## Source of meaning
 
 You kind of know the answer intuitively, but I'm trying to be clear in my
-thinking, so when I talk about objects having meaning... where does it come
-from? Why do some objects have more meaning than others?
+thinking, so when I talk about objects having meaning... where does that meaning
+come from? Why do some objects have more meaning than others?
 
 I've spent hundreds of hours knitting over the past couple of years, mostly
-making things for friends and family. I've thought about this question a lot.
-I suspect that it really all comes down to spending time in service of another.
+making things for friends and family. I've thought about this question a lot. I
+suspect that it comes down to spending time in service of another.
 
 Humans are sentient actors with agency and entire cognitive universes in our
 heads. But we are also animals made of meat and bones, and that flesh doesn't
 last forever. Every one of us has a finite amount of *things we will ever do.*
 "Spend time" is one of those stock phrases that has been sucked dry of semantic
-flavor over the years, but there really is a meaningful metaphor there. When you
-choose to use some of your time making a thing for someone, you don't get that
-time back. It is *spent*.
+flavor over the years, but there is a profound metaphor there. When you choose
+to use some of your time making a thing for someone, *you don't get that time
+back*. It is spent.
 
 <span name="matter">Choosing</span> to spend a fraction of our most precious
 resource for someone else is the strongest signal we can send that that person
@@ -266,8 +266,8 @@ meaning.
 
 <aside name="stranger">
 
-I mean, if it's [good enough for the Duffer brothers][stranger] -- another great
-pair of filmaking bros -- who am I to judge?
+I mean, if ChatGPT is [good enough for the Duffer brothers][stranger] -- another
+great pair of filmaking bros -- who am I to judge?
 
 [stranger]: https://www.reddit.com/r/StrangerThings/comments/1qas2q6/the_duffers_were_seen_opening_3_chatgpt_tabs/
 
@@ -283,13 +283,13 @@ that are both thoughtful *and* useful.
 
 Many years ago, I had a friend over for dinner. The next time I saw him, he
 handed me a rice cooker. It wasn't a particularly expensive one or anything, but
-he saw that the direction my cooking hobby was going and knew I would get a lot
-of use out of it. We've used that thing a hundred times since.
+he saw the direction my cooking hobby was going and knew I would get a lot of
+use out of it. We've used that thing a hundred times since.
 
 </aside>
 
 An object carries with it the weight of time that was put into making it and has
-a certain heft from you can get out of it. I think of AI as a tool that can
+a certain heft from what you can do with it. I think of AI as a tool that can
 transmute that former kind of value into the latter. It drains some of the
 meaning out, but in return lets you make more things with utility for the same
 effort.
@@ -304,10 +304,9 @@ mother-in-law using that in a fraction of the time.
 Efficiency -- the multiplier that determines how much effort is required to make
 an object -- works sort of like a slider that lets us choose the ratio of
 utility and meaning the resulting thing has. Generative AI, assuming the claims
-are true, has the capability to radically move that slider.
-
-It can produce huge values of stuff with real utility. But that exact same ease
-implies that it's all basically devoid of a sense of personal meaning.
+are true, has the capability to radically move that slider. It can produce huge
+volumes of stuff with real utility. But that exact same ease implies that the
+results are all devoid of a sense of personal meaning.
 
 ## Two tangents
 
@@ -382,8 +381,8 @@ made by someone who actually gave a shit about it. Even though the relationship
 between artist and listener is vague and indirect, that connection matters to
 me. I know that when I make music, the thing that helps me push through all of
 the many frustrations of producing is the hope -- however tentative -- that at
-the end the end of it all, one day someone might put on a track of mine and find
-their day improved by it being the temporary soundtrack to their life.
+the end of it all, one day someone might put on a track of mine and find their
+day improved by it being the temporary soundtrack to their life.
 
 Those moments of connection between artist and audience are what I live for as a
 creative person. For those, I can't see generative AI as anything but harmful.
@@ -394,9 +393,9 @@ Thinking about the things I make and consume and the kinds of value they contain
 helps me sort out some of my extremely conflicted feelings around AI.
 
 I want to emphasize that I'm only looking at this from the perspective of a
-single person's individual use of AI. The societal effects and externalities of
-AI are just as if not more important. But I haven't sorted out my feelings
-around that to have any idea what to say here. Maybe I never will.
+single person's individual use of AI. The global effects of AI are just as if
+not more important. But I haven't sorted out my feelings around that to have any
+idea what to say here. Maybe I never will.
 
 But I can set that aside and imagine a world where I can run a generative AI
 completely locally on my machine. A world where I was the only person on Earth
@@ -404,7 +403,7 @@ who had an AI. In that timeline, there would be almost no externalities to
 consider. *Even then,* I still want to be mindful of the consequences of using
 AI to help me make.
 
-In my own uses, I aim to focus on the places where I think it can improve the
+In my own uses, I aim to focus on the places where I think AI can improve the
 efficiency of making utilitarian goods. And when I'm making something where the
 human connection and meaning are important, I will try to put as much of myself
-into it as I can.
+and as little of the machine into it as I can.

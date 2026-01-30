@@ -6,7 +6,7 @@ tags: ai psychology
 One of the reasons I write is to help me organize my own mind. I have a
 compulsive need to *figure things out* and I'll lay awake at night shuffling
 sentences around in my head until it hangs together. Then I just have to try to
-get it all down in Markdown before I dissolves back into chaos.
+get it all down in Markdown before it dissolves back into chaos.
 
 Like a lot of people these days, I am losing a lot of sleep over <span
 name="generative">LLMs</span> and generative AI. I mean that literally. I've had

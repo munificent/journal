@@ -31,7 +31,7 @@ brain. This is a pitch for knitting, but -- for better or worse -- an extremely
 nerdily argued one.
 
 <figure>
-  <img class="framed" src="/image/2025/05/frog-and-toad.jpg">
+  <img class="framed" src="/image/2025/05/frog-and-toad.jpg" height="537.75">
   <figcaption>Frog and Toad, from
     <a href="https://www.frogandcast.com/frog-and-toad-home">this delighful
     pattern</a>. I made these as Christmas presents for my daughters.
@@ -81,7 +81,7 @@ deep sigh felt in my hands. Knitting is *so* touch-centered. Skilled knitters
 can knit without looking at their hands at all -- touch alone is sufficient.
 
 <figure name="scarf">
-  <img class="framed" src="/image/2025/05/scarf.jpg">
+  <img class="framed" src="/image/2025/05/scarf.jpg" height="506">
   <figcaption>Starting to work on a <a href="https://www.purlsoho.com/create/2020/02/07/slanting-stripes-scarf/">slanting stripes scarf</a> for myself.</figcaption>
 </figure>
 
@@ -106,7 +106,7 @@ works so quickly it's like fabric is spooling out of your hands on its own
 accord.
 
 <figure>
-  <img class="framed" src="/image/2025/05/megan-hat.jpg">
+  <img class="framed" src="/image/2025/05/megan-hat.jpg" height="504.5">
   <figcaption>The wool for this hat is a mixture of alpaca and sheep's wool. It's soft, fuzzy, and just the tiniest bit scratchy.</figcaption>
 </figure>
 
@@ -117,15 +117,15 @@ stitches fly off the needles -- good when you are done with those stitches but
 not so much otherwise.
 
 <figure name="dpn">
-  <img class="framed" src="/image/2025/05/frog-start.jpg">
+  <img class="framed" src="/image/2025/05/frog-start.jpg" height="485">
   <figcaption>An inauspicious start for our friend Toad.</figcaption>
 </figure>
 
 <aside name="dpn">
 
 I knitted Frog and Toad using lacquered wood size 2 double-pointed needles. It's
-hard to get a sense of scale from this photo, but they're six inches long.
-Like very fancy cocktail toothpicks.
+hard to get a sense of scale from this photo, but the needles are only six
+inches long. Like very fancy cocktail toothpicks.
 
 </aside>
 
@@ -186,7 +186,7 @@ intarsia or just buy a ball of self-striping yarn and let the yarn change
 colors for you. Is a sweater too big of a commitment? You can make hats forever.
 
 <figure name="hats">
-  <img class="framed" src="/image/2025/05/hats.jpg">
+  <img class="framed" src="/image/2025/05/hats.jpg" height="504.5">
   <figcaption>I've made a lot of hats. They're quick projects, only take a
   single skein of yarn, and almost always fit the wearer.</figcaption>
 </figure>
@@ -235,7 +235,7 @@ cast off to finish the work. With just those, you can make scarves and
 dishclothes. You are a knitter.
 
 <figure>
-  <img class="framed" src="/image/2025/05/toad-trunks.jpg">
+  <img class="framed" src="/image/2025/05/toad-trunks.jpg" height="504.5">
   <figcaption>Working on a swimsuit for Toad. The legs are stockinette stitch,
     just simple knit stitches over and over, switching colors every few rows.
   </figcaption>
@@ -252,7 +252,7 @@ few you want to chew on at a time, there is a project out there that will
 satisfy your appetite.
 
 <figure>
-  <img class="framed" src="/image/2025/05/holding-hands.jpg">
+  <img class="framed" src="/image/2025/05/holding-hands.jpg" height="537.75">
   <figcaption>I learned how to do a picot bind-off to make these tiny frog fingers.</figcaption>
 </figure>
 
@@ -271,7 +271,7 @@ for the rest of your life and never run out of new things to learn. Knitting
 will never stop rewarding you.
 
 <figure name="chicken">
-  <img class="framed" src="/image/2025/05/chicken.jpg">
+  <img class="framed" src="/image/2025/05/chicken.jpg" height="504.5">
   <figcaption>This pattern taught me short rows, wrap-and-turns, and cable cast-ons.
   </figcaption>
 </figure>
@@ -300,7 +300,7 @@ same time, knitting isn't just a pointless exercise to scratch my gamification
 itch. It is a real artform, and I am making real objects.
 
 <figure>
-  <img class="framed" src="/image/2025/05/bob-scarf.jpg">
+  <img class="framed" src="/image/2025/05/bob-scarf.jpg" height="504.5">
   <figcaption>Thousands of stitches, spooled out from time into space.</figcaption>
 </figure>
 
@@ -330,7 +330,7 @@ the end. When I pick up the kids from school, I can get ten minutes of knitting
 in while I wait for the bell.
 
 <figure>
-  <img class="framed" src="/image/2025/05/in-car.jpg">
+  <img class="framed" src="/image/2025/05/in-car.jpg" height="490.5">
   <figcaption>Working on a blanket square while I wait for the kids.</figcaption>
 </figure>
 
@@ -363,7 +363,7 @@ and counting won't leave room to think about anything else.
 [scarf]: https://www.ravelry.com/projects/munificent/slanting-stripes-scarf
 
 <figure>
-  <img class="framed" src="/image/2025/05/chocolate-shop.jpg">
+  <img class="framed" src="/image/2025/05/chocolate-shop.jpg" height="504.5">
   <figcaption>Working on a little dishcloth while sipping hot cocoa.</figcaption>
 </figure>
 
@@ -389,7 +389,7 @@ the scarf tends to bunch up on itself. But when she opened the package on
 Christmas and saw it, her eyes teared up. Mine are tearing up now writing this.
 
 <figure>
-  <img class="framed" src="/image/2025/05/mimi-scarf.jpg">
+  <img class="framed" src="/image/2025/05/mimi-scarf.jpg" height="448.25">
   <figcaption>The scarf.</figcaption>
 </figure>
 
